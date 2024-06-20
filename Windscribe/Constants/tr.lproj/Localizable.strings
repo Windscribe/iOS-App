@@ -1,0 +1,358 @@
+/*
+  Localizable.strings
+  Windscribe
+
+  Created by Yalcin on 2019-06-26.
+  Copyright © 2019 Windscribe. All rights reserved.
+*/
+
+"Your IP" = "IP Adresiniz";
+"Trusted" = "Güvenilir";
+"Upgrade" = "Yükselt";
+"Left" = "Kaldı";
+"Best Location" = "En İyi Konum";
+"Nothing to see here" = "Burada hiç bir şey yok";
+"No Static IP's" = "Static IP'niz yok";
+"Preferences" = "Ayarlar";
+"General" = "Genel";
+"Account" = "Hesap";
+"Connection" = "Bağlantı";
+"Help Me!" = "Yardım!";
+"Debug" = "Hata Ayıklama";
+"Log Out" = "Çıkış Yap";
+"Unlimited" = "Sınırsız";
+"Pro Subscription" = "Pro Abonelik";
+"Add Static IP" = "Static IP Ekle";
+"Refresh latency" = "Gecikme verilerini yenile";
+"Disconnect to refresh latency" = "Yenilemek için önce bağlantıyı sonlandır";
+"Firewall" = "Güvenlik Duvarı";
+"This turns on the on-demand mode." = "Bağlı kalma modunu aktif eder.";
+"Auto-Secure New Networks" = "Güvenlir Yeni Ağlar";
+"Auto-connect on new Wi-Fi networks" = "Yeni ağları güvenli olarak işaretler.";
+
+"Custom Config" = "Özel Konum";
+"No Custom Configs" = "Özel Konum Eklenmemiş";
+"This custom configuration will be gone forever." = "Bu konfigürasyon tamamen yok olacak.";
+"Enter Credentials" = "Bilgileri Girin";
+"Enter the username and password associated with this custom config" = "Bu konfigürasyona aşt Kullanıcı adı ve şifreyi girin";
+"Save credentials?" = "Bilgileri kaydet?";
+"Connect" = "Bağlan";
+"Incorrect File Format" = "Yanlış Dosya Tipi";
+"Something went wrong. Please make sure you have the correct OpenVPN configurations." = "Bir şeyler yanlış gitti. Lütfen doğru OpenVPN konfigürasyonuna sahip olduğunuza emin olun.";
+"Delete" = "Kaldır";
+
+"Connection Mode" = "Bağlantı Modu";
+"Language" = "Dil";
+"Latency Display" = "Gecikme Göstergesi";
+"Send Log" = "Hata Raporu Gönder";
+"MS" = "MS";
+"Bars" = "Bar";
+"Enable Notifications" = "Bildirimleri Aktif Et";
+"Open Settings" = "Ayarları Aç";
+"Location Order" = "Konum Sıralaması";
+"Protocol" = "Protokol";
+"Port" = "Port";
+"Auto" = "Otomatik";
+"Manual" = "Manuel";
+"Account" = "Hesap";
+"PLAN" = "PLAN";
+"Expiry Date" = "Bitiş Tarihi";
+"Reset Date" = "Yenilenme Tarihi";
+"Data Left" = "Kalan Kullanım";
+"Info" = "Bilgi";
+"Edit Account" = "Hesabı Düzenle";
+"Add" = "Ekle";
+"Get 10GB/Mo of data and gain the ability to reset a forgotten password." = "Aylık 10GB veri kullanımı ve unutulan şifreyi sıfırlama becerisini kazanın.";
+"Upgrade" = "Yükselt";
+"Confirm Your Email" = "Emailini Doğrula";
+"Resend" = "Tekrar Gönder";
+"Geography" = "Coğrafya";
+"Alphabet" = "Alfabe";
+"Latency" = "Gecikme";
+"Version" = "Sürüm";
+"Appearance" = "Tema";
+"Light" = "Aydınlık";
+"Dark" = "Karanlık";
+"This action requires a restart" = "Bu değişiklik yeniden başlatma gerektiriyor";
+"Please restart Windscribe to continue using in the preferred language." = "Windscribe'ı yeniden başlatarak seçtiğiniz dilde kulllanmaya devam edebilirsiniz.";
+"Close App" = "Uygulamayı Kapat";
+
+"Network Options" = "Ağ Ayarları";
+"If you want protection at all times except on certain networks, list them as \"trusted\" and Windscribe will automatically turn off and back on when needed." = "Eğer belirli ağlar dışında her zaman koruma altında kalmak istiyorsanız, istediğiniz ağları 'Güvenilir' olarak işaretleyin. Windscribe otomatik olarak gerektiğinde bağlantınızı sağlayacak.";
+"Secured" = "Güvenilir";
+"Unsecured" = "Güvenilmeyen";
+"Forget" = "Unut";
+"Unknown Network" = "Bilinmeyen Ağ";
+"Wi-fi" = "Wi-fi";
+"No Network Detected" = "Ağ Bulunmadı";
+"No Internet" = "İnternet Yok";
+"News Feed" = "Son Duyurular";
+
+"This network is unsecured" = "Güvenilir Ağ";
+"is unsecured, meaning you don't wish to use Windscribe while on this network." = "güvenilir. Bu ağda Windscribe'ı kullanmak istemediğiniz anlamına geliyor.";
+"Connect Anyway" = "Yinede Bağlan";
+"Cancel" = "Vazgeç";
+"Remove" = "Kaldır";
+
+"Search Locations" = "Lokasyon Ara";
+"Get Started" = "Başla";
+
+"Please enter your username and password." = "Lütfen kullanıcı adı ve şifrenizi girin.";
+"Try Again" = "Tekrar Dene";
+"The username and password combination is wrong." = "Kullanıcı adı veya şifre doğru değil.";
+"Please login with your username, not your email" = "Email adresi girdiniz. Lütfen kullanıcı adınızla giriş yapın.";
+
+"Loading" = "Yükleniyor";
+"Login" = "Giriş Yap";
+"Get 10GB/ Mo" = "10 GB Aylık";
+"10GB/ Mo" = "Aylık 10 GB";
+"Continue without account" = "Üyeliksiz devam et";
+"Limited to 2GB/ Mo" = "Aylık 2GB ile sınırlı";
+"Continue" = "Devam";
+"Sign up" = "Kayıt Ol";
+"Sign up free" = "Ücretsiz kayıt ol";
+"Account setup" = "Hesap kaydı";
+"Setup Account" = "Kayıdı Tamamla";
+"Username" = "Kullanıcı adı";
+"Password" = "Şifre";
+"Email" = "Email";
+"Your username" = "Kullanıcı adınız";
+"Your password" = "Şifreniz";
+"Your email" = "Email adresiniz";
+"Enter your email" = "Email adresinizi girin";
+"Verify your password" = "Şifrenizi Doğrulayın";
+"Forgot password?" = "Şifremi Unuttum";
+"Choose password" = "Şifreniz";
+"Confirm password" = "Şifrenizi doğrulayın";
+"Yes" = "Evet";
+"No" = "Hayır";
+"Okay" = "Tamam";
+"Error" = "Hata Oluştu";
+"Setup later" = "Sonra tamamla";
+"Optional" = "İsteğe bağlı";
+"Get More Data" = "Limiti Yükselt";
+"Add Email" = "Email Ekle";
+"For password recovery, updates & promo only. No spam" = "Sadece şifre yenileme, güncellemeler & duyurular için.";
+"Choose Username" = "Kullanıcı Adı";
+"Choose Password" = "Şifre";
+"Sign up or login to view your account details and safeguard your preferences" = "Hesap bilgilerini görüntülemek için kayıt olun veya giriş yapın.";
+"Powers" = "Özel Güçler";
+
+"Safeguard your Pro account and access it from any device." = "Pro hesabınızı koruyun ve diğer cihazlarınızdan erişin.";
+"Safeguard your account, access your settings from any device and get more data." = "Hesabınızı koruyun, diğer cihazlarınızdan erişin ve kullanım limitini yükseltin.";
+
+"Getting Server List" = "Sunucu Listesi Yükleniyor";
+"Getting IKEv2 Server Credentials" = "IKEv2 Sunucu Bilgileri Yükleniyor";
+"Getting OpenVPN Server Credentials" = "OpenVPN Sunucu Bilgileri Yükleniyor";
+"Getting Static IPs" = "Static IP'ler Yükleniyor";
+"Getting Port Maps" = "Port Haritası Yükleniyor";
+"Getting Mobile Plans" = "Mobil Planlarlar Yükleniyor";
+"Getting Configurations" = "Ayarlar Yükleniyor";
+"Getting Notifications" = "Bildirimler Yükleniyor";
+"Preparing Your Dashboard" = "Arayüz Hazırlanıyor";
+
+"The passwords don't match." = "Şifreler birbiri ile uyuşmuyor.";
+"Registration failed, please contact support." = "Kayıt başarısız oldu. Lütfen destek ekibine ulaşın.";
+"Awww! This username is taken." = "Bu kullanıcı adı zaten var.";
+"Please contact support." = "Lütfen destek ekibimize ulaşın.";
+"Awww! This email already exists." = "Bu email zaten mevcut.";
+"Disposable emails are not allowed. Provide a valid email, or leave the email field blank." = "Geçiçi email kullanamazsınız. Geçerli bir email girin veya boş bırakın.";
+"Cannot change existing email because it is already confirmed." = "Onaylanmış email adresi değiştirilemez.";
+"Must only contain letters, numbers and underscores." = "Sadece harf, numara ve alttan tire kullanılabilir.";
+"Must be longer than 7 characters." = "7 karakterden uzun olması gerekiyor.";
+"Enter a valid email." = "Geçersiz email.";
+"Unfortunately you cannot use Windscribe without an account as we detected potential abuse. Please make one, it's really easy." = "Maalesef hesap oluşturmadan Windscribe'ı kullanamazsınız. Lütfen hesap oluşturun, bu cidden kolay bir şey zaten.";
+
+"Connecting..." = "Bağlantı Kuruluyor...";
+"Please terminate the current connection before starting new connection." = "Lütfen yeni bir bağlantı kurmadan önce mevcut bağlantıyı sonlandırın.";
+"Disconnecting..." = "Bağlantı Sonlandırılıyor.";
+"Please wait until you are disconnected before starting new connection." = "Lütfen yeni bir bağlantı kurmadan önce mevcut bağlantının sonlandırılmasını bekleyin.";
+"No Internet" = "İnternet Bağlantısı Yok";
+"Your device is currently offline. Please enable WiFi or cellular connection." = "Cihazınız şuan çevrimdışı. Lütfen WiFi veya hücresel veri ile bağlantı sağlayın.";
+"Well, we gave it our best shot, but we couldn't connect you on this network. Please send us a debug log via the button below and open a support ticket on Windscribe.com" = "Maalesef sizin için bir bağlantı gerçekleştiremedik. Aşağıdaki düğmeyi kullanarak bize ayıklama raporu gönderin ve Windscribe.com üzerinden destek ekibimize ulaşın.";
+"Send us a Debug Log from the Preferences screen, and submit a support ticket." = "Ayarlar ekranından bize Hata Raporu gönderin ve destek ekibine ulaşın.";
+"Unable to connect" = "Bağlantı Kurulamadı";
+"Windscribe was unable to connect to this location, please try another location or contact support." = "Windscribe bu konuma bağlanamadı. Lütfen başka bir konum deneyin veya destek ekibimize ulaşın.";
+"You can't make changes while connected to a VPN." = "VPN'e bağlı iken değişiklik yapamazsınız.";
+
+"CONNECTED" = "BAĞLI";
+"CONNECTING" = "BAĞLANIYOR";
+"CONNECTING VIA" = "BAĞLANIYOR";
+"DISCONNECTED" = "BAĞLI DEĞİL";
+"DISCONNECTING" = "BAĞLANTI SONLANDIRILIYOR";
+"CONNECTIVITY TEST" = "BAĞLANTI TESTİ";
+"LOW WIFI SIGNAL" = "DÜŞÜK WİFİ SİNYALİ";
+
+"App Log Submitted." = "Hata Raporu Gönderildi.";
+"App log cannot be submitted at this time." = "Şuan Hata Raporu Gönderilemiyor.";
+"Confirmation Email Sent" = "Doğrulama Emaili Gönderildi";
+"Please check your inbox and junk/spam folder." = "Lütfen gelen kutunuzu ve junk/spam klasörünü kontrol edin.";
+"Please make sure you have entered a correct password and a valid email." = "Lütfen doğru email adresi ve şifreyi girdiğinize emin olun.";
+"Purchases Restored" = "Satın Alınanlar Kurtarıldı";
+"All purchases restored." = "Tüm satın alınanlar kurtarıldı.";
+
+"View Log" = "Raporu Görüntüle";
+"Send Log" = "Rapor Gönder";
+"Sending Log" = "Log Gönderiliyor";
+"Sent, Thanks!" = "Gönderildi, Teşekkürler!";
+"Enter Username" = "Kullanıcı adı girin";
+"Submit" = "Gönder";
+
+"One last thing!" = "Son Bir Şey!";
+"Add your email address in case you forget your password. We’ll even give you 10GB for it." = "Şifrenizi unutursanız diye  email adresinizi ekleyin. Hatta bunun için size 10 GB ekstra kullanım limiti ekliyoruz.";
+"Give me my 10GB/Month" = "Aylık 10 GB ekstramı ver";
+"I'm happy with 2GB/Month" = "Aylık 2 GB ile mutluyum";
+"No Thanks" = "Hayır Teşekkürler";
+"Secure your account" = "Hesabınızı güvenli tutun";
+"You’re out of data" = "Kulanım Limitiniz Doldu";
+"Upgrade now to stay protected or wait until your bandwidth is reset on " = "Şimdi hesabınızı yükseltin veya bekleyin. Kullanım limitiniz sıfırlanma tarihi: ";
+"Upgrade" = "Yükselt";
+"I'll wait!" = "Beklemek İstiyorum!";
+"Your Pro Plan expired!" = "Pro Planınız sona erdi!";
+"You’ve been downgraded to free for now" = "Şimdilik ücretsiz plana geçtiniz";
+"Renew Plan" = "Planı Yenile";
+"Remind me later" = "Daha sonra tekrar hatırlat";
+
+"Confirm Email" = "Email Doğrulama";
+"Please confirm your email to get 10GB/ Mo" = "Emaili doğrula ve aylık 10GB kazan";
+"Please confirm your email" = "Lütfen emaili doğrulayın";
+"Resend Verification Email" = "Tekrar Gönder";
+"Change Email" = "Emaili Değiştir";
+"Close" = "Kapat";
+
+"You’ve been banned" = "Erişime Yasaklandınız";
+"Your account has been disabled for violating our Terms of Service" = "Kullanım kurallarına uymadığınız için hesabınız devre dışı bırakıldı.";
+"Learn More" = "Daha Fazla Öğren";
+
+"Stay Protected" = "Korunmaya Devam Et";
+"Set up push notifications to receive connection updates in case of an interruption" = "Bildirimleri aktif ederek herhangi bir sorun oluştuğunda bağlantınız ile ilgili güncellemeler hakkında bilgi edinin";
+"Turn Notification On" = "Bildirimleri Aktif Et";
+
+"Plans" = "Planlar";
+"Pricing" = "Fiyatlandırma";
+"Benefits" = "Özellikler";
+"Free 10GB/Mo" = "Ücretsiz Aylık 10GB";
+"Restore Purchases" = "Satın Alınanları Geri Yükle";
+"This location isn’t free,\n it’s got standards" = "Bu lokasyon ücretsiz değil,\nbazı standartları var.";
+"You deserve more than limited privacy" = "Kısıtlı gizlilikten daha fazlasını hakediyorsunuz";
+"Looks like you’re out of precious privacy" = "Gizliliğin tükenmişe benziyor";
+"Upgrade Benefits" = "Neden Yükseltmeliyim?";
+"Unlimited Data" = "Sınırsız Veri";
+"Pretty self explanatory. Use as much bandwidth as you'd like." = "Kendini açıklıyor. İstediğin kadar limitsiz kullanım hakkı.";
+"All Locations" = "Tüm Konumlar";
+"Access to servers in over 60 countries and 110 data centers." = "60'dan fazla ülkedeki 110 sunucumuza erişim.";
+"R.O.B.E.R.T" = "R.O.B.E.R.T";
+"Best malware and ad-blocker you will ever use. Seriously." = "En iyi reklam ve takipçi yazılımı engelleyici. Ciddiyiz.";
+"Choose Plan" = "Plan Seçin";
+"Yearly" = "Yıllık";
+"Monthly" = "Aylık";
+"Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes." = "Satın aldıktan sonra abonelikler aylık, yıllık olarak yönetilebilir veya App Store hesabınız üzerinden sonlandırılabilir. Tüm fiyatlar vergiler dahil.";
+"Terms of Use" = "Kullanım Sözleşmesi";
+"Privacy Policy" = "Gizlilik Politikası";
+"Restore Purchase" = "Satın Alınanları Geri Yükle";
+"Year" = "Yıl";
+"Month" = "Ay";
+
+"Rate Us!" = "Bize Oy Verin!";
+"Are you enjoying Windscribe? Sure you are. Rate us in the App store and we’ll love you long time." = "Windscribe'dan keyif alıyor musunuz? Tabi alıyorsunuz. Bizi App Store üzerinde oylamanın tam vakti.";
+"Rate Windscribe" = "Windscribe'ı Oyla";
+"Maybe Later" = "Belki Daha Sonra";
+"Go Away" = "Bir Daha Gösterme";
+
+"Are you sure?" = "Emin misiniz?";
+"Removing this location from favourites will make it feel sad." = "Bu konumu favori listenizden kaldırıyorsunuz.";
+
+"Connect to VPN" = "VPN bağlantısını başlat";
+"Disconnect VPN" = "VPN bağlantısını sonlandır";
+
+"Your Privacy Is Important" = "Gizliliğiniz Önemli";
+"Windscribe is a no-logging VPN service that takes your privacy seriously. Any activity on our network cannot be traced to a specific account. That being said, we collect the following pieces of information in order to operate the service:" = "Windscribe log kaydetmeyen, gizliliğinizi ciddiye alan bir VPN servisidir. Bizim ağlarımızda gerçekleştirdiğiniz herhangi bir aktivite bir hesabı baz alarak takip edilemez. Sadece aşağıda listelediğimiz bilgileri servisimizi sunabilmeye devam etmek için topluyoruz.";
+"Account data: username, email (if you gave us one), and payment transaction IDs (if you gave us money)" = "Hesap bilgileri: kullanıcı adı, email (eğer eklerseniz), ödeme bilgileri (eğer bize para verirseniz)";
+"Metadata needed to ensure quality of service: bandwidth used in a 30 day period, number of parallel connections" = "Metadatalar servis kalitesi için gerekli: 30 günlük periyod içerisindeki kullanılan veri, yapılan paralel bağlantıların sayısı";
+"I'm OK With This" = "Benim İçin Sorun Yok";
+
+"This network hates us" = "Bu ağ bizi sevmiyor.";
+"Well we gave it our best shot, we just couldn’t connect you on this network for some reason." = "Yapabileceğimizin en iyisini denedik fakat bu ağ üzerinden bir bağlantı sağlayamadık.";
+"Send Debug Log" = "Hata Raporu Gönder";
+"Contact Support" = "Destek Al";
+
+"Auto-Secure" = "Otomatik Koruma";
+"When you connect to this network, Windscribe will auto-connect to the last chosen location." = "Bu ağa bağlandığınızda Windscribe otomatik olarak son seçilen konuma bağlanır.";
+"Forget Network" = "Ağı Unut";
+
+"Preferred Protocol" = "Tercih Edilen Protokol";
+"Choose the best protocol for this network. This overrides all global connection settings." = "Bu ağ için en iyi protokolü seçin. Bu seçenek diğer tüm bağlantı ayarlarını pasif kılar.";
+
+"Next up in" = "Tekrar dene:";
+"Set" = "";
+"as preferred protocol?" = "tercih edilen protokol olsun mu?";
+"Windscribe will keep using the chosen protocol on this network, regardless of your global connection settings." = "Windscribe genel bağlantı ayarlarınızı yoksayacak ve bundan sonra bu protokolü kullanacak.";
+"Set as Preferred" = "Tercih Edilen Protokol Yap";
+"Keep it automatic" = "Otomatik olarak bırak";
+"Back" = "Geri";
+"Don't ask again" = "Bir daha gösterme";
+
+"Leaderboard" = "Lider Tablosu";
+"Shake for Data" = "Salla ve Kazan";
+"Shakes" = "Sallama";
+"I Quit" = "Vazgeç";
+"Leave" = "Ayrıl";
+"Claim Prize" = "Ödülü Göster";
+"Try Again" = "Tekrar Dene";
+"Not Bad!" = "Kötü Değil!";
+"Shake for Data!" = "Salla ve Kazan!";
+"Shake your phone as much as you can before the time runs out and win!" = "Telefonunuz süre bitene kadar sallayabileceğiniz kadar sallayın ve ödül kazanın.";
+"Start Shaking" = "Sallamaya Başla";
+"I hate free stuff" = "Ücretsiz şeyleri sevmem";
+"View Leaderboard" = "Lider Tablosu";
+"High Score:" = "En Yüksek Skorun:";
+"New High Score!" = "Yeni En Yüksek Skor!";
+"Unlock Shake For Data" = "Salla ve Kazanı Tut";
+"Unlock access to this feature? It will show up in Preferences." = "Bu özelliği tutmak istiyor musunuz? Ayarlar ekranından erişebileceksiniz.";
+"Unlock" = "Tutmak İstiyorum";
+"Just Leave" = "Ayrıl";
+"Play" = "Oyna";
+"Without an email, your free account will be limited to 2GB/Mo and you won’t be able to reset your password." = "Email olmadan hesabınız aylık 2GB kullanım limiti ile sınırlandırılacak ve şifrenizi değiştiremeyeceksiniz.";
+"You won’t be able to reset a password without an email or receive any service updates from us." = "Email olmadan şifrenizi değiştiremeyeceksiniz veya duyurulara ulaşamayacaksınız.";
+"Continue without email" = "Email olmadan devam et";
+"Failure to setup account will prevent access in case you’re logged out." = "Hesap kaydınızı tamamlamazsanız çıkış yaptığınızda tekrar erişim sağlayamıyacaksınız.";
+
+"Circumvent Censorship in Seconds" = "Anında Tüm Sansürleri Kaldırın";
+"Automatically secure any network" = "Otomatik olarak istediğiniz ağlar için güvenlik sağlayın.";
+"Strict No-Logging Policy" = "Asla Kullanım Geçmişiniz Kaydedilmez";
+"Works with Siri, Shortcuts & Widgets" = "Siri Desteği ve Widget";
+"Add Custom Config" = "Özel Yapılandırma Ekle";
+"Custom configs allow you to connect to any OpenVPN or Wireguard server. Just add a valid config file and it will appear in this tab." = "Özel yapılandırmalar, herhangi bir OpenVPN veya Wireguard sunucusuna bağlanmanıza izin verir. Sadece geçerli bir yapılandırma dosyası ekleyin. Bu sekmede görünecektir.";
+"Windscribe   will  automatically   turn  on   when  you  connect  to  this network." = "Windscribe, bu ağa bağlandığınızda otomatik olarak açılır.";
+"Choose a default protocol for this network if you are having issues connecting" = "Bağlanmakta sorun yaşıyorsanız bu ağ için varsayılan bir protokol seçin";
+"INFO" = "BİLGİ";
+"PLAN" = "PLAN";
+"Allowing" = "İzin Veriliyor";
+"Blocking" = "Engelleniyor";
+"Manage Custom Rules" = "Özel Kuralları Yönet";
+"Show Location Load" = "Konum Yükünü Göster";
+"Haptic Feedback" = "Dokunsal geribildirim";
+"Are you sure you want to log out of Windscribe?" = "Windscribe\'dan çıkmak istediğinize emin misiniz?";
+"News Feed" = "Haber akışı";
+"Disclaimer" = "Sorumluluk reddi";
+"Grant Permission" = "İzin Ver";
+"Fill in the fields bellow and one of our support agents will personally get back to you very soon™" = "Aşağıdaki alanları doldurun, temsilcilerimizden biri çok yakında size geri dönecektir™";
+"So we can contact you, we won’t use  it for anything else" = "Böylece sizinle iletişime geçebiliriz, başka bir şey için kullanmayacağız";
+"Message" = "Mesaj";
+"Subject" = "Konu";
+"About" = "Hakkında";
+"R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch." = "R.O.B.E.R.T., özelleştirilebilir bir sunucu tarafı alan ve IP engelleme aracıdır. Anahtar değiştirerek tüm cihazlarınıza uygulamak istediğiniz engelleme listelerini seçin.";
+"All you need to know about Windscribe." = "Windscribe hakkında bilmeniz gereken her şey.";
+"Talk to Garry" = "Garry ile konuş";
+"Not as smart as Siri but can still answer your questions." = "Siri kadar akıllı olmasa da, hala sorularınıza cevap verebilir.";
+"Send Ticket" = "Destek talebi gönder";
+"Stuck? Send us a ticket." = "Sıkıştınız mı? Bize bir destek talebi gönderin.";
+"Community Support" = "Topluluk Desteği";
+"Best places to help and get help from other users." = "Diğer kullanıcılardan yardım alabileceğiniz en iyi yerler.";
+"View Debug Log" = "Debug Kaydını Görüntüle";
+"Status" = "Durum";
+"About us" = "Hakkımızda";
+"Terms" = "Şartlar";
+"Blog" = "Blog";
+"Jobs" = "İşler";
+"Software Licenses" = "Yazılım Lisansları";

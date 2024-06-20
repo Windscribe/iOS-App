@@ -1,0 +1,41 @@
+{
+  "originHash" : "b0d54b9637a0dc839aedaca80d6e184ee0ef266fe5f0c1a9c618eea919981b7d",
+  "pins" : [
+    {
+      "identity" : "dns",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Bouke/DNS.git",
+      "state" : {
+        "revision" : "78bbd1589890a90b202d11d5f9e1297050cf0eb2",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "swift-resolver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/seznam/swift-resolver.git",
+      "state" : {
+        "revision" : "cfb7d326bc4c89a48439303d758b375a8faae784",
+        "version" : "0.3.0"
+      }
+    },
+    {
+      "identity" : "swift-unisocket",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/seznam/swift-unisocket",
+      "state" : {
+        "revision" : "1785e432fb8497265a38712cdb9584c429ca3f96",
+        "version" : "0.14.0"
+      }
+    },
+    {
+      "identity" : "wireguard-apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://git.zx2c4.com/wireguard-apple/",
+      "state" : {
+        "revision" : "12b095470ad29ecea7436088f6e5fa701e6445a6"
+      }
+    }
+  ],
+  "version" : 3
+}

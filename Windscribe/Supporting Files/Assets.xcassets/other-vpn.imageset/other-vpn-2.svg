@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.3 (81716) - https://sketch.com -->
+    <title>other-vpn</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="othervpnicon" fill="#020D1C" fill-rule="nonzero">
+            <path d="M16,0 L16,3.767875 C16,9.072419 12.859797,13.873839 8,16 C3.140203,13.873839 0,9.072419 0,3.767875 L0,0 L16,0 Z M14,2 L2,2 L2,3.767875 C2,7.862572 4.200805,11.604655 7.698456,13.611957 L8,13.778 L8.022735,13.766799 C11.592592,11.8493 13.886121,8.156097 13.995877,4.074687 L14,3.767875 L14,2 Z"></path>
+        </g>
+    </g>
+</svg>

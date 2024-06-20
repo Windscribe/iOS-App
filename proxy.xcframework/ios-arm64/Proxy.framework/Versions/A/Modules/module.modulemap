@@ -1,0 +1,8 @@
+framework module "Proxy" {
+	header "ref.h"
+    header "Proxy.objc.h"
+    header "Universe.objc.h"
+    header "Proxy.h"
+
+    export *
+}

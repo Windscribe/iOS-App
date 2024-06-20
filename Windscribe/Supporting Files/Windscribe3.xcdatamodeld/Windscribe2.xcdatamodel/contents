@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="17G65" minimumToolsVersion="Xcode 7.0" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="Account" syncable="YES">
+        <attribute name="account_status" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="auth_hash" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="display_id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="plan_id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="premium" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="premium_expires" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="traffic_max" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="traffic_used" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ChosenNode" syncable="YES">
+        <attribute name="node" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Device" syncable="YES">
+        <attribute name="uuid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Expired" syncable="YES">
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="IgnoreSSL" syncable="YES">
+        <attribute name="ignore_ssl" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="Installed" syncable="YES">
+        <attribute name="installed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="ManualIP" syncable="YES">
+        <attribute name="manual_ip" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Servers" syncable="YES">
+        <attribute name="revision" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="servers" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ShownNotifications" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="Usage" syncable="YES">
+        <attribute name="amount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Account" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="ChosenNode" positionX="-45" positionY="9" width="128" height="60"/>
+        <element name="Expired" positionX="-36" positionY="18" width="128" height="60"/>
+        <element name="IgnoreSSL" positionX="-36" positionY="63" width="128" height="60"/>
+        <element name="Installed" positionX="-54" positionY="0" width="128" height="60"/>
+        <element name="ManualIP" positionX="-45" positionY="54" width="128" height="60"/>
+        <element name="Servers" positionX="-45" positionY="9" width="128" height="75"/>
+        <element name="Usage" positionX="-45" positionY="9" width="128" height="60"/>
+        <element name="Device" positionX="-36" positionY="63" width="128" height="60"/>
+        <element name="ShownNotifications" positionX="-27" positionY="72" width="128" height="60"/>
+    </elements>
+</model>

@@ -1,0 +1,142 @@
+//
+//  FileLoggerImpl.swift
+//  Windscribe
+//
+//  Created by Ginder Singh on 2024-01-03.
+//  Copyright © 2024 Windscribe. All rights reserved.
+//
+
+import CocoaLumberjack
+import Foundation
+import RxSwift
+class FileLoggerImpl: FileLogger {
+    private lazy var logDirectory: URL? = {
+        let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
+        return containerUrl?.appendingPathComponent("AppExtensionLogs")
+    }()
+
+    init() {
+        setupLogger()
+    }
+
+    func logD(_ tag: Any, _ message: String) {
+        DDLogDebug(DDLogMessageFormat("\(message)"), level: DDLogLevel.debug, tag: tag)
+    }
+
+    func logI(_ tag: Any, _ message: String) {
+        DDLogInfo(DDLogMessageFormat("\(message)"), level: DDLogLevel.info, tag: tag)
+    }
+
+    func logE(_ tag: Any, _ message: String) {
+        DDLogError(DDLogMessageFormat("\(message)"), level: DDLogLevel.error, tag: tag)
+    }
+
+    func getLogData() -> Single<String> {
+        return Single.create { [weak self] callback in
+            guard let self = self else {
+                return Disposables.create {}
+            }
+            var allLogEntries: [String] = []
+            let allLogFiles = self.getAllLogFiles()
+
+            for logFileURL in allLogFiles {
+                do {
+                    let logContent = try String(contentsOf: logFileURL)
+                    allLogEntries.append(contentsOf: buildLogEntries(from: logContent))
+                } catch {
+                    print("Error reading log file: \(error)")
+                }
+            }
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+
+            // Assuming log entries have timestamps at the beginning, sort them based on timestamps.
+            let sortedLogEntries = allLogEntries
+                .compactMap { entry -> (Date, String)? in
+                    let components = entry.components(separatedBy: " ")
+                    guard components.count >= 2 else {
+                        return nil
+                    }
+                    if let timestamp = dateFormatter.date(from: "\(components[0]) \(components[1])") {
+                        return (timestamp, entry)
+                    }
+                    return nil
+                }
+                .sorted { $0.0.compare($1.0) == .orderedAscending }
+                .map { $0.1 }
+
+            callback(.success(sortedLogEntries.joined(separator: "")))
+            return Disposables.create {}
+        }
+    }
+
+    func logDeviceInfo() {
+        let currentDevice = UIDevice.current
+        let deviceInfo = [
+            "\n[DeviceInfo]",
+            "-------------",
+            "[Device]: \(currentDevice.model)",
+            "[OS Version]: \(currentDevice.systemVersion)",
+            "[Release]: \(Bundle.main.buildVersionNumber ?? "")",
+            "[App Release Version]: \(Bundle.main.releaseVersionNumber ?? "")",
+            "[Start of log]:",
+            "------------------------------------------------------"
+        ]
+        logD(self, deviceInfo.joined(separator: "\n"))
+    }
+
+    private func setupLogger() {
+        let logFileManager = DDLogFileManagerDefault(logsDirectory: logDirectory?.path)
+        let fileLogger = DDFileLogger.init(logFileManager: logFileManager)
+        fileLogger .rollingFrequency = 0
+        fileLogger .maximumFileSize = 2000000
+        fileLogger .logFileManager.maximumNumberOfLogFiles = 1
+        fileLogger .logFormatter = FileLogFormater()
+        if DDLog.allLoggers.count == 0 {
+            DDLog.add(fileLogger)
+            let osLogger = DDOSLogger.init(subsystem: "com.windscribe.vpn", category: "Windscribe-VPN")
+            osLogger.logFormatter = FileLogFormater()
+            DDLog.add(osLogger)
+        }
+    }
+
+    private func getAllLogFiles() -> [URL] {
+        do {
+            let fileNames = try FileManager.default.contentsOfDirectory(atPath: logDirectory!.path).map { fileName in
+                logDirectory?.appendingPathComponent(fileName)
+            }.compactMap {$0}
+            return fileNames
+        } catch {
+            return []
+        }
+    }
+
+    private func buildLogEntries(from fileContent: String) -> [String] {
+        var logEntries: [String] = []
+        var currentLogEntry = ""
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+        let regexPattern = #"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}"#
+        do {
+            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
+            let lines = fileContent.components(separatedBy: .newlines)
+
+            for line in lines {
+                let range = NSRange(location: 0, length: line.utf16.count)
+                if let match = regex.firstMatch(in: line, options: [], range: range), let timestampRange = Range(match.range, in: line) {
+                    _ = String(line[timestampRange])
+                    if !currentLogEntry.isEmpty {
+                        logEntries.append(currentLogEntry)
+                        currentLogEntry = ""
+                    }
+                }
+                currentLogEntry += line + "\n"
+            }
+            if !currentLogEntry.isEmpty {
+                logEntries.append(currentLogEntry)
+            }
+        } catch {}
+        return logEntries
+    }
+}
