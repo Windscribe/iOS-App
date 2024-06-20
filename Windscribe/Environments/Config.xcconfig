@@ -1,0 +1,17 @@
+//
+//  Config.xcconfig
+//  Windscribe
+//
+//  Created by Ginder Singh on 2024-06-14.
+//  Copyright © 2024 Windscribe. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+APP_TEAM_ID =
+APP_BUNDLE_ID = 
+PACKET_TUNNEL_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).PacketTunnel
+WIREGUARD_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).WireGuardTunnel
+SIRI_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).SiriIntents
+HOME_WIDGET_BUNDLE_ID = $(APP_BUNDLE_ID).HomeWidget
+TEST_TARGET_BUNDLE_ID = com.WindscribeTests

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>INEnums</key>
+	<array/>
+	<key>INIntentDefinitionModelVersion</key>
+	<string>1.1</string>
+	<key>INIntentDefinitionNamespace</key>
+	<string>PpKCzm</string>
+	<key>INIntentDefinitionSystemVersion</key>
+	<string>19C57</string>
+	<key>INIntentDefinitionToolsBuildVersion</key>
+	<string>11B53</string>
+	<key>INIntentDefinitionToolsVersion</key>
+	<string>11.2.1</string>
+	<key>INIntents</key>
+	<array>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>information</string>
+			<key>INIntentDescription</key>
+			<string>View connected location and ip address.</string>
+			<key>INIntentDescriptionID</key>
+			<string>4LgglN</string>
+			<key>INIntentLastParameterTag</key>
+			<integer>4</integer>
+			<key>INIntentName</key>
+			<string>ShowLocation</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>View connected location and ip address</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>pxpnWk</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Connection State</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>fkI17L</string>
+				</dict>
+			</dict>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>You are connected to ${cityName}, ${nickName} and your IP address is ${ipAddress}.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>xUxV69</string>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Sorry, but I couldn't the find the information you are looking for.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>EXlsIo</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>You are not connected to VPN. Your  IP address is ${ipAddress}.</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>fGUZfS</string>
+						<key>INIntentResponseCodeName</key>
+						<string>successWithNoConnection</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>4</integer>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>cityName</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>nickName</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>3</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>ipAddress</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>4</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Connection State</string>
+			<key>INIntentTitleID</key>
+			<string>1gHj39</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>View</string>
+		</dict>
+	</array>
+	<key>INTypes</key>
+	<array/>
+</dict>
+</plist>

@@ -1,0 +1,38 @@
+excluded:
+  - Windscribe/WireGuard
+  - Pods
+  - build
+  - WindscribeTests
+  - PacketTunnel
+  - SiriIntents
+  - WireGuardTunnel
+  - HomeWidget
+  - Windscribe/Configurations
+  - Windscribe/scrtips
+  - MockingbirdMocks
+disabled_rules:
+  - non_optional_string_data_conversion
+  - cyclomatic_complexity
+  - trailing_whitespace
+  - line_length
+  - legacy_constructor
+  - comma
+  - function_parameter_count
+  - unused_enumerated
+  - inclusive_language
+type_body_length:
+  - 500 # warning
+  - 1500 # error
+file_length:
+  warning: 800
+  error: 1500
+variable_name:
+    min_length:
+        warning: 1
+function_body_length: 600
+# custom_rules:
+#     empty_line_before_closing_brace: 
+#     name: "Empty Line before closing brace"
+#     regex: '(^[ a-zA-Z ]*(?:protocol|extension|class|struct) (?!(?:var|let))[ a-zA-Z:]*\{\n *\S+)'
+#     message: "There should be an empty line after a declaration"
+#     severity: error

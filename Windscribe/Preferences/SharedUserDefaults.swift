@@ -1,0 +1,503 @@
+//
+//  SharedUserDefaults.swift
+//  Windscribe
+//
+//  Created by Ginder Singh on 2022-03-18.
+//  Copyright © 2022 Windscribe. All rights reserved.
+//
+
+import Foundation
+import RxCocoa
+import RxSwift
+import RealmSwift
+
+class SharedSecretDefaults: Preferences {
+
+    static let shared = SharedSecretDefaults()
+    let sharedDefault = UserDefaults(suiteName: SharedKeys.sharedGroup)
+    let standardDefault = UserDefaults.standard
+
+    func saveShowedShareDialog(showed: Bool = true) {
+        setBool(showed, forKey: SharedKeys.referAndShareUserDefautsKeys)
+    }
+
+    func getShowedShareDialog() -> Bool {
+        return getBool(key: SharedKeys.referAndShareUserDefautsKeys)
+    }
+
+    func getServerCredentialTypeKey() -> String? {
+        return getString(forKey: SharedKeys.serverCredentialsTypeKey)
+    }
+
+    func setServerCredentialTypeKey(typeKey: String) {
+        setString(typeKey, forKey: SharedKeys.serverCredentialsTypeKey)
+    }
+
+    func migrate() {
+        let sessionAuth = standardDefault.string(forKey: SharedKeys.activeUserSessionAuth)
+        setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
+
+        let privacyPopupAccepted = standardDefault.bool(forKey: SharedKeys.privacyPopupAccepted)
+        setBool(privacyPopupAccepted, forKey: SharedKeys.privacyPopupAccepted)
+    }
+
+    func setLanguageManagerSelectedLanguage(language: Languages) {
+        setString(language.name, forKey: SharedKeys.languageManagerSelectedLanguage)
+    }
+
+    func getLanguageManagerSelectedLanguage() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.languageManagerSelectedLanguage) ?? Observable.just(Languages.english.rawValue)
+    }
+
+    func setLanguageManagerDefaultLanguage(language: String) {
+        setString(language, forKey: SharedKeys.languageManagerDefaultLanguage)
+    }
+
+    func getLanguageManagerDefaultLanguage() -> String? {
+        return getString(forKey: SharedKeys.languageManagerDefaultLanguage)
+    }
+
+    func saveServerNameKey(key: String?) {
+        setString(key, forKey: SharedKeys.serverNameKey)
+    }
+
+    func getServerNameKey() -> String? {
+        return getString(forKey: SharedKeys.serverNameKey)
+    }
+
+    func saveCountryCodeKey(key: String?) {
+        setString(key, forKey: SharedKeys.countryCodeKey)
+    }
+
+    func getcountryCodeKey() -> String? {
+        return getString(forKey: SharedKeys.countryCodeKey)
+    }
+
+    func saveNickNameKey(key: String?) {
+        setString(key, forKey: SharedKeys.nickNameKey)
+    }
+
+    func getNickNameKey() -> String? {
+        return getString(forKey: SharedKeys.nickNameKey)
+    }
+
+    func saveConnectionMode(mode: String) {
+        setString(mode, forKey: SharedKeys.connectionMode)
+    }
+
+    func getConnectionMode() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.connectionMode) ?? Observable.just(DefaultValues.connectionMode)
+    }
+
+    func getConnectionModeSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.connectionMode) ?? DefaultValues.connectionMode
+    }
+
+    func saveAutoSecureNewNetworks(autoSecure: Bool) {
+        setBool(autoSecure, forKey: SharedKeys.autoSecureNewNetworks)
+    }
+
+    func getAutoSecureNewNetworks() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.autoSecureNewNetworks) ?? Observable.just(DefaultValues.autoSecureNewNetworks)
+    }
+
+    func saveBlurStaticIpAddress(bool: Bool?) {
+        setBool(bool, forKey: SharedKeys.blurStaticIpAddress)
+    }
+
+    func getBlurStaticIpAddress() -> Bool? {
+        return getBool(key: SharedKeys.blurStaticIpAddress)
+    }
+
+    func saveBlurNetworkName(bool: Bool?) {
+        setBool(bool, forKey: SharedKeys.blurNetworkName)
+    }
+
+    func getBlurNetworkName() -> Bool? {
+        return getBool(key: SharedKeys.blurNetworkName)
+    }
+
+    func saveSelectedLanguage(language: String?) {
+        setString(language, forKey: SharedKeys.selectedLanguage)
+    }
+
+    func getSelectedLanguage() -> String? {
+        return getString(forKey: SharedKeys.selectedLanguage)
+    }
+
+    func saveDefaultLanguage(language: String?) {
+        setString(language, forKey: SharedKeys.defaultLanguage)
+    }
+
+    func getDefaultLanguage() -> String? {
+        return getString(forKey: SharedKeys.defaultLanguage)
+    }
+
+    func saveActiveManagerKey(key: String?) {
+        setString(key, forKey: SharedKeys.activeManagerKey)
+    }
+
+    func getActiveManagerKey() -> String? {
+        return getString(forKey: SharedKeys.activeManagerKey)
+    }
+
+    func saveRegisteredForPushNotifications(bool: Bool?) {
+        setBool(bool, forKey: SharedKeys.registeredForPushNotifications)
+    }
+
+    func getRegisteredForPushNotifications() -> Bool? {
+        return getBool(key: SharedKeys.registeredForPushNotifications)
+    }
+
+    func saveFirstInstall(bool: Bool?) {
+        setBool(bool, forKey: SharedKeys.firstInstall)
+    }
+
+    func getFirstInstall() -> Bool? {
+        return getBool(key: SharedKeys.firstInstall)
+    }
+
+    func saveActiveAppleSig(sig: String?) {
+        setString(sig, forKey: SharedKeys.activeAppleSig)
+    }
+
+    func getActiveAppleSig() -> String? {
+        return getString(forKey: SharedKeys.activeAppleSig)
+    }
+
+    func saveActiveAppleData(data: String?) {
+        setString(data, forKey: SharedKeys.activeAppleData)
+    }
+
+    func getActiveAppleData() -> String? {
+        return getString(forKey: SharedKeys.activeAppleData)
+    }
+
+    func saveActiveAppleID(id: String?) {
+        setString(id, forKey: SharedKeys.activeAppleData)
+    }
+
+    func getActiveAppleID() -> String? {
+        return getString(forKey: SharedKeys.activeAppleID)
+    }
+
+    func saveAppleLanguage(languge: String?) {
+        setString(languge, forKey: SharedKeys.appleLanguage)
+    }
+
+    func getAppleLanguage() -> String? {
+        return getString(forKey: SharedKeys.appleLanguage)
+    }
+
+    func saveLastNotificationTimestamp(timeStamp: Double?) {
+        setDouble(timeStamp, forKey: SharedKeys.notificationRetriavalTimestamp)
+    }
+
+    func getLastNotificationTimestamp() -> Double? {
+        return getDouble(forKey: SharedKeys.notificationRetriavalTimestamp)
+    }
+
+    func saveSessionAuthHash(sessionAuth: String) {
+        setString(sessionAuth, forKey: SharedKeys.activeSessionAuthHash)
+    }
+
+    func getSessionAuthHash() -> String? {
+        return getString(forKey: SharedKeys.activeSessionAuthHash)
+    }
+
+    func getConnectionCount() -> Int? {
+        return getInt(forKey: SharedKeys.connectionCount)
+    }
+
+    func saveConnectionCount(count: Int) {
+        setInt(count, forKey: SharedKeys.connectionCount)
+    }
+
+    func getLastConnectedNetworkName() -> String? {
+        return getString(forKey: SharedKeys.lastConnectedNetworkName)
+    }
+
+    func saveLastConnectedNetworkName(network: String) {
+        setString(network, forKey: SharedKeys.lastConnectedNetworkName)
+    }
+
+    func getRateUsActionCompleted() -> Bool? {
+        return getBool(key: SharedKeys.rateUsActionCompleted)
+    }
+
+    func saveRateUsActionCompleted(bool: Bool) {
+        setBool(bool, forKey: SharedKeys.rateUsActionCompleted)
+    }
+
+    func getWhenRateUsPopupDisplayed() -> Date? {
+        return getDate(forKey: SharedKeys.rateUsPopupDisplayed)
+    }
+
+    func saveWhenRateUsPopupDisplayed(date: Date) {
+        setDate(date, forKey: SharedKeys.rateUsPopupDisplayed)
+    }
+
+    func getNativeRateUsPopupDisplayCount() -> Int? {
+        return getInt(forKey: SharedKeys.rateUsPopupDisplayCount)
+    }
+
+    func saveNativeRateUsPopupDisplayCount(count: Int) {
+        setInt(count, forKey: SharedKeys.rateUsPopupDisplayCount)
+    }
+
+    func getPrivacyPopupAccepted() -> Bool? {
+        return getBool(key: SharedKeys.privacyPopupAccepted)
+    }
+
+    func savePrivacyPopupAccepted(bool: Bool) {
+        setBool(bool, forKey: SharedKeys.privacyPopupAccepted)
+    }
+
+    func getShakeForDataHighestScore() -> Int? {
+        return getInt(forKey: SharedKeys.shakeForDataHighestScore)
+    }
+
+    func saveShakeForDataHighestScore(score: Int) {
+        setInt(score, forKey: SharedKeys.shakeForDataHighestScore)
+    }
+
+    func getUnlockShakeForData() -> Bool? {
+        return getBool(key: SharedKeys.shakeForDataUnlock)
+    }
+
+    func saveUnlockShakeForData(bool: Bool?) {
+        setBool(bool, forKey: SharedKeys.shakeForDataUnlock)
+    }
+
+    func saveLatencyType(latencyType: String) {
+        setString(latencyType, forKey: SharedKeys.latencyType)
+    }
+
+    func getLatencyType() -> RxSwift.Observable<String> {
+        sharedDefault?.rx.observe(String.self, SharedKeys.latencyType).map {$0 ?? DefaultValues.latencyType} ?? Observable.just(DefaultValues.latencyType)
+    }
+
+    func saveOrderLocationsBy(order: String) {
+        setString(order, forKey: SharedKeys.orderLocationsBy)
+    }
+
+    func getOrderLocationsBy() -> RxSwift.Observable<String?> {
+        sharedDefault?.rx.observe(String.self, SharedKeys.orderLocationsBy) ?? Observable.just(DefaultValues.orderLocationsBy)
+    }
+
+    func saveAppearance(appearance: String) {
+        setString(appearance, forKey: SharedKeys.appearance)
+
+    }
+
+    func getAppearance() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.appearance) ?? Observable.just(DefaultValues.appearance)
+
+    }
+
+    func saveLanguage(language: String) {
+        setString(language, forKey: SharedKeys.language)
+
+    }
+
+    func getLanguage() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.language) ?? Observable.just(DefaultValues.language)
+
+    }
+
+    func saveFirewallMode(firewall: Bool) {
+        setBool(firewall, forKey: SharedKeys.firewall)
+    }
+
+    func getFirewallMode() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.firewall) ?? Observable.just(DefaultValues.firewallMode)
+    }
+
+    func saveKillSwitch(killSwitch: Bool) {
+        setBool(killSwitch, forKey: SharedKeys.killSwitch)
+    }
+
+    func getKillSwitch() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.killSwitch) ?? Observable.just(DefaultValues.killSwitch)
+    }
+
+    func saveAllowLane(mode: Bool) {
+        setBool(mode, forKey: SharedKeys.allowLanMode)
+
+    }
+
+    func getAllowLane() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.allowLanMode) ?? Observable.just(DefaultValues.allowLaneMode)
+    }
+
+    func saveHapticFeedback(haptic: Bool) {
+        setBool(haptic, forKey: SharedKeys.hapticFeedback)
+
+    }
+
+    func getHapticFeedback() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.hapticFeedback) ?? Observable.just(DefaultValues.hapticFeedback)
+    }
+
+    func saveSelectedProtocol(selectedProtocol: String) {
+        setString(selectedProtocol, forKey: SharedKeys.selectedProtocol)
+    }
+
+    func getSelectedProtocol() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.selectedProtocol) ?? Observable.just(DefaultValues.protocol)
+    }
+
+    func getSelectedProtocolSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.selectedProtocol) ?? DefaultValues.protocol
+    }
+
+    func getSelectedPortSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.port) ?? DefaultValues.port
+    }
+
+    func saveSelectedPort(port: String) {
+        setString(port, forKey: SharedKeys.port)
+    }
+
+    func getSelectedPort() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.port) ?? Observable.just(DefaultValues.port)
+    }
+
+    func saveShowServerHealth(show: Bool) {
+        setBool(show, forKey: SharedKeys.serverHealth)
+    }
+
+    func getShowServerHealth() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.serverHealth) ?? Observable.just(DefaultValues.showServerHealth)
+    }
+
+    func saveDarkMode(darkMode: Bool) {
+        setBool(darkMode, forKey: SharedKeys.darkMode)
+    }
+
+    func getDarkMode() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.darkMode) ?? Observable.just(DefaultValues.darkMode)
+    }
+
+    func saveAdvanceParams(params: String) {
+        setString(params, forKey: SharedKeys.advanceParams)
+    }
+
+    func getAdvanceParams() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.advanceParams) ?? Observable.empty()
+    }
+
+    func getAdvanceParams() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.advanceParams)
+    }
+
+    func userSessionAuth() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.activeUserSessionAuth)
+    }
+
+    func saveUserSessionAuth(sessionAuth: String?) {
+        setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
+    }
+
+    func isCustomConfigSelected() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.isCustomConfigSelected) ?? false
+    }
+
+    func saveConnectingToCustomConfig(value: Bool) {
+        setBool(value, forKey: SharedKeys.isCustomConfigSelected)
+    }
+
+    func saveCountryOverrride(value: String?) {
+        setString(value, forKey: SharedKeys.countryOverride)
+    }
+
+    func getCountryOverride() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.countryOverride)
+    }
+    func saveCircumventCensorshipStatus(status: Bool) {
+        setBool(status, forKey: SharedKeys.circumventCensorship)
+    }
+
+    func getCircumventCensorshipEnabled() -> RxSwift.Observable<Bool> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.circumventCensorship).map { $0 ?? self.isRestrictedCountry() } ?? Observable.just(isRestrictedCountry())
+    }
+
+    func isCircumventCensorshipEnabled() -> Bool {
+        if let value = sharedDefault?.object(forKey: SharedKeys.circumventCensorship) as? Bool {
+            return value
+        }
+        return isRestrictedCountry()
+    }
+
+    func isRestrictedCountry() -> Bool {
+       return ["be", "fa", "ru", "tr", "zh"].contains(Locale.current.languageCode)
+    }
+
+    func getServerSettings() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.serverSettings) ?? ""
+    }
+
+    func saveServerSettings(settings: String) {
+        setString(settings, forKey: SharedKeys.serverSettings)
+    }
+
+    // MARK: - Base Types
+    func setString(_ value: String?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
+    }
+
+    func setBool(_ value: Bool?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
+    }
+
+    func getString(forKey: String) -> String? {
+        return sharedDefault?.string(forKey: forKey)
+    }
+
+    func removeObjects(forKey: [String]) {
+        forKey.forEach { key in
+            self.sharedDefault?.removeObject(forKey: key)
+        }
+    }
+
+    func getBool(key: String) -> Bool {
+        return sharedDefault?.bool(forKey: key) ?? false
+    }
+
+    func setInt(_ value: Int?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
+    }
+
+    func getInt(forKey: String) -> Int? {
+        return sharedDefault?.integer(forKey: forKey)
+    }
+
+    func setDate(_ value: Any?, forKey: String) {
+        sharedDefault?.set(Date(), forKey: forKey)
+    }
+
+    func getDate(forKey: String) -> Date? {
+        guard let date = sharedDefault?.object(forKey: forKey) as? Date else { return nil }
+        return date
+    }
+
+    func setDouble(_ value: Double?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
+    }
+
+    func getDouble(forKey: String) -> Double? {
+        return sharedDefault?.double(forKey: forKey)
+    }
+
+    func saveData(value: Any, key: String) {
+        sharedDefault?.setValue(value, forKey: key)
+    }
+
+    func getData(key: String) -> Any? {
+        return sharedDefault?.value(forKey: key)
+    }
+
+    func removeData(key: String) {
+        sharedDefault?.removeObject(forKey: key)
+    }
+}
