@@ -41,9 +41,7 @@ protocol MainViewModelType {
     func getLastNotificationTimestamp() -> Double?
     func getConnectionCount() -> Int?
     func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
-    func getPortList(protocolName: String) -> [String]?
-    func updatePreferredPort(network: WifiNetwork, port: String)
-    func updatePreferredProtocol(network: WifiNetwork, proto: String)
+    func getPortList(protocolName: String) -> [String]?    
     func updateServerConfig()
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
@@ -59,6 +57,7 @@ protocol MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
     
     func reconnect()
+    func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
 }
 
 class MainViewModel: MainViewModelType {
@@ -368,13 +367,14 @@ class MainViewModel: MainViewModelType {
         let portMap = (try? portMap.value()) ?? []
         return portMap.first(where: {$0.heading == protocolName})?.ports.toArray()
     }
-
-    func updatePreferredPort(network: WifiNetwork, port: String) {
-        localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredPort, value: port)
-    }
-
-    func updatePreferredProtocol(network: WifiNetwork, proto: String) {
-        localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredProtocol, value: proto)
+    
+    func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {
+        localDatabase.updateWifiNetwork(network: network,
+                                        properties: [
+                                            Fields.WifiNetwork.preferredProtocol : proto,
+                                            Fields.WifiNetwork.preferredPort : port
+                                        ])
+        reconnect()
     }
 
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool) {

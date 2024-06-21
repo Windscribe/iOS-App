@@ -63,6 +63,7 @@ protocol LocalDatabase {
     func updateNetworkWithPreferredProtocolSwitch(network: WifiNetwork, status: Bool)
     func updateTrustNetwork(network: WifiNetwork, status: Bool)
     func updateWifiNetwork(network: WifiNetwork, property: String, value: Any)
+    func updateWifiNetwork(network: WifiNetwork, properties: [String: Any]) 
     func updateNetworkDismissCount(network: WifiNetwork, dismissCount: Int)
     func updateNetworkDontAskAgainForPreferredProtocol(network: WifiNetwork, status: Bool)
     func updateCustomConfigName(customConfigId: String, name: String)
