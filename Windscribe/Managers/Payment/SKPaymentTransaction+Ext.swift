@@ -11,7 +11,7 @@ import StoreKit
 import Swinject
 
 extension SKPaymentTransaction {
-    // This not really a secret.
+    // This is not really a secret.
     private var sharedSecret: String {
         return "952b4412f002315aa50751032fcaab03"
     }
