@@ -57,6 +57,8 @@ protocol MainViewModelType {
     func markBlurNetworkName(isBlured: Bool)
     func refreshProtocolInfo()
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
+    
+    func reconnect()
 }
 
 class MainViewModel: MainViewModelType {
@@ -444,5 +446,17 @@ class MainViewModel: MainViewModelType {
 
     func refreshProtocolInfo() {
         refreshProtocolTrigger.onNext(())
+    }
+    
+    func reconnect() {
+        self.vpnManager.keepConnectingState = vpnManager.isConnected() || vpnManager.isConnecting()
+        vpnManager.resetProfiles {
+            let isOnline: Bool = ((try? self.appNetwork.value().status == .connected) != nil)
+            if isOnline {
+                self.vpnManager.delegate?.setConnecting()
+                self.vpnManager.retryWithNewCredentials = true
+                self.vpnManager.configureAndConnectVPN()
+            }
+        }
     }
 }
