@@ -41,7 +41,7 @@ protocol MainViewModelType {
     func getLastNotificationTimestamp() -> Double?
     func getConnectionCount() -> Int?
     func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
-    func getPortList(protocolName: String) -> [String]?    
+    func getPortList(protocolName: String) -> [String]?
     func updateServerConfig()
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
@@ -55,7 +55,7 @@ protocol MainViewModelType {
     func markBlurNetworkName(isBlured: Bool)
     func refreshProtocolInfo()
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
-    
+
     func reconnect()
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
 }
@@ -367,12 +367,12 @@ class MainViewModel: MainViewModelType {
         let portMap = (try? portMap.value()) ?? []
         return portMap.first(where: {$0.heading == protocolName})?.ports.toArray()
     }
-    
+
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {
         localDatabase.updateWifiNetwork(network: network,
                                         properties: [
-                                            Fields.WifiNetwork.preferredProtocol : proto,
-                                            Fields.WifiNetwork.preferredPort : port
+                                            Fields.WifiNetwork.preferredProtocol: proto,
+                                            Fields.WifiNetwork.preferredPort: port
                                         ])
         reconnect()
     }
@@ -447,7 +447,7 @@ class MainViewModel: MainViewModelType {
     func refreshProtocolInfo() {
         refreshProtocolTrigger.onNext(())
     }
-    
+
     func reconnect() {
         self.vpnManager.keepConnectingState = vpnManager.isConnected() || vpnManager.isConnecting()
         vpnManager.resetProfiles {

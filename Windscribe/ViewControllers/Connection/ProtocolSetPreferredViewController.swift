@@ -169,9 +169,9 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
         let defaultPort = portsArray[0]
         viewModel.localDatabase.updateWifiNetwork(network: network,
                                         properties: [
-                                            Fields.WifiNetwork.preferredProtocol : protocolName,
-                                            Fields.WifiNetwork.preferredPort : defaultPort,
-                                            Fields.WifiNetwork.preferredProtocolStatus : true
+                                            Fields.WifiNetwork.preferredProtocol: protocolName,
+                                            Fields.WifiNetwork.preferredPort: defaultPort,
+                                            Fields.WifiNetwork.preferredProtocolStatus: true
                                         ])
         DispatchQueue.main.async {
             self.dismiss(animated: true)

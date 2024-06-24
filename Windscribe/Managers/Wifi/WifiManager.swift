@@ -218,8 +218,8 @@ class WifiManager {
                 if network.protocolType != defaultProtocol {
                     localDb.updateWifiNetwork(network: network,
                                               properties: [
-                                                Fields.protocolType : defaultProtocol,
-                                                Fields.port : defaultPort
+                                                Fields.protocolType: defaultProtocol,
+                                                Fields.port: defaultPort
                                               ])
                     network.protocolType = defaultProtocol
                     network.port = defaultPort

@@ -649,9 +649,9 @@ class LocalDatabaseImpl: LocalDatabase {
             fatalError("")
         }
     }
-    
+
     func updateWifiNetwork(network: WifiNetwork, property: String, value: Any) {
-        updateWifiNetwork(network: network, properties: [property : value])
+        updateWifiNetwork(network: network, properties: [property: value])
     }
 
     func updateNetworkDismissCount(network: WifiNetwork, dismissCount: Int) {
