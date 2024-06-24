@@ -374,7 +374,9 @@ class MainViewModel: MainViewModelType {
                                             Fields.WifiNetwork.preferredProtocol: proto,
                                             Fields.WifiNetwork.preferredPort: port
                                         ])
-        reconnect()
+        if vpnManager.isConnected() || vpnManager.isConnecting() {
+            vpnManager.connectUsingPreferredProtocol()
+        }
     }
 
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool) {
