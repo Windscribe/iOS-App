@@ -37,7 +37,7 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
         self.scrollViewDelegate = self
         self.staticIPs = staticIPs
         languageManager.activelanguage.subscribe(onNext: { [self] _ in
-            label.text = TextsAsset.addStaticIP
+            label.text = TextsAsset.noStaticIPs
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
