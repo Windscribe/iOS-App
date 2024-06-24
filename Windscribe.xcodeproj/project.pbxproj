@@ -1131,6 +1131,7 @@
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
 		C5481CF5C95B230B8691EB78 /* Pods_HomeWidgetExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HomeWidgetExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		C553E34D2C25ABE900A2C027 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		C5592B752B37F3F200F2F110 /* WSNetErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetErrors.swift; sourceTree = "<group>"; };
 		C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Robert.swift"; sourceTree = "<group>"; };
 		C5592B792B37FCBF00F2F110 /* APIManagerImpl+Others.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Others.swift"; sourceTree = "<group>"; };
@@ -1907,6 +1908,7 @@
 		AF018DE021B0866600B225FF = {
 			isa = PBXGroup;
 			children = (
+				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
 				C571C66B2C13332D00786DA5 /* wsnet.framework */,
 				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				AF018DEB21B0866600B225FF /* Windscribe */,
