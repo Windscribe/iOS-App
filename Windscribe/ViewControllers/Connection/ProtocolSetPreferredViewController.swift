@@ -167,11 +167,12 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
         guard let network = viewModel.securedNetwork.getCurrentNetwork() else { return }
         guard let portsArray = viewModel.localDatabase.getPorts(protocolType: protocolName) else { return }
         let defaultPort = portsArray[0]
-
-        viewModel.localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredProtocol, value: protocolName)
-
-        viewModel.localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredPort, value: defaultPort)
-        viewModel.localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredProtocolStatus, value: true)
+        viewModel.localDatabase.updateWifiNetwork(network: network,
+                                        properties: [
+                                            Fields.WifiNetwork.preferredProtocol: protocolName,
+                                            Fields.WifiNetwork.preferredPort: defaultPort,
+                                            Fields.WifiNetwork.preferredProtocolStatus: true
+                                        ])
         DispatchQueue.main.async {
             self.dismiss(animated: true)
         }

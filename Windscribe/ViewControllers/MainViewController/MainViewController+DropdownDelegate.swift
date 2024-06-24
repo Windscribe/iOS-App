@@ -18,12 +18,11 @@ extension MainViewController: DropdownDelegate {
             protocolDropdownButton.setTitle(option)
             if let protocolName = self.protocolDropdownButton.button.titleLabel?.text, let defaultPort = viewModel.getPortList(protocolName: protocolName)?.first {
                 portDropdownButton.setTitle(defaultPort)
-                viewModel.updatePreferredProtocol(network: network, proto: option)
-                viewModel.updatePreferredPort(network: network, port: defaultPort)
+                viewModel.updatePreferred(port: defaultPort, and: option, for: network)
             }
         case portDropdownButton.dropdown:
             portDropdownButton.setTitle(option)
-            viewModel.updatePreferredPort(network: network, port: option)
+            viewModel.updatePreferred(port: option, and: network.preferredProtocol, for: network)
         default: ()
         }
     }

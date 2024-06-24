@@ -619,33 +619,39 @@ class LocalDatabaseImpl: LocalDatabase {
         }
     }
 
-    func updateWifiNetwork(network: WifiNetwork, property: String, value: Any) {
+    func updateWifiNetwork(network: WifiNetwork, properties: [String: Any]) {
         let updatedNetwork = network
         do {
             let realm = try Realm()
             try realm.safeWrite {
-                switch property {
-                case Fields.WifiNetwork.trustStatus:
-                    updatedNetwork.status = (value as? Bool) ?? false
-                case Fields.WifiNetwork.preferredPort:
-                    updatedNetwork.preferredPort = (value as? String) ?? ""
-                case Fields.WifiNetwork.preferredProtocol:
-                    updatedNetwork.preferredProtocol = (value as? String) ?? ""
-                case Fields.WifiNetwork.preferredProtocolStatus:
-                    updatedNetwork.preferredProtocolStatus = (value as? Bool) ?? false
-                case Fields.WifiNetwork.dontAskAgainForPreferredProtocol:
-                    updatedNetwork.dontAskAgainForPreferredProtocol = (value as? Bool) ?? false
-                case Fields.protocolType:
-                    updatedNetwork.protocolType = (value as? String) ?? ""
-                case Fields.port:
-                    updatedNetwork.port = (value as? String) ?? ""
-                default:
-                        return
+                properties.forEach { (property: String, value: Any) in
+                    switch property {
+                    case Fields.WifiNetwork.trustStatus:
+                        updatedNetwork.status = (value as? Bool) ?? false
+                    case Fields.WifiNetwork.preferredPort:
+                        updatedNetwork.preferredPort = (value as? String) ?? ""
+                    case Fields.WifiNetwork.preferredProtocol:
+                        updatedNetwork.preferredProtocol = (value as? String) ?? ""
+                    case Fields.WifiNetwork.preferredProtocolStatus:
+                        updatedNetwork.preferredProtocolStatus = (value as? Bool) ?? false
+                    case Fields.WifiNetwork.dontAskAgainForPreferredProtocol:
+                        updatedNetwork.dontAskAgainForPreferredProtocol = (value as? Bool) ?? false
+                    case Fields.protocolType:
+                        updatedNetwork.protocolType = (value as? String) ?? ""
+                    case Fields.port:
+                        updatedNetwork.port = (value as? String) ?? ""
+                    default:
+                            return
+                    }
                 }
             }
         } catch {
             fatalError("")
         }
+    }
+
+    func updateWifiNetwork(network: WifiNetwork, property: String, value: Any) {
+        updateWifiNetwork(network: network, properties: [property: value])
     }
 
     func updateNetworkDismissCount(network: WifiNetwork, dismissCount: Int) {

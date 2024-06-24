@@ -42,8 +42,6 @@ protocol MainViewModelType {
     func getConnectionCount() -> Int?
     func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
     func getPortList(protocolName: String) -> [String]?
-    func updatePreferredPort(network: WifiNetwork, port: String)
-    func updatePreferredProtocol(network: WifiNetwork, proto: String)
     func updateServerConfig()
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
@@ -57,6 +55,9 @@ protocol MainViewModelType {
     func markBlurNetworkName(isBlured: Bool)
     func refreshProtocolInfo()
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
+
+    func reconnect()
+    func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
 }
 
 class MainViewModel: MainViewModelType {
@@ -367,12 +368,12 @@ class MainViewModel: MainViewModelType {
         return portMap.first(where: {$0.heading == protocolName})?.ports.toArray()
     }
 
-    func updatePreferredPort(network: WifiNetwork, port: String) {
-        localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredPort, value: port)
-    }
-
-    func updatePreferredProtocol(network: WifiNetwork, proto: String) {
-        localDatabase.updateWifiNetwork(network: network, property: Fields.WifiNetwork.preferredProtocol, value: proto)
+    func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {
+        localDatabase.updateWifiNetwork(network: network,
+                                        properties: [
+                                            Fields.WifiNetwork.preferredProtocol: proto,
+                                            Fields.WifiNetwork.preferredPort: port
+                                        ])
     }
 
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool) {
@@ -444,5 +445,17 @@ class MainViewModel: MainViewModelType {
 
     func refreshProtocolInfo() {
         refreshProtocolTrigger.onNext(())
+    }
+
+    func reconnect() {
+        self.vpnManager.keepConnectingState = vpnManager.isConnected() || vpnManager.isConnecting()
+        vpnManager.resetProfiles {
+            let isOnline: Bool = ((try? self.appNetwork.value().status == .connected) != nil)
+            if isOnline {
+                self.vpnManager.delegate?.setConnecting()
+                self.vpnManager.retryWithNewCredentials = true
+                self.vpnManager.configureAndConnectVPN()
+            }
+        }
     }
 }

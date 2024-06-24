@@ -8,8 +8,8 @@
 
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
-APP_TEAM_ID =
-APP_BUNDLE_ID = 
+APP_TEAM_ID = GYZJYS7XUG
+APP_BUNDLE_ID = com.windscribe
 PACKET_TUNNEL_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).PacketTunnel
 WIREGUARD_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).WireGuardTunnel
 SIRI_EXT_BUNDLE_ID = $(APP_BUNDLE_ID).SiriIntents

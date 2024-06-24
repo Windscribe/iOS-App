@@ -238,19 +238,7 @@ extension MainViewController {
         if WifiManager.shared.isConnectedWifiTrusted() {
             router?.routeTo(to: .trustedNetwork, from: self)
         } else {
-            reconnect()
-        }
-    }
-
-    func reconnect() {
-        self.vpnManager.keepConnectingState = vpnManager.isConnected() || vpnManager.isConnecting()
-        vpnManager.resetProfiles {
-            let isOnline: Bool = ((try? self.viewModel.appNetwork.value().status == .connected) != nil)
-            if isOnline {
-                self.vpnManager.delegate?.setConnecting()
-                self.vpnManager.retryWithNewCredentials = true
-                self.vpnManager.configureAndConnectVPN()
-            }
+            viewModel.reconnect()
         }
     }
 
