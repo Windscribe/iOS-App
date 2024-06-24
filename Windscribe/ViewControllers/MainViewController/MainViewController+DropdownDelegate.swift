@@ -22,7 +22,7 @@ extension MainViewController: DropdownDelegate {
             }
         case portDropdownButton.dropdown:
             portDropdownButton.setTitle(option)
-            viewModel.updatePreferred(port: option, and:network.preferredProtocol, for: network)
+            viewModel.updatePreferred(port: option, and: network.preferredProtocol, for: network)
         default: ()
         }
     }
