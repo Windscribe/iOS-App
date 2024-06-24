@@ -149,6 +149,11 @@ extension MainViewController {
             if info != nil && [NEVPNStatus.connected, NEVPNStatus.connecting].contains(info!.status) {
                 protocolLabel.text = info?.selectedProtocol
                 portLabel.text = info?.selectedPort
+                if let network = network, network.preferredProtocolStatus {
+                    self.setPreferredProtocolBadgeVisibility(hidden: false)
+                } else {
+                    self.setPreferredProtocolBadgeVisibility(hidden: true)
+                }
                 return
             }
             if self.vpnManager.isCustomConfigSelected() {
@@ -174,8 +179,10 @@ extension MainViewController {
                 self.protocolLabel.text = network.preferredProtocol
                 self.portLabel.text = network.preferredPort
                 return
+            } else {
+                self.setPreferredProtocolBadgeVisibility(hidden: true)
             }
-            if (try? self.viewModel.connectionMode.value() == Fields.Values.manual) != nil {
+            if ((try? self.viewModel.connectionMode.value()) ?? DefaultValues.connectionMode) == Fields.Values.manual {
                 self.setPreferredProtocolBadgeVisibility(hidden: true)
                 self.protocolLabel.text = try? self.viewModel.selectedProtocol.value()
                 self.portLabel.text = try? self.viewModel.selectedPort.value()
@@ -188,9 +195,11 @@ extension MainViewController {
 
     private func setPreferredProtocolBadgeVisibility(hidden: Bool) {
         if hidden {
+            print("Badge is Hidden ####")
             preferredBadgeConstraints[2].constant = 0
             preferredBadgeConstraints[3].constant = 0
         } else {
+            print("Badge is unhidden $$$$$$")
             preferredBadgeConstraints[2].constant = 10
             preferredBadgeConstraints[3].constant = 8
         }

@@ -675,5 +675,13 @@ class ViewControllerModule: Assembly {
         container.register(LocationPermissionDisclosureViewController.self) { _ in
             LocationPermissionDisclosureViewController()
         }.inObjectScope(.transient)
+        container.register(GhostAccountViewController.self) { _ in
+            GhostAccountViewController()
+        }.initCompleted { r, c in
+            c.viewModel =  r.resolve(GhostAccountViewModel.self)
+            c.router = r.resolve(GhostAccountRouter.self)
+            c.logger = r.resolve(FileLogger.self)
+        }.inObjectScope(.transient)
+        
     }
 }

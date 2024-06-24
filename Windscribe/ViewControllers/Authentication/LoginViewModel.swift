@@ -59,6 +59,7 @@ class LoginViewModelImpl: LoginViewModel {
         logger.logD(self, "Logging in user.")
         apiCallManager.login(username: username, password: password, code2fa: twoFactorCode ?? "").observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] session in
+                WifiManager.shared.configure()
                 self?.userRepository.login(session: session)
                 self?.logger.logE(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
