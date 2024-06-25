@@ -61,7 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
-        WifiManager.shared.configure()
         vpnManager.setup { [self] in
             recordInstallIfFirstLoad()
             registerForPushNotifications()
