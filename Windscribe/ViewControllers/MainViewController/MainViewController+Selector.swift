@@ -195,11 +195,9 @@ extension MainViewController {
 
     private func setPreferredProtocolBadgeVisibility(hidden: Bool) {
         if hidden {
-            print("Badge is Hidden ####")
             preferredBadgeConstraints[2].constant = 0
             preferredBadgeConstraints[3].constant = 0
         } else {
-            print("Badge is unhidden $$$$$$")
             preferredBadgeConstraints[2].constant = 10
             preferredBadgeConstraints[3].constant = 8
         }
