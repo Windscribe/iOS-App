@@ -12,7 +12,7 @@ import RxSwift
 
 // MARK: - ConnectionModeView
 protocol ConnectionModeViewDelegate: AnyObject {
-    func connectionModeViewDidChangeMode(_ option: String)
+    func connectionModeViewDidChangeMode(_ option: ConnectionModeType)
     func connectionModeViewDidChangeProtocol(_ value: String)
     func connectionModeViewDidChangePort(_ value: String)
     func connectionModeViewDidSwitch(_ view: ConnectionModeView, value: Bool)
@@ -25,7 +25,7 @@ enum ConnectionHeaderType {
 }
 
 class ConnectionModeView: UIStackView {
-    private(set) var optionTitle: String
+    private(set) var optionMode: ConnectionModeType
     private(set) var listOption: [String]
     private(set) var currentPort: String
     private(set) var listPortOption: [String]
@@ -73,7 +73,7 @@ class ConnectionModeView: UIStackView {
     private lazy var header: SelectableHeaderView = {
         let header = SelectableHeaderView(title: self.name,
                                           imageAsset: self.iconAsset,
-                                          optionTitle: optionTitle,
+                                          optionTitle: optionMode.titleValue,
                                           listOption: listOption,
                                           isDarkMode: isDarkMode)
         header.delegate = self
@@ -104,12 +104,15 @@ class ConnectionModeView: UIStackView {
     init(title: String,
          description: String,
          iconAsset: String,
-         optionTitle: String, listOption: [String],
-         currentProtocol: String, listProtocolOption: [String],
-         currentPort: String, listPortOption: [String],
+         optionMode: ConnectionModeType,
+         listOption: [String],
+         currentProtocol: String,
+         listProtocolOption: [String],
+         currentPort: String,
+         listPortOption: [String],
          isDarkMode: BehaviorSubject<Bool>) {
         self.type = .selection
-        self.optionTitle = optionTitle
+        self.optionMode = optionMode
         self.listOption = listOption
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
@@ -129,11 +132,13 @@ class ConnectionModeView: UIStackView {
          description: String,
          iconAsset: String,
          currentSwitchOption: Bool = false,
-         currentProtocol: String, listProtocolOption: [String],
-         currentPort: String, listPortOption: [String],
+         currentProtocol: String,
+         listProtocolOption: [String],
+         currentPort: String,
+         listPortOption: [String],
          isDarkMode: BehaviorSubject<Bool>) {
         self.type = .switch
-        self.optionTitle = ""
+        self.optionMode = .auto
         self.listOption = []
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
@@ -170,7 +175,7 @@ class ConnectionModeView: UIStackView {
             updateUIForSwitch()
         case .selection:
             addArrangedSubview(header)
-            updateUI(optionTitle == TextsAsset.General.manual)
+            updateUI(optionMode == .manual)
         }
         addArrangedSubviews([
             protocolView,
@@ -222,15 +227,9 @@ class ConnectionModeView: UIStackView {
 
 extension ConnectionModeView: SelectableHeaderViewDelegate {
     func selectableHeaderViewDidSelect(_ option: String) {
-        switch option {
-        case TextsAsset.General.auto:
-            updateUI(false)
-        case TextsAsset.General.manual:
-            updateUI(true)
-        default:
-            break
-        }
-        delegate?.connectionModeViewDidChangeMode(option)
+        let connectionMode = ConnectionModeType(titleValue: option)
+        updateUI(connectionMode == .manual)
+        delegate?.connectionModeViewDidChangeMode(connectionMode)
     }
 
     private func updateUI(_ isManual: Bool) {

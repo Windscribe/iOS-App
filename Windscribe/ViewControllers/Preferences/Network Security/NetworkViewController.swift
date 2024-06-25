@@ -128,7 +128,7 @@ extension NetworkViewController: ConnectionModeViewDelegate {
     func connectionModeViewExplain() {
     }
 
-    func connectionModeViewDidChangeMode(_ option: String) {
+    func connectionModeViewDidChangeMode(_ option: ConnectionModeType) {
     }
 
     func connectionModeViewDidChangeProtocol(_ value: String) {
