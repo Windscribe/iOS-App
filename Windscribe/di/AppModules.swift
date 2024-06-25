@@ -682,6 +682,6 @@ class ViewControllerModule: Assembly {
             c.router = r.resolve(GhostAccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        
+
     }
 }

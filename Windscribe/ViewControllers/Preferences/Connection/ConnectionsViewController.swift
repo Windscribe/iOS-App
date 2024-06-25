@@ -35,7 +35,7 @@ class ConnectionViewController: WSNavigationViewController {
         let vw = ConnectionModeView(title: name,
                                     description: description,
                                     iconAsset: asset,
-                                    optionTitle: viewModel.getCurrentConnectionModeValue(),
+                                    optionMode: viewModel.getCurrentConnectionMode(),
                                     listOption: viewModel.currentConnectionModes(),
                                     currentProtocol: viewModel.getCurrentProtocol(),
                                     listProtocolOption: viewModel.getProtocols(),
@@ -174,7 +174,7 @@ extension ConnectionViewController: ConnectionModeViewDelegate {
     func connectionModeViewDidSwitch(_ view: ConnectionModeView, value: Bool) {
     }
 
-    func connectionModeViewDidChangeMode(_ option: String) {
+    func connectionModeViewDidChangeMode(_ option: ConnectionModeType) {
         viewModel.updateConnectionMode(value: option)
     }
 

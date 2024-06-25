@@ -9,6 +9,55 @@
 import Foundation
 import RxSwift
 
+enum ConnectionModeType {
+    case auto
+    case manual
+
+    static func defaultValue() -> ConnectionModeType { ConnectionModeType(fieldValue: DefaultValues.connectionMode) }
+
+    var titleValue: String {
+        switch self {
+        case .auto:
+            TextsAsset.General.auto
+        case .manual:
+            TextsAsset.General.manual
+        }
+    }
+
+    var fieldValue: String {
+        switch self {
+        case .auto:
+            Fields.Values.auto
+        case .manual:
+            Fields.Values.manual
+        }
+    }
+}
+
+extension ConnectionModeType {
+    init(fieldValue: String) {
+        self = switch fieldValue {
+        case Fields.Values.auto:
+                .auto
+        case Fields.Values.manual:
+                .manual
+        default:
+                .auto
+        }
+    }
+
+    init(titleValue: String) {
+        self = switch titleValue {
+        case TextsAsset.General.auto:
+                .auto
+        case TextsAsset.General.manual:
+                .manual
+        default:
+                .auto
+        }
+    }
+}
+
 protocol ConnectionsViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
@@ -19,7 +68,7 @@ protocol ConnectionsViewModelType {
     func updateCircumventCensorshipStatus(status: Bool)
     func updatePort(value: String)
     func updateProtocol(value: String)
-    func updateConnectionMode(value: String)
+    func updateConnectionMode(value: ConnectionModeType)
 
     func getFirewallStatus() -> Bool
     func getKillSwitchStatus() -> Bool
@@ -27,7 +76,7 @@ protocol ConnectionsViewModelType {
     func getAutoSecureNetworkStatus() -> Bool
 
     func currentConnectionModes() -> [String]
-    func getCurrentConnectionModeValue() -> String
+    func getCurrentConnectionMode() -> ConnectionModeType
 
     func getCurrentProtocol() -> String
     func getCurrentPort() -> String
@@ -49,7 +98,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var killSwitch = BehaviorSubject<Bool>(value: DefaultValues.killSwitch)
     private var allowLane = BehaviorSubject<Bool>(value: DefaultValues.allowLaneMode)
     private var autoSecure = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
-    private var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
+    private var connectionMode = BehaviorSubject<ConnectionModeType>(value: ConnectionModeType.defaultValue())
     var isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
     let isDarkMode: BehaviorSubject<Bool>
 
@@ -81,7 +130,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             self.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
         }.disposed(by: disposeBag)
         preferences.getConnectionMode().subscribe { data in
-            self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
+            self.connectionMode.onNext(ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode))
         }.disposed(by: disposeBag)
         preferences.getCircumventCensorshipEnabled().subscribe { data in
             self.isCircumventCensorshipEnabled.onNext(data)
@@ -120,16 +169,12 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         return (try? autoSecure.value()) ?? DefaultValues.autoSecureNewNetworks
     }
 
-    func getCurrentConnectionModeValue() -> String {
-        return (try? connectionMode.value()) ?? DefaultValues.connectionMode
+    func getCurrentConnectionMode() -> ConnectionModeType {
+        return (try? connectionMode.value()) ?? ConnectionModeType.defaultValue()
     }
 
-    func updateConnectionMode(value: String) {
-        if value == TextsAsset.General.manual {
-            preferences.saveConnectionMode(mode: Fields.Values.manual)
-        } else {
-            preferences.saveConnectionMode(mode: Fields.Values.auto)
-        }
+    func updateConnectionMode(value: ConnectionModeType) {
+        preferences.saveConnectionMode(mode: value.fieldValue)
     }
 
     func currentConnectionModes() -> [String] {
