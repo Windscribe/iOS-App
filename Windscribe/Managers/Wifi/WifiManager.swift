@@ -54,7 +54,11 @@ class WifiManager {
     private func observeSavedNetworks() {
         logger.logD(self, "Observing saved network list.")
         observingNetworks = true
-        localDb.getNetworks().filter {$0.first?.isInvalidated == false}.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] networks in
+
+        Observable.combineLatest(
+            localDb.getNetworks().filter {$0.first?.isInvalidated == false},
+            connectivity.network.asObservable()
+        ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, _) in
             self.logger.logD(self, "Network list: \(networks.map {$0.SSID}.joined(separator: ", "))")
             self.wifiNetworks.onNext(networks)
             if self.initialNetworkFetch {
