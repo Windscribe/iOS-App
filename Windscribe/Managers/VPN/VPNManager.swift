@@ -274,10 +274,10 @@ class VPNManager {
         DispatchQueue.main.async {
             if self.isConnected() {
                 VPNManager.shared.isOnDemandRetry = false
+                self.preferences.saveConnectionCount(count: ((self.preferences.getConnectionCount() ?? 0) + 1))
                 self.delegate?.setConnected(ipAddress: ipAddress)
                 self.resetProperties()
                 VPNManager.shared.connectIntent = true
-                self.preferences.saveConnectionCount(count: self.preferences.getConnectionCount() ?? 0 + 1)
                 if self.selectedFirewallMode == true {
                     VPNManager.shared.isOnDemandRetry = true
                 }
