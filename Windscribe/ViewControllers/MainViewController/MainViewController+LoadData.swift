@@ -144,11 +144,7 @@ extension MainViewController {
     func loadLatencyValues(force: Bool = false, selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         viewModel.latencies.subscribe(onNext: { _ in
             if (self.vpnManager.isDisconnected() || force ||
-                self.isAnyRefreshControlIsRefreshing()) &&
-                self.isLoadingLatencyValues == false {
-                self.loadStaticIPLatencyValues()
-                self.loadCustomConfigLatencyValues()
-                self.isLoadingLatencyValues = true
+                self.isAnyRefreshControlIsRefreshing()) {
                 if let observer = self.latencyLoaderObserver {
                     NotificationCenter.default.removeObserver(observer)
                 }
