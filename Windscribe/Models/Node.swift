@@ -97,6 +97,8 @@ struct FavNodeModel {
     let pingIp: String?
     let linkSpeed: String?
     let health: Int?
+    let isPremiumOnly: Bool?
+
 
     init(groupId: String,
          serverName: String,
@@ -108,7 +110,8 @@ struct FavNodeModel {
          ipAddress: String,
          pingIp: String,
          linkSpeed: String,
-         health: Int) {
+         health: Int,
+         isPremiumOnly: Bool) {
         self.groupId = groupId
         self.serverName = serverName
         self.countryCode = countryCode
@@ -120,6 +123,7 @@ struct FavNodeModel {
         self.pingIp = pingIp
         self.linkSpeed = linkSpeed
         self.health = health
+        self.isPremiumOnly = isPremiumOnly
     }
 
     init(node: NodeModel,
@@ -140,6 +144,7 @@ struct FavNodeModel {
         self.pingIp = group.pingIp
         self.linkSpeed = group.linkSpeed
         self.health = group.health
+        self.isPremiumOnly = group.premiumOnly
     }
 
 }
@@ -159,6 +164,7 @@ struct FavNodeModel {
     dynamic var pingHost: String = ""
     dynamic var linkSpeed: String = ""
     dynamic var health: Int = 0
+    dynamic var isPremiumOnly: Bool?
 
     convenience init(node: Node,
                      group: Group,
@@ -176,6 +182,7 @@ struct FavNodeModel {
         self.pingHost = group.pingHost
         self.linkSpeed = group.linkSpeed
         self.health = group.health
+        self.isPremiumOnly = group.premiumOnly
     }
 
     convenience init(node: NodeModel,
@@ -195,6 +202,7 @@ struct FavNodeModel {
         self.pingHost = group.pingHost ?? ""
         self.linkSpeed = group.linkSpeed ?? "1000"
         self.health = group.health ?? 0
+        self.isPremiumOnly = group.premiumOnly
     }
 
     override static func primaryKey() -> String? {
@@ -212,7 +220,8 @@ struct FavNodeModel {
                             ipAddress: ipAddress,
                             pingIp: pingIp,
                             linkSpeed: linkSpeed,
-                            health: health)
+                            health: health,
+                            isPremiumOnly: isPremiumOnly ?? true)
     }
 
 }

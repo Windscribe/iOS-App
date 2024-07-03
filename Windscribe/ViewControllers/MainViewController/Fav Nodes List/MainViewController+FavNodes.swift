@@ -22,6 +22,9 @@ extension MainViewController {
         favNodesListViewModel.configureVPNTrigger.subscribe({ _ in
             self.configureVPN()
         }).disposed(by: disposeBag)
+        favNodesListViewModel.showUpgradeTrigger.subscribe({_ in
+            self.showUpgradeView()
+        }).disposed(by: disposeBag)
     }
 }
 
