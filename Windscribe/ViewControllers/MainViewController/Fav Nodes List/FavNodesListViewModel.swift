@@ -14,27 +14,32 @@ enum FavNodesIPAlertType { case connecting; case disconnecting }
 protocol FavNodesListViewModelType {
     var presentAlertTrigger: PublishSubject<FavNodesIPAlertType> { get }
     var configureVPNTrigger: PublishSubject<()> { get }
-
+    var showUpgradeTrigger: PublishSubject<()> { get }
     func setSelectedFavNode(favNode: FavNodeModel)
 }
 
 class FavNodesListViewModel: FavNodesListViewModelType {
     var presentAlertTrigger = PublishSubject<FavNodesIPAlertType>()
     var configureVPNTrigger = PublishSubject<()>()
+    var showUpgradeTrigger = PublishSubject<()>()
 
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
     var connectionStateManager: ConnectionStateManagerType
+    var sessionManager: SessionManagerV2
+
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
-         connectionStateManager: ConnectionStateManagerType) {
+         connectionStateManager: ConnectionStateManagerType,
+         sessionManager: SessionManagerV2 ) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.connectionStateManager = connectionStateManager
+        self.sessionManager = sessionManager
     }
 
     func setSelectedFavNode(favNode: FavNodeModel) {
@@ -43,7 +48,11 @@ class FavNodesListViewModel: FavNodesListViewModelType {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
-        if !connectionStateManager.isConnecting() {
+        if !canAccesstoProLocation() &&
+            favNode.isPremiumOnly ?? false {
+            showUpgradeTrigger.onNext(())
+            return
+        } else if !connectionStateManager.isConnecting() {
             guard let countryCode = favNode.countryCode,
                   let dnsHostname = favNode.dnsHostname,
                   let hostname = favNode.hostname,
@@ -63,5 +72,10 @@ class FavNodesListViewModel: FavNodesListViewModelType {
         } else {
             presentAlertTrigger.onNext(.connecting)
         }
+    }
+
+    private func canAccesstoProLocation() -> Bool {
+        guard let session = sessionManager.session else { return false }
+        return session.isPremium
     }
 }

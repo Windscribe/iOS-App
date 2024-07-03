@@ -59,7 +59,6 @@ class WifiManager {
             localDb.getNetworks().filter {$0.first?.isInvalidated == false},
             connectivity.network.asObservable()
         ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, _) in
-            self.logger.logD(self, "Network list: \(networks.map {$0.SSID}.joined(separator: ", "))")
             self.wifiNetworks.onNext(networks)
             if self.initialNetworkFetch {
                 self.setSelectedPreferences()
@@ -68,7 +67,7 @@ class WifiManager {
             }
             self.initialNetworkFetch = false
             self.getNetworkName { wifiSSID in
-                self.connectedWifi = networks.filter { $0.SSID == wifiSSID }.first
+                self.connectedWifi = networks.filter {$0.isInvalidated == false}.filter { $0.SSID == wifiSSID }.first
                 if self.connectedWifi == nil {
                     self.saveNewNetwork(wifiSSID: wifiSSID ?? "")
                 }

@@ -371,7 +371,7 @@ class ViewModels: Assembly {
             return FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
                                          vpnManager: r.resolve(VPNManager.self)!,
                                          connectivity: r.resolve(Connectivity.self)!,
-                                         connectionStateManager: r.resolve(ConnectionStateManagerType.self)!)
+                                         connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             return ServerListViewModel(logger: r.resolve(FileLogger.self)!,
