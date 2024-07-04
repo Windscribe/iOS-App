@@ -67,17 +67,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
 
-        // Sending udp stuffing packaets.
-        sendUdpStuffingPackets(host: tunnelConfiguration.peers[0].endpoint?.host, port: tunnelConfiguration.peers[0].endpoint?.port) {
-            self.adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
-                guard let adapterError = adapterError else {
-                    let interfaceName = self.adapter.interfaceName ?? "unknown"
-                    self.logger.logD(self, "Tunnel interface is \(interfaceName)")
-                    completionHandler(nil)
-                    return
-                }
+        self.adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
+            guard let adapterError = adapterError else {
+                let interfaceName = self.adapter.interfaceName ?? "unknown"
+                self.logger.logD(self, "Tunnel interface is \(interfaceName)")
+                completionHandler(nil)
+                return
+            }
 
-                switch adapterError {
+            switch adapterError {
                 case .cannotLocateTunnelFileDescriptor:
                     self.logger.logE(self, "Starting tunnel failed: could not determine file descriptor")
                     errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
@@ -103,7 +101,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 case .invalidState:
                     // Must never happen
                     fatalError()
-                }
             }
         }
     }
@@ -157,12 +154,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Request new interface ip from wg init + wg connect
     /// Check if interface changed or peer changed (Account status change.)
     private func setNewTunnelInterfaceIp(updatedConfig: TunnelConfiguration) {
-        sendUdpStuffingPackets(host: updatedConfig.peers[0].endpoint?.host, port: updatedConfig.peers[0].endpoint?.port) { [self] in
-            self.logger.logD(self, "Interface has address changed")
-            reasserting = true
-            replacePeer(tunnelConfiguration: updatedConfig)
-            reasserting = false
-        }
+        self.logger.logD(self, "Interface has address changed")
+        reasserting = true
+        replacePeer(tunnelConfiguration: updatedConfig)
+        reasserting = false
     }
 
     /// Check user session for change.
@@ -237,68 +232,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 self.logger.logD(self, "PacketTunnelProvider: Successfully updated peer.")
             }
         }
-    }
-
-    /// Connects to peer using udp socket and sends random number of packets with random stuffing.
-    /// - Parameters:
-    ///   - host: Peer's host name.
-    ///   - port: Peer's port connection.
-    ///   - completion: Called when finished.
-    private func sendUdpStuffingPackets(host: Network.NWEndpoint.Host?, port: Network.NWEndpoint.Port?, completion: @escaping () -> Void) {
-        if !preferences.isCircumventCensorshipEnabled() {
-            completion()
-            return
-        }
-        guard let host = host , let port = port else {
-            completion()
-            return
-        }
-        // Open a port to send the package
-        let udpOptions = NWProtocolUDP.Options()
-        let connectionParams = NWParameters(dtls: nil, udp: udpOptions)
-        let connection = NWConnection(host: host, port: port, using: connectionParams)
-        // Wait for connection be to ready
-        connection.stateUpdateHandler = { state in
-            switch state {
-            case .setup:
-                self.logger.logD(self, "Setting up udp connection.")
-            case .waiting(_):
-                self.logger.logD(self, "Waiting for udp connection.")
-            case .preparing:
-                self.logger.logD(self, "Preparing udp connection.")
-            case .ready:
-                var ntpBuf = Data(count: 48)
-                ntpBuf[0] = 0x23 // ntp ver=4, mode=client
-                ntpBuf[2] = 0x09 // polling interval=9
-                ntpBuf[3] = 0x20 // clock precision
-                let attempts = [1,2,3,4,5].randomElement() ?? 1
-                for i in 1...attempts {
-                    for j in 40...47 {
-                        ntpBuf[j] = UInt8.random(in: UInt8.min...UInt8.max)
-                    }
-                    connection.send(content: ntpBuf, completion: .contentProcessed({ error in
-                        if i == attempts {
-                            self.logger.logD(self, "Finished sending packets.")
-                            connection.cancel()
-                        }
-                        if let error = error {
-                            self.logger.logE(self, "Failed sending udp packet with error \(error)")
-                        }
-                    }))
-                }
-            case .failed(let error):
-                self.logger.logE(self, "Udp connection failed. \(error)")
-                completion()
-            case .cancelled:
-                self.logger.logD(self, "Udp connection cancelled")
-                completion()
-            @unknown default:
-                self.logger.logD(self, "Udp connection unknown state")
-                completion()
-            }
-        }
-        let dispatch = DispatchQueue(label: "udp-stuffing-queue")
-        connection.start(queue: dispatch)
     }
 }
 

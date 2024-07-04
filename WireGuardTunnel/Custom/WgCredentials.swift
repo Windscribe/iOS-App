@@ -23,8 +23,10 @@ class WgCredentials {
     var serverPublicKey: String?
     var port: String?
     private let logger: FileLogger
+    private let preferences: Preferences
 
-    init(logger: FileLogger) {
+    init(preferences: Preferences, logger: FileLogger) {
+        self.preferences = preferences
         self.logger = logger
     }
 
@@ -111,6 +113,7 @@ class WgCredentials {
     }
 
     func asWgCredentialsString() -> String?{
+        let udpStuffing = preferences.isCircumventCensorshipEnabled()
         if let privateKey = getPrivateKey(),
            let address = address,
            let dns = dns,
@@ -128,6 +131,7 @@ class WgCredentials {
                          "PublicKey = \(serverPublicKey)",
                          "AllowedIPs = \(allowedIps)",
                          "Endpoint = \(serverEndPoint):\(port)",
+                         "udp_stuffing = \(udpStuffing)",
                          "PresharedKey = \(presharedKey)"]
             return lines.joined(separator: "\n")
         } else {

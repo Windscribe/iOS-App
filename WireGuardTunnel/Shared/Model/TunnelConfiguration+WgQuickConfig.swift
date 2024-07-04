@@ -73,7 +73,7 @@ extension TunnelConfiguration {
                         attributes[key] = value
                     }
                     let interfaceSectionKeys: Set<String> = ["privatekey", "listenport", "address", "dns", "mtu"]
-                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive"]
+                    let peerSectionKeys: Set<String> = ["publickey", "presharedkey", "allowedips", "endpoint", "persistentkeepalive", "udp_stuffing"]
                     if parserState == .inInterfaceSection {
                         guard interfaceSectionKeys.contains(key) else {
                             throw ParseError.interfaceHasUnrecognizedKey(keyWithCase)
@@ -159,6 +159,9 @@ extension TunnelConfiguration {
             }
             if let persistentKeepAlive = peer.persistentKeepAlive {
                 output.append("PersistentKeepalive = \(persistentKeepAlive)\n")
+            }
+            if let udpstuffing = peer.udpstuffing {
+                output.append("udp_stuffing = \(udpstuffing)\n")
             }
         }
 
@@ -246,6 +249,9 @@ extension TunnelConfiguration {
                 throw ParseError.peerHasInvalidPersistentKeepAlive(persistentKeepAliveString)
             }
             peer.persistentKeepAlive = persistentKeepAlive
+        }
+        if let udpstuffing = attributes["udp_stuffing"] {
+            peer.udpstuffing = Bool(udpstuffing)
         }
         return peer
     }

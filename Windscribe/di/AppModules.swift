@@ -16,7 +16,7 @@ import RxSwift
 class App: Assembly {
     func assemble(container: Swinject.Container) {
         container.register(WgCredentials.self) { r in
-            return WgCredentials(logger: r.resolve(FileLogger.self)!)
+            return WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(WireguardConfigRepository.self) { r in
             return WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: r.resolve(AlertManagerV2.self), logger: r.resolve(FileLogger.self)!)
