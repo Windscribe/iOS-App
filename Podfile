@@ -50,7 +50,6 @@ end
 # OpenVPN network extension
 target 'PacketTunnel' do
   use_frameworks!
-  pod 'OpenVPNAdapter', :git => 'https://github.com/ss-abramchuk/OpenVPNAdapter.git', :tag => '0.8.0'
   core
 end
 

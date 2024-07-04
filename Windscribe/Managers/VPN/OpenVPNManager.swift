@@ -127,6 +127,10 @@ class OpenVPNManager {
             if let proxyLine = proxyLine {
                 lines.append(proxyLine)
             }
+            if preferences.isCircumventCensorshipEnabled() {
+                lines.append("udp-stuffing")
+                lines.append("tcp-split-reset")
+            }
             guard let appendedConfigData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return }
 
             fileDatabase.removeFile(path: FilePaths.openVPN)
