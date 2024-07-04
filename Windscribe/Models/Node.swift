@@ -99,7 +99,6 @@ struct FavNodeModel {
     let health: Int?
     let isPremiumOnly: Bool?
 
-
     init(groupId: String,
          serverName: String,
          countryCode: String,

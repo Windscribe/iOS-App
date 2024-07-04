@@ -29,7 +29,6 @@ class FavNodesListViewModel: FavNodesListViewModelType {
     var connectionStateManager: ConnectionStateManagerType
     var sessionManager: SessionManagerV2
 
-
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
