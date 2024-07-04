@@ -14,7 +14,7 @@ extension Container {
         self.init()
         injectCore()
         register(WgCredentials.self) { r in
-            return WgCredentials(logger: r.resolve(FileLogger.self)!)
+            return WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(WireguardAPIManager.self) { r in
             return WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!)

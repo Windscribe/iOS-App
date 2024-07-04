@@ -1,5 +1,5 @@
 {
-  "originHash" : "d448be06cbca9a9def37d288875a7582f022ca2b3d78882c74f4244f42de710a",
+  "originHash" : "44d8ca17bc7f4eb1d41dc3a5640c9562a916248d57f8d475d95193a7d4619494",
   "pins" : [
     {
       "identity" : "dns",
@@ -40,9 +40,9 @@
     {
       "identity" : "wireguard-apple",
       "kind" : "remoteSourceControl",
-      "location" : "https://git.zx2c4.com/wireguard-apple/",
+      "location" : "https://github.com/Windscribe/wireguard-apple.git",
       "state" : {
-        "revision" : "12b095470ad29ecea7436088f6e5fa701e6445a6"
+        "revision" : "e073f04da6ce2e41772c03e9d4165074bc328495"
       }
     }
   ],
