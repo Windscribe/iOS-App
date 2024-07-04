@@ -1,5 +1,5 @@
 {
-  "originHash" : "b0d54b9637a0dc839aedaca80d6e184ee0ef266fe5f0c1a9c618eea919981b7d",
+  "originHash" : "d448be06cbca9a9def37d288875a7582f022ca2b3d78882c74f4244f42de710a",
   "pins" : [
     {
       "identity" : "dns",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "78bbd1589890a90b202d11d5f9e1297050cf0eb2",
         "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "openvpnadapter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Windscribe/OpenVPNAdapter.git",
+      "state" : {
+        "branch" : "windscribe",
+        "revision" : "106d9b0b2b3ee6119a4d411bc037cad26d006577"
       }
     },
     {

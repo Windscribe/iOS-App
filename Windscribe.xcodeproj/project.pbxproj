@@ -99,6 +99,9 @@
 		596E60062B8F77EC00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		596E60072B8F77ED00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		596E60082B8F77EF00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
+		597C04F32C2F021D00C2A085 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = 597C04F22C2F021D00C2A085 /* OpenVPNAdapter */; };
+		597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597C04F42C2F022C00C2A085 /* SystemConfiguration.framework */; };
+		597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 597C04F62C2F023200C2A085 /* UIKit.framework */; };
 		597DDE012BA2180500F19F3F /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		597DDE032BA229EC00F19F3F /* GeneralRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597DDE022BA229EC00F19F3F /* GeneralRouter.swift */; };
 		598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */; };
@@ -834,6 +837,8 @@
 		5932857A29DA8009009D0C3C /* BlurredLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredLabel.swift; sourceTree = "<group>"; };
 		5947B4AD2A214E7C00C95CF2 /* Latency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Latency.swift; sourceTree = "<group>"; };
 		5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWInterface.InterfaceType+Ext.swift"; sourceTree = "<group>"; };
+		597C04F42C2F022C00C2A085 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		597C04F62C2F023200C2A085 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		597DDE022BA229EC00F19F3F /* GeneralRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralRouter.swift; sourceTree = "<group>"; };
 		598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenVPNConnectionInfo.swift; sourceTree = "<group>"; };
 		598F173729F05723007137A4 /* EmergencyConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewController.swift; sourceTree = "<group>"; };
@@ -1376,9 +1381,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				597C04F32C2F021D00C2A085 /* OpenVPNAdapter in Frameworks */,
 				C571C66D2C13332D00786DA5 /* wsnet.framework in Frameworks */,
 				AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */,
 				C538B15A2AB1A34400E12CE2 /* proxy.xcframework in Frameworks */,
+				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
+				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
 				DAC2D5E9685166D40AE1F73B /* Pods_PacketTunnel.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1853,6 +1861,8 @@
 		5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				597C04F62C2F023200C2A085 /* UIKit.framework */,
+				597C04F42C2F022C00C2A085 /* SystemConfiguration.framework */,
 				C538B1582AB1A33D00E12CE2 /* proxy.xcframework */,
 				E91DE3B2274942040025741C /* AES256Encrypter.framework */,
 				AFF20A68230758C100AFA7E4 /* CloudKit.framework */,
@@ -3099,6 +3109,9 @@
 			dependencies = (
 			);
 			name = PacketTunnel;
+			packageProductDependencies = (
+				597C04F22C2F021D00C2A085 /* OpenVPNAdapter */,
+			);
 			productName = PacketTunnel;
 			productReference = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -3286,6 +3299,7 @@
 				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
 				C5D0E3A129BAE82E0091FB14 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
+				597C04F12C2F021D00C2A085 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -4510,6 +4524,7 @@
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4526,6 +4541,7 @@
 				);
 				MACH_O_TYPE = mh_execute;
 				MARKETING_VERSION = 3.8.0;
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4553,6 +4569,7 @@
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4655,6 +4672,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 373;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -4671,6 +4689,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.7.4;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -4689,6 +4708,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 373;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -5022,6 +5042,7 @@
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -5091,6 +5112,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 373;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -5320,6 +5342,14 @@
 				minimumVersion = 1.2.0;
 			};
 		};
+		597C04F12C2F021D00C2A085 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Windscribe/OpenVPNAdapter.git";
+			requirement = {
+				branch = windscribe;
+				kind = branch;
+			};
+		};
 		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/seznam/swift-resolver.git";
@@ -5339,6 +5369,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		597C04F22C2F021D00C2A085 /* OpenVPNAdapter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 597C04F12C2F021D00C2A085 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */;
+			productName = OpenVPNAdapter;
+		};
 		AF9E08A325E6B1BF00A0E372 /* Resolver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */;
