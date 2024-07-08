@@ -404,6 +404,7 @@ struct TextsAsset {
         static var version: String { "Version".localize() }
         static var auto: String { "Auto".localize() }
         static var manual: String { "Manual".localize() }
+        static var custom: String { "Custom".localize() }
         static let languages: [String] = Languages.allCases.map({ $0.name })
         static var hapticFeedback: String { "Haptic Feedback".localize() }
         static var showServerHealth: String { "Show Location Load".localize() }
@@ -831,6 +832,26 @@ struct TextsAsset {
 
     static var circumventCensorshipDescription: String {
         return "Connect to the VPN even in hostile environment".localize()
+    }
+
+    static var connectedDNS: String {
+        return "Connected DNS".localize()
+    }
+
+    static var connectedDNSDescription: String {
+        return "Select the DNS server while connected to Windscribe.".localize()
+    }
+
+    static var connectedDNSValueFieldDescription: String {
+        return "IP/DNS-over-HTTPS/TLS".localize()
+    }
+
+    static var connectedDNSInvalidAlertTitle: String {
+        return "DNS server invalid".localize()
+    }
+
+    static var connectedDNSInvalidAlertBody: String {
+        return "The DNS server entered is not valid, please enter a valid DNS server".localize()
     }
 
     static var configuredLocation: String {

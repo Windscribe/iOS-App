@@ -16,6 +16,7 @@ enum ConnectionSecure {
     case locationLoad
     case hapticFeeback
     case circumventCensorship
+    case connectedDNS
 
     var title: String {
         switch self {
@@ -33,6 +34,8 @@ enum ConnectionSecure {
             return TextsAsset.General.hapticFeedback
         case .circumventCensorship:
             return TextsAsset.circumventCensorship
+        case .connectedDNS:
+            return TextsAsset.connectedDNS
         }
     }
 
@@ -52,6 +55,8 @@ enum ConnectionSecure {
             return "Explain me!".localize()
         case .circumventCensorship:
             return TextsAsset.circumventCensorshipDescription
+        case .connectedDNS:
+            return TextsAsset.connectedDNSDescription
         }
     }
 }

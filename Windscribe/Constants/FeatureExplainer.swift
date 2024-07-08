@@ -12,6 +12,7 @@ enum FeatureExplainer {
     case connectionModes
     case fiwall
     case allowLan
+    case connectedDNS
 
     func getUrl() -> String {
         var endpoint: String = ""
@@ -22,6 +23,8 @@ enum FeatureExplainer {
             endpoint = "features/firewall"
         case .allowLan:
             endpoint = "features/lan-traffic"
+        case .connectedDNS:
+            endpoint = "features/flexible-dns"
         }
         return Links.base + endpoint
     }

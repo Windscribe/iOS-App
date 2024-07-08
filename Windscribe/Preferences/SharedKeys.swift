@@ -40,10 +40,12 @@ enum SharedKeys {
     static let selectedProtocol = "selectedProtocol"
     static let serverHealth = "serverHealth"
     static let darkMode = "darkMode"
+    static let connectedDNSValue = "connectedDNSValue"
 
     // UserDefaultKeys
     static let autoSecureNewNetworks = "AutoSecureNewNetworks"
     static let connectionMode = "connection-mode"
+    static let connectedDNS = "connected-DNS"
     static let connectionCount = "connection-count"
     static let lastConnectedNetworkName = "last-connected-network-name"
     static let rateUsPopupDisplayed = "rate-us-popup-displayed"

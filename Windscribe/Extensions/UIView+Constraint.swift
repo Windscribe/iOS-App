@@ -46,6 +46,7 @@ extension UIView {
                        left: NSLayoutXAxisAnchor? = nil,
                        bottom: NSLayoutYAxisAnchor? = nil,
                        right: NSLayoutXAxisAnchor? = nil,
+                       centerY: NSLayoutYAxisAnchor? = nil,
                        paddingTop: CGFloat = 0,
                        paddingLeft: CGFloat = 0,
                        paddingBottom: CGFloat = 0,
@@ -69,6 +70,10 @@ extension UIView {
 
         if let right = right {
             rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+        }
+
+        if let centerY = centerY {
+            centerYAnchor.constraint(equalTo: centerY).isActive = true
         }
 
         if let width = width {

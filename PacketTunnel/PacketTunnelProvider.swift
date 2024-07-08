@@ -164,6 +164,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider, ProxyTunnelCallBackProtocol 
 
 extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
+        if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom, let dnsSettings = DNSSettingsManager.makeDNSSettings(from: preferences.getCustomDNSValue()) {
+            networkSettings?.dnsSettings = dnsSettings
+        }
         networkSettings?.dnsSettings?.matchDomains = [""]
         setTunnelNetworkSettings(networkSettings, completionHandler: completionHandler)
     }

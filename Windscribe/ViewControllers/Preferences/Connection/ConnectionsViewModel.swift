@@ -8,59 +8,13 @@
 
 import Foundation
 import RxSwift
-
-enum ConnectionModeType {
-    case auto
-    case manual
-
-    static func defaultValue() -> ConnectionModeType { ConnectionModeType(fieldValue: DefaultValues.connectionMode) }
-
-    var titleValue: String {
-        switch self {
-        case .auto:
-            TextsAsset.General.auto
-        case .manual:
-            TextsAsset.General.manual
-        }
-    }
-
-    var fieldValue: String {
-        switch self {
-        case .auto:
-            Fields.Values.auto
-        case .manual:
-            Fields.Values.manual
-        }
-    }
-}
-
-extension ConnectionModeType {
-    init(fieldValue: String) {
-        self = switch fieldValue {
-        case Fields.Values.auto:
-                .auto
-        case Fields.Values.manual:
-                .manual
-        default:
-                .auto
-        }
-    }
-
-    init(titleValue: String) {
-        self = switch titleValue {
-        case TextsAsset.General.auto:
-                .auto
-        case TextsAsset.General.manual:
-                .manual
-        default:
-                .auto
-        }
-    }
-}
+import Network
 
 protocol ConnectionsViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
+    var shouldShowCustomDNSOption: BehaviorSubject<Bool> { get }
+
     func updateChangeFirewallStatus()
     func updateChangeKillSwitchStatus()
     func updateChangeAllowLanStatus()
@@ -69,6 +23,7 @@ protocol ConnectionsViewModelType {
     func updatePort(value: String)
     func updateProtocol(value: String)
     func updateConnectionMode(value: ConnectionModeType)
+    func updateConnectedDNS(type: ConnectedDNSType)
 
     func getFirewallStatus() -> Bool
     func getKillSwitchStatus() -> Bool
@@ -77,20 +32,23 @@ protocol ConnectionsViewModelType {
 
     func currentConnectionModes() -> [String]
     func getCurrentConnectionMode() -> ConnectionModeType
+    func getCurrentConnectedDNS() -> ConnectedDNSType
 
     func getCurrentProtocol() -> String
     func getCurrentPort() -> String
 
+    func getConnectedDNSValue() -> String
+
     func getProtocols() -> [String]
     func getPorts() -> [String]
-
     func getPort(by protocolType: String) -> [String]
+
+    func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void)
 }
 
 class ConnectionsViewModel: ConnectionsViewModelType {
-
     // MARK: - Dependencies
-    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager!, localDb: LocalDatabase
+    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager!, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -98,14 +56,18 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var killSwitch = BehaviorSubject<Bool>(value: DefaultValues.killSwitch)
     private var allowLane = BehaviorSubject<Bool>(value: DefaultValues.allowLaneMode)
     private var autoSecure = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
-    private var connectionMode = BehaviorSubject<ConnectionModeType>(value: ConnectionModeType.defaultValue())
-    var isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
+    private var connectionMode = ConnectionModeType.defaultValue()
+    private var connectedDNS = ConnectedDNSType.defaultValue()
+    let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
     let isDarkMode: BehaviorSubject<Bool>
+    let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
 
-    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase) {
+    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.localDb = localDb
+        self.connectivity = connectivity
+        self.networkRepository = networkRepository
         isDarkMode = themeManager.darkTheme
         loadData()
     }
@@ -130,10 +92,26 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             self.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
         }.disposed(by: disposeBag)
         preferences.getConnectionMode().subscribe { data in
-            self.connectionMode.onNext(ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode))
+            self.connectionMode = ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode)
+        }.disposed(by: disposeBag)
+        preferences.getConnectedDNSObservable().subscribe { data in
+            self.connectedDNS = ConnectedDNSType(fieldValue: data ?? DefaultValues.connectedDNS)
         }.disposed(by: disposeBag)
         preferences.getCircumventCensorshipEnabled().subscribe { data in
             self.isCircumventCensorshipEnabled.onNext(data)
+        }.disposed(by: disposeBag)
+        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { (connectionMode, selectedProtocol, network) in
+            if network.networkType == .wifi {
+                self.shouldShowCustomDNSOption.onNext(self.networkRepository.getCurrentNetwork()?.protocolType != TextsAsset.iKEv2)
+                return
+            }
+            if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {
+                if connectionMode == Fields.Values.manual {
+                    self.shouldShowCustomDNSOption.onNext(selectedProtocol != TextsAsset.iKEv2)
+                    return
+                }
+            }
+            self.shouldShowCustomDNSOption.onNext(true)
         }.disposed(by: disposeBag)
     }
 
@@ -170,15 +148,36 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getCurrentConnectionMode() -> ConnectionModeType {
-        return (try? connectionMode.value()) ?? ConnectionModeType.defaultValue()
+        return connectionMode
+    }
+
+    func getCurrentConnectedDNS() -> ConnectedDNSType {
+        return connectedDNS
     }
 
     func updateConnectionMode(value: ConnectionModeType) {
         preferences.saveConnectionMode(mode: value.fieldValue)
     }
 
+    func updateConnectedDNS(type: ConnectedDNSType) {
+        preferences.saveConnectedDNS(mode: type.fieldValue)
+    }
+
+    func getConnectedDNSValue() -> String {
+        preferences.getCustomDNSValue().value
+    }
+
     func currentConnectionModes() -> [String] {
         return [TextsAsset.General.auto, TextsAsset.General.manual]
+    }
+
+    func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void) {
+        DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: {dnsValue in
+            guard let dnsValue = dnsValue else { return }
+            self.preferences.saveCustomDNSValue(value: dnsValue)
+        }, completion: {isValid in
+            completion(isValid)
+        })
     }
 
     func updatePort(value: String) {
@@ -219,3 +218,5 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         WSNet.instance().advancedParameters().setAPIExtraTLSPadding(status)
     }
 }
+
+extension UIApplication: OpensURlType {}
