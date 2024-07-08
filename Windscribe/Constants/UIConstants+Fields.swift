@@ -35,6 +35,7 @@ struct Fields {
     struct Values {
         static let auto = "Auto"
         static let manual = "Manual"
+        static let custom = "Custom"
         static let ms = "MS"
         static let bars = "Bars"
         static let latency = "Latency"

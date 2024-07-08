@@ -238,7 +238,7 @@ class ViewModels: Assembly {
             return ShareWithFriendViewModel(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, referFriendManager: r.resolve(ReferAndShareManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            return ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!)
+            return ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!)
         }.inObjectScope(.transient)
         container.register(LanguageViewModelType.self) { r in
             return LanguageViewModel(languageManager: r.resolve(LanguageManagerV2.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!)

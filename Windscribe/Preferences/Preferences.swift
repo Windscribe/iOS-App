@@ -113,7 +113,10 @@ protocol Preferences {
     func saveAutoSecureNewNetworks(autoSecure: Bool)
 
     func getConnectionMode() -> RxSwift.Observable<String?>
+    func getConnectedDNSObservable() -> RxSwift.Observable<String?>
+    func getConnectedDNS() -> String
     func saveConnectionMode(mode: String)
+    func saveConnectedDNS(mode: String)
 
     func saveShowedShareDialog(showed: Bool)
     func getShowedShareDialog() -> Bool
@@ -122,4 +125,7 @@ protocol Preferences {
     func getSelectedPortSync() -> String
     func getServerSettings() -> String
     func saveServerSettings(settings: String)
+
+    func saveCustomDNSValue(value: DNSValue)
+    func getCustomDNSValue() -> DNSValue
 }

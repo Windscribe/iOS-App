@@ -12,7 +12,6 @@ import RxSwift
 import RealmSwift
 
 class SharedSecretDefaults: Preferences {
-
     static let shared = SharedSecretDefaults()
     let sharedDefault = UserDefaults(suiteName: SharedKeys.sharedGroup)
     let standardDefault = UserDefaults.standard
@@ -85,8 +84,20 @@ class SharedSecretDefaults: Preferences {
         setString(mode, forKey: SharedKeys.connectionMode)
     }
 
+    func saveConnectedDNS(mode: String) {
+        setString(mode, forKey: SharedKeys.connectedDNS)
+    }
+
     func getConnectionMode() -> RxSwift.Observable<String?> {
         return sharedDefault?.rx.observe(String.self, SharedKeys.connectionMode) ?? Observable.just(DefaultValues.connectionMode)
+    }
+
+    func getConnectedDNS() -> String {
+        return getString(forKey: SharedKeys.connectedDNS) ?? DefaultValues.connectedDNS
+    }
+
+    func getConnectedDNSObservable() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.connectedDNS) ?? Observable.just(DefaultValues.connectedDNS)
     }
 
     func getConnectionModeSync() -> String {
@@ -339,6 +350,14 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.rx.observe(Bool.self, SharedKeys.hapticFeedback) ?? Observable.just(DefaultValues.hapticFeedback)
     }
 
+    func saveCustomDNSValue(value: DNSValue) {
+        saveObject(object: value, forKey: SharedKeys.connectedDNSValue)
+    }
+
+    func getCustomDNSValue() -> DNSValue {
+        getObject(forKey: SharedKeys.connectedDNSValue) ?? DefaultValues.customDNSValue
+    }
+
     func saveSelectedProtocol(selectedProtocol: String) {
         setString(selectedProtocol, forKey: SharedKeys.selectedProtocol)
     }
@@ -499,5 +518,53 @@ class SharedSecretDefaults: Preferences {
 
     func removeData(key: String) {
         sharedDefault?.removeObject(forKey: key)
+    }
+
+    private func saveObject<T: Codable>(object: T, forKey: String) {
+        do {
+            let data = try JSONEncoder().encode(object)
+            sharedDefault?.set(data, forKey: forKey)
+        } catch {
+            // Fallback
+        }
+    }
+
+    private func getObject<T: Codable>(forKey: String) -> T? {
+        guard let data = sharedDefault?.data(forKey: forKey) else { return nil }
+        do {
+            return try JSONDecoder().decode(T.self, from: data)
+        } catch {
+            // Fallback
+            return nil
+        }
+    }
+
+    private func observeObject<T: Codable>(forKey: String) -> Observable<T?>? {
+        sharedDefault?.rx_observe(T.self, forKey: forKey)
+    }
+}
+
+extension UserDefaults {
+    func rx_observe<T: Codable>(_ type: T.Type, forKey key: String) -> Observable<T?> {
+        return Observable.create { observer in
+            if let data = self.data(forKey: key),
+               let value = try? JSONDecoder().decode(T.self, from: data) {
+                observer.onNext(value)
+            } else {
+                observer.onNext(nil)
+            }
+            let notificationName = UserDefaults.didChangeNotification
+            let notificationObserver = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
+                if let data = self.data(forKey: key),
+                   let value = try? JSONDecoder().decode(T.self, from: data) {
+                    observer.onNext(value)
+                } else {
+                    observer.onNext(nil)
+                }
+            }
+            return Disposables.create {
+                NotificationCenter.default.removeObserver(notificationObserver)
+            }
+        }
     }
 }

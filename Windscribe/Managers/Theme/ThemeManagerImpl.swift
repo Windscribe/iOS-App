@@ -92,4 +92,7 @@ struct ThemeUtils {
     static func interfaceStyle(isDarkMode: Bool) -> UIUserInterfaceStyle {
         return isDarkMode ? .dark : .light
     }
+    static func editImage(isDarkMode: Bool) -> UIImage? {
+        return isDarkMode ? UIImage(named: ImagesAsset.DarkMode.edit) : UIImage(named: ImagesAsset.edit)
+    }
 }

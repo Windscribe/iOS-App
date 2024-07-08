@@ -64,7 +64,6 @@ class ConnectionModeView: UIStackView {
     private lazy var mainWrapperView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.borderColor = try? isDarkMode.value() ? UIColor.whiteWithOpacity(opacity: 0.08).cgColor : UIColor.midnightWithOpacity(opacity: 0.08).cgColor
         view.layer.cornerRadius = 8
         view.layer.borderWidth = 2
         return view

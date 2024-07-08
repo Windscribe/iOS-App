@@ -36,6 +36,8 @@
 		1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		1AF57D48280FED3C004E8082 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		1B9E4881B28361D8E4276E67 /* Pods_Windscribe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4351FB9879219E6219AEF9FE /* Pods_Windscribe.framework */; };
+		1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */; };
+		1E0EFF172C2D6C22002FBC72 /* ConnectedDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0EFF162C2D6C22002FBC72 /* ConnectedDNSView.swift */; };
 		1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */; };
 		1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366C92BC03925000DF098 /* PopupRouter.swift */; };
 		1E2366CD2BC5768E000DF098 /* NewsFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */; };
@@ -51,6 +53,15 @@
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A19552C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A19572C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
+		1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
+		1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
+		1E7A19622C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
 		1EA876C52BC6E1C900F0DD25 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */; };
 		1EA876C92BC95B6C00F0DD25 /* NewsFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */; };
 		1EA876CB2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
@@ -779,6 +790,8 @@
 		1AE6DA1E2833CFD800593495 /* GeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralViewController.swift; sourceTree = "<group>"; };
 		1AF57D42280FCBE2004E8082 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		1AF57D45280FCF37004E8082 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
+		1E0EFF162C2D6C22002FBC72 /* ConnectedDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDNSView.swift; sourceTree = "<group>"; };
 		1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
 		1E2366C92BC03925000DF098 /* PopupRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupRouter.swift; sourceTree = "<group>"; };
 		1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedModel.swift; sourceTree = "<group>"; };
@@ -795,6 +808,8 @@
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
 		1E6A7FA2FA7061898B36ABB7 /* Pods-PacketTunnel.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.development.xcconfig"; path = "Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.development.xcconfig"; sourceTree = "<group>"; };
+		1E7A19522C34237E00851AE2 /* DNSValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSValue.swift; sourceTree = "<group>"; };
+		1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSSettingsManager.swift; sourceTree = "<group>"; };
 		1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
 		1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCell.swift; sourceTree = "<group>"; };
 		1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCellViewModel.swift; sourceTree = "<group>"; };
@@ -1441,6 +1456,8 @@
 				1A59057E283E176E00A79B99 /* ConnectionModeView.swift */,
 				1A590580283E1C3000A79B99 /* ConnectionModeItemView.swift */,
 				E998651628A5E2FC0091B6A3 /* SwitchHeaderView.swift */,
+				1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */,
+				1E0EFF162C2D6C22002FBC72 /* ConnectedDNSView.swift */,
 			);
 			path = Connection;
 			sourceTree = "<group>";
@@ -1649,6 +1666,15 @@
 				1E4933522BF50BC200C853AF /* ServerListViewModel.swift */,
 			);
 			path = "Server List";
+			sourceTree = "<group>";
+		};
+		1E7A19512C34236700851AE2 /* DNS */ = {
+			isa = PBXGroup;
+			children = (
+				1E7A19522C34237E00851AE2 /* DNSValue.swift */,
+				1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */,
+			);
+			path = DNS;
 			sourceTree = "<group>";
 		};
 		1EA876C72BC95B4D00F0DD25 /* Cell */ = {
@@ -2440,6 +2466,7 @@
 				E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */,
 				E93AE6682744BA060097843B /* VPNManager+Selector.swift */,
 				C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */,
+				1E7A19512C34236700851AE2 /* DNS */,
 			);
 			path = VPN;
 			sourceTree = "<group>";
@@ -3868,6 +3895,7 @@
 				AF36A1AB237C7E3600BDDCDB /* LeaderboardTableViewCell.swift in Sources */,
 				C5A930D22B43C5950001CFA0 /* BillingRepositoryImpl.swift in Sources */,
 				AF2199612270B147009B42E5 /* Socket.swift in Sources */,
+				1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C56FCBF62B2CD180008DE7D4 /* LoginRouter.swift in Sources */,
 				E97ABD6228F91ABA00B38587 /* ConnectionManager.swift in Sources */,
 				591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */,
@@ -3897,6 +3925,7 @@
 				1A9DB35428168E8500C3EC1C /* UITableViewCell.swift in Sources */,
 				AF2C1869234F5429008657FA /* VPNConnection.swift in Sources */,
 				E90E56A7275E4A02004E4AC0 /* URLRequestExtension.swift in Sources */,
+				1E0EFF172C2D6C22002FBC72 /* ConnectedDNSView.swift in Sources */,
 				C5D0E40529BB8BE70091FB14 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				E9816B6E27D8E9BE0059D275 /* WgCredentials.swift in Sources */,
 				E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */,
@@ -3974,6 +4003,7 @@
 				AF551D4323F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */,
 				C5D0E40129BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5A930E12B43F0270001CFA0 /* CredentialsRepositoryImpl.swift in Sources */,
+				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C56FCC042B2CF304008DE7D4 /* ConnectionRouter.swift in Sources */,
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
 				AF4C9ACF22F4995B004A9FA6 /* UIInputViewController+Ext.swift in Sources */,
@@ -3984,6 +4014,7 @@
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				C5D0F2FE27E1959D00DB3E49 /* WgErrorCodes.swift in Sources */,
 				C5BF384E2B91735100AA725C /* keyChainKeys.swift in Sources */,
+				1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */,
 				E96AFFF428A2BEB800B53EEE /* AccountEmailCell.swift in Sources */,
 				1EC6C7812BE268D60036248B /* CardTopViewModel.swift in Sources */,
 				C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */,
@@ -4139,6 +4170,7 @@
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				C55AF09B2B3B75D10011EF56 /* PreferencesSampleData.swift in Sources */,
+				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				5993396C2B4CD28100EC615D /* DefaultValues.swift in Sources */,
 				C5592B802B388B2800F2F110 /* APISampleData.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
@@ -4155,12 +4187,14 @@
 				C59C073D2940462200D6C3C1 /* SharedUserDefaults.swift in Sources */,
 				C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C50F20CB2B61777D00266B23 /* CoreModule.swift in Sources */,
+				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
 				C59C074029406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				C52DA52A2B63912A00E5C571 /* FileDatabase.swift in Sources */,
+				1E7A19552C34237E00851AE2 /* DNSValue.swift in Sources */,
 				E9425BA327437064008B8786 /* FilePaths.swift in Sources */,
 				C56FCBEA2B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
@@ -4205,6 +4239,7 @@
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4238,6 +4273,7 @@
 				C535D28027E2C19E00C08345 /* DynamicWireGuardConnect.swift in Sources */,
 				C571C6772C135C3600786DA5 /* UserScope.swift in Sources */,
 				C535D2A127E5133300C08345 /* URLRequest+Ext.swift in Sources */,
+				1E7A19622C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C50F20D22B62110700266B23 /* Bundle+Ext.swift in Sources */,
 				C535D28727E2E2BA00C08345 /* APIParameters.swift in Sources */,
 				C56FCBE12B2B8C52008DE7D4 /* Preferences.swift in Sources */,
@@ -4258,6 +4294,7 @@
 				C535D2A227E5136700C08345 /* URLRequestExtension.swift in Sources */,
 				C50F20852B60BCCE00266B23 /* WireguardConfigRepositoryImpl.swift in Sources */,
 				C5D0E40A29BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
+				1E7A19572C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
 				C5D0E40C29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */,
@@ -4285,6 +4322,7 @@
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
 				AFDF9354255EB940002B1FBA /* HomeWidget.intentdefinition in Sources */,
+				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
@@ -5369,7 +5407,7 @@
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
 				kind = revision;
-				revision = e073f04da6ce2e41772c03e9d4165074bc328495;
+				revision = 205b094c325c2d79493767644f1de88f72dd801f;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -66,7 +66,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
         }
-
+        if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom, let dnsSettings = DNSSettingsManager.makeDNSSettings(from: preferences.getCustomDNSValue()) {
+            tunnelConfiguration.dnsSettings = dnsSettings
+        }
         self.adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
@@ -207,6 +209,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     if(newAddress != lastIpAddress || oldKey != key) {
                         do {
                             let updatedConfig = try TunnelConfiguration(fromWgQuickConfig:  self.wgCrendentials.asWgCredentialsString()!)
+                            if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom, let dnsSettings = DNSSettingsManager.makeDNSSettings(from: self.preferences.getCustomDNSValue()) {
+                                updatedConfig.dnsSettings = dnsSettings
+                            }
                             self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
                         } catch {
                             self.logger.logD(self, "Failed to get wg configuration.")

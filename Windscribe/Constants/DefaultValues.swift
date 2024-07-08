@@ -15,7 +15,9 @@ enum DefaultValues {
     static let language = "English"
     static let `protocol` = "WireGuard"
     static let port = "443"
+    static let connectedDNS = "Auto"
     static let connectionMode = "Auto"
+    static let customDNSValue = DNSValue(type: .empty, value: "", servers: [])
     static let darkMode = true
     static let serverHealth = false
     static let firewallMode = true

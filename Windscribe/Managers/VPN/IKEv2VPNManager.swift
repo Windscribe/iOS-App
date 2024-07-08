@@ -34,7 +34,6 @@ class IKEv2VPNManager {
     let disposeBag = DisposeBag()
 
     private func loadData() {
-
         preferences.getKillSwitch().subscribe { data in
             self.killSwitch = data ?? DefaultValues.killSwitch
         }.disposed(by: disposeBag)
