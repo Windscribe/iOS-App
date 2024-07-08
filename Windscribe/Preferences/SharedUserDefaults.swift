@@ -49,6 +49,10 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.rx.observe(String.self, SharedKeys.languageManagerSelectedLanguage) ?? Observable.just(Languages.english.rawValue)
     }
 
+    func getLanguageManagerLanguage() -> String? {
+        return getString(forKey: SharedKeys.languageManagerSelectedLanguage)
+    }
+
     func setLanguageManagerDefaultLanguage(language: String) {
         setString(language, forKey: SharedKeys.languageManagerDefaultLanguage)
     }
