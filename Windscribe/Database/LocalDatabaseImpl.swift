@@ -342,7 +342,7 @@ class LocalDatabaseImpl: LocalDatabase {
     // MARK: migration
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 49,
+            schemaVersion: 50,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _,_ in }
@@ -559,6 +559,13 @@ class LocalDatabaseImpl: LocalDatabase {
                     }
                 } else if oldSchemaVersion < 49 {
                     migration.enumerateObjects(ofType: MobilePlan.className()) { _,_ in }
+                } else if oldSchemaVersion < 50 {
+                    migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
+                        newObject!["isPremiumOnly"] = false
+                    }
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, newObject in
+                        newObject!["isPremiumOnly"] = false
+                    }
                 }
             }, deleteRealmIfMigrationNeeded: false)
     }
