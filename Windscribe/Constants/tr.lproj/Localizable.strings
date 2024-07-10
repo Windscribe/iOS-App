@@ -356,3 +356,6 @@
 "Blog" = "Blog";
 "Jobs" = "İşler";
 "Software Licenses" = "Yazılım Lisansları";
+"Connected DNS" = "Bağlı DNS";
+"Select the DNS server while connected to Windscribe." = "Windscribe&apos; a bağlıyken DNS sunucusunu seçin.";
+"Custom" = "Töre";

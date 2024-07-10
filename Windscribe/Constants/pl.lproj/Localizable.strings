@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "Będziemy go używać jedynie do kontaktu z Tobą";
 "Message" = "Wiadomość";
 "Subject" = "Temat";
+"Connected DNS" = "Połączony DNS";
+"Select the DNS server while connected to Windscribe." = "Wybierz serwer DNS w trakcie połączenia z Windscribe.";
+"Custom" = "Niestandardowy";

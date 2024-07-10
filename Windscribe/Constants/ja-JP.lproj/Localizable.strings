@@ -341,3 +341,6 @@
 "So we can contact you, we won’t use  it for anything else" = "あなたに連絡できますが、他の用途には使いません";
 "Message" = "メッセージ";
 "Subject" = "件名";
+"Connected DNS" = "DNSに接続しました";
+"Select the DNS server while connected to Windscribe." = "Windscribe に接続しているときに DNS サーバーを選択します。";
+"Custom" = "カスタム";

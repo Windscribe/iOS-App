@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "Так мы сможем с вами связаться. Мы не будет использовать ваш e-mail для каких-либо других целей.";
 "Message" = "Сообщение";
 "Subject" = "Тема";
+"Connected DNS" = "DNS в туннеле";
+"Select the DNS server while connected to Windscribe." = "Выберите DNS-сервер при подключении к Windscribe.";
+"Custom" = "Пользовательский";
