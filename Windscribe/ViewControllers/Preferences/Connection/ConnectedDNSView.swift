@@ -101,6 +101,11 @@ class ConnectedDNSView: UIStackView {
         valueTextField.text = dnsValue
         valueTextField.layer.opacity = 0.5
         valueTextField.makeHeightAnchor(equalTo: 30)
+        valueTextField.autocorrectionType = .no
+        valueTextField.spellCheckingType = .no
+        valueTextField.keyboardType = .URL
+        valueTextField.returnKeyType = .done
+        valueTextField.autocapitalizationType = .none
 
         // Value Container Stack View
         dnsValueView.axis = .horizontal
@@ -171,8 +176,7 @@ class ConnectedDNSView: UIStackView {
 
         // Accept button tap binding
         acceptButton.rx.tap.bind { _ in
-            guard let text = self.valueTextField.text else { return }
-            self.delegate?.connectedDNSViewSaveValue(text)
+            self.submitValue()
         }.disposed(by: disposeBag)
 
         // Edit Mode binding
@@ -182,6 +186,10 @@ class ConnectedDNSView: UIStackView {
             self.valueTextField.isHidden = !$0
             self.cancelContainerView.isHidden = !$0
             self.acceptContainerView.isHidden = !$0
+        }.disposed(by: disposeBag)
+
+        valueTextField.rx.controlEvent(.editingDidEndOnExit).subscribe { _ in
+            self.submitValue()
         }.disposed(by: disposeBag)
     }
 
@@ -194,6 +202,11 @@ class ConnectedDNSView: UIStackView {
 
     func cancelUpdateValue() {
         updateConnectedDNSValue(value: dnsValue)
+    }
+
+    private func submitValue() {
+        guard let text = valueTextField.text else { return }
+        delegate?.connectedDNSViewSaveValue(text)
     }
 }
 

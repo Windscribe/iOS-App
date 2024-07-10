@@ -65,14 +65,14 @@ class AlertManager: AlertManagerV2 {
     }
 
     func showAlert(title: String, message: String, actions: [UIAlertAction]) {
-          DispatchQueue.main.async {
-              let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-              for action in actions {
-                  alert.addAction(action)
-              }
-              self.presentAlertOnViewController(alert: alert)
-          }
-      }
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            for action in actions {
+                alert.addAction(action)
+            }
+            self.presentAlertOnViewController(alert: alert)
+        }
+    }
 
     func showAlert(viewController: UIViewController, title: String, message: String, actions: [UIAlertAction]) {
         DispatchQueue.main.async {
@@ -101,17 +101,6 @@ class AlertManager: AlertManagerV2 {
             }
             return Disposables.create()
         }
-      }
-
-    func getLoadingAlert() -> UIAlertController {
-        let loadingAlert = UIAlertController(title: "", message: "", preferredStyle: .alert)
-        let loadingIndicator = UIActivityIndicatorView(frame: loadingAlert.view.bounds)
-        loadingIndicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        loadingIndicator.color = UIColor.black
-        loadingAlert.view.addSubview(loadingIndicator)
-        loadingIndicator.isUserInteractionEnabled = false
-        loadingIndicator.startAnimating()
-        return loadingAlert
     }
 
     private func presentAlertOnViewController(alert: UIAlertController ,viewController: UIViewController? = nil) {

@@ -62,6 +62,9 @@
 		1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
 		1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
 		1E7A19622C36F71900851AE2 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
+		1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
+		1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
+		1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1EA876C52BC6E1C900F0DD25 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */; };
 		1EA876C92BC95B6C00F0DD25 /* NewsFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */; };
 		1EA876CB2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
@@ -810,6 +813,7 @@
 		1E6A7FA2FA7061898B36ABB7 /* Pods-PacketTunnel.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.development.xcconfig"; path = "Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.development.xcconfig"; sourceTree = "<group>"; };
 		1E7A19522C34237E00851AE2 /* DNSValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSValue.swift; sourceTree = "<group>"; };
 		1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSSettingsManager.swift; sourceTree = "<group>"; };
+		1E818F112C3D6D560088066C /* RegexConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexConstants.swift; sourceTree = "<group>"; };
 		1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
 		1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCell.swift; sourceTree = "<group>"; };
 		1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCellViewModel.swift; sourceTree = "<group>"; };
@@ -2370,6 +2374,7 @@
 				C57BDE3629B93D7500337E63 /* Enums.swift */,
 				C57BDE3A29B93E2400337E63 /* SiriIdentifiers.swift */,
 				AF283F7D22C40BE7001F5520 /* Localizable.strings */,
+				1E818F112C3D6D560088066C /* RegexConstants.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -3807,6 +3812,7 @@
 				1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */,
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
+				1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */,
 				1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */,
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
 				C5BF384C2B916B3D00AA725C /* WelcomeViewModal.swift in Sources */,
@@ -4189,6 +4195,7 @@
 				C50F20CB2B61777D00266B23 /* CoreModule.swift in Sources */,
 				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */,
+				1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
@@ -4283,6 +4290,7 @@
 				C5D0E40229BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */,
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
+				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
 				C535D28C27E2E39100C08345 /* String+Ext.swift in Sources */,
 				C535D2A027E5127F00C08345 /* LogType.swift in Sources */,

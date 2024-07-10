@@ -17,6 +17,5 @@ protocol AlertManagerV2 {
     func showAlert(title: String, message: String, actions: [UIAlertAction], preferredAction: UIAlertAction) -> UIAlertController?
     func showAlert(title: String, message: String, actions: [UIAlertAction])
     func showAlert(viewController: UIViewController, title: String, message: String, actions: [UIAlertAction])
-    func getLoadingAlert() -> UIAlertController
     func askUser(message: String) -> Single<Bool>
 }
