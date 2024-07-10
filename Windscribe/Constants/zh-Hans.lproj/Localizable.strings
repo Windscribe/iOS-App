@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "便于我们与你联系，我们不会将其用于其他任何用途";
 "Message" = "消息";
 "Subject" = "主题";
+"Connected DNS" = "连接的域名解析";
+"Select the DNS server while connected to Windscribe." = "在连接到Windscribe时选择DNS服务器。";
+"Custom" = "习惯";

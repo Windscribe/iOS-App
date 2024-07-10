@@ -847,11 +847,11 @@ struct TextsAsset {
     }
 
     static var connectedDNSInvalidAlertTitle: String {
-        return "DNS server invalid".localize()
+        return "Invalid DNS server".localize()
     }
 
     static var connectedDNSInvalidAlertBody: String {
-        return "The DNS server entered is not valid, please enter a valid DNS server".localize()
+        return "Something went wrong. Please make sure you have entered a valid DNS server.".localize()
     }
 
     static var configuredLocation: String {

@@ -340,3 +340,6 @@
 "So we can contact you, we won’t use  it for anything else" = "Para que possamos contactá-lo(a), não usaremos isto para mais nada";
 "Message" = "Mensagem";
 "Subject" = "Assunto";
+"Connected DNS" = "DNS conectado";
+"Select the DNS server while connected to Windscribe." = "Selecione o servidor DNS enquanto estiver conectado ao Windscribe.";
+"Custom" = "Personalizado";

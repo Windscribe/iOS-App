@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "이를 통해 연락드릴 수 있으며, 다른 용도로는 활용하지 않습니다";
 "Message" = "메시지";
 "Subject" = "제목";
+"Connected DNS" = "연결된 DNS";
+"Select the DNS server while connected to Windscribe." = "Windscribe에 연결된 상태에서 DNS 서버를 선택합니다.";
+"Custom" = "관습";
