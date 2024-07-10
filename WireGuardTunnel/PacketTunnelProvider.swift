@@ -66,8 +66,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
         }
-        if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom, let dnsSettings = DNSSettingsManager.makeDNSSettings(from: preferences.getCustomDNSValue()) {
-            tunnelConfiguration.dnsSettings = dnsSettings
+        if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
+            let customDNSValue = preferences.getCustomDNSValue()
+            logger.logD(self, "User DNS configuration: \(customDNSValue.description)")
+            if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
+                tunnelConfiguration.dnsSettings = dnsSettings
+            }
         }
         self.adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
             guard let adapterError = adapterError else {
@@ -209,8 +213,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     if(newAddress != lastIpAddress || oldKey != key) {
                         do {
                             let updatedConfig = try TunnelConfiguration(fromWgQuickConfig:  self.wgCrendentials.asWgCredentialsString()!)
-                            if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom, let dnsSettings = DNSSettingsManager.makeDNSSettings(from: self.preferences.getCustomDNSValue()) {
-                                updatedConfig.dnsSettings = dnsSettings
+                            if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
+                                let customDNSValue = self.preferences.getCustomDNSValue()
+                                self.logger.logD(self, "User DNS configuration: \(customDNSValue.description)")
+                                if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
+                                    updatedConfig.dnsSettings = dnsSettings
+                                }
                             }
                             self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
                         } catch {

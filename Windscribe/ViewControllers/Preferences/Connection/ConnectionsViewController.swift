@@ -214,19 +214,21 @@ extension ConnectionViewController: ConnectionModeViewDelegate {
 
 extension ConnectionViewController: ConnectedDNSViewDelegate {
     func connectedDNSViewSaveValue(_ value: String) {
-        viewModel.saveConnectedDNSValue(value: value) {[weak self] isValid in
+        showLoading()
+        viewModel.saveConnectedDNSValue(value: value) { [weak self] isValid in
             guard let self = self else { return }
-            if isValid {
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                self.endLoading()
+                if isValid {
                     self.connectedDNSView.updateConnectedDNSValue(value: value)
-                }
-            } else {
-                let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .default) { _ in
-                    DispatchQueue.main.async {
-                        self.connectedDNSView.cancelUpdateValue()
+                } else {
+                    let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .default) { _ in
+                        DispatchQueue.main.async {
+                            self.connectedDNSView.cancelUpdateValue()
+                        }
                     }
+                    AlertManager().showAlert(title: TextsAsset.connectedDNSInvalidAlertTitle, message: TextsAsset.connectedDNSInvalidAlertBody, buttonText: TextsAsset.okay, actions: [cancelAction])
                 }
-                AlertManager().showAlert(title: TextsAsset.connectedDNSInvalidAlertTitle, message: TextsAsset.connectedDNSInvalidAlertBody, buttonText: TextsAsset.okay, actions: [cancelAction])
             }
         }
     }

@@ -20,3 +20,9 @@ struct DNSValue: Codable, Equatable {
     let value: String
     let servers: [String]
 }
+
+extension DNSValue: CustomStringConvertible {
+    var description: String {
+        return "Type: \(type) Value: \(value) Servers: \(servers)"
+    }
+}

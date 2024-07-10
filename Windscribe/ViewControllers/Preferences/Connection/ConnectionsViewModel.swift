@@ -173,11 +173,17 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void) {
         DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: {dnsValue in
-            guard let dnsValue = dnsValue else { return }
+            guard let dnsValue = dnsValue else {
+                completion(false)
+                return
+            }
+            if dnsValue.servers.isEmpty {
+                completion(false)
+                return
+            }
             self.preferences.saveCustomDNSValue(value: dnsValue)
-        }, completion: {isValid in
-            completion(isValid)
-        })
+            completion(true)
+        }, completion: {_ in })
     }
 
     func updatePort(value: String) {
