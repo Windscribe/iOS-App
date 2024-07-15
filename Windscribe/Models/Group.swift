@@ -91,9 +91,6 @@ struct GroupModel {
     dynamic var health: Int = 0
     dynamic var pingHost: String = ""
 
-    var advanceRepository: AdvanceRepository {
-        return Assembler.resolve(AdvanceRepository.self)
-    }
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case city = "city"
@@ -139,7 +136,7 @@ struct GroupModel {
             self.setNodes(array: nodesArray)
         }
         pingHost = try container.decodeIfPresent(String.self, forKey: .pingHost) ?? ""
-        self.setBestNode()
+        self.setBestNode(advanceRepository: Assembler.resolve(AdvanceRepository.self))
     }
 
     func setNodes(array: [Node]) {
@@ -147,7 +144,7 @@ struct GroupModel {
         nodes.append(objectsIn: array)
     }
 
-    func setBestNode() {
+    func setBestNode(advanceRepository: AdvanceRepository) {
         if nodes.count > 0 {
             let forceNode = advanceRepository.getForcedNode()
             if let forceNode = forceNode, nodes.map({$0.hostname}).contains(forceNode) {
