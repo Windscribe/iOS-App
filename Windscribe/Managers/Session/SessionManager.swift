@@ -48,9 +48,9 @@ class SessionManager: SessionManagerV2 {
     @objc func keepSessionUpdated() {
         if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
             self.sessionFetchInProgress = true
-            Single.just(self.localDatabase.getSessionSync())
+            self.localDatabase.getSession().first()
                 .flatMap { savedSession in
-                    if  let savedSession = savedSession, savedSession.isInvalidated == false {
+                    if  case let savedSession?? = savedSession {
                         self.logger.logD(self, "Cached session for \(savedSession.username)")
                         self.localDatabase.saveOldSession()
                         return self.apiManager.getSession()
@@ -58,11 +58,9 @@ class SessionManager: SessionManagerV2 {
                         return Single.error(Errors.sessionIsInvalid)
                     }
                 }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-                    if session.isInvalidated == false {
-                        localDatabase.saveSession(session: session).disposed(by: disposeBag)
-                        self.logger.logD(self, "Session updated for \(session.username)")
-                        self.sessionFetchInProgress = false
-                    }
+                    localDatabase.saveSession(session: session).disposed(by: disposeBag)
+                    self.logger.logD(self, "Session updated for \(session.username)")
+                    self.sessionFetchInProgress = false
                 }, onFailure: { error in
                     if case Errors.sessionIsInvalid = error {
                         self.logoutUser()

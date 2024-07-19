@@ -70,9 +70,7 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
         logger.logD(self, "Importing WireGuard/OpenVPN .conf file")
         let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
         localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            let config = $0.first {
-                return $0.name == fileName
-            }
+            let config = $0.first { return $0.name == fileName }
             if config != nil {
                 self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
                 return
@@ -163,7 +161,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
 
     private func setBestLocation() {
         localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if self.connectionStateManager.isConnecting() { self.logger.logD(self, "Changing selected location to Best location with hostname \(bestLocation.hostname)")
+            if let bestLocation = bestLocation, self.connectionStateManager.isConnecting() { self.logger.logD(self, "Changing selected location to Best location with hostname \(bestLocation.hostname)")
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
                                                             dnsHostname: bestLocation.dnsHostname,
                                                             hostname: bestLocation.hostname,
@@ -171,6 +169,8 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
                                                             nickName: bestLocation.nickName,
                                                             cityName: bestLocation.cityName,
                                                             groupId: bestLocation.groupId)
+            } else {
+                self.vpnManager.selectedNode = nil
             }
         }).disposed(by: disposeBag)
     }

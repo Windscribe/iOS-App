@@ -45,9 +45,6 @@ class WifiManager {
     }
 
     func getConnectedNetwork() -> WifiNetwork? {
-        if connectedWifi?.isInvalidated == true {
-            return nil
-        }
         return connectedWifi
     }
 
@@ -56,10 +53,14 @@ class WifiManager {
         observingNetworks = true
 
         Observable.combineLatest(
-            localDb.getNetworks().filter {$0.first?.isInvalidated == false},
+            localDb.getNetworks(),
             connectivity.network.asObservable()
         ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, _) in
             self.wifiNetworks.onNext(networks)
+            guard !networks.isEmpty else {
+                self.connectedWifi = nil
+                return
+            }
             if self.initialNetworkFetch {
                 self.setSelectedPreferences()
             } else {
@@ -67,7 +68,7 @@ class WifiManager {
             }
             self.initialNetworkFetch = false
             self.getNetworkName { wifiSSID in
-                self.connectedWifi = networks.filter {$0.isInvalidated == false}.filter { $0.SSID == wifiSSID }.first
+                self.connectedWifi = networks.filter { $0.SSID == wifiSSID }.first
                 if self.connectedWifi == nil {
                     self.saveNewNetwork(wifiSSID: wifiSSID ?? "")
                 }
@@ -160,7 +161,7 @@ class WifiManager {
                                           preferredProtocol: defaultProtocol,
                                           preferredPort: defaultPort)
 
-            if let results = try? self.wifiNetworks.value(), results.first?.isInvalidated == false {
+            if let results = try? self.wifiNetworks.value() {
                 let SSIDs = results.map({ $0.SSID })
                 if !SSIDs.contains(wifiNetwork.SSID) {
                     if "Unknown" != wifiNetwork.SSID {
@@ -195,7 +196,7 @@ class WifiManager {
                                           preferredProtocol: defaultProtocol,
                                           preferredPort: defaultPort)
         if let results = try? wifiNetworks.value() {
-            let SSIDs = results.filter {$0.isInvalidated == false}.map({ $0.SSID })
+            let SSIDs = results.map({ $0.SSID })
             if !SSIDs.contains(cellularNetwork.SSID) {
                 self.logger.logD(self, "Cellular network added.")
 
@@ -259,7 +260,7 @@ class WifiManager {
 
     func isConnectedWifiTrusted() -> Bool {
         let results = try? wifiNetworks.value()
-        let SSIDs = results?.filter {$0.isInvalidated == false}.filter({ $0.status == true }).map({ $0.SSID })
+        let SSIDs = results?.filter({ $0.status == true }).map({ $0.SSID })
         guard let connectedNetwork = getConnectedWifiNetworkSSID() else {
             return false
         }

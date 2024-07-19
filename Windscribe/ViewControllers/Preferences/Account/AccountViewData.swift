@@ -12,18 +12,11 @@ import Swinject
 import RxSwift
 
 enum AccountItemCell {
-
     private var  localDatabase: LocalDatabase {
         return Assembler.resolve(LocalDatabase.self)
     }
 
-    private var session: Session? {
-        var sess: Session?
-        localDatabase.getSession().subscribe(onNext: { session in
-            sess = session
-        }, onError: { _ in }).dispose()
-        return sess
-    }
+    private var session: Session? { localDatabase.getSessionSync() }
 
     var isProUser: Bool {
         if let session = session {
@@ -167,13 +160,7 @@ enum AccountSectionItem {
         return Assembler.resolve(LocalDatabase.self)
     }
 
-    private var session: Session? {
-        var sess: Session?
-        localDatabase.getSession().subscribe(onNext: { session in
-            sess = session
-        }, onError: { _ in }).dispose()
-        return sess
-    }
+    private var session: Session? { localDatabase.getSessionSync() }
 
     var isProUser: Bool {
         if let session = session {
@@ -226,11 +213,7 @@ enum AccountSectionItem {
     private func makePlanItems() -> [AccountItemCell] {
         if let session = session, session.isUserPro {
             return [.planType, .expiredDate]
-
-            // return [.planType, .expiredDate, .editAccount]
         }
         return [.planType, .expiredDate, .dateLeft]
-
-        // return [.planType, .expiredDate, .dateLeft, .editAccount]
     }
 }

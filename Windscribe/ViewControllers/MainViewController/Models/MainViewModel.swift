@@ -310,8 +310,9 @@ class MainViewModel: MainViewModelType {
     }
 
     func getNotices() {
-        guard let notifications = localDatabase.getNotifications() else { return }
-        notices.onNext(notifications)
+        localDatabase.getNotificationsObservable().bind(onNext: { notifications in
+            self.notices.onNext(notifications)
+        }).disposed(by: disposeBag)
     }
 
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void) {
@@ -340,7 +341,7 @@ class MainViewModel: MainViewModelType {
 
     func retrieveNotifications() -> [NoticeModel]? {
         guard let notices = try? self.notices.value() else { return nil }
-        let noticeModels = Array(notices.filter({$0.isInvalidated == false}).compactMap { $0.getModel() }.reversed().sorted(by: {$0.id! > $1.id!}).prefix(5))
+        let noticeModels = Array(notices.compactMap { $0.getModel() }.reversed().sorted(by: {$0.id! > $1.id!}).prefix(5))
         return noticeModels
     }
 
