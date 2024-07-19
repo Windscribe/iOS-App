@@ -68,7 +68,11 @@ class ConnectionStateManager: ConnectionStateManagerType {
         return Assembler.resolve(Connectivity.self)
     }()
 
-    init(apiManager: APIManager, vpnManager: VPNManager, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, logger: FileLogger) {
+    init(apiManager: APIManager,
+         vpnManager: VPNManager,
+         securedNetwork: SecuredNetworkRepository,
+         localDatabase: LocalDatabase,
+         logger: FileLogger) {
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.securedNetwork = securedNetwork

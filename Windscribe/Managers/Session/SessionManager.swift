@@ -73,6 +73,11 @@ class SessionManager: SessionManagerV2 {
         self.updateServerConfigs()
     }
 
+    func canAccesstoProLocation() -> Bool {
+        guard let session = session else { return false }
+        return session.isPremium
+    }
+
     func listenForSessionChanges() {
         localDatabase.getSession().subscribe(
             onNext: { session in
@@ -113,6 +118,16 @@ class SessionManager: SessionManagerV2 {
         }
     }
 
+    private func loadLatency() {
+        latencyRepo.loadAllServerLatency()
+            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onCompleted: {
+                self.vpnManager.checkLocationValidity()
+            })
+            .disposed(by: self.disposeBag)
+    }
+
     func checkForSessionChange() {
         logger.logD(MainViewController.self, "Comparing new session with old session.")
         guard let newSession = session, let oldSession = localDatabase.getOldSession() else {
@@ -133,7 +148,9 @@ class SessionManager: SessionManagerV2 {
         }
         if !newSession.isPremium && oldSession.isPremium {
             logger.logD(MainViewController.self, "User's pro plan expired.")
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().subscribe(
+                onSuccess: { _ in self.loadLatency()
+                }, onFailure: { _ in }).disposed(by: disposeBag)
             credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
             credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
         }

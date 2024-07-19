@@ -64,7 +64,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         }
 
-        if !canAccesstoProLocation() &&
+        if !sessionManager.canAccesstoProLocation() &&
             group.premiumOnly ?? false {
             showUpgradeTrigger.onNext(())
             return
@@ -115,11 +115,6 @@ class ServerListViewModel: ServerListViewModelType {
 }
 
 extension ServerListViewModel {
-    private func canAccesstoProLocation() -> Bool {
-        guard let session = sessionManager.session else { return false }
-        return session.isPremium
-    }
-
     /// true: under maintenance
     /// false: not
     private func checkMaintenanceLocation(server: ServerModel, group: GroupModel) -> Bool {
