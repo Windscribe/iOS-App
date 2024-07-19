@@ -4,6 +4,8 @@
 <dict>
 	<key>CFAPP_BUNDLE_ID</key>
 	<string>$(APP_BUNDLE_ID)</string>
+    <key>CFAccountID</key>
+    <string>$(APP_TEAM_ID)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
