@@ -12,7 +12,6 @@ import RxSwift
 import Swinject
 
 class ConnectionManager: ConnectionManagerV2 {
-
     private var logger: FileLogger
     private let disposeBag = DisposeBag()
     private var connectivity: Connectivity
@@ -61,7 +60,6 @@ class ConnectionManager: ConnectionManagerV2 {
         preferences.getSelectedPort().subscribe( onNext: { [weak self] port in
             self?.manualPort = port ?? DefaultValues.port
         }).disposed(by: disposeBag)
-
     }
     // MARK: - Actions
     /// Load protocols

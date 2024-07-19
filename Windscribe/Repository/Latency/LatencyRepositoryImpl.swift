@@ -67,14 +67,25 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadAllServerLatency() -> Completable {
-        self.createLatencyTask(from: self.getServerPingAndHosts())
+        let latencySingles =  self.createLatencyTask(from: self.getServerPingAndHosts())
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in
+            .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
+
+        latencySingles.subscribe(
+            onFailure: { _ in
                 let pingData = self.database.getAllPingData()
                 self.latency.onNext(pingData)
                 self.pickBestLocation(pingData: pingData)
-            }).asCompletable()
+            }
+        )
+        .disposed(by: self.disposeBag)
+
+        return latencySingles.do(onSuccess: { _ in
+            let pingData = self.database.getAllPingData()
+            self.latency.onNext(pingData)
+            self.pickBestLocation(pingData: pingData)
+        }).asCompletable()
     }
 
     func loadFavouriteLatency() -> Completable {

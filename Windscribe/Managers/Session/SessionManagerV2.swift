@@ -14,4 +14,5 @@ protocol SessionManagerV2 {
     func logoutUser()
     func checkForSessionChange()
     func keepSessionUpdated()
+    func canAccesstoProLocation() -> Bool
 }
