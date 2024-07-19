@@ -36,7 +36,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         database.getBestLocation().subscribe(onNext: { location in
             self.bestLocation.onNext(location)
         }, onError: { _ in
-
+            self.bestLocation.onNext(nil)
         }, onCompleted: {
             self.observingBestLocation = false
         }).disposed(by: disposeBag)

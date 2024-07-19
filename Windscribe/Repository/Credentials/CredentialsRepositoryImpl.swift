@@ -84,7 +84,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     }
 
     func selectedServerCredentialsType() -> ServerCredentials.Type {
-        guard let result = wifiManager.connectedWifi, result.isInvalidated == false else {
+        guard let result = wifiManager.getConnectedNetwork() else {
             return OpenVPNServerCredentials.self
         }
         if result.preferredProtocolStatus == true && !VPNManager.shared.isFromProtocolFailover && !vpnManager.isFromProtocolChange {

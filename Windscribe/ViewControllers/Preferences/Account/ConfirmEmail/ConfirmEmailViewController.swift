@@ -46,6 +46,7 @@ class ConfirmEmailViewController: WSUIViewController {
 
     private func bindData() {
         viewModel.localDatabase.getSession().subscribe(onNext: { [self] session in
+            guard let session = session else { return }
             DispatchQueue.main.async {
                 if session.emailStatus == true {
                   self.dismissDelegate?.dismissWith(action: .dismiss)

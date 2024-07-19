@@ -103,7 +103,7 @@ extension MainViewController {
 
     func updateUIForSession(session: Session?) {
         logger.logD(self, "Looking for account state changes.")
-        guard let session = session, !session.isInvalidated else { return }
+        guard let session = session else { return }
         // check for ghost account and present account completion screen
         if didCheckForGhostAccount == false && session.isUserPro == true && session.isUserGhost == true {
             self.didCheckForGhostAccount = true
@@ -317,7 +317,7 @@ extension MainViewController {
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
             self.serverListTableView.delegate = self.serverListTableViewDataSource
-            if let bestLocation = try? self.viewModel.bestLocation.value(), bestLocation.isInvalidated == false {
+            if let bestLocation = try? self.viewModel.bestLocation.value() {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             }
         }

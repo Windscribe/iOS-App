@@ -312,7 +312,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.bestLocation.filter {!($0?.isInvalidated ?? false)}.bind(onNext: { bestLocation in
+        viewModel.bestLocation.bind(onNext: { bestLocation in
             guard let bestLocation = bestLocation else { return }
             self.logger.logD(self, "Configuring best location.")
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()

@@ -29,7 +29,11 @@ class UserRepositoryImpl: UserRepository {
         self.vpnmanager = vpnmanager
         self.logger = logger
         localDatabase.getSession().subscribe(onNext: { [self] session in
-            self.user.onNext(User(session: session))
+            if let session = session {
+                self.user.onNext(User(session: session))
+            } else {
+                self.user.onNext(nil)
+            }
         }, onError: { [self] _ in
             self.user.onNext(nil)
         }).disposed(by: disposeBag)

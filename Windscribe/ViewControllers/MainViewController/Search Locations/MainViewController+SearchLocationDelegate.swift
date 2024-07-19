@@ -43,7 +43,7 @@ extension MainViewController {
         }
     }
     func reloadServerListForSearch() {
-        guard let results = try? viewModel.serverList.value(), results.first?.isInvalidated == false else { return }
+        guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
         let serverModels = results.compactMap({ $0.getServerModel() })
         let serverSections: [ServerSection] = serverModels.map({ ServerSection(server: $0, collapsed: true) })

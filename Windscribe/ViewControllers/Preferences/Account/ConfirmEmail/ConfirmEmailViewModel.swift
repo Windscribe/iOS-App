@@ -24,7 +24,7 @@ class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
     var sessionManager: SessionManagerV2
     let disposeBag = DisposeBag()
     var apiManager: APIManager
-    var session: BehaviorSubject<Session>?
+    let session = BehaviorSubject<Session?>(value: nil)
 
     init(alertManager: AlertManagerV2, sessionManager: SessionManagerV2, localDatabase: LocalDatabase, apiManager: APIManager) {
         self.alertManager = alertManager
@@ -36,7 +36,7 @@ class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
 
     func getSession() {
         localDatabase.getSession().subscribe(onNext: { [self] session in
-            self.session?.onNext(session)
+            self.session.onNext(session)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
