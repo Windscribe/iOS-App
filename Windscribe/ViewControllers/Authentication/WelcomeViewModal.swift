@@ -44,11 +44,11 @@ class WelcomeViewModelImpl: WelcomeViewModal {
     }
 
     func continueButtonTapped() {
-        //        if keyChainDatabase.isGhostAccountCreated() {
-        //            logger.logD(self, "Ghost account already created from this device.")
-        //            routeToSignup.onNext(true)
-        //            return
-        //        }
+        if keyChainDatabase.isGhostAccountCreated() {
+            logger.logD(self, "Ghost account already created from this device.")
+            routeToSignup.onNext(true)
+            return
+        }
         showLoadingView.onNext(true)
         apiManager.regToken().observe(on: MainScheduler.instance)
             .flatMap { result in

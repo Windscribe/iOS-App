@@ -48,7 +48,7 @@ protocol ConnectionsViewModelType {
 
 class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
-    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager!, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository
+    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)

@@ -26,6 +26,9 @@ class GhostAccountViewController: WSNavigationViewController {
         addViews()
         addAutoLayoutConstraints()
         titleLabel.text = TextsAsset.Preferences.account
+        infoLabel.text = TextsAsset.Account.ghostInfo
+        signUpButton.setTitle(TextsAsset.signUp, for: .normal)
+        loginButton.setTitle(TextsAsset.login, for: .normal)
         bindData()
     }
 
@@ -36,6 +39,13 @@ class GhostAccountViewController: WSNavigationViewController {
             } else {
                 router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
             }
+        }.disposed(by: disposeBag)
+
+        viewModel?.isDarkMode.subscribe {
+            self.setupViews(isDark: $0)
+            self.infoLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
+            self.signUpButton.setTitleColor(ThemeUtils.primaryTextColorInvert(isDarkMode: $0), for: .normal)
+            self.loginButton.setTitleColor(ThemeUtils.primaryTextColor(isDarkMode: $0), for: .normal)
         }.disposed(by: disposeBag)
 
         loginButton.rx.tap.bind { [self] in

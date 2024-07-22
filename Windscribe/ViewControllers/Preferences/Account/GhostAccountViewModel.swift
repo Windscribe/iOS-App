@@ -7,17 +7,20 @@
 //
 
 import Foundation
+import RxSwift
 
 protocol GhostAccountViewModelType {
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func isUserPro() -> Bool?
 }
 
 class GhostAccountViewModel: GhostAccountViewModelType {
+    let sessionManager: SessionManagerV2
+    let isDarkMode: BehaviorSubject<Bool>
 
-    var sessionManager: SessionManagerV2
-
-    init(sessionManager: SessionManagerV2) {
+    init(sessionManager: SessionManagerV2, themeManager: ThemeManager) {
         self.sessionManager = sessionManager
+        isDarkMode = themeManager.darkTheme
     }
 
     func isUserPro() -> Bool? {
