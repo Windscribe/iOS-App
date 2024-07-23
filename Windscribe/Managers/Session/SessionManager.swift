@@ -29,6 +29,7 @@ class SessionManager: SessionManagerV2 {
     let portmapRepo = Assembler.resolve(PortMapRepository.self)
     let preferences = Assembler.resolve(Preferences.self)
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
+    let userRepo = Assembler.resolve(UserRepository.self)
 
     func setSessionTimer() {
         logger.logD(MainViewController.self, "60 seconds fetch session timer scheduled.")
@@ -58,7 +59,7 @@ class SessionManager: SessionManagerV2 {
                         return Single.error(Errors.sessionIsInvalid)
                     }
                 }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-                    localDatabase.saveSession(session: session).disposed(by: disposeBag)
+                    userRepo.update(session: session)
                     self.logger.logD(self, "Session updated for \(session.username)")
                     self.sessionFetchInProgress = false
                 }, onFailure: { error in
