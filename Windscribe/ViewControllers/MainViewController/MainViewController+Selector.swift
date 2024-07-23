@@ -146,6 +146,9 @@ extension MainViewController {
 
     func refreshProtocol(from network: WifiNetwork?) {
         self.vpnManager.getVPNConnectionInfo { [self] info in
+            if info?.status == NEVPNStatus.disconnecting ||  info?.status == NEVPNStatus.invalid {
+                return
+            }
             if info != nil && [NEVPNStatus.connected, NEVPNStatus.connecting].contains(info!.status) {
                 protocolLabel.text = info?.selectedProtocol
                 portLabel.text = info?.selectedPort
