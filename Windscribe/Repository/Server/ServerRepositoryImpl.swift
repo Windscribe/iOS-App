@@ -56,7 +56,7 @@ class ServerRepositoryImpl: ServerRepository {
                 serverList.forEach { server in
                     server.groups.forEach { group in
                         if String(group.id) == favourite.groupId {
-                            if let lastSelectedNode = group.nodes.filter({$0.hostname == favourite.hostname}).first {
+                            if let lastSelectedNode =  self.getLastSelectedNode(group: group, server: server, favourite: favourite) {
                                 let favNode = FavNode(node: lastSelectedNode,
                                                       group: group,
                                                       server: server)
@@ -67,5 +67,13 @@ class ServerRepositoryImpl: ServerRepository {
                 }
             }
         }
+    }
+
+    private func getLastSelectedNode(group: Group, server: Server, favourite: FavNode) -> Node? {
+        var node = group.nodes.filter({$0.hostname == favourite.hostname}).first
+        if node == nil {
+            node = group.nodes.randomElement()
+        }
+        return node
     }
 }
