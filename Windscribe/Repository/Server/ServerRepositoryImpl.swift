@@ -72,6 +72,7 @@ class ServerRepositoryImpl: ServerRepository {
     private func getLastSelectedNode(group: Group, server: Server, favourite: FavNode) -> Node? {
         var node = group.nodes.filter({$0.hostname == favourite.hostname}).first
         if node == nil {
+            localDatabase.removeFavNode(hostName: favourite.hostname)
             node = group.nodes.randomElement()
         }
         return node
