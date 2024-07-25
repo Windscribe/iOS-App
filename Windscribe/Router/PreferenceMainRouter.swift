@@ -48,6 +48,9 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
         case RouteID.enterEmail:
             let vc = Assembler.resolve(EnterEmailViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
+        case RouteID.login:
+            let vc = Assembler.resolve(LoginViewController.self)
+            from.navigationController?.pushViewController(vc, animated: true)
         default: ()
         }
     }
