@@ -33,7 +33,7 @@ class NewsFeedModel: NewsFeedModelType {
     }
 
     private func load() {
-        Observable.combineLatest(localDatabase.getNotificationsObservable(), localDatabase.getReadNoticesObservable())
+        Observable.combineLatest(localDatabase.getNotificationsObservable(), localDatabase.getReadNoticesObservable().take(1))
         .bind { (notifications, readNotifications) in
             if notifications.isEmpty { return }
             let setReadNotificationIDs = Set(readNotifications.map { $0.id })

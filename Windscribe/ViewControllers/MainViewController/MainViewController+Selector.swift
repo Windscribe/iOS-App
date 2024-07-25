@@ -206,7 +206,9 @@ extension MainViewController {
         }
         preferredProtocolBadge.layoutIfNeeded()
         changeProtocolArrow.layoutIfNeeded()
-        setCircumventCensorshipBadge()
+        if let info = try? connectionStateViewModel.connectedState.value() {
+            self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
+        }
     }
 
     @objc func showConnectionFailed() {
