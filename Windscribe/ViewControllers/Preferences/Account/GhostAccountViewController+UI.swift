@@ -12,7 +12,6 @@ extension GhostAccountViewController {
 
     func addViews() {
         infoLabel = UILabel()
-        infoLabel.textColor = UIColor.white
         infoLabel.textAlignment = .center
         infoLabel.numberOfLines = 0
         infoLabel.font = UIFont.text(size: 16)
@@ -22,12 +21,10 @@ extension GhostAccountViewController {
         signUpButton.layer.cornerRadius = 26
         signUpButton.clipsToBounds = true
         signUpButton.backgroundColor = UIColor.seaGreen
-        signUpButton.setTitleColor(UIColor.midnight, for: .normal)
         signUpButton.titleLabel?.font = UIFont.text(size: 16)
         self.view.addSubview(signUpButton)
 
         loginButton = UIButton(type: .system)
-        loginButton.setTitleColor(UIColor.white, for: .normal)
         loginButton.layer.opacity = 0.5
         loginButton.titleLabel?.font = UIFont.bold(size: 16)
         self.view.addSubview(loginButton)

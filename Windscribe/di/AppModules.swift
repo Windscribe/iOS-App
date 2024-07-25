@@ -253,7 +253,7 @@ class ViewModels: Assembly {
             return NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(GhostAccountViewModelType.self) { r in
-            return GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!)
+            return GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(EnterEmailViewModel.self) { r in
             return EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
@@ -678,7 +678,7 @@ class ViewControllerModule: Assembly {
         container.register(GhostAccountViewController.self) { _ in
             GhostAccountViewController()
         }.initCompleted { r, c in
-            c.viewModel =  r.resolve(GhostAccountViewModel.self)
+            c.viewModel = r.resolve(GhostAccountViewModelType.self)
             c.router = r.resolve(GhostAccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
