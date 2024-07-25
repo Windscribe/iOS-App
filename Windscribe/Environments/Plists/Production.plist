@@ -69,16 +69,26 @@
 			<key>UIPrerenderedIcon</key>
 			<false/>
 		</dict>
+        <key>CFBundleAlternateIcons</key>
+        <dict>
+            <key>IconName</key>
+            <dict>
+                <key>CFBundleIconFiles</key>
+                <array>
+                    <string>IconName</string>
+                </array>
+            </dict>
+        </dict>
 	</dict>
 	<key>CFBundleIcons~ipad</key>
 	<dict>
 		<key>CFBundleAlternateIcons</key>
 		<dict>
-			<key>AppIcon-Light</key>
+			<key>IconName</key>
 			<dict>
 				<key>CFBundleIconFiles</key>
 				<array>
-					<string>AppIcon-Light</string>
+					<string>IconName</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>

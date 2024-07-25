@@ -36,6 +36,11 @@
 		1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		1AF57D48280FED3C004E8082 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		1B9E4881B28361D8E4276E67 /* Pods_Windscribe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4351FB9879219E6219AEF9FE /* Pods_Windscribe.framework */; };
+		1E01D8FF2C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */; };
+		1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */; };
+		1E01D9282C51675900B679E9 /* IconName@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */; };
+		1E01D9292C51675900B679E9 /* IconName@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */; };
+		1E01D92A2C51675900B679E9 /* IconName@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9272C51675900B679E9 /* IconName@2x.png */; };
 		1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */; };
 		1E0EFF172C2D6C22002FBC72 /* ConnectedDNSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0EFF162C2D6C22002FBC72 /* ConnectedDNSView.swift */; };
 		1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */; };
@@ -349,8 +354,6 @@
 		AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFDF934B255EB93C002B1FBA /* SwiftUI.framework */; };
 		AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDF934E255EB93C002B1FBA /* HomeWidget.swift */; };
 		AFDF9352255EB940002B1FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFDF9351255EB940002B1FBA /* Assets.xcassets */; };
-		AFDF9354255EB940002B1FBA /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = AFDF9350255EB93C002B1FBA /* HomeWidget.intentdefinition */; };
-		AFDF9355255EB941002B1FBA /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = AFDF9350255EB93C002B1FBA /* HomeWidget.intentdefinition */; };
 		AFDF9358255EB941002B1FBA /* HomeWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AFDF9348255EB93C002B1FBA /* HomeWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AFDF935C255EC191002B1FBA /* Flags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF0AED332200DACE00039CAF /* Flags.xcassets */; };
 		AFDF935D2562B7CA002B1FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF4ECAA323E9D93A00E09223 /* Assets.xcassets */; };
@@ -795,6 +798,51 @@
 		1AE6DA1E2833CFD800593495 /* GeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralViewController.swift; sourceTree = "<group>"; };
 		1AF57D42280FCBE2004E8082 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		1AF57D45280FCF37004E8082 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		1E01D8DE2C51559B00B679E9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8E02C5155A400B679E9 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E01D8E22C5155A400B679E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E01D8E42C5155AA00B679E9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8E62C5155B300B679E9 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8E82C5155CD00B679E9 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8EA2C51562800B679E9 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8EC2C51562F00B679E9 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8EE2C51563300B679E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8F02C51563600B679E9 /* ko-KR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko-KR"; path = "ko-KR.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E01D8F22C51563B00B679E9 /* id-ID */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "id-ID"; path = "id-ID.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E01D8F42C51564100B679E9 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8F62C51564700B679E9 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8F82C51564900B679E9 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E01D8FA2C51564C00B679E9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8FC2C51566000B679E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E01D8FD2C5164EA00B679E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/HomeWidget.intentdefinition; sourceTree = "<group>"; };
+		1E01D9022C51650200B679E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9042C51651E00B679E9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9062C51651F00B679E9 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E01D9082C51652000B679E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E01D90A2C51652300B679E9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D90C2C51652400B679E9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D90E2C51652500B679E9 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9102C51652700B679E9 /* id-ID */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "id-ID"; path = "id-ID.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E01D9122C51652800B679E9 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9142C51652900B679E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9162C51652B00B679E9 /* ko-KR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko-KR"; path = "ko-KR.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E01D9182C51652C00B679E9 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D91A2C51652D00B679E9 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E01D91C2C51652D00B679E9 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D91E2C51652E00B679E9 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9202C51652F00B679E9 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9222C51652F00B679E9 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9242C51653000B679E9 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/HomeWidget.strings; sourceTree = "<group>"; };
+		1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@2x~ipad.png"; sourceTree = "<group>"; };
+		1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@3x~ipad.png"; sourceTree = "<group>"; };
+		1E01D9272C51675900B679E9 /* IconName@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@2x.png"; sourceTree = "<group>"; };
+		1E0D9D252C529240008AFF2D /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LocationIntents.strings; sourceTree = "<group>"; };
+		1E0D9D272C529242008AFF2D /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "it-IT.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E0D9D292C52924A008AFF2D /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "ja-JP.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E0D9D2B2C529265008AFF2D /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "de-DE.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
+		1E0D9D2D2C529277008AFF2D /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "de-DE.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E0D9D2F2C529278008AFF2D /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "it-IT.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
+		1E0D9D312C529279008AFF2D /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "ja-JP.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
 		1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
 		1E0EFF162C2D6C22002FBC72 /* ConnectedDNSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDNSView.swift; sourceTree = "<group>"; };
 		1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
@@ -1052,7 +1100,6 @@
 		AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticMode.swift; sourceTree = "<group>"; };
 		AF551D4523F1F6370094F0A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/LocationIntents.intentdefinition; sourceTree = "<group>"; };
 		AF551D4823F1F6460094F0A4 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		AF551D4A23F1F64F0094F0A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LocationIntents.strings; sourceTree = "<group>"; };
 		AF60571A236897D900986BA7 /* DropdownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownButton.swift; sourceTree = "<group>"; };
 		AF619C4224AA348900BB331C /* WireGuardTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF619C4424AA348900BB331C /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
@@ -1115,7 +1162,6 @@
 		AFDF9349255EB93C002B1FBA /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		AFDF934B255EB93C002B1FBA /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		AFDF934E255EB93C002B1FBA /* HomeWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWidget.swift; sourceTree = "<group>"; };
-		AFDF9350255EB93C002B1FBA /* HomeWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = HomeWidget.intentdefinition; sourceTree = "<group>"; };
 		AFDF9351255EB940002B1FBA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AFDF9353255EB940002B1FBA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HomeWidgetExtension.entitlements; sourceTree = "<group>"; };
@@ -2310,6 +2356,9 @@
 			children = (
 				AF4C000523DB78CE00F07F06 /* AppIcon-Light@2x.png */,
 				AF4C000423DB78CD00F07F06 /* AppIcon-Light@3x.png */,
+				1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */,
+				1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */,
+				1E01D9272C51675900B679E9 /* IconName@2x.png */,
 			);
 			path = "AppIcons-Light";
 			sourceTree = "<group>";
@@ -2456,7 +2505,7 @@
 			isa = PBXGroup;
 			children = (
 				AFDF934E255EB93C002B1FBA /* HomeWidget.swift */,
-				AFDF9350255EB93C002B1FBA /* HomeWidget.intentdefinition */,
+				1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */,
 				AFDF9351255EB940002B1FBA /* Assets.xcassets */,
 				AFDF9353255EB940002B1FBA /* Info.plist */,
 			);
@@ -3376,8 +3425,10 @@
 				AF4E926421EF8F5900A3F584 /* IBMPlexSans-TextItalic.otf in Resources */,
 				AF4E925F21EF8F5900A3F584 /* IBMPlexSans-MediumItalic.otf in Resources */,
 				AF4E925D21EF8F5900A3F584 /* IBMPlexSans-LightItalic.otf in Resources */,
+				1E01D92A2C51675900B679E9 /* IconName@2x.png in Resources */,
 				AF16CA102226E4B200997A2A /* LogoParts.xcassets in Resources */,
 				AF038CD3257FB14B008F34A6 /* welcome-background.png in Resources */,
+				1E01D9292C51675900B679E9 /* IconName@3x~ipad.png in Resources */,
 				AF4E926021EF8F5900A3F584 /* IBMPlexSans-Regular.otf in Resources */,
 				AF2EC47022BD6D2800EB4799 /* SmallFlags.xcassets in Resources */,
 				AF4E926321EF8F5900A3F584 /* IBMPlexSans-Text.otf in Resources */,
@@ -3392,6 +3443,7 @@
 				AF15B8CD2475B7A70086BB2A /* blur.png in Resources */,
 				AF914A7023CCF947002D3041 /* ws-rotating-logo.gif in Resources */,
 				AF4E925921EF8F5900A3F584 /* IBMPlexSans-BoldItalic.otf in Resources */,
+				1E01D9282C51675900B679E9 /* IconName@2x~ipad.png in Resources */,
 				AF4ECAA423E9D93B00E09223 /* Assets.xcassets in Resources */,
 				AF4E925A21EF8F5900A3F584 /* IBMPlexSans-ExtraLightItalic.otf in Resources */,
 				598F173A29F05723007137A4 /* EmergencyConnectViewController.xib in Resources */,
@@ -4122,7 +4174,7 @@
 				E97ABD5728E5F95E00B38587 /* ProtocolSetPreferredViewController.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,
 				AF04983021FA43690046D33B /* Section.swift in Sources */,
-				AFDF9355255EB941002B1FBA /* HomeWidget.intentdefinition in Sources */,
+				1E01D8FF2C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				C57BDE4229B93FBB00337E63 /* LinkProvider.swift in Sources */,
 				AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */,
 				AF8DA7AB2204B50200885BD8 /* PreferencesViewController+UI.swift in Sources */,
@@ -4337,7 +4389,7 @@
 				1A9DB35C2817F63A00C3EC1C /* UIView+Swizzling.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
-				AFDF9354255EB940002B1FBA /* HomeWidget.intentdefinition in Sources */,
+				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
@@ -4388,6 +4440,35 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E01D8FD2C5164EA00B679E9 /* Base */,
+				1E01D9022C51650200B679E9 /* en */,
+				1E01D9042C51651E00B679E9 /* ar */,
+				1E01D9062C51651F00B679E9 /* zh-HK */,
+				1E01D9082C51652000B679E9 /* zh-Hans */,
+				1E01D90A2C51652300B679E9 /* fr */,
+				1E01D90C2C51652400B679E9 /* de */,
+				1E01D90E2C51652500B679E9 /* hi */,
+				1E01D9102C51652700B679E9 /* id-ID */,
+				1E01D9122C51652800B679E9 /* it */,
+				1E01D9142C51652900B679E9 /* ja */,
+				1E01D9162C51652B00B679E9 /* ko-KR */,
+				1E01D9182C51652C00B679E9 /* pl */,
+				1E01D91A2C51652D00B679E9 /* pt-PT */,
+				1E01D91C2C51652D00B679E9 /* ru */,
+				1E01D91E2C51652E00B679E9 /* es */,
+				1E01D9202C51652F00B679E9 /* tr */,
+				1E01D9222C51652F00B679E9 /* uk */,
+				1E01D9242C51653000B679E9 /* vi */,
+				1E0D9D2D2C529277008AFF2D /* de-DE */,
+				1E0D9D2F2C529278008AFF2D /* it-IT */,
+				1E0D9D312C529279008AFF2D /* ja-JP */,
+			);
+			name = HomeWidget.intentdefinition;
+			sourceTree = "<group>";
+		};
 		AF018DF521B0866800B225FF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4426,7 +4507,26 @@
 			children = (
 				AF551D4523F1F6370094F0A4 /* Base */,
 				AF551D4823F1F6460094F0A4 /* tr */,
-				AF551D4A23F1F64F0094F0A4 /* en */,
+				1E01D8DE2C51559B00B679E9 /* ar */,
+				1E01D8E02C5155A400B679E9 /* zh-HK */,
+				1E01D8E22C5155A400B679E9 /* zh-Hans */,
+				1E01D8E42C5155AA00B679E9 /* fr */,
+				1E01D8E62C5155B300B679E9 /* ru */,
+				1E01D8E82C5155CD00B679E9 /* pl */,
+				1E01D8EA2C51562800B679E9 /* vi */,
+				1E01D8EC2C51562F00B679E9 /* hi */,
+				1E01D8EE2C51563300B679E9 /* ja */,
+				1E01D8F02C51563600B679E9 /* ko-KR */,
+				1E01D8F22C51563B00B679E9 /* id-ID */,
+				1E01D8F42C51564100B679E9 /* it */,
+				1E01D8F62C51564700B679E9 /* es */,
+				1E01D8F82C51564900B679E9 /* pt-PT */,
+				1E01D8FA2C51564C00B679E9 /* de */,
+				1E01D8FC2C51566000B679E9 /* en */,
+				1E0D9D252C529240008AFF2D /* uk */,
+				1E0D9D272C529242008AFF2D /* it-IT */,
+				1E0D9D292C52924A008AFF2D /* ja-JP */,
+				1E0D9D2B2C529265008AFF2D /* de-DE */,
 			);
 			name = LocationIntents.intentdefinition;
 			path = ..;
@@ -4575,11 +4675,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 21;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -4621,11 +4722,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -5101,11 +5203,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

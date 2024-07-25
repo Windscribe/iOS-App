@@ -6,8 +6,6 @@
 	<string>$(APP_BUNDLE_ID)</string>
 	<key>CFAccountID</key>
 	<string>$(APP_TEAM_ID)</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -110,6 +108,8 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
@@ -120,9 +120,10 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs the location permission in order to make the &quot;Network Whitelist&quot; feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.</string>
+	<string>$(PRODUCT_NAME) needs the location permission in order to make the "Network Whitelist" feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>ConfigurationIntent</string>
 		<string>ShowLocationIntent</string>
 	</array>
 	<key>UIAppFonts</key>
