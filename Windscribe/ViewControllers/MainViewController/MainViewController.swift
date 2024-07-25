@@ -313,7 +313,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         viewModel.bestLocation.bind(onNext: { bestLocation in
-            guard let bestLocation = bestLocation else { return }
+            guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             if selectBestLocation && self.vpnManager.isDisconnected() || self.noSelectedNodeToConnect() {
