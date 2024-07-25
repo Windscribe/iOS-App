@@ -35,7 +35,7 @@ class ServerRepositoryImpl: ServerRepository {
                 let servers = serverList.servers.toArray()
                 servers.forEach { s in
                     s.groups.forEach { g in
-                        g.setBestNode()
+                        g.setBestNode(advanceRepository: self.advanceRepository)
                     }
                 }
                 self.localDatabase.saveServers(servers: servers)
