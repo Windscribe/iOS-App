@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "لنتمكن من التواصل معك، لن نستخدمه لأي شيء آخر";
 "Message" = "الرسالة";
 "Subject" = "الموضوع";
+"Connected DNS" = "DNS المتصل";
+"Select the DNS server while connected to Windscribe." = "حدد خادم DNS أثناء الاتصال ب Windscribe.";
+"Custom" = "تقليد";

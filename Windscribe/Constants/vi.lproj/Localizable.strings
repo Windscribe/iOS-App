@@ -348,3 +348,6 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "So we can contact you, we won’t use  it for anything else" = "Vì vậy, chúng tôi có thể liên hệ với bạn, chúng tôi sẽ không sử dụng thông tin đó cho bất kỳ việc gì khác";
 "Message" = "Tin nhắn";
 "Subject" = "Chủ đề";
+"Connected DNS" = "DNS được kết nối";
+"Select the DNS server while connected to Windscribe." = "Chọn máy chủ DNS trong khi kết nối với Windscribe.";
+"Custom" = "Phong tục";

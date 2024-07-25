@@ -339,3 +339,6 @@
 "So we can contact you, we won’t use  it for anything else" = "Agar kami dapat menghubungi Anda, tidak akan digunakan untuk hal lain";
 "Message" = "Pesan";
 "Subject" = "Perihal";
+"Connected DNS" = "DNS yang tersambung";
+"Select the DNS server while connected to Windscribe." = "Pilih server DNS saat terhubung ke Windscribe.";
+"Custom" = "Adat";
