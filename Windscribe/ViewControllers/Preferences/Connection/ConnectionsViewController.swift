@@ -46,6 +46,14 @@ class ConnectionViewController: WSNavigationViewController {
         return vw
     }()
 
+    lazy var connectedDNSView = {
+        let vw = ConnectedDNSView(optionType: viewModel.getCurrentConnectedDNS(),
+                                  dnsValue: viewModel.getConnectedDNSValue(),
+                                  isDarkMode: viewModel.isDarkMode)
+        vw.delegate = self
+        return vw
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Connection View")
@@ -60,7 +68,15 @@ class ConnectionViewController: WSNavigationViewController {
                 networkWhiteListRow,
                 connectionModeViewV2,
                 makeConnectionSecureView(type: .killSwitch),
+                connectedDNSView,
                 makeConnectionSecureView(type: .allowLan),
+                circumventCensorshipView
+            ])
+        } else if #available(iOS 14.0, *) {
+            layoutView.stackView.addArrangedSubviews([
+                networkWhiteListRow,
+                connectionModeViewV2,
+                connectedDNSView,
                 circumventCensorshipView
             ])
         } else {
@@ -95,6 +111,10 @@ class ConnectionViewController: WSNavigationViewController {
 
         viewModel.isCircumventCensorshipEnabled.subscribe {
             self.circumventCensorshipView.switchButton.setStatus($0)
+        }.disposed(by: disposeBag)
+
+        viewModel.shouldShowCustomDNSOption.subscribe {
+            self.connectedDNSView.isHidden = !$0
         }.disposed(by: disposeBag)
     }
 
@@ -189,5 +209,39 @@ extension ConnectionViewController: ConnectionModeViewDelegate {
 
     func connectionModeViewDidChangePort(_ value: String) {
         viewModel.updatePort(value: value)
+    }
+}
+
+extension ConnectionViewController: ConnectedDNSViewDelegate {
+    func connectedDNSViewSaveValue(_ value: String) {
+        viewModel.saveConnectedDNSValue(value: value) {[weak self] isValid in
+            guard let self = self else { return }
+            if isValid {
+                DispatchQueue.main.async {
+                    self.connectedDNSView.updateConnectedDNSValue(value: value)
+                }
+            } else {
+                let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .default) { _ in
+                    DispatchQueue.main.async {
+                        self.connectedDNSView.cancelUpdateValue()
+                    }
+                }
+                AlertManager().showAlert(title: TextsAsset.connectedDNSInvalidAlertTitle, message: TextsAsset.connectedDNSInvalidAlertBody, buttonText: TextsAsset.okay, actions: [cancelAction])
+            }
+        }
+    }
+
+    func connectedDNSViewDidChangeType(_ option: ConnectedDNSType) {
+        viewModel.updateConnectedDNS(type: option)
+    }
+
+    func connectedDNSViewExplain() {
+        if let url = URL(string: FeatureExplainer.connectedDNS.getUrl()) {
+            openLink(url: url)
+        }
+    }
+
+    func connectedDNSViewDidStartEditing() {
+        layoutView.scrollView.scrollToView(view: connectedDNSView, animated: true)
     }
 }
