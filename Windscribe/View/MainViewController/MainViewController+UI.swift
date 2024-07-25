@@ -280,7 +280,6 @@ extension MainViewController {
         notificationDot.layer.cornerRadius = 7.0
         notificationDot.clipsToBounds = true
         notificationDot.isHidden = true
-//        notificationDot.setTitle("3", for: .normal)
         notificationDot.setTitleColor(UIColor.midnight, for: .normal)
         notificationDot.titleLabel?.font = UIFont.bold(size: 10)
         notificationDot.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
