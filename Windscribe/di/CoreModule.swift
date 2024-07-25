@@ -32,6 +32,14 @@ extension Container {
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())
+            if let countryOverride = preferences.getAdvanceParams().splitToArray(separator: "\n").first(where: { keyValue in
+                let pair = keyValue.splitToArray(separator: "=")
+                return pair.count == 2 && pair[0] == wsServerOverrride
+            })?.splitToArray(separator: "=")
+                .dropFirst()
+                .joined(separator: "=") {
+                    WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
+                }
             return WSNet.instance().serverAPI()
         }.inObjectScope(.container)
     }

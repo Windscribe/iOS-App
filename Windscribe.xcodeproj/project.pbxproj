@@ -615,6 +615,13 @@
 		C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
 		C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */; };
+		C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
+		C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
+		C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
+		C5DEF9F42C52EDCD00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
+		C5DEF9F52C52EDCE00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
+		C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
+		C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
 		C5E18ED2286B3D3200DD3B07 /* APIParameterValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9B2743703D008B8786 /* APIParameterValues.swift */; };
 		C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
@@ -4279,6 +4286,8 @@
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
 				AFBD019622946B3400FED749 /* String+Ext.swift in Sources */,
+				C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */,
+				C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				AFED9A3A226E4457000E9EE2 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4304,8 +4313,10 @@
 				C52DA52F2B63913300E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
+				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4340,6 +4351,7 @@
 				C535D28027E2C19E00C08345 /* DynamicWireGuardConnect.swift in Sources */,
 				C571C6772C135C3600786DA5 /* UserScope.swift in Sources */,
 				C535D2A127E5133300C08345 /* URLRequest+Ext.swift in Sources */,
+				C5DEF9F52C52EDCE00696D06 /* AdvanceKeys.swift in Sources */,
 				1E7A19622C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C50F20D22B62110700266B23 /* Bundle+Ext.swift in Sources */,
 				C535D28727E2E2BA00C08345 /* APIParameters.swift in Sources */,
@@ -4383,6 +4395,7 @@
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
 				AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */,
 				AF038CC9256409C2008F34A6 /* UIColor+Ext.swift in Sources */,
+				C5DEF9F42C52EDCD00696D06 /* AdvanceKeys.swift in Sources */,
 				C50F20C82B61777A00266B23 /* CoreModule.swift in Sources */,
 				C52DA52D2B63912D00E5C571 /* FileDatabase.swift in Sources */,
 				596E60052B8F774000D51E20 /* LanguageManagerV2.swift in Sources */,
@@ -4396,6 +4409,7 @@
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
 				C56FCBE42B2B8DB2008DE7D4 /* SharedUserDefaults.swift in Sources */,
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
+				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Ext.swift in Sources */,
 				C50F20CF2B61A52C00266B23 /* FileLogFormater.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
