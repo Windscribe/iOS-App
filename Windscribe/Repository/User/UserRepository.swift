@@ -13,4 +13,5 @@ protocol UserRepository {
     var user: BehaviorSubject<User?> { get }
     func getUpdatedUser() -> Single<User>
     func login(session: Session)
+    func update(session: Session)
 }

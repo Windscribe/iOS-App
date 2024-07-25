@@ -56,4 +56,9 @@ class UserRepositoryImpl: UserRepository {
         localDatabase.saveSession(session: session).disposed(by: disposeBag)
         user.onNext(User(session: session))
     }
+
+    func update(session: Session) {
+        localDatabase.saveSession(session: session).disposed(by: disposeBag)
+        user.onNext(User(session: session))
+    }
 }
