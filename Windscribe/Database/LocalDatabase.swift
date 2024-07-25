@@ -11,7 +11,7 @@ import RealmSwift
 import RxSwift
 protocol LocalDatabase {
     func migrate()
-    func getSession() -> Observable<Session>
+    func getSession() -> Observable<Session?>
     func getSessionSync() -> Session?
     func saveSession(session: Session) -> Disposable
     func getMobilePlans() -> [MobilePlan]?
@@ -35,7 +35,7 @@ protocol LocalDatabase {
     func getReadNotices() -> [ReadNotice]?
     func getReadNoticesObservable() -> Observable<[ReadNotice]>
     func saveReadNotices(readNotices: [ReadNotice])
-    func getIp() -> Observable<MyIP>
+    func getIp() -> Observable<MyIP?>
     func saveIp(myip: MyIP) -> Disposable
     func getNetworks() -> Observable<[WifiNetwork]>
     func saveNetwork(wifiNetwork: WifiNetwork) -> Disposable
@@ -50,10 +50,10 @@ protocol LocalDatabase {
     func saveRobertFilters(filters: RobertFilters) -> Disposable
     func saveLastConnectedNode(node: LastConnectedNode) -> Disposable
     func getLastConnectedNode() -> LastConnectedNode?
-    func getBestLocation() -> Observable<BestLocation>
+    func getBestLocation() -> Observable<BestLocation?>
     func saveBestLocation(location: BestLocation) -> Disposable
     func removeBestLocation(cityName: String)
-    func getLastConnection() -> Observable<VPNConnection>
+    func getLastConnection() -> Observable<VPNConnection?>
     func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable
     func saveFavNode(favNode: FavNode) -> Disposable
     func getFavNode() -> Observable<[FavNode]>

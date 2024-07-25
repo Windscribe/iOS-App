@@ -97,7 +97,7 @@ class ServerListViewModel: ServerListViewModelType {
 
     func connectToBestLocation() {
         localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if !self.connectionStateManager.isConnecting() {
+            if let bestLocation = bestLocation, !self.connectionStateManager.isConnecting() {
                 self.logger.logD(MainViewController.self, "Tapped on Best Location \(bestLocation.hostname) from the server list.")
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
                                                        dnsHostname: bestLocation.dnsHostname,

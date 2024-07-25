@@ -75,6 +75,8 @@
 		1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */; };
 		1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
 		1EA91DDE2BECFE4100496DF8 /* VPNManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DDD2BECFE4100496DF8 /* VPNManagerViewModel.swift */; };
+		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
+		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
 		1EC6C77E2BE136190036248B /* MainViewController+SearchLocationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77D2BE136190036248B /* MainViewController+SearchLocationDelegate.swift */; };
 		1EC6C7812BE268D60036248B /* CardTopViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7802BE268D60036248B /* CardTopViewModel.swift */; };
@@ -824,6 +826,8 @@
 		1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+Status.swift"; sourceTree = "<group>"; };
 		1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionStateInfo.swift; sourceTree = "<group>"; };
 		1EA91DDD2BECFE4100496DF8 /* VPNManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerViewModel.swift; sourceTree = "<group>"; };
+		1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Migration.swift"; sourceTree = "<group>"; };
+		1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Utility.swift"; sourceTree = "<group>"; };
 		1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationsViewModel.swift; sourceTree = "<group>"; };
 		1EC6C77D2BE136190036248B /* MainViewController+SearchLocationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+SearchLocationDelegate.swift"; sourceTree = "<group>"; };
 		1EC6C7802BE268D60036248B /* CardTopViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTopViewModel.swift; sourceTree = "<group>"; };
@@ -2554,6 +2558,8 @@
 			children = (
 				C5592B882B394BF100F2F110 /* LocalDatabase.swift */,
 				C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */,
+				1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */,
+				1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -4049,6 +4055,7 @@
 				C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */,
 				AF36BF0C22FC969300FCC6F4 /* EnterCredentialsViewController.swift in Sources */,
+				1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */,
 				C51704BF27694B4000556040 /* ServerHealthView.swift in Sources */,
 				5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */,
 				C56FCC002B2CE66A008DE7D4 /* GhostAccountRouter.swift in Sources */,
@@ -4085,6 +4092,7 @@
 				59C3115F2BC5C00F004B16B3 /* ConnectionManagerV2.swift in Sources */,
 				AF8DA7AD2204BA1900885BD8 /* PreferencesTableViewCell.swift in Sources */,
 				C56FCC082B2CF3A7008DE7D4 /* HelpRouter.swift in Sources */,
+				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
 				E97ABD4B28D47AE600B38587 /* ShareWithFriendViewController.swift in Sources */,
 				AF97EFDF2281F1DD00378058 /* Bundle+Ext.swift in Sources */,

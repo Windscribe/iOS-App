@@ -13,7 +13,7 @@ class IPRepositoryImpl: IPRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
-    let currentIp: ReplaySubject<MyIP> = ReplaySubject.create(bufferSize: 1)
+    let currentIp: ReplaySubject<MyIP?> = ReplaySubject.create(bufferSize: 1)
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager

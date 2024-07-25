@@ -63,7 +63,6 @@ class NewsFeedViewController: WSUIViewController {
     }
 
     @objc func backButtonTapped() {
-        NotificationCenter.default.post(Notification(name: Notifications.checkForNotifications))
         dismiss(animated: true, completion: nil)
     }
 }
