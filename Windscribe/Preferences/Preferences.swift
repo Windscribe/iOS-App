@@ -87,6 +87,7 @@ protocol Preferences {
     func getSessionAuthHash() -> String?
     func saveCountryOverrride(value: String?)
     func getCountryOverride() -> String?
+    func getLanguageManagerLanguage() -> String?
 
     func saveServerNameKey(key: String?)
     func getServerNameKey() -> String?

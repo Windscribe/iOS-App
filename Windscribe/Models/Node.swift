@@ -159,11 +159,11 @@ struct FavNodeModel {
     dynamic var dnsHostname: String = ""
     dynamic var ipAddress: String = ""
     dynamic var customConfigId: String?
+    dynamic var isPremiumOnly: Bool = false
     dynamic var pingIp: String = ""
     dynamic var pingHost: String = ""
     dynamic var linkSpeed: String = ""
     dynamic var health: Int = 0
-    dynamic var isPremiumOnly: Bool?
 
     convenience init(node: Node,
                      group: Group,
@@ -201,7 +201,7 @@ struct FavNodeModel {
         self.pingHost = group.pingHost ?? ""
         self.linkSpeed = group.linkSpeed ?? "1000"
         self.health = group.health ?? 0
-        self.isPremiumOnly = group.premiumOnly
+        self.isPremiumOnly = group.premiumOnly ?? false
     }
 
     override static func primaryKey() -> String? {
@@ -220,7 +220,7 @@ struct FavNodeModel {
                             pingIp: pingIp,
                             linkSpeed: linkSpeed,
                             health: health,
-                            isPremiumOnly: isPremiumOnly ?? true)
+                            isPremiumOnly: isPremiumOnly)
     }
 
 }

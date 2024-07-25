@@ -82,7 +82,9 @@ class LanguageManager: LanguageManagerV2 {
     }
 
     func setAppLanguage() {
-        let currentLanguage = getCurrentLanguage()
+        if let currentLanguage = preference.getLanguageManagerLanguage() {
+            return
+        }
         if currentLanguage != Languages.english {
             return
         }
