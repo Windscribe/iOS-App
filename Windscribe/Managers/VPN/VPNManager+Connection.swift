@@ -273,8 +273,9 @@ extension VPNManager {
                                                    cityName: cityName,
                                                    groupId: groupId)
         } else {
-            logger.logD(self, "Updated to best location as there were no other groups available on the same server.")
             localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
+                guard let bestLocation = bestLocation else { return }
+                self.logger.logD(self, "Updated to best location as there were no other groups available on the same server.")
                 self.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
                                             dnsHostname: bestLocation.dnsHostname,
                                             hostname: bestLocation.hostname,
