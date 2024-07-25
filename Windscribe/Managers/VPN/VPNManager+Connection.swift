@@ -238,4 +238,51 @@ extension VPNManager {
             connectUsingOpenVPN(forceProtocol: udp)
         }
     }
+
+    func checkLocationValidity() {
+        guard let selectedNode = selectedNode else { return }
+        let hostname = selectedNode.hostname
+        let serverGroup = localDB.getServerAndGroup(bestNodeHostname: hostname)
+        guard let serverGroup = serverGroup else { return }
+        if !sessionManager.canAccesstoProLocation() && serverGroup.1.premiumOnly ?? false {
+            logger.logD(self, "Will try to update to a valid group from the server list.")
+            updateToValidLocation(from: serverGroup)
+        }
+    }
+
+    private func updateToValidLocation(from serverGroup: (ServerModel, GroupModel)) {
+        logger.logD(self, "Will try to update to a valid group from the server list.")
+        if let group = serverGroup.0.groups?.filter({ serverGroup.1.id != $0.id }).first {
+            let server = serverGroup.0
+            guard let bestNode = group.bestNode,
+                  let bestNodeHostname = bestNode.hostname,
+                  let serverName = server.name,
+                  let countryCode = server.countryCode,
+                  let dnsHostname = server.dnsHostname,
+                  let hostname = bestNode.hostname,
+                  let serverAddress = bestNode.ip2,
+                  let nickName = group.nick,
+                  let cityName = group.city,
+                  let groupId = group.id else { return }
+            logger.logD(self, "Updated to another group in the same server \(serverName) \(bestNodeHostname).")
+            selectedNode = SelectedNode(countryCode: countryCode,
+                                                   dnsHostname: dnsHostname,
+                                                   hostname: hostname,
+                                                   serverAddress: serverAddress,
+                                                   nickName: nickName,
+                                                   cityName: cityName,
+                                                   groupId: groupId)
+        } else {
+            logger.logD(self, "Updated to best location as there were no other groups available on the same server.")
+            localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
+                self.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
+                                            dnsHostname: bestLocation.dnsHostname,
+                                            hostname: bestLocation.hostname,
+                                            serverAddress: bestLocation.ipAddress,
+                                            nickName: bestLocation.nickName,
+                                            cityName: bestLocation.cityName,
+                                            groupId: bestLocation.groupId)
+            }).disposed(by: disposeBag)
+        }
+    }
 }
