@@ -150,6 +150,7 @@ class ConnectionModeView: UIStackView {
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         setup()
+        bindViews()
     }
 
     required init(coder: NSCoder) {

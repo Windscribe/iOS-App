@@ -122,13 +122,13 @@ extension MainViewController {
     }
 
     func loadStaticIPLatencyValues() {
-       viewModel.loadStaticIPLatencyValues(completion: { [weak self] (_, error) in
-           if error == nil {
-               DispatchQueue.main.async { [weak self] in
-                   self?.staticIpTableView.reloadData()
-               }
-           }
-       })
+        viewModel.loadStaticIPLatencyValues(completion: { [weak self] (_, error) in
+            if error == nil {
+                DispatchQueue.main.async { [weak self] in
+                    self?.staticIpTableView.reloadData()
+                }
+            }
+        })
     }
 
     func loadCustomConfigLatencyValues() {
@@ -164,10 +164,8 @@ extension MainViewController {
     func loadNotifications() {
         viewModel.notices.observe(on: MainScheduler.asyncInstance).subscribe( onNext: { _ in
             self.checkForUnreadNotifications()
-
         }, onError: { error in
             self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
-
-        }
     }
+}

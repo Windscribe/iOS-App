@@ -16,6 +16,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
+
     init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
         self.vpnManager = vpnManager
@@ -64,6 +65,14 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         }
     }
 
+    func removesConfig() {
+        localDatabase.getCustomConfigs().filter { config in
+            config.name == configuationName && !config.isInvalidated
+        }.forEach {
+            localDatabase.removeCustomConfig(fileId: $0.id)
+        }
+    }
+
     // Stops tunnel
     func disconnect() {
         vpnManager.connectIntent = false
@@ -85,7 +94,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let fileId = UUID().uuidString
         let path = "\(fileId).ovpn"
         fileDatabase.saveFile(data: data, path: path)
-        let customConfig = CustomConfig(id: fileId, name: "emergency-connect", serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
+        let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
         localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
         return customConfig
     }
