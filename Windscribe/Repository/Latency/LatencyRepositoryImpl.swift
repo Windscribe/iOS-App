@@ -213,7 +213,8 @@ class LatencyRepositoryImpl: LatencyRepository {
             }
         }
         }
-        if !observingBestLocation {
+        let lastBestLocation = try? bestLocation.value()
+        if !observingBestLocation || lastBestLocation == nil {
             delay(2) {
                 self.observeBestLocation()
             }
