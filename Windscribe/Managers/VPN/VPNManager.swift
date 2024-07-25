@@ -18,7 +18,9 @@ class VPNManager {
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-    let wgCrendentials = Assembler.resolve(WgCredentials.self)
+    lazy var wgCrendentials: WgCredentials = {
+        return Assembler.resolve(WgCredentials.self)
+    }()
     lazy var wgRepository: WireguardConfigRepository = {
         return Assembler.resolve(WireguardConfigRepository.self)
     }()
