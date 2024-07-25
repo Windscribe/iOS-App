@@ -95,6 +95,7 @@ class LoginViewModelImpl: LoginViewModel {
             if emergencyConnectRepository.isConnected() == true {
                 logger.logD(self, "Disconnecting emergency connect.")
                 emergencyConnectRepository.removesConfig()
+                VPNManager.shared.selectedNode = nil
                 emergencyConnectRepository.removeProfile().subscribe(onCompleted: {
                     self.routeToMainView.onNext(true)
                 }).disposed(by: disposeBag)
