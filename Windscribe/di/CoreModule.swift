@@ -24,6 +24,11 @@ extension Container {
         }.inObjectScope(.container)
         register(WSNetServerAPI.self) { r in
             let preferences = r.resolve(Preferences.self)!
+            let logger = r.resolve(FileLogger.self)
+            WSNet.setLogger({ message in
+                let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
+                logger?.logD(self, msg)
+            }, debugLog: false)
             #if STAGING
             WSNet.initialize("ios", appVersion: Bundle.main.releaseVersionNumber ?? "", isUseStagingDomains: true, serverApiSettings: preferences.getServerSettings())
             #else
