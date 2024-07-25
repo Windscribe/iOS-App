@@ -37,6 +37,11 @@ class InfoPromptViewController: WSUIViewController {
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
 
+        cancelButton.rx.tap.bind { [self] in
+            viewModel.cancel()
+            self.dismiss(animated: true, completion: nil)
+        }.disposed(by: disposeBag)
+
         view.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [self] _ in
             viewModel.cancel()
             self.dismiss(animated: true, completion: nil)
