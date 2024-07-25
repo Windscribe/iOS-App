@@ -206,6 +206,7 @@ extension MainViewController {
         }
         preferredProtocolBadge.layoutIfNeeded()
         changeProtocolArrow.layoutIfNeeded()
+        setCircumventCensorshipBadge()
     }
 
     @objc func showConnectionFailed() {

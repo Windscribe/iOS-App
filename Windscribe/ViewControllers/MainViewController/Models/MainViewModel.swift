@@ -311,7 +311,7 @@ class MainViewModel: MainViewModelType {
     }
 
     func getNotices() {
-        localDatabase.getNotificationsObservable().bind(onNext: { notifications in
+        Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { (_, notifications) in
             self.notices.onNext(notifications)
         }).disposed(by: disposeBag)
     }

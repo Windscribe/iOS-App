@@ -174,7 +174,7 @@ extension MainViewController {
         }
     }
 
-    private func setCircumventCensorshipBadge(color: UIColor? = nil) {
+    func setCircumventCensorshipBadge(color: UIColor? = nil) {
         circumventCensorshipBadge.image = UIImage(named: ImagesAsset.circumventCensorship)
         if preferredBadgeConstraints[2].constant > 0 {
             circumventCensorshipBadgeConstraints[1].constant = 10
