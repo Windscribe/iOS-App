@@ -398,8 +398,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
 
         self.vpnManager.checkForForceDisconnect()
-
-        // self.reloadServerListOrder()
     }
 
     func reloadCustomConfigs() {

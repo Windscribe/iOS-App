@@ -90,7 +90,9 @@ class MainViewModel: MainViewModelType {
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
     var session = BehaviorSubject<Session?>(value: nil)
-    var oldSession: OldSession?
+    var oldSession: OldSession? {
+        get { localDatabase.getOldSession() }
+    }
     let isDarkMode: BehaviorSubject<Bool>
     let refreshProtocolTrigger = PublishSubject<()>()
 
@@ -122,7 +124,6 @@ class MainViewModel: MainViewModelType {
         preferences.getOrderLocationsBy().subscribe(onNext: { [self] order in
             self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
         }, onError: { _ in }).disposed(by: disposeBag)
-        oldSession = localDatabase.getOldSession()
         loadLastConnection()
         loadLatencies()
         getNotices()
