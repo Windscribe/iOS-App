@@ -27,7 +27,7 @@ Check our [Acknowledgements file](ACKNOWLEDGEMENTS.md) for the list of third par
 
 #### Requirements
 - iOS 12.0+
-- Xcode 12.0+
+- Xcode 15.0+
 - Swift 5.0+
 - CocoaPods 1.15.2+
 - Go 1.16+
