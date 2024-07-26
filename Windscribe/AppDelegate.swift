@@ -95,6 +95,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 self.window?.rootViewController = UINavigationController(rootViewController: firstViewController)
             }, completion: nil)
         }
+        WSNet.instance().dnsResolver().setDnsServers(["76.76.2.0", "2606:1a40::", "1.1.1.1", "9.9.9.9"])
         self.window?.makeKeyAndVisible()
     }
 

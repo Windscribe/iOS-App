@@ -36,7 +36,6 @@ extension Container {
             #endif
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
-            WSNet.instance().dnsResolver().setDnsServers([])
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())
             if let countryOverride = preferences.getAdvanceParams().splitToArray(separator: "\n").first(where: { keyValue in
                 let pair = keyValue.splitToArray(separator: "=")
