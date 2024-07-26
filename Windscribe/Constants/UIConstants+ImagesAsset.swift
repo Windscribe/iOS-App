@@ -81,6 +81,7 @@ struct ImagesAsset {
     static let emergencyConnectOn = "Emergency-connect-on"
     static let emergencyConnectOff = "Emergency-connect-off"
     static let circumventCensorship = "circumvent-censorship"
+    static let customDns = "custom-dns"
     static let closeCross = "close-cross"
 
     struct Slides {

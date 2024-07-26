@@ -65,9 +65,11 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         }
     }
 
-    func removesConfig() {
+    func cleansEmergencyConfigs() {
+        vpnManager.selectedNode = nil
+        localDatabase.removeLastConnectedNode()
         localDatabase.getCustomConfigs().filter { config in
-            config.name == configuationName && !config.isInvalidated
+            config.name == configuationName && config.isInvalidated == false
         }.forEach {
             localDatabase.removeCustomConfig(fileId: $0.id)
         }

@@ -328,14 +328,14 @@ extension MainViewController {
             NSLayoutConstraint(item: preferredProtocolBadge as Any, attribute: .centerY, relatedBy: .equal, toItem: self.portLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: preferredProtocolBadge as Any, attribute: .left, relatedBy: .equal, toItem: self.portLabel, attribute: .right, multiplier: 1.0, constant: 8),
             NSLayoutConstraint(item: preferredProtocolBadge as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 10),
-            NSLayoutConstraint(item: preferredProtocolBadge as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 8)
+            NSLayoutConstraint(item: preferredProtocolBadge as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 0)
         ]
         self.view.addConstraints(preferredBadgeConstraints)
          circumventCensorshipBadgeConstraints = [
             NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .centerY, relatedBy: .equal, toItem: self.preferredProtocolBadge, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .left, relatedBy: .equal, toItem: self.preferredProtocolBadge, attribute: .right, multiplier: 1.0, constant: 10),
+            NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .left, relatedBy: .equal, toItem: self.preferredProtocolBadge, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 12)
+            NSLayoutConstraint(item: circumventCensorshipBadge as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 0)
         ]
         self.view.addConstraints(circumventCensorshipBadgeConstraints)
         changeProtocolArrowConstraints = [

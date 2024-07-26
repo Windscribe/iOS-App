@@ -14,5 +14,5 @@ protocol EmergencyRepository {
     func disconnect()
     func isConnected() -> Bool
     func removeProfile() -> Completable
-    func removesConfig()
+    func cleansEmergencyConfigs()
 }
