@@ -186,6 +186,12 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObject(object: filters)
     }
 
+    func removeLastConnectedNode() {
+        if let object = getLastConnectedNode() {
+            deleteRealmObject(object: object)
+        }
+    }
+
     func saveLastConnectedNode(node: LastConnectedNode) -> Disposable {
         return updateRealmObject(object: node)
     }

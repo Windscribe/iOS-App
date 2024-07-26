@@ -175,7 +175,6 @@ extension MainViewController {
     }
 
     func setCircumventCensorshipBadge(color: UIColor? = nil) {
-        circumventCensorshipBadge.image = UIImage(named: ImagesAsset.circumventCensorship)
         if preferredBadgeConstraints[2].constant > 0 {
             circumventCensorshipBadgeConstraints[1].constant = 10
         } else {
@@ -191,7 +190,7 @@ extension MainViewController {
             changeProtocolArrowConstraints[1].constant = 0
         }
         if let color = color {
-            circumventCensorshipBadge.setImageColor(color: color)
+            circumventCensorshipBadge.tintColor = color
         }
         circumventCensorshipBadge.layoutIfNeeded()
         changeProtocolArrow.layoutIfNeeded()

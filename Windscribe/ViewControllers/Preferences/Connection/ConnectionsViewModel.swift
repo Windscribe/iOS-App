@@ -101,8 +101,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             self.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
         Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { (connectionMode, selectedProtocol, network) in
-            if network.networkType == .wifi {
-                self.shouldShowCustomDNSOption.onNext(self.networkRepository.getCurrentNetwork()?.protocolType != TextsAsset.iKEv2)
+            if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
+                self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
                 return
             }
             if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {

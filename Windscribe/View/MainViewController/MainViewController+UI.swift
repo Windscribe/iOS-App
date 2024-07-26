@@ -339,7 +339,7 @@ extension MainViewController {
 
         circumventCensorshipBadge = UIImageView()
         circumventCensorshipBadge.isHidden = false
-        circumventCensorshipBadge.image = UIImage(named: ImagesAsset.circumventCensorship)
+        circumventCensorshipBadge.image = UIImage(named: ImagesAsset.circumventCensorship)?.withRenderingMode(.alwaysTemplate)
         circumventCensorshipBadge.contentMode = .scaleAspectFit
         self.view.addSubview(circumventCensorshipBadge)
 
