@@ -82,7 +82,7 @@ struct DNSSettingsManager {
             var resolvedHosts = [String]()
             var hints = addrinfo(
                 ai_flags: 0,
-                ai_family: AF_UNSPEC,
+                ai_family: AF_INET,
                 ai_socktype: SOCK_STREAM,
                 ai_protocol: 0,
                 ai_addrlen: 0,
