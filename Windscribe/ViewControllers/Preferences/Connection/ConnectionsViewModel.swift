@@ -188,7 +188,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
-        ConnectionManager.shared.loadProtocols { _ in}
+        ConnectionManager.shared.loadProtocols(shouldReset: true) { _ in}
     }
 
     func updateProtocol(value: String) {

@@ -44,7 +44,7 @@ class ConnectionManager: ConnectionManagerV2 {
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         logger.logI(self, "Starting connection manager.")
-        loadProtocols { [weak self] list in
+        loadProtocols(shouldReset: true) { [weak self] list in
             self?.protocolsToConnectList = list
         }
         bindData()
@@ -66,14 +66,16 @@ class ConnectionManager: ConnectionManagerV2 {
     /// change their priority based on user settings.
     /// append port
     /// Priority order [Connected, User selected, Preferred, Manual, Good, Failed]
-    func loadProtocols(comletion: @escaping ([DisplayProtocolPort]) -> Void) {
+    func loadProtocols(shouldReset: Bool, comletion: @escaping ([DisplayProtocolPort]) -> Void) {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             goodProtocol = nil
             userSelected = nil
             protocolsToConnectList.removeAll()
         }
         failoverNetworkName = connectivity.getNetwork().networkType
-        getProtocolList()
+        if shouldReset {
+            getProtocolList()
+        }
         // Save all failed protocols
         let failedProtocols = protocolsToConnectList.filter { list in list.viewType == .fail }
         // Reset all protocol type to normal
@@ -202,7 +204,7 @@ class ConnectionManager: ConnectionManagerV2 {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
-        loadProtocols {  _ in
+        loadProtocols(shouldReset: true) {  _ in
             completion(true)
         }
     }
