@@ -28,7 +28,7 @@ extension VPNManager {
                 connectUsingCustomConfigOpenVPN()
             }
         } else {
-            ConnectionManager.shared.loadProtocols { [self] _ in
+            ConnectionManager.shared.loadProtocols(shouldReset: true) { [self] _ in
                 switch ConnectionManager.shared.getNextProtocol().protocolName {
                 case iKEv2:
                     connectUsingIKEv2()

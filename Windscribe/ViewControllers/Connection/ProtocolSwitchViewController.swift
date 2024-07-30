@@ -122,7 +122,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
 
     private func createProtocolView() {
         protocolStack.removeAllArrangedSubviews()
-        connectionManager.loadProtocols { [self] displayConnection in
+        connectionManager.loadProtocols(shouldReset: false) { [self] displayConnection in
             for dt in displayConnection {
                 var protocolDescription: String
                 switch dt.protocolPort.protocolName {
