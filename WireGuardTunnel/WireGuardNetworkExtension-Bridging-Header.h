@@ -1,6 +1,7 @@
 #include "../WireGuardKitC/WireGuardKitC.h"
 #include "../WireGuardKitGo/wireguard.h"
 #include "ringlogger.h"
+#import "resolv.h"
 
 #import "wsnet/WSNet.h"
 #import "wsnet/WSNetCancelableCallback.h"

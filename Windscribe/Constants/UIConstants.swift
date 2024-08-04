@@ -499,6 +499,12 @@ struct TextsAsset {
         static var ghostInfo: String {
             return "Sign up or login to view your account details and safeguard your preferences".localize()
         }
+        static var cancelAccount: String {
+            return "Delete Account".localize()
+        }
+        static var deleteAccountMessage: String {
+            return "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone.".localize()
+        }
     }
 
     struct NetworkSecurity {
@@ -1378,5 +1384,5 @@ struct TvAssets {
     static var loginCodeError: String {
         return "Unable to generate Login code. Check you network connection.".localize()
     }
-    
+
 }

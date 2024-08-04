@@ -18,4 +18,5 @@ protocol AlertManagerV2 {
     func showAlert(title: String, message: String, actions: [UIAlertAction])
     func showAlert(viewController: UIViewController, title: String, message: String, actions: [UIAlertAction])
     func askUser(message: String) -> Single<Bool>
+    func askPasswordToDeleteAccount() -> Single<String?>
 }

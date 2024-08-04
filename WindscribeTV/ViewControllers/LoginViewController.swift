@@ -12,7 +12,7 @@ import RxSwift
 
 class LoginViewController: UIViewController {
 
-    @IBOutlet weak var LoginButton: WSRoundButton!
+    @IBOutlet weak var loginButton: WSRoundButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var passwordTextField: WSTextFieldTv!
     @IBOutlet weak var forgotButton: UIButton!
@@ -29,14 +29,14 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var textField2FA: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var infoLabel: UILabel!
-    
-    var myPreferredFocusedView:UIView?
+
+    var myPreferredFocusedView: UIView?
     var is2FA: Bool = false
 
     // MARK: - State properties
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
-    
+
     override var preferredFocusedView: UIView? {
         return myPreferredFocusedView
     }
@@ -44,7 +44,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         if is2FA {
             setup2FA()
-        } else  {
+        } else {
             setup()
         }
         setupCommonUI()
@@ -105,10 +105,10 @@ class LoginViewController: UIViewController {
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if context.nextFocusedView == LoginButton {
-            LoginButton.layer.borderColor = UIColor.clear.cgColor
+        if context.nextFocusedView == loginButton {
+            loginButton.layer.borderColor = UIColor.clear.cgColor
         } else {
-            LoginButton.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+            loginButton.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
 
         if context.nextFocusedView == generateCodeButton {
@@ -125,7 +125,7 @@ class LoginViewController: UIViewController {
             self?.passwordTextField.isEnabled = !show
             self?.loadingView.isHidden = !show
         }.disposed(by: disposeBag)
-        LoginButton.rx.primaryAction.bind { [weak self] in
+        loginButton.rx.primaryAction.bind { [weak self] in
             guard let username = self?.usernameTextField?.text,
                   let password = self?.passwordTextField?.text else { return }
             self?.viewModel.continueButtonTapped(username: username, password: password, twoFactorCode: self?.textField2FA?.text)
@@ -134,7 +134,7 @@ class LoginViewController: UIViewController {
             router.routeTo(to: .forgotPassword, from: self)
             self.logger.logD(self, "Moving to forgot password screen.")
         }.disposed(by: disposeBag)
-        backButton.rx.primaryAction.bind{ [weak self] in
+        backButton.rx.primaryAction.bind { [weak self] in
             self?.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
         viewModel.routeToMainView.bind { [self] _ in
@@ -144,7 +144,7 @@ class LoginViewController: UIViewController {
         generateCodeButton.rx.primaryAction.bind { [weak self] in
             self?.viewModel.generateCodeTapped()
         }.disposed(by: disposeBag)
-        viewModel.xpressCode.bind{ code in
+        viewModel.xpressCode.bind { code in
             DispatchQueue.main.async { [weak self] in
                 if let code = code, code.count > 0 {
                     self?.codeDisplayLabel.isHidden = false
@@ -157,7 +157,7 @@ class LoginViewController: UIViewController {
                 }
             }
         }.disposed(by: disposeBag)
-        viewModel.failedState.distinctUntilChanged().bind{ [weak self] (state) in
+        viewModel.failedState.distinctUntilChanged().bind { [weak self] (state) in
             switch state {
             case .username(let error), .network(let error), .api(let error), .twoFa(let error), .loginCode(let error):
                 self?.infoLabel.isHidden = false
@@ -165,7 +165,7 @@ class LoginViewController: UIViewController {
             case .none:
                 self?.infoLabel.isHidden = true
                 self?.infoLabel.text = ""
-            
+
             }
         }.disposed(by: disposeBag)
         viewModel.show2faCodeField.bind { [self] show in
@@ -176,5 +176,5 @@ class LoginViewController: UIViewController {
             }
         }.disposed(by: disposeBag)
     }
-    
+
 }

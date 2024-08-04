@@ -21,7 +21,6 @@ class WSRoundButton: UIButton {
         setup()
     }
 
-
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setup()

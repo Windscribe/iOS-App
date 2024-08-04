@@ -691,22 +691,43 @@
 		C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */; };
 		C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A32B3E80300011EF56 /* RxExtensions.swift */; };
 		C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */; };
+		C56123742C5F23A80090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C56123752C5F24010090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C56123762C5F24020090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C56123772C5F24040090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C56123792C5F24050090EB5A /* DNSUtil.swift .swift in Sources */ = {isa = PBXBuildFile; fileRef = C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */; };
+		C561237A2C5F25750090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
+		C561237B2C5F25760090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
+		C561237C2C5F25770090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
+		C561237D2C5F25790090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
+		C561237E2C5F257A0090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
+		C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
+		C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
+		C56123832C5F25E10090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB582214AAFF001A3F24 /* libresolv.9.tbd */; };
+		C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB512214A8BC001A3F24 /* libresolv.tbd */; };
+		C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
+		C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
+		C56123872C5F26130090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB582214AAFF001A3F24 /* libresolv.9.tbd */; };
+		C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB512214A8BC001A3F24 /* libresolv.tbd */; };
+		C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
+		C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
+		C561238F2C5F2D610090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; platformFilters = (tvos, ); };
+		C56123942C5F2DA50090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; };
+		C56123952C5F2DA50090EB5A /* wstnet_tv.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C56123982C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; platformFilter = ios; };
+		C56123992C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
+		C561239A2C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; platformFilter = ios; };
+		C561239B2C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
+		C561239D2C5F2EDA0090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
+		C561239E2C5F2EDA0090EB5A /* wsnet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C561239F2C5F30570090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; platformFilters = (tvos, ); };
 		C56615F02C4D72F1008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
-		C56615F82C4D88C5008AA993 /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; };
-		C56615F92C4D88C5008AA993 /* wsnet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C56615FB2C4D88E1008AA993 /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5986AB462C45607100167023 /* wstnet_tv.framework */; };
-		C56615FC2C4D88E1008AA993 /* wstnet_tv.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5986AB462C45607100167023 /* wstnet_tv.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C56615FE2C4D88FC008AA993 /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; platformFilter = ios; };
-		C56616012C4D8911008AA993 /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; };
-		C56616042C4D892A008AA993 /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; platformFilter = ios; };
-		C56616072C4D8944008AA993 /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C571C66B2C13332D00786DA5 /* wsnet.framework */; };
 		C56616102C4D8E7D008AA993 /* proxy_tv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C566160D2C4D8E4D008AA993 /* proxy_tv.a */; platformFilters = (tvos, ); };
 		C56616112C4D8E84008AA993 /* proxy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C566160A2C4D8E24008AA993 /* proxy.a */; platformFilter = ios; };
-		C56616122C4D8F07008AA993 /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5986AB462C45607100167023 /* wstnet_tv.framework */; platformFilters = (tvos, ); };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		C56616212C4DA687008AA993 /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5986AB462C45607100167023 /* wstnet_tv.framework */; platformFilters = (tvos, ); };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
 		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
 		C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AF42C4DFF300069DB6E /* WireGuardKit */; };
@@ -1021,7 +1042,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C56615F92C4D88C5008AA993 /* wsnet.framework in Embed Frameworks */,
+				C561239E2C5F2EDA0090EB5A /* wsnet.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1032,7 +1053,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C56615FC2C4D88E1008AA993 /* wstnet_tv.framework in Embed Frameworks */,
+				C56123952C5F2DA50090EB5A /* wstnet_tv.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1206,7 +1227,6 @@
 		597C04F62C2F023200C2A085 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		597DDE022BA229EC00F19F3F /* GeneralRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralRouter.swift; sourceTree = "<group>"; };
 		5986AB422C45605F00167023 /* wstnet_tv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wstnet_tv.framework; sourceTree = "<group>"; };
-		5986AB462C45607100167023 /* wstnet_tv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wstnet_tv.framework; sourceTree = "<group>"; };
 		5986AB592C47432D00167023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5986AB5B2C47569E00167023 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 		5986AB5E2C485A2300167023 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
@@ -1539,6 +1559,11 @@
 		C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpRepositoryTests.swift; sourceTree = "<group>"; };
 		C55AF0A32B3E80300011EF56 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+VPN.swift"; sourceTree = "<group>"; };
+		C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNSUtil.swift .swift"; sourceTree = "<group>"; };
+		C561237F2C5F25B60090EB5A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
+		C56123802C5F25B60090EB5A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.9.tbd; sourceTree = DEVELOPER_DIR; };
+		C561238B2C5F2D610090EB5A /* wstnet_tv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wstnet_tv.framework; sourceTree = "<group>"; };
+		C56123962C5F2ED20090EB5A /* wsnet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wsnet.framework; sourceTree = "<group>"; };
 		C566160A2C4D8E24008AA993 /* proxy.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = proxy.a; sourceTree = "<group>"; };
 		C566160B2C4D8E24008AA993 /* proxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proxy.h; sourceTree = "<group>"; };
 		C566160D2C4D8E4D008AA993 /* proxy_tv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = proxy_tv.a; sourceTree = "<group>"; };
@@ -1565,7 +1590,6 @@
 		C56FCC072B2CF3A7008DE7D4 /* HelpRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpRouter.swift; sourceTree = "<group>"; };
 		C56FCC092B2CF3DF008DE7D4 /* UpgradeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeRouter.swift; sourceTree = "<group>"; };
 		C571C6632C1212FF00786DA5 /* ConnectivityImpl+Hotspot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConnectivityImpl+Hotspot.swift"; sourceTree = "<group>"; };
-		C571C66B2C13332D00786DA5 /* wsnet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wsnet.framework; sourceTree = "<group>"; };
 		C571C6732C135C3600786DA5 /* UserScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScope.swift; sourceTree = "<group>"; };
 		C57668E32B2790AA004EA3D7 /* APIResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult.swift; sourceTree = "<group>"; };
 		C57668ED2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceParamsViewController.swift; sourceTree = "<group>"; };
@@ -1744,10 +1768,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56615FB2C4D88E1008AA993 /* wstnet_tv.framework in Frameworks */,
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
+				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
 				C56D5B032C4E08650069DB6E /* WireGuardKit in Frameworks */,
+				C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */,
+				C56123942C5F2DA50090EB5A /* wstnet_tv.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1761,13 +1787,13 @@
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
-				C56615F82C4D88C5008AA993 /* wsnet.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
 				C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */,
 				AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */,
 				AF87DB522214A8BC001A3F24 /* libresolv.tbd in Frameworks */,
 				AF16CA1622272EAB00997A2A /* StoreKit.framework in Frameworks */,
 				C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */,
+				C561239D2C5F2EDA0090EB5A /* wsnet.framework in Frameworks */,
 				C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */,
 				1B9E4881B28361D8E4276E67 /* Pods_Windscribe.framework in Frameworks */,
 			);
@@ -1787,13 +1813,15 @@
 			files = (
 				C56616112C4D8E84008AA993 /* proxy.a in Frameworks */,
 				AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */,
+				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
+				C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */,
 				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
+				C56123982C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
+				C561239F2C5F30570090EB5A /* wstnet_tv.framework in Frameworks */,
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
 				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
 				DAC2D5E9685166D40AE1F73B /* Pods_PacketTunnel.framework in Frameworks */,
-				C56615FE2C4D88FC008AA993 /* wsnet.framework in Frameworks */,
 				C56616102C4D8E7D008AA993 /* proxy_tv.a in Frameworks */,
-				C56616122C4D8F07008AA993 /* wstnet_tv.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1801,9 +1829,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C56123832C5F25E10090EB5A /* libresolv.9.tbd in Frameworks */,
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
+				C56123992C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
+				C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */,
 				9B7A6D492A314E85A229364B /* Pods_SiriIntents.framework in Frameworks */,
-				C56616012C4D8911008AA993 /* wsnet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1811,11 +1841,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56616042C4D892A008AA993 /* wsnet.framework in Frameworks */,
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
+				C561238F2C5F2D610090EB5A /* wstnet_tv.framework in Frameworks */,
 				C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */,
+				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
 				C56D5B012C4E06550069DB6E /* WireGuardKit in Frameworks */,
-				C56616212C4DA687008AA993 /* wstnet_tv.framework in Frameworks */,
+				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
+				C561239A2C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1823,10 +1855,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56616072C4D8944008AA993 /* wsnet.framework in Frameworks */,
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
+				C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
+				C561239B2C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
+				C56123872C5F26130090EB5A /* libresolv.9.tbd in Frameworks */,
 				84DB83C52D55C4639941F898 /* Pods_HomeWidgetExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2347,6 +2381,8 @@
 		5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C56123802C5F25B60090EB5A /* libresolv.9.tbd */,
+				C561237F2C5F25B60090EB5A /* libresolv.tbd */,
 				59FC73E02C514C2C00021CD1 /* NetworkExtension.framework */,
 				5986AB422C45605F00167023 /* wstnet_tv.framework */,
 				597C04F62C2F023200C2A085 /* UIKit.framework */,
@@ -3082,11 +3118,11 @@
 		C56615F72C4D883E008AA993 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				C56123962C5F2ED20090EB5A /* wsnet.framework */,
+				C561238B2C5F2D610090EB5A /* wstnet_tv.framework */,
 				C566160D2C4D8E4D008AA993 /* proxy_tv.a */,
 				C566160A2C4D8E24008AA993 /* proxy.a */,
 				C566160B2C4D8E24008AA993 /* proxy.h */,
-				C571C66B2C13332D00786DA5 /* wsnet.framework */,
-				5986AB462C45607100167023 /* wstnet_tv.framework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -3175,6 +3211,7 @@
 			isa = PBXGroup;
 			children = (
 				C57BDE4129B93FBB00337E63 /* LinkProvider.swift */,
+				C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -4307,6 +4344,7 @@
 				59A2186B2C3C9C27000D89FA /* SharedKeys.swift in Sources */,
 				59FC74592C51616100021CD1 /* UIEdgeInsets+Ext.swift in Sources */,
 				59FC74182C51544200021CD1 /* MyIP.swift in Sources */,
+				C56123752C5F24010090EB5A /* DNSUtil.swift .swift in Sources */,
 				59FC74822C52D7D500021CD1 /* WelcomeRouter.swift in Sources */,
 				59FC73E72C51506F00021CD1 /* APIManagerImpl+Billing.swift in Sources */,
 				59FC74722C516D9700021CD1 /* InAppPurchaseManagerImpl.swift in Sources */,
@@ -4427,6 +4465,7 @@
 				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
+				C561237E2C5F257A0090EB5A /* Resolver.swift in Sources */,
 				59FC74012C5153B200021CD1 /* PreferenceItem.swift in Sources */,
 				59FC74172C51543E00021CD1 /* Latency.swift in Sources */,
 				59FC73D22C514AF000021CD1 /* AlertManagerV2.swift in Sources */,
@@ -4669,6 +4708,7 @@
 				AF36A1A9237C7C9B00BDDCDB /* ViewLeaderboardViewController+UI.swift in Sources */,
 				E90FD04527397DA800721874 /* MainViewController+StreamingListTableViewDelegate.swift in Sources */,
 				AF2AB9F022F333F600DC0604 /* SwitchButton.swift in Sources */,
+				C56123742C5F23A80090EB5A /* DNSUtil.swift .swift in Sources */,
 				597DDE032BA229EC00F19F3F /* GeneralRouter.swift in Sources */,
 				C52DA5292B63902B00E5C571 /* CustomConfigRepositoryImpl.swift in Sources */,
 				E9219FED2885A3AE0026E544 /* UIView+Constraint.swift in Sources */,
@@ -5001,6 +5041,7 @@
 				C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C50F20CB2B61777D00266B23 /* CoreModule.swift in Sources */,
 				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
+				C561237A2C5F25750090EB5A /* Resolver.swift in Sources */,
 				5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */,
 				1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
@@ -5029,6 +5070,7 @@
 				C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */,
 				C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				AFED9A3A226E4457000E9EE2 /* Constants.swift in Sources */,
+				C56123792C5F24050090EB5A /* DNSUtil.swift .swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5041,6 +5083,7 @@
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
+				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
 				5986AB492C4563BE00167023 /* APIParameterValues.swift in Sources */,
 				C56FCBE32B2B8DB1008DE7D4 /* SharedUserDefaults.swift in Sources */,
@@ -5057,6 +5100,7 @@
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
 			);
@@ -5105,6 +5149,7 @@
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
+				C56123772C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C535D28C27E2E39100C08345 /* String+Ext.swift in Sources */,
 				C535D2A027E5127F00C08345 /* LogType.swift in Sources */,
 				C5D0E40829BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
@@ -5120,6 +5165,7 @@
 				C5D0E40C29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */,
 				C535D27927E2811D00C08345 /* DynamicWireGuardConfig.swift in Sources */,
+				C561237C2C5F25770090EB5A /* Resolver.swift in Sources */,
 				C5328D0A2B6CB12200A12756 /* AlertManagerV2.swift in Sources */,
 				C56FCBEC2B2B8E4F008DE7D4 /* SharedKeys.swift in Sources */,
 			);
@@ -5144,6 +5190,7 @@
 				5986AB4A2C4563C400167023 /* APIParameterValues.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
+				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
@@ -5153,6 +5200,7 @@
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Ext.swift in Sources */,
+				C56123762C5F24020090EB5A /* DNSUtil.swift .swift in Sources */,
 				C50F20CF2B61A52C00266B23 /* FileLogFormater.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
@@ -5803,11 +5851,6 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/libs",
-				);
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DEBUG=1",
 				);
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (

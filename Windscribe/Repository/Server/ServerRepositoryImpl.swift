@@ -31,7 +31,7 @@ class ServerRepositoryImpl: ServerRepository {
             return Single.error(Errors.validationFailure)
         }
         let countryCode = advanceRepository.getCountryOverride() ?? ""
-        return apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.isPro, alcList: user.alcList)
+        return apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
             .map { serverList in
                 let servers = serverList.servers.toArray()
                 servers.forEach { s in

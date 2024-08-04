@@ -22,8 +22,9 @@ protocol APIManager {
     func regToken() -> RxSwift.Single<Token>
     func signUpUsingToken(token: String) -> RxSwift.Single<Session>
     func claimAccount(username: String, password: String, email: String) -> RxSwift.Single<APIMessage>
-    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse> 
+    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse>
     func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
+    func cancelAccount(password: String) -> RxSwift.Single<APIMessage>
     // VPN
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
     func getStaticIpList() -> Single<StaticIPList>

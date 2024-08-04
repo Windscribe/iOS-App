@@ -11,7 +11,7 @@ import Foundation
 class XPressLoginCodeResponse: Decodable {
     var signature: String = ""
     var time: Int = 0
-    var ttl:  Int = 0
+    var ttl: Int = 0
     var xPressLoginCode: String = ""
 
     enum CodingKeys: String, CodingKey {
