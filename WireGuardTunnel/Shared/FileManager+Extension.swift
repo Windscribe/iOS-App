@@ -6,7 +6,7 @@ import os.log
 
 extension FileManager {
     static var appGroupId: String? {
-        #if os(iOS)
+        #if os(iOS) || os(tvOS)
         let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup
         #elseif os(macOS)
         let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup

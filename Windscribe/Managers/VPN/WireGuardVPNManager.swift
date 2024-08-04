@@ -82,6 +82,7 @@ class WireGuardVPNManager {
                 self.getConfiguration { (tunnelConfiguration) in
                     guard let tunnelConfiguration = tunnelConfiguration else { return }
                     self.providerManager.setTunnelConfiguration(tunnelConfiguration, username: TextsAsset.wireGuard, description: Constants.appName)
+#if os(iOS)
                     // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
                     if #available(iOS 15.1, *) {
                         self.providerManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch : true
@@ -94,6 +95,7 @@ class WireGuardVPNManager {
                             self.providerManager.protocolConfiguration?.includeAllNetworks = true
                         }
                     }
+#endif
                     self.providerManager.onDemandRules?.removeAll()
                     self.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
                     self.providerManager.isEnabled = true
@@ -160,9 +162,11 @@ class WireGuardVPNManager {
             if error == nil,
                 self.isConfigured() {
                 self.providerManager?.isOnDemandEnabled = VPNManager.shared.connectIntent
+#if os(iOS)
                 if #available(iOS 15.1, *) {
                     self.providerManager?.protocolConfiguration?.includeAllNetworks = self.killSwitch
                 }
+#endif
                 self.providerManager?.saveToPreferences { _ in
                     self.providerManager?.loadFromPreferences(completionHandler: { _ in
                         self.providerManager?.connection.stopVPNTunnel()
@@ -235,9 +239,11 @@ class WireGuardVPNManager {
 
     func setKillSwitchMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
             if #available(iOS 15.1, *) {
                 self?.providerManager?.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
             }
+#endif
             self?.providerManager?.saveToPreferences { _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
             }
@@ -246,9 +252,11 @@ class WireGuardVPNManager {
 
     func setAllowLanMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
             if #available(iOS 15.1, *) {
                 self?.providerManager?.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
             }
+#endif
             self?.providerManager?.saveToPreferences { _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
             }

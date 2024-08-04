@@ -76,10 +76,12 @@ class IKEv2VPNManager {
                 ikeV2Protocol.passwordReference = serverCredentials
                 ikeV2Protocol.username = username
                 ikeV2Protocol.sharedSecretReference = serverCredentials
+                #if os(iOS)
                 if #available(iOS 13.0, *) {
                     // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
                     ikeV2Protocol.enableFallback = true
                 }
+                #endif
                 ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm =  NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
                 ikeV2Protocol.ikeSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
                 ikeV2Protocol.ikeSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
@@ -90,6 +92,8 @@ class IKEv2VPNManager {
                 ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
 
                 self.neVPNManager.protocolConfiguration = ikeV2Protocol
+
+#if os(iOS)
 
                 // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
                 if #available(iOS 15.1, *) {
@@ -102,6 +106,8 @@ class IKEv2VPNManager {
                         self.neVPNManager.protocolConfiguration?.includeAllNetworks = true
                     }
                 }
+#endif
+
                 self.neVPNManager.onDemandRules?.removeAll()
                 self.neVPNManager.onDemandRules = VPNManager.shared.getOnDemandRules()
                 self.neVPNManager.isEnabled = true
@@ -120,10 +126,13 @@ class IKEv2VPNManager {
                 self.logger.logD(self, "KillSwitch option set by user is \(self.killSwitch )")
                 self.logger.logD(self, "Allow lan option set by user is \(self.allowLane )")
 
+#if os(iOS)
+
                 if #available(iOS 15.1, *) {
                     self.logger.logD(self, "KillSwitch in IKEv2 VPNManager is \( String(describing: self.neVPNManager.protocolConfiguration?.includeAllNetworks))")
                     self.logger.logD(self, "Allow lan in IKEv2 VPNManager is \( String(describing: self.neVPNManager.protocolConfiguration?.excludeLocalNetworks))")
                 }
+#endif
             }
         }
     }
@@ -187,6 +196,8 @@ class IKEv2VPNManager {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] (error) in
             if error == nil, self?.neVPNManager.protocolConfiguration?.username != nil {
                 self?.neVPNManager.isOnDemandEnabled = VPNManager.shared.connectIntent
+#if os(iOS)
+
                 if #available(iOS 15.1, *) {
                     if restartOnDisconnect {
                         self?.neVPNManager.protocolConfiguration?.includeAllNetworks = false
@@ -194,6 +205,7 @@ class IKEv2VPNManager {
                         self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
                     }
                 }
+                #endif
                 self?.neVPNManager.saveToPreferences { [weak self] _ in
                     self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
                         self?.neVPNManager.connection.stopVPNTunnel()
@@ -215,9 +227,12 @@ class IKEv2VPNManager {
 
     func setKillSwitchMode() {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
+
             if #available(iOS 15.1, *) {
                 self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
             }
+            #endif
             self?.neVPNManager.saveToPreferences { [weak self] _ in
                 self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
                 })
@@ -227,9 +242,12 @@ class IKEv2VPNManager {
 
     func setAllowLanMode() {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
+
             if #available(iOS 15.1, *) {
                 self?.neVPNManager.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
             }
+            #endif
             self?.neVPNManager.saveToPreferences { [weak self] _ in
                 self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
                 })

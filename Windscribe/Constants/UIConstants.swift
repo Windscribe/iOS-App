@@ -1373,3 +1373,10 @@ struct SubmitTicket {
         return "Failed to send support ticket. Please check your network and try again.".localize()
     }
 }
+
+struct TvAssets {
+    static var loginCodeError: String {
+        return "Unable to generate Login code. Check you network connection.".localize()
+    }
+    
+}

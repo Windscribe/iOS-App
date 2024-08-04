@@ -17,7 +17,7 @@ extension APIManagerImpl {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: StaticIPList.self) { completion in
-            self.api.staticIps(sessionAuth, platform: APIParameterValues.platform, deviceId: deviceID, callback: completion)
+            self.api.staticIps(sessionAuth, callback: completion)
         }
     }
 
@@ -32,7 +32,7 @@ extension APIManagerImpl {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: String.self) { completion in
-            self.api.serverConfigs(sessionAuth, ovpnVersion: openVPNVersion, callback: completion)
+            self.api.serverConfigs(sessionAuth, callback: completion)
         }
     }
 

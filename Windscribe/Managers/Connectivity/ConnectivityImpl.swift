@@ -6,7 +6,6 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import CoreTelephony
 import Foundation
 import Network
 import RxSwift
@@ -120,6 +119,7 @@ class ConnectivityImpl: Connectivity {
     /// Returns optional Wifi SSID for current network.
     func getWifiSSID() -> String? {
         var interface = [String: Any]()
+#if os(iOS)
         if let interfaces = CNCopySupportedInterfaces() {
             for i in 0 ..< CFArrayGetCount(interfaces) {
                 let interfaceName = CFArrayGetValueAtIndex(interfaces, i)
@@ -137,18 +137,14 @@ class ConnectivityImpl: Connectivity {
         if let SSID = interface["SSID"] as? String {
             return SSID
         }
+#endif
         return nil
     }
 
     /// Returns carrier name for cellular network
     ///  - Note: This api was depcreated in iOS 16.0 and returns "Cellular"
     private func getCellularNetworkName() -> String {
-        let carrierName = CTTelephonyNetworkInfo().serviceSubscriberCellularProviders?.first?.value.carrierName ?? "Cellular"
-        if carrierName == "--" {
-            return "Cellular"
-        } else {
-            return carrierName
-        }
+        return "Cellular"
     }
 
     func internetConnectionAvailable() -> Bool {

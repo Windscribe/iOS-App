@@ -8,7 +8,6 @@
 
 import UIKit
 import AVKit
-import JNKeychain
 import RxSwift
 
 class WelcomeViewController: WSUIViewController {

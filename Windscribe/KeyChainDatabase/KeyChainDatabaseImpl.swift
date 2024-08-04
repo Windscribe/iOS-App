@@ -7,9 +7,11 @@
 //
 
 import Foundation
-import JNKeychain
+import SimpleKeychain
 class KeyChainDatabaseImpl: KeyChainDatabase {
     private let logger: FileLogger
+    private let simpleKeychain = SimpleKeychain(accessGroup: SharedKeys.sharedKeychainGroup)
+
     init(logger: FileLogger) {
         self.logger = logger
     }
@@ -49,10 +51,17 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     }
 
     func isGhostAccountCreated() -> Bool {
-        return JNKeychain.loadValue(forKey: KeyChainkeys.ghostAccountCreated) as? Bool ?? false
+        // return JNKeychain.loadValue(forKey: KeyChainkeys.ghostAccountCreated) as? Bool ?? false
+        if let value = try? simpleKeychain.data(forKey: KeyChainkeys.ghostAccountCreated) {
+            let isGhostAccountCreated = String(data: value, encoding: .utf8).flatMap(Bool.init) ?? false
+            return isGhostAccountCreated
+        }
+        return false
+
     }
 
     func setGhostAccountCreated() {
-        JNKeychain.saveValue(true, forKey: KeyChainkeys.ghostAccountCreated)
+        try? simpleKeychain.set(true.data, forKey: KeyChainkeys.ghostAccountCreated)
+       // JNKeychain.saveValue(true, forKey: KeyChainkeys.ghostAccountCreated)
     }
 }

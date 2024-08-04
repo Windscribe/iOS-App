@@ -11,12 +11,6 @@ import UIKit
 import RealmSwift
 import RxSwift
 
-struct LoadLatencyInfo {
-    let force: Bool
-    let selectBestLocation: Bool
-    let connectToBestLocation: Bool
-}
-
 extension MainViewController {
     func loadLastConnection() {
         viewModel.lastConnection.subscribe(onNext: { lastconnection in

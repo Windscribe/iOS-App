@@ -8,10 +8,9 @@
 
 import NetworkExtension
 import OpenVPNAdapter
-import Proxy
 import Swinject
 
-class PacketTunnelProvider: NEPacketTunnelProvider, ProxyTunnelCallBackProtocol {
+class PacketTunnelProvider: NEPacketTunnelProvider {
 
     // MARK: Dependencies
     private lazy var container: Container = {
@@ -90,7 +89,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, ProxyTunnelCallBackProtocol 
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        ProxyRegisterTunnelCallback(nil)
         stopHandler = completionHandler
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
@@ -109,9 +107,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider, ProxyTunnelCallBackProtocol 
             }
             guard let path = proxyLogFilePath() else { return false }
             DispatchQueue.global(qos: .background).async {
-                ProxyInitialise(false, path)
-                ProxyRegisterTunnelCallback(self)
-                ProxyStartProxy(Proxy.localEndpoint, proxyInfo.remoteEndpoint, proxyInfo.proxyType.rawValue, Proxy.mtu, self.preferences.isCircumventCensorshipEnabled())
+                let logFilePathCString = (path as NSString).utf8String
+                let listenAddressCString = (Proxy.localEndpoint as NSString).utf8String
+                let remoteAddressCString = ( proxyInfo.remoteEndpoint as NSString).utf8String
+                let goLogFilePath = _GoString_(p: logFilePathCString, n: Int(strlen(logFilePathCString!)))
+                let goListenAddress = _GoString_(p: listenAddressCString, n: Int(strlen(listenAddressCString!)))
+                let goRemoteAddress = _GoString_(p: remoteAddressCString, n: Int(strlen(remoteAddressCString!)))
+                Initialise(0, goLogFilePath)
+                var censorship = GoUint8(0)
+                if self.preferences.isCircumventCensorshipEnabled() {
+                    censorship = GoUint8(1)
+                }
+                StartProxy(goListenAddress, goRemoteAddress,  GoInt(proxyInfo.proxyType.rawValue), GoInt(Proxy.mtu), censorship)
             }
             return true
         }
@@ -139,12 +146,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider, ProxyTunnelCallBackProtocol 
         } else {
             return nil
         }
-    }
-
-    /// File descriptor of proxy's remote endpoint used to whitelist connection
-    /// only applicable on Android
-    func protect(_ fd: Int) {
-
     }
 
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {

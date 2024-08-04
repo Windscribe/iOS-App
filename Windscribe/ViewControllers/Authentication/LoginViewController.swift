@@ -122,6 +122,9 @@ class LoginViewController: WSNavigationViewController {
                 self?.passwordInfoIconImageView.isHidden = true
                 self?.infoLabel.isHidden = true
                 self?.infoLabel.text = ""
+            default:
+                self?.logger.logD(self, "default case")
+
             }
         }.disposed(by: disposeBag)
         continueButton.rx.tap.bind { [weak self] in

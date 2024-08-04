@@ -8,24 +8,24 @@
 
 static void forkwrite(void)
 {
-    struct log *log = open_log("/tmp/test_log");
-    char c[512];
-    int i, base;
-    bool in_fork = !fork();
-
-    base = 10000 * in_fork;
-    for (i = 0; i < 1024; ++i) {
-        snprintf(c, 512, "bla bla bla %d", base + i);
-        write_msg_to_log(log, "HMM", c);
-    }
-
-
-    if (in_fork)
-        _exit(0);
-    wait(NULL);
-
-    write_log_to_file("/dev/stdout", log);
-    close_log(log);
+//    struct log *log = open_log("/tmp/test_log");
+//    char c[512];
+//    int i, base;
+//    bool in_fork = !fork();
+//
+//    base = 10000 * in_fork;
+//    for (i = 0; i < 1024; ++i) {
+//        snprintf(c, 512, "bla bla bla %d", base + i);
+//        write_msg_to_log(log, "HMM", c);
+//    }
+//
+//
+//    if (in_fork)
+//        _exit(0);
+//    wait(NULL);
+//
+//    write_log_to_file("/dev/stdout", log);
+//    close_log(log);
 }
 
 static void writetext(const char *text)

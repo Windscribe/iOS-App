@@ -59,4 +59,17 @@ extension APIManagerImpl {
             self.api.claimAccount(sessionAuth, username: username, password: password, email: email, claimAccount: "1", callback: completion)
         }
     }
+
+    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse> {
+        return makeApiCall(modalType: XPressLoginCodeResponse.self) { completion in
+            self.api.getXpressLoginCode(completion)
+        }
+    }
+    
+    func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse> {
+        return makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
+            self.api.verifyXpressLoginCode(code, sig: sig, callback: completion)
+        }
+    }
+
 }

@@ -35,4 +35,10 @@ extension APIManagerImpl {
             self.api.deleteSession(sessionAuth, callback: completion)
         }
     }
+    
+    func getSession(sessionAuth: String) -> Single<Session> {
+        return makeApiCall(modalType: Session.self) { completion in
+            self.api.session(sessionAuth, callback: completion)
+        }
+    }
 }

@@ -9,7 +9,6 @@
 import UIKit
 import CoreData
 import WidgetKit
-import JNKeychain
 import RealmSwift
 import NetworkExtension
 import StoreKit
@@ -195,7 +194,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // Once user have left the app remove last push notification payload.
         logger.logD(self, "App state changed to EnterBackground.")
         pushNotificationManager.addPushNotification(notificationPayload: nil)
-        preferences.saveServerSettings(settings: WSNet.instance().serverAPI().currentSettings())
+        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {

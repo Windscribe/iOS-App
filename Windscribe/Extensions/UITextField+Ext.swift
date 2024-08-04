@@ -21,3 +21,128 @@ extension UITextField {
     }
 
 }
+
+class WSTextFieldTv: UITextField {
+
+    lazy var textLayer = CATextLayer()
+
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        layer.backgroundColor = UIColor.clear.cgColor
+
+        textLayer.font = self.font
+        textLayer.foregroundColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+        textLayer.alignmentMode = .justified
+        textLayer.bounds = CGRect(x: -10, y: -10, width: layer.bounds.width - 10, height: layer.bounds.height - 10)
+        self.backgroundColor = .clear
+        self.textColor = .whiteWithOpacity(opacity: 0.50)
+        self.font = UIFont.text(size: 30)
+        self.layer.cornerRadius = 10
+        self.clipsToBounds = true
+        self.tintColor = .clear
+
+        layer.addSublayer(textLayer)
+    }
+
+    override func layoutSublayers(of layer: CALayer) {
+        layer.backgroundColor = self.isFocused ? UIColor.whiteWithOpacity(opacity: 0.19).cgColor : UIColor.clear.cgColor
+        textLayer.frame = layer.bounds
+        textLayer.string = self.text?.isEmpty ?? true ? self.placeholder : self.text
+    }
+
+    override func addSubview(_ view: UIView) {
+
+        // blocks standard styling
+    }
+
+}
+
+
+class PasswordTextFieldTv: UITextField {
+    lazy var showHidePasswordButton = ImageButton(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+
+    override var isSecureTextEntry: Bool {
+          didSet {
+              if isFirstResponder {
+                  _ = becomeFirstResponder()
+              }
+          }
+      }
+
+      override func becomeFirstResponder() -> Bool {
+          let success = super.becomeFirstResponder()
+          if isSecureTextEntry, let text = self.text {
+              self.text?.removeAll()
+              insertText(text)
+          }
+          return success
+      }
+
+     required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    
+        self.isSecureTextEntry = true
+        self.clearsOnBeginEditing = false
+        self.clearsOnInsertion = false
+     
+        showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
+        showHidePasswordButton.addTarget(self, action: #selector(showHidePasswordButtonTapped), for: .touchUpInside)
+        super.addSubview(showHidePasswordButton)
+         
+         self.backgroundColor = .clear
+         self.textColor = .whiteWithOpacity(opacity: 0.50)
+         self.font = UIFont.text(size: 30)
+         self.layer.cornerRadius = 10
+         self.clipsToBounds = true
+         self.tintColor = .clear
+         layer.backgroundColor = self.isFocused ? UIColor.whiteWithOpacity(opacity: 0.19).cgColor : UIColor.clear.cgColor
+
+    }
+    
+    @objc func showHidePasswordButtonTapped() {
+        if self.isSecureTextEntry {
+            self.isSecureTextEntry = false
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
+        } else {
+            self.isSecureTextEntry = true
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        showHidePasswordButton.translatesAutoresizingMaskIntoConstraints = false
+
+        addConstraints([
+            NSLayoutConstraint(item: showHidePasswordButton,
+                               attribute: .centerY,
+                               relatedBy: .equal,
+                               toItem: self,
+                               attribute: .centerY,
+                               multiplier: 1.0,
+                               constant: 0),
+            NSLayoutConstraint(item: showHidePasswordButton,
+                               attribute: .right,
+                               relatedBy: .equal,
+                               toItem: self,
+                               attribute: .right,
+                               multiplier: 1.0,
+                               constant: -16),
+            NSLayoutConstraint(item: showHidePasswordButton,
+                               attribute: .height,
+                               relatedBy: .equal,
+                               toItem: nil,
+                               attribute: .height,
+                               multiplier: 1.0,
+                               constant: 24),
+            NSLayoutConstraint(item: showHidePasswordButton,
+                               attribute: .width,
+                               relatedBy: .equal,
+                               toItem: nil,
+                               attribute: .width,
+                               multiplier: 1.0,
+                               constant: 24)
+            ])
+    }
+}
+

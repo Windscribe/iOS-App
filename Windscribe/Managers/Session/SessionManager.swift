@@ -196,11 +196,14 @@ class SessionManager: SessionManagerV2 {
     }
 
     func reloadRootViewController() {
+        #if os(iOS)
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
             window.rootViewController?.dismiss(animated: false, completion: nil)
             UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
                 window.rootViewController = UINavigationController(rootViewController: GeneralViewController())
             }, completion: nil)
         }
+        #elseif os(tvOS)
+        #endif
     }
 }

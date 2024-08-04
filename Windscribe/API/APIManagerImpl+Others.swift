@@ -33,13 +33,13 @@ extension APIManagerImpl {
 
     func recordInstall(platform: String) -> Single<APIMessage> {
         return makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.recordInstall(platform, callback: completion)
+            self.api.recordInstall(completion)
         }
     }
 
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) -> Single<APIMessage> {
         return makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.sendSupportTicket(email, supportName: name, supportSubject: subject, supportMessage: message, supportCategory: category, type: type, channel: channel, platform: platform, callback: completion)
+            self.api.sendSupportTicket(email, supportName: name, supportSubject: subject, supportMessage: message, supportCategory: category, type: type, channel: channel, callback: completion)
         }
     }
 
@@ -65,7 +65,6 @@ extension APIManagerImpl {
 
         return makeApiCall(modalType: APIMessage.self) { completion in
             self.api.recordShake(forDataScore: sessionAuth,
-                                 platform: APIParameterValues.platform,
                                  score: "\(score)",
                                  signature: signatureText,
                                  callback: completion)

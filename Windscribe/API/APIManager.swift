@@ -13,6 +13,7 @@ protocol APIManager {
     func getSession() -> Single<Session>
     func getWebSession() -> Single<WebSession>
     func deleteSession() -> Single<APIMessage>
+    func getSession(sessionAuth: String) -> Single<Session>
     // Account
     func login(username: String, password: String, code2fa: String) -> Single<Session>
     func signup(username: String, password: String, referringUsername: String, email: String) -> Single<Session>
@@ -21,6 +22,8 @@ protocol APIManager {
     func regToken() -> RxSwift.Single<Token>
     func signUpUsingToken(token: String) -> RxSwift.Single<Session>
     func claimAccount(username: String, password: String, email: String) -> RxSwift.Single<APIMessage>
+    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse> 
+    func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     // VPN
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
     func getStaticIpList() -> Single<StaticIPList>
