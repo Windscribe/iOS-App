@@ -29,14 +29,10 @@ extension Container {
                             let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
                             logger?.logD(self, msg)
                         }, debugLog: false)
-        #if os(iOS)
         #if STAGING
             WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: true, persistentSettings: preferences.getServerSettings())
         #else
             WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
-        #endif
-        #elseif os(tvOS)
-            WSNet.initialize("tvos", platformName: "tvos", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
         #endif
             setWSNetDNSServer(servers: preferences.getCustomDNSValue().servers)
             WSNet.instance().setConnectivityState(true)
