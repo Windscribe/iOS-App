@@ -25,15 +25,19 @@ extension Container {
         register(WSNetServerAPI.self) { r in
             let preferences = r.resolve(Preferences.self)!
             let logger = r.resolve(FileLogger.self)
-            WSNet.setLogger({ message in
-                let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
-                logger?.logD(self, msg)
-            }, debugLog: false)
-            #if STAGING
-            WSNet.initialize("ios", appVersion: Bundle.main.releaseVersionNumber ?? "", isUseStagingDomains: true, serverApiSettings: preferences.getServerSettings())
-            #else
-            WSNet.initialize("ios", appVersion: Bundle.main.releaseVersionNumber ?? "", isUseStagingDomains: false, serverApiSettings: preferences.getServerSettings())
-            #endif
+                        WSNet.setLogger({ message in
+                            let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
+                            logger?.logD(self, msg)
+                        }, debugLog: false)
+        #if os(iOS)
+        #if STAGING
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: true, persistentSettings: preferences.getServerSettings())
+        #else
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
+        #endif
+        #elseif os(tvOS)
+            WSNet.initialize("tvos", platformName: "tvos", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
+        #endif
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())

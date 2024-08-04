@@ -9,7 +9,9 @@
 import Foundation
 import RealmSwift
 import NetworkExtension
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 import Swinject
 import RxSwift
 
@@ -152,7 +154,9 @@ class VPNManager {
             networks.filter { $0.status == true }.forEach { network in
                 if network.SSID == TextsAsset.cellular && network.SSID != VPNManager.shared.untrustedOneTimeOnlySSID {
                     let ruleDisconnect = NEOnDemandRuleDisconnect()
+                    #if os(iOS)
                     ruleDisconnect.interfaceTypeMatch = .cellular
+                    #endif
                     onDemandRules.append(ruleDisconnect)
                     logger.logD(VPNManager.self, "Added On demand disconnect rule for cellular network.")
                 }
@@ -402,22 +406,28 @@ enum VPNManagerType: String {
         if let conf = manager as? NETunnelProviderManager {
             if let wgConfig = conf.tunnelConfiguration,
                 let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
+                #if os(iOS)
                 if #available(iOS 14.0, *) {
                     return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
                 } else {
                     return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
                 }
+                #endif
             }
             if let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,let ovpn = neProtocol.providerConfiguration?["ovpn"] as? Data {
                 return getVPNConnectionInfo(ovpn: ovpn, manager: manager)
             }
         }
         // iKEV2 use NEVPNManager
+#if os(iOS)
         if #available(iOS 14.0, *) {
             return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
         } else {
             return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress,killSwitch: false, onDemand: manager.isOnDemandEnabled)
         }
+        #else
+        return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress,killSwitch: false, onDemand: manager.isOnDemandEnabled)
+        #endif
     }
 
     private func getVPNConnectionInfo(ovpn: Data, manager: NEVPNManager) -> VPNConnectionInfo? {
@@ -449,11 +459,15 @@ enum VPNManagerType: String {
             }
         }
         if let proto = proto, let port = port {
+#if os(iOS)
             if #available(iOS 14.0, *) {
                 return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
             } else {
                 return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
             }
+#else
+            return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
+#endif
         } else {
             return nil
         }

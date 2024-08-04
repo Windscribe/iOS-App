@@ -8,7 +8,9 @@
 
 import Foundation
 import RxSwift
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 import Swinject
 
 protocol ConnectionStateManagerType {
@@ -222,11 +224,13 @@ extension ConnectionStateManager: VPNManagerDelegate {
                 preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
             }
         }
+        #if os(iOS)
         if #available(iOS 14.0, *) {
             #if arch(arm64) || arch(i386) || arch(x86_64)
             WidgetCenter.shared.reloadAllTimelines()
             #endif
         }
+        #endif
     }
 
     func displaySetPrefferedProtocol() {

@@ -9,7 +9,9 @@
 import Foundation
 import RealmSwift
 import NetworkExtension
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 import RxSwift
 
 extension VPNManager {
@@ -274,9 +276,12 @@ extension VPNManager {
             if WireGuardVPNManager.shared.providerManager.protocolConfiguration?.username == TextsAsset.wireGuard {
                 WireGuardVPNManager.shared.providerManager?.isOnDemandEnabled = false
                 WireGuardVPNManager.shared.providerManager.isEnabled = false
+#if os(iOS)
+
                 if #available(iOS 14.0, *) {
                     WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
+                #endif
                 WireGuardVPNManager.shared.providerManager.saveToPreferences { error in
                     if error == nil {
                         WireGuardVPNManager.shared.providerManager.loadFromPreferences { error in
@@ -306,9 +311,12 @@ extension VPNManager {
             if OpenVPNManager.shared.providerManager.protocolConfiguration?.username == TextsAsset.openVPN {
                 OpenVPNManager.shared.providerManager?.isOnDemandEnabled = false
                 OpenVPNManager.shared.providerManager.isEnabled = false
+#if os(iOS)
+
                 if #available(iOS 14.0, *) {
                     OpenVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
+                #endif
                 OpenVPNManager.shared.providerManager.saveToPreferences { error in
                     if error == nil {
                         OpenVPNManager.shared.providerManager.loadFromPreferences { _ in
@@ -334,9 +342,11 @@ extension VPNManager {
             if error == nil {
                 IKEv2VPNManager.shared.neVPNManager.isOnDemandEnabled = false
                 IKEv2VPNManager.shared.neVPNManager.isEnabled = false
+                #if os(iOS)
                 if #available(iOS 14.0, *) {
                     IKEv2VPNManager.shared.neVPNManager.protocolConfiguration?.includeAllNetworks = false
                 }
+                #endif
                 IKEv2VPNManager.shared.neVPNManager.saveToPreferences { error in
                     if error == nil {
                         IKEv2VPNManager.shared.neVPNManager.loadFromPreferences { _ in

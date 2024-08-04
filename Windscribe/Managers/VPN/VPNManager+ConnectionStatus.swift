@@ -9,7 +9,9 @@
 import Foundation
 import RealmSwift
 import NetworkExtension
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 extension VPNManager {
     func isConnected() -> Bool {
@@ -104,11 +106,13 @@ extension VPNManager {
 
     @objc func connectionStatusChanged(_ notification: Notification?) {
         self.configureForConnectionState()
+        #if os(iOS)
         if #available(iOS 14.0, *) {
             #if arch(arm64) || arch(i386) || arch(x86_64)
             WidgetCenter.shared.reloadAllTimelines()
             #endif
         }
+        #endif
     }
 
     func configureForConnectionState() {

@@ -145,6 +145,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
+        #if os(iOS)
         if vpnManager.isConnected() {
             completion(-1)
         } else {
@@ -159,6 +160,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 }
             }
         }
+        #endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {

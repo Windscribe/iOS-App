@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import JNKeychain
 import WireGuardKit
 import Swinject
+import SimpleKeychain
 
 class WgCredentials {
 
@@ -24,7 +24,7 @@ class WgCredentials {
     var port: String?
     private let logger: FileLogger
     private let preferences: Preferences
-
+    private let simpleKeychain = SimpleKeychain(accessGroup: SharedKeys.sharedKeychainGroup)
     init(preferences: Preferences, logger: FileLogger) {
         self.preferences = preferences
         self.logger = logger
@@ -50,9 +50,9 @@ class WgCredentials {
 
     //Generate private key if not available and save it to keychain.
     func getPrivateKey() -> String? {
-        guard let currentKey = JNKeychain.loadValue(forKey: SharedKeys.privateKey, forAccessGroup: SharedKeys.sharedKeychainGroup) as? String else {
+        guard let currentKey = try? simpleKeychain.string(forKey: SharedKeys.privateKey) else {
             let privateKey = PrivateKey.init().base64Key
-            JNKeychain.saveValue(privateKey, forKey: SharedKeys.privateKey, forAccessGroup: SharedKeys.sharedKeychainGroup)
+            try! simpleKeychain.set(privateKey, forKey: SharedKeys.privateKey)
             return privateKey
         }
         return currentKey
@@ -104,7 +104,7 @@ class WgCredentials {
 
     //Delete credentials and key if user status changes
     func delete(){
-        JNKeychain.deleteValue(forKey: SharedKeys.privateKey, forAccessGroup: SharedKeys.sharedKeychainGroup)
+        try! simpleKeychain.deleteItem(forKey: SharedKeys.privateKey)
         self.dns = nil
         self.address = nil
         self.presharedKey = nil

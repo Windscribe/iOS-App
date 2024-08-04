@@ -9,7 +9,6 @@
 import Foundation
 import SystemConfiguration.CaptiveNetwork
 import RealmSwift
-import CoreTelephony
 import NetworkExtension
 import Swinject
 import RxSwift

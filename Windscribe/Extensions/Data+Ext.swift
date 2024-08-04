@@ -21,3 +21,19 @@ extension Data {
         }
     }
 }
+
+extension Bool {
+
+    var data: Data {
+        var value = self
+        let nsdata =  NSData(bytes: &value, length: MemoryLayout.size(ofValue: self))
+        return Data(referencing: nsdata)
+    }
+
+    init?(data: NSData) {
+        guard data.length == 1 else { return nil }
+        var value = false
+        data.getBytes(&value, length: MemoryLayout<Bool>.size)
+        self = value
+    }
+}

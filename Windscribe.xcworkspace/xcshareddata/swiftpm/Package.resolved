@@ -42,7 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Windscribe/wireguard-apple.git",
       "state" : {
-        "revision" : "205b094c325c2d79493767644f1de88f72dd801f"
+        "branch" : "windscribe",
+        "revision" : "f8f91c7c0c18799a92368f0ea9dbdb9b8ec4ac1b"
       }
     }
   ],

@@ -9,6 +9,7 @@
 import NetworkExtension
 extension Connectivity {
     func getSsidFromNeHotspotHelper(completion: @escaping (String?) -> Void) {
+#if os(iOS)
         if #available(iOS 14.0, *) {
             NEHotspotNetwork.fetchCurrent { network in
                 if let ssid = network?.ssid {
@@ -20,5 +21,8 @@ extension Connectivity {
         } else {
             completion(nil)
         }
+#else
+        completion(nil)
+#endif
     }
 }

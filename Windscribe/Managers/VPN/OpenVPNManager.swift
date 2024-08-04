@@ -181,6 +181,8 @@ class OpenVPNManager {
 
                         self.providerManager.protocolConfiguration = tunnelProtocol
 
+#if os(iOS)
+
                         // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
                         if #available(iOS 15.1, *) {
 
@@ -193,6 +195,7 @@ class OpenVPNManager {
                                 self.providerManager.protocolConfiguration?.includeAllNetworks = true
                             }
                         }
+                        #endif
                         self.providerManager.onDemandRules?.removeAll()
                         self.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
                         self.providerManager.isEnabled = true
@@ -256,9 +259,12 @@ class OpenVPNManager {
         self.providerManager?.loadFromPreferences(completionHandler: { (error) in
             if error == nil, self.isConfigured() {
                 self.providerManager?.isOnDemandEnabled = VPNManager.shared.connectIntent
+#if os(iOS)
+
                 if #available(iOS 14.0, *) {
                     self.providerManager?.protocolConfiguration?.includeAllNetworks = self.killSwitch
                 }
+                #endif
                 self.providerManager?.saveToPreferences { [weak self] _ in
                     self?.providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
                         self?.providerManager?.connection.stopVPNTunnel()
@@ -287,9 +293,12 @@ class OpenVPNManager {
 
     func setKillSwitchMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
+
             if #available(iOS 15.1, *) {
                 self?.providerManager?.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
             }
+            #endif
             self?.providerManager?.saveToPreferences { [weak self] _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in
                 })
@@ -299,9 +308,12 @@ class OpenVPNManager {
 
     func setAllowLanMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
+#if os(iOS)
+
             if #available(iOS 15.1, *) {
                 self?.providerManager?.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
             }
+            #endif
             self?.providerManager?.saveToPreferences { [weak self] _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in
                 })

@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 enum LoginErrorState: Equatable {
-    case username(String), network(String), twoFa(String), api(String)
+    case username(String), network(String), twoFa(String), api(String), loginCode(String)
 }
 protocol LoginViewModel {
     var showLoadingView: BehaviorSubject<Bool> { get }
@@ -17,10 +17,13 @@ protocol LoginViewModel {
     var show2faCodeField: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var xpressCode: BehaviorSubject<String?> {get}
     func keyBoardWillShow()
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?)
+    func generateCodeTapped() 
 }
 class LoginViewModelImpl: LoginViewModel {
+    var xpressCode = BehaviorSubject<String?>(value: nil)
     let showLoadingView = BehaviorSubject(value: false)
     let stopEditing = BehaviorSubject(value: false)
     let failedState = BehaviorSubject<LoginErrorState?>(value: nil)
@@ -83,6 +86,51 @@ class LoginViewModelImpl: LoginViewModel {
                 }
             }).disposed(by: disposeBag)
     }
+
+    func generateCodeTapped() {
+        apiCallManager.getXpressLoginCode().observe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [weak self] xpressResponse in
+                self?.xpressCode.onNext(xpressResponse.xPressLoginCode)
+                self?.startXPressLoginCodeVerifier(response: xpressResponse)
+            }, onFailure: { [ self] _ in
+                self.logger.logE(self, "Unable to generate Login code. Check you network connection.")
+                self.failedState.onNext(.loginCode(TvAssets.loginCodeError))
+            }).disposed(by: disposeBag)
+    }
+    
+    func  startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
+        let startTime = Date()
+        Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { _ in
+                self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
+                    .timeout(.seconds(20), scheduler: MainScheduler.instance)
+                    .subscribe(onSuccess: { [ self] verifyResponse in
+                        let auth = verifyResponse.sessionAuth
+                        self.apiCallManager.getSession(sessionAuth: auth).subscribe(onSuccess: { [weak self] session in
+                            WifiManager.shared.configure()
+                            self?.userRepository.login(session: session)
+                            self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
+                            self?.prepareUserData()
+                            self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                        }).disposed(by: self.disposeBag)
+                    }, onFailure: { [ self] error in
+                        self.logger.logE(self, error.localizedDescription)
+                        invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                    }).disposed(by: self.disposeBag)  
+            })
+            .disposed(by: disposeBag)
+        
+        
+    }
+    
+   private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse ) {
+       let now = Date()
+       let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
+       if secondsPassed > loginCodeResponse.ttl {
+           logger.logD(self, "Failed to verify XPress login code in ttl .Giving up")
+           self.failedState.onNext(.network(""))
+       }
+   }
 
     func keyBoardWillShow() {
         failedState.onNext(.none)

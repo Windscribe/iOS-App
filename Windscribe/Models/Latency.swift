@@ -17,3 +17,9 @@ enum LatencyType {
     case staticIp
     case config
 }
+
+struct LoadLatencyInfo {
+    let force: Bool
+    let selectBestLocation: Bool
+    let connectToBestLocation: Bool
+}

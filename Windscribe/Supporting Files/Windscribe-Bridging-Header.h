@@ -17,3 +17,4 @@
 #import "wsnet/WSNetEmergencyConnect.h"
 #import "wsnet/WSNetEmergencyConnectEndpoint.h"
 #import "wsnet/WSNetAdvancedParameters.h"
+#import "proxy.h"

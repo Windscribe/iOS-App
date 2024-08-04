@@ -6,7 +6,6 @@ PODS:
   - Differentiator (5.0.0)
   - ExpyTableView (1.1)
   - IQKeyboardManagerSwift (6.5.0)
-  - JNKeychain (0.1.4)
   - MockingbirdFramework (0.20.0)
   - Realm (10.33.0):
     - Realm/Headers (= 10.33.0)
@@ -33,6 +32,7 @@ PODS:
   - RxRelay (6.6.0):
     - RxSwift (= 6.6.0)
   - RxSwift (6.6.0)
+  - SimpleKeychain (1.0.1)
   - Swinject (2.8.3)
   - SwipeCellKit (2.5.4)
 
@@ -41,7 +41,6 @@ DEPENDENCIES:
   - CocoaLumberjack/Swift (= 3.8.2)
   - ExpyTableView (= 1.1)
   - IQKeyboardManagerSwift (= 6.5.0)
-  - JNKeychain
   - MockingbirdFramework (~> 0.20)
   - Realm (= 10.33.0)
   - RealmSwift (= 10.33.0)
@@ -51,6 +50,7 @@ DEPENDENCIES:
   - RxGesture (= 4.0.4)
   - RxRealm
   - RxSwift (= 6.6.0)
+  - SimpleKeychain (~> 1.0)
   - Swinject
   - SwipeCellKit (= 2.5.4)
 
@@ -61,7 +61,6 @@ SPEC REPOS:
     - Differentiator
     - ExpyTableView
     - IQKeyboardManagerSwift
-    - JNKeychain
     - MockingbirdFramework
     - Realm
     - RealmSwift
@@ -72,6 +71,7 @@ SPEC REPOS:
     - RxRealm
     - RxRelay
     - RxSwift
+    - SimpleKeychain
     - Swinject
     - SwipeCellKit
 
@@ -81,7 +81,6 @@ SPEC CHECKSUMS:
   Differentiator: e8497ceab83c1b10ca233716d547b9af21b9344d
   ExpyTableView: 52dde6e141056544c0b8e7b083a840c37ddb6132
   IQKeyboardManagerSwift: 6cd19976c6e871907c4ed9127c2d3affdd4defc2
-  JNKeychain: fb6cc9ec95959ba46cd95d0ee6f7a05e41da9f42
   MockingbirdFramework: 54e35fbbb47b806c1a1fae2cf3ef99f6eceb55e5
   Realm: d4f810e161fa2c2c589b9860b6eb09238deacd73
   RealmSwift: cef9946f09f2333a8f2ac8bac4f8de52fb9f5ac3
@@ -92,9 +91,10 @@ SPEC CHECKSUMS:
   RxRealm: 666c8785327fe2fff972a3093b35dc7055c1ca38
   RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
+  SimpleKeychain: 130211269f88f038d7dc5254cf0b1b9ce978c398
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
   SwipeCellKit: 4eada3884ab1bbae5e8d2fb9030c242aa23d7f42
 
-PODFILE CHECKSUM: 1bafafb964afee5d1ca8b8f9b9131d44d99753e5
+PODFILE CHECKSUM: c455cacd2aafd5095951c99e2661eb00cdafbde5
 
 COCOAPODS: 1.15.2
