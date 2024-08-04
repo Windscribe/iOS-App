@@ -126,7 +126,7 @@ extension ServerListViewModel {
         }
         if !group.isNodesAvailable() && !premiumOnly {
             return true
-        } else if !group.isNodesAvailable() && premiumOnly && sessionManager.session?.isUserPro == true {
+        } else if !group.isNodesAvailable() && premiumOnly && sessionManager.session?.isPremium == true {
             return true
         }
         return false

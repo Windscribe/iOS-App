@@ -50,14 +50,14 @@ struct DNSSettingsManager {
             if urlHttpsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
                     DNSSettingsManager.resolveHosts(fromURL: customValue) {
-                        completionDNS(DNSValue(type: .overHttps, value: customValue,
+                        completionDNS(DNSValue(type: .overHttps, value: value,
                                                servers: $0))
                     }
                 return
             } else if urlTlsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
                 DNSSettingsManager.resolveHosts(fromURL: customValue, isTls: true) {
-                    completionDNS(DNSValue(type: .overTLS, value: customValue, servers: $0))
+                    completionDNS(DNSValue(type: .overTLS, value: value, servers: $0))
                 }
                 return
             }

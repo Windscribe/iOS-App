@@ -111,4 +111,30 @@ class AlertManager: AlertManagerV2 {
             viewController?.present(alert, animated: true, completion: nil)
         }
     }
+
+    func askPasswordToDeleteAccount() -> Single<String?> {
+        return Single<String?>.create { completion in
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: TextsAsset.Account.cancelAccount, message: TextsAsset.Account.deleteAccountMessage, preferredStyle: .alert)
+                alert.addTextField { field in
+                    field.layer.cornerRadius = 3
+                    field.clipsToBounds = true
+                    field.font = UIFont.text(size: 16)
+                    field.autocorrectionType = .no
+                    field.autocapitalizationType = .none
+                }
+                let positiveAction = UIAlertAction(title: TextsAsset.okay, style: .default, handler: { _ in
+                    completion(.success(alert.textFields?[0].text ?? nil))
+                })
+                alert.addAction(positiveAction)
+                let negativeAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel, handler: { _ in
+                    completion(.success(nil))
+                })
+                alert.addAction(negativeAction)
+                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
+                viewController.present(alert, animated: true, completion: nil)
+            }
+            return Disposables.create()
+        }
+    }
 }

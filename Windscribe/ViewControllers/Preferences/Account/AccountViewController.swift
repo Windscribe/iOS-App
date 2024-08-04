@@ -1,9 +1,9 @@
 //
-//	AccountViewController.swift
-//	Windscribe
+//    AccountViewController.swift
+//    Windscribe
 //
-//	Created by Thomas on 20/05/2022.
-//	Copyright © 2022 Windscribe. All rights reserved.
+//    Created by Thomas on 20/05/2022.
+//    Copyright © 2022 Windscribe. All rights reserved.
 //
 
 import Foundation
@@ -61,6 +61,27 @@ class AccountViewController: WSNavigationViewController {
         viewModel.isDarkMode.subscribe(onNext: { [self] isDark in
             self.setupViews(isDark: isDark)
         }).disposed(by: disposeBag)
+        viewModel.cancelAccountState.subscribe(onNext: { state in
+            self.logger.logD(self, "Cancel account state: \(state)")
+            switch state {
+                case .initial:
+                    self.endLoading()
+                case .loading:
+                    self.showLoading()
+                case .error(let error):
+                    self.endLoading()
+                    self.viewModel.alertManager.showSimpleAlert(
+                        viewController: self,
+                        title: TextsAsset.error,
+                        message: error,
+                        buttonText: TextsAsset.okay
+                    )
+                case .success:
+                    self.endLoading()
+                    self.viewModel.logoutUser()
+
+            }
+        }).disposed(by: disposeBag)
     }
 
     private func updateUI() {
@@ -91,49 +112,49 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let data = viewModel.celldata(at: indexPath)
         switch data {
-        case .email:
-            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.bindView(isDarkMode: viewModel.isDarkMode)
-            cell.setType(.email, item: data)
-            cell.indexPath = indexPath
-            cell.delegate = self
-            return cell
-        case .emailPro:
-            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.bindView(isDarkMode: viewModel.isDarkMode)
-            cell.setType(.emailPro, item: data)
-            cell.indexPath = indexPath
-            cell.delegate = self
-            return cell
-        case .emailEmpty:
-            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.bindView(isDarkMode: viewModel.isDarkMode)
-            cell.setType(.emptyEmail, item: data)
-            cell.indexPath = indexPath
-            cell.delegate = self
-            return cell
-        case .confirmEmail:
-            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.bindView(isDarkMode: viewModel.isDarkMode)
-            cell.setType(.confirmEmail, item: data)
-            cell.indexPath = indexPath
-            cell.delegate = self
-            cell.resendEmailAction = { [weak self] in
-                self?.navigateToConfirmEmailVC()
-            }
-            return cell
-        case .editAccount:
-            let cell = AccountEditCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.bindView(isDarkMode: viewModel.isDarkMode)
-            cell.accoutItem = data
-            return cell
-        default:
-            let cell = AccountTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
-            cell.delegate = self
-            cell.indexPath = indexPath
-            cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.configData(item: data)
-            return cell
+            case .email:
+                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.bindView(isDarkMode: viewModel.isDarkMode)
+                cell.setType(.email, item: data)
+                cell.indexPath = indexPath
+                cell.delegate = self
+                return cell
+            case .emailPro:
+                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.bindView(isDarkMode: viewModel.isDarkMode)
+                cell.setType(.emailPro, item: data)
+                cell.indexPath = indexPath
+                cell.delegate = self
+                return cell
+            case .emailEmpty:
+                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.bindView(isDarkMode: viewModel.isDarkMode)
+                cell.setType(.emptyEmail, item: data)
+                cell.indexPath = indexPath
+                cell.delegate = self
+                return cell
+            case .confirmEmail:
+                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.bindView(isDarkMode: viewModel.isDarkMode)
+                cell.setType(.confirmEmail, item: data)
+                cell.indexPath = indexPath
+                cell.delegate = self
+                cell.resendEmailAction = { [weak self] in
+                    self?.navigateToConfirmEmailVC()
+                }
+                return cell
+            case .cancelAccount:
+                let cell = AccountEditCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.bindView(isDarkMode: viewModel.isDarkMode)
+                cell.accoutItem = data
+                return cell
+            default:
+                let cell = AccountTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
+                cell.delegate = self
+                cell.indexPath = indexPath
+                cell.bindViews(isDarkMode: viewModel.isDarkMode)
+                cell.configData(item: data)
+                return cell
         }
     }
 
@@ -146,9 +167,9 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = viewModel.celldata(at: indexPath)
         switch data {
-        case .editAccount:
-            handleEditAccount()
-        default: break
+            case .cancelAccount:
+                handleCancelAccount()
+            default: break
         }
     }
 }
@@ -159,15 +180,15 @@ extension AccountViewController {
         viewModel.resendConfirmEmail(success: { [weak self] in
             self?.endLoading()
             self?.viewModel.alertManager.showSimpleAlert(viewController: self,
-                                                title: TextsAsset.ConfirmationEmailSentAlert.title,
-                                                message: TextsAsset.ConfirmationEmailSentAlert.message,
-                                                buttonText: TextsAsset.okay)
+                                                         title: TextsAsset.ConfirmationEmailSentAlert.title,
+                                                         message: TextsAsset.ConfirmationEmailSentAlert.message,
+                                                         buttonText: TextsAsset.okay)
         }, failure: { [weak self] msg in
             self?.endLoading()
             self?.viewModel.alertManager.showSimpleAlert(viewController: self,
-                                                title: TextsAsset.ConfirmationEmailSentAlert.title,
-                                                message: msg,
-                                                buttonText: TextsAsset.okay)
+                                                         title: TextsAsset.ConfirmationEmailSentAlert.title,
+                                                         message: msg,
+                                                         buttonText: TextsAsset.okay)
         })
     }
 
@@ -184,22 +205,15 @@ extension AccountViewController {
 
     }
 
-    private func handleEditAccount() {
-        showLoading()
-        viewModel.getWebSession(success: { [weak self] url in
-            self?.endLoading()
-            DispatchQueue.main.async { [weak self] in
-                self?.openLink(url: url)
+    private func handleCancelAccount() {
+        logger.logD(self, "Showing delete account popup.")
+        viewModel.alertManager.askPasswordToDeleteAccount().subscribe(onSuccess: { password in
+            if let password = password, !password.isEmpty {
+                self.viewModel.cancelAccount(password: password)
+            } else {
+                self.logger.logD(self, "Entered password is nil/empty.")
             }
-        }, failure: { [weak self] msg in
-            self?.endLoading()
-            self?.viewModel.alertManager.showSimpleAlert(
-                viewController: self,
-                title: TextsAsset.error,
-                message: msg,
-                buttonText: TextsAsset.okay
-            )
-        })
+        }, onFailure: { _ in }).disposed(by: disposeBag)
     }
 }
 

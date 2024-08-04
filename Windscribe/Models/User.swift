@@ -13,12 +13,14 @@ struct User {
     let locationHash: String
     let planType: String
     let alcList: [String]
+    let allAccessPlan: Bool
     init(session: Session) {
         // Either user have pro subscription or pay per location plan.
         isPro = session.isPremium || session.billingPlanId == -9
         username = session.username
         locationHash = session.locHash
         planType = isPro ? "1" : "0"
-        alcList =  Array(session.alc)
+        alcList =  session.alc.toArray()
+        allAccessPlan = session.isPremium
     }
 }

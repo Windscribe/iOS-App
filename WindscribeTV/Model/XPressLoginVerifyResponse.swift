@@ -9,7 +9,6 @@
 import Foundation
 class XPressLoginVerifyResponse: Decodable {
     var sessionAuth: String = ""
-    
 
     enum CodingKeys: String, CodingKey {
         case data = "data"

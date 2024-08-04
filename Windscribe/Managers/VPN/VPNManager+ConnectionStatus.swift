@@ -135,6 +135,7 @@ extension VPNManager {
             let protocolType = info.selectedProtocol
             if self.lastConnectionStatus == connectionStatus { return }
             self.lastConnectionStatus = connectionStatus
+            setWSNetDNSServer(servers: self.preferences.getCustomDNSValue().servers)
             IKEv2VPNManager.shared.noResponseTimer?.invalidate()
             switch connectionStatus {
             case .connecting:

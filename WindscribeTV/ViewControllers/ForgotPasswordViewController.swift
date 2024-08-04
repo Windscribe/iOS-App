@@ -11,7 +11,7 @@ import UIKit
 class ForgotPasswordViewController: UIViewController {
 
     @IBOutlet weak var infoLabel: UILabel!
-    
+
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
     override func viewDidLoad() {
@@ -19,7 +19,6 @@ class ForgotPasswordViewController: UIViewController {
         setupUI()
         // Do any additional setup after loading the view.
     }
-    
 
     private func setupUI() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
@@ -34,10 +33,9 @@ class ForgotPasswordViewController: UIViewController {
         backButton.setBackgroundImage(UIImage.imageWithColor(.clear), for: .focused)
 
     }
-    
+
     @IBAction func backAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
-    
 
 }

@@ -56,7 +56,7 @@ class TVViewControllers: Assembly {
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(LoginViewModel.self)
-            vc.logger = r.resolve(FileLogger.self)  
+            vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(LoginRouter.self)
 
         }.inObjectScope(.transient)
@@ -64,7 +64,7 @@ class TVViewControllers: Assembly {
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ForgotPasswordViewController") as! ForgotPasswordViewController
         }.initCompleted {  _, _ in
         }.inObjectScope(.transient)
-        
+
         // swiftlint:enable force_cast
     }
 

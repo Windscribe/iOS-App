@@ -20,7 +20,7 @@ protocol LoginViewModel {
     var xpressCode: BehaviorSubject<String?> {get}
     func keyBoardWillShow()
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?)
-    func generateCodeTapped() 
+    func generateCodeTapped()
 }
 class LoginViewModelImpl: LoginViewModel {
     var xpressCode = BehaviorSubject<String?>(value: nil)
@@ -97,7 +97,7 @@ class LoginViewModelImpl: LoginViewModel {
                 self.failedState.onNext(.loginCode(TvAssets.loginCodeError))
             }).disposed(by: disposeBag)
     }
-    
+
     func  startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
         Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
@@ -116,13 +116,12 @@ class LoginViewModelImpl: LoginViewModel {
                     }, onFailure: { [ self] error in
                         self.logger.logE(self, error.localizedDescription)
                         invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
-                    }).disposed(by: self.disposeBag)  
+                    }).disposed(by: self.disposeBag)
             })
             .disposed(by: disposeBag)
-        
-        
+
     }
-    
+
    private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse ) {
        let now = Date()
        let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)

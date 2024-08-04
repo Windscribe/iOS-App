@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)serverCredentials:(NSString*)authHash isOpenVpnProtocol:(BOOL)isOpenVpnProtocol callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverConfigs:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)portMap:(NSString*)authHash version:(uint32_t)version forceProtocols:(NSArray<NSString*>*)forceProtocols callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)recordInstall:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)recordInstall:(BOOL)isDesktop callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)addEmail:(NSString*)authHash email:(NSString*)email callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)confirmEmail:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email callback:(void(^)(int, NSString*))callback;
@@ -49,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)shakeData:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)recordShakeForDataScore:(NSString*)authHash score:(NSString*)score signature:(NSString*)signature callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)verifyTvLoginCode:(NSString*)authHash xpressCode:(NSString*)xpressCode callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)cancelAccount:(NSString*)authHash password:(NSString*)password callback:(void(^)(int, NSString*))callback;
 
 @end
 

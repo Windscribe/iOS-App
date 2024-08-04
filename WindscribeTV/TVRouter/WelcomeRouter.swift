@@ -24,4 +24,3 @@ class WelcomeRouter: RootRouter {
         }
     }
 }
-

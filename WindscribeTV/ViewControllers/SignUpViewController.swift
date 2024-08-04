@@ -21,12 +21,12 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var signUpTitle: UILabel!
     @IBOutlet weak var usernameTextField: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
-    
+
     // MARK: - State properties
     var viewModel: SignUpViewModel!, router: SignupRouter!, logger: FileLogger!
     var claimGhostAccount = false
     let disposeBag = DisposeBag()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -74,7 +74,7 @@ class SignUpViewController: UIViewController {
         signUpButton.rx.primaryAction.bind { [self] in
             viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount)
         }.disposed(by: disposeBag)
-        viewModel.failedState.bind{ [weak self] (state) in
+        viewModel.failedState.bind { [weak self] (state) in
             self?.setFailureState(state: state)
         }.disposed(by: disposeBag)
         viewModel.routeTo.bind { [self] _ in
@@ -85,7 +85,7 @@ class SignUpViewController: UIViewController {
             router.routeTo(to: RouteID.forgotPassword, from: self)
         }.disposed(by: disposeBag)
     }
-    
+
     private func setFailureState(state: SignUpErrorState) {
         switch state {
         case .username(let error):
@@ -127,7 +127,7 @@ class SignUpViewController: UIViewController {
 
     func hideLoading() {
         loadingView.isHidden = true
-       
+
     }
     func showLoading() {
         loadingView.startAnimating()

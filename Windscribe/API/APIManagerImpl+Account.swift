@@ -65,10 +65,19 @@ extension APIManagerImpl {
             self.api.getXpressLoginCode(completion)
         }
     }
-    
+
     func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse> {
         return makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
             self.api.verifyXpressLoginCode(code, sig: sig, callback: completion)
+        }
+    }
+
+    func cancelAccount(password: String) -> RxSwift.Single<APIMessage> {
+        guard let sessionAuth = userRepository?.sessionAuth else {
+            return Single.error(Errors.validationFailure)
+        }
+        return makeApiCall(modalType: APIMessage.self) { completion in
+            self.api.cancelAccount(sessionAuth, password: password, callback: completion)
         }
     }
 

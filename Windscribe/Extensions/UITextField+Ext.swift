@@ -57,7 +57,6 @@ class WSTextFieldTv: UITextField {
 
 }
 
-
 class PasswordTextFieldTv: UITextField {
     lazy var showHidePasswordButton = ImageButton(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
 
@@ -80,15 +79,15 @@ class PasswordTextFieldTv: UITextField {
 
      required init?(coder: NSCoder) {
         super.init(coder: coder)
-    
+
         self.isSecureTextEntry = true
         self.clearsOnBeginEditing = false
         self.clearsOnInsertion = false
-     
+
         showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
         showHidePasswordButton.addTarget(self, action: #selector(showHidePasswordButtonTapped), for: .touchUpInside)
         super.addSubview(showHidePasswordButton)
-         
+
          self.backgroundColor = .clear
          self.textColor = .whiteWithOpacity(opacity: 0.50)
          self.font = UIFont.text(size: 30)
@@ -98,7 +97,7 @@ class PasswordTextFieldTv: UITextField {
          layer.backgroundColor = self.isFocused ? UIColor.whiteWithOpacity(opacity: 0.19).cgColor : UIColor.clear.cgColor
 
     }
-    
+
     @objc func showHidePasswordButtonTapped() {
         if self.isSecureTextEntry {
             self.isSecureTextEntry = false
@@ -145,4 +144,3 @@ class PasswordTextFieldTv: UITextField {
             ])
     }
 }
-

@@ -38,6 +38,7 @@ extension Container {
         #elseif os(tvOS)
             WSNet.initialize("tvos", platformName: "tvos", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
         #endif
+            setWSNetDNSServer(servers: preferences.getCustomDNSValue().servers)
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())

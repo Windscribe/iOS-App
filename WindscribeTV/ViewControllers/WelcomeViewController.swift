@@ -40,7 +40,7 @@ class WelcomeViewController: UIViewController {
         loginDescription.textColor = .whiteWithOpacity(opacity: 0.50)
         loginDescription.isHidden = true
         containerView.backgroundColor = .midnightWithOpacity(opacity: 0.90)
-        
+
         loadingView = UIActivityIndicatorView(style: .large)
         loadingView.isHidden = true
         view.addSubview(loadingView)
@@ -74,10 +74,10 @@ class WelcomeViewController: UIViewController {
             viewmodal.continueButtonTapped()
         }.disposed(by: disposeBag)
     }
-    
+
     func hideLoadingView() {
         loadingView.isHidden = true
-       
+
     }
 
     func showLoadingView() {

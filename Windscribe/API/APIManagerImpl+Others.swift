@@ -33,7 +33,7 @@ extension APIManagerImpl {
 
     func recordInstall(platform: String) -> Single<APIMessage> {
         return makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.recordInstall(completion)
+            self.api.recordInstall(false, callback: completion)
         }
     }
 
