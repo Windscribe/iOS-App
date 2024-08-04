@@ -4,8 +4,8 @@
 <dict>
 	<key>CFAPP_BUNDLE_ID</key>
 	<string>$(APP_BUNDLE_ID)</string>
-    <key>CFAccountID</key>
-    <string>$(APP_TEAM_ID)</string>
+	<key>CFAccountID</key>
+	<string>$(APP_TEAM_ID)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -24,6 +24,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>arm64</string>
+	</array>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
