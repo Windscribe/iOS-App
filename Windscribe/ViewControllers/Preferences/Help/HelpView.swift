@@ -68,7 +68,7 @@ class HelpView: UIStackView {
         lbl.font = UIFont.text(size: 14)
         lbl.text = item.subTitle
         let lines = numberOfLines(for: lbl.text ?? "", with: lbl.font)
-        let height = CGFloat(lines) * (lbl.font.lineHeight + 0.5)
+        let height = CGFloat(lines) * (lbl.font.lineHeight + 0.8)
         lbl.makeHeightAnchor(equalTo: height)
         lbl.numberOfLines = 0
         lbl.layer.opacity = 0.5
@@ -79,10 +79,10 @@ class HelpView: UIStackView {
         let screenWidth = UIScreen.main.bounds.width
         let label = UILabel()
         label.text = text
-        label.font = font
+        label.font = UIFont.text(size: 14)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
-        let maxSize = CGSize(width: screenWidth, height: CGFloat.greatestFiniteMagnitude)
+        let maxSize = CGSize(width: screenWidth - 64, height: CGFloat.greatestFiniteMagnitude)
         let textRect = text.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
         let lineHeight = font.lineHeight
         let lines = Int(ceil(textRect.height / lineHeight))
