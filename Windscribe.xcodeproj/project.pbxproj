@@ -712,21 +712,9 @@
 		C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB512214A8BC001A3F24 /* libresolv.tbd */; };
 		C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
 		C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
-		C561238F2C5F2D610090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; platformFilters = (tvos, ); };
-		C56123942C5F2DA50090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; };
-		C56123952C5F2DA50090EB5A /* wstnet_tv.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C56123982C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; platformFilter = ios; };
-		C56123992C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
-		C561239A2C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; platformFilter = ios; };
-		C561239B2C5F2ED20090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
-		C561239D2C5F2EDA0090EB5A /* wsnet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; };
-		C561239E2C5F2EDA0090EB5A /* wsnet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C56123962C5F2ED20090EB5A /* wsnet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C561239F2C5F30570090EB5A /* wstnet_tv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C561238B2C5F2D610090EB5A /* wstnet_tv.framework */; platformFilters = (tvos, ); };
 		C56615F02C4D72F1008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
-		C56616102C4D8E7D008AA993 /* proxy_tv.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C566160D2C4D8E4D008AA993 /* proxy_tv.a */; platformFilters = (tvos, ); };
-		C56616112C4D8E84008AA993 /* proxy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C566160A2C4D8E24008AA993 /* proxy.a */; platformFilter = ios; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
 		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
@@ -804,6 +792,15 @@
 		C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE2B2B5101CC004FA857 /* PingData.swift */; };
 		C590D76927F2A55D007515B3 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
+		C598705E2C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C598705F2C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C59870602C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C59870612C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C59870642C6317AC00DA4DB1 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C59870632C6317AC00DA4DB1 /* Proxy.xcframework */; };
+		C59870652C6318A300DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C59870662C6318A300DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C59870672C6318A700DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
+		C59870682C6318A700DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BBFC8273F30D60078BB72 /* WebSession.swift */; };
 		C59C073D2940462200D6C3C1 /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* SharedUserDefaults.swift */; };
 		C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
@@ -1042,7 +1039,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C561239E2C5F2EDA0090EB5A /* wsnet.framework in Embed Frameworks */,
+				C59870662C6318A300DA4DB1 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1053,7 +1050,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C56123952C5F2DA50090EB5A /* wstnet_tv.framework in Embed Frameworks */,
+				C59870682C6318A700DA4DB1 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1562,11 +1559,6 @@
 		C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNSUtil.swift .swift"; sourceTree = "<group>"; };
 		C561237F2C5F25B60090EB5A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		C56123802C5F25B60090EB5A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.9.tbd; sourceTree = DEVELOPER_DIR; };
-		C561238B2C5F2D610090EB5A /* wstnet_tv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wstnet_tv.framework; sourceTree = "<group>"; };
-		C56123962C5F2ED20090EB5A /* wsnet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wsnet.framework; sourceTree = "<group>"; };
-		C566160A2C4D8E24008AA993 /* proxy.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = proxy.a; sourceTree = "<group>"; };
-		C566160B2C4D8E24008AA993 /* proxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proxy.h; sourceTree = "<group>"; };
-		C566160D2C4D8E4D008AA993 /* proxy_tv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = proxy_tv.a; sourceTree = "<group>"; };
 		C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerErrors.swift; sourceTree = "<group>"; };
 		C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDictionary.swift; sourceTree = "<group>"; };
 		C56F5DAF29537B8C008CD223 /* ConcurrentDictionaryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDictionaryTest.swift; sourceTree = "<group>"; };
@@ -1621,6 +1613,8 @@
 		C580FE272B50829B004FA857 /* LatencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepository.swift; sourceTree = "<group>"; };
 		C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C580FE2B2B5101CC004FA857 /* PingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingData.swift; sourceTree = "<group>"; };
+		C598705C2C63172A00DA4DB1 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
+		C59870632C6317AC00DA4DB1 /* Proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Proxy.xcframework; sourceTree = "<group>"; };
 		C59BBFC8273F30D60078BB72 /* WebSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSession.swift; sourceTree = "<group>"; };
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
@@ -1769,11 +1763,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
+				C59870672C6318A700DA4DB1 /* WSNet.xcframework in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
 				C56D5B032C4E08650069DB6E /* WireGuardKit in Frameworks */,
 				C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */,
-				C56123942C5F2DA50090EB5A /* wstnet_tv.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1785,6 +1779,7 @@
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
+				C59870652C6318A300DA4DB1 /* WSNet.xcframework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
@@ -1793,7 +1788,6 @@
 				AF87DB522214A8BC001A3F24 /* libresolv.tbd in Frameworks */,
 				AF16CA1622272EAB00997A2A /* StoreKit.framework in Frameworks */,
 				C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */,
-				C561239D2C5F2EDA0090EB5A /* wsnet.framework in Frameworks */,
 				C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */,
 				1B9E4881B28361D8E4276E67 /* Pods_Windscribe.framework in Frameworks */,
 			);
@@ -1811,17 +1805,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56616112C4D8E84008AA993 /* proxy.a in Frameworks */,
 				AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */,
+				C598705E2C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */,
 				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
 				C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */,
 				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
-				C56123982C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
-				C561239F2C5F30570090EB5A /* wstnet_tv.framework in Frameworks */,
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
+				C59870642C6317AC00DA4DB1 /* Proxy.xcframework in Frameworks */,
 				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
 				DAC2D5E9685166D40AE1F73B /* Pods_PacketTunnel.framework in Frameworks */,
-				C56616102C4D8E7D008AA993 /* proxy_tv.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1831,9 +1823,9 @@
 			files = (
 				C56123832C5F25E10090EB5A /* libresolv.9.tbd in Frameworks */,
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
-				C56123992C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
 				C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */,
 				9B7A6D492A314E85A229364B /* Pods_SiriIntents.framework in Frameworks */,
+				C598705F2C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1842,12 +1834,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
-				C561238F2C5F2D610090EB5A /* wstnet_tv.framework in Frameworks */,
+				C59870602C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */,
 				C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
 				C56D5B012C4E06550069DB6E /* WireGuardKit in Frameworks */,
 				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
-				C561239A2C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1858,8 +1849,8 @@
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
 				C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */,
+				C59870612C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
-				C561239B2C5F2ED20090EB5A /* wsnet.framework in Frameworks */,
 				C56123872C5F26130090EB5A /* libresolv.9.tbd in Frameworks */,
 				84DB83C52D55C4639941F898 /* Pods_HomeWidgetExtension.framework in Frameworks */,
 			);
@@ -3118,11 +3109,8 @@
 		C56615F72C4D883E008AA993 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				C56123962C5F2ED20090EB5A /* wsnet.framework */,
-				C561238B2C5F2D610090EB5A /* wstnet_tv.framework */,
-				C566160D2C4D8E4D008AA993 /* proxy_tv.a */,
-				C566160A2C4D8E24008AA993 /* proxy.a */,
-				C566160B2C4D8E24008AA993 /* proxy.h */,
+				C59870632C6317AC00DA4DB1 /* Proxy.xcframework */,
+				C598705C2C63172A00DA4DB1 /* WSNet.xcframework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
