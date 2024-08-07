@@ -8,6 +8,22 @@
 			<key>BinaryPath</key>
 			<string>wsnet.framework/wsnet</string>
 			<key>LibraryIdentifier</key>
+			<string>ios-arm64-simulator</string>
+			<key>LibraryPath</key>
+			<string>wsnet.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>ios</string>
+			<key>SupportedPlatformVariant</key>
+			<string>simulator</string>
+		</dict>
+		<dict>
+			<key>BinaryPath</key>
+			<string>wsnet.framework/wsnet</string>
+			<key>LibraryIdentifier</key>
 			<string>ios-arm64</string>
 			<key>LibraryPath</key>
 			<string>wsnet.framework</string>
@@ -20,23 +36,9 @@
 		</dict>
 		<dict>
 			<key>BinaryPath</key>
-			<string>wstnet_tv.framework/wstnet_tv</string>
-			<key>LibraryIdentifier</key>
-			<string>tvos-arm64</string>
-			<key>LibraryPath</key>
-			<string>wstnet_tv.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>arm64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>tvos</string>
-		</dict>
-		<dict>
-			<key>BinaryPath</key>
 			<string>wsnet.framework/wsnet</string>
 			<key>LibraryIdentifier</key>
-			<string>ios-arm64-simulator</string>
+			<string>tvos-arm64</string>
 			<key>LibraryPath</key>
 			<string>wsnet.framework</string>
 			<key>SupportedArchitectures</key>
@@ -44,9 +46,7 @@
 				<string>arm64</string>
 			</array>
 			<key>SupportedPlatform</key>
-			<string>ios</string>
-			<key>SupportedPlatformVariant</key>
-			<string>simulator</string>
+			<string>tvos</string>
 		</dict>
 	</array>
 	<key>CFBundlePackageType</key>
