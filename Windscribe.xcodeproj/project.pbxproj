@@ -719,8 +719,6 @@
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
 		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
 		C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AF42C4DFF300069DB6E /* WireGuardKit */; };
-		C56D5B012C4E06550069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5B002C4E06550069DB6E /* WireGuardKit */; };
-		C56D5B032C4E08650069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5B022C4E08650069DB6E /* WireGuardKit */; };
 		C56F5DAE2953739C008CD223 /* ConcurrentDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */; };
 		C56F5DB029537B8C008CD223 /* ConcurrentDictionaryTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F5DAF29537B8C008CD223 /* ConcurrentDictionaryTest.swift */; };
 		C56F5DB129537C2C008CD223 /* ConcurrentDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */; };
@@ -801,6 +799,8 @@
 		C59870662C6318A300DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C59870672C6318A700DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; };
 		C59870682C6318A700DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598705C2C63172A00DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706A2C63210B00DA4DB1 /* WireGuardKit */; };
+		C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706C2C63212700DA4DB1 /* WireGuardKit */; };
 		C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BBFC8273F30D60078BB72 /* WebSession.swift */; };
 		C59C073D2940462200D6C3C1 /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* SharedUserDefaults.swift */; };
 		C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
@@ -1764,9 +1764,9 @@
 			files = (
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
 				C59870672C6318A700DA4DB1 /* WSNet.xcframework in Frameworks */,
+				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
-				C56D5B032C4E08650069DB6E /* WireGuardKit in Frameworks */,
 				C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1835,9 +1835,9 @@
 			files = (
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
 				C59870602C63172A00DA4DB1 /* WSNet.xcframework in Frameworks */,
+				C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */,
 				C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
-				C56D5B012C4E06550069DB6E /* WireGuardKit in Frameworks */,
 				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3620,7 +3620,7 @@
 			);
 			name = WindscribeTV;
 			packageProductDependencies = (
-				C56D5B022C4E08650069DB6E /* WireGuardKit */,
+				C598706C2C63212700DA4DB1 /* WireGuardKit */,
 			);
 			productName = WindscribeTV;
 			productReference = 592EDBF92C3C688400351D44 /* WindscribeTV.app */;
@@ -3739,7 +3739,7 @@
 			);
 			name = WireGuardTunnel;
 			packageProductDependencies = (
-				C56D5B002C4E06550069DB6E /* WireGuardKit */,
+				C598706A2C63210B00DA4DB1 /* WireGuardKit */,
 			);
 			productName = WireGuardTunnel;
 			productReference = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */;
@@ -3890,7 +3890,7 @@
 				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
 				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
 				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
-				C56D5AFF2C4E06550069DB6E /* XCRemoteSwiftPackageReference "wireguard-apple" */,
+				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -6756,12 +6756,12 @@
 				kind = branch;
 			};
 		};
-		C56D5AFF2C4E06550069DB6E /* XCRemoteSwiftPackageReference "wireguard-apple" */ = {
+		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
-				branch = windscribe;
-				kind = branch;
+				kind = revision;
+				revision = 0af771a08d34cc82365fb9e9bb24494aa5ab034f;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -6785,14 +6785,14 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = WireGuardKit;
 		};
-		C56D5B002C4E06550069DB6E /* WireGuardKit */ = {
+		C598706A2C63210B00DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C56D5AFF2C4E06550069DB6E /* XCRemoteSwiftPackageReference "wireguard-apple" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
 			productName = WireGuardKit;
 		};
-		C56D5B022C4E08650069DB6E /* WireGuardKit */ = {
+		C598706C2C63212700DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C56D5AFF2C4E06550069DB6E /* XCRemoteSwiftPackageReference "wireguard-apple" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
 			productName = WireGuardKit;
 		};
 		C5E3C4A72C36CAC0009B67DC /* WireGuardKit */ = {
