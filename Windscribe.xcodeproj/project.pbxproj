@@ -673,14 +673,6 @@
 		C535D2A127E5133300C08345 /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2A752E230DAF6300548088 /* URLRequest+Ext.swift */; };
 		C535D2A227E5136700C08345 /* URLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90E56A6275E4A02004E4AC0 /* URLRequestExtension.swift */; };
 		C54AE8722B8E5BEF00646529 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */; };
-		C54CACF22C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACF32C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACF42C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACF52C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACF72C63BF0C005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACF82C63BF0C005BDFD5 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C54CACF92C63BF15005BDFD5 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; };
-		C54CACFA2C63BF15005BDFD5 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88C116F79ED9C24091D3B53F /* Pods_WireGuardTunnel.framework */; };
 		C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; };
 		C5592B762B37F3F200F2F110 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
@@ -798,7 +790,6 @@
 		C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE2B2B5101CC004FA857 /* PingData.swift */; };
 		C590D76927F2A55D007515B3 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
-		C59870642C6317AC00DA4DB1 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C59870632C6317AC00DA4DB1 /* Proxy.xcframework */; };
 		C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706A2C63210B00DA4DB1 /* WireGuardKit */; };
 		C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706C2C63212700DA4DB1 /* WireGuardKit */; };
 		C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BBFC8273F30D60078BB72 /* WebSession.swift */; };
@@ -833,6 +824,15 @@
 		C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */; };
 		C5A930FA2B45A5F00001CFA0 /* FileLogFormater.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F62B45A4FC0001CFA0 /* FileLogFormater.swift */; };
 		C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */; };
+		C5AB0C6F2C63E4DC005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C702C63E4DC005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C712C63E4DC005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C722C63E4DC005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C742C63E4E6005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C752C63E4E7005D2541 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C5AB0C762C63E4EB005D2541 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; };
+		C5AB0C772C63E4EB005D2541 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C782C63E511005D2541 /* Proxy.xcframework */; };
 		C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */; };
 		C5BF0D52277454EB009C95DF /* PushNotificationPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */; };
 		C5BF384C2B916B3D00AA725C /* WelcomeViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384B2B916B3D00AA725C /* WelcomeViewModal.swift */; };
@@ -1039,7 +1039,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C54CACF82C63BF0C005BDFD5 /* WSNet.xcframework in Embed Frameworks */,
+				C5AB0C752C63E4E7005D2541 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1050,7 +1050,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C54CACFA2C63BF15005BDFD5 /* WSNet.xcframework in Embed Frameworks */,
+				C5AB0C772C63E4EB005D2541 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1539,7 +1539,6 @@
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
 		C5481CF5C95B230B8691EB78 /* Pods_HomeWidgetExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HomeWidgetExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
-		C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
 		C553E34D2C25ABE900A2C027 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		C5592B752B37F3F200F2F110 /* WSNetErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetErrors.swift; sourceTree = "<group>"; };
 		C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Robert.swift"; sourceTree = "<group>"; };
@@ -1614,7 +1613,6 @@
 		C580FE272B50829B004FA857 /* LatencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepository.swift; sourceTree = "<group>"; };
 		C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C580FE2B2B5101CC004FA857 /* PingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingData.swift; sourceTree = "<group>"; };
-		C59870632C6317AC00DA4DB1 /* Proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Proxy.xcframework; sourceTree = "<group>"; };
 		C59BBFC8273F30D60078BB72 /* WebSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSession.swift; sourceTree = "<group>"; };
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
@@ -1640,6 +1638,8 @@
 		C5A930F32B45A3880001CFA0 /* FileLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLogger.swift; sourceTree = "<group>"; };
 		C5A930F62B45A4FC0001CFA0 /* FileLogFormater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLogFormater.swift; sourceTree = "<group>"; };
 		C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoggerImpl.swift; sourceTree = "<group>"; };
+		C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
+		C5AB0C782C63E511005D2541 /* Proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Proxy.xcframework; sourceTree = "<group>"; };
 		C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+RefreshControls.swift"; sourceTree = "<group>"; };
 		C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationPayload.swift; sourceTree = "<group>"; };
 		C5BF384B2B916B3D00AA725C /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
@@ -1763,7 +1763,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
-				C54CACF92C63BF15005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C762C63E4EB005D2541 /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
@@ -1779,7 +1779,7 @@
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
-				C54CACF72C63BF0C005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C742C63E4E6005D2541 /* WSNet.xcframework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
@@ -1809,9 +1809,9 @@
 				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
 				C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */,
 				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
-				C54CACF22C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C6F2C63E4DC005D2541 /* WSNet.xcframework in Frameworks */,
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
-				C59870642C6317AC00DA4DB1 /* Proxy.xcframework in Frameworks */,
+				C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */,
 				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
 				DAC2D5E9685166D40AE1F73B /* Pods_PacketTunnel.framework in Frameworks */,
 			);
@@ -1825,7 +1825,7 @@
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
 				C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */,
 				9B7A6D492A314E85A229364B /* Pods_SiriIntents.framework in Frameworks */,
-				C54CACF32C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C702C63E4DC005D2541 /* WSNet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1834,7 +1834,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
-				C54CACF42C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C712C63E4DC005D2541 /* WSNet.xcframework in Frameworks */,
 				C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */,
 				C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
@@ -1849,7 +1849,7 @@
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
 				C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */,
-				C54CACF52C63BF00005BDFD5 /* WSNet.xcframework in Frameworks */,
+				C5AB0C722C63E4DC005D2541 /* WSNet.xcframework in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
 				C56123872C5F26130090EB5A /* libresolv.9.tbd in Frameworks */,
 				84DB83C52D55C4639941F898 /* Pods_HomeWidgetExtension.framework in Frameworks */,
@@ -3109,8 +3109,8 @@
 		C56615F72C4D883E008AA993 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				C54CACF02C63BF00005BDFD5 /* WSNet.xcframework */,
-				C59870632C6317AC00DA4DB1 /* Proxy.xcframework */,
+				C5AB0C782C63E511005D2541 /* Proxy.xcframework */,
+				C5AB0C6D2C63E4DC005D2541 /* WSNet.xcframework */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -6761,7 +6761,7 @@
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
 				kind = revision;
-				revision = 0af771a08d34cc82365fb9e9bb24494aa5ab034f;
+				revision = 7480f8e3ddfb431332b3488bc244e48f2bbdc6e6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
