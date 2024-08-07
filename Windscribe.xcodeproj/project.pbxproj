@@ -793,12 +793,14 @@
 		C59870642C6317AC00DA4DB1 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C59870632C6317AC00DA4DB1 /* Proxy.xcframework */; };
 		C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706A2C63210B00DA4DB1 /* WireGuardKit */; };
 		C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706C2C63212700DA4DB1 /* WireGuardKit */; };
-		C598706F2C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
 		C59870702C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
 		C59870712C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
 		C59870722C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
 		C59870732C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
-		C59870742C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
+		C59870752C6357C900DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
+		C59870762C6357C900DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C59870772C6357CC00DA4DB1 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; };
+		C59870782C6357CC00DA4DB1 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C598706E2C6355E500DA4DB1 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59BBFC8273F30D60078BB72 /* WebSession.swift */; };
 		C59C073D2940462200D6C3C1 /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* SharedUserDefaults.swift */; };
 		C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
@@ -1037,6 +1039,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C59870762C6357C900DA4DB1 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1047,6 +1050,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C59870782C6357CC00DA4DB1 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1759,7 +1763,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
-				C59870742C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */,
+				C59870772C6357CC00DA4DB1 /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
@@ -1775,7 +1779,7 @@
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
-				C598706F2C6355E500DA4DB1 /* WSNet.xcframework in Frameworks */,
+				C59870752C6357C900DA4DB1 /* WSNet.xcframework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
