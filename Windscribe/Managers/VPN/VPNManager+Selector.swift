@@ -273,24 +273,24 @@ extension VPNManager {
 
     func resetWireguard(comletion: @escaping () -> Void) {
         WireGuardVPNManager.shared.setup {
-            if WireGuardVPNManager.shared.providerManager.protocolConfiguration?.username == TextsAsset.wireGuard {
+            if WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.username == TextsAsset.wireGuard {
                 WireGuardVPNManager.shared.providerManager?.isOnDemandEnabled = false
-                WireGuardVPNManager.shared.providerManager.isEnabled = false
+                WireGuardVPNManager.shared.providerManager?.isEnabled = false
 #if os(iOS)
 
                 if #available(iOS 14.0, *) {
                     WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
                 #endif
-                WireGuardVPNManager.shared.providerManager.saveToPreferences { error in
+                WireGuardVPNManager.shared.providerManager?.saveToPreferences { error in
                     if error == nil {
-                        WireGuardVPNManager.shared.providerManager.loadFromPreferences { error in
+                        WireGuardVPNManager.shared.providerManager?.loadFromPreferences { error in
                             if error != nil {
                                 delay(2, completion: comletion)
                                 return
                             }
                             if WireGuardVPNManager.shared.isConnected() || WireGuardVPNManager.shared.isConnecting() {
-                                WireGuardVPNManager.shared.providerManager.connection.stopVPNTunnel()
+                                WireGuardVPNManager.shared.providerManager?.connection.stopVPNTunnel()
                                 delay(2, completion: comletion)
                             } else {
                                 comletion()
@@ -308,20 +308,20 @@ extension VPNManager {
 
     func resetOpenVPN(comletion: @escaping () -> Void) {
         OpenVPNManager.shared.setup {
-            if OpenVPNManager.shared.providerManager.protocolConfiguration?.username == TextsAsset.openVPN {
+            if OpenVPNManager.shared.providerManager?.protocolConfiguration?.username == TextsAsset.openVPN {
                 OpenVPNManager.shared.providerManager?.isOnDemandEnabled = false
-                OpenVPNManager.shared.providerManager.isEnabled = false
+                OpenVPNManager.shared.providerManager?.isEnabled = false
 #if os(iOS)
 
                 if #available(iOS 14.0, *) {
                     OpenVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
                 #endif
-                OpenVPNManager.shared.providerManager.saveToPreferences { error in
+                OpenVPNManager.shared.providerManager?.saveToPreferences { error in
                     if error == nil {
-                        OpenVPNManager.shared.providerManager.loadFromPreferences { _ in
+                        OpenVPNManager.shared.providerManager?.loadFromPreferences { _ in
                             if OpenVPNManager.shared.isConnected() || OpenVPNManager.shared.isConnecting() {
-                                OpenVPNManager.shared.providerManager.connection.stopVPNTunnel()
+                                OpenVPNManager.shared.providerManager?.connection.stopVPNTunnel()
                                 delay(1, completion: comletion)
                             } else {
                                 comletion()

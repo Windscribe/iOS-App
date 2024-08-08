@@ -104,7 +104,7 @@ class WgCredentials {
 
     //Delete credentials and key if user status changes
     func delete(){
-        try! simpleKeychain.deleteItem(forKey: SharedKeys.privateKey)
+        try? simpleKeychain.deleteItem(forKey: SharedKeys.privateKey)
         self.dns = nil
         self.address = nil
         self.presharedKey = nil
