@@ -101,7 +101,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      Records app install.
      */
     private func recordInstallIfFirstLoad() {
-        if preferences.getFirstInstall() != nil {
+        if preferences.getFirstInstall() == nil {
             preferences.saveFirstInstall(bool: true)
             apiManager.recordInstall(platform: "ios").subscribe(onSuccess: { _ in
                 self.logger.logD(self, "Successfully recorded new install.")
