@@ -340,5 +340,5 @@
 "Message" = "Сообщение";
 "Subject" = "Тема";
 "Connected DNS" = "DNS в туннеле";
-"Select the DNS server while connected to Windscribe." = "Выберите DNS-сервер при подключении к Windscribe.";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Выберите DNS-сервер при подключении к Windscribe.";
 "Custom" = "Пользовательский";

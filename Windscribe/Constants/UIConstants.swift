@@ -845,7 +845,7 @@ struct TextsAsset {
     }
 
     static var connectedDNSDescription: String {
-        return "Select the DNS server while connected to Windscribe.".localize()
+        return "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting.".localize()
     }
 
     static var connectedDNSValueFieldDescription: String {
