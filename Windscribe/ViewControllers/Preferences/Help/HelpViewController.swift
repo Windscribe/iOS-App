@@ -26,6 +26,11 @@ class HelpViewController: WSNavigationViewController {
                                                                title: TextsAsset.Debug.viewLog),
                                                 type: .action,
                                                 delegate: self, isDarkMode: viewModel.isDarkMode)
+    private lazy var advanceParams = HelpView(item: HelpItem(icon: ImagesAsset.Preferences.advanceParams,
+                                                                title: TextsAsset.Preferences.advanceParameters,
+                                                                subTitle: Help.advanceParamDescription),
+                                                 type: .navigation,
+                                                 delegate: self, isDarkMode: viewModel.isDarkMode)
 
     private lazy var sendDebugLogRow: HelpView = {
         let vw = HelpView(item: HelpItem(icon: ImagesAsset.Help.debugSend,
@@ -81,6 +86,7 @@ class HelpViewController: WSNavigationViewController {
                   talkToGarryRow,
                   sendTicketRow,
                   communitySupportRow,
+                  advanceParams,
                   viewDebugLogRow,
                   sendDebugLogRow
               ])
@@ -89,6 +95,7 @@ class HelpViewController: WSNavigationViewController {
                   knowledgeBaseRow,
                   talkToGarryRow,
                   communitySupportRow,
+                  advanceParams,
                   viewDebugLogRow,
                   sendDebugLogRow
               ])
@@ -145,6 +152,8 @@ extension HelpViewController: HelpViewDelegate {
             viewLogButtonTapped()
         case sendDebugLogRow:
             sendLogButtonTapped()
+        case advanceParams:
+            router?.routeTo(to: RouteID.advanceParams, from: self)
         default:
             break
         }

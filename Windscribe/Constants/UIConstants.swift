@@ -1294,6 +1294,9 @@ struct Help {
     static var discord: String {
         return "Discord".localize()
     }
+    static var advanceParamDescription: String {
+        return "Make advanced tweaks to the way the app functions".localize()
+    }
 }
 
 struct Robert {

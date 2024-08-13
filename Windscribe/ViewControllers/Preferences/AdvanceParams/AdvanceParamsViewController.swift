@@ -61,7 +61,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
         viewModel.isDarkMode.subscribe { isDarkMode in
             self.setupViews(isDark: isDarkMode)
             self.inputBox.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-            self.inputBox.backgroundColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
+            self.inputBox.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode)
             self.view.backgroundColor = ThemeUtils.backgroundColor(isDarkMode: isDarkMode)
             self.backButton.setImage(UIImage(named: ThemeUtils.backButtonAsset(isDarkMode: isDarkMode)), for: .normal)
             self.closeButton?.setImage(UIImage(named: ThemeUtils.closeButtonAsset(isDarkMode: isDarkMode)), for: .normal)

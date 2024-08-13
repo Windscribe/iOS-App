@@ -17,6 +17,9 @@ class HelpRouter: BaseRouter, NavigationRouter {
         case RouteID.submitTicket:
             let vc = Assembler.resolve(SubmitTicketViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
+        case RouteID.advanceParams:
+            let vc = Assembler.resolve(AdvanceParamsViewController.self)
+            from.navigationController?.pushViewController(vc, animated: true)
         default: ()
         }
     }
