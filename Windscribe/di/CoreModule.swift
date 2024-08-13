@@ -11,7 +11,7 @@ import Swinject
 import CocoaLumberjack
 /// Core dependencies used by all targets.
 extension Container {
-    func injectCore(isExt: Bool = false) {
+    func injectCore(ext: Bool = false) {
         register(FileLogger.self) { _ in
             let logger = FileLoggerImpl()
             return logger
@@ -34,11 +34,7 @@ extension Container {
         #else
             WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
         #endif
-            if isExt {
-                setWSNetDNSServer(servers: ["76.76.2.11", "1.1.1.1", "8.8.8.8"], force: true)
-            } else {
-                setWSNetDNSServer(servers: preferences.getCustomDNSValue().servers)
-            }
+            setWSNetDNSServer(servers: preferences.getCustomDNSValue().servers, ext: ext)
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())
