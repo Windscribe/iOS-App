@@ -125,18 +125,15 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
             return PreferenceItem(icon: ImagesAsset.Preferences.connection,
                                   title: TextsAsset.Preferences.connection)
         case 4:
-            return PreferenceItem(icon: ImagesAsset.Preferences.advanceParams,
-                                  title: TextsAsset.Preferences.advanceParameters)
-        case 5:
             return PreferenceItem(icon: ImagesAsset.Servers.fav,
                                   title: TextsAsset.Preferences.referForData)
-        case 6:
+        case 5:
             return PreferenceItem(icon: ImagesAsset.Preferences.helpMe,
                                   title: TextsAsset.Preferences.helpMe)
-        case 7:
+        case 6:
             return PreferenceItem(icon: ImagesAsset.Preferences.about,
                                   title: TextsAsset.Preferences.about)
-        case 8:
+        case 7:
             return PreferenceItem(icon: ImagesAsset.Preferences.logoutRed,
                                   title: TextsAsset.Preferences.logout)
         default: break

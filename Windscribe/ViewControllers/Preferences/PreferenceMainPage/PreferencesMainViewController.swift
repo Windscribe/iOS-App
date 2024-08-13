@@ -213,13 +213,13 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
         if viewModel?.isUserGhost() ?? false {
-            return 8
+            return 7
         }
-        return 9
+        return 8
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 5 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true) {
+        if indexPath.row == 4 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true) {
             return 0.01
         }
         return 48
@@ -236,8 +236,8 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
         if let preferenceItem = viewModel?.getPreferenceItem(for: indexPath.row) {
             cell.displayingItem = preferenceItem
         }
-        cell.isHidden = indexPath.row == 5 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true)
-        if indexPath.row == 8 {
+        cell.isHidden = indexPath.row == 4 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true)
+        if indexPath.row == 7 {
             cell.arrowIcon.isHidden = true
             cell.cellDivider.isHidden = true
         }
@@ -267,15 +267,13 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
         case 2:
             router?.routeTo(to: RouteID.connection, from: self)
         case 4:
-            router?.routeTo(to: RouteID.advanceParams, from: self)
-        case 5:
             router?.routeTo(to: RouteID.shareWithFriends, from: self)
-        case 6:
+        case 5:
             router?.routeTo(to: RouteID.help, from: self)
-        case 7:
+        case 6:
             router?.routeTo(to: RouteID.about, from: self)
 
-        case 8:
+        case 7:
             self.signoutButtonTapped()
         default:
             break
