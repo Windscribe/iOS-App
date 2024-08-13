@@ -10,9 +10,9 @@ import Foundation
 import Swinject
 /// Dependencies used by Wireguard network extension.
 extension Container {
-    convenience init(_: Bool) {
+    convenience init(isExt: Bool) {
         self.init()
-        injectCore()
+        injectCore(isExt: isExt)
         register(WgCredentials.self) { r in
             return WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)

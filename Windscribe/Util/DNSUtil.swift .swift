@@ -7,8 +7,8 @@
 //
 
 import Foundation
-func setWSNetDNSServer(servers: [String]) {
-    if Resolver().getservers().isEmpty {
+func setWSNetDNSServer(servers: [String], force: Bool = false) {
+    if Resolver().getservers().isEmpty || force {
         WSNet.instance().dnsResolver().setDnsServers(servers)
     } else {
         WSNet.instance().dnsResolver().setDnsServers(Resolver().getservers().map {Resolver.getnameinfo($0)})

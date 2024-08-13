@@ -16,7 +16,7 @@ import RxSwift
 class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: dependencies
     private lazy var container: Container = {
-        let container = Container(true)
+        let container = Container(isExt: true)
         return container
     }()
     private lazy var wgCrendentials: WgCredentials = {
@@ -168,6 +168,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Check user session for change.
     func getSession(){
+        WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1"])
         logger.logD(self, "Requesting user session update.")
         apiCallManager.getSession()
             .subscribe(onSuccess: { [self] data in
