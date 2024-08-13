@@ -340,5 +340,5 @@
 "Message" = "Nachricht";
 "Subject" = "Thema";
 "Connected DNS" = "Verbundenes DNS";
-"Select the DNS server while connected to Windscribe." = "Wählen Sie den DNS-Server aus, während Sie mit Windscribe verbunden sind.";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Wählen Sie den DNS-Server aus, während Sie mit Windscribe verbunden sind.";
 "Custom" = "Gewohnheit";

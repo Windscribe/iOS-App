@@ -340,5 +340,5 @@
 "Message" = "Pesan";
 "Subject" = "Perihal";
 "Connected DNS" = "DNS yang tersambung";
-"Select the DNS server while connected to Windscribe." = "Pilih server DNS saat terhubung ke Windscribe.";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Pilih server DNS saat terhubung ke Windscribe.";
 "Custom" = "Adat";

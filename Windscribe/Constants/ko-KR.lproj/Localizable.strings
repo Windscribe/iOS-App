@@ -340,5 +340,5 @@
 "Message" = "메시지";
 "Subject" = "제목";
 "Connected DNS" = "연결된 DNS";
-"Select the DNS server while connected to Windscribe." = "Windscribe에 연결된 상태에서 DNS 서버를 선택합니다.";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe에 연결된 상태에서 DNS 서버를 선택합니다.";
 "Custom" = "관습";

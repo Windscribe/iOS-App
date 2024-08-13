@@ -349,5 +349,5 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Message" = "Tin nhắn";
 "Subject" = "Chủ đề";
 "Connected DNS" = "DNS được kết nối";
-"Select the DNS server while connected to Windscribe." = "Chọn máy chủ DNS trong khi kết nối với Windscribe.";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Chọn máy chủ DNS trong khi kết nối với Windscribe.";
 "Custom" = "Phong tục";
