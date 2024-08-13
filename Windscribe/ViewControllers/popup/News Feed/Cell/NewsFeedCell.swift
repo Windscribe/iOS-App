@@ -49,6 +49,7 @@ class NewsFeedCell: UITableViewCell {
 
         // MARK: - Header
         titleLabel.font = UIFont.bold(size: 12)
+        titleLabel.numberOfLines = 2
         iconView.image = UIImage(named: ImagesAsset.whiteExpand)
         readStatusDot = UIView()
         readStatusDot.backgroundColor = UIColor.seaGreen
