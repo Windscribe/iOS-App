@@ -38,7 +38,8 @@ class NewsFeedModel: NewsFeedModelType {
             if notifications.isEmpty { return }
             let setReadNotificationIDs = Set(readNotifications.map { $0.id })
             let firstUnreadNotificationID = notifications.first { !setReadNotificationIDs.contains($0.id) }?.id ?? -1
-            let sections = notifications.map { notice in
+            let sections = notifications.sorted { $0.date > $1.date }
+                .map { notice in
                 let isFirstUnread = notice.id == firstUnreadNotificationID
                 if isFirstUnread { self.updateReadNotice(for: notice.id) }
                 return NewsSection(items: [NewsFeedCellViewModel(notice: notice,
