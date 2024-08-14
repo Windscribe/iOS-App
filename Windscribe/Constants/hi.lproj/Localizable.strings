@@ -358,7 +358,7 @@
 "current network" = "वर्तमान नेटवर्क";
 "other network" = "अन्य नेटवर्क";
 "Select the preferred protocol for this network. This overrides global connection preferences." = "इस नेटवर्क के लिए सर्वोत्तम प्रोटोकॉल चुनें। यह सभी वैश्विक कनेक्शन सेटिंग्स को ओवरराइड करता है।";
-"Advance Parameters" = "एडवांस पैरामीटर";
+"Advanced Parameters" = "एडवांस्ड पैरामीटर";
 "About Us" = "हमारे बारे में";
 "Can’t access Windscribe? Connect to our servers to unblock your restrictive network." = "Windscribe तक पहुँचने में असमर्थ हैं? अपने प्रतिबंधक नेटवर्क को अनब्लॉक करने के लिए हमारे सर्वर से जुड़ें।";
 "Referred by someone?" = "किसी द्वारा रेफर किया गया?";

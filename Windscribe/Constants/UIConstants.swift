@@ -357,7 +357,7 @@ struct TextsAsset {
         static var about: String { return "About".localize()}
         static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localize()}
         static var referForData: String { return "Refer for Data".localize()}
-        static var advanceParameters: String { return "Advance Parameters".localize()}
+        static var advanceParameters: String { return "Advanced Parameters".localize()}
     }
 
     struct Robert {
