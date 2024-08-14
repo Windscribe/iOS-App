@@ -201,8 +201,11 @@ class NodeTableViewCell: BaseNodeTableViewCell {
             if isGroupProOnly && !isUserPro {
                 favButton.setImage(proNodeIconImage, for: .normal)
             } else {
-                let forceDisconnectNode = displayingGroup?.nodes?.first { $0.forceDisconnect == true }
-                if  forceDisconnectNode != nil {
+                if let bestNode = displayingGroup?.bestNode,
+                   let bestNodeHostname = displayingGroup?.bestNodeHostname,
+                   bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
+                   bestNodeHostname != "" {
+                } else {
                     nickNameLabel.isEnabled = false
                     cityNameLabel.isEnabled = false
                     favButton.isEnabled = false
@@ -218,6 +221,24 @@ class NodeTableViewCell: BaseNodeTableViewCell {
         }
         linkSpeedIcon.isHidden = displayingGroup?.linkSpeed != "10000"
     }
+
+    func isHostStillActive(hostname: String, isStaticIP: Bool = false) -> Bool {
+        guard let nodesList = localDB.getServers()?.flatMap({ $0.groups }).map({ $0.nodes }),
+              let  staticIPNodes = localDB.getStaticIPs()?.flatMap({ $0.nodes }) else { return false }
+         for nodes in nodesList {
+             for node in nodes {
+                 if node.hostname == hostname && node.forceDisconnect == false {
+                     return true
+                 }
+             }
+         }
+         for node in staticIPNodes {
+             if node.hostname == hostname && node.forceDisconnect == false {
+                 return true
+             }
+         }
+         return false
+     }
 
     @objc func favButtonTapped() {
         if favButton.image(for: .normal) != proNodeIconImage {
