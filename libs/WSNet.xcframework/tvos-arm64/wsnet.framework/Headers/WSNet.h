@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 +(BOOL)initialize:(NSString*)basePlatform platformName:(NSString*)platformName appVersion:(NSString*)appVersion deviceId:(NSString*)deviceId openVpnVersion:(NSString*)openVpnVersion isUseStagingDomains:(BOOL)isUseStagingDomains persistentSettings:(NSString*)persistentSettings;
 +(WSNet*)instance;
 +(void)cleanup;
++(BOOL)isValid;
 -(void)setConnectivityState:(BOOL)isOnline;
 -(void)setIsConnectedToVpnState:(BOOL)isConnected;
 -(NSString*)currentPersistentSettings;
