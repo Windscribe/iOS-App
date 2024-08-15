@@ -146,6 +146,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
+    override func wake() {
+        logger.logD(self, "Device waking up")
+        onStaleConnection()
+    }
+
+    override func sleep(completionHandler: @escaping () -> Void) {
+        logger.logD(self, "Device going to sleep.")
+        completionHandler()
+    }
+
     /// Called when handshake fails. Checks user status and authentication.
     func onStaleConnection() {
         if !runningHealthCheck && !preferences.isCustomConfigSelected() {
