@@ -464,6 +464,14 @@ class SharedSecretDefaults: Preferences {
         setString(settings, forKey: SharedKeys.serverSettings)
     }
 
+    func getWireguardWakeupTime() -> Double {
+        return sharedDefault?.double(forKey: SharedKeys.wireguardWakeupTime) ?? 0.0
+    }
+
+    func saveWireguardWakeupTime(value: Double) {
+        sharedDefault?.set(value, forKey: SharedKeys.wireguardWakeupTime)
+    }
+
     // MARK: - Base Types
     func setString(_ value: String?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)

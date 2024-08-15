@@ -58,6 +58,7 @@ enum SharedKeys {
     static let registeredForPushNotifications = "registered-for-push-notifications"
     static let blurStaticIpAddress = "blur-static-ip-address"
     static let blurNetworkName = "blur-network-name"
+    static let wireguardWakeupTime = "wireguard-wake-up-time"
 
     static let activeSessionAuthHash = "activeSessionAuthHash"
     static let notificationRetriavalTimestamp = "notificationRetriavalTimestamp"

@@ -147,12 +147,17 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func wake() {
-        logger.logD(self, "Device waking up")
-        onStaleConnection()
+        let currentTime = Date().timeIntervalSince1970
+        let lastWakeTime = preferences.getWireguardWakeupTime()
+        if lastWakeTime == 0 || currentTime - lastWakeTime >= 600 {
+            logger.logD(self, "Device wake up.")
+            UserDefaults.standard.set(currentTime, forKey: "lastWakeTime")
+            preferences.saveWireguardWakeupTime(value: currentTime)
+            onStaleConnection()
+        }
     }
 
     override func sleep(completionHandler: @escaping () -> Void) {
-        logger.logD(self, "Device going to sleep.")
         completionHandler()
     }
 

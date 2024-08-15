@@ -129,4 +129,6 @@ protocol Preferences {
 
     func saveCustomDNSValue(value: DNSValue)
     func getCustomDNSValue() -> DNSValue
+    func saveWireguardWakeupTime(value: Double)
+    func getWireguardWakeupTime() -> Double
 }
