@@ -24,7 +24,7 @@ class WgCredentials {
     var port: String?
     private let logger: FileLogger
     private let preferences: Preferences
-    private let simpleKeychain = SimpleKeychain(accessGroup: SharedKeys.sharedKeychainGroup)
+    private let simpleKeychain = SimpleKeychain(service: "WireguardService", accessGroup: SharedKeys.sharedKeychainGroup)
     init(preferences: Preferences, logger: FileLogger) {
         self.preferences = preferences
         self.logger = logger
