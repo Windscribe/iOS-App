@@ -10,6 +10,7 @@ import CocoaLumberjack
 import Foundation
 import RxSwift
 class FileLoggerImpl: FileLogger {
+    private let maxLogLength = 120000
     private lazy var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
         return containerUrl?.appendingPathComponent("AppExtensionLogs")
@@ -65,8 +66,20 @@ class FileLoggerImpl: FileLogger {
                 }
                 .sorted { $0.0.compare($1.0) == .orderedAscending }
                 .map { $0.1 }
-
-            callback(.success(sortedLogEntries.joined(separator: "")))
+            let combinedLog = sortedLogEntries.joined(separator: "")
+            let truncatedLog: String
+            if combinedLog.count > maxLogLength {
+                let startIndex = combinedLog.index(combinedLog.endIndex, offsetBy: -maxLogLength)
+                let substring = combinedLog[startIndex...]
+                if let firstNewlineIndex = substring.firstIndex(of: "\n") {
+                    truncatedLog = String(substring[firstNewlineIndex...])
+                } else {
+                    truncatedLog = String(substring)
+                }
+            } else {
+                truncatedLog = combinedLog
+            }
+            callback(.success(truncatedLog))
             return Disposables.create {}
         }
     }

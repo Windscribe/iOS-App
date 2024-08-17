@@ -61,7 +61,7 @@ class HelpViewModelImpl: HelpViewModel {
             if let session =  self.sessionManager.session, session.isUserGhost == true {
                 debugUsername = "ghost_\(session.userId)"
             }
-            return self.apiManager.sendDebugLog(username: debugUsername, log: fileData.base64Encoded())
+            return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
         }.subscribe(onSuccess: { _ in
             self.logger.logD(self, "Debug log submitted.")
             completion(true, nil)
