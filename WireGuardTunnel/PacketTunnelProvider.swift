@@ -56,15 +56,22 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         logger.logD(self, "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
             logger.logD(self, "Wg credentials not avaialble for non custom config connection.")
-            completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+            // If user status changes to expired/banned credentials are deleted, Status may have changed to Okay. Try to get ip again & restart extension.
+            self.runningHealthCheck = true
+            self.requestNewInterfaceIp(completionHandler: completionHandler)
             return
         }
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
-              let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
+              var tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
             errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
+        }
+        // Tunnel configuration provided with start of connection may have changed due user status change.
+        let lastIpAddress = tunnelConfiguration.interface.addresses[0].stringRepresentation
+        if !preferences.isCustomConfigSelected() && lastIpAddress != wgCrendentials.address {
+            tunnelConfiguration = try! TunnelConfiguration(fromWgQuickConfig: wgCrendentials.asWgCredentialsString() ?? "")
         }
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
@@ -183,7 +190,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Check user session for change.
     func getSession(){
-        WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1"])
         logger.logD(self, "Requesting user session update.")
         apiCallManager.getSession()
             .subscribe(onSuccess: { [self] data in
@@ -213,18 +219,23 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     /// Request new interface address to check if it has changed.
-    private func requestNewInterfaceIp() {
-        self.logger.logD(self, "Requesting new interface address.")
+    private func requestNewInterfaceIp(completionHandler: ((Error?) -> Void)? = nil) {
         do {
-            guard let config = wgCrendentials.asWgCredentialsString() else {
-                self.logger.logE(self, "Unabled to find saved wg credentials. \( wgCrendentials.debugDescription)")
-                return
+            self.logger.logD(self, "Catching existing configuration.")
+            var tunnelConfig: TunnelConfiguration? = nil
+            if let config =  wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized()  {
+                tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
             }
-            let tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
-            let lastIpAddress = tunnelConfig.interface.addresses[0].stringRepresentation
+            let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
+            self.logger.logD(self, "Requesting new interface address.")
             wgConfigRepository.getCredentials().subscribe(onCompleted: {
                 self.runningHealthCheck = false
+                // Restart extesnion if connection to apply new configuration.
+                if let completionHandler = completionHandler {
+                    completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                    return
+                }
                 if let newAddress = self.wgCrendentials.address, let key = self.wgCrendentials.presharedKey {
                     if(newAddress != lastIpAddress || oldKey != key) {
                         do {
@@ -242,14 +253,24 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                         }
                     } else {
                         self.logger.logD(self, "Same interface address.")
-                        self.runningHealthCheck = false
                     }
                 }
             }, onError: { error in
                 self.runningHealthCheck = false
-                self.logger.logD(self, "Failed to build wg configuration. \(error)")
+                self.logger.logD(self, "Failed to build get wg configuration from api: \(error)")
+                if let completionHandler = completionHandler {
+                    completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                    return
+                }
             }).disposed(by: disposeBag)
-        } catch {}
+        } catch let e {
+            self.logger.logD(self, "Failed to get wg configuration. \(e.localizedDescription)")
+            self.runningHealthCheck = false
+            if let completionHandler = completionHandler {
+                completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                return
+            }
+        }
     }
 
     // Generates and apply updated wg config. Only do if peer changes (Private key + preshaed key changed)
