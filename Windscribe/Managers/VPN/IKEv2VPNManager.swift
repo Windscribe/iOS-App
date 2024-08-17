@@ -57,7 +57,8 @@ class IKEv2VPNManager {
                 ikeV2Protocol.authenticationMethod = .none
                 ikeV2Protocol.useExtendedAuthentication = true
                 ikeV2Protocol.enablePFS = true
-
+                // Using direct ip for server does not work in iOS <=13
+                let legacyOS = NSString(string: UIDevice.current.systemVersion).doubleValue <= 13
                 // Changes for the ikev2 issue on ios 16 and kill switch on
                 if #available(iOS 16.0, *) {
                     if self.killSwitch || !self.allowLane {
@@ -68,6 +69,10 @@ class IKEv2VPNManager {
                         ikeV2Protocol.serverAddress = ip
                         ikeV2Protocol.serverCertificateCommonName = hostname
                     }
+                } else if legacyOS {
+                    ikeV2Protocol.remoteIdentifier = hostname
+                    ikeV2Protocol.localIdentifier = username
+                    ikeV2Protocol.serverAddress = hostname
                 } else {
                     ikeV2Protocol.serverAddress = ip
                     ikeV2Protocol.serverCertificateCommonName = hostname

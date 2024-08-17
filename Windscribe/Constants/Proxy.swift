@@ -14,5 +14,5 @@ struct Proxy {
     static let internalProtocol = "tcp"
     static let wstunnelPath = "/tcp/127.0.0.1/1194"
     static let defaultProxyPort = "1194"
-    static let localEndpoint = ":\(defaultProxyPort)"
+    static let localEndpoint = "127.0.0.1:\(defaultProxyPort)"
 }
