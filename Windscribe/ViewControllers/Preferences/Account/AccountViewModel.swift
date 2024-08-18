@@ -29,6 +29,7 @@ protocol AccountViewModelType {
     func loadSession() -> Single<Session>
     func cancelAccount(password: String)
     func logoutUser()
+    func getSections() -> [AccountSectionItem]
 }
 
 class AccountViewModel: AccountViewModelType {
@@ -48,6 +49,10 @@ class AccountViewModel: AccountViewModelType {
         sections = [.info, .plan]
         self.alertManager = alertManager
         isDarkMode = themeManager.darkTheme
+    }
+
+    func getSections() -> [AccountSectionItem] {
+        return sections
     }
 
     func numberOfRowsInSection(in section: Int) -> Int {

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="KfW-pB-pIq" customClass="SettingOption" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="94"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nk3-vS-O5V">
+                    <rect key="frame" x="0.0" y="0.0" width="400" height="94"/>
+                    <viewLayoutGuide key="safeArea" id="i5j-fQ-rmo"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKW-rJ-UhI">
+                    <rect key="frame" x="24" y="0.0" width="312" height="94"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="312" id="sSt-qS-VbP"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="42"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="check-mark-on" translatesAutoresizingMaskIntoConstraints="NO" id="RlO-Un-ed4">
+                    <rect key="frame" x="344" y="31" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="32" id="T4k-Km-ImX"/>
+                        <constraint firstAttribute="height" constant="32" id="TDJ-3x-yxS"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="nk3-vS-O5V" secondAttribute="trailing" id="BEN-uE-RWX"/>
+                <constraint firstAttribute="bottom" secondItem="oKW-rJ-UhI" secondAttribute="bottom" id="Dw6-3J-dgo"/>
+                <constraint firstItem="oKW-rJ-UhI" firstAttribute="leading" secondItem="KfW-pB-pIq" secondAttribute="leading" constant="24" id="FLU-z1-69R"/>
+                <constraint firstAttribute="trailing" secondItem="RlO-Un-ed4" secondAttribute="trailing" constant="24" id="H12-d1-xg8"/>
+                <constraint firstItem="RlO-Un-ed4" firstAttribute="centerY" secondItem="KfW-pB-pIq" secondAttribute="centerY" id="QGC-lf-0IF"/>
+                <constraint firstAttribute="bottom" secondItem="nk3-vS-O5V" secondAttribute="bottom" id="RM6-4L-bGs"/>
+                <constraint firstItem="oKW-rJ-UhI" firstAttribute="top" secondItem="KfW-pB-pIq" secondAttribute="top" id="Vqi-u8-4Uq"/>
+                <constraint firstItem="nk3-vS-O5V" firstAttribute="leading" secondItem="KfW-pB-pIq" secondAttribute="leading" id="h9K-z4-9Z8"/>
+                <constraint firstItem="RlO-Un-ed4" firstAttribute="leading" secondItem="oKW-rJ-UhI" secondAttribute="trailing" constant="8" id="lFZ-Qq-pzK"/>
+                <constraint firstItem="nk3-vS-O5V" firstAttribute="top" secondItem="KfW-pB-pIq" secondAttribute="top" id="oT3-gu-HaO"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="selectedImageView" destination="RlO-Un-ed4" id="VEC-ka-sTo"/>
+                <outlet property="selectedView" destination="nk3-vS-O5V" id="reZ-zu-ljh"/>
+                <outlet property="titleLabel" destination="oKW-rJ-UhI" id="rva-v1-jcI"/>
+            </connections>
+            <point key="canvasLocation" x="62" y="-41"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="check-mark-on" width="16" height="16"/>
+    </resources>
+</document>

@@ -11,9 +11,12 @@ import UIKit
 
 // MARK: - UITableView register and dequeue
 extension UITableViewCell {
-
     class func registerClass(in tableView: UITableView?) {
         tableView?.register(self, forCellReuseIdentifier: className)
+    }
+
+    class func registerNibClass(in tableView: UITableView?) {
+        tableView?.register(UINib(nibName: className, bundle: nil), forCellReuseIdentifier: className)
     }
 
     class func dequeueReusableCell(in tableView: UITableView, for indexPath: IndexPath) -> Self {

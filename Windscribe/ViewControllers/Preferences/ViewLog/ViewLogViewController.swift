@@ -13,7 +13,6 @@ import RxSwift
 class ViewLogViewController: WSNavigationViewController {
     var logView: UITextView!
     var logger: FileLogger?
-    var viewModal: ViewLogViewModel?
     lazy var themeManager = Assembler.resolve(ThemeManager.self)
     var viewModel: ViewLogViewModel!
 

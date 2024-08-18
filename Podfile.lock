@@ -33,7 +33,7 @@ PODS:
     - RxSwift (= 6.6.0)
   - RxSwift (6.6.0)
   - SimpleKeychain (1.0.1)
-  - Swinject (2.8.3)
+  - Swinject (2.9.1)
   - SwipeCellKit (2.5.4)
 
 DEPENDENCIES:
@@ -92,9 +92,9 @@ SPEC CHECKSUMS:
   RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
   SimpleKeychain: 130211269f88f038d7dc5254cf0b1b9ce978c398
-  Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
+  Swinject: a827d508c6270da03ec74e558e728917a888fa9b
   SwipeCellKit: 4eada3884ab1bbae5e8d2fb9030c242aa23d7f42
 
-PODFILE CHECKSUM: 1c0a8323199dbb719ea2b4c9acf42b0bbf482033
+PODFILE CHECKSUM: c455cacd2aafd5095951c99e2661eb00cdafbde5
 
 COCOAPODS: 1.14.3

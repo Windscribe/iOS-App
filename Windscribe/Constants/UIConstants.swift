@@ -409,6 +409,8 @@ struct TextsAsset {
         static var hapticFeedback: String { "Haptic Feedback".localize() }
         static var showServerHealth: String { "Show Location Load".localize() }
         static var autoSecure: String { "Auto-Secure".localize() }
+        static var enabled: String { "Enabled".localize() }
+        static var disabled: String { "Disabled".localize() }
 
         static func getValue(displayText: String) -> String? {
             switch displayText {

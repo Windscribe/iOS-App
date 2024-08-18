@@ -17,7 +17,9 @@ protocol ConnectionsViewModelType {
 
     func updateChangeFirewallStatus()
     func updateChangeKillSwitchStatus()
+    func updateChangeKillSwitchStatus(status: Bool)
     func updateChangeAllowLanStatus()
+    func updateChangeAllowLanStatus(status: Bool)
     func updateAutoSecureNetworkStatus()
     func updateCircumventCensorshipStatus(status: Bool)
     func updatePort(value: String)
@@ -25,6 +27,7 @@ protocol ConnectionsViewModelType {
     func updateConnectionMode(value: ConnectionModeType)
     func updateConnectedDNS(type: ConnectedDNSType)
 
+    func getCircumventCensorshipStatus() -> Bool
     func getFirewallStatus() -> Bool
     func getKillSwitchStatus() -> Bool
     func getAllowLanStatus() -> Bool
@@ -119,12 +122,22 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         try? preferences.saveFirewallMode(firewall: !firewall.value())
     }
 
+    func updateChangeKillSwitchStatus(status: Bool) {
+        preferences.saveKillSwitch(killSwitch: status)
+    }
+
     func updateChangeKillSwitchStatus() {
-        try? preferences.saveKillSwitch(killSwitch: !killSwitch.value())
+        guard let status = try? killSwitch.value() else { return }
+        updateChangeKillSwitchStatus(status: !status)
+    }
+
+    func updateChangeAllowLanStatus(status: Bool) {
+        preferences.saveAllowLane(mode: status)
     }
 
     func updateChangeAllowLanStatus() {
-        try? preferences.saveAllowLane(mode: !allowLane.value())
+        guard let status = try? allowLane.value() else { return }
+        updateChangeAllowLanStatus(status: !status)
     }
 
     func updateAutoSecureNetworkStatus() {
@@ -222,6 +235,10 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     func updateCircumventCensorshipStatus(status: Bool) {
         preferences.saveCircumventCensorshipStatus(status: status)
         WSNet.instance().advancedParameters().setAPIExtraTLSPadding(status)
+    }
+
+    func getCircumventCensorshipStatus() -> Bool {
+        preferences.isCircumventCensorshipEnabled()
     }
 }
 

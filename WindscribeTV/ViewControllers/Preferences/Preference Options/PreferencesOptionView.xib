@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iN0-l3-epB" customClass="PreferencesOptionView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="356" height="94"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXc-JC-Hk1">
+                    <rect key="frame" x="36" y="0.0" width="320" height="94"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="42"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AoA-C3-K9B">
+                    <rect key="frame" x="0.0" y="0.0" width="4" height="94"/>
+                    <viewLayoutGuide key="safeArea" id="wEd-Ay-3GI"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="4" id="PDk-6h-zMW"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="AoA-C3-K9B" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8lb-v9-op7"/>
+                <constraint firstAttribute="trailing" secondItem="rXc-JC-Hk1" secondAttribute="trailing" id="DTI-3h-GiY"/>
+                <constraint firstItem="AoA-C3-K9B" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="DcS-OL-zif"/>
+                <constraint firstAttribute="bottom" secondItem="AoA-C3-K9B" secondAttribute="bottom" id="TGU-So-f5J"/>
+                <constraint firstAttribute="bottom" secondItem="rXc-JC-Hk1" secondAttribute="bottom" id="Y1H-Wh-sDv"/>
+                <constraint firstItem="rXc-JC-Hk1" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ZOw-EH-HMk"/>
+                <constraint firstItem="rXc-JC-Hk1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="36" id="kqn-Yq-VQM"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="selectedView" destination="AoA-C3-K9B" id="uCr-Iy-hZn"/>
+                <outlet property="titleLabel" destination="rXc-JC-Hk1" id="AWS-5V-Ehu"/>
+            </connections>
+            <point key="canvasLocation" x="62" y="-41"/>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="gUE-Ev-8dX" customClass="PreferencesConnectionView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9zA-J1-lmb">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="top" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="C1K-wx-t3a">
+                            <rect key="frame" x="0.0" y="0.0" width="1920" height="0.0"/>
+                            <subviews>
+                                <view hidden="YES" contentMode="scaleToFill" id="ptB-a9-z5k">
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <viewLayoutGuide key="safeArea" id="34V-bS-gnQ"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </view>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="C1K-wx-t3a" firstAttribute="trailing" secondItem="xSm-hu-WaC" secondAttribute="trailing" id="CNL-v4-Nvg"/>
+                        <constraint firstItem="C1K-wx-t3a" firstAttribute="bottom" secondItem="xSm-hu-WaC" secondAttribute="bottom" id="K5p-qu-gO6"/>
+                        <constraint firstItem="C1K-wx-t3a" firstAttribute="leading" secondItem="xSm-hu-WaC" secondAttribute="leading" id="OXW-dq-Y6a"/>
+                        <constraint firstItem="C1K-wx-t3a" firstAttribute="width" secondItem="B9F-Wh-wfy" secondAttribute="width" id="Yyc-kb-njF"/>
+                        <constraint firstItem="C1K-wx-t3a" firstAttribute="top" secondItem="xSm-hu-WaC" secondAttribute="top" id="ly4-5e-zoX"/>
+                    </constraints>
+                    <viewLayoutGuide key="contentLayoutGuide" id="xSm-hu-WaC"/>
+                    <viewLayoutGuide key="frameLayoutGuide" id="B9F-Wh-wfy"/>
+                </scrollView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="9zA-J1-lmb" firstAttribute="leading" secondItem="gUE-Ev-8dX" secondAttribute="leading" id="7pC-ki-JbD"/>
+                <constraint firstAttribute="bottom" secondItem="9zA-J1-lmb" secondAttribute="bottom" id="Ndf-6n-wMw"/>
+                <constraint firstItem="9zA-J1-lmb" firstAttribute="top" secondItem="gUE-Ev-8dX" secondAttribute="top" id="SBj-8V-KIX"/>
+                <constraint firstAttribute="trailing" secondItem="9zA-J1-lmb" secondAttribute="trailing" id="g9y-mz-D0O"/>
+            </constraints>
+            <connections>
+                <outlet property="contentStackView" destination="C1K-wx-t3a" id="4Lx-Br-KJD"/>
+            </connections>
+            <point key="canvasLocation" x="-275" y="-35"/>
+        </view>
+    </objects>
+</document>
