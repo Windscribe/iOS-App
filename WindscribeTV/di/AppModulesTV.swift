@@ -64,6 +64,7 @@ class TVViewControllers: Assembly {
             vc.connectionStateViewModel = r.resolve(ConnectionStateViewModelType.self)
             vc.logger =  r.resolve(FileLogger.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
+            vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
         container.register(WelcomeViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
@@ -101,7 +102,7 @@ class TVViewControllers: Assembly {
             vc.connectionsViewModel = r.resolve(ConnectionsViewModelType.self)
             vc.viewLogViewModel = r.resolve(ViewLogViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
-        }
+        }.inObjectScope(.transient)
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted {  _, _ in
@@ -122,5 +123,8 @@ class TVRouters: Assembly {
         container.register(SignupRouter.self) { _ in
             SignupRouter()
         }.inObjectScope(.transient)
+        container.register(HomeRouter.self) { _ in
+            HomeRouter()
+        }
     }
 }

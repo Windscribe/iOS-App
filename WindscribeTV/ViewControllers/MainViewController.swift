@@ -44,6 +44,7 @@ class MainViewController: UIViewController {
     var viewModel: MainViewModelType!
     var connectionStateViewModel: ConnectionStateViewModelType!
     var latencyViewModel: LatencyViewModel!
+    var router: HomeRouter!
     let disposeBag = DisposeBag()
     let vpnManager = VPNManager.shared
     var logger: FileLogger!
@@ -136,7 +137,7 @@ class MainViewController: UIViewController {
     }
 
     @IBAction func settingsPressed(_ sender: Any) {
-        print("settings clicked")
+        router.routeTo(to: RouteID.preferences, from: self)
     }
 
     @IBAction func notificationsClicked(_ sender: Any) {

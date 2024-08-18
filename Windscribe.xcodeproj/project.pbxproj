@@ -753,6 +753,7 @@
 		C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = AF87DB512214A8BC001A3F24 /* libresolv.tbd */; };
 		C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
 		C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
+		C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5658EA62C71AACD00E8215A /* HomeRouter.swift */; };
 		C56615F02C4D72F1008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
@@ -1624,6 +1625,7 @@
 		C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DNSUtil.swift .swift"; sourceTree = "<group>"; };
 		C561237F2C5F25B60090EB5A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		C56123802C5F25B60090EB5A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.9.tbd; sourceTree = DEVELOPER_DIR; };
+		C5658EA62C71AACD00E8215A /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagerErrors.swift; sourceTree = "<group>"; };
 		C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDictionary.swift; sourceTree = "<group>"; };
 		C56F5DAF29537B8C008CD223 /* ConcurrentDictionaryTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConcurrentDictionaryTest.swift; sourceTree = "<group>"; };
@@ -2517,6 +2519,7 @@
 				59FC74862C52FCEE00021CD1 /* Router.swift */,
 				59FC74882C530A4100021CD1 /* LoginRouter.swift */,
 				59DF45872C59C30400EB6DC1 /* SignupRouter.swift */,
+				C5658EA62C71AACD00E8215A /* HomeRouter.swift */,
 			);
 			path = TVRouter;
 			sourceTree = "<group>";
@@ -4684,6 +4687,7 @@
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				59FC743E2C515B9E00021CD1 /* SessionManager.swift in Sources */,
+				C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */,
 				1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */,
 				59FC73CE2C514A8800021CD1 /* WgCredentials.swift in Sources */,
 				59FC73F72C51535B00021CD1 /* WebSession.swift in Sources */,
