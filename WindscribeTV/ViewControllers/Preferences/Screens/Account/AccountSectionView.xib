@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AccountSectionView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DaK-wj-Am3">
+                    <rect key="frame" x="40" y="0.0" width="92" height="64"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="64" id="vrQ-wt-LCz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="xIG-9M-IcV">
+                    <rect key="frame" x="40" y="96" width="1840" height="984"/>
+                </stackView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="xIG-9M-IcV" secondAttribute="bottom" id="PkJ-Hy-uGP"/>
+                <constraint firstItem="xIG-9M-IcV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="aOM-7l-eh4"/>
+                <constraint firstItem="xIG-9M-IcV" firstAttribute="top" secondItem="DaK-wj-Am3" secondAttribute="bottom" constant="32" id="c7X-JX-ENx"/>
+                <constraint firstAttribute="trailing" secondItem="xIG-9M-IcV" secondAttribute="trailing" constant="40" id="e2t-YY-pCZ"/>
+                <constraint firstItem="DaK-wj-Am3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pjN-Je-gEZ"/>
+                <constraint firstItem="DaK-wj-Am3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="xTv-KI-Khm"/>
+            </constraints>
+            <connections>
+                <outlet property="stackView" destination="xIG-9M-IcV" id="Lnc-DZ-V4J"/>
+                <outlet property="titleLabel" destination="DaK-wj-Am3" id="pL9-GP-pCo"/>
+            </connections>
+            <point key="canvasLocation" x="143" y="41"/>
+        </view>
+    </objects>
+</document>

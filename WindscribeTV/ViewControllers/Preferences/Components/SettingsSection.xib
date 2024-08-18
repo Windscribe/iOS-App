@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SettingsSection" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1480" height="234"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="u9a-Yi-0ze">
+                    <rect key="frame" x="0.0" y="24" width="1480" height="210"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YSD-jc-X2H">
+                            <rect key="frame" x="0.0" y="0.0" width="1480" height="65"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="42"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vwD-dI-Ht7">
+                            <rect key="frame" x="0.0" y="116" width="1480" height="94"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="kCB-k5-wiT" userLabel="Content Stack View">
+                                    <rect key="frame" x="0.0" y="0.0" width="1480" height="94"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Chn-0N-8w0">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="94"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                    </subviews>
+                                    <viewLayoutGuide key="safeArea" id="lth-Rx-qtQ"/>
+                                </stackView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="width" secondItem="S2T-sf-cmn" secondAttribute="width" priority="250" id="42l-Mz-f61"/>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="height" secondItem="S2T-sf-cmn" secondAttribute="height" id="E6e-md-Hht"/>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="leading" secondItem="6P4-Oq-1do" secondAttribute="leading" id="WOn-xp-i1V"/>
+                                <constraint firstAttribute="height" constant="94" id="giy-Bd-a6H"/>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="top" secondItem="6P4-Oq-1do" secondAttribute="top" id="lSq-QU-RFg"/>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="bottom" secondItem="6P4-Oq-1do" secondAttribute="bottom" id="mkI-ei-9pK"/>
+                                <constraint firstItem="kCB-k5-wiT" firstAttribute="trailing" secondItem="6P4-Oq-1do" secondAttribute="trailing" id="x1V-TW-kRC"/>
+                            </constraints>
+                            <viewLayoutGuide key="contentLayoutGuide" id="6P4-Oq-1do"/>
+                            <viewLayoutGuide key="frameLayoutGuide" id="S2T-sf-cmn"/>
+                        </scrollView>
+                    </subviews>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="u9a-Yi-0ze" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="MWp-cY-MFA"/>
+                <constraint firstAttribute="trailing" secondItem="u9a-Yi-0ze" secondAttribute="trailing" id="REQ-3P-bQS"/>
+                <constraint firstAttribute="bottom" secondItem="u9a-Yi-0ze" secondAttribute="bottom" id="aCb-YQ-r9D"/>
+                <constraint firstItem="u9a-Yi-0ze" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="24" id="xi8-JC-q7N"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="contentStackView" destination="kCB-k5-wiT" id="sIp-EE-mDf"/>
+                <outlet property="contentViewTop" destination="xi8-JC-q7N" id="r0Q-l6-xX2"/>
+                <outlet property="scrollView" destination="vwD-dI-Ht7" id="8kT-aZ-Siz"/>
+                <outlet property="tempView" destination="Chn-0N-8w0" id="UEf-CM-JzC"/>
+                <outlet property="titleLabel" destination="YSD-jc-X2H" id="rWI-Ge-D5J"/>
+            </connections>
+            <point key="canvasLocation" x="3" y="-35"/>
+        </view>
+    </objects>
+</document>

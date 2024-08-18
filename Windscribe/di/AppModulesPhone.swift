@@ -39,7 +39,7 @@ class ViewModels: Assembly {
         container.register(GeneralViewModelType.self) { r in
             return GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.transient)
-        container.register(AccountViewModel.self) { r in
+        container.register(AccountViewModelType.self) { r in
             return AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(ShareWithFriendViewModelType.self) { r in
@@ -272,7 +272,7 @@ class ViewControllerModule: Assembly {
         container.register(AccountViewController.self) { _ in
             AccountViewController()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(AccountViewModel.self)
+            c.viewModel = r.resolve(AccountViewModelType.self)
             c.router = r.resolve(AccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)

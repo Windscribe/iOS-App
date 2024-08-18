@@ -27,6 +27,7 @@ protocol GeneralViewModelType {
     func getVersion() -> String
     func getServerHealth() -> Bool
     func getHapticFeedback() -> Bool
+    func selectLanguage(with value: String)
 }
 
 class GeneralViewModel: GeneralViewModelType {
@@ -120,6 +121,12 @@ class GeneralViewModel: GeneralViewModelType {
 
     func getCurrentLanguage() -> String {
         return languageManager.getCurrentLanguage().name
+    }
+
+    func selectLanguage(with value: String) {
+        if let language = Languages(name: value) {
+            languageManager.setLanguage(language: language)
+        }
     }
 
     func getServerHealth() -> Bool {

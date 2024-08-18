@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="QU5-SV-USX" customClass="PreferencesAccountView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="top" ambiguous="YES" axis="vertical" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="0jS-dV-tsY">
+                    <rect key="frame" x="40" y="40" width="1840" height="320"/>
+                </stackView>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="0jS-dV-tsY" secondAttribute="trailing" constant="40" id="HBL-qO-uOv"/>
+                <constraint firstItem="0jS-dV-tsY" firstAttribute="leading" secondItem="QU5-SV-USX" secondAttribute="leading" constant="40" id="Qf3-lp-PcT"/>
+                <constraint firstItem="0jS-dV-tsY" firstAttribute="top" secondItem="QU5-SV-USX" secondAttribute="top" constant="40" id="qQ6-GF-QCi"/>
+            </constraints>
+            <connections>
+                <outlet property="contentStackView" destination="0jS-dV-tsY" id="uqy-AQ-zbt"/>
+            </connections>
+            <point key="canvasLocation" x="-275" y="-35"/>
+        </view>
+    </objects>
+</document>

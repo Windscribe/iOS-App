@@ -22,4 +22,8 @@ extension UIFont {
         return UIFont(name: "EurostileExt-Bla", size: size)!
     }
 
+    static func regular(size: CGFloat) -> UIFont {
+        return UIFont(name: "IBMPlexSans", size: size)!
+    }
+
 }

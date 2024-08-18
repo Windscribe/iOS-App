@@ -50,32 +50,32 @@ enum AccountItemCell {
         }
 
         switch self {
-            case .username:
-                return TextsAsset.username
-            case .email:
-                return TextsAsset.email
-            case .planType:
-                if session.isPremium || session.billingPlanId == -9 {
-                    return TextsAsset.UpgradeView.unlimitedData
-                } else {
-                    return "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)"
-                }
-            case .expiredDate:
-                return TextsAsset.Account.resetDate
-            case .dateLeft:
-                return TextsAsset.Account.dataLeft
-            case .confirmEmail:
-                //            return TextsAsset.Account.confirmYourEmail
-                return TextsAsset.email
-            case .emailEmpty:
-                if session.isUserPro {
-                    return TextsAsset.Account.addEmailDescriptionPro
-                }
-                return TextsAsset.Account.addEmailDescription
-            case .cancelAccount:
-                return TextsAsset.Account.cancelAccount
-            case .emailPro:
-                return TextsAsset.email
+        case .username:
+            return TextsAsset.username
+        case .email:
+            return TextsAsset.email
+        case .planType:
+            if session.isPremium || session.billingPlanId == -9 {
+                return TextsAsset.UpgradeView.unlimitedData
+            } else {
+                return "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)"
+            }
+        case .expiredDate:
+            return TextsAsset.Account.resetDate
+        case .dateLeft:
+            return TextsAsset.Account.dataLeft
+        case .confirmEmail:
+            //                        return TextsAsset.Account.confirmYourEmail
+            return TextsAsset.email
+        case .emailEmpty:
+            if session.isUserPro {
+                return TextsAsset.Account.addEmailDescriptionPro
+            }
+            return TextsAsset.Account.addEmailDescription
+        case .cancelAccount:
+            return TextsAsset.Account.cancelAccount
+        case .emailPro:
+            return TextsAsset.email
         }
     }
 
@@ -88,56 +88,63 @@ enum AccountItemCell {
             return nil
         }
         switch self {
-            case .username:
-                return NSAttributedString(string: session.username)
-            case .email, .emailPro:
-                if session.email.isEmpty {
-                    return NSAttributedString(string: TextsAsset.Account.addEmail,
-                                              attributes: [.font: UIFont.text(size: 16)])
-                }
-                return NSAttributedString(string: session.email,
-                                          attributes: [.font: UIFont.text(size: 16)])
-            case .planType:
-                if session.isPremium || session.billingPlanId == -9 {
-                    return NSAttributedString(string: session.premiumExpiryDate)
-                } else if session.isUserPro {
-                    if themeManager.getIsDarkTheme() {
-                        return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
-                                                       bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
-                                                       textColor: UIColor.seaGreen)
-                    } else {
-                        return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconBlue)!,
-                                                       bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
-                                                       textColor: UIColor.brightBlue)
-                    }
-                } else {
-                    return NSAttributedString(string: TextsAsset.Account.upgrade,
-                                              attributes: [.font: UIFont.text(size: 16)])
-                }
-            case .expiredDate:
-                if session.isPremium {
-                    return NSAttributedString(string: session.premiumExpiryDate,
-                                              attributes: [.font: UIFont.text(size: 16)])
-                } else {
-                    return NSAttributedString(string: session.getNextReset(),
-                                              attributes: [.font: UIFont.text(size: 16)])
-                }
-            case .dateLeft:
-                return NSAttributedString(string: session.getDataLeft(),
-                                          attributes: [.font: UIFont.text(size: 16)])
-            case .emailEmpty:
+        case .username:
+            return NSAttributedString(string: session.username, attributes: getDeviceFontAttributes())
+        case .email, .emailPro:
+            if session.email.isEmpty {
                 return NSAttributedString(string: TextsAsset.Account.addEmail,
-                                          attributes: [.font: UIFont.text(size: 16)])
-            case .confirmEmail:
-                if session.email.isEmpty {
-                    return NSAttributedString(string: TextsAsset.Account.resend,
-                                              attributes: [.font: UIFont.text(size: 16)])
+                                          attributes: getDeviceFontAttributes(isFullColor: false))
+            }
+            return NSAttributedString(string: session.email,
+                                      attributes: getDeviceFontAttributes(isFullColor: false))
+        case .planType:
+            if session.isPremium || session.billingPlanId == -9 {
+                return NSAttributedString(string: session.premiumExpiryDate)
+            } else if session.isUserPro {
+                if themeManager.getIsDarkTheme() {
+                    return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
+                                                   bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
+                                                   textColor: UIColor.seaGreen)
+                } else {
+                    return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconBlue)!,
+                                                   bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
+                                                   textColor: UIColor.brightBlue)
                 }
-                return NSAttributedString(string: session.email,
-                                          attributes: [.font: UIFont.text(size: 16)])
-            default:
-                return nil
+            } else {
+                return NSAttributedString(string: TextsAsset.Account.upgrade,
+                                          attributes: getDeviceFontAttributes(isFullColor: false))
+            }
+        case .expiredDate:
+            if session.isPremium {
+                return NSAttributedString(string: session.premiumExpiryDate,
+                                          attributes: getDeviceFontAttributes())
+            } else {
+                return NSAttributedString(string: session.getNextReset(),
+                                          attributes: getDeviceFontAttributes())
+            }
+        case .dateLeft:
+            return NSAttributedString(string: session.getDataLeft(),
+                                      attributes: getDeviceFontAttributes(isFullColor: false))
+        case .emailEmpty:
+            return NSAttributedString(string: TextsAsset.Account.addEmail,
+                                      attributes: getDeviceFontAttributes())
+        case .confirmEmail:
+            if session.email.isEmpty {
+                return NSAttributedString(string: TextsAsset.Account.resend,
+                                          attributes: getDeviceFontAttributes())
+            }
+            return NSAttributedString(string: session.email,
+                                      attributes: getDeviceFontAttributes())
+        default:
+            return nil
         }
+    }
+
+    private func getDeviceFontAttributes(isFullColor: Bool = false) -> [NSAttributedString.Key: Any] {
+        if UIDevice.current.isTV {
+            return [.font: UIFont.regular(size: 42), .foregroundColor: UIColor.white.withAlphaComponent(isFullColor ? 1 : 0.5)]
+        }
+        return [.font: UIFont.text(size: 16)]
     }
 
     var needUpgradeAccount: Bool {
@@ -175,19 +182,19 @@ enum AccountSectionItem {
 
     var items: [AccountItemCell] {
         switch self {
-            case .info:
-                return makeInfoItems()
-            case .plan:
-                return makePlanItems()
+        case .info:
+            return makeInfoItems()
+        case .plan:
+            return makePlanItems()
         }
     }
 
     var title: String {
         switch self {
-            case .info:
-                return TextsAsset.Account.info
-            case .plan:
-                return TextsAsset.Account.plan
+        case .info:
+            return TextsAsset.Account.info
+        case .plan:
+            return TextsAsset.Account.plan
         }
     }
 
@@ -199,7 +206,6 @@ enum AccountSectionItem {
         if session.email.isEmpty {
             return [.username, .emailEmpty]
         }
-
         if session.email.isEmpty == false,
            session.emailStatus == false {
             return [.username, .confirmEmail]

@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFAPP_BUNDLE_ID</key>
+    <string>$(APP_BUNDLE_ID)</string>
+    <key>CFAccountID</key>
+    <string>$(APP_TEAM_ID)</string>
 	<key>NSExtensionPointIdentifier</key>
 	<string>com.apple.tv-top-shelf</string>
 	<key>UIAppFonts</key>
@@ -11,6 +15,7 @@
 		<string>IBMPlexSans-Regular.otf</string>
 		<string>IBMPlexSans-Text.otf</string>
 		<string>EurostileExt-Bla.otf</string>
+		<string>IBMPlexSans-Medium.otf</string>
 	</array>
 </dict>
 </plist>

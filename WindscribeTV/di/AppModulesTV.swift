@@ -25,6 +25,21 @@ class TVViewModels: Assembly {
         container.register(SignUpViewModel.self) { r in
             return SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
+        container.register(GeneralViewModelType.self) { r in
+            return GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
+        }.inObjectScope(.transient)
+        container.register(GeneralViewModelType.self) { r in
+            return GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
+        }.inObjectScope(.transient)
+        container.register(AccountViewModelType.self) { r in
+            return AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+        container.register(ConnectionsViewModelType.self) { r in
+            return ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!)
+        }.inObjectScope(.transient)
+        container.register(ViewLogViewModel.self) { r in
+            return ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
+        }
         container.register(ConnectionStateViewModelType.self) { r in
             return ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!)
         }.inObjectScope(.transient)
@@ -35,7 +50,6 @@ class TVViewModels: Assembly {
             return LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
     }
-
 }
 
 // MARK: - ViewControllers
@@ -76,11 +90,23 @@ class TVViewControllers: Assembly {
         container.register(ForgotPasswordViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ForgotPasswordViewController") as! ForgotPasswordViewController
         }.initCompleted {  _, _ in
+            
         }.inObjectScope(.transient)
+
+        container.register(PreferencesMainViewController.self) { _ in
+            PreferencesMainViewController(nibName: "PreferencesMainViewController", bundle: nil)
+        }.initCompleted {  r, vc in
+            vc.generalViewModel = r.resolve(GeneralViewModelType.self)
+            vc.accountViewModel = r.resolve(AccountViewModelType.self)
+            vc.connectionsViewModel = r.resolve(ConnectionsViewModelType.self)
+            vc.viewLogViewModel = r.resolve(ViewLogViewModel.self)
+            vc.logger = r.resolve(FileLogger.self)
+        }
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted {  _, _ in
         }.inObjectScope(.transient)
+
         // swiftlint:enable force_cast
     }
 

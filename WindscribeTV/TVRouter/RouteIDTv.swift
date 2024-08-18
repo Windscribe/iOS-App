@@ -14,4 +14,5 @@ enum RouteID {
     case mainMenu
     case home
     case forgotPassword
+    case preferences
 }

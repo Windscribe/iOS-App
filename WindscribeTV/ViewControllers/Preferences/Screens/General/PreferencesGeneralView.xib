@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PreferencesGeneralView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="top" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="p48-3V-6Ug">
+                    <rect key="frame" x="0.0" y="76" width="1920" height="1004"/>
+                    <viewLayoutGuide key="safeArea" id="ho7-Nh-Xh2"/>
+                </stackView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="p48-3V-6Ug" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="0vr-H4-glw"/>
+                <constraint firstAttribute="trailing" secondItem="p48-3V-6Ug" secondAttribute="trailing" id="DGS-Lm-WK0"/>
+                <constraint firstItem="p48-3V-6Ug" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="76" id="Q85-DX-334"/>
+                <constraint firstAttribute="bottom" secondItem="p48-3V-6Ug" secondAttribute="bottom" id="tDT-04-t8w"/>
+            </constraints>
+            <connections>
+                <outlet property="contentStackView" destination="p48-3V-6Ug" id="u8V-ze-bjj"/>
+            </connections>
+            <point key="canvasLocation" x="-275" y="-35"/>
+        </view>
+    </objects>
+</document>
