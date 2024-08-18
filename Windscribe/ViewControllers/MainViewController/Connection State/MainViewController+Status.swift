@@ -10,52 +10,7 @@ import UIKit
 import RxSwift
 import NetworkExtension
 
-extension ConnectionState {
-    var backgroundColor: UIColor {
-        switch self {
-        case .connected, .test: .connectedStartBlue
-        case .connecting, .automaticFailed: .connectingStartBlue
-        case .disconnecting: .disconnectedStartBlack
-        case .disconnected: .lightMidnight
-        }
-    }
-    var backgroundOpacity: Float { [.disconnecting].contains(self) ? 0.10 : 0.25 }
-    var statusText: String {
-        switch self {
-        case .test: TextsAsset.Status.connectivityTest
-        case .connected: TextsAsset.Status.on
-        case .connecting: TextsAsset.Status.connecting
-        case .disconnected, .disconnecting: TextsAsset.Status.off
-        case .automaticFailed: ""
-        }
-    }
-    var statusColor: UIColor {
-        switch self {
-        case .connected, .test: .seaGreen
-        case .connecting: .lowGreen
-        case .disconnecting, .disconnected: .white
-        case .automaticFailed: .failedConnectionYellow
-        }
-    }
-    var statusImage: String { self == .automaticFailed ? ImagesAsset.protocolFailed : ImagesAsset.connectionSpinner }
-    var statusAlpha: CGFloat { [.connected, .test, .connecting, .automaticFailed].contains(self) ? 1.0 : 0.5 }
-    var statusViewColor: UIColor { ([.disconnected, .disconnecting].contains(self) ? UIColor.white : .midnight).withAlphaComponent(0.25) }
-    var preferredProtocolBadge: String {
-        switch self {
-        case .connected, .test: ImagesAsset.preferredProtocolBadgeOn
-        case .connecting: ImagesAsset.preferredProtocolBadgeConnecting
-        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.preferredProtocolBadgeOff
-        }
-    }
-    var connectButtonRing: String {
-        switch self {
-        case .connected, .test: ImagesAsset.connectButtonRing
-        case .connecting: ImagesAsset.connectingButtonRing
-        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.failedConnectionButtonRing
-        }
-    }
-    var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
-}
+
 
 extension MainViewController {
     func bindConnectionStateViewModel() {

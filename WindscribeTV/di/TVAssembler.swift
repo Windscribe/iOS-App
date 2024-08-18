@@ -15,7 +15,7 @@ import RealmSwift
 extension Assembler {
     static let container = Container()
     static let assembler: Assembler = {
-        return Assembler([App(), Network(), Repository(), Database(), Managers(),TVViewModels(), TVViewControllers(), TVRouters()], container: container)
+        return Assembler([App(), Network(), Repository(), Database(), Managers(),TVViewModels(), TVRouters(), TVViewControllers()], container: container)
     }()
     /**
      Resolves any previously added dependecy from assembler.
