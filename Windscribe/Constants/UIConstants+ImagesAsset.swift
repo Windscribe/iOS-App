@@ -255,4 +255,16 @@ struct ImagesAsset {
     static let preferredProtocolBadgeOn = "preferred-protocol-badge-on"
     static let rightArrowBold = "right-arrow-bold"
     static let preferredProtocolBadgeConnecting = "preferred-protocol-badge-connecting"
+    
+    struct TvAsset {
+        static let settingsButton = "settingButton"
+        static let notificationsIcon = "notifications_icon"
+        static let helpIcon = "help_icon"
+        static let helpIconFocused = "help_icon_focused"
+        static let notificationIconFocused = "notification_icon_focused"
+        static let settingsIconFocused = "settings_icon_focused"
+        static let connectionButtonOff = "connectionButton_off"
+        static let connectionButtonOn = "connectionButton_on"
+        static let disconnectedRing = "disconnected_ring"
+    }
 }
