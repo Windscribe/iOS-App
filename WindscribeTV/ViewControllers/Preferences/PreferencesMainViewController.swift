@@ -44,13 +44,13 @@ class PreferencesMainViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         generalView.updateSelection()
         connnectionsView.updateSelection()
     }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) { }
 
     private func setup() {
@@ -82,7 +82,7 @@ class PreferencesMainViewController: UIViewController {
         connnectionsView.setup()
         addSubview(view: connnectionsView)
         connnectionsView.isHidden = true
-        
+
         logView.setup(with: viewLogViewModel)
         addSubview(view: logView)
         logView.isHidden = true

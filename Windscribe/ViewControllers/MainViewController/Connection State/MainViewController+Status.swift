@@ -10,8 +10,6 @@ import UIKit
 import RxSwift
 import NetworkExtension
 
-
-
 extension MainViewController {
     func bindConnectionStateViewModel() {
         connectionStateViewModel.displayLocalIPAddress(force: true)

@@ -9,31 +9,31 @@
 import UIKit
 
 class HomeButton: UIButton {
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupButton()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupButton()
     }
-    
+
     func setupButton() {
-        
+
         // Make the button round
         self.layer.cornerRadius = self.frame.size.width / 2
         self.clipsToBounds = true
-        
+
         // Set the border color and width
         self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         self.layer.borderWidth = 2.0
-        
+
         self.setTitle(nil, for: .normal)
         self.isUserInteractionEnabled = true
     }
-    
+
     // Optionally override layoutSubviews to ensure the button remains round on layout changes
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -51,7 +51,7 @@ class SettingButton: HomeButton {
             self.setBackgroundImage(backgroundImageFocused, for: .focused)
         }
     }
-    
+
 }
 
 class NotificationButton: HomeButton {
@@ -64,9 +64,8 @@ class NotificationButton: HomeButton {
             self.setBackgroundImage(backgroundImageFocused, for: .focused)
         }
     }
-    
-}
 
+}
 
 class HelpButton: HomeButton {
     override func setupButton() {
@@ -78,6 +77,5 @@ class HelpButton: HomeButton {
             self.setBackgroundImage(backgroundImageFocused, for: .focused)
         }
     }
-    
-}
 
+}

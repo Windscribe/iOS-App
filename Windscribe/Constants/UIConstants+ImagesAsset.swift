@@ -255,7 +255,7 @@ struct ImagesAsset {
     static let preferredProtocolBadgeOn = "preferred-protocol-badge-on"
     static let rightArrowBold = "right-arrow-bold"
     static let preferredProtocolBadgeConnecting = "preferred-protocol-badge-connecting"
-    
+
     struct TvAsset {
         static let settingsButton = "settingButton"
         static let notificationsIcon = "notifications_icon"

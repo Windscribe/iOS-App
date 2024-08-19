@@ -27,12 +27,12 @@ class PreferencesGeneralView: UIView {
         orderByView.populate(with: TextsAsset.orderPreferences, title: GeneralHelper.getTitle(.locationOrder))
         orderByView.select(option: viewModel.getCurrentLocationOrder())
         orderByView.delegate = self
-        
+
         contentStackView.addArrangedSubview(languagesView)
         contentStackView.addArrangedSubview(orderByView)
         contentStackView.addArrangedSubview(UIView())
     }
-    
+
     func updateSelection() {
         languagesView.select(option: viewModel.getCurrentLanguage(), animated: false)
         orderByView.select(option: viewModel.getCurrentLocationOrder(), animated: false)

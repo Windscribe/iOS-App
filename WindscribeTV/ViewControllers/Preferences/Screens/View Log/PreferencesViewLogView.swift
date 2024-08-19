@@ -12,19 +12,19 @@ import RxSwift
 class PreferencesViewLogView: UIView {
     let disposeBag = DisposeBag()
     var viewModel: ViewLogViewModel!
-    
+
     @IBOutlet weak var textView: UITextView!
-    
+
     func setup(with viewModel: ViewLogViewModel) {
         self.viewModel = viewModel
         bindViews()
-        
-        textView.isUserInteractionEnabled = true;
-        textView.isSelectable = true;
-        textView.showsVerticalScrollIndicator = true;
+
+        textView.isUserInteractionEnabled = true
+        textView.isSelectable = true
+        textView.showsVerticalScrollIndicator = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
     }
-    
+
     private func bindViews() {
         viewModel.logContent.subscribe(onNext: { content in
             self.textView.text = content

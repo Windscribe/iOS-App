@@ -19,7 +19,7 @@ class SettingsSection: UIView {
     @IBOutlet weak var scrollView: UIScrollView!
 
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
-    
+
     private var listOfOptions = [String]()
 
     weak var delegate: SettingsSectionDelegate?
@@ -39,7 +39,7 @@ class SettingsSection: UIView {
             titleLabel.isHidden = true
         }
         self.layoutIfNeeded()
-        
+
         contentStackView.removeAllArrangedSubviews()
         list.forEach {
             let optionView: SettingOption = SettingOption.fromNib()
@@ -69,12 +69,12 @@ class SettingsSection: UIView {
 
     private func scrollToView(view: UIView, index: Int, animated: Bool) {
         let originX = contentStackView.convert(view.frame.origin, to: scrollView).x
-        scrollView.scrollRectToVisible(CGRect(x:originX, y:0 , width: view.frame.width, height: 1), animated: animated)
+        scrollView.scrollRectToVisible(CGRect(x: originX, y: 0 , width: view.frame.width, height: 1), animated: animated)
     }
 }
 
 extension SettingsSection: UIScrollViewDelegate {
-    
+
 }
 
 extension SettingsSection: SettingOptionDelegate {

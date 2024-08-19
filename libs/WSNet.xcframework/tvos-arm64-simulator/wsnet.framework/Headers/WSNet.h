@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WSNet : BridgeObject
 
 +(void)setLogger:(void(^)(NSString*))loggerFunction debugLog:(BOOL)debugLog;
-+(BOOL)initialize:(NSString*)basePlatform platformName:(NSString*)platformName appVersion:(NSString*)appVersion deviceId:(NSString*)deviceId openVpnVersion:(NSString*)openVpnVersion isUseStagingDomains:(BOOL)isUseStagingDomains persistentSettings:(NSString*)persistentSettings;
++(BOOL)initialize:(NSString*)basePlatform platformName:(NSString*)platformName appVersion:(NSString*)appVersion deviceId:(NSString*)deviceId openVpnVersion:(NSString*)openVpnVersion isUseStagingDomains:(BOOL)isUseStagingDomains language:(NSString*)language persistentSettings:(NSString*)persistentSettings;
 +(WSNet*)instance;
 +(void)cleanup;
 +(BOOL)isValid;

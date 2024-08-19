@@ -15,7 +15,7 @@ class ServerListViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-    
+
     override func didMove(toParent parent: UIViewController?) {
         print("did move")
     }
@@ -25,6 +25,5 @@ class ServerListViewController: UIViewController {
             vc.isFromServer = true
         }
     }
-
 
 }
