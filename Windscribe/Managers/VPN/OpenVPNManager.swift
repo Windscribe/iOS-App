@@ -368,16 +368,16 @@ class OpenVPNManager {
 
         var base64username = ""
         var base64password = ""
-
-        guard let connectedWifi = WifiManager.shared.getConnectedNetwork() else { return }
         var protocolType = ConnectionManager.shared.getNextProtocol().protocolName
         var port = ConnectionManager.shared.getNextProtocol().portName
+        logger.logD(self, "\(protocolType) \(port)")
+
         if VPNManager.shared.selectedNode?.customConfig?.authRequired == false {
             configure(username: base64username,
                       password: base64password,
-                      protocolType: connectedWifi.protocolType,
+                      protocolType: protocolType,
                       serverAddress: serverAddress,
-                      port: connectedWifi.port,
+                      port: port,
                       x509Name: x509Name,
                       proxyInfo: nil
             ) { (result, error) in

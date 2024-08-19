@@ -86,9 +86,11 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect {
             return
         }
-        OpenVPNManager.shared.configureWithSavedCredentials { (_, error) in
-            if error == nil {
-                OpenVPNManager.shared.connect()
+        DispatchQueue.main.async {
+            OpenVPNManager.shared.configureWithSavedCredentials { (_, error) in
+                if error == nil {
+                    OpenVPNManager.shared.connect()
+                }
             }
         }
     }
