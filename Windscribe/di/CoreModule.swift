@@ -29,10 +29,15 @@ extension Container {
                             let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
                             logger?.logD(self, msg)
                         }, debugLog: false)
+            var language: String = "en"
+            let preferredLanguages = Locale.preferredLanguages
+            if let deviceLanguage = preferredLanguages.first {
+                language = String(deviceLanguage.prefix(2))
+            }
         #if STAGING
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: true, persistentSettings: preferences.getServerSettings())
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
         #else
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, persistentSettings: preferences.getServerSettings())
+            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, isUseStagingDomains: false, language: language , persistentSettings: preferences.getServerSettings())
         #endif
             WSNet.instance().dnsResolver().setDnsServers(["76.76.2.0", "1.1.1.1", "9.9.9.9"])
             WSNet.instance().setConnectivityState(true)

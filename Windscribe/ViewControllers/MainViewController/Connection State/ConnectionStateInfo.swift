@@ -46,7 +46,6 @@ struct ConnectionStateInfo {
     }
 }
 
-
 extension ConnectionState {
     var backgroundColor: UIColor {
         switch self {
@@ -91,7 +90,7 @@ extension ConnectionState {
         case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.failedConnectionButtonRing
         }
     }
-    
+
     var connectButtonRingTv: String {
         switch self {
         case .connected, .test: ImagesAsset.connectButtonRing
@@ -101,6 +100,6 @@ extension ConnectionState {
         }
     }
     var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
-    
+
     var connectButtonTV: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOff : ImagesAsset.TvAsset.connectionButtonOn }
 }

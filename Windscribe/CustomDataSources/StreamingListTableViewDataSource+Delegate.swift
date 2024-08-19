@@ -86,8 +86,10 @@ class StreamingListTableViewDataSource: WExpyTableViewDataSource, ExpyTableViewD
             streamingSections[section].collapsed = !expanded
         }
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
-        cell.setCollapsed(collapsed: streamingSections[section].collapsed)
-        cell.displayingServer = streamingSections[section].server
+        if streamingSections.count > section {
+            cell.setCollapsed(collapsed: streamingSections[section].collapsed)
+            cell.displayingServer = streamingSections[section].server
+        }
         return cell
     }
 

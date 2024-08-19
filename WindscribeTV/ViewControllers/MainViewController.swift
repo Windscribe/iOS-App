@@ -31,7 +31,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var dividerView: UIView!
     @IBOutlet weak var connectionButton: UIButton!
     @IBOutlet weak var connectionButtonRing: UIImageView!
-    
+
     @IBOutlet weak var upgradeButton: UpgradeButton!
     @IBOutlet weak var bestLocationImage: UIImageView!
     @IBOutlet weak var firstServer: UIImageView!
@@ -39,7 +39,7 @@ class MainViewController: UIViewController {
     @IBOutlet weak var thirdServer: UIImageView!
     @IBOutlet weak var locationsLabel: UILabel!
     @IBOutlet weak var nextViewButton: UIButton!
-    
+
     // MARK: Properties
     var viewModel: MainViewModelType!
     var connectionStateViewModel: ConnectionStateViewModelType!
@@ -57,9 +57,9 @@ class MainViewController: UIViewController {
         bindViews()
         // Do any additional setup after loading the view.
     }
-    
+
     override var preferredFocusedView: UIView? {
-       
+
        return myPreferredFocusedView
     }
 
@@ -84,14 +84,14 @@ class MainViewController: UIViewController {
         backgroundGradient.locations = [0.0, 1.0]
         flagBackgroundView.layer.mask = backgroundGradient
         self.view.addSubview(flagBackgroundView)
-        
+
         settingsButton.bringToFront()
         notificationButton.bringToFront()
         helpButton.bringToFront()
         connectionButton.bringToFront()
-        
+
         flagBackgroundView.sendToBack()
-        
+
         ipLabel.font = UIFont.bold(size: 25)
         dividerView.backgroundColor = .whiteWithOpacity(opacity: 0.24)
         protocolLabel.textColor = .whiteWithOpacity(opacity: 0.50)
@@ -102,7 +102,7 @@ class MainViewController: UIViewController {
         statusLabel.clipsToBounds = true
         statusLabel.backgroundColor = .whiteWithOpacity(opacity: 0.24)
         statusLabel.font = .bold(size: 35)
-        
+
         connectedCityLabel.font = .bold(size: 100)
         connectedServerLabel.font = .text(size: 85)
         connectionButton.layer.cornerRadius = connectionButton.frame.height/2
@@ -111,28 +111,28 @@ class MainViewController: UIViewController {
         bestLocationImage.layer.masksToBounds = true
         bestLocationImage.layer.borderWidth = 5
         bestLocationImage.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
-        
+
         firstServer.layer.masksToBounds = false
         firstServer.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         firstServer.layer.shadowOpacity = 1
         firstServer.layer.shadowOffset = CGSize(width: 10, height: 10)
         firstServer.layer.shadowRadius = 0.0
-        
+
         secondServer.layer.masksToBounds = false
         secondServer.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         secondServer.layer.shadowOpacity = 1
         secondServer.layer.shadowOffset = CGSize(width: 10, height: 10)
         secondServer.layer.shadowRadius = 0.0
-        
+
         thirdServer.layer.masksToBounds = false
         thirdServer.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         thirdServer.layer.shadowOpacity = 1
         thirdServer.layer.shadowOffset = CGSize(width: 10, height: 10)
         thirdServer.layer.shadowRadius = 0.0
-        
+
         bestLocationImage.adjustsImageWhenAncestorFocused = true
         bestLocationImage.clipsToBounds = false
-        
+
         locationsLabel.font = .bold(size: 35)
     }
 
@@ -145,7 +145,7 @@ class MainViewController: UIViewController {
     }
     @IBAction func helpClicked(_ sender: Any) {
     }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if isFromServer == false {
             if context.nextFocusedView === nextViewButton {
@@ -162,7 +162,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
+
    override func viewDidAppear(_ animated: Bool) {
         if isFromServer == true {
             DispatchQueue.main.async {
@@ -172,10 +172,10 @@ class MainViewController: UIViewController {
                 print("focus set to connection button")
                 self.isFromServer = false
             }
-            
+
         }
     }
-    
+
     func bindViews() {
         connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
@@ -189,18 +189,18 @@ class MainViewController: UIViewController {
         connectionStateViewModel.connectedState.subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
-        
+
         connectionStateViewModel.ipAddressSubject.subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
         viewModel.session.subscribe(onNext: {
             self.setUpgradeButton(session: $0)
         }).disposed(by: disposeBag)
-        
+
         viewModel.selectedPort.subscribe(onNext: {
             self.portLabel.text = $0
         }).disposed(by: disposeBag)
-        
+
         viewModel.selectedProtocol.subscribe(onNext: {
             self.protocolLabel.text = $0
         }).disposed(by: disposeBag)
@@ -208,19 +208,19 @@ class MainViewController: UIViewController {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
         setFlagImages()
-        
+
     }
-    
+
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         viewModel.bestLocation.bind(onNext: { bestLocation in
             guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
-            if selectBestLocation {//&& self.vpnManager.isDisconnected() {
+            if selectBestLocation {// && self.vpnManager.isDisconnected() {
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
-                //self.configureVPN()
+                // self.configureVPN()
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
@@ -242,10 +242,10 @@ class MainViewController: UIViewController {
             self.thirdServer.image = UIImage(named: serverSectionsOrdered[2].server?.countryCode ?? "")
         }
     }
-    
+
     func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {
         DispatchQueue.main.async {
-            //self.showFlagAnimation(countryCode: selectedNode.countryCode, autoPicked: selectedNode.autoPicked || selectedNode.customConfig != nil)
+            // self.showFlagAnimation(countryCode: selectedNode.countryCode, autoPicked: selectedNode.autoPicked || selectedNode.customConfig != nil)
             self.connectedServerLabel.text = selectedNode.nickName
             if selectedNode.cityName == Fields.Values.bestLocation {
                 self.connectedCityLabel.text = TextsAsset.bestLocation
@@ -277,7 +277,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
+
     func animateConnectedState(with info: ConnectionStateInfo) {
         self.statusLabel.text = info.state.statusText
         self.statusLabel.textColor = info.state.statusColor
@@ -287,7 +287,7 @@ class MainViewController: UIViewController {
         self.connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButton), for: .focused)
-        
+
     }
-    
+
 }

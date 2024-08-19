@@ -62,7 +62,7 @@ class PreferencesConnectionView: UIView {
         contentStackView.addArrangedSubview(circumventCensorshipView)
         contentStackView.addArrangedSubview(UIView())
     }
-    
+
     func updateSelection() {
         connectionModeView.select(option: viewModel.getCurrentConnectionMode().titleValue, animated: false)
         protocolsView.select(option: viewModel.getCurrentProtocol(), animated: false)

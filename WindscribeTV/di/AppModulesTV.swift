@@ -91,7 +91,7 @@ class TVViewControllers: Assembly {
         container.register(ForgotPasswordViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ForgotPasswordViewController") as! ForgotPasswordViewController
         }.initCompleted {  _, _ in
-            
+
         }.inObjectScope(.transient)
 
         container.register(PreferencesMainViewController.self) { _ in
