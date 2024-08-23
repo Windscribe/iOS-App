@@ -69,6 +69,9 @@
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <connections>
+                                            <action selector="upgradeButtonPressed:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="R8s-qc-58C"/>
+                                        </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="badge" translatesAutoresizingMaskIntoConstraints="NO" id="IVt-VI-qGp">
                                         <rect key="frame" x="1800" y="45" width="75" height="75"/>

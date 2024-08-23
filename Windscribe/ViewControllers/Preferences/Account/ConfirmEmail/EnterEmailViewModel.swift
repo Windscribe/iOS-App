@@ -13,6 +13,7 @@ protocol EnterEmailViewModel {
     var alertManager: AlertManagerV2 { get }
     var sessionManager: SessionManagerV2 {get}
     var isDarkMode: BehaviorSubject<Bool> {get}
+    var currentEmail: String? { get }
     func changeEmailAddress(email: String) -> Single<APIMessage>
 }
 
@@ -22,6 +23,10 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
     let apiManager: APIManager
     let isDarkMode: BehaviorSubject<Bool>
 
+    var currentEmail: String? {
+        sessionManager.session?.email
+    }
+    
     init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2,themeManager: ThemeManager, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager

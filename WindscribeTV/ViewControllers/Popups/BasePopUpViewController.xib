@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BasePopUpViewController" customModule="WindscribeTV" customModuleProvider="target">
+            <connections>
+                <outlet property="bodyLabel" destination="dhp-7k-4dh" id="xc7-V8-Nao"/>
+                <outlet property="headerLabel" destination="kaB-7R-RKa" id="eUA-EW-all"/>
+                <outlet property="mainStackView" destination="wv8-UO-NTt" id="NiE-Lb-jtD"/>
+                <outlet property="titleLabel" destination="tT5-1P-WCB" id="RWQ-Nj-k6u"/>
+                <outlet property="view" destination="NSt-Se-Yth" id="2kO-hY-yco"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NSt-Se-Yth">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Support" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tT5-1P-WCB">
+                    <rect key="frame" x="48" y="48" width="352" height="110"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="92"/>
+                    <color key="textColor" white="1" alpha="0.29999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="48" translatesAutoresizingMaskIntoConstraints="NO" id="wv8-UO-NTt">
+                    <rect key="frame" x="510" y="439" width="900" height="202"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="windscribe.com/support" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kaB-7R-RKa">
+                            <rect key="frame" x="0.0" y="0.0" width="900" height="62"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="52"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Go to the address above on you phone or computer for all support related inquires" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dhp-7k-4dh">
+                            <rect key="frame" x="0.0" y="110" width="900" height="92"/>
+                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                            <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="bFq-pe-dex"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="900" id="ghz-7N-NAA"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="UVE-hp-s4D"/>
+            <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="tT5-1P-WCB" firstAttribute="top" secondItem="NSt-Se-Yth" secondAttribute="top" constant="48" id="U1x-96-eIH"/>
+                <constraint firstItem="wv8-UO-NTt" firstAttribute="centerY" secondItem="NSt-Se-Yth" secondAttribute="centerY" id="Xek-fq-pdH"/>
+                <constraint firstItem="wv8-UO-NTt" firstAttribute="centerX" secondItem="NSt-Se-Yth" secondAttribute="centerX" id="cUJ-9E-8up"/>
+                <constraint firstItem="tT5-1P-WCB" firstAttribute="leading" secondItem="NSt-Se-Yth" secondAttribute="leading" constant="48" id="wfr-sl-RDz"/>
+            </constraints>
+            <point key="canvasLocation" x="-553" y="-1181"/>
+        </view>
+    </objects>
+</document>

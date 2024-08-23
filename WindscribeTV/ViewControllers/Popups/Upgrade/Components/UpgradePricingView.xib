@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="UpgradePricingView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="862" height="112"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eP4-IA-xKQ">
+                    <rect key="frame" x="66" y="37" width="79" height="38"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="32"/>
+                    <color key="textColor" systemColor="systemGreenColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="13p-jZ-Lwv">
+                    <rect key="frame" x="717" y="37" width="79" height="38"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="32"/>
+                    <color key="textColor" systemColor="systemGreenColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="13p-jZ-Lwv" secondAttribute="trailing" constant="66" id="57x-DR-XpL"/>
+                <constraint firstItem="eP4-IA-xKQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="66" id="Bg2-8e-rh1"/>
+                <constraint firstItem="eP4-IA-xKQ" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="mMN-Sw-hfB"/>
+                <constraint firstItem="13p-jZ-Lwv" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="sdF-Qy-iwe"/>
+            </constraints>
+            <nil key="simulatedTopBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="descriptionLabel" destination="eP4-IA-xKQ" id="oeM-Vc-QI0"/>
+                <outlet property="priceLabel" destination="13p-jZ-Lwv" id="AlT-5C-sjm"/>
+            </connections>
+            <point key="canvasLocation" x="179" y="71"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

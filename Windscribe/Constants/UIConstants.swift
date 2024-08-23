@@ -120,6 +120,9 @@ struct TextsAsset {
     static var okay: String {
         return "Okay".localize()
     }
+    static var ok: String {
+        return "OK".localize()
+    }
     static var error: String {
         return "Error".localize()
     }
@@ -675,6 +678,12 @@ struct TextsAsset {
         }
         static var months: String {
             return "Months".localize()
+        }
+        static var oneMonth: String {
+            return "1 Month Pro Subscription".localize()
+        }
+        static var oneYear: String {
+            return "1 Year Pro Subscription".localize()
         }
         static var iAPDescription: String {
             return "Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period. You can cancel anytime with your iTunes account settings. Any unused portion of a free trial will be forfeited if you purchase a subscription".localize()
@@ -1260,6 +1269,7 @@ struct Links {
     static let jobs = base + "jobs"
     static let learMoreAboutRobert = "features/robert"
     static let softwareLicenses = "https://windscribe.com/terms/oss"
+    static let support = "windscribe.com/support"
 }
 
 struct Help {
@@ -1298,6 +1308,15 @@ struct Help {
     }
     static var advanceParamDescription: String {
         return "Make advanced tweaks to the way the app functions".localize()
+    }
+}
+
+struct PopupsTV {
+    static var support: String {
+        return "Support".localize()
+    }
+    static var supportBody: String {
+        return "Go to the address above on you phone or computer for all support related inquires".localize()
     }
 }
 

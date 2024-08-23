@@ -43,6 +43,10 @@ enum AccountItemCell {
     case confirmEmail
     case emailEmpty
     case cancelAccount
+    
+    var isUpgradeButton: Bool {
+        return self == .planType && needUpgradeAccount
+    }
 
     var title: String? {
         guard let session = session else {
