@@ -158,7 +158,6 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         case .viewLog: logView.isHidden = false
         case .sendLog: sendLogButtonTapped(logView: sender)
         case .signOut: signoutButtonTapped()
-        default: return
         }
     }
 }
@@ -174,12 +173,7 @@ extension PreferencesMainViewController: PreferencesAccountViewDelegate {
             router.routeTo(to: .confirmEmail, from: self)
         case .cancelAccount:
             handleCancelAccount()
+        default: return
         }
-    }
-}
-
-extension PreferencesMainViewController: PreferencesAccountViewDelegate {
-    func upgradeWasSelected() {
-        router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
     }
 }
