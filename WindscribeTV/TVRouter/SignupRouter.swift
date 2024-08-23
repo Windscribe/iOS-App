@@ -14,20 +14,10 @@ class SignupRouter: RootRouter {
         switch to {
         case RouteID.home:
             let vc = Assembler.resolve(MainViewController.self)
-            vc.modalPresentationStyle = .fullScreen
-            // vc.appJustStarted = true
-            // vc.userJustLoggedIn = true
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-               let window = appDelegate.window {
-                window.rootViewController?.dismiss(animated: false,
-                                                   completion: nil)
-                UIView.transition(with: window,
-                                  duration: 0.3,
-                                  options: .transitionCrossDissolve,
-                                  animations: {
-                                      window.rootViewController = UINavigationController(rootViewController: vc)
-                                  }, completion: nil)
-            }
+            presentAsRoot(vc: vc)
+        case .signup:
+            let vc = Assembler.resolve(SignUpViewController.self)
+            presentAsRoot(vc: vc)
         case RouteID.forgotPassword:
             let vc = Assembler.resolve(ForgotPasswordViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)

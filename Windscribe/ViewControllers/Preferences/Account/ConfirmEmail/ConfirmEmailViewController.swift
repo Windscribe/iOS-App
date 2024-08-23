@@ -9,15 +9,6 @@
 import UIKit
 import RxSwift
 
-protocol ConfirmEmailViewControllerDelegate: AnyObject {
-    func dismissWith(action: ConfirmEmailAction)
-}
-
-enum ConfirmEmailAction {
-    case dismiss
-    case enterEmail
-}
-
 class ConfirmEmailViewController: WSUIViewController {
 
     var viewModel: ConfirmEmailViewModel!, logger: FileLogger!

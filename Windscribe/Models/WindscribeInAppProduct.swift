@@ -12,6 +12,7 @@ struct WindscribeInAppProduct {
     var price  = ""
     var extId = ""
     var planLabel = ""
+    var tvPlanLabel = ""
     var product: SKProduct
 
     init(product: SKProduct, plans: [MobilePlan]) {
@@ -22,10 +23,13 @@ struct WindscribeInAppProduct {
         if let plan = plans.first(where: {$0.extId == product.productIdentifier}) {
             if plan.duration == 12 {
                 planLabel = "\(price)/\(TextsAsset.UpgradeView.year)"
+                tvPlanLabel = TextsAsset.UpgradeView.oneYear
             } else if plan.duration == 1 {
                 planLabel = "\(price)/\(TextsAsset.UpgradeView.month)"
+                tvPlanLabel = TextsAsset.UpgradeView.oneMonth
             } else {
                 planLabel = "\(price)/\(plan.duration) \(TextsAsset.UpgradeView.months)"
+                tvPlanLabel = planLabel
             }
            }
         }

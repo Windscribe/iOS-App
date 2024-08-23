@@ -15,4 +15,12 @@ enum RouteID {
     case home
     case forgotPassword
     case preferences
+    case upgrade
+    case confirmEmail
+    case addEmail
+    case enterEmail
+    case support
+    case error(body: String)
+    case rateUs
+    case getMoreData
 }

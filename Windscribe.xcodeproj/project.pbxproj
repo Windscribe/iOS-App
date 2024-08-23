@@ -36,6 +36,10 @@
 		1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		1AF57D48280FED3C004E8082 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		1B9E4881B28361D8E4276E67 /* Pods_Windscribe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4351FB9879219E6219AEF9FE /* Pods_Windscribe.framework */; };
+		1E006BB92C6AA8F400EE6389 /* BasePopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BB82C6AA8F400EE6389 /* BasePopUpViewController.swift */; };
+		1E006BBB2C6AA91500EE6389 /* BasePopUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */; };
+		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
+		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
 		1E01D8FF2C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */; };
 		1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E01D8FE2C5164EA00B679E9 /* HomeWidget.intentdefinition */; };
 		1E01D9282C51675900B679E9 /* IconName@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */; };
@@ -129,6 +133,28 @@
 		1EE74F842BD81DC30031185F /* ViewLeaderboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F832BD81DC30031185F /* ViewLeaderboardViewModel.swift */; };
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
+		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
+		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
+		1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */; };
+		1EF7BB2D2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */; };
+		1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */; };
+		1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB302C6D0D750032A4DF /* UpgradePricingView.swift */; };
+		1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB322C6D0D8F0032A4DF /* UpgradePricingView.xib */; };
+		1EF7BB352C6D0DAE0032A4DF /* UpgradePlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB342C6D0DAE0032A4DF /* UpgradePlanDetailView.swift */; };
+		1EF7BB372C6D0DBA0032A4DF /* UpgradePlanDetailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB362C6D0DBA0032A4DF /* UpgradePlanDetailView.xib */; };
+		1EF7BB392C6F93670032A4DF /* UILabel+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD593D421F8EC0A00A47546 /* UILabel+Ext.swift */; };
+		1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB3C2C74AFFE0032A4DF /* RatePopupViewController.swift */; };
+		1EF7BB3F2C74B0190032A4DF /* RatePopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB3E2C74B0190032A4DF /* RatePopupViewController.xib */; };
+		1EF7BB412C74B0880032A4DF /* UIVIew+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB402C74B0880032A4DF /* UIVIew+Gradient.swift */; };
+		1EF7BB422C74C2E20032A4DF /* RateUsPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */; };
+		1EF7BB452C74C8760032A4DF /* GetMoreDataPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB442C74C8760032A4DF /* GetMoreDataPopupViewController.swift */; };
+		1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB472C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift */; };
+		1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4A2C75F6840032A4DF /* AddEmailPopupViewController.swift */; };
+		1EF7BB4D2C75FB2F0032A4DF /* AddEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */; };
+		1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */; };
+		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
+		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
+		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
 		591CF9AB2BBB1305004DEB48 /* GhostAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AA2BBB1305004DEB48 /* GhostAccountViewModel.swift */; };
@@ -1142,6 +1168,10 @@
 		1AE6DA1E2833CFD800593495 /* GeneralViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralViewController.swift; sourceTree = "<group>"; };
 		1AF57D42280FCBE2004E8082 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		1AF57D45280FCF37004E8082 /* Language.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		1E006BB82C6AA8F400EE6389 /* BasePopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePopUpViewController.swift; sourceTree = "<group>"; };
+		1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasePopUpViewController.xib; sourceTree = "<group>"; };
+		1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePopupViewModel.swift; sourceTree = "<group>"; };
+		1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTypes.swift; sourceTree = "<group>"; };
 		1E01D8DE2C51559B00B679E9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LocationIntents.strings; sourceTree = "<group>"; };
 		1E01D8E02C5155A400B679E9 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
 		1E01D8E22C5155A400B679E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
@@ -1254,6 +1284,22 @@
 		1EE74F832BD81DC30031185F /* ViewLeaderboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLeaderboardViewModel.swift; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
+		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
+		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
+		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewControllerDelegate.swift; sourceTree = "<group>"; };
+		1EF7BB302C6D0D750032A4DF /* UpgradePricingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePricingView.swift; sourceTree = "<group>"; };
+		1EF7BB322C6D0D8F0032A4DF /* UpgradePricingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePricingView.xib; sourceTree = "<group>"; };
+		1EF7BB342C6D0DAE0032A4DF /* UpgradePlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePlanDetailView.swift; sourceTree = "<group>"; };
+		1EF7BB362C6D0DBA0032A4DF /* UpgradePlanDetailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePlanDetailView.xib; sourceTree = "<group>"; };
+		1EF7BB3C2C74AFFE0032A4DF /* RatePopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatePopupViewController.swift; sourceTree = "<group>"; };
+		1EF7BB3E2C74B0190032A4DF /* RatePopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RatePopupViewController.xib; sourceTree = "<group>"; };
+		1EF7BB402C74B0880032A4DF /* UIVIew+Gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIVIew+Gradient.swift"; sourceTree = "<group>"; };
+		1EF7BB442C74C8760032A4DF /* GetMoreDataPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMoreDataPopupViewController.swift; sourceTree = "<group>"; };
+		1EF7BB472C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailPopupViewController.swift; sourceTree = "<group>"; };
+		1EF7BB4A2C75F6840032A4DF /* AddEmailPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmailPopupViewController.swift; sourceTree = "<group>"; };
+		1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddEmailPopupViewController.xib; sourceTree = "<group>"; };
+		1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfirmEmailPopupViewController.xib; sourceTree = "<group>"; };
+		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
 		1F3DA431C10D934B8C8448C9 /* Pods_SiriIntents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SiriIntents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		243162AA830BDE8A7257D2E5 /* Pods-WindscribeTests.production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WindscribeTests.production.xcconfig"; path = "Target Support Files/Pods-WindscribeTests/Pods-WindscribeTests.production.xcconfig"; sourceTree = "<group>"; };
 		33A0A21CC7E61EBE5B81456E /* Pods-WindscribeTV.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WindscribeTV.development.xcconfig"; path = "Target Support Files/Pods-WindscribeTV/Pods-WindscribeTV.development.xcconfig"; sourceTree = "<group>"; };
@@ -2044,6 +2090,39 @@
 			path = Language;
 			sourceTree = "<group>";
 		};
+		1E006BB72C6A9C5200EE6389 /* Popups */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB492C75F6680032A4DF /* Emails */,
+				1EF7BB432C74C8590032A4DF /* Get More Data */,
+				1EF7BB3B2C74AFB90032A4DF /* Rate Windscribe */,
+				1E006BBD2C6B738A00EE6389 /* View Models */,
+				1E006BBC2C6B711200EE6389 /* Upgrade */,
+				1E006BB82C6AA8F400EE6389 /* BasePopUpViewController.swift */,
+				1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */,
+			);
+			path = Popups;
+			sourceTree = "<group>";
+		};
+		1E006BBC2C6B711200EE6389 /* Upgrade */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB2F2C6D0D5F0032A4DF /* Components */,
+				1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */,
+				1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */,
+			);
+			path = Upgrade;
+			sourceTree = "<group>";
+		};
+		1E006BBD2C6B738A00EE6389 /* View Models */ = {
+			isa = PBXGroup;
+			children = (
+				1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */,
+				1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */,
+			);
+			path = "View Models";
+			sourceTree = "<group>";
+		};
 		1E0D9D632C6103A3008AFF2D /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -2403,6 +2482,53 @@
 			path = ShakeData;
 			sourceTree = "<group>";
 		};
+		1EF7BB2F2C6D0D5F0032A4DF /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB302C6D0D750032A4DF /* UpgradePricingView.swift */,
+				1EF7BB322C6D0D8F0032A4DF /* UpgradePricingView.xib */,
+				1EF7BB342C6D0DAE0032A4DF /* UpgradePlanDetailView.swift */,
+				1EF7BB362C6D0DBA0032A4DF /* UpgradePlanDetailView.xib */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		1EF7BB382C6F932A0032A4DF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		1EF7BB3B2C74AFB90032A4DF /* Rate Windscribe */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB3C2C74AFFE0032A4DF /* RatePopupViewController.swift */,
+				1EF7BB3E2C74B0190032A4DF /* RatePopupViewController.xib */,
+			);
+			path = "Rate Windscribe";
+			sourceTree = "<group>";
+		};
+		1EF7BB432C74C8590032A4DF /* Get More Data */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB442C74C8760032A4DF /* GetMoreDataPopupViewController.swift */,
+				1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */,
+			);
+			path = "Get More Data";
+			sourceTree = "<group>";
+		};
+		1EF7BB492C75F6680032A4DF /* Emails */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7BB472C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift */,
+				1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */,
+				1EF7BB4A2C75F6840032A4DF /* AddEmailPopupViewController.swift */,
+				1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */,
+			);
+			path = Emails;
+			sourceTree = "<group>";
+		};
 		591CF9A72BB47951004DEB48 /* ReferAndShareManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -2420,6 +2546,7 @@
 				59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */,
 				599BA2AF2C63EA8B00F0D1E4 /* HomeButton.swift */,
 				599BA2B72C65453F00F0D1E4 /* UpgradeButton.swift */,
+				1EF7BB402C74B0880032A4DF /* UIVIew+Gradient.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2453,6 +2580,8 @@
 		59A218662C3C7FE4000D89FA /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7BB382C6F932A0032A4DF /* Utils */,
+				1E006BB72C6A9C5200EE6389 /* Popups */,
 				1E0D9D6C2C6103A3008AFF2D /* Preferences */,
 				59A218672C3C8011000D89FA /* MainViewController.swift */,
 				59DA7FC12C3DAD3800042E57 /* WelcomeViewController.swift */,
@@ -3649,6 +3778,7 @@
 				AF4ECA9F23E8CF1900E09223 /* ConfirmEmailViewController.swift */,
 				AF4ECAA123E8D00800E09223 /* ConfirmEmailViewController+UI.swift */,
 				591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */,
+				1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */,
 			);
 			path = ConfirmEmail;
 			sourceTree = "<group>";
@@ -4078,17 +4208,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EF7BB4D2C75FB2F0032A4DF /* AddEmailPopupViewController.xib in Resources */,
+				1EF7BB3F2C74B0190032A4DF /* RatePopupViewController.xib in Resources */,
+				1EF7BB372C6D0DBA0032A4DF /* UpgradePlanDetailView.xib in Resources */,
 				5986AB532C47420400167023 /* IBMPlexSans-Bold.otf in Resources */,
 				5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */,
+				1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */,
 				5986AB572C47422B00167023 /* IBMPlexSans-Text.otf in Resources */,
 				1E8C8F362C64FC7D00CBFDC5 /* IBMPlexSans-Regular.otf in Resources */,
 				5986AB562C47422800167023 /* EurostileExt-Bla.otf in Resources */,
+				1E006BBB2C6AA91500EE6389 /* BasePopUpViewController.xib in Resources */,
+				1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */,
 				1E8C8F372C64FC9C00CBFDC5 /* IBMPlexSans-Light.otf in Resources */,
 				1E0D9D722C6103A3008AFF2D /* PreferencesOptionView.xib in Resources */,
 				1E9F2C352C665FD100607BAA /* PreferencesViewLogView.xib in Resources */,
 				1E0D9D702C6103A3008AFF2D /* SettingsSection.xib in Resources */,
 				1E0D9D762C6103A3008AFF2D /* PreferencesMainViewController.xib in Resources */,
 				592EDC032C3C688500351D44 /* Assets.xcassets in Resources */,
+				1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */,
+				1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */,
 				592EDC062C3C688500351D44 /* Base in Resources */,
 				599BA2AE2C63D38400F0D1E4 /* Flags.xcassets in Resources */,
 				592EDC012C3C688400351D44 /* Base in Resources */,
@@ -4507,6 +4645,7 @@
 				59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */,
 				59FC746C2C5167F500021CD1 /* CustomConfigRepositoryImpl.swift in Sources */,
 				59FC74312C51571600021CD1 /* UIDevice+Ext.swift in Sources */,
+				1E006BB92C6AA8F400EE6389 /* BasePopUpViewController.swift in Sources */,
 				1E0D9D6D2C6103A3008AFF2D /* SettingOption.swift in Sources */,
 				59FC741A2C51544D00021CD1 /* WindscribeInAppProduct.swift in Sources */,
 				59A2186B2C3C9C27000D89FA /* SharedKeys.swift in Sources */,
@@ -4534,6 +4673,7 @@
 				59FC73CF2C514AC300021CD1 /* UserScope.swift in Sources */,
 				59FC74272C51557A00021CD1 /* IKEv2VPNManager.swift in Sources */,
 				59FC74062C5153D100021CD1 /* Email.swift in Sources */,
+				1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */,
 				59FC74392C515A9400021CD1 /* ServerRepository.swift in Sources */,
 				59FC74572C51612D00021CD1 /* NWInterface.InterfaceType+Ext.swift in Sources */,
 				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
@@ -4541,6 +4681,7 @@
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				59FC74102C51540C00021CD1 /* HelpItem.swift in Sources */,
+				1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */,
 				59FC73D42C514B1300021CD1 /* UIConstants.swift in Sources */,
 				1E9F2C332C665FC600607BAA /* PreferencesViewLogView.swift in Sources */,
 				59DF45892C59C58600EB6DC1 /* SignUpViewModel.swift in Sources */,
@@ -4582,6 +4723,7 @@
 				59FC73EA2C5150C700021CD1 /* APIUtil.swift in Sources */,
 				59FC73EB2C5150D300021CD1 /* String+Ext.swift in Sources */,
 				59A218712C3C9E22000D89FA /* AppModulesTV.swift in Sources */,
+				1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */,
 				59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */,
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59FC740D2C5153F400021CD1 /* Score.swift in Sources */,
@@ -4591,22 +4733,26 @@
 				59DA7FB82C3D897100042E57 /* FileLogFormater.swift in Sources */,
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
 				59FC744A2C515DF900021CD1 /* ConnectionManagerV2.swift in Sources */,
+				1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */,
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
 				59FC74362C515A5B00021CD1 /* keyChainKeys.swift in Sources */,
+				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
 				59FC73DD2C514BCD00021CD1 /* ConnectivityImpl.swift in Sources */,
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
 				59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */,
+				1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */,
 				59FC74532C51605300021CD1 /* UIStackView+Ext.swift in Sources */,
 				59FC73DB2C514B9D00021CD1 /* FilePaths.swift in Sources */,
 				1E79CA622C63D942006D4DE7 /* AccountItemView.swift in Sources */,
 				59FC746A2C5167E200021CD1 /* EmergencyRepositoryImpl.swift in Sources */,
 				59FC74742C51726700021CD1 /* InAppPurchaseManager+Observer.swift in Sources */,
 				59FC74582C51613000021CD1 /* VPNManager+Selector.swift in Sources */,
+				1EF7BB392C6F93670032A4DF /* UILabel+Ext.swift in Sources */,
 				59A218752C3CA091000D89FA /* TVAssembler.swift in Sources */,
 				C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */,
 				59DA7FCC2C3DC55F00042E57 /* APIParameters.swift in Sources */,
@@ -4615,6 +4761,7 @@
 				59FC74642C5167A300021CD1 /* NotificationRepositoryImpl.swift in Sources */,
 				1E0D9D732C6103A3008AFF2D /* PreferencesGeneralView.swift in Sources */,
 				59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */,
+				1EF7BB412C74B0880032A4DF /* UIVIew+Gradient.swift in Sources */,
 				59FC745B2C5161D900021CD1 /* UIView+Ext.swift in Sources */,
 				59FC74132C51542300021CD1 /* RobertFilters.swift in Sources */,
 				59DA7FBA2C3D898F00042E57 /* FileDatabaseImpl.swift in Sources */,
@@ -4628,6 +4775,7 @@
 				59FC74432C515D9200021CD1 /* PortMapRepositoryImpl.swift in Sources */,
 				59FC74462C515DC100021CD1 /* DispatchQueue+Ext.swift in Sources */,
 				59FC743B2C515B7E00021CD1 /* StaticIpRepository.swift in Sources */,
+				1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */,
 				59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */,
 				59FC73EE2C51511700021CD1 /* Token.swift in Sources */,
 				59FC73FA2C51538200021CD1 /* APIDebug.swift in Sources */,
@@ -4635,6 +4783,7 @@
 				5986AB482C45621600167023 /* APIParameterValues.swift in Sources */,
 				59DA7FC72C3DC4D000042E57 /* DynamicWireGuardConfig.swift in Sources */,
 				59FC73FD2C51539B00021CD1 /* Notice.swift in Sources */,
+				1EF7BB422C74C2E20032A4DF /* RateUsPopupModel.swift in Sources */,
 				5963A2F12C66AAE30091138E /* VPNManagerViewModel.swift in Sources */,
 				59FC747F2C52D74F00021CD1 /* WelcomeViewModal.swift in Sources */,
 				59A218692C3C9C21000D89FA /* Preferences.swift in Sources */,
@@ -4669,6 +4818,7 @@
 				59FC74002C5153AE00021CD1 /* Section.swift in Sources */,
 				59FC74692C5167DF00021CD1 /* EmergencyRepository.swift in Sources */,
 				59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */,
+				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
@@ -4683,10 +4833,12 @@
 				59FC74652C5167B700021CD1 /* IPRepository.swift in Sources */,
 				59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */,
 				5963A2F22C66AE770091138E /* MainViewModel.swift in Sources */,
+				1EF7BB452C74C8760032A4DF /* GetMoreDataPopupViewController.swift in Sources */,
 				59FC741E2C51547000021CD1 /* AdvanceRepositoryImpl.swift in Sources */,
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				59FC743E2C515B9E00021CD1 /* SessionManager.swift in Sources */,
+				1EF7BB352C6D0DAE0032A4DF /* UpgradePlanDetailView.swift in Sources */,
 				C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */,
 				1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */,
 				59FC73CE2C514A8800021CD1 /* WgCredentials.swift in Sources */,
@@ -4695,6 +4847,7 @@
 				59FC73E82C51507300021CD1 /* APIManagerImpl+VPN.swift in Sources */,
 				59FC74732C516DC400021CD1 /* InAppPurchaseManagerDelegate.swift in Sources */,
 				59FC74082C5153D700021CD1 /* ClosestCountry.swift in Sources */,
+				1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */,
 				59FC73F92C51537900021CD1 /* APIResult.swift in Sources */,
 				1E8C8F3E2C6507D800CBFDC5 /* RegexConstants.swift in Sources */,
 				59FC74472C515DC500021CD1 /* LatencyRepositoryImpl.swift in Sources */,
@@ -4722,6 +4875,8 @@
 				59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */,
 				59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */,
 				59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */,
+				1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */,
+				1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */,
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
@@ -4993,6 +5148,7 @@
 				1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */,
 				599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */,
 				59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */,
+				1EF7BB2D2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */,
 				1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */,
 				E9219FF6288A2A290026E544 /* SelectableHeaderView.swift in Sources */,
 				C5D0E40329BB8BE70091FB14 /* test_ringlogger.c in Sources */,

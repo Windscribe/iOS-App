@@ -25,7 +25,7 @@ enum PreferencesType: String {
 }
 
 class PreferencesMainViewController: UIViewController {
-    var generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, logger: FileLogger!
+    var generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, logger: FileLogger!, router: HomeRouter!
 
     @IBOutlet weak var optionsStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -66,6 +66,7 @@ class PreferencesMainViewController: UIViewController {
         }
         titleLabel.font = UIFont.bold(size: 92)
         createSettingViews()
+        accountView.delegate = self
     }
 
     private func createSettingViews() {
@@ -106,5 +107,11 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         case .viewLog: logView.isHidden = false
         default: return
         }
+    }
+}
+
+extension PreferencesMainViewController: PreferencesAccountViewDelegate {
+    func upgradeWasSelected() {
+        router.routeTo(to: .upgrade, from: self)
     }
 }

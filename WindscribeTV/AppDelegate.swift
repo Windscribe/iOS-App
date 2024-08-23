@@ -50,9 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Authenticated user
         if preferences.userSessionAuth() != nil {
             let mainViewController = Assembler.resolve(MainViewController.self)
-
-            // mainViewController.appJustStarted = true
-           // let viewController = UINavigationController(rootViewController: mainViewController)
+            let viewController = UINavigationController(rootViewController: mainViewController)
             UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
                 self.window?.rootViewController = mainViewController
             }, completion: nil)

@@ -8,9 +8,18 @@
 
 import UIKit
 
-class AccountItemView: UIStackView {
+protocol AccountItemViewDelegate: NSObject {
+    func upgradeWasSelected()
+}
+
+class AccountItemView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var backgroundView: UIView!
+    
+    let button = UIButton()
+    
+    var delegate: AccountItemViewDelegate?
 
     func setup(with item: AccountItemCell) {
         titleLabel.font = UIFont.bold(size: 42)
@@ -20,5 +29,33 @@ class AccountItemView: UIStackView {
 
         titleLabel.text = item.title
         valueLabel.attributedText = item.value
+        
+        backgroundView.isHidden = true
+        backgroundView.addGreyHGradientBackground()
+        
+        if item.isUpgradeButton {
+            addSubview(button)
+            button.addTarget(self, action: #selector(selectUpgrade), for: .primaryActionTriggered)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+            button.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            button.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
+            button.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        }
+    }
+    
+    @IBAction func selectUpgrade(_ sender: Any) {
+        delegate?.upgradeWasSelected()
+    }
+    
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
+            UIView.animate(withDuration: 0.5) {
+                self.backgroundView.isHidden = false            }
+        } else {
+            UIView.animate(withDuration: 0.5) {
+                self.backgroundView.isHidden = true
+            }
+        }
     }
 }

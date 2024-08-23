@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UpgradePopViewController" customModule="WindscribeTV" customModuleProvider="target">
+            <connections>
+                <outlet property="containerView" destination="6vD-pc-MTN" id="jBm-ef-bbf"/>
+                <outlet property="loadingView" destination="Y1K-in-Ihf" id="cX3-IG-Ssm"/>
+                <outlet property="plansStackView" destination="Bhd-jv-lfD" id="3ul-IA-8qj"/>
+                <outlet property="pricingLabel" destination="EQB-Jg-1aJ" id="Zv0-yx-LX2"/>
+                <outlet property="pricingStackView" destination="B1Z-UI-Y9t" id="Y82-Ny-kuN"/>
+                <outlet property="titleLabel" destination="Yvp-4T-UWC" id="Vum-gV-CbW"/>
+                <outlet property="view" destination="Cqp-Cn-dEP" id="iRc-Nz-sCQ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Cqp-Cn-dEP">
+            <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1K-in-Ihf">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" id="bFo-Mr-VKP">
+                            <rect key="frame" x="928" y="508" width="64" height="64"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view hidden="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6vD-pc-MTN">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_pro_icon_with_logo" translatesAutoresizingMaskIntoConstraints="NO" id="ncw-B0-BPf">
+                            <rect key="frame" x="1686" y="34" width="214" height="96"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="96" id="9c1-gf-MhI"/>
+                                <constraint firstAttribute="width" constant="214" id="t5q-6h-zop"/>
+                            </constraints>
+                        </imageView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="Bhd-jv-lfD">
+                            <rect key="frame" x="28" y="200" width="936" height="860"/>
+                        </stackView>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="B1Z-UI-Y9t">
+                            <rect key="frame" x="964" y="200" width="936" height="860"/>
+                            <subviews>
+                                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pricing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EQB-Jg-1aJ">
+                                    <rect key="frame" x="0.0" y="0.0" width="141" height="0.0"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="42"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                        </stackView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You deserve  more than limited privacy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yvp-4T-UWC">
+                            <rect key="frame" x="34" y="20" width="1181" height="77"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="64"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="B1Z-UI-Y9t" firstAttribute="height" secondItem="Bhd-jv-lfD" secondAttribute="height" id="1Rg-9e-IUr"/>
+                        <constraint firstAttribute="trailing" secondItem="ncw-B0-BPf" secondAttribute="trailing" constant="20" id="1e7-1y-9UH"/>
+                        <constraint firstItem="Bhd-jv-lfD" firstAttribute="leading" secondItem="6vD-pc-MTN" secondAttribute="leadingMargin" constant="20" id="2Ax-Lf-fbZ"/>
+                        <constraint firstItem="B1Z-UI-Y9t" firstAttribute="leading" secondItem="Bhd-jv-lfD" secondAttribute="trailing" id="Hk0-8s-ccc"/>
+                        <constraint firstAttribute="trailing" secondItem="B1Z-UI-Y9t" secondAttribute="trailing" constant="20" id="HqO-r0-II5"/>
+                        <constraint firstItem="B1Z-UI-Y9t" firstAttribute="centerY" secondItem="Bhd-jv-lfD" secondAttribute="centerY" id="T24-aL-Xu2"/>
+                        <constraint firstItem="B1Z-UI-Y9t" firstAttribute="width" secondItem="Bhd-jv-lfD" secondAttribute="width" id="TCb-dl-bv4"/>
+                        <constraint firstItem="Yvp-4T-UWC" firstAttribute="top" secondItem="6vD-pc-MTN" secondAttribute="top" constant="20" id="ZBM-cw-ETr"/>
+                        <constraint firstItem="Yvp-4T-UWC" firstAttribute="leading" secondItem="6vD-pc-MTN" secondAttribute="leading" constant="34" id="gDu-la-dqk"/>
+                        <constraint firstItem="Bhd-jv-lfD" firstAttribute="top" secondItem="6vD-pc-MTN" secondAttribute="top" constant="200" id="hrv-Vq-2xc"/>
+                        <constraint firstItem="ncw-B0-BPf" firstAttribute="top" secondItem="6vD-pc-MTN" secondAttribute="top" constant="34" id="rVJ-Ln-XHE"/>
+                        <constraint firstAttribute="bottom" secondItem="Bhd-jv-lfD" secondAttribute="bottom" constant="20" id="sBv-YE-JjH"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="WidgetBackground"/>
+            <constraints>
+                <constraint firstItem="Y1K-in-Ihf" firstAttribute="leading" secondItem="Cqp-Cn-dEP" secondAttribute="leading" id="8hY-uS-o2H"/>
+                <constraint firstAttribute="trailing" secondItem="Y1K-in-Ihf" secondAttribute="trailing" id="BmO-2I-Dsr"/>
+                <constraint firstItem="6vD-pc-MTN" firstAttribute="top" secondItem="Cqp-Cn-dEP" secondAttribute="top" id="X1u-g1-cxC"/>
+                <constraint firstAttribute="trailing" secondItem="6vD-pc-MTN" secondAttribute="trailing" id="Z03-ii-ZaU"/>
+                <constraint firstAttribute="bottom" secondItem="Y1K-in-Ihf" secondAttribute="bottom" id="Zl8-X2-B5m"/>
+                <constraint firstItem="Y1K-in-Ihf" firstAttribute="top" secondItem="Cqp-Cn-dEP" secondAttribute="top" id="j8M-Vv-3oc"/>
+                <constraint firstItem="6vD-pc-MTN" firstAttribute="leading" secondItem="Cqp-Cn-dEP" secondAttribute="leading" id="vm8-8C-u5P"/>
+                <constraint firstAttribute="bottom" secondItem="6vD-pc-MTN" secondAttribute="bottom" id="wnR-cM-jUd"/>
+            </constraints>
+            <edgeInsets key="layoutMargins" top="8" left="8" bottom="8" right="8"/>
+            <point key="canvasLocation" x="-529" y="-1181"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_pro_icon_with_logo" width="107" height="48"/>
+        <namedColor name="WidgetBackground">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

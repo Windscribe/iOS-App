@@ -50,7 +50,7 @@ class MainViewController: UIViewController {
     var logger: FileLogger!
     var myPreferredFocusedView: UIView?
     var isFromServer: Bool = false
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -62,11 +62,11 @@ class MainViewController: UIViewController {
 
        return myPreferredFocusedView
     }
-
+    
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
-
+        
         flagView.contentMode = .scaleAspectFill
         flagView.layer.opacity = 0.25
         gradient = CAGradientLayer()
@@ -74,7 +74,7 @@ class MainViewController: UIViewController {
         gradient.colors = [UIColor.clear.cgColor, UIColor.lightMidnight.cgColor]
         gradient.locations = [0, 0.65]
         flagView.layer.mask = gradient
-
+        
         flagBackgroundView = UIView()
         flagBackgroundView.frame = flagView.bounds
         flagBackgroundView.backgroundColor = UIColor.lightMidnight
@@ -135,17 +135,23 @@ class MainViewController: UIViewController {
 
         locationsLabel.font = .bold(size: 35)
     }
-
+    
     @IBAction func settingsPressed(_ sender: Any) {
         router.routeTo(to: RouteID.preferences, from: self)
     }
-
+    
     @IBAction func notificationsClicked(_ sender: Any) {
         print("notifications clicked")
     }
+    
     @IBAction func helpClicked(_ sender: Any) {
+        router.routeTo(to: RouteID.support, from: self)
     }
-
+    
+    @IBAction func upgradeButtonPressed(_ sender: Any) {
+        router.routeTo(to: RouteID.upgrade, from: self)
+    }
+    
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if isFromServer == false {
             if context.nextFocusedView === nextViewButton {
@@ -163,7 +169,7 @@ class MainViewController: UIViewController {
         }
     }
 
-   override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         if isFromServer == true {
             DispatchQueue.main.async {
                 self.myPreferredFocusedView = self.connectionButton
@@ -230,9 +236,9 @@ class MainViewController: UIViewController {
                 }
             }
         }).disposed(by: disposeBag )
-
+        
     }
-
+    
     func setFlagImages() {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
@@ -265,7 +271,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-
+    
     func showSecureIPAddressState(ipAddress: String) {
         UIView.animate(withDuration: 0.25) {[weak self] in
             guard let self = self else { return }
