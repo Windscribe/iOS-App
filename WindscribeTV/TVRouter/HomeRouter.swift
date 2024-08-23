@@ -44,6 +44,16 @@ class HomeRouter: RootRouter {
         case .newsFeed:
             let vc: NewsFeedViewController = Assembler.resolve(NewsFeedViewController.self)
             from.present(vc, animated: true)
+        case .serverList:
+            let vc = Assembler.resolve(ServerListViewController.self)
+            let transition = CATransition()
+            transition.duration = 0.5
+            transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+            transition.type = CATransitionType.moveIn
+            transition.subtype = CATransitionSubtype.fromTop
+            from.view.layer.add(transition, forKey: nil)
+            from.present(vc, animated: true)
+            
         default: ()
         }
     }

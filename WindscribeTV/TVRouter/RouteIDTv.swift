@@ -15,6 +15,8 @@ enum RouteID {
     case home
     case forgotPassword
     case preferences
+    case serverList
+    case serverListDetail(server: ServerModel)
     case upgrade(promoCode: String?, pcpID: String?)
     case confirmEmail
     case addEmail

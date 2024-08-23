@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ServerListCollectionViewCell" id="Rz2-K0-ksD" customClass="ServerListCollectionViewCell" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="301" height="203"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="301" height="203"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CA" translatesAutoresizingMaskIntoConstraints="NO" id="fd2-TZ-IWl">
+                        <rect key="frame" x="0.0" y="0.0" width="294" height="152"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Canada" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Npw-x4-O7C">
+                        <rect key="frame" x="0.0" y="160" width="301" height="43"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="38"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="0.40000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="7PP-Ag-gPX"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="Npw-x4-O7C" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" id="89L-ug-hc4"/>
+                <constraint firstItem="Npw-x4-O7C" firstAttribute="top" secondItem="fd2-TZ-IWl" secondAttribute="bottom" constant="8" id="Nfh-TC-hLg"/>
+                <constraint firstItem="fd2-TZ-IWl" firstAttribute="top" secondItem="Rz2-K0-ksD" secondAttribute="top" id="RBt-Eg-rpH"/>
+                <constraint firstItem="fd2-TZ-IWl" firstAttribute="leading" secondItem="Rz2-K0-ksD" secondAttribute="leading" id="RLK-pu-zNw"/>
+                <constraint firstAttribute="trailing" secondItem="Npw-x4-O7C" secondAttribute="trailing" id="bfK-sk-Yvq"/>
+                <constraint firstAttribute="bottom" secondItem="Npw-x4-O7C" secondAttribute="bottom" id="iSw-dJ-XUV"/>
+                <constraint firstAttribute="trailing" secondItem="fd2-TZ-IWl" secondAttribute="trailing" constant="7" id="pa0-hz-N2u"/>
+                <constraint firstItem="fd2-TZ-IWl" firstAttribute="height" secondItem="Rz2-K0-ksD" secondAttribute="height" multiplier="0.788177" constant="-8" id="vMn-du-cya"/>
+            </constraints>
+            <size key="customSize" width="301" height="203"/>
+            <connections>
+                <outlet property="countryCode" destination="Npw-x4-O7C" id="Dpy-Cy-W9A"/>
+                <outlet property="flagImage" destination="fd2-TZ-IWl" id="stf-Jw-v1y"/>
+            </connections>
+            <point key="canvasLocation" x="144.5" y="59.5"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="CA" width="414" height="207"/>
+    </resources>
+</document>
