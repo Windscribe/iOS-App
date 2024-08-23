@@ -68,6 +68,10 @@ class TVViewModels: Assembly {
         container.register(ConfirmEmailViewModel.self) { r in
             return ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
+        
+        container.register(NewsFeedModelType.self) { r in
+            return NewsFeedModel(notificationRepository: r.resolve(NotificationRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -165,7 +169,14 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-
+        
+        container.register(NewsFeedViewController.self) { _ in NewsFeedViewController(nibName: "NewsFeedViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(NewsFeedModelType.self)
+            vc.router = r.resolve(HomeRouter.self)
+            vc.logger = r.resolve(FileLogger.self)
+        }.inObjectScope(.transient)
+        
         // swiftlint:enable force_cast
     }
 

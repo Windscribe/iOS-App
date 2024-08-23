@@ -21,6 +21,8 @@ class UpgradePopViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     var viewModel: UpgradeViewModel?
+    var promoCode: String?
+    var pcpID: String?
 
     //MARK: Overrides
     override func viewDidLoad() {
@@ -58,7 +60,7 @@ class UpgradePopViewController: UIViewController {
     
     private func bindViews() {
         guard let viewModel = viewModel else { return }
-        viewModel.loadPlans(promo: nil)
+        viewModel.loadPlans(promo: promoCode)
         viewModel.plans.subscribe { plans in
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()

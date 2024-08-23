@@ -112,6 +112,6 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
 
 extension PreferencesMainViewController: PreferencesAccountViewDelegate {
     func upgradeWasSelected() {
-        router.routeTo(to: .upgrade, from: self)
+        router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
     }
 }

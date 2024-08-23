@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="nOV-dR-ZpG" customClass="OptionSelectionView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CUx-g9-O1P">
+                    <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="112" id="7dv-sO-iGB"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="549-92-RoN">
+                    <rect key="frame" x="-8" y="12" width="16" height="88"/>
+                    <viewLayoutGuide key="safeArea" id="vKL-gr-CQO"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="16" id="UYg-tp-pYT"/>
+                    </constraints>
+                </view>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="bfB-9f-mHY">
+                    <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
+                    <viewLayoutGuide key="safeArea" id="G4e-LI-kSp"/>
+                </stackView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Fc-dK-Reh">
+                    <rect key="frame" x="36" y="0.0" width="584" height="112"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="42"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="bfB-9f-mHY" secondAttribute="trailing" id="6I5-Az-9s1"/>
+                <constraint firstAttribute="bottom" secondItem="CUx-g9-O1P" secondAttribute="bottom" id="8c1-ye-S7B"/>
+                <constraint firstItem="9Fc-dK-Reh" firstAttribute="top" secondItem="nOV-dR-ZpG" secondAttribute="top" id="Wm0-hU-ANc"/>
+                <constraint firstItem="bfB-9f-mHY" firstAttribute="leading" secondItem="nOV-dR-ZpG" secondAttribute="leading" id="Zcs-pE-z2I"/>
+                <constraint firstAttribute="trailing" secondItem="CUx-g9-O1P" secondAttribute="trailing" id="a5G-r7-qq6"/>
+                <constraint firstAttribute="bottom" secondItem="549-92-RoN" secondAttribute="bottom" constant="12" id="fkH-W7-hh5"/>
+                <constraint firstItem="CUx-g9-O1P" firstAttribute="leading" secondItem="nOV-dR-ZpG" secondAttribute="leading" id="hKI-mR-eSD"/>
+                <constraint firstItem="549-92-RoN" firstAttribute="top" secondItem="nOV-dR-ZpG" secondAttribute="top" constant="12" id="hWK-09-8Jl"/>
+                <constraint firstItem="9Fc-dK-Reh" firstAttribute="leading" secondItem="nOV-dR-ZpG" secondAttribute="leading" constant="36" id="i0Q-Go-H8y"/>
+                <constraint firstItem="549-92-RoN" firstAttribute="leading" secondItem="nOV-dR-ZpG" secondAttribute="leading" constant="-8" id="iJy-4K-Pn7"/>
+                <constraint firstAttribute="trailing" secondItem="9Fc-dK-Reh" secondAttribute="trailing" id="kjJ-0S-c0c"/>
+                <constraint firstAttribute="bottom" secondItem="9Fc-dK-Reh" secondAttribute="bottom" id="mR0-Xm-pCj"/>
+                <constraint firstItem="CUx-g9-O1P" firstAttribute="top" secondItem="nOV-dR-ZpG" secondAttribute="top" id="n5x-EX-shX"/>
+                <constraint firstItem="bfB-9f-mHY" firstAttribute="top" secondItem="nOV-dR-ZpG" secondAttribute="top" id="pWg-0c-Sng"/>
+                <constraint firstAttribute="bottom" secondItem="bfB-9f-mHY" secondAttribute="bottom" id="wLE-Tw-D1y"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="buttonHolder" destination="bfB-9f-mHY" id="zyO-vj-T3Y"/>
+                <outlet property="focusView" destination="CUx-g9-O1P" id="1U5-as-WkA"/>
+                <outlet property="selectedView" destination="549-92-RoN" id="cBz-ip-LoB"/>
+                <outlet property="titleLabel" destination="9Fc-dK-Reh" id="PbQ-h2-9Wc"/>
+            </connections>
+            <point key="canvasLocation" x="194" y="-41"/>
+        </view>
+    </objects>
+</document>

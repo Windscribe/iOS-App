@@ -15,7 +15,7 @@ enum RouteID {
     case home
     case forgotPassword
     case preferences
-    case upgrade
+    case upgrade(promoCode: String?, pcpID: String?)
     case confirmEmail
     case addEmail
     case enterEmail
@@ -23,4 +23,5 @@ enum RouteID {
     case error(body: String)
     case rateUs
     case getMoreData
+    case newsFeed
 }

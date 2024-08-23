@@ -141,7 +141,7 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func notificationsClicked(_ sender: Any) {
-        print("notifications clicked")
+        router.routeTo(to: RouteID.newsFeed, from: self)
     }
     
     @IBAction func helpClicked(_ sender: Any) {
@@ -149,7 +149,7 @@ class MainViewController: UIViewController {
     }
     
     @IBAction func upgradeButtonPressed(_ sender: Any) {
-        router.routeTo(to: RouteID.upgrade, from: self)
+        router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
     }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
