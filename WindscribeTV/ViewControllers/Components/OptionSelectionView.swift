@@ -40,8 +40,10 @@ class OptionSelectionView: UIView {
         focusView.isHidden = !isSelected
         buttonHolder.addArrangedSubview(button)
         button.addTarget(self, action: #selector(selectOption), for: .primaryActionTriggered)
-        layoutIfNeeded()
+        focusView.layoutIfNeeded()
         focusView.addGreyHGradientBackground()
+        focusView.setNeedsDisplay()
+        focusView.clipsToBounds = true
     }
     
     @IBAction func selectOption(_ sender: Any) {

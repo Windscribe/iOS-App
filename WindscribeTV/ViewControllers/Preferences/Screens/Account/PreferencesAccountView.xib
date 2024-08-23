@@ -12,7 +12,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="top" ambiguous="YES" axis="vertical" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="0jS-dV-tsY">
+                <stackView opaque="NO" contentMode="top" ambiguous="YES" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="0jS-dV-tsY">
                     <rect key="frame" x="40" y="40" width="1840" height="320"/>
                 </stackView>
             </subviews>

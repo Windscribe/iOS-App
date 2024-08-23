@@ -15,9 +15,11 @@ protocol SettingOptionDelegate: NSObject {
 class SettingOption: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var selectedView: UIView!
+    @IBOutlet weak var buttonContainerView: UIStackView!
     @IBOutlet weak var selectedImageView: UIImageView!
     private var button = UIButton()
     private var value: String = ""
+    private let borderWidth = 4.0
 
     weak var delegate: SettingOptionDelegate?
 
@@ -26,38 +28,32 @@ class SettingOption: UIView {
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        let scale = 1.1
-        let translationX = titleLabel.frame.width * (scale - 1) / 2.0
+        var newColor = UIColor.clear
+        var hasBorder = true
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
-            UIView.animate(withDuration: 0.5) {
-                self.titleLabel.transform = CGAffineTransformConcat(CGAffineTransform(scaleX: scale, y: scale), CGAffineTransform(translationX: translationX, y: -1))
-            }
-        } else {
-            UIView.animate(withDuration: 0.5) {
-                self.titleLabel.transform = CGAffineTransformConcat(CGAffineTransform(scaleX: 1.0, y: 1.0), CGAffineTransform(translationX: 0, y: 0))
-            }
+            newColor = .whiteWithOpacity(opacity: 0.5)
+            hasBorder = false
+        }
+        UIView.animate(withDuration: 0.2) {
+            self.selectedView.backgroundColor = newColor
+            self.selectedView.layer.borderWidth = hasBorder ? self.borderWidth : 0
         }
     }
 
     func setup(with title: String, isSelected: Bool = false) {
         value = title
         selectedView.layer.cornerRadius = 8
-        selectedView.layer.borderWidth = 2
-        selectedView.layer.borderColor = UIColor.white.withAlphaComponent(0.5).cgColor
+        selectedView.layer.borderWidth = borderWidth
+        selectedView.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.5).cgColor
         titleLabel.text = title
         titleLabel.alpha = 0.5
         updateSelection(with: isSelected)
-        addSubview(button)
+        buttonContainerView.addArrangedSubview(button)
         button.addTarget(self, action: #selector(selectOption), for: .primaryActionTriggered)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        button.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        button.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
-        button.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
     }
 
     func updateSelection(with isSelected: Bool) {
-        selectedView.isHidden = !isSelected
         selectedImageView.isHidden = !isSelected
+        selectedView.layer.borderColor = isSelected ? UIColor.whiteWithOpacity(opacity: 0.5).cgColor : UIColor.clear.cgColor
     }
 }
