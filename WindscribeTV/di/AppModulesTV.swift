@@ -186,7 +186,18 @@ class TVViewControllers: Assembly {
             vc.router = r.resolve(HomeRouter.self)
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        
+        container.register(ServerListViewController.self) { _ in
+            UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
+            vc.router = r.resolve(ServerListRouter.self)
+        }.inObjectScope(.transient)
+        container.register(ServerDetailViewController.self) { _ in
+            ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
+        }.initCompleted {  r, vc in
+            vc.viewModel = r.resolve(MainViewModelType.self)
+        }.inObjectScope(.transient)
         // swiftlint:enable force_cast
     }
 
@@ -204,6 +215,9 @@ class TVRouters: Assembly {
         }.inObjectScope(.transient)
         container.register(HomeRouter.self) { _ in
             HomeRouter()
+        }
+        container.register(ServerListRouter.self) { _ in
+            ServerListRouter()
         }
     }
 }

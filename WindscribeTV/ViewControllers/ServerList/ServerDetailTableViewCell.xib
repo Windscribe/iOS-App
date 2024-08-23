@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ServerDetailTableViewCell" rowHeight="339" id="fBs-An-CcD" customClass="ServerDetailTableViewCell" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="2336" height="339"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fBs-An-CcD" id="S0Q-fX-qc8">
+                <rect key="frame" x="0.0" y="0.0" width="2336" height="339"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-l4-6Mc">
+                        <rect key="frame" x="0.0" y="118.5" width="92" height="102"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Jy-a4-eod">
+                                <rect key="frame" x="0.0" y="0.0" width="92" height="46"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8sI-C2-uif">
+                                <rect key="frame" x="0.0" y="56" width="92" height="46"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C7p-9j-nRT">
+                        <rect key="frame" x="1936" y="146.5" width="92" height="46"/>
+                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ipg-ps-MbL">
+                        <rect key="frame" x="2203" y="132" width="75" height="75"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="75" id="227-W6-8lx"/>
+                            <constraint firstAttribute="height" constant="75" id="HGY-KO-rAq"/>
+                        </constraints>
+                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jfm-Xr-U1g">
+                        <rect key="frame" x="2078" y="132" width="75" height="75"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="75" id="1iE-0O-IdC"/>
+                            <constraint firstAttribute="height" constant="75" id="r1f-GG-lZr"/>
+                        </constraints>
+                        <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="jfm-Xr-U1g" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="J5S-Xk-Ez0"/>
+                    <constraint firstItem="jfm-Xr-U1g" firstAttribute="leading" secondItem="C7p-9j-nRT" secondAttribute="trailing" constant="50" id="SFY-Rh-FAn"/>
+                    <constraint firstItem="C7p-9j-nRT" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="Ssi-ug-4af"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ipg-ps-MbL" secondAttribute="trailing" constant="50" id="WEW-5z-cDE"/>
+                    <constraint firstItem="ipg-ps-MbL" firstAttribute="leading" secondItem="jfm-Xr-U1g" secondAttribute="trailing" constant="50" id="hJL-Hi-Y5y"/>
+                    <constraint firstItem="qfc-l4-6Mc" firstAttribute="leading" secondItem="S0Q-fX-qc8" secondAttribute="leading" id="owB-gI-TLs"/>
+                    <constraint firstItem="qfc-l4-6Mc" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="u3T-gG-buG"/>
+                    <constraint firstItem="ipg-ps-MbL" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="y9f-LW-qpw"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="1ks-Xo-ai1"/>
+            <connections>
+                <outlet property="cityLabel" destination="4Jy-a4-eod" id="Hne-nk-4Qi"/>
+                <outlet property="connectButton" destination="jfm-Xr-U1g" id="4qQ-BY-8hi"/>
+                <outlet property="descriptionLabel" destination="C7p-9j-nRT" id="3m8-sM-ihU"/>
+                <outlet property="favButton" destination="ipg-ps-MbL" id="X6h-wS-yaf"/>
+                <outlet property="latencyLabel" destination="8sI-C2-uif" id="Bbg-vl-70i"/>
+            </connections>
+            <point key="canvasLocation" x="-233" y="110.5"/>
+        </tableViewCell>
+    </objects>
+</document>

@@ -55,6 +55,7 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         bindViews()
+        setupSwipeDownGesture()
         // Do any additional setup after loading the view.
     }
 
@@ -148,37 +149,36 @@ class MainViewController: UIViewController {
         router.routeTo(to: RouteID.support, from: self)
     }
     
-    @IBAction func upgradeButtonPressed(_ sender: Any) {
-        router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
-    }
     
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if isFromServer == false {
-            if context.nextFocusedView === nextViewButton {
-                let vc = Assembler.resolve(ServerListViewController.self)
-                let transition = CATransition()
-                transition.duration = 0.5
-                transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-                transition.type = CATransitionType.moveIn
-                transition.subtype = CATransitionSubtype.fromTop
-                self.navigationController?.view.layer.add(transition, forKey: nil)
-                self.navigationController?.pushViewController(vc, animated: false)
-                self.view.layer.add(transition, forKey: nil)
-                self.present(vc, animated: true)
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        super.pressesBegan(presses, with: event)
+        for press in presses {
+            if press.type == .downArrow {
+                if nextViewButton.isFocused {
+                    myPreferredFocusedView = connectionButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                    router.routeTo(to: .serverList, from: self)
+                }
             }
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        if isFromServer == true {
-            DispatchQueue.main.async {
-                self.myPreferredFocusedView = self.connectionButton
+    
+    private func setupSwipeDownGesture() {
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown(_:)))
+        swipeDown.direction = .down
+        view.addGestureRecognizer(swipeDown)
+    }
+
+    @objc private func handleSwipeDown(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if nextViewButton.isFocused {
+                myPreferredFocusedView = connectionButton
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()
-                print("focus set to connection button")
-                self.isFromServer = false
+                router.routeTo(to: .serverList, from: self)
             }
-
         }
     }
 
@@ -251,7 +251,6 @@ class MainViewController: UIViewController {
 
     func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {
         DispatchQueue.main.async {
-            // self.showFlagAnimation(countryCode: selectedNode.countryCode, autoPicked: selectedNode.autoPicked || selectedNode.customConfig != nil)
             self.connectedServerLabel.text = selectedNode.nickName
             if selectedNode.cityName == Fields.Values.bestLocation {
                 self.connectedCityLabel.text = TextsAsset.bestLocation
@@ -261,6 +260,7 @@ class MainViewController: UIViewController {
             self.flagView.image = UIImage(named: selectedNode.countryCode)
         }
     }
+
     func setUpgradeButton(session: Session?) {
         if let session = session {
             if session.isUserPro {
@@ -293,7 +293,6 @@ class MainViewController: UIViewController {
         self.connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButton), for: .focused)
-
     }
 
 }

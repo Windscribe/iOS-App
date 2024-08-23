@@ -266,5 +266,15 @@ struct ImagesAsset {
         static let connectionButtonOff = "connectionButton_off"
         static let connectionButtonOn = "connectionButton_on"
         static let disconnectedRing = "disconnected_ring"
+        static let staticIp = "static_ip"
+        static let allIcon = "all_icon"
+        static let favnavIcon = "favnav_icon"
+        static let flixIcon = "flix_icon"
+        static let connectIcon = "connect_icon"
+        static let connectIconFocused = "connect_icon_focused"
+        static let addFavIcon = "add_fav_icon"
+        static let addFavIconFocused = "add_fav_icon_focused"
+        static let removeFavIcon = "remove_fav_icon"
+        static let removeFavIconFocused = "remove_fav_icon_focused"
     }
 }
