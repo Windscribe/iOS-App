@@ -14,7 +14,7 @@ class HomeRouter: RootRouter {
         case .preferences:
             let vc = Assembler.resolve(PreferencesMainViewController.self)
             from.present(vc, animated: true)
-        case .upgrade:
+        case let .upgrade(promoCode, pcpID):
             let vc = Assembler.resolve(UpgradePopViewController.self)
             from.present(vc, animated: true)
         case .support:
@@ -40,6 +40,9 @@ class HomeRouter: RootRouter {
         case .addEmail:
             let vc: AddEmailPopupViewController = Assembler.resolve(AddEmailPopupViewController.self)
             vc.viewModel?.setPopupType(with: .addeEmail)
+            from.present(vc, animated: true)
+        case .newsFeed:
+            let vc: NewsFeedViewController = Assembler.resolve(NewsFeedViewController.self)
             from.present(vc, animated: true)
         default: ()
         }

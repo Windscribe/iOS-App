@@ -118,6 +118,12 @@
 		1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */; };
 		1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
 		1EA91DDE2BECFE4100496DF8 /* VPNManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DDD2BECFE4100496DF8 /* VPNManagerViewModel.swift */; };
+		1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */; };
+		1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */; };
+		1EA9D6FC2C7752EE00566A93 /* NewsFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */; };
+		1EA9D6FD2C77530500566A93 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
+		1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */; };
+		1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -1269,6 +1275,10 @@
 		1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+Status.swift"; sourceTree = "<group>"; };
 		1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionStateInfo.swift; sourceTree = "<group>"; };
 		1EA91DDD2BECFE4100496DF8 /* VPNManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerViewModel.swift; sourceTree = "<group>"; };
+		1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
+		1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsFeedViewController.xib; sourceTree = "<group>"; };
+		1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectionView.swift; sourceTree = "<group>"; };
+		1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptionSelectionView.xib; sourceTree = "<group>"; };
 		1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Migration.swift"; sourceTree = "<group>"; };
 		1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Utility.swift"; sourceTree = "<group>"; };
 		1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationsViewModel.swift; sourceTree = "<group>"; };
@@ -2093,6 +2103,7 @@
 		1E006BB72C6A9C5200EE6389 /* Popups */ = {
 			isa = PBXGroup;
 			children = (
+				1EA9D6F72C77478500566A93 /* NewsFeed */,
 				1EF7BB492C75F6680032A4DF /* Emails */,
 				1EF7BB432C74C8590032A4DF /* Get More Data */,
 				1EF7BB3B2C74AFB90032A4DF /* Rate Windscribe */,
@@ -2391,6 +2402,24 @@
 			path = "Connection State";
 			sourceTree = "<group>";
 		};
+		1EA9D6F72C77478500566A93 /* NewsFeed */ = {
+			isa = PBXGroup;
+			children = (
+				1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */,
+				1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */,
+			);
+			path = NewsFeed;
+			sourceTree = "<group>";
+		};
+		1EA9D6FE2C7754A800566A93 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */,
+				1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		1EC6C77C2BE10DB00036248B /* Search Locations */ = {
 			isa = PBXGroup;
 			children = (
@@ -2580,6 +2609,7 @@
 		59A218662C3C7FE4000D89FA /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				1EA9D6FE2C7754A800566A93 /* Components */,
 				1EF7BB382C6F932A0032A4DF /* Utils */,
 				1E006BB72C6A9C5200EE6389 /* Popups */,
 				1E0D9D6C2C6103A3008AFF2D /* Preferences */,
@@ -4210,12 +4240,14 @@
 			files = (
 				1EF7BB4D2C75FB2F0032A4DF /* AddEmailPopupViewController.xib in Resources */,
 				1EF7BB3F2C74B0190032A4DF /* RatePopupViewController.xib in Resources */,
+				1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */,
 				1EF7BB372C6D0DBA0032A4DF /* UpgradePlanDetailView.xib in Resources */,
 				5986AB532C47420400167023 /* IBMPlexSans-Bold.otf in Resources */,
 				5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */,
 				1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */,
 				5986AB572C47422B00167023 /* IBMPlexSans-Text.otf in Resources */,
 				1E8C8F362C64FC7D00CBFDC5 /* IBMPlexSans-Regular.otf in Resources */,
+				1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */,
 				5986AB562C47422800167023 /* EurostileExt-Bla.otf in Resources */,
 				1E006BBB2C6AA91500EE6389 /* BasePopUpViewController.xib in Resources */,
 				1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */,
@@ -4741,6 +4773,7 @@
 				59FC74362C515A5B00021CD1 /* keyChainKeys.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
+				1EA9D6FC2C7752EE00566A93 /* NewsFeedModel.swift in Sources */,
 				59FC73DD2C514BCD00021CD1 /* ConnectivityImpl.swift in Sources */,
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
@@ -4853,12 +4886,15 @@
 				59FC74472C515DC500021CD1 /* LatencyRepositoryImpl.swift in Sources */,
 				59FC73D52C514B2400021CD1 /* String+Localized.swift in Sources */,
 				59DA7FC92C3DC4FD00042E57 /* Session.swift in Sources */,
+				1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */,
+				1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */,
 				59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */,
 				59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */,
 				59A218682C3C8011000D89FA /* MainViewController.swift in Sources */,
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,
 				5986AB5D2C47569E00167023 /* UIImage+Ext.swift in Sources */,
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
+				1EA9D6FD2C77530500566A93 /* NewsFeedCellViewModel.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
 				59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */,

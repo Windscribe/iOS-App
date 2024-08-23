@@ -40,7 +40,7 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
             signupRouter.routeTo(to: .signup(claimGhostAccount: false), from: self)
         }.disposed(by: disposeBag)
         getProButton.rx.primaryAction.bind { [self] in
-            router.routeTo(to: .upgrade, from: self)
+            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
         }.disposed(by: disposeBag)
     }
 }
