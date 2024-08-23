@@ -72,6 +72,14 @@ class TVViewModels: Assembly {
         container.register(NewsFeedModelType.self) { r in
             return NewsFeedModel(notificationRepository: r.resolve(NotificationRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
+ 
+		container.register(PreferencesMainViewModel.self) { r in
+            return PreferencesMainViewModelImp(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManagerV2.self)!)
+        }.inObjectScope(.transient)
+        
+        container.register(HelpViewModel.self) { r in
+            return HelpViewModelImpl(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -119,10 +127,12 @@ class TVViewControllers: Assembly {
         container.register(PreferencesMainViewController.self) { _ in
             PreferencesMainViewController(nibName: "PreferencesMainViewController", bundle: nil)
         }.initCompleted {  r, vc in
+            vc.viewModel = r.resolve(PreferencesMainViewModel.self)
             vc.generalViewModel = r.resolve(GeneralViewModelType.self)
             vc.accountViewModel = r.resolve(AccountViewModelType.self)
             vc.connectionsViewModel = r.resolve(ConnectionsViewModelType.self)
             vc.viewLogViewModel = r.resolve(ViewLogViewModel.self)
+            vc.helpViewModel = r.resolve(HelpViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)

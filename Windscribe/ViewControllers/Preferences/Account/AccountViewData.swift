@@ -47,6 +47,10 @@ enum AccountItemCell {
     var isUpgradeButton: Bool {
         return self == .planType && needUpgradeAccount
     }
+    
+    var hasAction: Bool {
+        return [AccountItemCell.cancelAccount, AccountItemCell.confirmEmail].contains(self) || isUpgradeButton
+    }
 
     var title: String? {
         guard let session = session else {

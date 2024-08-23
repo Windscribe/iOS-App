@@ -14,40 +14,43 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N89-Od-5En">
-                    <rect key="frame" x="0.0" y="0.0" width="1920" height="64"/>
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="96"/>
                     <viewLayoutGuide key="safeArea" id="8zq-6E-Sde"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
                 <stackView opaque="NO" contentMode="redraw" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M9c-xb-P4A">
-                    <rect key="frame" x="0.0" y="0.0" width="1920" height="64"/>
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="96"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Huh-lZ-b73">
-                            <rect key="frame" x="0.0" y="0.0" width="32" height="64"/>
+                            <rect key="frame" x="0.0" y="0.0" width="32" height="96"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="64" id="Qew-VP-HLR"/>
+                                <constraint firstAttribute="height" constant="96" id="Qew-VP-HLR"/>
                                 <constraint firstAttribute="width" constant="32" id="q0S-NA-6FS"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMn-LC-3ho">
-                            <rect key="frame" x="32" y="0.0" width="172" height="64"/>
+                            <rect key="frame" x="32" y="0.0" width="172" height="96"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="64" id="zM4-qP-2Uj"/>
+                                <constraint firstAttribute="height" constant="96" id="zM4-qP-2Uj"/>
                             </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LI2-BB-pth">
-                            <rect key="frame" x="204" y="0.0" width="1716" height="64"/>
+                            <rect key="frame" x="204" y="0.0" width="1716" height="96"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="64" id="8ZL-yZ-IRG"/>
+                                <constraint firstAttribute="height" constant="96" id="8ZL-yZ-IRG"/>
                             </constraints>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="96" id="XvH-yM-DoY"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

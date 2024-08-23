@@ -50,7 +50,7 @@ class NewsFeedViewController: UIViewController {
         self.newsSections = newsSections
         let firstItem = self.newsSections.first?.items.first
         newsSections.forEach {
-            let newsNameView: OptionSelectionView = PreferencesOptionView.fromNib()
+            let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
             if let details = $0.items.first {
                 self.listStackView.addArrangedSubview(newsNameView)
                 newsNameView.setup(with: details.title ?? "", isSelected: firstItem?.title == details.title)

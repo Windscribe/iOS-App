@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PreferencesAccountViewDelegate: NSObject {
-    func upgradeWasSelected()
+    func actionSelected(with item: AccountItemCell)
 }
 
 class PreferencesAccountView: UIView {
@@ -30,7 +30,7 @@ class PreferencesAccountView: UIView {
 }
 
 extension PreferencesAccountView: AccountSectionViewDelegate {
-    func upgradeWasSelected() {
-        delegate?.upgradeWasSelected()
+    func actionSelected(with item: AccountItemCell) {
+        delegate?.actionSelected(with: item)
     }
 }

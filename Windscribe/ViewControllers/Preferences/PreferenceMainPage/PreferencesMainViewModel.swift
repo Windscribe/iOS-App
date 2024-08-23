@@ -9,7 +9,6 @@
 import UIKit
 import RxSwift
 protocol PreferencesMainViewModel {
-
     var actionDisplay: BehaviorSubject<ActionDisplay> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
     var currentLanguage: BehaviorSubject<String?> { get }

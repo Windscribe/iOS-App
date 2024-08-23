@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AccountSectionViewDelegate: NSObject {
-    func upgradeWasSelected()
+    func actionSelected(with item: AccountItemCell)
 }
 
 class AccountSectionView: UIView {
@@ -37,7 +37,7 @@ class AccountSectionView: UIView {
 }
 
 extension AccountSectionView: AccountItemViewDelegate {
-    func upgradeWasSelected() {
-        delegate?.upgradeWasSelected()
+    func actionSelected(with item: AccountItemCell) {
+        delegate?.actionSelected(with: item)
     }
 }

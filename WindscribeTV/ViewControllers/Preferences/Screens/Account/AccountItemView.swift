@@ -9,7 +9,7 @@
 import UIKit
 
 protocol AccountItemViewDelegate: NSObject {
-    func upgradeWasSelected()
+    func actionSelected(with item: AccountItemCell)
 }
 
 class AccountItemView: UIView {
@@ -20,8 +20,10 @@ class AccountItemView: UIView {
     let button = UIButton()
     
     var delegate: AccountItemViewDelegate?
+    private var item: AccountItemCell?
 
     func setup(with item: AccountItemCell) {
+        self.item = item
         titleLabel.font = UIFont.bold(size: 42)
         titleLabel.textColor = .white.withAlphaComponent(1.0)
         valueLabel.font = UIFont.regular(size: 42)
@@ -33,7 +35,7 @@ class AccountItemView: UIView {
         backgroundView.isHidden = true
         backgroundView.addGreyHGradientBackground()
         
-        if item.isUpgradeButton {
+        if item.hasAction {
             addSubview(button)
             button.addTarget(self, action: #selector(selectUpgrade), for: .primaryActionTriggered)
             button.translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +47,8 @@ class AccountItemView: UIView {
     }
     
     @IBAction func selectUpgrade(_ sender: Any) {
-        delegate?.upgradeWasSelected()
+        guard let item = item, let delegate = delegate else { return }
+        delegate.actionSelected(with: item)
     }
     
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {

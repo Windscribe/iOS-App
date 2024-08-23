@@ -124,6 +124,8 @@
 		1EA9D6FD2C77530500566A93 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
 		1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */; };
 		1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */; };
+		1EA9D7032C77A0C300566A93 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
+		1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -2570,6 +2572,7 @@
 		592CA79B2C4F1CE80078D487 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				1E0D9D782C61049D008AFF2D /* Extensions */,
 				592EDBFF2C3C688400351D44 /* Main.storyboard */,
 				592CA7A22C4FF8910078D487 /* Login2FA.xib */,
 				59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */,
@@ -2583,7 +2586,6 @@
 		592EDBFA2C3C688400351D44 /* WindscribeTV */ = {
 			isa = PBXGroup;
 			children = (
-				1E0D9D782C61049D008AFF2D /* Extensions */,
 				59FC748A2C53150400021CD1 /* Model */,
 				59FC74802C52D7B900021CD1 /* TVRouter */,
 				5986AB592C47432D00167023 /* Info.plist */,
@@ -4728,6 +4730,7 @@
 				599BA2B82C65453F00F0D1E4 /* UpgradeButton.swift in Sources */,
 				59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */,
 				59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */,
+				1EA9D7032C77A0C300566A93 /* HelpViewModel.swift in Sources */,
 				59FC742C2C51565D00021CD1 /* NETunnelProviderManager+Ext.swift in Sources */,
 				59FC74662C5167BB00021CD1 /* IPRepositoryImpl.swift in Sources */,
 				5986AB3B2C41C0B900167023 /* CoreModule.swift in Sources */,
@@ -4916,6 +4919,7 @@
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
+				1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */,
 				1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */,
 				59FC742E2C51569700021CD1 /* Keychain.swift in Sources */,
 				1E9F2C372C66629100607BAA /* UITextView+Ext.swift in Sources */,

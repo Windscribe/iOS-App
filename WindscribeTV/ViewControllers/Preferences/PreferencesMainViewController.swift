@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 enum PreferencesType: String {
     case general = "General"
@@ -25,7 +26,7 @@ enum PreferencesType: String {
 }
 
 class PreferencesMainViewController: UIViewController {
-    var generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, logger: FileLogger!, router: HomeRouter!
+    var viewModel: PreferencesMainViewModel!, generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, helpViewModel: HelpViewModel!, logger: FileLogger!, router: HomeRouter!
 
     @IBOutlet weak var optionsStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
@@ -39,6 +40,7 @@ class PreferencesMainViewController: UIViewController {
     private var options: [PreferencesType] = [.general, .account, .connection, .viewLog, .sendLog, .signOut]
     private var selectedRow: Int = 0
     private var optionViews = [PreferencesOptionView]()
+    private let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,9 +58,9 @@ class PreferencesMainViewController: UIViewController {
     private func setup() {
         options.forEach {
             let optionView: PreferencesOptionView = PreferencesOptionView.fromNib()
-            optionView.setup(with: $0)
-            optionView.delegate = self
             optionsStackView.addArrangedSubview(optionView)
+            optionView.selectionDelegate = self
+            optionView.setup(with: $0)
             optionViews.append(optionView)
         }
         if let firstOption = optionViews.first {
@@ -92,20 +94,86 @@ class PreferencesMainViewController: UIViewController {
     private func addSubview(view: UIView) {
         contentStackView.addArrangedSubview(view)
     }
+    
+
+    private func signoutButtonTapped() {
+        logger.logD(self, "User tapped to sign out.")
+        viewModel.alertManager.showYesNoAlert(viewController: self, title: TextsAsset.Preferences.logout,
+                                           message: TextsAsset.Preferences.logOutAlert ,
+                                           completion: { result in
+            if result {
+                self.viewModel?.logoutUser()
+            }
+        })
+    }
+    
+    private func sendLogButtonTapped(logView: PreferencesOptionView) {
+        if helpViewModel.networkStatus != NetworkStatus.connected {
+            logger.logD(self, "No Internet available")
+            DispatchQueue.main.async {
+                self.helpViewModel.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.appLogSubmitFailAlert, message: "", buttonText: TextsAsset.okay)
+            }
+        } else {
+            logView.updateTitle(with: "\(TextsAsset.Debug.sendingLog)...")
+            helpViewModel.submitDebugLog(username: nil) { (_, error) in
+                DispatchQueue.main.async {
+                    if error == nil {
+                        logView.updateTitle()
+                    } else {
+                        self.helpViewModel.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.appLogSubmitFailAlert, message: "", buttonText: TextsAsset.okay)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func handleCancelAccount() {
+        logger.logD(self, "Showing delete account popup.")
+        viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { password in
+            if let password = password, !password.isEmpty {
+                self.accountViewModel.cancelAccount(password: password)
+            } else {
+                self.logger.logD(self, "Entered password is nil/empty.")
+            }
+        }, onFailure: { _ in }).disposed(by: disposeBag)
+    }
 }
 
 extension PreferencesMainViewController: PreferencesOptionViewDelegate {
-    func optionWasSelected(with value: PreferencesType) {
+    func optionWasSelected(_ sender: OptionSelectionView) { }
+    
+    func optionWasSelected(with value: PreferencesType, _ sender: PreferencesOptionView) {
         optionViews.forEach {
-            $0.updateSelection(with: $0.isType(of: value))
+            $0.updateSelection(with: $0 == sender)
         }
-        [generalView, accountView, connnectionsView, logView].forEach { $0.isHidden = true }
+        [generalView, accountView, connnectionsView, logView].forEach {
+            if ![PreferencesType.sendLog, PreferencesType.signOut].contains(value) {
+                $0.isHidden = true
+            }
+        }
         switch value {
         case .general: generalView.isHidden = false
         case .account:  accountView.isHidden = false
         case .connection: connnectionsView.isHidden = false
         case .viewLog: logView.isHidden = false
+        case .sendLog: sendLogButtonTapped(logView: sender)
+        case .signOut: signoutButtonTapped()
         default: return
+        }
+    }
+}
+
+extension PreferencesMainViewController: PreferencesAccountViewDelegate {
+    func actionSelected(with item: AccountItemCell) {
+        if item.isUpgradeButton {
+            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
+            return
+        }
+        switch item {
+        case .confirmEmail:
+            router.routeTo(to: .confirmEmail, from: self)
+        case .cancelAccount:
+            handleCancelAccount()
         }
     }
 }
