@@ -18,6 +18,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var latencyLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    @IBOutlet weak var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
     lazy var localDB = Assembler.resolve(LocalDatabase.self)
     var displayingGroup: GroupModel?
@@ -82,6 +83,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     func updateUIForFavNode() {
+        connectButtonTrailing.constant = 0
         favButton.isHidden = false
         if let city = displayingFavNode?.cityName, let nick = displayingFavNode?.nickName {
             let fullText = "\(city) \(nick)"
@@ -99,6 +101,11 @@ class ServerDetailTableViewCell: UITableViewCell {
             self.latencyLabel.text = "  --  "
             return
         }
+        if minTime > 0 {
+            self.latencyLabel.text = " \(minTime.description) MS"
+        } else {
+            self.latencyLabel.text = "  --  "
+        }
         localDB.getFavNode().subscribe(onNext: { favNodes in
             self.favNodes = favNodes
             if let id =  self.displayingFavNode?.groupId {
@@ -106,11 +113,11 @@ class ServerDetailTableViewCell: UITableViewCell {
                 self.setFavButtonImage()
             }
         }).disposed(by: disposeBag)
-        self.latencyLabel.text = " \(minTime.description) MS"
     }
     
     func updetaUIForStaticIP() {
         favButton.isHidden = true
+        connectButtonTrailing.constant = -125
         if let city = displayingStaticIP?.cityName, let nick = displayingStaticIP?.countryCode {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
@@ -128,11 +135,12 @@ class ServerDetailTableViewCell: UITableViewCell {
                 self.latencyLabel.text = "  --  "
                 return
             }
+            
             guard let staticIp = displayingStaticIP?.staticIP else {
-                self.latencyLabel.text = " \(minTime.description) MS"
+                self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : "--"
                 return
             }
-            self.latencyLabel.text = " \(minTime.description) MS  \(staticIp)"
+            self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
         }
     }
     
@@ -193,6 +201,8 @@ class ServerDetailTableViewCell: UITableViewCell {
                 }
             }
         } else {
+            cityLabel.textColor = .whiteWithOpacity(opacity: 0.50)
+            latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
             descriptionLabel.isHidden = true
         }
     }
@@ -215,6 +225,11 @@ class ServerDetailTableViewCell: UITableViewCell {
             self.latencyLabel.text = "  --  "
             return
         }
+        if minTime > 0 {
+            self.latencyLabel.text = " \(minTime.description) MS"
+        } else {
+            self.latencyLabel.text = "  --  "
+        }
         localDB.getFavNode().subscribe(onNext: { favNodes in
             self.favNodes = favNodes
             if let id =  group.id {
@@ -222,7 +237,6 @@ class ServerDetailTableViewCell: UITableViewCell {
                 self.setupUI()
             }
         }).disposed(by: disposeBag)
-        self.latencyLabel.text = " \(minTime.description) MS"
     }
 
     @objc func favButtonTapped() {

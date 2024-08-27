@@ -160,10 +160,37 @@ class MainViewController: UIViewController {
                     self.updateFocusIfNeeded()
                     router.routeTo(to: .serverList, from: self)
                 }
+            } else if press.type == .upArrow {
+                if connectionButton.isFocused {
+                    myPreferredFocusedView = notificationButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                }
+            }
+            else if press.type == .rightArrow {
+                if preferredFocusedView == notificationButton {
+                    myPreferredFocusedView = helpButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                } else if preferredFocusedView == settingsButton {
+                    myPreferredFocusedView = notificationButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                }
+                
+            } else if press.type == .leftArrow {
+                if preferredFocusedView == notificationButton {
+                    myPreferredFocusedView = settingsButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                } else if preferredFocusedView == helpButton {
+                    myPreferredFocusedView = notificationButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                }
             }
         }
     }
-
     
     private func setupSwipeDownGesture() {
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown(_:)))
@@ -173,7 +200,7 @@ class MainViewController: UIViewController {
 
     @objc private func handleSwipeDown(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if nextViewButton.isFocused {
+            if preferredFocusedView == nextViewButton {
                 myPreferredFocusedView = connectionButton
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()

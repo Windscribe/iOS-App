@@ -81,7 +81,6 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
             cell.bindData(group: group)
             cell.displayingGroup = group
             cell.displayingNodeServer = server
-            
         }
         cell.focusStyle = UITableViewCell.FocusStyle.custom
         return cell

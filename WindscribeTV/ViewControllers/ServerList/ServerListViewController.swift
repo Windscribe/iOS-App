@@ -53,6 +53,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     private var selectedRow: Int = 0
     private var optionViews = [SideMenuOptions]()
     let disposeBag = DisposeBag()
+    var myPreferredFocusedView: UIView?
 
     var staticIpSelected = false
 
@@ -68,9 +69,40 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         setup()
         bindData(isStreaming: false)
         toggleView(viewToToggle: favTableView, isViewVisible: true)
+        self.serverListCollectionView.contentInsetAdjustmentBehavior = .never
+    }
+    
+    override var preferredFocusedView: UIView? {
+
+       return myPreferredFocusedView
+    }
+
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        super.pressesBegan(presses, with: event)
+        for press in presses {
+            if press.type == .leftArrow {
+                if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
+                    if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+                        print("IndexPath is \(indexPath)")
+                        if indexPath.row == 0 {
+                            myPreferredFocusedView = optionViews.first?.button
+                            self.setNeedsFocusUpdate()
+                            self.updateFocusIfNeeded()
+                            return
+                        }
+                    }
+                }
+                if UIScreen.main.focusedView is UIButton {
+                    myPreferredFocusedView = optionViews.first?.button
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                }
+            }
+        }
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        //myPreferredFocusedView = context.nextFocusedView
         if context.nextFocusedItem is UIButton {
             let view = context.nextFocusedView as? UIButton
             if view?.superview?.superview is UITableViewCell {
