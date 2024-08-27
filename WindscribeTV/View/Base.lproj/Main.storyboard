@@ -576,7 +576,7 @@ Secrets.</string>
         <!--Server List View Controller-->
         <scene sceneID="fm6-7i-lzK">
             <objects>
-                <viewController storyboardIdentifier="ServerListViewController" id="4Zg-za-KW0" customClass="ServerListViewController" customModule="WindscribeTV" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ServerListViewController" automaticallyAdjustsScrollViewInsets="NO" id="4Zg-za-KW0" customClass="ServerListViewController" customModule="WindscribeTV" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Woy-hh-PUs"/>
                         <viewControllerLayoutGuide type="bottom" id="lR9-Ig-i4n"/>
