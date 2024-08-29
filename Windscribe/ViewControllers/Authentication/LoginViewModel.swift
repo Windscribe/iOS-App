@@ -107,6 +107,7 @@ class LoginViewModelImpl: LoginViewModel {
                     .subscribe(onSuccess: { [ self] verifyResponse in
                         let auth = verifyResponse.sessionAuth
                         self.apiCallManager.getSession(sessionAuth: auth).subscribe(onSuccess: { [weak self] session in
+                            session.sessionAuthHash = auth
                             WifiManager.shared.configure()
                             self?.userRepository.login(session: session)
                             self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")

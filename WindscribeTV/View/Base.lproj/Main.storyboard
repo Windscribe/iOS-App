@@ -176,6 +176,9 @@
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <connections>
+                                            <action selector="connectButtonPressed:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="XZS-RJ-hoP"/>
+                                        </connections>
                                     </button>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bestloc_icon" translatesAutoresizingMaskIntoConstraints="NO" id="sNv-Ga-8LR">
                                         <rect key="frame" x="32" y="965" width="430" height="230"/>

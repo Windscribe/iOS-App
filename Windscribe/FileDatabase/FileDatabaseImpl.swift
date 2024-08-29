@@ -15,10 +15,17 @@ class FileDatabaseImpl: FileDatabase {
     func removeFile(path: String) {
         let fileManager = FileManager.default
         do {
+#if os(iOS)
             let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                           in: .userDomainMask,
-                                                           appropriateFor: nil,
-                                                           create: false)
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#else
+            let documentDirectory = try fileManager.url(for: .cachesDirectory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#endif
             let fileURL = documentDirectory.appendingPathComponent(path)
             try fileManager.removeItem(at: fileURL)
         } catch let error {
@@ -29,10 +36,17 @@ class FileDatabaseImpl: FileDatabase {
     func saveFile(data: Data, path: String) {
         let fileManager = FileManager.default
         do {
+#if os(iOS)
             let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                           in: .userDomainMask,
-                                                           appropriateFor: nil,
-                                                           create: false)
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#else
+            let documentDirectory = try fileManager.url(for: .cachesDirectory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#endif
             let fileURL = documentDirectory.appendingPathComponent(path)
             try data.write(to: fileURL)
         } catch let error {
@@ -43,10 +57,17 @@ class FileDatabaseImpl: FileDatabase {
     func readFile(path: String) -> Data? {
         let fileManager = FileManager.default
         do {
+#if os(iOS)
             let documentDirectory = try fileManager.url(for: .documentDirectory,
-                                                           in: .userDomainMask,
-                                                           appropriateFor: nil,
-                                                           create: false)
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#else
+            let documentDirectory = try fileManager.url(for: .cachesDirectory,
+                                                        in: .userDomainMask,
+                                                        appropriateFor: nil,
+                                                        create: false)
+#endif
             let fileURL = documentDirectory.appendingPathComponent(path)
             return try Data(contentsOf: fileURL, options: .uncached)
         } catch let error {
