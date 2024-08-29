@@ -50,7 +50,7 @@ class MainViewController: UIViewController {
     var logger: FileLogger!
     var myPreferredFocusedView: UIView?
     var isFromServer: Bool = false
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -63,11 +63,11 @@ class MainViewController: UIViewController {
 
        return myPreferredFocusedView
     }
-    
+
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
-        
+
         flagView.contentMode = .scaleAspectFill
         flagView.layer.opacity = 0.25
         gradient = CAGradientLayer()
@@ -75,7 +75,7 @@ class MainViewController: UIViewController {
         gradient.colors = [UIColor.clear.cgColor, UIColor.lightMidnight.cgColor]
         gradient.locations = [0, 0.65]
         flagView.layer.mask = gradient
-        
+
         flagBackgroundView = UIView()
         flagBackgroundView.frame = flagView.bounds
         flagBackgroundView.backgroundColor = UIColor.lightMidnight
@@ -136,20 +136,20 @@ class MainViewController: UIViewController {
 
         locationsLabel.font = .bold(size: 35)
     }
-    
+
     @IBAction func settingsPressed(_ sender: Any) {
         router.routeTo(to: RouteID.preferences, from: self)
     }
-    
+
     @IBAction func notificationsClicked(_ sender: Any) {
         router.routeTo(to: RouteID.newsFeed, from: self)
     }
-    
+
     @IBAction func helpClicked(_ sender: Any) {
         router.routeTo(to: RouteID.support, from: self)
     }
-    
-    
+
+
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)
         for press in presses {
@@ -177,7 +177,7 @@ class MainViewController: UIViewController {
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
                 }
-                
+
             } else if press.type == .leftArrow {
                 if preferredFocusedView == notificationButton {
                     myPreferredFocusedView = settingsButton
@@ -191,7 +191,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
+
     private func setupSwipeDownGesture() {
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown(_:)))
         swipeDown.direction = .down
@@ -200,7 +200,7 @@ class MainViewController: UIViewController {
 
     @objc private func handleSwipeDown(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if preferredFocusedView == nextViewButton {
+            if UIScreen.main.focusedView == connectionButton {
                 myPreferredFocusedView = connectionButton
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()
@@ -253,7 +253,7 @@ class MainViewController: UIViewController {
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
-                // self.configureVPN()
+                self.configureVPN()
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
@@ -263,9 +263,9 @@ class MainViewController: UIViewController {
                 }
             }
         }).disposed(by: disposeBag )
-        
+
     }
-    
+
     func setFlagImages() {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
@@ -298,7 +298,7 @@ class MainViewController: UIViewController {
             }
         }
     }
-    
+
     func showSecureIPAddressState(ipAddress: String) {
         UIView.animate(withDuration: 0.25) {[weak self] in
             guard let self = self else { return }
@@ -320,6 +320,61 @@ class MainViewController: UIViewController {
         self.connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButton), for: .focused)
+    }
+
+    @IBAction func connectButtonPressed(_ sender: Any) {
+        VPNManager.shared.resetProperties()
+        disableConnectButton()
+        if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
+            logger.logE(MainViewController.self, "User tapped to connect.")
+            let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
+            if isOnline {
+                configureVPN()
+            } else {
+                enableConnectButton()
+                //displayInternetConnectionLostAlert()
+            }
+        } else {
+            logger.logD(self, "User tapped to disconnect.")
+            connectionStateViewModel.disconnect()
+        }
+    }
+
+    func disableConnectButton() {
+        connectionButton.isUserInteractionEnabled = false
+        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
+    }
+
+    @objc func enableConnectButton() {
+        self.connectionButton.isUserInteractionEnabled = true
+    }
+
+    @objc func configureVPN(bypassConnectingCheck: Bool = false) {
+        // Add popups when ready
+//        if !viewModel.isPrivacyPopupAccepted() {
+//            showPrivacyConfirmationPopup()
+//            return
+//        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
+//            self.displayConnectingAlert()
+//            logger.logD(self, "User attempted to connect while in connecting state.")
+//            return
+//        } else if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
+//            self.showOutOfDataPopup()
+//            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+//            logger.logD(self, "User attempted to connect when out of data.")
+//            return
+//        }
+        vpnManager.connectIntent = false
+        vpnManager.userTappedToDisconnect = false
+        vpnManager.isOnDemandRetry = false
+        viewModel.reconnect()
+
+        if WifiManager.shared.isConnectedWifiTrusted() {
+            // Add trusted network popup
+          //  router?.routeTo(to: .trustedNetwork, from: self)
+        } else {
+            viewModel.reconnect()
+        }
     }
 
 }

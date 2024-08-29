@@ -8,20 +8,87 @@
 
 import UIKit
 import Swinject
+import RxSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    private lazy var customConfigRepository: CustomConfigRepository = {
+        return Assembler.resolve(CustomConfigRepository.self)
+    }()
+    let disposeBag = DisposeBag()
+    private lazy var apiManager: APIManager = {
+        return Assembler.resolve(APIManager.self)
+    }()
     private lazy var preferences: Preferences = {
         return Assembler.resolve(Preferences.self)
+    }()
+    private lazy var logger: FileLogger = {
+        return Assembler.resolve(FileLogger.self)
+    }()
+    private lazy var vpnManager: VPNManager = {
+        return Assembler.resolve(VPNManager.self)
+    }()
+    private lazy var localDatabase: LocalDatabase = {
+        return Assembler.resolve(LocalDatabase.self)
+    }()
+    private lazy var purchaseManager: InAppPurchaseManager = {
+        return Assembler.resolve(InAppPurchaseManager.self)
+    }()
+    private lazy var latencyRepository: LatencyRepository = {
+        return Assembler.resolve(LatencyRepository.self)
+    }()
+    private lazy var languageManager: LanguageManagerV2 = {
+        return Assembler.resolve(LanguageManagerV2.self)
+    }()
+    private lazy var pushNotificationManager: PushNotificationManagerV2 = {
+        return Assembler.resolve(PushNotificationManagerV2.self)
+    }()
+    private lazy var themeManager: ThemeManager = {
+        return Assembler.resolve(ThemeManager.self)
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        setApplicationWindow()
+        localDatabase.migrate()
+        logger.logDeviceInfo()
+        languageManager.setAppLanguage()
+        vpnManager.setup { [self] in
+            recordInstallIfFirstLoad()
+            //registerForPushNotifications()
+            resetCountryOverrideForServerList()
+            purchaseManager.verifyPendingTransaction()
+            latencyRepository.loadLatency()
+            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in}).disposed(by: disposeBag)
+            setApplicationWindow()
+            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        }
         return true
+
+    }
+    /**
+     Records app install.
+     */
+    private func recordInstallIfFirstLoad() {
+        if preferences.getFirstInstall() == false {
+            preferences.saveFirstInstall(bool: true)
+            apiManager.recordInstall(platform: "tvos").subscribe(onSuccess: { _ in
+                self.logger.logD(self, "Successfully recorded new install.")
+            }, onFailure: { error in
+                self.logger.logE(self, "Failed to record new install: \(error)")
+            }).disposed(by: disposeBag)
+        }
+    }
+
+    /**
+     If vpn state is disconnected on app launch reset country override for the server list.
+     */
+    private func resetCountryOverrideForServerList() {
+        if vpnManager.connectionStatus() == .disconnected {
+            preferences.saveCountryOverrride(value: nil)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

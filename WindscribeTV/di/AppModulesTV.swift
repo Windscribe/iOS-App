@@ -52,31 +52,31 @@ class TVViewModels: Assembly {
         container.register(LatencyViewModel.self) { r in
             return LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
-        
+
         container.register(BasePopupViewModelType.self) { r in
             return BasePopupViewModel()
         }.inObjectScope(.transient)
-        
+
         container.register(RateUsPopupModelType.self) { r in
             return RateUsPopupModel(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
-        
+
         container.register(EnterEmailViewModel.self) { r in
             return EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-        
+
         container.register(ConfirmEmailViewModel.self) { r in
             return ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-        
+
         container.register(NewsFeedModelType.self) { r in
             return NewsFeedModel(notificationRepository: r.resolve(NotificationRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
- 
+
 		container.register(PreferencesMainViewModel.self) { r in
             return PreferencesMainViewModelImp(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManagerV2.self)!)
         }.inObjectScope(.transient)
-        
+
         container.register(HelpViewModel.self) { r in
             return HelpViewModelImpl(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
@@ -136,42 +136,42 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-        
+
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted {  _, _ in
         }.inObjectScope(.transient)
-        
+
         container.register(UpgradePopViewController.self) { _ in UpgradePopViewController(nibName: "UpgradePopViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(UpgradeViewModel.self)
         }.inObjectScope(.transient)
-        
+
         container.register(BasePopUpViewController.self) { _ in BasePopUpViewController(nibName: "BasePopUpViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
         }.inObjectScope(.transient)
-        
+
         container.register(RatePopupViewController.self) { _ in RatePopupViewController(nibName: "RatePopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.ruViewModel = r.resolve(RateUsPopupModelType.self)
         }.inObjectScope(.transient)
-        
+
         container.register(GetMoreDataPopupViewController.self) { _ in GetMoreDataPopupViewController(nibName: "GetMoreDataPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.router = r.resolve(HomeRouter.self)
             vc.signupRouter = r.resolve(SignupRouter.self)
         }.inObjectScope(.transient)
-        
+
         container.register(ConfirmEmailPopupViewController.self) { _ in ConfirmEmailPopupViewController(nibName: "ConfirmEmailPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
             vc.ceViewModel = r.resolve(ConfirmEmailViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        
+
         container.register(AddEmailPopupViewController.self) { _ in AddEmailPopupViewController(nibName: "AddEmailPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
@@ -179,7 +179,7 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
-        
+
         container.register(NewsFeedViewController.self) { _ in NewsFeedViewController(nibName: "NewsFeedViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(NewsFeedModelType.self)
