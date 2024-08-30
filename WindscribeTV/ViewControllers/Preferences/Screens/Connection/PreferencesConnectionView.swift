@@ -78,6 +78,7 @@ class PreferencesConnectionView: UIView {
 
     private func updatePorts() {
         portsView.populate(with: viewModel.getPorts(), title: nil)
+        portsView.select(option: viewModel.getCurrentPort(), animated: false)
     }
 }
 

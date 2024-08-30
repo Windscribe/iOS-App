@@ -126,6 +126,8 @@
 		1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */; };
 		1EA9D7032C77A0C300566A93 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
 		1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */; };
+		1EA9D70A2C81D42F00566A93 /* TopSettingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */; };
+		1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -1291,6 +1293,8 @@
 		1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsFeedViewController.xib; sourceTree = "<group>"; };
 		1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectionView.swift; sourceTree = "<group>"; };
 		1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptionSelectionView.xib; sourceTree = "<group>"; };
+		1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSettingSection.swift; sourceTree = "<group>"; };
+		1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopSettingSection.xib; sourceTree = "<group>"; };
 		1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Migration.swift"; sourceTree = "<group>"; };
 		1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Utility.swift"; sourceTree = "<group>"; };
 		1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationsViewModel.swift; sourceTree = "<group>"; };
@@ -2163,6 +2167,8 @@
 				1E0D9D602C6103A3008AFF2D /* SettingOption.xib */,
 				1E0D9D612C6103A3008AFF2D /* SettingsSection.swift */,
 				1E0D9D622C6103A3008AFF2D /* SettingsSection.xib */,
+				1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */,
+				1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -2544,13 +2550,6 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		1EF7BB382C6F932A0032A4DF /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
 		1EF7BB3B2C74AFB90032A4DF /* Rate Windscribe */ = {
 			isa = PBXGroup;
 			children = (
@@ -2649,7 +2648,6 @@
 			isa = PBXGroup;
 			children = (
 				1EA9D6FE2C7754A800566A93 /* Components */,
-				1EF7BB382C6F932A0032A4DF /* Utils */,
 				1E006BB72C6A9C5200EE6389 /* Popups */,
 				1E0D9D6C2C6103A3008AFF2D /* Preferences */,
 				59A218672C3C8011000D89FA /* MainViewController.swift */,
@@ -4303,6 +4301,7 @@
 				592EDC062C3C688500351D44 /* Base in Resources */,
 				59E4A7D12C73D84300987F99 /* ServerDetailTableViewCell.xib in Resources */,
 				599BA2AE2C63D38400F0D1E4 /* Flags.xcassets in Resources */,
+				1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */,
 				592EDC012C3C688400351D44 /* Base in Resources */,
 				1E0D9D6E2C6103A3008AFF2D /* SettingOption.xib in Resources */,
 				1E0D9D832C612EDF008AFF2D /* PreferencesConnectionView.xib in Resources */,
@@ -4915,6 +4914,7 @@
 				59FC74652C5167B700021CD1 /* IPRepository.swift in Sources */,
 				59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */,
 				5963A2F22C66AE770091138E /* MainViewModel.swift in Sources */,
+				1EA9D70A2C81D42F00566A93 /* TopSettingSection.swift in Sources */,
 				1EF7BB452C74C8760032A4DF /* GetMoreDataPopupViewController.swift in Sources */,
 				59FC741E2C51547000021CD1 /* AdvanceRepositoryImpl.swift in Sources */,
 				59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */,

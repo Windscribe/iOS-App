@@ -54,6 +54,7 @@ struct ImagesAsset {
     static let prefRightIcon = "pref-right-arrow"
     static let prefProIconGreen = "pref-pro-icon-green"
     static let prefProIconBlue = "pref-pro-icon-blue"
+    static let prefProIconGrey = "white-pro-star"
     static let prefBackIcon = "pref-back"
     static let dropDownIcon = "dropdown-icon"
     static let closeIcon = "close-icon"

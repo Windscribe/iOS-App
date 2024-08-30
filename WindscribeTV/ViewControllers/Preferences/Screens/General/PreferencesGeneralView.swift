@@ -12,8 +12,8 @@ import RxSwift
 class PreferencesGeneralView: UIView {
     var viewModel: GeneralViewModelType!
 
-    lazy var languagesView: SettingsSection = {
-        SettingsSection.fromNib()
+    lazy var languagesView: TopSettingSection = {
+        TopSettingSection.fromNib()
     }()
     lazy var orderByView: SettingsSection = {
         SettingsSection.fromNib()

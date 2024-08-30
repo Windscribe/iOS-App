@@ -17,10 +17,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="400" height="94"/>
                     <viewLayoutGuide key="safeArea" id="i5j-fQ-rmo"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="94" id="Jn0-JJ-BIG"/>
+                    </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oKW-rJ-UhI">
                     <rect key="frame" x="24" y="0.0" width="312" height="94"/>
                     <constraints>
+                        <constraint firstAttribute="height" constant="94" id="r17-w3-LAa"/>
                         <constraint firstAttribute="width" constant="312" id="sSt-qS-VbP"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="42"/>
@@ -35,7 +39,10 @@
                     </constraints>
                 </imageView>
                 <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3X3-Do-nVI">
-                    <rect key="frame" x="0.0" y="0.0" width="400" height="94"/>
+                    <rect key="frame" x="0.0" y="-146" width="400" height="240"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="240" id="WT6-h9-dbl"/>
+                    </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -44,16 +51,13 @@
                 <constraint firstAttribute="bottom" secondItem="oKW-rJ-UhI" secondAttribute="bottom" id="Dw6-3J-dgo"/>
                 <constraint firstItem="oKW-rJ-UhI" firstAttribute="leading" secondItem="KfW-pB-pIq" secondAttribute="leading" constant="24" id="FLU-z1-69R"/>
                 <constraint firstAttribute="trailing" secondItem="RlO-Un-ed4" secondAttribute="trailing" constant="24" id="H12-d1-xg8"/>
-                <constraint firstItem="RlO-Un-ed4" firstAttribute="centerY" secondItem="KfW-pB-pIq" secondAttribute="centerY" id="QGC-lf-0IF"/>
                 <constraint firstAttribute="bottom" secondItem="nk3-vS-O5V" secondAttribute="bottom" id="RM6-4L-bGs"/>
                 <constraint firstItem="3X3-Do-nVI" firstAttribute="leading" secondItem="KfW-pB-pIq" secondAttribute="leading" id="VB2-he-laP"/>
-                <constraint firstItem="oKW-rJ-UhI" firstAttribute="top" secondItem="KfW-pB-pIq" secondAttribute="top" id="Vqi-u8-4Uq"/>
                 <constraint firstItem="nk3-vS-O5V" firstAttribute="leading" secondItem="KfW-pB-pIq" secondAttribute="leading" id="h9K-z4-9Z8"/>
                 <constraint firstAttribute="bottom" secondItem="3X3-Do-nVI" secondAttribute="bottom" id="kGu-md-DvE"/>
                 <constraint firstItem="RlO-Un-ed4" firstAttribute="leading" secondItem="oKW-rJ-UhI" secondAttribute="trailing" constant="8" id="lFZ-Qq-pzK"/>
-                <constraint firstItem="nk3-vS-O5V" firstAttribute="top" secondItem="KfW-pB-pIq" secondAttribute="top" id="oT3-gu-HaO"/>
                 <constraint firstAttribute="trailing" secondItem="3X3-Do-nVI" secondAttribute="trailing" id="pyl-mR-bP5"/>
-                <constraint firstItem="3X3-Do-nVI" firstAttribute="top" secondItem="KfW-pB-pIq" secondAttribute="top" id="yQn-F6-JS0"/>
+                <constraint firstItem="RlO-Un-ed4" firstAttribute="centerY" secondItem="oKW-rJ-UhI" secondAttribute="centerY" id="s3Z-Vf-WET"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
