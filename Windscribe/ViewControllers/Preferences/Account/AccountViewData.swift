@@ -63,13 +63,17 @@ enum AccountItemCell {
         case .email:
             return TextsAsset.email
         case .planType:
-            if session.isPremium || session.billingPlanId == -9 {
+            if session.isUserPro {
                 return TextsAsset.UpgradeView.unlimitedData
             } else {
                 return "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)"
             }
         case .expiredDate:
-            return TextsAsset.Account.resetDate
+            if session.isUserPro {
+                return TextsAsset.Account.expiryDate
+            } else {
+                return TextsAsset.Account.resetDate
+            }
         case .dateLeft:
             return TextsAsset.Account.dataLeft
         case .confirmEmail:
@@ -106,12 +110,15 @@ enum AccountItemCell {
             return NSAttributedString(string: session.email,
                                       attributes: getDeviceFontAttributes(isFullColor: false))
         case .planType:
-            if session.isPremium || session.billingPlanId == -9 {
-                return NSAttributedString(string: session.premiumExpiryDate)
-            } else if session.isUserPro {
-                if themeManager.getIsDarkTheme() {
+            if session.isUserPro {
+                if UIDevice.current.isTV {
+                    return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGrey)!.withTintColor(.whiteWithOpacity(opacity: 0.5), renderingMode: .alwaysTemplate),
+                                                                         bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
+                                                                         textColor: UIColor.seaGreen)
+                }
+                else if themeManager.getIsDarkTheme() {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
-                                                   bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
+                                                   bounds: CGRect(x: 0, y: 0, width: 16, height: 16),
                                                    textColor: UIColor.seaGreen)
                 } else {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconBlue)!,

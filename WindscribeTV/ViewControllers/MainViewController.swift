@@ -148,7 +148,10 @@ class MainViewController: UIViewController {
     @IBAction func helpClicked(_ sender: Any) {
         router.routeTo(to: RouteID.support, from: self)
     }
-
+    
+    @IBAction func upgradeButtonPressed(_ sender: Any) {
+        router.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
+    }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)

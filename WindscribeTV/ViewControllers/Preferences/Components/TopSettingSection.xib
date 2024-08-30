@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Qid-fK-th1" customClass="TopSettingSection" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="1480" height="211"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XVI-mX-7PZ">
+                    <rect key="frame" x="12" y="24" width="103" height="49"/>
+                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="42"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="51" translatesAutoresizingMaskIntoConstraints="NO" id="1LG-xe-QfH">
+                    <rect key="frame" x="0.0" y="0.0" width="1480" height="211"/>
+                    <subviews>
+                        <scrollView multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fKx-9L-XRc">
+                            <rect key="frame" x="0.0" y="0.0" width="1480" height="211"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacing="64" translatesAutoresizingMaskIntoConstraints="NO" id="ILP-eR-zM6" userLabel="Content Stack View">
+                                    <rect key="frame" x="0.0" y="0.0" width="1480" height="211"/>
+                                    <subviews>
+                                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ov6-UC-rbC">
+                                            <rect key="frame" x="0.0" y="0.0" width="0.0" height="94"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </view>
+                                    </subviews>
+                                    <viewLayoutGuide key="safeArea" id="7ZR-yq-4GU"/>
+                                </stackView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="width" secondItem="PNm-B2-fy4" secondAttribute="width" priority="250" id="1g9-K5-NhH"/>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="trailing" secondItem="m1p-t4-e4N" secondAttribute="trailing" id="9Fc-7v-Awh"/>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="height" secondItem="PNm-B2-fy4" secondAttribute="height" id="MzA-xJ-agi"/>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="leading" secondItem="m1p-t4-e4N" secondAttribute="leading" id="jWL-xl-XYt"/>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="top" secondItem="m1p-t4-e4N" secondAttribute="top" id="oeV-f4-DPP"/>
+                                <constraint firstItem="ILP-eR-zM6" firstAttribute="bottom" secondItem="m1p-t4-e4N" secondAttribute="bottom" id="pXj-jE-qA0"/>
+                                <constraint firstAttribute="height" constant="211" id="t2p-c4-JCN"/>
+                            </constraints>
+                            <viewLayoutGuide key="contentLayoutGuide" id="m1p-t4-e4N"/>
+                            <viewLayoutGuide key="frameLayoutGuide" id="PNm-B2-fy4"/>
+                        </scrollView>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="211" id="uiI-S5-Nmp"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="oFa-lR-kyB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="1LG-xe-QfH" firstAttribute="top" secondItem="Qid-fK-th1" secondAttribute="top" id="4jU-jO-ZMQ"/>
+                <constraint firstItem="XVI-mX-7PZ" firstAttribute="top" secondItem="Qid-fK-th1" secondAttribute="top" constant="24" id="73A-Vu-vJS"/>
+                <constraint firstItem="XVI-mX-7PZ" firstAttribute="leading" secondItem="Qid-fK-th1" secondAttribute="leading" constant="12" id="Ddr-W9-oSL"/>
+                <constraint firstAttribute="trailing" secondItem="1LG-xe-QfH" secondAttribute="trailing" id="RmP-q0-QJN"/>
+                <constraint firstAttribute="bottom" secondItem="1LG-xe-QfH" secondAttribute="bottom" id="ZE9-np-LAQ"/>
+                <constraint firstItem="1LG-xe-QfH" firstAttribute="leading" secondItem="Qid-fK-th1" secondAttribute="leading" id="mHf-fB-fpt"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="contentStackView" destination="ILP-eR-zM6" id="Crb-Sa-wBi"/>
+                <outlet property="contentViewTop" destination="4jU-jO-ZMQ" id="WpU-WJ-649"/>
+                <outlet property="scrollView" destination="fKx-9L-XRc" id="J6I-tr-REO"/>
+                <outlet property="tempView" destination="ov6-UC-rbC" id="Y5Z-BU-zht"/>
+                <outlet property="titleLabel" destination="XVI-mX-7PZ" id="35X-cY-UOm"/>
+            </connections>
+            <point key="canvasLocation" x="3" y="-35"/>
+        </view>
+    </objects>
+</document>

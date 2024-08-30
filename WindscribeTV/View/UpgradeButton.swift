@@ -11,7 +11,6 @@ import RxSwift
 import Swinject
 
 class UpgradeButton: UIButton {
-
     var dataLeft: UILabel!
 
     override init(frame: CGRect) {
@@ -25,7 +24,6 @@ class UpgradeButton: UIButton {
     }
 
     func setupButton() {
-
         // Make the button round
         self.layer.cornerRadius = self.frame.height/2
         self.clipsToBounds = true
@@ -84,20 +82,15 @@ class UpgradeButton: UIButton {
     }
 
     func setborder() {
-
             self.layer.borderWidth = 2
             self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
-
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-
         if context.nextFocusedView == self {
             self.layer.borderColor = UIColor.clear.cgColor
         } else {
             self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
-
         }
-
     }
 }
