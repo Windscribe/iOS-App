@@ -21,6 +21,7 @@ class SettingsSection: UIView {
     @IBOutlet weak var contentViewTop: NSLayoutConstraint!
 
     private var listOfOptions = [String]()
+    private var listOfOptionViewss = [SettingOption]()
 
     weak var delegate: SettingsSectionDelegate?
 
@@ -46,10 +47,17 @@ class SettingsSection: UIView {
             optionView.setup(with: $0)
             optionView.delegate = self
             contentStackView.addArrangedSubview(optionView)
+            listOfOptionViewss.append(optionView)
         }
         contentStackView.addArrangedSubview(UIView())
         contentStackView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
+    }
+    
+    func updateText(with list: [String], title: String? = nil) {
+        list.enumerated().forEach { (index, text) in
+            listOfOptionViewss[index].titleLabel.text = text
+        }
     }
 
     func select(option: String, animated: Bool = true) {

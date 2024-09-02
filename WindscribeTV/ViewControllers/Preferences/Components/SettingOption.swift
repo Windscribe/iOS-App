@@ -51,6 +51,11 @@ class SettingOption: UIView {
         buttonContainerView.addArrangedSubview(button)
         button.addTarget(self, action: #selector(selectOption), for: .primaryActionTriggered)
     }
+    
+    func updateTitle(with title: String) {
+        value = title
+        titleLabel.text = title
+    }
 
     func updateSelection(with isSelected: Bool) {
         selectedImageView.isHidden = !isSelected

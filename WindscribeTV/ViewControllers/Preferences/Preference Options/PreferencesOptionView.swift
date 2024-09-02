@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
     func optionWasSelected(with value: PreferencesType, _ sender: PreferencesOptionView)
@@ -14,24 +15,34 @@ protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
 
 class PreferencesOptionView: OptionSelectionView {
     private var optionType: PreferencesType?
+    private let disposeBag = DisposeBag()
+    
+    var viewModel: PreferencesMainViewModel?
 
     weak var selectionDelegate: PreferencesOptionViewDelegate?
 
     func setup(with type: PreferencesType, isSelected: Bool = false) {
+        bindViews()
         optionType = type
-        super.setup(with: type.rawValue, isSelected: isSelected, isPrimary: type.isPrimary)
+        super.setup(with: type.title, isSelected: isSelected, isPrimary: type.isPrimary)
     }
     
     func updateTitle(with value: String? = nil) {
         if let value = value {
             titleLabel.text = value
         } else {
-            titleLabel.text = optionType?.rawValue
+            titleLabel.text = optionType?.title
         }
     }
 
     func isType(of type: PreferencesType) -> Bool {
         return type == optionType
+    }
+    
+    private func bindViews() {
+        viewModel?.currentLanguage.subscribe(onNext: { _ in 
+            self.updateTitle()
+        }).disposed(by: disposeBag)
     }
     
     @IBAction override func selectOption(_ sender: Any) {
