@@ -126,6 +126,7 @@
 		1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */; };
 		1EA9D7032C77A0C300566A93 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
 		1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */; };
+		1EA9D70F2C82150C00566A93 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AF283F7D22C40BE7001F5520 /* Localizable.strings */; };
 		1EA9D70A2C81D42F00566A93 /* TopSettingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */; };
 		1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
@@ -4300,6 +4301,7 @@
 				1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */,
 				592EDC062C3C688500351D44 /* Base in Resources */,
 				59E4A7D12C73D84300987F99 /* ServerDetailTableViewCell.xib in Resources */,
+				1EA9D70F2C82150C00566A93 /* Localizable.strings in Resources */,
 				599BA2AE2C63D38400F0D1E4 /* Flags.xcassets in Resources */,
 				1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */,
 				592EDC012C3C688400351D44 /* Base in Resources */,

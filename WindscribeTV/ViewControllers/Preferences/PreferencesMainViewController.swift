@@ -9,18 +9,29 @@
 import UIKit
 import RxSwift
 
-enum PreferencesType: String {
-    case general = "General"
-    case account = "Account"
-    case connection = "Connection"
-    case viewLog = "View Debug Log"
-    case sendLog = "Send Debug Log"
-    case signOut = "Sign Out"
+enum PreferencesType {
+    case general
+    case account
+    case connection
+    case viewLog
+    case sendLog
+    case signOut
 
     var isPrimary: Bool {
         switch self {
         case .general, .account, .connection, .viewLog: return true
         default: return false
+        }
+    }
+    
+    var title: String {
+        switch self {
+        case .account: TextsAsset.Preferences.account
+        case .general: TextsAsset.Preferences.general
+        case .connection: TextsAsset.Preferences.connection
+        case .viewLog: TextsAsset.Debug.viewLog
+        case .sendLog: TextsAsset.Debug.sendLog
+        case .signOut: TextsAsset.Preferences.logout
         }
     }
 }
@@ -59,6 +70,7 @@ class PreferencesMainViewController: UIViewController {
         options.forEach {
             let optionView: PreferencesOptionView = PreferencesOptionView.fromNib()
             optionsStackView.addArrangedSubview(optionView)
+            optionView.viewModel = viewModel
             optionView.selectionDelegate = self
             optionView.setup(with: $0)
             optionViews.append(optionView)
@@ -69,6 +81,7 @@ class PreferencesMainViewController: UIViewController {
         titleLabel.font = UIFont.bold(size: 92)
         createSettingViews()
         accountView.delegate = self
+        optionsStackView.addArrangedSubview(UIView())
     }
 
     private func createSettingViews() {
@@ -154,7 +167,9 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         switch value {
         case .general: generalView.isHidden = false
         case .account:  accountView.isHidden = false
-        case .connection: connnectionsView.isHidden = false
+        case .connection: 
+            connnectionsView.isHidden = false
+//            connnectionsView.updateSelection()
         case .viewLog: logView.isHidden = false
         case .sendLog: sendLogButtonTapped(logView: sender)
         case .signOut: signoutButtonTapped()

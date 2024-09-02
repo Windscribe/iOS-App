@@ -17,8 +17,10 @@ class AccountSectionView: UIView {
     @IBOutlet weak var stackView: UIStackView!
     
     var delegate: AccountSectionViewDelegate?
+    private var sectionData: AccountSectionItem?
 
     func setup(with sectionData: AccountSectionItem) {
+        self.sectionData = sectionData
         titleLabel.textColor = .white.withAlphaComponent(0.5)
         titleLabel.attributedText = NSAttributedString(string: sectionData.title,
                                               attributes: [
@@ -33,6 +35,12 @@ class AccountSectionView: UIView {
             itemView.delegate = self
             stackView.addArrangedSubview(itemView)
         }
+    }
+    
+    func updateLocalisation() {
+        guard let sectionData = sectionData else { return }
+        stackView.removeAllArrangedSubviews()
+        setup(with: sectionData)
     }
 }
 

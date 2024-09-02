@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 
 protocol PreferencesAccountViewDelegate: NSObject {
     func actionSelected(with item: AccountItemCell)
@@ -17,6 +18,7 @@ class PreferencesAccountView: UIView {
 
     var viewModel: AccountViewModelType?
     var delegate: PreferencesAccountViewDelegate?
+    private let disposeBag = DisposeBag()
 
     func setup() {
         guard let accountViewModel = viewModel else { return }
@@ -26,6 +28,17 @@ class PreferencesAccountView: UIView {
             sectionView.delegate = self
             contentStackView.addArrangedSubview(sectionView)
         }
+        bindViews()
+    }
+    
+    private func bindViews() {
+        viewModel?.languageUpdatedTrigger.subscribe { _ in
+            self.contentStackView.arrangedSubviews.forEach {
+                if let sectionView = $0 as? AccountSectionView {
+                    sectionView.updateLocalisation()
+                }
+            }
+        }.disposed(by: disposeBag)
     }
 }
 

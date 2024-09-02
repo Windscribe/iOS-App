@@ -16,6 +16,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AyE-cn-FYa">
                     <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="112" id="yB7-tQ-OkU"/>
+                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hZ4-t5-4Pq">
                     <rect key="frame" x="-8" y="12" width="16" height="88"/>
@@ -29,8 +32,8 @@
                     <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
                     <viewLayoutGuide key="safeArea" id="CNZ-d9-HmD"/>
                 </stackView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JL9-nY-ifg">
-                    <rect key="frame" x="36" y="0.0" width="584" height="112"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JL9-nY-ifg">
+                    <rect key="frame" x="36" y="24" width="584" height="64"/>
                     <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="42"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -42,7 +45,7 @@
                 <constraint firstItem="hZ4-t5-4Pq" firstAttribute="top" secondItem="3Ri-wC-BYd" secondAttribute="top" constant="12" id="2KG-zj-7HU"/>
                 <constraint firstItem="vPb-xf-oWi" firstAttribute="leading" secondItem="3Ri-wC-BYd" secondAttribute="leading" id="7up-VB-R2A"/>
                 <constraint firstAttribute="trailing" secondItem="AyE-cn-FYa" secondAttribute="trailing" id="Abb-Px-Zvv"/>
-                <constraint firstAttribute="bottom" secondItem="JL9-nY-ifg" secondAttribute="bottom" id="M8A-4M-DYW"/>
+                <constraint firstAttribute="bottom" secondItem="JL9-nY-ifg" secondAttribute="bottom" constant="24" id="M8A-4M-DYW"/>
                 <constraint firstItem="AyE-cn-FYa" firstAttribute="top" secondItem="3Ri-wC-BYd" secondAttribute="top" id="RLQ-MS-fzU"/>
                 <constraint firstItem="hZ4-t5-4Pq" firstAttribute="leading" secondItem="3Ri-wC-BYd" secondAttribute="leading" constant="-8" id="ShE-sw-RY1"/>
                 <constraint firstAttribute="trailing" secondItem="JL9-nY-ifg" secondAttribute="trailing" id="UrN-8Z-LQM"/>
@@ -53,7 +56,7 @@
                 <constraint firstItem="AyE-cn-FYa" firstAttribute="leading" secondItem="3Ri-wC-BYd" secondAttribute="leading" id="nxX-A0-biP"/>
                 <constraint firstAttribute="trailing" secondItem="vPb-xf-oWi" secondAttribute="trailing" id="o2C-q9-5V6"/>
                 <constraint firstAttribute="bottom" secondItem="hZ4-t5-4Pq" secondAttribute="bottom" constant="12" id="u9S-Jk-upo"/>
-                <constraint firstItem="JL9-nY-ifg" firstAttribute="top" secondItem="3Ri-wC-BYd" secondAttribute="top" id="zie-xg-2Q9"/>
+                <constraint firstItem="JL9-nY-ifg" firstAttribute="top" secondItem="3Ri-wC-BYd" secondAttribute="top" constant="24" id="zie-xg-2Q9"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>

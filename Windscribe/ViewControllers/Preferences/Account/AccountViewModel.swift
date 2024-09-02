@@ -19,6 +19,7 @@ protocol AccountViewModelType {
     var alertManager: AlertManagerV2 {get}
     var isDarkMode: BehaviorSubject<Bool> {get}
     var cancelAccountState: BehaviorSubject<ManageAccountState> {get}
+    var languageUpdatedTrigger: PublishSubject<()> { get }
 
     func titleForHeader(in section: Int) -> String
     func numberOfSections() -> Int
@@ -37,18 +38,24 @@ class AccountViewModel: AccountViewModelType {
     let apiCallManager: APIManager
     let logger: FileLogger
     let sessionManager: SessionManagerV2
+    
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
     let isDarkMode: BehaviorSubject<Bool>
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
+    let languageUpdatedTrigger = PublishSubject<()>()
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger) {
+    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
         sections = [.info, .plan]
         self.alertManager = alertManager
         isDarkMode = themeManager.darkTheme
+        
+        languageManager.activelanguage.subscribe { _ in
+            self.languageUpdatedTrigger.onNext(())
+        }.disposed(by: disposeBag)
     }
 
     func getSections() -> [AccountSectionItem] {

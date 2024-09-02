@@ -17,7 +17,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="620" height="112"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="112" id="7dv-sO-iGB"/>
+                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="112" id="7dv-sO-iGB"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="549-92-RoN">

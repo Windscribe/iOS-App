@@ -20,7 +20,7 @@
             <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" distribution="fillEqually" spacing="46" translatesAutoresizingMaskIntoConstraints="NO" id="8os-JP-eFO">
+                <stackView opaque="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" axis="vertical" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="8os-JP-eFO">
                     <rect key="frame" x="0.0" y="246" width="380" height="794"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="380" id="Our-qA-mNI"/>

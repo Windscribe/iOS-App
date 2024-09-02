@@ -14,6 +14,7 @@ protocol ConnectionsViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
     var shouldShowCustomDNSOption: BehaviorSubject<Bool> { get }
+    var languageUpdatedTrigger: PublishSubject<()> { get }
 
     func updateChangeFirewallStatus()
     func updateChangeKillSwitchStatus()
@@ -51,7 +52,7 @@ protocol ConnectionsViewModelType {
 
 class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
-    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository
+    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -64,13 +65,15 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
     let isDarkMode: BehaviorSubject<Bool>
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
+    let languageUpdatedTrigger = PublishSubject<()>()
 
-    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository) {
+    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.localDb = localDb
         self.connectivity = connectivity
         self.networkRepository = networkRepository
+        self.languageManager = languageManager
         isDarkMode = themeManager.darkTheme
         loadData()
     }
@@ -115,6 +118,9 @@ class ConnectionsViewModel: ConnectionsViewModelType {
                 }
             }
             self.shouldShowCustomDNSOption.onNext(true)
+        }.disposed(by: disposeBag)
+        languageManager.activelanguage.subscribe { _ in
+            self.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
     }
 

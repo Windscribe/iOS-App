@@ -13,6 +13,7 @@ protocol GeneralViewModelType {
     var hapticFeedback: BehaviorSubject<Bool> { get }
     var showServerHealth: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var languageUpdatedTrigger: PublishSubject<()> { get }
     var themeManager: ThemeManager {get}
     func didSelectedLocationOrder(value: String)
     func didSelectedLatencyDisplay(value: String)
@@ -31,7 +32,6 @@ protocol GeneralViewModelType {
 }
 
 class GeneralViewModel: GeneralViewModelType {
-
     // MARK: - Dependencies
     let preferences: Preferences
     let themeManager: ThemeManager
@@ -46,6 +46,7 @@ class GeneralViewModel: GeneralViewModelType {
     let locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencyType = BehaviorSubject<String>(value: DefaultValues.latencyType)
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
+    let languageUpdatedTrigger = PublishSubject<()>()
 
     // MARK: - Data
     init(preferences: Preferences, themeManager: ThemeManager, languageManager: LanguageManagerV2, pushNotificationManager: PushNotificationManagerV2) {
@@ -77,6 +78,9 @@ class GeneralViewModel: GeneralViewModelType {
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 
+        languageManager.activelanguage.subscribe { _ in
+            self.languageUpdatedTrigger.onNext(())
+        }.disposed(by: disposeBag)
     }
 
     func updateHapticFeedback() {
