@@ -148,7 +148,7 @@ class MainViewController: UIViewController {
     @IBAction func helpClicked(_ sender: Any) {
         router.routeTo(to: RouteID.support, from: self)
     }
-    
+
     @IBAction func upgradeButtonPressed(_ sender: Any) {
         router.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
     }
@@ -169,8 +169,7 @@ class MainViewController: UIViewController {
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
                 }
-            }
-            else if press.type == .rightArrow {
+            } else if press.type == .rightArrow {
                 if preferredFocusedView == notificationButton {
                     myPreferredFocusedView = helpButton
                     self.setNeedsFocusUpdate()
@@ -231,6 +230,7 @@ class MainViewController: UIViewController {
         }).disposed(by: disposeBag)
         viewModel.session.subscribe(onNext: {
             self.setUpgradeButton(session: $0)
+            self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
 
         viewModel.selectedPort.subscribe(onNext: {
@@ -266,7 +266,6 @@ class MainViewController: UIViewController {
                 }
             }
         }).disposed(by: disposeBag )
-
     }
 
     func setFlagImages() {
@@ -335,7 +334,7 @@ class MainViewController: UIViewController {
                 configureVPN()
             } else {
                 enableConnectButton()
-                //displayInternetConnectionLostAlert()
+                // displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
@@ -353,20 +352,19 @@ class MainViewController: UIViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        // Add popups when ready
-//        if !viewModel.isPrivacyPopupAccepted() {
-//            showPrivacyConfirmationPopup()
-//            return
-//        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
-//            self.displayConnectingAlert()
-//            logger.logD(self, "User attempted to connect while in connecting state.")
-//            return
-//        } else if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
-//            self.showOutOfDataPopup()
-//            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
-//            logger.logD(self, "User attempted to connect when out of data.")
-//            return
-//        }
+        if !viewModel.isPrivacyPopupAccepted() {
+            showPrivacyConfirmationPopup()
+            return
+        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
+            self.displayConnectingAlert()
+            logger.logD(self, "User attempted to connect while in connecting state.")
+            return
+        } else if (try? viewModel.session.value())?.status == 2 && !vpnManager.isCustomConfigSelected() {
+            self.showOutOfDataPopup()
+            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+            logger.logD(self, "User attempted to connect when out of data.")
+            return
+        }
         vpnManager.connectIntent = false
         vpnManager.userTappedToDisconnect = false
         vpnManager.isOnDemandRetry = false
@@ -380,4 +378,60 @@ class MainViewController: UIViewController {
         }
     }
 
+    private func checkSessionChanges(session: Session?) {
+        guard let session = session else { return }
+        logger.logD(self, "Looking for account state changes.")
+        if session.status == 3 {
+            logger.logD(self, "User is banned.")
+            router?.routeTo(to: RouteID.bannedAccountPopup, from: self)
+            return
+        } else if session.status == 2 {
+            logger.logD(self, "User is out of data.")
+            self.showOutOfDataPopup()
+            return
+        }
+        guard let oldSession = viewModel.oldSession else { return }
+        if !session.isPremium && oldSession.isPremium {
+            self.showProPlanExpiredPopup()
+            return
+        }
+    }
+
+    private func showOutOfDataPopup() {
+        if !viewModel.didShowOutOfDataPopup {
+        if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
+            connectionStateViewModel.disconnect()
+        }
+        self.logger.logD(self, "Displaying Out Of Data Popup.")
+            router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
+            self.viewModel.didShowOutOfDataPopup = true
+        }
+    }
+
+    private func showProPlanExpiredPopup() {
+        if !viewModel.didShowProPlanExpiredPopup {
+            if vpnManager.isConnected() {
+                connectionStateViewModel.disconnect()
+            }
+            DispatchQueue.main.async {
+                self.router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
+            }
+            self.viewModel.didShowProPlanExpiredPopup = true
+        }
+    }
+
+    private func showPrivacyConfirmationPopup() {
+        if !viewModel.isPrivacyPopupAccepted() {
+            router?.routeTo(to: .privacyView, from: self)
+        }
+    }
+
+    private func displayConnectingAlert() {
+        AlertManager.shared.showSimpleAlert(
+            viewController: self,
+            title: TextsAsset.ConnectingAlert.title,
+            message: TextsAsset.ConnectingAlert.message,
+            buttonText: TextsAsset.okay
+        )
+    }
 }

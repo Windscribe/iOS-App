@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Foundation
 import Swinject
 
 class ServerListRouter: RootRouter {
@@ -17,7 +16,7 @@ class ServerListRouter: RootRouter {
             let vc = Assembler.resolve(ServerDetailViewController.self)
             vc.server = server
             from.present(vc, animated: true)
-        
+
         default: ()
         }
     }

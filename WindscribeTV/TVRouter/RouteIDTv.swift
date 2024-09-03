@@ -26,4 +26,8 @@ enum RouteID {
     case rateUs
     case getMoreData
     case newsFeed
+    case bannedAccountPopup
+    case outOfDataAccountPopup
+    case proPlanExpireddAccountPopup
+    case privacyView
 }

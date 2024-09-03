@@ -37,31 +37,31 @@ class PreferencesConnectionView: UIView {
     func setup() {
         updateProtocols()
         updatePorts()
-        
+
         connectionModeView.populate(with: viewModel.currentConnectionModes(), title: GeneralHelper.getTitle(.connectionMode))
-        
+
         allwayOnView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.killSwitch))
 
         allowLanTraficView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.allowLan))
 
         circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
-        
+
         protocolsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
         portsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
-        
+
         portsView.delegate = self
         protocolsView.delegate = self
         connectionModeView.delegate = self
         allwayOnView.delegate = self
         allowLanTraficView.delegate = self
         circumventCensorshipView.delegate = self
-        
+
         [connectionModeView, protocolsView, portsView, allwayOnView, allowLanTraficView, circumventCensorshipView]
             .forEach {
                 contentStackView.addArrangedSubview($0)
             }
         contentStackView.addArrangedSubview(UIView())
-        
+
         bindViews()
     }
 
@@ -82,21 +82,21 @@ class PreferencesConnectionView: UIView {
         portsView.populate(with: viewModel.getPorts(), title: nil)
         portsView.select(option: viewModel.getCurrentPort(), animated: false)
     }
-    
+
     private func updateText() {
         connectionModeView.updateText(with: viewModel.currentConnectionModes(), title: GeneralHelper.getTitle(.connectionMode))
-        
+
         protocolsView.updateText(with: viewModel.getProtocols(), title: nil)
-        
+
         portsView.updateText(with: viewModel.getPorts(), title: nil)
-        
+
         allwayOnView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.killSwitch))
 
         allowLanTraficView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.allowLan))
 
         circumventCensorshipView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
     }
-    
+
     private func bindViews() {
         viewModel.languageUpdatedTrigger.subscribe { _ in
             self.updateText()

@@ -14,7 +14,7 @@ class HomeRouter: RootRouter {
         case .preferences:
             let vc = Assembler.resolve(PreferencesMainViewController.self)
             from.present(vc, animated: true)
-        case let .upgrade(promoCode, pcpID):
+        case .upgrade:
             let vc = Assembler.resolve(UpgradePopViewController.self)
             from.present(vc, animated: true)
         case .support:
@@ -53,7 +53,19 @@ class HomeRouter: RootRouter {
             transition.subtype = CATransitionSubtype.fromTop
             from.view.layer.add(transition, forKey: nil)
             from.present(vc, animated: true)
-            
+        case .privacyView:
+            let vc: PrivacyPopUpViewController = Assembler.resolve(PrivacyPopUpViewController.self)
+            vc.viewModel?.setPopupType(with: .privacy)
+            from.present(vc, animated: true)
+        case .bannedAccountPopup:
+            let vc: BannedAccountPopupViewController = Assembler.resolve(BannedAccountPopupViewController.self)
+            presentAsRoot(vc: vc)
+        case .outOfDataAccountPopup:
+            let vc: OutOfDataAccountPopupViewController = Assembler.resolve(OutOfDataAccountPopupViewController.self)
+            from.present(vc, animated: true)
+        case .proPlanExpireddAccountPopup:
+            let vc: ProPlanExpiredAccountPopupViewController = Assembler.resolve(ProPlanExpiredAccountPopupViewController.self)
+            from.present(vc, animated: true)
         default: ()
         }
     }

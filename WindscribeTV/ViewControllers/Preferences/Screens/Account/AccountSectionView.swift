@@ -15,7 +15,7 @@ protocol AccountSectionViewDelegate: NSObject {
 class AccountSectionView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stackView: UIStackView!
-    
+
     var delegate: AccountSectionViewDelegate?
     private var sectionData: AccountSectionItem?
 
@@ -36,7 +36,7 @@ class AccountSectionView: UIView {
             stackView.addArrangedSubview(itemView)
         }
     }
-    
+
     func updateLocalisation() {
         guard let sectionData = sectionData else { return }
         stackView.removeAllArrangedSubviews()

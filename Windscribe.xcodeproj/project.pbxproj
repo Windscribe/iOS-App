@@ -129,6 +129,12 @@
 		1EA9D70F2C82150C00566A93 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = AF283F7D22C40BE7001F5520 /* Localizable.strings */; };
 		1EA9D70A2C81D42F00566A93 /* TopSettingSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */; };
 		1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */; };
+		1EA9D7122C8717DC00566A93 /* PrivacyPopUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7112C8717DC00566A93 /* PrivacyPopUpViewController.swift */; };
+		1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */; };
+		1EA9D7152C8728BE00566A93 /* PrivacyPopUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7142C8728BE00566A93 /* PrivacyPopUpViewController.xib */; };
+		1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7292C87375200566A93 /* AccountPopupModel.swift */; };
+		1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */; };
+		1EA9D72D2C8739AC00566A93 /* AccountPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -1296,6 +1302,11 @@
 		1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OptionSelectionView.xib; sourceTree = "<group>"; };
 		1EA9D7092C81D42F00566A93 /* TopSettingSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopSettingSection.swift; sourceTree = "<group>"; };
 		1EA9D70B2C81D43700566A93 /* TopSettingSection.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TopSettingSection.xib; sourceTree = "<group>"; };
+		1EA9D7112C8717DC00566A93 /* PrivacyPopUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPopUpViewController.swift; sourceTree = "<group>"; };
+		1EA9D7142C8728BE00566A93 /* PrivacyPopUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PrivacyPopUpViewController.xib; sourceTree = "<group>"; };
+		1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupViewController.swift; sourceTree = "<group>"; };
+		1EA9D7292C87375200566A93 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
+		1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountPopupViewController.xib; sourceTree = "<group>"; };
 		1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Migration.swift"; sourceTree = "<group>"; };
 		1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Utility.swift"; sourceTree = "<group>"; };
 		1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationsViewModel.swift; sourceTree = "<group>"; };
@@ -2130,6 +2141,8 @@
 		1E006BB72C6A9C5200EE6389 /* Popups */ = {
 			isa = PBXGroup;
 			children = (
+				1EA9D7252C8734EC00566A93 /* Account */,
+				1EA9D7102C8717B900566A93 /* PrivacyView */,
 				1EA9D6F72C77478500566A93 /* NewsFeed */,
 				1EF7BB492C75F6680032A4DF /* Emails */,
 				1EF7BB432C74C8590032A4DF /* Get More Data */,
@@ -2447,6 +2460,25 @@
 				1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		1EA9D7102C8717B900566A93 /* PrivacyView */ = {
+			isa = PBXGroup;
+			children = (
+				1EA9D7112C8717DC00566A93 /* PrivacyPopUpViewController.swift */,
+				1EA9D7142C8728BE00566A93 /* PrivacyPopUpViewController.xib */,
+			);
+			path = PrivacyView;
+			sourceTree = "<group>";
+		};
+		1EA9D7252C8734EC00566A93 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */,
+				1EA9D7292C87375200566A93 /* AccountPopupModel.swift */,
+				1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */,
+			);
+			path = Account;
 			sourceTree = "<group>";
 		};
 		1EC6C77C2BE10DB00036248B /* Search Locations */ = {
@@ -4285,6 +4317,7 @@
 				5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */,
 				1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */,
 				5986AB572C47422B00167023 /* IBMPlexSans-Text.otf in Resources */,
+				1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */,
 				1E8C8F362C64FC7D00CBFDC5 /* IBMPlexSans-Regular.otf in Resources */,
 				1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */,
 				5986AB562C47422800167023 /* EurostileExt-Bla.otf in Resources */,
@@ -4294,6 +4327,7 @@
 				1E0D9D722C6103A3008AFF2D /* PreferencesOptionView.xib in Resources */,
 				59656F682C72D5D000707EA2 /* ServerListCollectionViewCell.xib in Resources */,
 				1E9F2C352C665FD100607BAA /* PreferencesViewLogView.xib in Resources */,
+				1EA9D7152C8728BE00566A93 /* PrivacyPopUpViewController.xib in Resources */,
 				1E0D9D702C6103A3008AFF2D /* SettingsSection.xib in Resources */,
 				1E0D9D762C6103A3008AFF2D /* PreferencesMainViewController.xib in Resources */,
 				592EDC032C3C688500351D44 /* Assets.xcassets in Resources */,
@@ -4767,6 +4801,7 @@
 				1E0D9D792C61049D008AFF2D /* UIView+Nib.swift in Sources */,
 				59FC74022C5153B500021CD1 /* APIEmailSent.swift in Sources */,
 				59FC73FF2C5153A700021CD1 /* PortMap.swift in Sources */,
+				1EA9D72D2C8739AC00566A93 /* AccountPopupViewController.swift in Sources */,
 				59656F702C73BF1F00707EA2 /* ServerDetailViewController.swift in Sources */,
 				59FC73DF2C514C0900021CD1 /* ConnectivityImpl+Hotspot.swift in Sources */,
 				59FC73D92C514B7400021CD1 /* LanguageManager.swift in Sources */,
@@ -4791,6 +4826,7 @@
 				59DF45882C59C30400EB6DC1 /* SignupRouter.swift in Sources */,
 				59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */,
 				59FC73CD2C514A7A00021CD1 /* AppModules.swift in Sources */,
+				1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */,
 				59FC74492C515DF500021CD1 /* ConnectionManager.swift in Sources */,
 				1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */,
 				59FC74412C515BC000021CD1 /* WifiManager.swift in Sources */,
@@ -4820,6 +4856,7 @@
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
+				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
 				59FC74362C515A5B00021CD1 /* keyChainKeys.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
@@ -4861,6 +4898,7 @@
 				1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */,
 				59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */,
 				59FC73EE2C51511700021CD1 /* Token.swift in Sources */,
+				1EA9D7122C8717DC00566A93 /* PrivacyPopUpViewController.swift in Sources */,
 				59FC73FA2C51538200021CD1 /* APIDebug.swift in Sources */,
 				59FC74382C515A8300021CD1 /* KeyChainDatabaseImpl.swift in Sources */,
 				5986AB482C45621600167023 /* APIParameterValues.swift in Sources */,

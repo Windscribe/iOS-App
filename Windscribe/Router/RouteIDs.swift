@@ -19,7 +19,7 @@ enum RouteID {
     case help
     case viewLog
     case enterEmail
-    case confirmEmail(delegate: ConfirmEmailViewControllerDelegate)
+    case confirmEmail(delegate: ConfirmEmailViewControllerDelegate?)
     case general
     case ghostAccount
     case account

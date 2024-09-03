@@ -14,16 +14,16 @@ class AddEmailPopupViewController: BasePopUpViewController {
     @IBOutlet weak var fieldStackView: UIStackView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
+
     var addEmailButton = WSPillButton()
     var emailTextField = WSTextFieldTv()
-    
-    //MARK: Overrides
+
+    // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViews()
     }
-    
+
     override func setup() {
         super.setup()
         addEmailButton.setTitle(TextsAsset.Account.addEmail, for: .normal)
@@ -31,31 +31,31 @@ class AddEmailPopupViewController: BasePopUpViewController {
         mainStackView.addArrangedSubview(addEmailButton)
         mainStackView.addArrangedSubview(UIView())
         bodyLabel.font = UIFont.regular(size: 34)
-        
+
         emailTextField.text = aeViewModel.currentEmail
         emailTextField.placeholder = TextsAsset.email
         emailTextField.keyboardType = .emailAddress
         fieldStackView.addArrangedSubview(emailTextField)
     }
-    
-    //MARK: Setting up
+
+    // MARK: Setting up
     private func bindViews() {
         addEmailButton.rx.primaryAction.bind { [self] in
             continueButtonTapped()
         }.disposed(by: disposeBag)
     }
-    
-    //MARK: Actions
+
+    // MARK: Actions
     private func showLoading() {
         loadingView.isHidden = false
         activityIndicator.startAnimating()
     }
-    
+
     private func endLoading() {
         loadingView.isHidden = true
         activityIndicator.stopAnimating()
     }
-    
+
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
         logger.logE(self, "User tapped to submit email.")
@@ -65,7 +65,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
             DispatchQueue.main.async { [ self] in
                 self.endLoading()
                 self.addEmailButton.isEnabled = true
-                self.router.routeTo(to: RouteID.confirmEmail(delegate: nil), from: self)
+                self.router.routeTo(to: .confirmEmail(delegate: nil), from: self)
             }
         }, onFailure: { [weak self] error in
             DispatchQueue.main.async { [weak self] in

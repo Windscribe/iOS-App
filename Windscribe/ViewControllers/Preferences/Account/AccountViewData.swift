@@ -43,11 +43,11 @@ enum AccountItemCell {
     case confirmEmail
     case emailEmpty
     case cancelAccount
-    
+
     var isUpgradeButton: Bool {
         return self == .planType && needUpgradeAccount
     }
-    
+
     var hasAction: Bool {
         return [AccountItemCell.cancelAccount, AccountItemCell.confirmEmail].contains(self) || isUpgradeButton
     }
@@ -115,8 +115,7 @@ enum AccountItemCell {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGrey)!.withTintColor(.whiteWithOpacity(opacity: 0.5), renderingMode: .alwaysTemplate),
                                                                          bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
                                                                          textColor: UIColor.seaGreen)
-                }
-                else if themeManager.getIsDarkTheme() {
+                } else if themeManager.getIsDarkTheme() {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
                                                    bounds: CGRect(x: 0, y: 0, width: 16, height: 16),
                                                    textColor: UIColor.seaGreen)

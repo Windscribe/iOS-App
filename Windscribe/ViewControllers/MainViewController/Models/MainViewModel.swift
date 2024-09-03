@@ -30,6 +30,8 @@ protocol MainViewModelType {
     var session: BehaviorSubject<Session?> { get }
     var isBlurStaticIpAddress: Bool { get }
     var isBlurNetworkName: Bool { get }
+    var didShowProPlanExpiredPopup: Bool { get set }
+    var didShowOutOfDataPopup: Bool { get set }
     func loadNotifications()
     func loadServerList()
     func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void)
@@ -93,6 +95,8 @@ class MainViewModel: MainViewModelType {
     var oldSession: OldSession? {
         get { localDatabase.getOldSession() }
     }
+    var didShowProPlanExpiredPopup = false
+    var didShowOutOfDataPopup = false
     let isDarkMode: BehaviorSubject<Bool>
     let refreshProtocolTrigger = PublishSubject<()>()
 

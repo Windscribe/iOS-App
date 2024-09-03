@@ -20,15 +20,15 @@ class AlertManager: AlertManagerV2 {
             self.presentAlertOnViewController(alert: alert, viewController: viewController)
         }
     }
-    
+
     func showYesNoAlert(viewController: UIViewController, title: String, message: String, completion: @escaping (_ result: Bool) -> Void) {
         showYesNoAlertDefault(viewController: viewController, title: title, message: message, completion: completion)
     }
-    
+
     func showYesNoAlert(title: String, message: String, completion: @escaping (_ result: Bool) -> Void) {
         showYesNoAlertDefault(title: title, message: message, completion: completion)
     }
-    
+
     private func showYesNoAlertDefault(viewController: UIViewController? = nil, title: String, message: String, completion: @escaping (_ result: Bool) -> Void) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: title,
@@ -118,15 +118,15 @@ class AlertManager: AlertManagerV2 {
             viewController?.present(alert, animated: true, completion: nil)
         }
     }
-    
+
     func askPasswordToDeleteAccount(viewController: UIViewController) -> Single<String?> {
         return askPasswordToDeleteAccountDefault(viewController: viewController)
     }
-    
+
     func askPasswordToDeleteAccount() -> Single<String?> {
         return askPasswordToDeleteAccountDefault()
     }
-    
+
     private func askPasswordToDeleteAccountDefault(viewController: UIViewController? = nil) -> Single<String?> {
         return Single<String?>.create { completion in
         DispatchQueue.main.async {

@@ -14,10 +14,10 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var favButton: UIButton!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
-    
+
     @IBOutlet weak var latencyLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    
+
     @IBOutlet weak var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
     lazy var localDB = Assembler.resolve(LocalDatabase.self)
@@ -40,7 +40,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     private var isbtnSecond = false
     private var isDefault   = false
 
-    override var preferredFocusEnvironments: [UIFocusEnvironment]{
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
         switch true {
         case isbtnFirst:
             return [connectButton]
@@ -50,7 +50,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             return [connectButton]
         }
     }
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
@@ -72,10 +72,10 @@ class ServerDetailTableViewCell: UITableViewCell {
         connectButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.connectIconFocused), for: .focused)
 
         cityLabel.textColor = .whiteWithOpacity(opacity: 0.50)
-        
+
         latencyLabel.font = .bold(size: 30)
         latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
-        
+
         descriptionLabel.textColor = .white
         descriptionLabel.font = .text(size: 30)
         descriptionLabel.isHidden = true
@@ -88,10 +88,10 @@ class ServerDetailTableViewCell: UITableViewCell {
         if let city = displayingFavNode?.cityName, let nick = displayingFavNode?.nickName {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
-                    
+
             let firstRange = (fullText as NSString).range(of: city)
             attributedString.addAttribute(.font, value: UIFont.bold(size: 45), range: firstRange)
-                    
+
             let secondRange = (fullText as NSString).range(of: nick)
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
@@ -114,17 +114,17 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }).disposed(by: disposeBag)
     }
-    
+
     func updetaUIForStaticIP() {
         favButton.isHidden = true
         connectButtonTrailing.constant = -125
         if let city = displayingStaticIP?.cityName, let nick = displayingStaticIP?.countryCode {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
-                    
+
             let firstRange = (fullText as NSString).range(of: city)
             attributedString.addAttribute(.font, value: UIFont.bold(size: 45), range: firstRange)
-                    
+
             let secondRange = (fullText as NSString).range(of: nick)
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
@@ -135,7 +135,7 @@ class ServerDetailTableViewCell: UITableViewCell {
                 self.latencyLabel.text = "  --  "
                 return
             }
-            
+
             guard let staticIp = displayingStaticIP?.staticIP else {
                 self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : "--"
                 return
@@ -143,7 +143,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
         }
     }
-    
+
     func setFavButtonImage() {
         if isFavourited {
             favButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.removeFavIcon), for: .normal)
@@ -172,17 +172,17 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
     }
 
-    override var canBecomeFocused: Bool{
+    override var canBecomeFocused: Bool {
             return false
     }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if (context.previouslyFocusedView != nil) && (context.nextFocusedView != nil){
+        if (context.previouslyFocusedView != nil) && (context.nextFocusedView != nil) {
             if context.nextFocusedView is ServerDetailTableViewCell && context.previouslyFocusedView  !=  self.favButton {
                 self.isbtnFirst = true
                 self.setNeedsFocusUpdate()
             }
-            if context.nextFocusedView  ==  self.connectButton && context.previouslyFocusedView  ==  self.connectButton{
+            if context.nextFocusedView  ==  self.connectButton && context.previouslyFocusedView  ==  self.connectButton {
                 self.isbtnSecond = true
                 self.setNeedsFocusUpdate()
             }
@@ -193,7 +193,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-            } else if favButton.isFocused{
+            } else if favButton.isFocused {
                 if isFavourited {
                     descriptionLabel.text = TvAssets.removeFromFav
                 } else {
@@ -206,16 +206,16 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = true
         }
     }
-    
+
     func bindData(group: GroupModel) {
         self.displayingGroup = group
         if let city = group.city, let nick = group.nick {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
-                    
+
             let firstRange = (fullText as NSString).range(of: city)
             attributedString.addAttribute(.font, value: UIFont.bold(size: 45), range: firstRange)
-                    
+
             let secondRange = (fullText as NSString).range(of: nick)
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
@@ -265,5 +265,5 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }
     }
-    
+
 }

@@ -11,34 +11,34 @@ import RxSwift
 
 class RatePopupViewController: BasePopUpViewController {
     @IBOutlet weak var buttonStackView: UIStackView!
-    
+
     var rateButton = WSPillButton()
     var laterButton = WSPillButton()
     var goAwayButton = WSPillButton()
-    
+
     var ruViewModel: RateUsPopupModelType!
-    
-    //MARK: Overrides
+
+    // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViews()
     }
-    
-    //MARK: Setting up
+
+    // MARK: Setting up
     override func setup() {
         super.setup()
         view.addBlueGradientBackground()
         rateButton.setTitle(TextsAsset.RateUs.action, for: .normal)
         laterButton.setTitle(TextsAsset.RateUs.maybeLater, for: .normal)
         goAwayButton.setTitle(TextsAsset.RateUs.goAway, for: .normal)
-        
+
         [rateButton, laterButton, goAwayButton].forEach { roundbutton in
             roundbutton.setup(withHeight: 96.0)
             buttonStackView.addArrangedSubview(roundbutton)
         }
         buttonStackView.addArrangedSubview(UIView())
     }
-    
+
     private func bindViews() {
         rateButton.rx.primaryAction.bind { [self] in
             ruViewModel.setRateUsActionCompleted()

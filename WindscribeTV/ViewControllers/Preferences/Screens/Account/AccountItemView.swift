@@ -16,9 +16,9 @@ class AccountItemView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var backgroundView: UIView!
-    
+
     let button = UIButton()
-    
+
     var delegate: AccountItemViewDelegate?
     private var item: AccountItemCell?
 
@@ -31,10 +31,10 @@ class AccountItemView: UIView {
 
         titleLabel.text = item.title
         valueLabel.attributedText = item.value
-        
+
         backgroundView.isHidden = true
         backgroundView.addGreyHGradientBackground()
-        
+
         if item.hasAction {
             addSubview(button)
             button.addTarget(self, action: #selector(selectUpgrade), for: .primaryActionTriggered)
@@ -45,12 +45,12 @@ class AccountItemView: UIView {
             button.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
         }
     }
-    
+
     @IBAction func selectUpgrade(_ sender: Any) {
         guard let item = item, let delegate = delegate else { return }
         delegate.actionSelected(with: item)
     }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
             UIView.animate(withDuration: 0.5) {

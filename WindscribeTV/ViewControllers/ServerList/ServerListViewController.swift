@@ -16,7 +16,6 @@ enum SideMenuType: String {
     case windflix = "Windflix"
     case staticIp = "Static IPs"
 
-
     func getImage(isSelected: Bool) -> UIImage? {
         switch self {
         case .all:
@@ -37,7 +36,6 @@ enum SideMenuType: String {
 }
 
 class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
-
 
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!
     var serverSectionsOrdered: [ServerSection] = []
@@ -129,7 +127,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        //myPreferredFocusedView = context.nextFocusedView
+        // myPreferredFocusedView = context.nextFocusedView
         if context.nextFocusedItem is UIButton {
             let view = context.nextFocusedView as? UIButton
             if view?.superview?.superview is UITableViewCell {
@@ -230,7 +228,6 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
 
-
         }
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = 90
@@ -282,7 +279,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100),
+            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
         ])
 
         favTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -291,7 +288,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130),
+            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
         ])
 
     }
@@ -305,8 +302,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as! ServerListCollectionViewCell
+        guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let serverSection = serverSectionsOrdered[indexPath.item]
         if let countrycode = serverSection.server?.countryCode {
             cell.flagImage.image =  UIImage(named: "\(countrycode)")
@@ -357,7 +353,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if staticIpSelected{
+        if staticIpSelected {
             return staticIPModels.count
         } else {
             return favNodeModels.count
@@ -365,8 +361,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as! ServerDetailTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
         if !staticIpSelected {
             let favNodes = favNodeModels[indexPath.row]
             cell.displayingFavNode = favNodes

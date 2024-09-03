@@ -38,7 +38,7 @@ class AccountViewModel: AccountViewModelType {
     let apiCallManager: APIManager
     let logger: FileLogger
     let sessionManager: SessionManagerV2
-    
+
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
     let isDarkMode: BehaviorSubject<Bool>
@@ -52,7 +52,7 @@ class AccountViewModel: AccountViewModelType {
         sections = [.info, .plan]
         self.alertManager = alertManager
         isDarkMode = themeManager.darkTheme
-        
+
         languageManager.activelanguage.subscribe { _ in
             self.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)

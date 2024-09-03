@@ -15,23 +15,23 @@ class UpgradePopViewController: UIViewController {
 
     @IBOutlet weak var plansStackView: UIStackView!
     @IBOutlet weak var pricingStackView: UIStackView!
-    
+
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var loadingView: UIView!
-    
+
     let disposeBag = DisposeBag()
     var viewModel: UpgradeViewModel?
     var promoCode: String?
     var pcpID: String?
 
-    //MARK: Overrides
+    // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         bindViews()
     }
-    
-    //MARK: Setting up
+
+    // MARK: Setting up
     private func setup() {
         let infoList = [(title: TextsAsset.UpgradeView.unlimitedData, body: TextsAsset.UpgradeView.unlimitedDataMessage),
                         (title: TextsAsset.UpgradeView.allLocations, body: TextsAsset.UpgradeView.allLocationsMessage),
@@ -42,11 +42,11 @@ class UpgradePopViewController: UIViewController {
             plansStackView.addArrangedSubview(planView)
         }
         plansStackView.addArrangedSubview(UIView())
-        
+
         view.addBlueGradientBackground()
         applyFonts()
     }
-    
+
     private func applyFonts() {
         titleLabel.font = UIFont.bold(size: 72)
         titleLabel.textColor = .white
@@ -57,7 +57,7 @@ class UpgradePopViewController: UIViewController {
                                                 .kern: 4
                                               ])
     }
-    
+
     private func bindViews() {
         guard let viewModel = viewModel else { return }
         viewModel.loadPlans(promo: promoCode)
@@ -91,7 +91,7 @@ class UpgradePopViewController: UIViewController {
                 case .success(let ghostAccount):
                     self.endLoading()
                     if ghostAccount {
-                        //TODO: Go to signup view controller
+                        // TODO: Go to signup view controller
                     } else {
                         self.navigationController?.popToRootViewController(animated: true)
                     }
@@ -106,7 +106,7 @@ class UpgradePopViewController: UIViewController {
             }
         }).disposed(by: disposeBag)
     }
-    
+
     private func endLoading() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
@@ -116,7 +116,7 @@ class UpgradePopViewController: UIViewController {
             self.containerView.isHidden = self.pricingLabel.isHidden
         }
     }
-    
+
     private func showLoading() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else {
