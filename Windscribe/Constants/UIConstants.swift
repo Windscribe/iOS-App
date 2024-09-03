@@ -939,7 +939,25 @@ struct TextsAsset {
             return "Your Privacy Is Important".localize()
         }
         static var description: String {
-            return "Windscribe is a no-logging VPN service that takes your privacy seriously. Any activity on our network cannot be traced to a specific account. That being said, we collect the following pieces of information in order to operate the service:".localize()
+            return """
+    Data Collection Notice
+
+    We respect your privacy and are committed to keeping your data secure. Here’s how we handle your information:
+
+    - When You Sign Up: We only collect a username and password for account creation. You may optionally provide an email address for password recovery and service updates. Payment information is handled by third-party processors; we only retain the transaction ID for 30 days to prevent fraud.
+
+    - When You Use Our Service: We track the total amount of data you transfer and the timestamp of your last activity to enforce service limits and prevent abuse. We do not store any records of your VPN sessions, source IP, or browsing history.
+
+    - When You Are Connected: During your connection, temporary data such as your VPN username and connection time is stored in memory but is discarded immediately after disconnection. We keep a count of parallel connections and your total data usage over 30 days.
+
+    What We Don’t Do:
+    - We do not log or share your browsing history.
+    - We do not store any unnecessary data.
+
+    Your information is never shared with third parties, and any data requests would yield minimal information due to our minimal logging practices.
+
+    By proceeding, you agree to the collection and use of your data as described above.
+    """
         }
         static var firstLine: String {
             return "Account data: username, email (if you gave us one), and payment transaction IDs (if you gave us money)".localize()
