@@ -18,17 +18,8 @@ extension PrivacyViewController {
         backgroundView.layer.opacity = 0.95
         self.view.addSubview(backgroundView)
 
-        titleLabel = UILabel()
-        titleLabel.text = TextsAsset.PrivacyView.title
-        titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.font = UIFont.bold(size: 24)
-        titleLabel.textColor = UIColor.white
-        titleLabel.numberOfLines = 1
-        titleLabel.textAlignment = .left
-        self.view.addSubview(titleLabel)
-
         descriptionLabel = UILabel()
-        descriptionLabel.text = TextsAsset.PrivacyView.description + "\n\n" + TextsAsset.PrivacyView.firstLine + "\n\n" + TextsAsset.PrivacyView.secondLine
+        descriptionLabel.text = TextsAsset.PrivacyView.description
         descriptionLabel.numberOfLines = 0
         descriptionLabel.textAlignment = .left
         descriptionLabel.font = UIFont.text(size: fontSize)
@@ -51,7 +42,6 @@ extension PrivacyViewController {
 
     func addAutoLayoutConstraints() {
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         actionButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -62,14 +52,8 @@ extension PrivacyViewController {
             backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
             backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0),
 
-            // titleLabel
-            titleLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: UIScreen.isSmallScreen ? 60 : 120),
-            titleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 55),
-            titleLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -55),
-            titleLabel.heightAnchor.constraint(equalToConstant: 100),
-
             // descriptionLabel
-            descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 24),
+            descriptionLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: UIScreen.isSmallScreen ? 60 : 120),
             descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 35),
             descriptionLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -35),
 

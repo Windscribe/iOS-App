@@ -12,7 +12,6 @@ import RxSwift
 class PrivacyViewController: WSUIViewController {
 
     var backgroundView: UIView!
-    var titleLabel: UILabel!
     var descriptionLabel: UILabel!
     var actionButton: UIButton!
 
