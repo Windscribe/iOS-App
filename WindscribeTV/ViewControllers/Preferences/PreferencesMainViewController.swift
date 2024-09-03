@@ -185,7 +185,7 @@ extension PreferencesMainViewController: PreferencesAccountViewDelegate {
         }
         switch item {
         case .confirmEmail:
-            router.routeTo(to: .confirmEmail, from: self)
+            router.routeTo(to: .confirmEmail(delegate: nil), from: self)
         case .cancelAccount:
             handleCancelAccount()
         default: return

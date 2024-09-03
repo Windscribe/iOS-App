@@ -305,6 +305,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        // swiftlint:disable:next force_cast
         let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as! ServerListCollectionViewCell
         let serverSection = serverSectionsOrdered[indexPath.item]
         if let countrycode = serverSection.server?.countryCode {
@@ -364,6 +365,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // swiftlint:disable:next force_cast
         let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as! ServerDetailTableViewCell
         if !staticIpSelected {
             let favNodes = favNodeModels[indexPath.row]

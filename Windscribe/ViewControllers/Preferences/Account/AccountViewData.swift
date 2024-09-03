@@ -111,7 +111,7 @@ enum AccountItemCell {
                                       attributes: getDeviceFontAttributes(isFullColor: false))
         case .planType:
             if session.isUserPro {
-                if UIDevice.current.isTV {
+                if UIDevice.current.isTV, #available(iOS 13.0, *) {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGrey)!.withTintColor(.whiteWithOpacity(opacity: 0.5), renderingMode: .alwaysTemplate),
                                                                          bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
                                                                          textColor: UIColor.seaGreen)
