@@ -15,6 +15,7 @@ enum PopupTypes {
     case getMoreData
     case confirmEmail
     case addeEmail
+    case privacy
 
     var title: String {
         switch self {
@@ -23,13 +24,14 @@ enum PopupTypes {
         case .getMoreData: TextsAsset.getMoreData
         case .confirmEmail: TextsAsset.EmailView.confirmEmail
         case .addeEmail: TextsAsset.addEmail
+        case .privacy: TextsAsset.PrivacyView.title
         default: ""
         }
     }
 
     var header: String {
         switch self {
-        case .support:Links.support
+        case .support: Links.support
         case .rateUs: Constants.appName
         default: ""
         }
@@ -42,6 +44,7 @@ enum PopupTypes {
         case let .error(body): body
         case .getMoreData: "Either sign up to increase it to 10GB/Month, or upgrade it and get rid of the limits completely."
         case .addeEmail, .confirmEmail: TextsAsset.EnterEmail.description
+        case .privacy: TextsAsset.PrivacyView.description + "\n\n" + TextsAsset.PrivacyView.firstLine + "\n\n" + TextsAsset.PrivacyView.secondLine
         }
     }
 }

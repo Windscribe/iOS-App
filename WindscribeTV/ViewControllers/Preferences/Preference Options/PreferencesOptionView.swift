@@ -16,7 +16,7 @@ protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
 class PreferencesOptionView: OptionSelectionView {
     private var optionType: PreferencesType?
     private let disposeBag = DisposeBag()
-    
+
     var viewModel: PreferencesMainViewModel?
 
     weak var selectionDelegate: PreferencesOptionViewDelegate?
@@ -26,7 +26,7 @@ class PreferencesOptionView: OptionSelectionView {
         optionType = type
         super.setup(with: type.title, isSelected: isSelected, isPrimary: type.isPrimary)
     }
-    
+
     func updateTitle(with value: String? = nil) {
         if let value = value {
             titleLabel.text = value
@@ -38,13 +38,13 @@ class PreferencesOptionView: OptionSelectionView {
     func isType(of type: PreferencesType) -> Bool {
         return type == optionType
     }
-    
+
     private func bindViews() {
-        viewModel?.currentLanguage.subscribe(onNext: { _ in 
+        viewModel?.currentLanguage.subscribe(onNext: { _ in
             self.updateTitle()
         }).disposed(by: disposeBag)
     }
-    
+
     @IBAction override func selectOption(_ sender: Any) {
         guard let optionType = optionType else {return}
         selectionDelegate?.optionWasSelected(with: optionType, self)

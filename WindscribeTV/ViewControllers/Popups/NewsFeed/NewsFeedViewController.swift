@@ -15,26 +15,26 @@ class NewsFeedViewController: UIViewController {
     @IBOutlet weak var buttonHiddingView: UIView!
     @IBOutlet weak var newsBodyText: UITextView!
     var button = WSPillButton()
-    
+
     var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!
     let disposeBag = DisposeBag()
     var currentAction: NoticeAction?
-    
+
     private var newsSections = [NewsSection]()
-    
-    //MARK: Overrides
+
+    // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         bindViews()
     }
-    
-    //MARK: Setting up
+
+    // MARK: Setting up
     private func setup() {
         button.setup(withHeight: 96)
         buttonContainerView.addArrangedSubview(button)
     }
-    
+
     private func bindViews() {
         viewModel.newsSections.subscribe { [weak self] newsSections in
             guard let self = self else { return }
@@ -45,7 +45,7 @@ class NewsFeedViewController: UIViewController {
             self.router.routeTo(to: .upgrade(promoCode: action.promoCode, pcpID: action.pcpid), from: self)
         }.disposed(by: disposeBag)
     }
-    
+
     private func buildSelectionOptions(newsSections: [NewsSection]) {
         self.newsSections = newsSections
         let firstItem = self.newsSections.first?.items.first
@@ -60,7 +60,7 @@ class NewsFeedViewController: UIViewController {
         guard let firstItem = firstItem else { return }
         self.setupDetailsView(with: firstItem)
     }
-    
+
     private func setupDetailsView(with item: NewsFeedCellViewModel) {
         if let message = item.message, let messageData = message.data(using: .utf8) {
             newsBodyText.htmlText(htmlData: messageData,

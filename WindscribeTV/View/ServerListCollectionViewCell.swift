@@ -9,15 +9,15 @@
 import UIKit
 
 class ServerListCollectionViewCell: UICollectionViewCell {
-    
+
     @IBOutlet weak var countryCode: UILabel!
     @IBOutlet weak var flagImage: UIImageView!
-    
+
     override func awakeFromNib() {
        super.awakeFromNib()
         setup()
     }
- 
+
     func setup() {
         flagImage.layer.masksToBounds = false
         flagImage.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
@@ -27,7 +27,7 @@ class ServerListCollectionViewCell: UICollectionViewCell {
         countryCode.font = .bold(size: 30)
         countryCode.text = countryCode.text?.uppercased()
     }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if self.isFocused {
             self.flagImage.alpha = 1.0

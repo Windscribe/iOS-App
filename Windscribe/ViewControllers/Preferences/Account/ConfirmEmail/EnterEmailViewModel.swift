@@ -26,7 +26,7 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
     var currentEmail: String? {
         sessionManager.session?.email
     }
-    
+
     init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2,themeManager: ThemeManager, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager

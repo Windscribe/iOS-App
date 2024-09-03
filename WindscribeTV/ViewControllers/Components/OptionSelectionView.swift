@@ -18,7 +18,7 @@ class OptionSelectionView: UIView {
     @IBOutlet weak var focusView: UIView!
     @IBOutlet weak var buttonHolder: UIStackView!
     var button = UIButton()
-    
+
     weak var delegate: OptionSelectionViewDelegate?
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -45,7 +45,7 @@ class OptionSelectionView: UIView {
         focusView.setNeedsDisplay()
         focusView.clipsToBounds = true
     }
-    
+
     @IBAction func selectOption(_ sender: Any) {
         delegate?.optionWasSelected(self)
     }

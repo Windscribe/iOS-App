@@ -135,7 +135,7 @@ extension MainViewController {
         } else if session.getDataLeftInMB() >= 1024 && appJustStarted == false && viewModel.showRateDialog() {
             self.showRateUsPopup()
         }
-        guard let oldSession =   viewModel.oldSession else { return }
+        guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             if !didShowProPlanExpiredPopup {
                 self.showProPlanExpiredPopup()

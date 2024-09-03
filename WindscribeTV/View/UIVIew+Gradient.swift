@@ -20,7 +20,7 @@ extension UIView {
         gradient.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
         self.layer.insertSublayer(gradient, at: 0)
     }
-    
+
     func addGreyHGradientBackground() {
         let startColor = UIColor.whiteWithOpacity(opacity: 0.2).cgColor
         let endColor = UIColor.clear.cgColor

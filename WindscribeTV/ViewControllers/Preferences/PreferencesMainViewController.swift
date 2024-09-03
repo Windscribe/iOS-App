@@ -23,7 +23,7 @@ enum PreferencesType {
         default: return false
         }
     }
-    
+
     var title: String {
         switch self {
         case .account: TextsAsset.Preferences.account
@@ -107,7 +107,6 @@ class PreferencesMainViewController: UIViewController {
     private func addSubview(view: UIView) {
         contentStackView.addArrangedSubview(view)
     }
-    
 
     private func signoutButtonTapped() {
         logger.logD(self, "User tapped to sign out.")
@@ -119,7 +118,7 @@ class PreferencesMainViewController: UIViewController {
             }
         })
     }
-    
+
     private func sendLogButtonTapped(logView: PreferencesOptionView) {
         if helpViewModel.networkStatus != NetworkStatus.connected {
             logger.logD(self, "No Internet available")
@@ -139,7 +138,7 @@ class PreferencesMainViewController: UIViewController {
             }
         }
     }
-    
+
     private func handleCancelAccount() {
         logger.logD(self, "Showing delete account popup.")
         viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { password in
@@ -154,7 +153,7 @@ class PreferencesMainViewController: UIViewController {
 
 extension PreferencesMainViewController: PreferencesOptionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) { }
-    
+
     func optionWasSelected(with value: PreferencesType, _ sender: PreferencesOptionView) {
         optionViews.forEach {
             $0.updateSelection(with: $0 == sender)
@@ -167,7 +166,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         switch value {
         case .general: generalView.isHidden = false
         case .account:  accountView.isHidden = false
-        case .connection: 
+        case .connection:
             connnectionsView.isHidden = false
 //            connnectionsView.updateSelection()
         case .viewLog: logView.isHidden = false

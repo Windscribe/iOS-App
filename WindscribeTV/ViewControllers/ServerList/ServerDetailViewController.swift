@@ -59,9 +59,9 @@ class ServerDetailViewController: UIViewController {
         }
         tableView.contentInset = UIEdgeInsets.zero
         tableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
-        
+
     }
-    
+
     func bindData() {
         viewModel?.favNode.bind(onNext: { favNodes in
             self.favNodes = favNodes?.compactMap({ $0.getFavNodeModel() })
@@ -74,10 +74,9 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return server?.groups?.count ?? 0
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // swiftlint:disable:next force_cast
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as! ServerDetailTableViewCell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
         if let group = server?.groups?[indexPath.row] {
             cell.bindData(group: group)
             cell.displayingGroup = group
@@ -86,7 +85,7 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
         cell.focusStyle = UITableViewCell.FocusStyle.custom
         return cell
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 125
     }

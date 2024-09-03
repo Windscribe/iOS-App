@@ -11,29 +11,29 @@ import RxSwift
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
     var ceViewModel: ConfirmEmailViewModel!, logger: FileLogger!
-    
+
     var resendButton = WSPillButton()
     var changeButton = WSPillButton()
-    
-    //MARK: Overrides
+
+    // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
         bindViews()
     }
-    
-    //MARK: Setting up
+
+    // MARK: Setting up
     override func setup() {
         super.setup()
         resendButton.setTitle(TextsAsset.Account.resend, for: .normal)
         changeButton.setTitle(TextsAsset.EmailView.changeEmail, for: .normal)
-        
+
         [resendButton, changeButton].forEach { roundbutton in
             roundbutton.setup(withHeight: 96.0)
             mainStackView.addArrangedSubview(roundbutton)
         }
         mainStackView.addArrangedSubview(UIView())
     }
-    
+
     private func bindViews() {
         resendButton.rx.primaryAction.bind { [self] in
             self.resendButtonTapped()
@@ -42,7 +42,7 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
     }
-    
+
     private func resendButtonTapped() {
         logger.logE(self, "User tapped Resend Email button.")
         resendButton.isEnabled = false

@@ -11,11 +11,11 @@ import UIKit
 class UpgradePlanDetailView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var bodyLabel: UILabel!
-    
+
     func setup(with title: String, and body: String) {
         titleLabel.text = title
         bodyLabel.text = body
-        
+
         titleLabel.font = UIFont.bold(size: 42)
         bodyLabel.font = UIFont.regular(size: 42)
         titleLabel.textColor = .white

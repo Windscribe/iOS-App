@@ -41,7 +41,7 @@ class WSRoundButton: UIButton {
             self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
     }
-    
+
     func updateCorners(radius: CGFloat) {
         self.layer.cornerRadius = radius
     }
@@ -74,17 +74,17 @@ class WSPillButton: UIButton {
         heightAnchor.constraint(equalToConstant: withHeight).isActive = true
         layoutIfNeeded()
     }
-    
+
     func updateCorners(radius: CGFloat) {
         self.layer.cornerRadius = radius
     }
-    
+
     private func updateSelected() {
         backgroundColor = UIColor.whiteWithOpacity(opacity: 0.4)
         layer.borderColor = UIColor.clear.cgColor
         setTitleColor(.seaGreen, for: .normal)
     }
-    
+
     func updateDeselected() {
         backgroundColor = .clear
         layer.borderWidth = 4

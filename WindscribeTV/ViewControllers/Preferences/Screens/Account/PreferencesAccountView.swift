@@ -30,7 +30,7 @@ class PreferencesAccountView: UIView {
         }
         bindViews()
     }
-    
+
     private func bindViews() {
         viewModel?.languageUpdatedTrigger.subscribe { _ in
             self.contentStackView.arrangedSubviews.forEach {

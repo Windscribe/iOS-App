@@ -53,7 +53,7 @@ class SettingsSection: UIView {
         contentStackView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
     }
-    
+
     func updateText(with list: [String], title: String? = nil) {
         list.enumerated().forEach { (index, text) in
             listOfOptionViewss[index].titleLabel.text = text

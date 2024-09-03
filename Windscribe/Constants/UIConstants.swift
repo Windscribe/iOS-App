@@ -1408,7 +1408,7 @@ struct TvAssets {
     static var loginCodeError: String {
         return "Unable to generate Login code. Check you network connection.".localize()
     }
-    
+
     static var addToFav: String {
         return "Add to fav".localize()
     }
@@ -1416,11 +1416,11 @@ struct TvAssets {
     static var removeFromFav: String {
         return "Remove from fav".localize()
     }
-    
+
     static var favTitle: String {
         return "Favourite".localize()
     }
-    
+
     static var staticIPTitle: String {
         return "Static IP".localize()
     }

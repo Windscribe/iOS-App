@@ -14,12 +14,12 @@ class PageTitleLabel: UILabel {
         super.init(frame: frame)
         setup()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setup()
     }
-    
+
     func setup() {
         self.font = UIFont.bold(size: 92)
         self.textColor = .whiteWithOpacity(opacity: 0.24)

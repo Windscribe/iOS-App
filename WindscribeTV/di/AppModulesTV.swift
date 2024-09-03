@@ -53,7 +53,7 @@ class TVViewModels: Assembly {
             return LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
 
-        container.register(BasePopupViewModelType.self) { r in
+        container.register(BasePopupViewModelType.self) { _ in
             return BasePopupViewModel()
         }.inObjectScope(.transient)
 
@@ -79,6 +79,23 @@ class TVViewModels: Assembly {
 
         container.register(HelpViewModel.self) { r in
             return HelpViewModelImpl(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(PrivacyViewModelType.self) { r in
+            return PrivacyViewModel(preferences: r.resolve(Preferences.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, sharedVPNManager: r.resolve(IKEv2VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(OutOfDataAccountPopupModelType.self) { r in
+            return OutOfDataAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+        }.inObjectScope(.transient)
+        container.register(AccountPopupModelType.self) { r in
+            return AccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+        }.inObjectScope(.transient)
+        container.register(ProPlanExpiredAccountPopupModelType.self) { r in
+            return ProPlanExpiredAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+        }.inObjectScope(.transient)
+        container.register(BannedAccountPopupModelType.self) { r in
+            return BannedAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
     }
 }
@@ -186,6 +203,7 @@ class TVViewControllers: Assembly {
             vc.router = r.resolve(HomeRouter.self)
             vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
+
         container.register(ServerListViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ServerListViewController") as! ServerListViewController
         }.initCompleted { r, vc in
@@ -193,14 +211,45 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(ServerListRouter.self)
         }.inObjectScope(.transient)
+
         container.register(ServerDetailViewController.self) { _ in
             ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
         }.initCompleted {  r, vc in
             vc.viewModel = r.resolve(MainViewModelType.self)
         }.inObjectScope(.transient)
+
+        container.register(PrivacyPopUpViewController.self) { _ in PrivacyPopUpViewController(nibName: "PrivacyPopUpViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.privacyViewModel = r.resolve(PrivacyViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(AccountPopupViewController.self) { _ in AccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.accountPopupViewModel = r.resolve(AccountPopupModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(BannedAccountPopupViewController.self) { _ in BannedAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.accountPopupViewModel = r.resolve(BannedAccountPopupModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(OutOfDataAccountPopupViewController.self) { _ in OutOfDataAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.accountPopupViewModel = r.resolve(OutOfDataAccountPopupModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ProPlanExpiredAccountPopupViewController.self) { _ in ProPlanExpiredAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
+        }.initCompleted { r, vc in
+            vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.accountPopupViewModel = r.resolve(ProPlanExpiredAccountPopupModelType.self)
+        }.inObjectScope(.transient)
+
         // swiftlint:enable force_cast
     }
-
 }
 class TVRouters: Assembly {
     func assemble(container: Container) {

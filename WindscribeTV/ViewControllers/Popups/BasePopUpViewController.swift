@@ -28,11 +28,11 @@ class BasePopUpViewController: UIViewController {
         titleLabel?.text = type.title
         titleLabel?.font = UIFont.bold(size: 92)
         titleLabel?.textColor = .white.withAlphaComponent(0.15)
-        
+
         headerLabel.text = type.header
         headerLabel.font = UIFont.bold(size: 62)
         headerLabel.textColor = .white
-        
+
         bodyLabel.text = type.body
         bodyLabel.font = UIFont.regular(size: 42)
         bodyLabel.textColor = .white.withAlphaComponent(0.4)

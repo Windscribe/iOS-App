@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         languageManager.setAppLanguage()
         vpnManager.setup { [self] in
             recordInstallIfFirstLoad()
-            //registerForPushNotifications()
+            // registerForPushNotifications()
             resetCountryOverrideForServerList()
             purchaseManager.verifyPendingTransaction()
             latencyRepository.loadLatency()
