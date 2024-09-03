@@ -140,7 +140,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     func continueFreeButtonTapped() {
         logger.logD(self, "User tapped to get free data.")
         if sessionManager.session?.hasUserAddedEmail == true && sessionManager.session?.emailStatus == false {
-            upgradeRouteState.onNext(RouteID.confirmEmail)
+            upgradeRouteState.onNext(RouteID.confirmEmail(delegate: self))
         } else if sessionManager.session?.hasUserAddedEmail == false && sessionManager.session?.isUserGhost == false {
             upgradeRouteState.onNext(RouteID.enterEmail)
         } else {

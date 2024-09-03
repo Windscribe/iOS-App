@@ -65,7 +65,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
             DispatchQueue.main.async { [ self] in
                 self.endLoading()
                 self.addEmailButton.isEnabled = true
-                self.router.routeTo(to: RouteID.confirmEmail, from: self)
+                self.router.routeTo(to: RouteID.confirmEmail(delegate: nil), from: self)
             }
         }, onFailure: { [weak self] error in
             DispatchQueue.main.async { [weak self] in
