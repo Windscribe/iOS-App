@@ -96,7 +96,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
         sendDebugLogButton.rx.tap.bind {
             self.viewModel.submitLog()
         }.disposed(by: disposeBag)
-        viewModel.submitLogState.bind { data in
+        viewModel.submitLogState.observe(on: MainScheduler.instance).bind { data in
             switch data {
             case .initial:
                 self.endLoading()

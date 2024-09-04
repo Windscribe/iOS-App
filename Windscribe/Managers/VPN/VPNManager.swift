@@ -110,7 +110,11 @@ class VPNManager {
             self.selectedFirewallMode = data ?? DefaultValues.firewallMode
         }.disposed(by: disposeBag)
         preferences.getConnectionMode().subscribe { data in
-            self.selectedConnectionMode = data
+            if data == nil {
+                self.selectedConnectionMode = DefaultValues.connectionMode
+            } else {
+                self.selectedConnectionMode = data
+            }
         }.disposed(by: disposeBag)
     }
 
