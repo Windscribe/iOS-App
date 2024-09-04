@@ -124,6 +124,10 @@ class SessionManager: SessionManagerV2 {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {
+                self.logger.logD(self, "Successfully update latency.")
+                self.vpnManager.checkLocationValidity()
+            }, onError: { _ in
+                self.logger.logD(self, "Failed to update latency.")
                 self.vpnManager.checkLocationValidity()
             })
             .disposed(by: self.disposeBag)
@@ -149,9 +153,14 @@ class SessionManager: SessionManagerV2 {
         }
         if !newSession.isPremium && oldSession.isPremium {
             logger.logD(MainViewController.self, "User's pro plan expired.")
-            serverRepo.getUpdatedServers().subscribe(
-                onSuccess: { _ in self.loadLatency()
-                }, onFailure: { _ in }).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().delaySubscription(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance).subscribe(
+                onSuccess: { _ in
+                    self.logger.logD(self, "Updated server list.")
+                    self.loadLatency()
+                }, onFailure: { _ in
+                    self.logger.logD(self, "Failed to update server list.")
+                    self.loadLatency()
+                }).disposed(by: disposeBag)
             credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
             credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
         }
