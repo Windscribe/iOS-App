@@ -53,7 +53,7 @@ extension VPNManager {
     /// if connection mode is manual sets selected protocol and port
     /// if wifi network name is available and prefered protcol is turned on use prefered protocol and port.
     func setNewVPNConnection(forceProtocol: String? = nil) {
-        var selectedProtocol = forceProtocol ?? iKEv2
+        var selectedProtocol = forceProtocol ?? wireGuard
         let forcePort = localDB.getPorts(protocolType: selectedProtocol)?[0]
         var selectedPort = forcePort ?? "443"
         if preferences.getConnectionModeSync() == Fields.Values.manual {
@@ -243,30 +243,52 @@ extension VPNManager {
 
     func checkLocationValidity() {
         guard let selectedNode = selectedNode else { return }
-        let hostname = selectedNode.hostname
-        let serverGroup = localDB.getServerAndGroup(bestNodeHostname: hostname)
-        guard let serverGroup = serverGroup else { return }
-        if !sessionManager.canAccesstoProLocation() && serverGroup.1.premiumOnly ?? false {
-            logger.logD(self, "Will try to update to a valid group from the server list.")
-            updateToValidLocation(from: serverGroup)
+        guard let currentLocation = getCurrentLocation() else {
+            self.logger.logD(self, "Unable to find \(selectedNode.cityName). Switching to Sister location.")
+            if let sisterLocation = getSisterLocation() {
+                logger.logD(self, "Switching to \(sisterLocation.1.city ?? "").")
+                switchLocation(from: sisterLocation)
+            } else {
+                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                switchLocation(from: nil)
+            }
+            return
+        }
+        if !sessionManager.canAccesstoProLocation() && currentLocation.1.premiumOnly ?? false {
+            switchLocation(from: nil)
         }
     }
 
-    private func updateToValidLocation(from serverGroup: (ServerModel, GroupModel)) {
-        logger.logD(self, "Will try to update to a valid group from the server list.")
-        if let group = serverGroup.0.groups?.filter({ serverGroup.1.id != $0.id }).first {
-            let server = serverGroup.0
-            guard let bestNode = group.bestNode,
-                  let bestNodeHostname = bestNode.hostname,
-                  let serverName = server.name,
-                  let countryCode = server.countryCode,
-                  let dnsHostname = server.dnsHostname,
+    private func getCurrentLocation() -> (ServerModel, GroupModel)? {
+        guard let selectedNode = selectedNode else { return nil }
+        let hostname = selectedNode.hostname
+        return localDB.getServerAndGroup(bestNodeHostname: hostname)
+    }
+
+    private func getSisterLocation() -> (ServerModel, GroupModel)? {
+        guard let servers = localDB.getServers() else { return nil }
+        var serverResult: ServerModel?
+        var groupResult: GroupModel?
+        for server in servers.map({$0.getServerModel()}) {
+            for group in server?.groups ?? [] where group.id == selectedNode?.groupId {
+                serverResult = server
+                groupResult = server?.groups?.filter {$0.isNodesAvailable()}.randomElement()
+            }
+        }
+        guard let serverResultSafe = serverResult, let groupResultSafe = groupResult else { return nil }
+        return (serverResultSafe, groupResultSafe)
+    }
+
+    private func switchLocation(from serverGroup: (ServerModel, GroupModel)?) {
+        if let serverGroup = serverGroup {
+            guard let bestNode = serverGroup.1.bestNode,
+                  let countryCode = serverGroup.0.countryCode,
+                  let dnsHostname = serverGroup.0.dnsHostname,
                   let hostname = bestNode.hostname,
                   let serverAddress = bestNode.ip2,
-                  let nickName = group.nick,
-                  let cityName = group.city,
-                  let groupId = group.id else { return }
-            logger.logD(self, "Updated to another group in the same server \(serverName) \(bestNodeHostname).")
+                  let nickName = serverGroup.1.nick,
+                  let cityName = serverGroup.1.city,
+                  let groupId = serverGroup.1.id else { return }
             selectedNode = SelectedNode(countryCode: countryCode,
                                                    dnsHostname: dnsHostname,
                                                    hostname: hostname,
@@ -274,10 +296,10 @@ extension VPNManager {
                                                    nickName: nickName,
                                                    cityName: cityName,
                                                    groupId: groupId)
+            self.configureAndConnectVPN()
         } else {
             localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
                 guard let bestLocation = bestLocation else { return }
-                self.logger.logD(self, "Updated to best location as there were no other groups available on the same server.")
                 self.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
                                             dnsHostname: bestLocation.dnsHostname,
                                             hostname: bestLocation.hostname,
@@ -285,6 +307,7 @@ extension VPNManager {
                                             nickName: bestLocation.nickName,
                                             cityName: bestLocation.cityName,
                                             groupId: bestLocation.groupId)
+                self.configureAndConnectVPN()
             }).disposed(by: disposeBag)
         }
     }

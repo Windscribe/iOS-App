@@ -354,9 +354,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showProPlanExpiredPopup() {
-        if vpnManager.isConnected() {
-            connectionStateViewModel.disconnect()
-        }
         DispatchQueue.main.async {
             self.popupRouter?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
         }
