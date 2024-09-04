@@ -72,7 +72,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
                 if let session =  self.sessionManager.session, session.isUserGhost == true {
                     debugUsername = "ghost_\(session.userId)"
                 }
-                return self.apiManager.sendDebugLog(username: debugUsername, log: fileData.base64Encoded())
+                return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
             }
             .subscribe(onSuccess: { [self] _ in
                 submitLogState.onNext(.sent)
