@@ -58,8 +58,8 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: staticIPCellReuseIdentifier, for: indexPath) as? StaticIPTableViewCell ?? StaticIPTableViewCell(style: .default, reuseIdentifier: staticIPCellReuseIdentifier)
         let staticIP = staticIPs?[indexPath.row]
-        cell.bindViews(isDarkMode: viewModel.isDarkMode)
         cell.displayingStaticIP = staticIP
+        cell.bindViews(isDarkMode: viewModel.isDarkMode)
         return cell
     }
 
