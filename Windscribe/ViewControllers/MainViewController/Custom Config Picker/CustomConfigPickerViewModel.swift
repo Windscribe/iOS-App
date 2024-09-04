@@ -88,7 +88,7 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
     func addCustomConfig() {
         logger.logD(self, "User tapped to Add Custom Config")
 
-        let documentTypes = ["com.windscribe.wireguard.config.quick",String(kUTTypeText)]
+        let documentTypes = ["com.windscribe.wireguard.config.quick", "org.openvpn.config", "public.data", String(kUTTypeText)]
         let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes,in: .import)
         filePicker.delegate = self
         presentDocumentPickerTrigger.onNext(filePicker)
