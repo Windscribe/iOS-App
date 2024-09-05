@@ -52,11 +52,14 @@ class HomeRouter: RootRouter {
             transition.type = CATransitionType.moveIn
             transition.subtype = CATransitionSubtype.fromTop
             from.view.layer.add(transition, forKey: nil)
-            from.present(vc, animated: true)
+            vc.delegate = from as? any ServerListTableViewDelegate
+            vc.favDelegate = from as? any FavNodesListTableViewDelegate
+            vc.staticIpDelegate = from as? any StaticIPListTableViewDelegate
+            from.navigationController?.pushViewController(vc, animated: true)
         case .privacyView:
             let vc: PrivacyPopUpViewController = Assembler.resolve(PrivacyPopUpViewController.self)
             vc.viewModel?.setPopupType(with: .privacy)
-            from.present(vc, animated: true)
+            from.navigationController?.pushViewController(vc, animated: true)
         case .bannedAccountPopup:
             let vc: BannedAccountPopupViewController = Assembler.resolve(BannedAccountPopupViewController.self)
             presentAsRoot(vc: vc)

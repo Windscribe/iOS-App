@@ -97,6 +97,24 @@ class TVViewModels: Assembly {
         container.register(BannedAccountPopupModelType.self) { r in
             return BannedAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
+        container.register(ServerListViewModelType.self) { r in
+            return ServerListViewModel(logger: r.resolve(FileLogger.self)!,
+                                       vpnManager: r.resolve(VPNManager.self)!,
+                                       connectivity: r.resolve(Connectivity.self)!,
+                                       localDataBase: r.resolve(LocalDatabase.self)!,
+                                       connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+        }.inObjectScope(.transient)
+        container.register(FavNodesListViewModelType.self) { r in
+            return FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
+                                         vpnManager: r.resolve(VPNManager.self)!,
+                                         connectivity: r.resolve(Connectivity.self)!,
+                                         connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+        }.inObjectScope(.transient)
+        container.register(StaticIPListViewModelType.self) { r in
+            return StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
+                                         vpnManager: r.resolve(VPNManager.self)!,
+                                         connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, connectivity: r.resolve(Connectivity.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -112,6 +130,9 @@ class TVViewControllers: Assembly {
             vc.connectionStateViewModel = r.resolve(ConnectionStateViewModelType.self)
             vc.logger =  r.resolve(FileLogger.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
+            vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
+            vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
+            vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
         container.register(WelcomeViewController.self) { _ in
@@ -209,6 +230,7 @@ class TVViewControllers: Assembly {
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(MainViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
+            vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.router = r.resolve(ServerListRouter.self)
         }.inObjectScope(.transient)
 
@@ -216,6 +238,7 @@ class TVViewControllers: Assembly {
             ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
         }.initCompleted {  r, vc in
             vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
         }.inObjectScope(.transient)
 
         container.register(PrivacyPopUpViewController.self) { _ in PrivacyPopUpViewController(nibName: "PrivacyPopUpViewController", bundle: nil)

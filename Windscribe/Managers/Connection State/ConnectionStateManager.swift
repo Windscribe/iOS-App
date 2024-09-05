@@ -197,6 +197,9 @@ extension ConnectionStateManager: VPNManagerDelegate {
 
     func setConnecting() {
         guard !isOnDemandRetry() else { return }
+#if os(tvOS)
+        self.updateStateInfo(to: .connecting)
+#endif
         autoModeSelectorHiddenChecker.onNext {
             if $0 { self.updateStateInfo(to: .connecting) }
         }

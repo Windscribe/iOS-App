@@ -240,6 +240,9 @@
 		5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		599339702B4CD28400EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
+		5998C6232C86A73000558233 /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		5998C6242C86AB2B00558233 /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
+		5998C6252C8807C000558233 /* StaticIPListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */; };
 		599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599BA2A62C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift */; };
 		599BA2A82C5D1E5300F0D1E4 /* DNSValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A19522C34237E00851AE2 /* DNSValue.swift */; };
 		599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
@@ -4785,6 +4788,7 @@
 				59FC74262C51557300021CD1 /* OpenVPNManager.swift in Sources */,
 				59FC73CF2C514AC300021CD1 /* UserScope.swift in Sources */,
 				59FC74272C51557A00021CD1 /* IKEv2VPNManager.swift in Sources */,
+				5998C6232C86A73000558233 /* ServerListViewModel.swift in Sources */,
 				59FC74062C5153D100021CD1 /* Email.swift in Sources */,
 				1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */,
 				59FC74392C515A9400021CD1 /* ServerRepository.swift in Sources */,
@@ -4851,6 +4855,7 @@
 				59DA7FB82C3D897100042E57 /* FileLogFormater.swift in Sources */,
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
 				59FC744A2C515DF900021CD1 /* ConnectionManagerV2.swift in Sources */,
+				5998C6252C8807C000558233 /* StaticIPListViewModel.swift in Sources */,
 				1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */,
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
@@ -4919,6 +4924,7 @@
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
 				C561237E2C5F257A0090EB5A /* Resolver.swift in Sources */,
+				5998C6242C86AB2B00558233 /* FavNodesListViewModel.swift in Sources */,
 				59FC74012C5153B200021CD1 /* PreferenceItem.swift in Sources */,
 				59FC74172C51543E00021CD1 /* Latency.swift in Sources */,
 				59FC73D22C514AF000021CD1 /* AlertManagerV2.swift in Sources */,

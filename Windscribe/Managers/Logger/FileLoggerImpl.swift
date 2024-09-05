@@ -11,10 +11,14 @@ import Foundation
 import RxSwift
 class FileLoggerImpl: FileLogger {
     private let maxLogLength = 120000
-    private lazy var logDirectory: URL? = {
+    var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
+    #if os(tvOS)
+        return containerUrl?.appendingPathComponent("Library/Caches")
+    #else
         return containerUrl?.appendingPathComponent("AppExtensionLogs")
-    }()
+    #endif
+      }()
 
     init() {
         setupLogger()

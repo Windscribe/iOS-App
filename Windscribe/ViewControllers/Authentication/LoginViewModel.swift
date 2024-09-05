@@ -112,6 +112,8 @@ class LoginViewModelImpl: LoginViewModel {
                             self?.userRepository.login(session: session)
                             self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
                             self?.prepareUserData()
+//                            localDatabase.saveOldSession()
+//                            localDatabase.saveSession(session: session).disposed(by: disposeBag)
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)
                     }, onFailure: { [ self] error in
