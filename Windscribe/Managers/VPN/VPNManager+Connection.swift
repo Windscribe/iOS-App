@@ -296,7 +296,7 @@ extension VPNManager {
                                                    nickName: nickName,
                                                    cityName: cityName,
                                                    groupId: groupId)
-            self.configureAndConnectVPN()
+            self.connect()
         } else {
             localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
                 guard let bestLocation = bestLocation else { return }
@@ -307,8 +307,18 @@ extension VPNManager {
                                             nickName: bestLocation.nickName,
                                             cityName: bestLocation.cityName,
                                             groupId: bestLocation.groupId)
-                self.configureAndConnectVPN()
+                self.connect()
             }).disposed(by: disposeBag)
+        }
+    }
+
+    private func connect() {
+        resetProfiles {
+            self.connectIntent = true
+            self.userTappedToDisconnect = false
+            self.restartOnDisconnect = false
+            self.isOnDemandRetry = false
+            self.configureAndConnectVPN()
         }
     }
 }

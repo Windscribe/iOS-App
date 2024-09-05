@@ -385,7 +385,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 } else {
                     self.connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
                     self.vpnManager.resetProperties()
-                    self.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
+                 //   self.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
                 }
             }
         }
