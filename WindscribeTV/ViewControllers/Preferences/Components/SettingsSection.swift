@@ -27,20 +27,7 @@ class SettingsSection: UIView {
 
     func populate(with list: [String], title: String? = nil) {
         listOfOptions = list
-        if let title = title {
-            titleLabel.attributedText = NSAttributedString(string: title.uppercased(),
-                                                  attributes: [
-                                                    .font: UIFont.bold(size: 32),
-                                                    .foregroundColor: UIColor.white.withAlphaComponent(0.2),
-                                                    .kern: 4
-                                                  ])
-            contentViewTop.constant = 24
-        } else {
-            contentViewTop.constant = 0
-            titleLabel.isHidden = true
-        }
-        self.layoutIfNeeded()
-
+        updateTitle(with: title)
         contentStackView.removeAllArrangedSubviews()
         list.forEach {
             let optionView: SettingOption = SettingOption.fromNib()
@@ -53,8 +40,25 @@ class SettingsSection: UIView {
         contentStackView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
     }
+    
+    private func updateTitle(with text: String?) {
+        if let title = text {
+            titleLabel.attributedText = NSAttributedString(string: title.uppercased(),
+                                                           attributes: [
+                                                            .font: UIFont.bold(size: 32),
+                                                            .foregroundColor: UIColor.white.withAlphaComponent(0.2),
+                                                            .kern: 4
+                                                           ])
+            contentViewTop.constant = 24
+        } else {
+            contentViewTop.constant = 0
+            titleLabel.isHidden = true
+        }
+        self.layoutIfNeeded()
+    }
 
     func updateText(with list: [String], title: String? = nil) {
+        updateTitle(with: title)
         list.enumerated().forEach { (index, text) in
             listOfOptionViewss[index].titleLabel.text = text
         }

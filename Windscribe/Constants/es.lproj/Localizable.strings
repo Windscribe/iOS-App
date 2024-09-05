@@ -342,3 +342,15 @@
 "Connected DNS" = "DNS al conectarse";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Selecciona el servidor DNS mientras estás conectado a Windscribe.";
 "Custom" = "Personalizado";
+"Pro" = "Pro";
+"Enabled" = "Habilitado";
+"Disabled" = "Discapacitado";
+"Always on VPN" = "VPN siempre activa";
+"Allow LAN Traffic" = "Permitir tráfico LAN";
+"Circumvent Censorship" = "Eludir la censura";
+"Unable to generate Login code. Check you network connection." = "Unable to generate Login code. Check you network connection.";
+"Add to fav" = "Añadido a favoritos";
+"Remove from fav" = "Favorilerden kaldır";
+"Favourites" = "Favoritos";
+"Static IP" = "IP estática";
+"All" = "Todo";

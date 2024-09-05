@@ -342,3 +342,14 @@
 "Connected DNS" = "DNS yang tersambung";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Pilih server DNS saat terhubung ke Windscribe.";
 "Custom" = "Adat";
+"Pro" = "Pro";
+"Enabled" = "Diaktifkan";
+"Disabled" = "Cacat";
+"Always on VPN" = "Selalu aktif VPN";
+"Allow LAN Traffic" = "Izinkan Lalu Lintas LAN";
+"Circumvent Censorship" = "Hindari Sensor";
+"Add to fav" = "Ditambahkan ke favorit";
+"Remove from fav" = "Hapus dari favorit";
+"Favourites" = "Favorit";
+"Static IP" = "IP statis";
+"All" = "Semua";

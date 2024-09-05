@@ -49,7 +49,7 @@ enum AccountItemCell {
     }
 
     var hasAction: Bool {
-        return [AccountItemCell.cancelAccount, AccountItemCell.confirmEmail].contains(self) || isUpgradeButton
+        return [AccountItemCell.cancelAccount, AccountItemCell.confirmEmail, AccountItemCell.emailEmpty].contains(self) || isUpgradeButton
     }
 
     var title: String? {

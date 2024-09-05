@@ -42,7 +42,8 @@ class PreferencesMainViewController: UIViewController {
     @IBOutlet weak var optionsStackView: UIStackView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentStackView: UIStackView!
-
+    @IBOutlet weak var versionLabel: UILabel!
+    
     let generalView: PreferencesGeneralView = PreferencesGeneralView.fromNib()
     let accountView: PreferencesAccountView = PreferencesAccountView.fromNib()
     let connnectionsView: PreferencesConnectionView = PreferencesConnectionView.fromNib()
@@ -79,9 +80,18 @@ class PreferencesMainViewController: UIViewController {
             firstOption.updateSelection(with: true)
         }
         titleLabel.font = UIFont.bold(size: 92)
+        versionLabel.font = UIFont.regular(size: 32)
+        versionLabel.text = generalViewModel.getVersion()
         createSettingViews()
         accountView.delegate = self
         optionsStackView.addArrangedSubview(UIView())
+        bindViews()
+    }
+    
+    private func bindViews() {
+        viewModel.currentLanguage.subscribe { _ in
+            self.titleLabel.text = TextsAsset.Preferences.title
+        }.disposed(by: disposeBag)
     }
 
     private func createSettingViews() {
@@ -187,6 +197,8 @@ extension PreferencesMainViewController: PreferencesAccountViewDelegate {
             router.routeTo(to: .confirmEmail(delegate: nil), from: self)
         case .cancelAccount:
             handleCancelAccount()
+        case .emailEmpty:
+            router.routeTo(to: .addEmail, from: self)
         default: return
         }
     }

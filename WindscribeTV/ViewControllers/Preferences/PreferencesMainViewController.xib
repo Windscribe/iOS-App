@@ -3,7 +3,6 @@
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -12,6 +11,7 @@
                 <outlet property="contentStackView" destination="Qch-9T-a74" id="GUg-DQ-GX7"/>
                 <outlet property="optionsStackView" destination="8os-JP-eFO" id="VT6-gY-Dxk"/>
                 <outlet property="titleLabel" destination="sJF-fG-8iv" id="luJ-Be-oBr"/>
+                <outlet property="versionLabel" destination="hFk-TB-aWd" id="a7X-sH-14Z"/>
                 <outlet property="view" destination="82e-qC-QTU" id="YF8-bS-BUx"/>
             </connections>
         </placeholder>
@@ -49,8 +49,13 @@
                     <color key="textColor" white="1" alpha="0.20056335034013606" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFk-TB-aWd">
+                    <rect key="frame" x="1744" y="96" width="92" height="46"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                    <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
-            <viewLayoutGuide key="safeArea" id="moY-db-mqt"/>
             <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="0.90295493197278909" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="8os-JP-eFO" secondAttribute="bottom" constant="40" id="7sj-Cg-O0g"/>
@@ -58,6 +63,8 @@
                 <constraint firstAttribute="bottom" secondItem="Q4W-A4-miv" secondAttribute="bottom" id="Ef8-an-xk7"/>
                 <constraint firstAttribute="trailing" secondItem="Q4W-A4-miv" secondAttribute="trailing" id="G2K-nC-wK5"/>
                 <constraint firstItem="Q4W-A4-miv" firstAttribute="leading" secondItem="8os-JP-eFO" secondAttribute="trailing" constant="60" id="Ovf-ik-h1R"/>
+                <constraint firstItem="hFk-TB-aWd" firstAttribute="top" secondItem="sJF-fG-8iv" secondAttribute="bottom" constant="-75" id="R2B-I1-dSb"/>
+                <constraint firstItem="hFk-TB-aWd" firstAttribute="trailing" secondItem="82e-qC-QTU" secondAttribute="trailing" constant="-84" id="XNk-zV-Gcp"/>
                 <constraint firstItem="Q4W-A4-miv" firstAttribute="top" secondItem="sJF-fG-8iv" secondAttribute="bottom" constant="8" id="h13-W1-kcG"/>
                 <constraint firstItem="sJF-fG-8iv" firstAttribute="leading" secondItem="82e-qC-QTU" secondAttribute="leadingMargin" constant="20" id="hqY-Br-ShP"/>
                 <constraint firstItem="8os-JP-eFO" firstAttribute="top" secondItem="sJF-fG-8iv" secondAttribute="bottom" constant="75" id="zBX-4a-1yA"/>

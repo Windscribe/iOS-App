@@ -26,6 +26,8 @@ class AccountPopupViewController: BasePopUpViewController {
     // MARK: Setting up
     override func setup() {
         super.setup()
+        titleLabel?.text = ""
+        headerLabel.isHidden = false
         [actionButton, cancelButton].forEach {
             $0.setup(withHeight: 96.0)
             mainStackView.addArrangedSubview($0)
@@ -38,7 +40,7 @@ class AccountPopupViewController: BasePopUpViewController {
             imageView.image = UIImage(named: $0)
         }).disposed(by: disposeBag)
         accountPopupViewModel.title.subscribe(onNext: { [self] in
-            titleLabel?.text = $0
+            headerLabel?.text = $0
         }).disposed(by: disposeBag)
         accountPopupViewModel.description.subscribe(onNext: { [self] in
             bodyLabel.text = $0
