@@ -10,11 +10,26 @@ import UIKit
 import Swinject
 import RxSwift
 
+protocol ServerListTableViewDelegate: AnyObject {
+    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
+}
+
+protocol FavNodesListTableViewDelegate: AnyObject {
+    func setSelectedFavNode(favNode: FavNodeModel)
+}
+
+protocol StaticIPListTableViewDelegate: AnyObject {
+    func setSelectedStaticIP(staticIP: StaticIPModel)
+}
+
 class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var favButton: UIButton!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
-
+    weak var delegate: ServerListTableViewDelegate?
+    weak var favDelegate: FavNodesListTableViewDelegate?
+    weak var staticIpDelegate: StaticIPListTableViewDelegate?
+    
     @IBOutlet weak var latencyLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
 
@@ -70,6 +85,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         connectButton.clipsToBounds = true
         connectButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.connectIcon), for: .normal)
         connectButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.connectIconFocused), for: .focused)
+        connectButton.addTarget(self, action: #selector(connectButtonTapped), for: .primaryActionTriggered)
 
         cityLabel.textColor = .whiteWithOpacity(opacity: 0.50)
 
@@ -265,5 +281,18 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }
     }
-
+    
+    @objc func connectButtonTapped() {
+        guard let server = displayingNodeServer, let group = displayingGroup else {
+            guard let favnode = displayingFavNode else { 
+                guard let staticIp = displayingStaticIP else { return }
+                self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
+                return }
+            self.favDelegate?.setSelectedFavNode(favNode: favnode)
+            return
+        }
+        self.delegate?.setSelectedServerAndGroup(server: server, group: group)
+        
+    }
+    
 }

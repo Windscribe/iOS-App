@@ -31,7 +31,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     private func bindViews() {
         button.rx.primaryAction.bind { [self] in
             self.privacyViewModel.action()
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
     }
 }

@@ -12,10 +12,11 @@ import Swinject
 class ServerListRouter: RootRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {
-        case let RouteID.serverListDetail(server):
+        case let RouteID.serverListDetail(server, delegate):
             let vc = Assembler.resolve(ServerDetailViewController.self)
             vc.server = server
-            from.present(vc, animated: true)
+            vc.delegate = delegate
+            from.navigationController?.pushViewController(vc, animated: true)
 
         default: ()
         }

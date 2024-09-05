@@ -10,6 +10,7 @@ import CocoaLumberjack
 import Foundation
 import RxSwift
 protocol FileLogger {
+    var logDirectory: URL? { get set}
     func logDeviceInfo()
     func getLogData() -> Single<String>
     func logD(_ tag: Any, _ message: String)

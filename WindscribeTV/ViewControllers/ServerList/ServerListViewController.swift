@@ -16,6 +16,7 @@ enum SideMenuType: String {
     case windflix = "Windflix"
     case staticIp = "Static IPs"
 
+
     func getImage(isSelected: Bool) -> UIImage? {
         switch self {
         case .all:
@@ -37,7 +38,9 @@ enum SideMenuType: String {
 
 class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
 
-    var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!
+
+    var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
+
     var serverSectionsOrdered: [ServerSection] = []
     @IBOutlet weak var sideMenu: UIStackView!
     var favNodeModels: [FavNodeModel] = []
@@ -46,6 +49,9 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     @IBOutlet var serverListCollectionView: UICollectionView!
     @IBOutlet var favTableView: UITableView!
     @IBOutlet weak var sideMenuWidthConstraint: NSLayoutConstraint!
+    weak var delegate: ServerListTableViewDelegate?
+    weak var favDelegate: FavNodesListTableViewDelegate?
+    weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
     private var sideOptions: [SideMenuType] = [.all,.fav,.windflix,.staticIp]
     private var selectedRow: Int = 0
@@ -196,6 +202,25 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             }
 
         }).disposed(by: disposeBag)
+        viewModel.favNode.subscribe(onNext: { [self] favNodes in
+            favNodeModels.removeAll()
+            if let favnodes = favNodes {
+                for result in favnodes {
+                    guard let favNodeModel = result.getFavNodeModel() else { return }
+                    favNodeModels.append(favNodeModel)
+                }
+                DispatchQueue.main.async {
+                    self.favTableView.reloadData()
+                    self.view.layoutIfNeeded()
+                }            }
+        }, onError: { error in
+            self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
+        }).disposed(by: disposeBag)
+        
+        serverListViewModel.configureVPNTrigger.subscribe(onNext: {
+            print("Testing")
+            //self.configureVPN()
+        }).disposed(by: disposeBag)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -227,6 +252,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             toggleView(viewToToggle: favTableView, isViewVisible: false)
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
+
 
         }
         UIView.animate(withDuration: 0.3) {
@@ -314,7 +340,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let selectedServer = self.serverSectionsOrdered[indexPath.row].server {
-            router.routeTo(to: .serverListDetail(server: selectedServer), from: self)
+            router.routeTo(to: .serverListDetail(server: selectedServer, delegate: self.delegate), from: self)
         }
     }
 
@@ -365,10 +391,12 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
         if !staticIpSelected {
             let favNodes = favNodeModels[indexPath.row]
             cell.displayingFavNode = favNodes
+            cell.favDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
         } else {
             let staticIP = staticIPModels[indexPath.row]
             cell.displayingStaticIP = staticIP
+            cell.staticIpDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
 
         }
@@ -381,5 +409,19 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 125
+    }
+}
+
+extension ServerListViewController: FavNodesListTableViewDelegate {
+    func setSelectedFavNode(favNode: FavNodeModel) {
+        self.navigationController?.popToRootViewController(animated: true)
+        self.favDelegate?.setSelectedFavNode(favNode: favNode)
+    }
+}
+
+extension ServerListViewController: StaticIPListTableViewDelegate {
+    func setSelectedStaticIP(staticIP: StaticIPModel) {
+        self.navigationController?.popToRootViewController(animated: true)
+        self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIP)
     }
 }

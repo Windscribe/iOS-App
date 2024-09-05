@@ -8,10 +8,16 @@
 
 import Foundation
 import UIKit
+#if canImport(SafariServices)
 import SafariServices
+#endif
 import RxSwift
 
 enum StaticIPAlertType { case connecting; case disconnecting }
+
+protocol StaticIPListFooterViewDelegate: AnyObject {
+    func addStaticIP()
+}
 
 protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
     var presentLinkTrigger: PublishSubject<URL> { get }

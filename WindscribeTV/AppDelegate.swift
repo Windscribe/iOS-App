@@ -49,12 +49,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var themeManager: ThemeManager = {
         return Assembler.resolve(ThemeManager.self)
     }()
+    private lazy var connectivity: Connectivity = {
+        return Assembler.resolve(Connectivity.self)
+    }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
+        connectivity.refreshNetwork()
         vpnManager.setup { [self] in
             recordInstallIfFirstLoad()
             // registerForPushNotifications()
@@ -65,6 +69,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             setApplicationWindow()
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         }
+        apiManager.getSession().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
+            localDatabase.saveOldSession()
+            localDatabase.saveSession(session: session).disposed(by: disposeBag)
+        }, onFailure: { [self] error in
+            logger.logE(self, "Failed to get session from server with error \(error).")
+        }).disposed(by: disposeBag)
         return true
 
     }
@@ -119,7 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let mainViewController = Assembler.resolve(MainViewController.self)
             let viewController = UINavigationController(rootViewController: mainViewController)
             UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.window?.rootViewController = mainViewController
+                self.window?.rootViewController = viewController
             }, completion: nil)
         } else {
             let welcomeVC = Assembler.resolve(WelcomeViewController.self)

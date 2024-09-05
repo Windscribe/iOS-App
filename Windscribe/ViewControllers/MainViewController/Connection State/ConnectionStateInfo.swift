@@ -95,8 +95,7 @@ extension ConnectionState {
         switch self {
         case .connected, .test: ImagesAsset.connectButtonRing
         case .connecting: ImagesAsset.connectingButtonRing
-        case .disconnecting, .automaticFailed: ImagesAsset.failedConnectionButtonRing
-        case  .disconnected: ImagesAsset.TvAsset.disconnectedRing
+        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.TvAsset.disconnectedRing
         }
     }
     var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }

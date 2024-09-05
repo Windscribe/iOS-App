@@ -20,9 +20,10 @@ class ServerDetailViewController: UIViewController {
         backgroundGradient,
         flagBottomGradient: CAGradientLayer!
     var server: ServerModel?
-    var viewModel: MainViewModelType?
+    var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?
     let disposeBag = DisposeBag()
-
+    var delegate: ServerListTableViewDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -82,11 +83,23 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
             cell.displayingGroup = group
             cell.displayingNodeServer = server
         }
+        cell.delegate = self
         cell.focusStyle = UITableViewCell.FocusStyle.custom
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 125
+    }
+}
+
+extension ServerDetailViewController: ServerListTableViewDelegate {
+    func setSelectedServerAndGroup(server: ServerModel,
+                                   group: GroupModel) {
+        
+        //self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
+        self.delegate?.setSelectedServerAndGroup(server: server,
+                                                      group: group)
     }
 }

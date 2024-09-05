@@ -105,7 +105,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             guard let proxyInfo = ProxyInfo(text: String(line)) else {
                 return false
             }
-            guard let path = proxyLogFilePath() else { return false }
+            guard let path = logger.logDirectory?.lastPathComponent else { return false }
             DispatchQueue.global(qos: .background).async {
                 let logFilePathCString = (path as NSString).utf8String
                 let listenAddressCString = (Proxy.localEndpoint as NSString).utf8String

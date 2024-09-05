@@ -416,6 +416,8 @@ enum VPNManagerType: String {
                 } else {
                     return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
                 }
+                #else
+                return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
                 #endif
             }
             if let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,let ovpn = neProtocol.providerConfiguration?["ovpn"] as? Data {

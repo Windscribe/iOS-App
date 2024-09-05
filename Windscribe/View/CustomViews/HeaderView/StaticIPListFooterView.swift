@@ -12,9 +12,6 @@ import RealmSwift
 import RxSwift
 import Swinject
 
-protocol StaticIPListFooterViewDelegate: AnyObject {
-    func addStaticIP()
-}
 
 class StaticIPListFooterView: WSView {
 
