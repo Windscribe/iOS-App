@@ -342,3 +342,14 @@
 "Connected DNS" = "連接的功能變數名稱解析";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "在連接到Windscribe時選擇DNS伺服器。";
 "Custom" = "習慣";
+"Pro" = "親";
+"Enabled" = "已啟用";
+"Disabled" = "已停用";
+"Always on VPN" = "始终在线的 VPN";
+"Allow LAN Traffic" = "允許局域網流量";
+"Circumvent Censorship" = "規避審查";
+"Add to fav" = "添加到收藏夹";
+"Remove from fav" = "从收藏夹中删除";
+"Favourites" = "收藏夹";
+"Static IP" = "静态 IP";
+"All" = "都";

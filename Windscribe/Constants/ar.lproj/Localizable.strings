@@ -342,3 +342,12 @@
 "Connected DNS" = "DNS المتصل";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "حدد خادم DNS أثناء الاتصال ب Windscribe.";
 "Custom" = "تقليد";
+"Invalid DNS server" = "Invalid DNS server";
+"Pro" = "برو";
+"Enabled" = "مُفعَّل";
+"Disabled" = "معطل";
+"Add to fav" = "تمت الإضافة إلى المفضلة";
+"Remove from fav" = "إزالة من المفضلة";
+"Favourites" = "المفضلة";
+"Static IP" = "IP ثابت";
+"All" = "كل";

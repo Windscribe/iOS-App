@@ -22,14 +22,14 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="xIG-9M-IcV">
-                    <rect key="frame" x="40" y="68" width="1840" height="1012"/>
+                    <rect key="frame" x="40" y="68" width="1876" height="1012"/>
                 </stackView>
             </subviews>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="xIG-9M-IcV" secondAttribute="bottom" id="PkJ-Hy-uGP"/>
                 <constraint firstItem="xIG-9M-IcV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="aOM-7l-eh4"/>
                 <constraint firstItem="xIG-9M-IcV" firstAttribute="top" secondItem="DaK-wj-Am3" secondAttribute="bottom" constant="4" id="c7X-JX-ENx"/>
-                <constraint firstAttribute="trailing" secondItem="xIG-9M-IcV" secondAttribute="trailing" constant="40" id="e2t-YY-pCZ"/>
+                <constraint firstAttribute="trailing" secondItem="xIG-9M-IcV" secondAttribute="trailing" constant="4" id="e2t-YY-pCZ"/>
                 <constraint firstItem="DaK-wj-Am3" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pjN-Je-gEZ"/>
                 <constraint firstItem="DaK-wj-Am3" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="40" id="xTv-KI-Khm"/>
             </constraints>

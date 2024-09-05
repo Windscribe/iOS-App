@@ -23,9 +23,10 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     override func setup() {
         super.setup()
         button.setTitle(TextsAsset.PrivacyView.action, for: .normal)
-        button.setup(withHeight: 96.0)
+        button.setup(withHeight: 82)
         mainStackView.addArrangedSubview(button)
-        mainStackView.addArrangedSubview(UIView())
+        titleLabel?.text = ""
+        bodyLabel.font = UIFont.regular(size: 25)
     }
 
     private func bindViews() {

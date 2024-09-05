@@ -342,3 +342,15 @@
 "Connected DNS" = "Підключений DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Виберіть DNS-сервер під час підключення до Windscribe.";
 "Custom" = "Нестандартний";
+"Pro" = "Про";
+"Enabled" = "Увімкнено";
+"Disabled" = "Вимкнено";
+"Always on VPN" = "Завжди на VPN";
+"Allow LAN Traffic" = "Дозволити трафік локальної мережі";
+"Circumvent Censorship" = "Обхід цензури";
+"Unable to generate Login code. Check you network connection." = "Unable to generate Login code. Check you network connection.";
+"Add to fav" = "Додано в обране";
+"Remove from fav" = "Видалити з уподобань";
+"Favourites" = "Улюблений";
+"Static IP" = "Статична IP-адреса";
+"All" = "Увесь";

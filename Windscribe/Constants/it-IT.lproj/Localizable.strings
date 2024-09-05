@@ -341,3 +341,14 @@
 "Connected DNS" = "DNS connesso";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Selezionare il server DNS mentre si è connessi a Windscribe.";
 "Custom" = "Costume";
+"Pro" = "Pro";
+"Enabled" = "Attivato";
+"Disabled" = "Disabilitato";
+"Always on VPN" = "VPN sempre attiva";
+"Allow LAN Traffic" = "Consenti traffico LAN";
+"Circumvent Censorship" = "Eludere la censura";
+"Add to fav" = "Aggiunto ai preferiti";
+"Remove from fav" = "Rimuovi dai preferiti";
+"Favourites" = "Preferiti";
+"Static IP" = "IP statico";
+"All" = "Tutto";

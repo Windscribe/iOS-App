@@ -344,3 +344,14 @@
 "Connected DNS" = "DNSに接続しました";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe に接続しているときに DNS サーバーを選択します。";
 "Custom" = "カスタム";
+"Pro" = "プロ";
+"Enabled" = "有効";
+"Disabled" = "無効";
+"Always on VPN" = "常時接続VPN";
+"Allow LAN Traffic" = "LANトラフィックを許可する";
+"Circumvent Censorship" = "検閲を回避する";
+"Add to fav" = "お気に入りに追加されました";
+"Remove from fav" = "お気に入りから削除";
+"Favourites" = "お気に入り";
+"Static IP" = "静的 IP";
+"All" = "全て";
