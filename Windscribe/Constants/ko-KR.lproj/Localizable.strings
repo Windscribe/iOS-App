@@ -342,3 +342,14 @@
 "Connected DNS" = "연결된 DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe에 연결된 상태에서 DNS 서버를 선택합니다.";
 "Custom" = "관습";
+"Pro" = "프로";
+"Enabled" = "켜짐";
+"Disabled" = "비활성화됨";
+"Always on VPN" = "상시 VPN";
+"Allow LAN Traffic" = "LAN 트래픽 허용";
+"Circumvent Censorship" = "검열 우회";
+"Add to fav" = "즐겨찾기에 추가됨";
+"Remove from fav" = "즐겨찾기에서 제거";
+"Favourites" = "즐겨찾기";
+"Static IP" = "고정 IP";
+"All" = "모두";

@@ -388,3 +388,11 @@
 "Connected DNS" = "कनेक्टेड DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "विंडस्क्राइब से कनेक्ट करते समय DNS सर्वर का चयन करें।";
 "Custom" = "परम्परा";
+"Pro" = "प्रो";
+"Enabled" = "सक्षम";
+"Disabled" = "अक्षम";
+"Add to fav" = "पसंदीदा में जोड़ा गया";
+"Remove from fav" = "पसंदीदा से हटा दें";
+"Favourites" = "पसंदीदा";
+"Static IP" = "स्थैतिक आईपी";
+"All" = "सब";

@@ -31,33 +31,30 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jjh-yK-Zpu" userLabel="Central View">
                     <rect key="frame" x="640" y="222" width="640" height="858"/>
                     <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dby-2J-uYm">
+                            <rect key="frame" x="0.0" y="0.0" width="640" height="0.0"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="52"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jdl-Ir-KVM">
-                            <rect key="frame" x="230" y="24" width="180" height="180"/>
+                            <rect key="frame" x="230" y="48" width="180" height="180"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="180" id="Lrf-Mm-JBm"/>
                                 <constraint firstAttribute="width" secondItem="jdl-Ir-KVM" secondAttribute="height" multiplier="1:1" id="WP6-yn-qu5"/>
                             </constraints>
                         </imageView>
-                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dby-2J-uYm">
-                            <rect key="frame" x="0.0" y="252" width="640" height="0.0"/>
-                            <constraints>
-                                <constraint firstAttribute="height" id="qFA-cU-Nd5"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="52"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Go to the address above on you phone or computer for all support related inquires" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dix-kL-XIV">
-                            <rect key="frame" x="0.0" y="252" width="640" height="138"/>
+                            <rect key="frame" x="0.0" y="276" width="640" height="138"/>
                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                             <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IQT-h4-1za">
-                            <rect key="frame" x="80" y="486" width="480" height="336"/>
+                            <rect key="frame" x="80" y="510" width="480" height="312"/>
                             <subviews>
                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="6WW-uI-c4a">
-                                    <rect key="frame" x="0.0" y="0.0" width="480" height="336"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="480" height="312"/>
                                 </stackView>
                             </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -72,9 +69,8 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="IQT-h4-1za" firstAttribute="leading" secondItem="jjh-yK-Zpu" secondAttribute="leading" constant="80" id="3mj-TS-Tf0"/>
-                        <constraint firstItem="jdl-Ir-KVM" firstAttribute="bottom" secondItem="Dby-2J-uYm" secondAttribute="top" constant="-48" id="8Mq-Ux-XkQ"/>
                         <constraint firstAttribute="trailing" secondItem="Dix-kL-XIV" secondAttribute="trailing" id="8fo-Ha-fII"/>
-                        <constraint firstItem="jdl-Ir-KVM" firstAttribute="top" secondItem="jjh-yK-Zpu" secondAttribute="top" constant="24" id="8zJ-mn-jSs"/>
+                        <constraint firstItem="jdl-Ir-KVM" firstAttribute="top" secondItem="Dby-2J-uYm" secondAttribute="bottom" constant="48" id="8zJ-mn-jSs"/>
                         <constraint firstAttribute="trailing" secondItem="Dby-2J-uYm" secondAttribute="trailing" id="ByT-ew-dt9"/>
                         <constraint firstItem="jdl-Ir-KVM" firstAttribute="centerX" secondItem="jjh-yK-Zpu" secondAttribute="centerX" id="RGU-6v-aS1"/>
                         <constraint firstAttribute="bottom" secondItem="IQT-h4-1za" secondAttribute="bottom" constant="36" id="T2j-26-vUg"/>
@@ -82,8 +78,9 @@
                         <constraint firstAttribute="width" constant="640" id="XeQ-RY-0Oj"/>
                         <constraint firstAttribute="trailing" secondItem="IQT-h4-1za" secondAttribute="trailing" constant="80" id="bds-7a-egp"/>
                         <constraint firstItem="IQT-h4-1za" firstAttribute="top" secondItem="Dix-kL-XIV" secondAttribute="bottom" constant="96" id="c4K-RS-Jou"/>
-                        <constraint firstItem="Dix-kL-XIV" firstAttribute="top" secondItem="Dby-2J-uYm" secondAttribute="bottom" id="hEw-Bx-XYy"/>
+                        <constraint firstItem="Dby-2J-uYm" firstAttribute="top" secondItem="jjh-yK-Zpu" secondAttribute="top" id="k05-Oc-gY1"/>
                         <constraint firstItem="Dby-2J-uYm" firstAttribute="leading" secondItem="jjh-yK-Zpu" secondAttribute="leading" id="qGx-rK-hr9"/>
+                        <constraint firstItem="jdl-Ir-KVM" firstAttribute="bottom" secondItem="Dix-kL-XIV" secondAttribute="top" constant="-48" id="x4H-qe-0rY"/>
                     </constraints>
                 </view>
             </subviews>
@@ -92,8 +89,8 @@
             <constraints>
                 <constraint firstItem="jjh-yK-Zpu" firstAttribute="centerX" secondItem="jkG-cv-UDv" secondAttribute="centerX" id="7XF-Ep-h6q"/>
                 <constraint firstItem="zoB-cN-8wt" firstAttribute="top" secondItem="jkG-cv-UDv" secondAttribute="top" constant="48" id="Awc-cy-oN4"/>
-                <constraint firstItem="jjh-yK-Zpu" firstAttribute="top" secondItem="jkG-cv-UDv" secondAttribute="top" constant="222" id="Fkx-xL-kT7"/>
                 <constraint firstAttribute="bottom" secondItem="jjh-yK-Zpu" secondAttribute="bottom" id="QZv-R8-TTB"/>
+                <constraint firstItem="jjh-yK-Zpu" firstAttribute="top" secondItem="zoB-cN-8wt" secondAttribute="bottom" constant="64" id="izu-ON-WH9"/>
                 <constraint firstItem="zoB-cN-8wt" firstAttribute="leading" secondItem="jkG-cv-UDv" secondAttribute="leading" constant="48" id="ovL-WF-RVA"/>
             </constraints>
             <point key="canvasLocation" x="-553" y="-1181"/>

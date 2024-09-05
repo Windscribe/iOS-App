@@ -16,7 +16,11 @@ class HomeRouter: RootRouter {
             from.present(vc, animated: true)
         case .upgrade:
             let vc = Assembler.resolve(UpgradePopViewController.self)
-            from.present(vc, animated: true)
+            if let navigationVC = from.navigationController {
+                navigationVC.setViewControllers([vc], animated: true)
+            } else {
+                from.present(vc, animated: true)
+            }
         case .support:
             let vc: BasePopUpViewController = Assembler.resolve(BasePopUpViewController.self)
             vc.viewModel?.setPopupType(with: .support)
@@ -68,7 +72,9 @@ class HomeRouter: RootRouter {
             from.present(vc, animated: true)
         case .proPlanExpireddAccountPopup:
             let vc: ProPlanExpiredAccountPopupViewController = Assembler.resolve(ProPlanExpiredAccountPopupViewController.self)
-            from.present(vc, animated: true)
+            let navigationController = UINavigationController()
+            navigationController.setViewControllers([vc], animated: false)
+            from.present(navigationController, animated: true)
         default: ()
         }
     }
