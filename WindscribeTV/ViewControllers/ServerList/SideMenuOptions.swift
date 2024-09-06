@@ -18,14 +18,14 @@ class SideMenuOptions: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     let gradient = CAGradientLayer()
 
-    private var sideMenuType: SideMenuType?
+    var sideMenuType: SideMenuType?
     var button = UIButton()
     weak var delegate: SideMenuOptionViewDelegate?
 
     func setup(with type: SideMenuType, isSelected: Bool = false) {
         sideMenuType = type
         selectionView.layer.cornerRadius = 2
-        titleLabel.text = type.rawValue
+        titleLabel.text = type.rawValue.localize()
         imgView.image = type.getImage(isSelected: isSelected)
         titleLabel.font =  UIFont.bold(size: 42)
         updateSelection(with: isSelected)
@@ -61,7 +61,14 @@ class SideMenuOptions: UIView {
         gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
         gradient.frame = CGRect(x: 0.0, y: 0.0, width: frame.width, height: frame.height)
-        self.layer.insertSublayer(gradient, at: 0)
+        if self.layer.sublayers?.contains(gradient) ?? false {
+            gradient.colors = [
+               UIColor.clear.cgColor,
+               UIColor.clear.cgColor
+            ]
+        } else {
+            self.layer.insertSublayer(gradient, at: 0)
+        }
 
          // Define the gradient colors (white to white with slight variations if needed)
      }

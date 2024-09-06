@@ -15,15 +15,16 @@ class ServerListCollectionViewCell: UICollectionViewCell {
 
     override func awakeFromNib() {
        super.awakeFromNib()
-        setup()
     }
 
-    func setup() {
-        flagImage.layer.masksToBounds = false
-        flagImage.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
-        flagImage.layer.shadowOpacity = 1
-        flagImage.layer.shadowOffset = CGSize(width: 10, height: 10)
-        flagImage.layer.shadowRadius = 0.0
+    func setup(isShadow: Bool) {
+        if isShadow {
+            flagImage.layer.masksToBounds = false
+            flagImage.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
+            flagImage.layer.shadowOpacity = 1
+            flagImage.layer.shadowOffset = CGSize(width: 10, height: 10)
+            flagImage.layer.shadowRadius = 0.0
+        }
         countryCode.font = .bold(size: 30)
         countryCode.text = countryCode.text?.uppercased()
     }

@@ -54,8 +54,11 @@ class MainViewController: UIViewController {
     var logger: FileLogger!
     var myPreferredFocusedView: UIView?
     var isFromServer: Bool = false
+    var bestLocation: BestLocationModel?
     lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
-    
+    private lazy var languageManager: LanguageManagerV2 = {
+        return Assembler.resolve(LanguageManagerV2.self)
+    }()
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -171,7 +174,7 @@ class MainViewController: UIViewController {
                     myPreferredFocusedView = connectionButton
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
-                    router.routeTo(to: .serverList, from: self)
+                    router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
                 }
             } else if press.type == .upArrow {
                 if connectionButton.isFocused {
@@ -184,8 +187,12 @@ class MainViewController: UIViewController {
                     myPreferredFocusedView = helpButton
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
-                } else if preferredFocusedView == settingsButton {
+                } else if preferredFocusedView == settingsButton || UIScreen.main.focusedView == settingsButton{
                     myPreferredFocusedView = notificationButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                } else if preferredFocusedView == helpButton {
+                    myPreferredFocusedView = upgradeButton
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
                 }
@@ -197,6 +204,10 @@ class MainViewController: UIViewController {
                     self.updateFocusIfNeeded()
                 } else if preferredFocusedView == helpButton {
                     myPreferredFocusedView = notificationButton
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
+                } else if preferredFocusedView == upgradeButton {
+                    myPreferredFocusedView = helpButton
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
                 }
@@ -216,7 +227,7 @@ class MainViewController: UIViewController {
                 myPreferredFocusedView = connectionButton
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()
-                router.routeTo(to: .serverList, from: self)
+                router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
             }
         }
     }
@@ -271,8 +282,16 @@ class MainViewController: UIViewController {
             self.configureVPN()
         }).disposed(by: disposeBag)
         
+        languageManager.activelanguage.subscribe(onNext: { [self] _ in
+            localisation()
+        }, onError: { _ in }).disposed(by: disposeBag)
+        
     }
     
+    func localisation() {
+        locationsLabel.text = TextsAsset.Permission.locationPermissionLabel
+    }
+
     func loadLastConnection() {
         viewModel.lastConnection.subscribe(onNext: { lastconnection in
             self.protocolLabel.text = lastconnection?.protocolType
@@ -284,6 +303,7 @@ class MainViewController: UIViewController {
         viewModel.bestLocation.bind(onNext: { bestLocation in
             guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
+            self.bestLocation = bestLocation.getBestLocationModel()
             if selectBestLocation {// && self.vpnManager.isDisconnected() {
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
             }
@@ -518,8 +538,15 @@ class MainViewController: UIViewController {
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {
-        serverListViewModel.setSelectedServerAndGroup(server: server,
-                                                      group: group)
+        
+        if let premiumOnly = group.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+            if premiumOnly && !isUserPro {
+                router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
+            } else {
+                serverListViewModel.setSelectedServerAndGroup(server: server,
+                                                              group: group)
+            }
+        }
     }
 }
 
@@ -532,5 +559,11 @@ extension MainViewController: FavNodesListTableViewDelegate {
 extension MainViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         staticIPListViewModel.setSelectedStaticIP(staticIP: staticIP)
+    }
+}
+
+extension MainViewController: BestLocationConnectionDelegate {
+    func connectToBestLocation() {
+        serverListViewModel.connectToBestLocation()
     }
 }

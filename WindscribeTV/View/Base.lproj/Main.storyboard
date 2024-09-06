@@ -592,10 +592,37 @@ Secrets.</string>
                                 <rect key="frame" x="180" y="0.0" width="1740" height="1080"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oHG-FT-WDR">
+                                <rect key="frame" x="750" y="409" width="420" height="262"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fav-empty-white" translatesAutoresizingMaskIntoConstraints="NO" id="06o-ob-0Ub">
+                                        <rect key="frame" x="185" y="106" width="50" height="50"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="Dvq-GB-xUQ"/>
+                                            <constraint firstAttribute="height" constant="50" id="Uxo-qT-uwj"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing to see here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYU-dd-aiK">
+                                        <rect key="frame" x="47" y="196" width="326" height="46"/>
+                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="0.95999999999999996" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="420" id="1nJ-kK-EA8"/>
+                                    <constraint firstItem="06o-ob-0Ub" firstAttribute="centerX" secondItem="oHG-FT-WDR" secondAttribute="centerX" id="2Xa-lf-rj5"/>
+                                    <constraint firstItem="VYU-dd-aiK" firstAttribute="top" secondItem="06o-ob-0Ub" secondAttribute="bottom" constant="40" id="CqJ-UC-Wit"/>
+                                    <constraint firstItem="06o-ob-0Ub" firstAttribute="centerY" secondItem="oHG-FT-WDR" secondAttribute="centerY" id="d9s-tB-QvP"/>
+                                    <constraint firstItem="VYU-dd-aiK" firstAttribute="centerX" secondItem="oHG-FT-WDR" secondAttribute="centerX" id="eKe-c7-4w6"/>
+                                    <constraint firstAttribute="height" constant="262" id="hu9-sZ-rxW"/>
+                                </constraints>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SY1-Ra-Oqh">
                                 <rect key="frame" x="100" y="0.0" width="1820" height="1080"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hHu-9Y-ana">
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hHu-9Y-ana">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -652,12 +679,15 @@ Secrets.</string>
                             <constraint firstAttribute="bottom" secondItem="SY1-Ra-Oqh" secondAttribute="bottom" id="hyb-WA-qk8"/>
                             <constraint firstAttribute="trailing" secondItem="6ft-YL-OlT" secondAttribute="trailing" id="jRx-k4-IKp"/>
                             <constraint firstItem="5wm-Hx-cVe" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" id="k4A-IN-EHd"/>
+                            <constraint firstItem="oHG-FT-WDR" firstAttribute="centerY" secondItem="PMr-4a-o7g" secondAttribute="centerY" id="lqM-kz-ADa"/>
                             <constraint firstAttribute="bottom" secondItem="6ft-YL-OlT" secondAttribute="bottom" id="rgQ-qP-5az"/>
                             <constraint firstItem="SY1-Ra-Oqh" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" id="s88-Mb-l1V"/>
                             <constraint firstAttribute="trailing" secondItem="SY1-Ra-Oqh" secondAttribute="trailing" id="uEB-DI-Aqd"/>
+                            <constraint firstItem="oHG-FT-WDR" firstAttribute="centerX" secondItem="PMr-4a-o7g" secondAttribute="centerX" id="zIg-vA-dHm"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="emptyFavView" destination="oHG-FT-WDR" id="cRz-tl-3dw"/>
                         <outlet property="favTableView" destination="6ft-YL-OlT" id="cxO-GN-ZqQ"/>
                         <outlet property="serverListCollectionView" destination="SY1-Ra-Oqh" id="CdY-mG-Ko4"/>
                         <outlet property="sideMenu" destination="mPM-7m-YPc" id="2NV-0d-tXV"/>
@@ -667,7 +697,7 @@ Secrets.</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bm2-o1-0FD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-408" y="1341"/>
+            <point key="canvasLocation" x="-251" y="1143"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="k1O-1C-fGS">
@@ -995,6 +1025,7 @@ Secrets.</string>
         <image name="badge" width="224" height="224"/>
         <image name="bestloc_icon" width="300" height="156"/>
         <image name="disconnected_ring" width="300" height="300"/>
+        <image name="fav-empty-white" width="16" height="14"/>
         <image name="logo" width="64" height="64"/>
         <image name="unsecure" width="32" height="32"/>
     </resources>

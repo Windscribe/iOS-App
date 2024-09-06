@@ -48,7 +48,7 @@ class HomeRouter: RootRouter {
         case .newsFeed:
             let vc: NewsFeedViewController = Assembler.resolve(NewsFeedViewController.self)
             from.present(vc, animated: true)
-        case .serverList:
+        case let .serverList(bestLocation):
             let vc = Assembler.resolve(ServerListViewController.self)
             let transition = CATransition()
             transition.duration = 0.5
@@ -59,6 +59,8 @@ class HomeRouter: RootRouter {
             vc.delegate = from as? any ServerListTableViewDelegate
             vc.favDelegate = from as? any FavNodesListTableViewDelegate
             vc.staticIpDelegate = from as? any StaticIPListTableViewDelegate
+            vc.bestLocDelegate = from as? any BestLocationConnectionDelegate
+            vc.bestLocation = bestLocation
             from.navigationController?.pushViewController(vc, animated: true)
         case .privacyView:
             let vc: PrivacyPopUpViewController = Assembler.resolve(PrivacyPopUpViewController.self)
