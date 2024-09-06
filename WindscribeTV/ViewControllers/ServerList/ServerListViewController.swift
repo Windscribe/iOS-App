@@ -10,6 +10,10 @@ import UIKit
 import Swinject
 import RxSwift
 
+protocol BestLocationConnectionDelegate: AnyObject {
+    func connectToBestLocation()
+}
+
 enum SideMenuType: String {
     case all = "All"
     case fav = "Favorites"
@@ -51,20 +55,27 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     @IBOutlet weak var sideMenuWidthConstraint: NSLayoutConstraint!
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
+    weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
+    @IBOutlet weak var emptyFavView: UIView!
     private var sideOptions: [SideMenuType] = [.all,.fav,.windflix,.staticIp]
     private var selectedRow: Int = 0
     private var optionViews = [SideMenuOptions]()
+    private var selectionOption = SideMenuType.all
     let disposeBag = DisposeBag()
     var myPreferredFocusedView: UIView?
 
     var staticIpSelected = false
 
+    var bestLocation: BestLocationModel?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         serverListCollectionView.delegate = self
         serverListCollectionView.dataSource = self
+        
         sideMenuWidthConstraint.constant = 90
         self.serverListCollectionView.register(UINib(nibName: "ServerListCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ServerListCollectionViewCell")
         favTableView.delegate = self
@@ -75,6 +86,23 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         toggleView(viewToToggle: favTableView, isViewVisible: true)
         self.serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
+        hideEmptyFavView()
+        
+    }
+
+    private func hideEmptyFavView() {
+        if selectionOption == .fav {
+            if favNodeModels.count > 0 {
+                emptyFavView.isHidden = true
+                emptyFavView.subviews.forEach { $0.isHidden = true }
+            } else {
+                emptyFavView.isHidden = false
+                emptyFavView.subviews.forEach { $0.isHidden = false }
+            }
+        } else {
+            emptyFavView.isHidden = true
+            emptyFavView.subviews.forEach { $0.isHidden = true }
+        }
     }
 
     override var preferredFocusedView: UIView? {
@@ -159,6 +187,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
                 self.view.layoutIfNeeded()
             }
         }
+       
     }
 
     private func setup() {
@@ -170,20 +199,6 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             sideMenu.addArrangedSubview(optionView)
             optionViews.append(optionView)
         }
-        viewModel.favNode.subscribe(onNext: { [self] favNodes in
-            favNodeModels.removeAll()
-            if let favnodes = favNodes {
-                for result in favnodes {
-                    guard let favNodeModel = result.getFavNodeModel() else { return }
-                    favNodeModels.append(favNodeModel)
-                }
-                favTableView.reloadData()
-            }
-        }, onError: { error in
-            self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
-
-        }).disposed(by: disposeBag)
-
     }
 
     func bindData(isStreaming: Bool) {
@@ -191,6 +206,13 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         if results.count == 0 { return }
         viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
             self.serverSectionsOrdered = serverSectionsOrdered
+            
+           if  self.bestLocation != nil {
+                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+                if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
+                    self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+                }
+            }
             self.serverListCollectionView.reloadData()
         }
         self.viewModel.staticIPs.subscribe(onNext: { [self] staticips in
@@ -211,8 +233,12 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
                 }
                 DispatchQueue.main.async {
                     self.favTableView.reloadData()
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
                     self.view.layoutIfNeeded()
-                }            }
+                    self.hideEmptyFavView()
+                }
+            }
         }, onError: { error in
             self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
@@ -237,19 +263,27 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         case .all:
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
             toggleView(viewToToggle: favTableView, isViewVisible: true)
+            selectionOption = .all
+            hideEmptyFavView()
             bindData(isStreaming: false)
         case .fav:
             staticIpSelected = false
             toggleView(viewToToggle: favTableView, isViewVisible: false)
+            selectionOption = .fav
+            hideEmptyFavView()
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
         case .windflix:
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
             toggleView(viewToToggle: favTableView, isViewVisible: true)
+            selectionOption = .windflix
+            hideEmptyFavView()
             bindData(isStreaming: true)
         case .staticIp:
             staticIpSelected = true
             toggleView(viewToToggle: favTableView, isViewVisible: false)
+            selectionOption = .staticIp
+            hideEmptyFavView()
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
 
@@ -258,6 +292,11 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = 90
             self.view.layoutIfNeeded()
+        }
+        optionViews.forEach {
+            if $0.sideMenuType == self.selectionOption {
+                $0.setHorizontalGradientBackground()
+            }
         }
     }
 
@@ -321,7 +360,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
 
 }
 
-extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return serverSectionsOrdered.count
@@ -330,8 +369,14 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let serverSection = serverSectionsOrdered[indexPath.item]
-        if let countrycode = serverSection.server?.countryCode {
-            cell.flagImage.image =  UIImage(named: "\(countrycode)")
+        if indexPath.item == 0 && self.bestLocation != nil {
+            cell.flagImage.image =  UIImage(named: "bestLocation_cell")
+            cell.setup(isShadow: false)
+        } else {
+            if let countrycode = serverSection.server?.countryCode {
+                cell.flagImage.image =  UIImage(named: "\(countrycode)")
+            }
+            cell.setup(isShadow: true)
         }
         cell.countryCode.text = serverSection.server?.name
         return cell
@@ -339,9 +384,19 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 0 && self.bestLocation != nil {
+            self.navigationController?.popToRootViewController(animated: true)
+            bestLocDelegate?.connectToBestLocation()
+            return
+        }
         if let selectedServer = self.serverSectionsOrdered[indexPath.row].server {
             router.routeTo(to: .serverListDetail(server: selectedServer, delegate: self.delegate), from: self)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: 421, height: 273)
     }
 
 }
@@ -400,7 +455,6 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.focusStyle = UITableViewCell.FocusStyle.custom
 
         }
-
         return cell
     }
 

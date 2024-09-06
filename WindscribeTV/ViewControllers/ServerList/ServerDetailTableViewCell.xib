@@ -10,10 +10,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ServerDetailTableViewCell" rowHeight="339" id="fBs-An-CcD" customClass="ServerDetailTableViewCell" customModule="WindscribeTV" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="2336" height="339"/>
+            <rect key="frame" x="0.0" y="0.0" width="2352" height="339"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fBs-An-CcD" id="S0Q-fX-qc8">
-                <rect key="frame" x="0.0" y="0.0" width="2336" height="339"/>
+                <rect key="frame" x="0.0" y="0.0" width="2352" height="339"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qfc-l4-6Mc">
@@ -34,13 +34,13 @@
                         </subviews>
                     </stackView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C7p-9j-nRT">
-                        <rect key="frame" x="1936" y="146.5" width="92" height="46"/>
+                        <rect key="frame" x="1952" y="146.5" width="92" height="46"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ipg-ps-MbL">
-                        <rect key="frame" x="2203" y="132" width="75" height="75"/>
+                        <rect key="frame" x="2219" y="132" width="75" height="75"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="75" id="227-W6-8lx"/>
                             <constraint firstAttribute="height" constant="75" id="HGY-KO-rAq"/>
@@ -49,7 +49,7 @@
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jfm-Xr-U1g">
-                        <rect key="frame" x="2078" y="132" width="75" height="75"/>
+                        <rect key="frame" x="2094" y="132" width="75" height="75"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="75" id="1iE-0O-IdC"/>
                             <constraint firstAttribute="height" constant="75" id="r1f-GG-lZr"/>
@@ -57,14 +57,23 @@
                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     </button>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pref-pro-icon-green" translatesAutoresizingMaskIntoConstraints="NO" id="J41-PE-pB3">
+                        <rect key="frame" x="122" y="118.5" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="50" id="ZiO-ut-42F"/>
+                            <constraint firstAttribute="height" constant="50" id="w1y-qa-7gU"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="J41-PE-pB3" firstAttribute="leading" secondItem="qfc-l4-6Mc" secondAttribute="trailing" constant="30" id="212-i5-ZKe"/>
                     <constraint firstItem="jfm-Xr-U1g" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="J5S-Xk-Ez0"/>
                     <constraint firstItem="jfm-Xr-U1g" firstAttribute="leading" secondItem="C7p-9j-nRT" secondAttribute="trailing" constant="50" id="SFY-Rh-FAn"/>
                     <constraint firstItem="C7p-9j-nRT" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="Ssi-ug-4af"/>
                     <constraint firstAttribute="trailingMargin" secondItem="ipg-ps-MbL" secondAttribute="trailing" constant="50" id="WEW-5z-cDE"/>
                     <constraint firstItem="qfc-l4-6Mc" firstAttribute="leading" secondItem="S0Q-fX-qc8" secondAttribute="leading" id="owB-gI-TLs"/>
                     <constraint firstItem="qfc-l4-6Mc" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="u3T-gG-buG"/>
+                    <constraint firstItem="J41-PE-pB3" firstAttribute="top" secondItem="qfc-l4-6Mc" secondAttribute="top" id="u4M-IV-ki0"/>
                     <constraint firstItem="ipg-ps-MbL" firstAttribute="centerY" secondItem="S0Q-fX-qc8" secondAttribute="centerY" id="y9f-LW-qpw"/>
                     <constraint firstItem="jfm-Xr-U1g" firstAttribute="trailing" secondItem="ipg-ps-MbL" secondAttribute="trailing" constant="-125" id="zjS-uq-KnG"/>
                 </constraints>
@@ -77,8 +86,12 @@
                 <outlet property="descriptionLabel" destination="C7p-9j-nRT" id="3m8-sM-ihU"/>
                 <outlet property="favButton" destination="ipg-ps-MbL" id="X6h-wS-yaf"/>
                 <outlet property="latencyLabel" destination="8sI-C2-uif" id="Bbg-vl-70i"/>
+                <outlet property="proIcon" destination="J41-PE-pB3" id="S4g-KZ-klo"/>
             </connections>
             <point key="canvasLocation" x="-233" y="110.5"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="pref-pro-icon-green" width="32" height="32"/>
+    </resources>
 </document>

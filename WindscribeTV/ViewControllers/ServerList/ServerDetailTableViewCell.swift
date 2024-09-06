@@ -26,6 +26,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var favButton: UIButton!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var connectButton: UIButton!
+    @IBOutlet weak var proIcon: UIImageView!
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
@@ -40,6 +41,9 @@ class ServerDetailTableViewCell: UITableViewCell {
     var displayingNodeServer: ServerModel?
     var favNodes: [FavNode] = []
     let disposeBag = DisposeBag()
+    lazy var sessionManager: SessionManagerV2 = {
+        return Assembler.resolve(SessionManagerV2.self)
+    }()
     var displayingFavNode: FavNodeModel? {
         didSet {
             updateUIForFavNode()
@@ -91,11 +95,18 @@ class ServerDetailTableViewCell: UITableViewCell {
 
         latencyLabel.font = .bold(size: 30)
         latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
+        proIcon.alpha = 0.50
 
         descriptionLabel.textColor = .white
         descriptionLabel.font = .text(size: 30)
         descriptionLabel.isHidden = true
         descriptionLabel.text = ""
+        self.proIcon.isHidden = true
+        if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+            if premiumOnly && !isUserPro {
+                self.proIcon.isHidden = false
+            }
+        }
     }
 
     func updateUIForFavNode() {
@@ -122,6 +133,13 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             self.latencyLabel.text = "  --  "
         }
+        
+        if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium {
+            if premiumOnly && !isUserPro {
+                self.proIcon.isHidden = false
+            }
+        }
+        
         localDB.getFavNode().subscribe(onNext: { favNodes in
             self.favNodes = favNodes
             if let id =  self.displayingFavNode?.groupId {
@@ -158,6 +176,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
             self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
         }
+      
     }
 
     func setFavButtonImage() {
@@ -206,9 +225,21 @@ class ServerDetailTableViewCell: UITableViewCell {
         if connectButton.isFocused || favButton.isFocused {
             cityLabel.textColor = .white
             latencyLabel.textColor = .white
+            proIcon.alpha = 1
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
+                if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium {
+                    if premiumOnly && !isUserPro {
+                        descriptionLabel.text = TextsAsset.upgrade
+                    }
+                }
+                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+                    if premiumOnly && !isUserPro {
+                        descriptionLabel.text = TextsAsset.upgrade
+                    }
+                }
+               
             } else if favButton.isFocused {
                 if isFavourited {
                     descriptionLabel.text = TvAssets.removeFromFav
@@ -219,6 +250,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             cityLabel.textColor = .whiteWithOpacity(opacity: 0.50)
             latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
+            proIcon.alpha = 0.50
             descriptionLabel.isHidden = true
         }
     }

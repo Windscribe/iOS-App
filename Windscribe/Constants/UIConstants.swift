@@ -1436,10 +1436,19 @@ struct TvAssets {
     }
 
     static var favTitle: String {
-        return "Favourite".localize()
+        return "Favourites".localize()
     }
 
     static var staticIPTitle: String {
         return "Static IP".localize()
     }
+    
+    static var allTitle: String {
+        return "All".localize()
+    }
+    
+    static var windflixTitle: String {
+        return "Windflix".localize()
+    }
+    
 }
