@@ -151,6 +151,7 @@ class ServerDetailTableViewCell: UITableViewCell {
 
     func updetaUIForStaticIP() {
         favButton.isHidden = true
+        proIcon.isHidden = true
         connectButtonTrailing.constant = -125
         if let city = displayingStaticIP?.cityName, let nick = displayingStaticIP?.countryCode {
             let fullText = "\(city) \(nick)"
@@ -229,12 +230,12 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium {
+                if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
                 }
-                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+                if let premiumOnly = displayingGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
@@ -315,16 +316,17 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
     
     @objc func connectButtonTapped() {
-        guard let server = displayingNodeServer, let group = displayingGroup else {
-            guard let favnode = displayingFavNode else { 
-                guard let staticIp = displayingStaticIP else { return }
-                self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
-                return }
-            self.favDelegate?.setSelectedFavNode(favNode: favnode)
-            return
+        if favButton.isHidden {
+            guard let staticIp = displayingStaticIP else { return }
+            self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
+        } else {
+            guard let server = displayingNodeServer, let group = displayingGroup else {
+                guard let favnode = displayingFavNode else { return }
+                self.favDelegate?.setSelectedFavNode(favNode: favnode)
+                return
+            }
+            self.delegate?.setSelectedServerAndGroup(server: server, group: group)
         }
-        self.delegate?.setSelectedServerAndGroup(server: server, group: group)
-        
     }
     
 }
