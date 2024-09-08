@@ -158,7 +158,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
     func setDisconnected() {
         if loadLatencyValuesOnDisconnect {
             updateStateInfo(to: .disconnected)
-            setConnectionLabelValuesForSelectedNode(shouldIgnoreCity: true)
+            setConnectionLabelValuesForSelectedNode()
             loadLatencyValuesOnDisconnect = false
             Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(loadLatencyValues), userInfo: nil, repeats: false)
             return
