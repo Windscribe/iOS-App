@@ -102,4 +102,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
         self.delegate?.setSelectedServerAndGroup(server: server,
                                                       group: group)
     }
+    func showUpgradeView() {
+        self.delegate?.showUpgradeView()
+    }
 }

@@ -12,10 +12,12 @@ import RxSwift
 
 protocol ServerListTableViewDelegate: AnyObject {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
+    func showUpgradeView()
 }
 
 protocol FavNodesListTableViewDelegate: AnyObject {
     func setSelectedFavNode(favNode: FavNodeModel)
+    func showUpgradeView()
 }
 
 protocol StaticIPListTableViewDelegate: AnyObject {
@@ -137,7 +139,11 @@ class ServerDetailTableViewCell: UITableViewCell {
         if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
                 self.proIcon.isHidden = false
+            } else {
+                self.proIcon.isHidden = true
             }
+        } else {
+            self.proIcon.isHidden = true
         }
         
         localDB.getFavNode().subscribe(onNext: { favNodes in
@@ -319,6 +325,9 @@ class ServerDetailTableViewCell: UITableViewCell {
         if favButton.isHidden {
             guard let staticIp = displayingStaticIP else { return }
             self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
+        } else if !proIcon.isHidden {
+            delegate?.showUpgradeView()
+            favDelegate?.showUpgradeView()
         } else {
             guard let server = displayingNodeServer, let group = displayingGroup else {
                 guard let favnode = displayingFavNode else { return }

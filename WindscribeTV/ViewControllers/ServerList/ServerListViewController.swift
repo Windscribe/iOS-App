@@ -471,6 +471,9 @@ extension ServerListViewController: FavNodesListTableViewDelegate {
         self.navigationController?.popToRootViewController(animated: true)
         self.favDelegate?.setSelectedFavNode(favNode: favNode)
     }
+    func showUpgradeView() {
+        self.delegate?.showUpgradeView()
+    }
 }
 
 extension ServerListViewController: StaticIPListTableViewDelegate {

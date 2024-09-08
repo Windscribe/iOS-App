@@ -548,6 +548,9 @@ extension MainViewController: ServerListTableViewDelegate {
             }
         }
     }
+    func showUpgradeView() {
+        router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
+    }
 }
 
 extension MainViewController: FavNodesListTableViewDelegate {
