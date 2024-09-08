@@ -137,6 +137,7 @@ class Managers: Assembly {
         container.register(ConnectionStateManagerType.self) {  r in
             ConnectionStateManager(apiManager: r.resolve(APIManager.self)!, vpnManager: r.resolve(VPNManager.self)!,
                                    securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!,
+                                   latencyRepository: r.resolve(LatencyRepository.self)!,
                                    logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
     }

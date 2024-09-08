@@ -58,6 +58,7 @@ class ConnectionStateManager: ConnectionStateManagerType {
     var securedNetwork: SecuredNetworkRepository
     var localDatabase: LocalDatabase
     var apiManager: APIManager
+    var latencyRepository: LatencyRepository
     let disposeBag = DisposeBag()
 
     private lazy var preferences: Preferences = {
@@ -74,11 +75,13 @@ class ConnectionStateManager: ConnectionStateManagerType {
          vpnManager: VPNManager,
          securedNetwork: SecuredNetworkRepository,
          localDatabase: LocalDatabase,
+         latencyRepository: LatencyRepository,
          logger: FileLogger) {
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
+        self.latencyRepository = latencyRepository
         self.logger = logger
         self.vpnManager.delegate = self
     }
@@ -266,9 +269,9 @@ extension ConnectionStateManager {
         localDatabase.saveLastConnectedNode(node: lastConnectedNode).disposed(by: disposeBag)
     }
 
-    private func setConnectionLabelValuesForSelectedNode(shouldIgnoreCity: Bool = false) {
+    private func setConnectionLabelValuesForSelectedNode() {
         guard var selectedNode = self.vpnManager.selectedNode else { return }
-        if shouldIgnoreCity {
+        if let id = try? latencyRepository.bestLocation.value()?.groupId, id == selectedNode.groupId {
             selectedNode.cityName = TextsAsset.bestLocation
             selectedNode.nickName = ""
         }
