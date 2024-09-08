@@ -105,7 +105,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             guard let proxyInfo = ProxyInfo(text: String(line)) else {
                 return false
             }
-            guard let path = logger.logDirectory?.lastPathComponent else { return false }
+            guard let path = proxyLogFilePath() else { return false }
             DispatchQueue.global(qos: .background).async {
                 let logFilePathCString = (path as NSString).utf8String
                 let listenAddressCString = (Proxy.localEndpoint as NSString).utf8String
@@ -129,23 +129,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// - Returns optional log file path.
     /// - Note max file size 5KB
     private func proxyLogFilePath() -> String? {
-        let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
-        if let logDirectory = containerUrl?.appendingPathComponent("AppExtensionLogs").path {
-            let path = "\(logDirectory)/proxy.log"
-            if !FileManager.default.fileExists(atPath: path) {
-                FileManager.default.createFile(atPath: path, contents: nil)
-            }
-            do {
-                if let fileSize = try FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as? Int {
-                    if fileSize > 1024 * 5 {
-                        FileManager.default.createFile(atPath: path, contents: nil)
-                    }
-                }
-            } catch {}
-            return path
-        } else {
-            return nil
+        let dir = logger.logDirectory?.path ?? ""
+        let path = "\(dir)/proxy.log"
+        if !FileManager.default.fileExists(atPath: path) {
+            FileManager.default.createFile(atPath: path, contents: nil)
         }
+        do {
+            if let fileSize = try FileManager.default.attributesOfItem(atPath: path)[FileAttributeKey.size] as? Int {
+                if fileSize > 1024 * 5 {
+                    FileManager.default.createFile(atPath: path, contents: nil)
+                }
+            }
+        } catch {}
+        return path
     }
 
     override func handleAppMessage(_ messageData: Data, completionHandler: ((Data?) -> Void)?) {
