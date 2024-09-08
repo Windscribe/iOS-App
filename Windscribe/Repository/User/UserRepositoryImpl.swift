@@ -15,6 +15,7 @@ class UserRepositoryImpl: UserRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let vpnmanager: VPNManager
+    private let wgCredentials: WgCredentials
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
     let user = BehaviorSubject<User?>(value: nil)
@@ -22,11 +23,12 @@ class UserRepositoryImpl: UserRepository {
         return preferences.userSessionAuth()
     }
 
-    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase, vpnmanager: VPNManager, logger: FileLogger) {
+    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase, vpnmanager: VPNManager, wgCredentials: WgCredentials, logger: FileLogger) {
         self.preferences = preferences
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.vpnmanager = vpnmanager
+        self.wgCredentials = wgCredentials
         self.logger = logger
         localDatabase.getSession().subscribe(onNext: { [self] session in
             if let session = session {
@@ -51,6 +53,7 @@ class UserRepositoryImpl: UserRepository {
     }
 
     func login(session: Session) {
+        wgCredentials.delete()
         preferences.saveUserSessionAuth(sessionAuth: session.sessionAuthHash)
         localDatabase.saveOldSession()
         localDatabase.saveSession(session: session).disposed(by: disposeBag)
