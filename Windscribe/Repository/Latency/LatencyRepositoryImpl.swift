@@ -51,11 +51,8 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Returns latency data for ip.
     func getPingData(ip: String) -> PingData? {
-        let value = try? latency.value().first { $0.ip == ip }
-        if value?.isInvalidated == true {
-            return nil
-        }
-        return value
+        let value = try? latency.value()
+        return value?.first { !$0.isInvalidated  && $0.ip == ip }
     }
 
     func loadLatency() {

@@ -39,14 +39,15 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet weak var connectButtonTrailing: NSLayoutConstraint!
     let latencyRepository = Assembler.resolve(LatencyRepository.self)
     lazy var localDB = Assembler.resolve(LocalDatabase.self)
+    lazy var preferences = Assembler.resolve(Preferences.self)
     var displayingGroup: GroupModel?
     var displayingNodeServer: ServerModel?
-    var favNodes: [FavNode] = []
+    var favIDs: [String] = []
     let disposeBag = DisposeBag()
     lazy var sessionManager: SessionManagerV2 = {
         return Assembler.resolve(SessionManagerV2.self)
     }()
-    var displayingFavNode: FavNodeModel? {
+    var displayingFavGroup: Group? {
         didSet {
             updateUIForFavNode()
         }
@@ -112,9 +113,12 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     func updateUIForFavNode() {
+        if displayingFavGroup?.isInvalidated == true {
+            return
+        }
         connectButtonTrailing.constant = 0
         favButton.isHidden = false
-        if let city = displayingFavNode?.cityName, let nick = displayingFavNode?.nickName {
+        if let city = displayingFavGroup?.city, let nick = displayingFavGroup?.nick {
             let fullText = "\(city) \(nick)"
             let attributedString = NSMutableAttributedString(string: fullText)
 
@@ -125,7 +129,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             attributedString.addAttribute(.font, value: UIFont.text(size: 45), range: secondRange)
             cityLabel.attributedText = attributedString
         }
-        guard let pingIp = displayingFavNode?.pingIp,
+        guard let pingIp = displayingFavGroup?.pingIp,
               let minTime = latencyRepository.getPingData(ip: pingIp)?.latency else {
             self.latencyLabel.text = "  --  "
             return
@@ -136,7 +140,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             self.latencyLabel.text = "  --  "
         }
         
-        if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium {
+        if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
                 self.proIcon.isHidden = false
             } else {
@@ -145,11 +149,10 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             self.proIcon.isHidden = true
         }
-        
-        localDB.getFavNode().subscribe(onNext: { favNodes in
-            self.favNodes = favNodes
-            if let id =  self.displayingFavNode?.groupId {
-                self.isFavourited = favNodes.map({ $0.groupId }).contains("\(id)")
+        preferences.observeFavouriteIds().subscribe(onNext: { favIDs in
+            self.favIDs = favIDs
+            if self.displayingFavGroup?.isInvalidated == false , let id = self.displayingFavGroup?.id {
+                self.isFavourited = favIDs.map({ $0 }).contains("\(id)")
                 self.setFavButtonImage()
             }
         }).disposed(by: disposeBag)
@@ -236,7 +239,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             descriptionLabel.isHidden = false
             if connectButton.isFocused {
                 descriptionLabel.text = TextsAsset.connect
-                if let premiumOnly = displayingFavNode?.isPremiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
+                if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, favButton.isHidden == false {
                     if premiumOnly && !isUserPro {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
@@ -285,38 +288,34 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             self.latencyLabel.text = "  --  "
         }
-        localDB.getFavNode().subscribe(onNext: { favNodes in
-            self.favNodes = favNodes
-            if let id =  group.id {
-                self.isFavourited = favNodes.map({ $0.groupId }).contains("\(id)")
+        preferences.observeFavouriteIds().subscribe(onNext: { favIDs in
+            self.favIDs = favIDs
+            if let id = group.id {
+                self.isFavourited = favIDs.map({ $0 }).contains("\(id)")
                 self.setupUI()
             }
         }).disposed(by: disposeBag)
     }
 
     @objc func favButtonTapped() {
-        guard let group = displayingGroup, let server = displayingNodeServer else {
-            guard let node = displayingFavNode else { return }
-            if let groupId = node.groupId,
-               let favNodeHostname = self.favNodes.filter({$0.groupId == "\(groupId)"}).first?.hostname {
-                self.localDB.removeFavNode(hostName: favNodeHostname)
-            }
+        var group = displayingGroup
+        if displayingFavGroup != nil {
+            group = displayingFavGroup?.getGroupModel()
+        }
+        guard let group = group else {
             return
         }
         if isFavourited {
             isFavourited = false
             setFavButtonImage()
-            if let groupId = group.id,
-               let favNodeHostname = self.favNodes.filter({$0.groupId == "\(groupId)"}).first?.hostname {
-                self.localDB.removeFavNode(hostName: favNodeHostname)
+            if let groupId = group.id {
+                self.preferences.removeFavouriteId("\(groupId)")
             }
-
         } else {
             isFavourited = true
             setFavButtonImage()
-            if let bestNode = group.bestNode {
-                let favNode = FavNode(node: bestNode, group: group, server: server)
-                localDB.saveFavNode(favNode: favNode).disposed(by: disposeBag)
+            if let groupId = group.id {
+                self.preferences.addFavouriteId("\(groupId)")
             }
         }
     }
@@ -330,12 +329,25 @@ class ServerDetailTableViewCell: UITableViewCell {
             favDelegate?.showUpgradeView()
         } else {
             guard let server = displayingNodeServer, let group = displayingGroup else {
-                guard let favnode = displayingFavNode else { return }
-                self.favDelegate?.setSelectedFavNode(favNode: favnode)
+                guard let favGroup = displayingFavGroup else { return }
+                if let favNode = buildFavNode(group: favGroup)?.getFavNodeModel() {
+                    self.favDelegate?.setSelectedFavNode(favNode: favNode)
+                }
                 return
             }
             self.delegate?.setSelectedServerAndGroup(server: server, group: group)
         }
+    }
+    
+    private func buildFavNode(group: Group) -> FavNode? {
+        let servers = localDB.getServers() ?? []
+        let server = servers.first { server in
+            return server.groups.map{$0.id}.contains(group.id)
+        }
+        if let server = server, let node = group.nodes.randomElement() {
+            return FavNode(node: node, group: group, server: server)
+        }
+        return nil
     }
     
 }
