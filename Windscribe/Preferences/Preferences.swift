@@ -131,4 +131,8 @@ protocol Preferences {
     func getCustomDNSValue() -> DNSValue
     func saveWireguardWakeupTime(value: Double)
     func getWireguardWakeupTime() -> Double
+    
+    func observeFavouriteIds() -> Observable<[String]>
+    func addFavouriteId(_ id: String)
+    func removeFavouriteId(_ id: String)
 }

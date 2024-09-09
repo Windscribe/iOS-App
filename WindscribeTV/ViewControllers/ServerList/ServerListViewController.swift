@@ -47,7 +47,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
 
     var serverSectionsOrdered: [ServerSection] = []
     @IBOutlet weak var sideMenu: UIStackView!
-    var favNodeModels: [FavNodeModel] = []
+    var favGroups: [Group] = []
     var staticIPModels = [StaticIPModel]()
     @IBOutlet var sideMenuContainerView: UIView!
     @IBOutlet var serverListCollectionView: UICollectionView!
@@ -92,7 +92,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
 
     private func hideEmptyFavView() {
         if selectionOption == .fav {
-            if favNodeModels.count > 0 {
+            if favGroups.count > 0 {
                 emptyFavView.isHidden = true
                 emptyFavView.subviews.forEach { $0.isHidden = true }
             } else {
@@ -224,20 +224,15 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             }
 
         }).disposed(by: disposeBag)
-        viewModel.favNode.subscribe(onNext: { [self] favNodes in
-            favNodeModels.removeAll()
-            if let favnodes = favNodes {
-                for result in favnodes {
-                    guard let favNodeModel = result.getFavNodeModel() else { return }
-                    favNodeModels.append(favNodeModel)
-                }
-                DispatchQueue.main.async {
-                    self.favTableView.reloadData()
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
-                    self.view.layoutIfNeeded()
-                    self.hideEmptyFavView()
-                }
+        viewModel.favouriteGroups.subscribe(onNext: { [self] favourites in
+            favGroups.removeAll()
+            favGroups.append(contentsOf: favourites)
+            DispatchQueue.main.async {
+                self.favTableView.reloadData()
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+                self.view.layoutIfNeeded()
+                self.hideEmptyFavView()
             }
         }, onError: { error in
             self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
@@ -437,15 +432,15 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
         if staticIpSelected {
             return staticIPModels.count
         } else {
-            return favNodeModels.count
+            return favGroups.count
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
         if !staticIpSelected {
-            let favNodes = favNodeModels[indexPath.row]
-            cell.displayingFavNode = favNodes
+            let favNodes = favGroups[indexPath.row]
+            cell.displayingFavGroup = favNodes
             cell.favDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
         } else {

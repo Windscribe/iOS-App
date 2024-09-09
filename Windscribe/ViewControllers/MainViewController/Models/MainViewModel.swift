@@ -28,6 +28,7 @@ protocol MainViewModelType {
     var appNetwork: BehaviorSubject<AppNetwork> { get }
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
     var session: BehaviorSubject<Session?> { get }
+    var favouriteGroups: BehaviorSubject<[Group]> {get}
     var isBlurStaticIpAddress: Bool { get }
     var isBlurNetworkName: Bool { get }
     var didShowProPlanExpiredPopup: Bool { get set }
@@ -92,6 +93,7 @@ class MainViewModel: MainViewModelType {
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
     var session = BehaviorSubject<Session?>(value: nil)
+    var favouriteGroups = BehaviorSubject<[Group]>(value: [])
     var oldSession: OldSession? {
         get { localDatabase.getOldSession() }
     }
@@ -120,6 +122,7 @@ class MainViewModel: MainViewModelType {
         loadNotifications()
         loadServerList()
         loadFavNode()
+        loadTvFavourites()
         loadStaticIps()
         loadCustomConfigs()
         observeNetworkStatus()
@@ -261,6 +264,24 @@ class MainViewModel: MainViewModelType {
             }
         }).disposed(by: disposeBag)
 
+    }
+    
+    private func getFavouriteGroup(id: String, servers: [Server]) -> Group? {
+        var groups: [Group] = []
+        for server in servers {
+            server.groups.forEach { group in
+                groups.append(group)
+            }
+        }
+        return groups.first {$0.id == Int(id)}
+    }
+    
+    private func loadTvFavourites(){
+        Observable.combineLatest(preferences.observeFavouriteIds(), serverList).map { (ids, servers) in
+            return ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
+        }.subscribe(onNext: { groups in
+            self.favouriteGroups.onNext(groups)
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func loadFavNode() {

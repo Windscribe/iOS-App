@@ -895,6 +895,12 @@
 		C580FE282B50829B004FA857 /* LatencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE272B50829B004FA857 /* LatencyRepository.swift */; };
 		C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE2B2B5101CC004FA857 /* PingData.swift */; };
+		C585F3E12C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
+		C585F3E22C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
+		C585F3E32C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
+		C585F3E42C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
+		C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
+		C585F3E62C8E79A400A70524 /* Preferences+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */; };
 		C590D76927F2A55D007515B3 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
 		C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706A2C63210B00DA4DB1 /* WireGuardKit */; };
 		C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C598706C2C63212700DA4DB1 /* WireGuardKit */; };
@@ -1778,6 +1784,7 @@
 		C580FE272B50829B004FA857 /* LatencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepository.swift; sourceTree = "<group>"; };
 		C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C580FE2B2B5101CC004FA857 /* PingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingData.swift; sourceTree = "<group>"; };
+		C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Preferences+Favourites.swift"; sourceTree = "<group>"; };
 		C59BBFC8273F30D60078BB72 /* WebSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSession.swift; sourceTree = "<group>"; };
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
@@ -3543,6 +3550,7 @@
 				C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */,
 				C535D29827E4E85700C08345 /* SharedUserDefaults.swift */,
 				C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */,
+				C585F3E02C8E79A400A70524 /* Preferences+Favourites.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -4901,6 +4909,7 @@
 				59FC74462C515DC100021CD1 /* DispatchQueue+Ext.swift in Sources */,
 				59FC743B2C515B7E00021CD1 /* StaticIpRepository.swift in Sources */,
 				1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */,
+				C585F3E62C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */,
 				59FC73EE2C51511700021CD1 /* Token.swift in Sources */,
 				1EA9D7122C8717DC00566A93 /* PrivacyPopUpViewController.swift in Sources */,
@@ -5400,6 +5409,7 @@
 				AF3FC117227B3D8F0050B224 /* LoadingButton.swift in Sources */,
 				AF018E0121B09A6100B225FF /* Constants.swift in Sources */,
 				AF0AED3B22035A9E00039CAF /* StreamingListTableViewDataSource+Delegate.swift in Sources */,
+				C585F3E12C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */,
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
 				AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */,
@@ -5536,6 +5546,7 @@
 				1E7A19552C34237E00851AE2 /* DNSValue.swift in Sources */,
 				E9425BA327437064008B8786 /* FilePaths.swift in Sources */,
 				C56FCBEA2B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */,
+				C585F3E22C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
 				596E60062B8F77EC00D51E20 /* Language.swift in Sources */,
 				C50F20D02B62110400266B23 /* Bundle+Ext.swift in Sources */,
@@ -5574,6 +5585,7 @@
 				5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */,
 				C50F20D12B62110500266B23 /* Bundle+Ext.swift in Sources */,
 				C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */,
+				C585F3E32C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				AF551D4423F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */,
 				C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C50F20CE2B61A52B00266B23 /* FileLogFormater.swift in Sources */,
@@ -5600,6 +5612,7 @@
 				C50F20822B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				C535D29A27E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
+				C585F3E42C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
 				C535D29327E2EF3700C08345 /* FilePaths.swift in Sources */,
@@ -5677,6 +5690,7 @@
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
+				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
