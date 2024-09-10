@@ -17,6 +17,7 @@ class ForgotPasswordViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupLocalized()
         // Do any additional setup after loading the view.
     }
 
@@ -38,4 +39,9 @@ class ForgotPasswordViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
+    func setupLocalized() {
+        welcomeLabel.text = TextsAsset.slogan
+        infoLabel.text = TvAssets.forgotPasswordInfo
+        backButton.titleLabel?.text = TextsAsset.back
+    }
 }

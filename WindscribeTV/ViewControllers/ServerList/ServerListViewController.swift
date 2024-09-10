@@ -16,11 +16,11 @@ protocol BestLocationConnectionDelegate: AnyObject {
 
 enum SideMenuType: String {
     case all = "All"
-    case fav = "Favorites"
+    case fav = "Favourites"
     case windflix = "Windflix"
-    case staticIp = "Static IPs"
-    
-    
+    case staticIp = "Static IP"
+
+
     func getImage(isSelected: Bool) -> UIImage? {
         switch self {
         case .all:
@@ -86,7 +86,6 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         self.serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
         hideEmptyFavView()
-        
     }
 
     private func hideEmptyFavView() {
@@ -371,7 +370,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         
         NSLayoutConstraint.activate([
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: -130),
             favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
         ])
@@ -395,7 +394,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
             }
             cell.setup(isShadow: true)
         }
-        cell.countryCode.text = serverSection.server?.name
+        cell.countryCode.text = serverSection.server?.name?.localize()
         return cell
         
     }
@@ -442,7 +441,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
         ])
         
         // Set a fixed height for the header view
-        let headerHeight: CGFloat = 500
+        let headerHeight: CGFloat = 300
         headerView.frame = CGRect(x: 0, y: 0, width: favTableView.frame.width, height: headerHeight)
         
         return headerView
