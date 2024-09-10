@@ -355,3 +355,12 @@
 "Favourites" = "お気に入り";
 "Static IP" = "静的 IP";
 "All" = "全て";
+"If you already have an account." = "すでにアカウントをお持ちの場合.";
+"Lazy Login" = "レイジーログイン";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "任意のデバイスで https://windscribe.com/lazy にアクセスし、以下のコードを入力します。";
+"OR" = "又は";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "携帯電話または iPad で Windscribe iOS アプリを使用して、[設定](左上) に移動し、[アカウント] で[遅延ログイン] を選択して、以下のコードを入力します。";
+"Generate Code" = "コードの生成";
+"Manual Login" = "手動ログイン";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FAは続行する必要があります\n認証アプリを使用してコード\nを生成します。";
+"Please visit windscribe.com to reset your password" = "windscribe.com にアクセスしてパスワードをリセットしてください";

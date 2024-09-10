@@ -371,3 +371,12 @@
 "Favourites" = "Favorilerden";
 "Static IP" = "Statik IP";
 "All" = "Tüm";
+"If you already have an account." = "Zaten bir hesabınız varsa.";
+"Lazy Login" = "Tembel Giriş";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "Herhangi bir cihazda https://windscribe.com/lazy adresine gidin ve aşağıdaki kodu girin.";
+"OR" = "VEYA";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "Windscribe iOS uygulamanızı telefonunuzda veya iPad'inizde kullanarak Tercihler\\e (Sol üstte) gidin, \"Hesap\" altında \"Lazy Login\" i seçin ve aşağıdaki kodu girin.";
+"Generate Code" = "Kod Oluştur";
+"Manual Login" = "Manual Login";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA devam etmeyi gerektirir.\nKodu oluşturmak için bir kimlik\ndoğrulama uygulaması kullanın.";
+"Please visit windscribe.com to reset your password" = "Lütfen şifrenizi sıfırlamak için windscribe.com sayfasını ziyaret edin";

@@ -48,11 +48,8 @@
                                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </textField>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Jc-bf-kxF">
-                                    <rect key="frame" x="0.0" y="0.0" width="450" height="133"/>
-                                    <string key="text">2FA require to proceed.
-Use an authentication
-app to generate the code.</string>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2FA require to proceed.\nUse an authentication\napp to generate the code." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Jc-bf-kxF">
+                                    <rect key="frame" x="0.0" y="0.0" width="450" height="178"/>
                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="38"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -134,11 +131,6 @@ Secrets.</string>
             <point key="canvasLocation" x="-117" y="-1104"/>
         </view>
     </objects>
-    <designables>
-        <designable name="LH4-WQ-qhu">
-            <size key="intrinsicContentSize" width="173" height="86"/>
-        </designable>
-    </designables>
     <resources>
         <image name="logo" width="64" height="64"/>
     </resources>

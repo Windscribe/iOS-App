@@ -1472,7 +1472,7 @@ struct TvAssets {
     }
     
     static var generateCode: String {
-        return "GENERATE CODE".localize()
+        return "Generate Code".localize().uppercased()
     }
     
     static var manualLogin: String {
@@ -1484,10 +1484,6 @@ struct TvAssets {
     }
     
     static var twofaDescription: String {
-        return """
-        2FA require to proceed.
-        Use an authentication
-        app to generate the code.
-        """.localize()
+        return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
     }
 }

@@ -353,3 +353,12 @@
 "Favourites" = "즐겨찾기";
 "Static IP" = "고정 IP";
 "All" = "모두";
+"If you already have an account." = "이미 계정이 있는 경우.";
+"Lazy Login" = "지연 로그인";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "어떤 기기에서든 https://windscribe.com/lazy로 이동하여 아래 코드를 입력하세요.";
+"OR" = "또는";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "휴대폰이나 iPad에서 Windscribe iOS 앱을 사용하여 기본 설정(왼쪽 상단)으로 이동하고 \"계정\"에서 \"지연 로그인\"을 선택한 다음 아래 코드를 입력합니다.";
+"Generate Code" = "코드 생성";
+"Manual Login" = "수동 로그인";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA는 계속 진행해야 합니다.\n인증 앱을 사용하여\n코드를 생성합니다.";
+"Please visit windscribe.com to reset your password" = "windscribe.com 방문하여 비밀번호를 재설정하세요.";

@@ -354,3 +354,12 @@
 "Favourites" = "Favoritos";
 "Static IP" = "IP estática";
 "All" = "Todo";
+"If you already have an account." = "Si ya tienes una cuenta.";
+"Lazy Login" = "Inicio de sesión perezoso";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "Vaya a https://windscribe.com/lazy en cualquier dispositivo e ingrese el código a continuación.";
+"OR" = "O";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "Usando su aplicación Windscribe iOS en su teléfono o iPad, vaya a Preferencias (arriba a la izquierda), en \"Cuenta\", elija \"Lazy Login\" e ingrese el código a continuación.";
+"Generate Code" = "Generar código";
+"Manual Login" = "Inicio de sesión manual";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA requieren proceder.\nUse una aplicación de autenticación\npara generar el código.";
+"Please visit windscribe.com to reset your password" = "Visita windscribe.com para restablecer tu contraseña";

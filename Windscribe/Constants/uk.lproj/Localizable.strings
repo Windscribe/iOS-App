@@ -354,3 +354,12 @@
 "Favourites" = "Улюблений";
 "Static IP" = "Статична IP-адреса";
 "All" = "Увесь";
+"If you already have an account." = "Якщо у вас уже є обліковий запис.";
+"Lazy Login" = "Лінивий вхід";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "Перейдіть на сторінку https://windscribe.com/lazy на будь-якому пристрої та введіть наведений нижче код.";
+"OR" = "АБО";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "Використовуючи додаток Windscribe для iOS на телефоні або iPad, перейдіть в Налаштування (вгорі ліворуч), в розділі «Обліковий запис» виберіть «Лінивий вхід» і введіть код нижче.";
+"Generate Code" = "Згенерувати код";
+"Manual Login" = "Вхід вручну";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA вимагати продовження.\nСтворіть код за допомогою\nпрограми для автентифікації.";
+"Please visit windscribe.com to reset your password" = "Будь ласка, відвідайте windscribe.com, щоб скинути пароль";

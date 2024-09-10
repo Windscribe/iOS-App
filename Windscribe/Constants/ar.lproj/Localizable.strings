@@ -351,3 +351,12 @@
 "Favourites" = "المفضلة";
 "Static IP" = "IP ثابت";
 "All" = "كل";
+"If you already have an account." = "إذا كان لديك حساب بالفعل.";
+"Lazy Login" = "تسجيل الدخول الكسول";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "انتقل إلى https://windscribe.com/lazy على أي جهاز وأدخل الرمز أدناه";
+"OR" = "أو";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "باستخدام تطبيق Windscribe iOS على هاتفك الخلوي أو iPad ، انتقل إلى التفضيلات (أعلى اليسار) ، ضمن \"الحساب\" ، اختر \"تسجيل الدخول البطيء\" وأدخل الرمز أدناه.";
+"Generate Code" = "إنشاء التعليمات البرمجية";
+"Manual Login" = "تسجيل الدخول اليدوي";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA تتطلب المضي قدما. استخدم تطبيق مصادقة لإنشاء الرمز.";
+"Please visit windscribe.com to reset your password" = "يرجى زيارة windscribe.com لإعادة تعيين كلمة المرور الخاصة بك";

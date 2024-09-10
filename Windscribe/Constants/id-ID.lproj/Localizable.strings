@@ -353,3 +353,12 @@
 "Favourites" = "Favorit";
 "Static IP" = "IP statis";
 "All" = "Semua";
+"If you already have an account." = "Jika Anda sudah memiliki akun.";
+"Lazy Login" = "Login Malas";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "Buka https://windscribe.com/lazy di perangkat apa pun dan masukkan kode di bawah.";
+"OR" = "ATAU";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "Menggunakan aplikasi iOS Windscribe Anda di ponsel atau iPad Anda, buka Preferensi (Kiri atas), di bawah \"Akun\" pilih \"Login Malas\" dan masukkan kode di bawah ini.";
+"Generate Code" = "Hasilkan Kode";
+"Manual Login" = "Login Manual";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA perlu melanjutkan.\nGunakan aplikasi autentikasi\nuntuk membuat kode.";
+"Please visit windscribe.com to reset your password" = "Silakan kunjungi windscribe.com untuk mengatur ulang kata sandi Anda";
