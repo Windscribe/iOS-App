@@ -353,3 +353,12 @@
 "Favourites" = "Ulubionych";
 "Static IP" = "Statyczny adres IP";
 "All" = "Wszystkie";
+"If you already have an account." = "Jeśli masz już konto.";
+"Lazy Login" = "Leniwe logowanie";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "Wejdź na https://windscribe.com/lazy na dowolnym urządzeniu i wprowadź poniższy kod.";
+"OR" = "LUB";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "Korzystając z aplikacji Windscribe na iOS na telefonie lub iPad, przejdź do Preferencji (w lewym górnym rogu), w sekcji \"Konto\" wybierz \"Lazy Login\" i wprowadź poniższy kod.";
+"Generate Code" = "Generowanie kodu";
+"Manual Login" = "Logowanie ręczne";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA wymaga kontynuowania.\nUżyj aplikacji uwierzytelniającej,\naby wygenerować kod.";
+"Please visit windscribe.com to reset your password" = "Odwiedź stronę windscribe.com, aby zresetować hasło";

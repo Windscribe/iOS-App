@@ -353,3 +353,12 @@
 "Favourites" = "收藏夹";
 "Static IP" = "静态 IP";
 "All" = "都";
+"If you already have an account." = "如果您已有帐户.";
+"Lazy Login" = "延迟登录";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "在任何设备上转至 https://windscribe.com/lazy 并输入以下代码。";
+"OR" = "或";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "在手机或 iPad 上使用 Windscribe iOS 应用程序，转到首选项（左上角），在“帐户”下选择“延迟登录”并输入下面的代码。";
+"Generate Code" = "生成代码";
+"Manual Login" = "手动登录";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "需通过双重验证以继续操作。请使用 2FA 应用生成代码。";
+"Please visit windscribe.com to reset your password" = "请访问 windscribe.com 重置密码";

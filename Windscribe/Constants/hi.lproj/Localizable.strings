@@ -396,3 +396,13 @@
 "Favourites" = "पसंदीदा";
 "Static IP" = "स्थैतिक आईपी";
 "All" = "सब";
+"If you already have an account." = "अगर आपके पास पहले से ही अकाउंट है.";
+"Lazy Login" = "आलसी लॉगिन";
+"Go to https://windscribe.com/lazy on any device and enter the code below." = "किसी भी डिवाइस पर https://windscribe.com/lazy पर जाएं और नीचे दिया गया कोड दर्ज करें।";
+"OR" = "या";
+"Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below." = "अपने सेल फोन या आईपैड पर अपने विंडस्क्राइब आईओएस ऐप का उपयोग करके, प्राथमिकताएं (ऊपरी बाएं) पर जाएं।
+\"खाता\" के अंतर्गत \"आलसी लॉगिन\" चुनें और नीचे कोड दर्ज करें।";
+"Generate Code" = "कोड जनरेट करें";
+"Manual Login" = "मैन्युअल लॉगिन";
+"2FA require to proceed.\nUse an authentication\napp to generate the code." = "2एफए को आगे बढ़ने की आवश्यकता है। कोड जनरेट करने के लिए प्रमाणीकरण ऐप्लिकेशन का उपयोग करें.";
+"Please visit windscribe.com to reset your password" = "अपना पासवर्ड रीसेट करने के लिए कृपया windscribe.com पर जाएँ";
