@@ -15,10 +15,10 @@ protocol ConfirmEmailViewModel {
     var localDatabase: LocalDatabase {get}
     var apiManager: APIManager {get}
     func getSession()
+    func updateSession()
 }
 
 class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
-
     var alertManager: AlertManagerV2
     var localDatabase: LocalDatabase
     var sessionManager: SessionManagerV2
@@ -40,4 +40,7 @@ class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
+    func updateSession() {
+        sessionManager.keepSessionUpdated()
+    }
 }

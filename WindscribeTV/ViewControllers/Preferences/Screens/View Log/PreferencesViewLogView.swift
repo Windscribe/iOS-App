@@ -24,11 +24,15 @@ class PreferencesViewLogView: UIView {
         textView.showsVerticalScrollIndicator = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
     }
+    
+    func scrolltoBottom() {
+        self.textView.scrollToBottom()
+    }
 
     private func bindViews() {
         viewModel.logContent.subscribe(onNext: { content in
             self.textView.text = content
-            self.textView.scrollToBottom()
+            self.scrolltoBottom()
         }, onError: { _ in })
         .disposed(by: disposeBag)
     }

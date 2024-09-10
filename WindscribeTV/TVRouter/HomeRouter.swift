@@ -16,7 +16,7 @@ class HomeRouter: RootRouter {
             from.present(vc, animated: true)
         case .upgrade:
             let vc = Assembler.resolve(UpgradePopViewController.self)
-            from.present(vc, animated: true)
+            presentWithPossibleNavigation(vc: vc, from: from)
         case .support:
             let vc: BasePopUpViewController = Assembler.resolve(BasePopUpViewController.self)
             vc.viewModel?.setPopupType(with: .support)
@@ -36,11 +36,11 @@ class HomeRouter: RootRouter {
         case .confirmEmail:
             let vc: ConfirmEmailPopupViewController = Assembler.resolve(ConfirmEmailPopupViewController.self)
             vc.viewModel?.setPopupType(with: .confirmEmail)
-            from.present(vc, animated: true)
+            presentWithPossibleNavigation(vc: vc, from: from)
         case .addEmail:
             let vc: AddEmailPopupViewController = Assembler.resolve(AddEmailPopupViewController.self)
             vc.viewModel?.setPopupType(with: .addeEmail)
-            from.present(vc, animated: true)
+            presentInNavigationController(vc: vc, from: from)
         case .newsFeed:
             let vc: NewsFeedViewController = Assembler.resolve(NewsFeedViewController.self)
             from.present(vc, animated: true)
@@ -70,9 +70,7 @@ class HomeRouter: RootRouter {
             from.present(vc, animated: true)
         case .proPlanExpireddAccountPopup:
             let vc: ProPlanExpiredAccountPopupViewController = Assembler.resolve(ProPlanExpiredAccountPopupViewController.self)
-            let navigationController = UINavigationController()
-            navigationController.setViewControllers([vc], animated: false)
-            from.present(navigationController, animated: true)
+            presentInNavigationController(vc: vc, from: from)
         default: ()
         }
     }

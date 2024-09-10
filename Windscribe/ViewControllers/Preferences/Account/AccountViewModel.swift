@@ -20,6 +20,7 @@ protocol AccountViewModelType {
     var isDarkMode: BehaviorSubject<Bool> {get}
     var cancelAccountState: BehaviorSubject<ManageAccountState> {get}
     var languageUpdatedTrigger: PublishSubject<()> { get }
+    var sessionUpdatedTrigger: PublishSubject<()> { get }
 
     func titleForHeader(in section: Int) -> String
     func numberOfSections() -> Int
@@ -38,21 +39,24 @@ class AccountViewModel: AccountViewModelType {
     let apiCallManager: APIManager
     let logger: FileLogger
     let sessionManager: SessionManagerV2
+    let localDatabase: LocalDatabase
 
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
     let isDarkMode: BehaviorSubject<Bool>
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
     let languageUpdatedTrigger = PublishSubject<()>()
+    var sessionUpdatedTrigger = PublishSubject<()>()
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2) {
+    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2, localDatabase: LocalDatabase) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
-        sections = [.info, .plan]
+        self.localDatabase = localDatabase
         self.alertManager = alertManager
+        
         isDarkMode = themeManager.darkTheme
-
+        sections = [.info, .plan]
         languageManager.activelanguage.subscribe { _ in
             self.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
@@ -119,7 +123,17 @@ class AccountViewModel: AccountViewModelType {
     }
 
     func loadSession() -> Single<Session> {
-        return apiCallManager.getSession()
+        let sessionSingle = apiCallManager.getSession()
+        sessionSingle.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
+            localDatabase.saveOldSession()
+            localDatabase.saveSession(session: session).disposed(by: disposeBag)
+            if localDatabase.getOldSession() != localDatabase.getSessionSync() {
+                sessionUpdatedTrigger.onNext(())
+            }
+        }, onFailure: { [self] error in
+            logger.logE(self, "Failed to get session from server with error \(error).")
+        }).disposed(by: disposeBag)
+        return sessionSingle
     }
 
     func logoutUser() {

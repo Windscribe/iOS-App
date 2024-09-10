@@ -43,6 +43,8 @@ class PreferencesMainViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var contentStackView: UIStackView!
     @IBOutlet weak var versionLabel: UILabel!
+    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet weak var loadingActivityView: UIActivityIndicatorView!
     
     let generalView: PreferencesGeneralView = PreferencesGeneralView.fromNib()
     let accountView: PreferencesAccountView = PreferencesAccountView.fromNib()
@@ -63,6 +65,9 @@ class PreferencesMainViewController: UIViewController {
         super.viewWillAppear(animated)
         generalView.updateSelection()
         connnectionsView.updateSelection()
+        logView.scrolltoBottom()
+        
+        accountViewModel.loadSession().subscribe(onFailure: { _ in }).disposed(by: disposeBag)
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) { }
@@ -92,6 +97,32 @@ class PreferencesMainViewController: UIViewController {
         viewModel.currentLanguage.subscribe { _ in
             self.titleLabel.text = TextsAsset.Preferences.title
         }.disposed(by: disposeBag)
+        
+        accountViewModel.cancelAccountState.subscribe(onNext: { state in
+            self.logger.logD(self, "Cancel account state: \(state)")
+            switch state {
+                case .initial:
+                    self.hideLoading()
+                case .loading:
+                    self.showLoading()
+                case .error(let error):
+                    self.hideLoading()
+                    self.accountViewModel.alertManager.showSimpleAlert(
+                        viewController: self,
+                        title: TextsAsset.error,
+                        message: error,
+                        buttonText: TextsAsset.okay
+                    )
+                case .success:
+                    self.hideLoading()
+                    self.accountViewModel.logoutUser()
+
+            }
+        }).disposed(by: disposeBag)
+        
+        accountViewModel.sessionUpdatedTrigger.subscribe { _ in
+            self.accountView.setup()
+        }.disposed(by: disposeBag)
     }
 
     private func createSettingViews() {
@@ -101,6 +132,7 @@ class PreferencesMainViewController: UIViewController {
 
         accountView.viewModel = accountViewModel
         accountView.setup()
+        accountView.bindViews()
         addSubview(view: accountView)
         accountView.isHidden = true
 
@@ -139,8 +171,9 @@ class PreferencesMainViewController: UIViewController {
             logView.updateTitle(with: "\(TextsAsset.Debug.sendingLog)...")
             helpViewModel.submitDebugLog(username: nil) { (_, error) in
                 DispatchQueue.main.async {
+                    logView.updateTitle()
                     if error == nil {
-                        logView.updateTitle()
+                        self.helpViewModel.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.appLogSubmitSuccessAlert, message: "", buttonText: TextsAsset.okay)
                     } else {
                         self.helpViewModel.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.appLogSubmitFailAlert, message: "", buttonText: TextsAsset.okay)
                     }
@@ -158,6 +191,16 @@ class PreferencesMainViewController: UIViewController {
                 self.logger.logD(self, "Entered password is nil/empty.")
             }
         }, onFailure: { _ in }).disposed(by: disposeBag)
+    }
+    
+    private func hideLoading() {
+        loadingActivityView.stopAnimating()
+        loadingView.isHidden = true
+    }
+    
+    private func showLoading() {
+        loadingActivityView.startAnimating()
+        loadingView.isHidden = false
     }
 }
 
@@ -178,8 +221,8 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         case .account:  accountView.isHidden = false
         case .connection:
             connnectionsView.isHidden = false
-//            connnectionsView.updateSelection()
         case .viewLog: logView.isHidden = false
+            logView.scrolltoBottom()
         case .sendLog: sendLogButtonTapped(logView: sender)
         case .signOut: signoutButtonTapped()
         }
