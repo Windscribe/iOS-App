@@ -10,10 +10,11 @@ import UIKit
 import RxSwift
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
-    var ceViewModel: ConfirmEmailViewModel!, logger: FileLogger!
+    var ceViewModel: ConfirmEmailViewModel!, logger: FileLogger!, router: HomeRouter!
 
     var resendButton = WSPillButton()
     var changeButton = WSPillButton()
+    var closeButton = WSPillButton()
 
     // MARK: Overrides
     override func viewDidLoad() {
@@ -26,8 +27,9 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
         super.setup()
         resendButton.setTitle(TextsAsset.Account.resend, for: .normal)
         changeButton.setTitle(TextsAsset.EmailView.changeEmail, for: .normal)
+        closeButton.setTitle(TextsAsset.EmailView.close, for: .normal)
 
-        [resendButton, changeButton].forEach { roundbutton in
+        [resendButton, changeButton, closeButton].forEach { roundbutton in
             roundbutton.setup(withHeight: 96.0)
             mainStackView.addArrangedSubview(roundbutton)
         }
@@ -39,6 +41,9 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
             self.resendButtonTapped()
         }.disposed(by: disposeBag)
         changeButton.rx.primaryAction.bind { [self] in
+            self.router.routeTo(to: .addEmail, from: self)
+        }.disposed(by: disposeBag)
+        closeButton.rx.primaryAction.bind { [self] in
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
     }

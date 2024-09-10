@@ -48,5 +48,4 @@ extension UITextView {
             self.scrollRangeToVisible(bottom)
         }
     }
-
 }

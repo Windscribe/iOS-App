@@ -19,8 +19,8 @@ enum SideMenuType: String {
     case fav = "Favorites"
     case windflix = "Windflix"
     case staticIp = "Static IPs"
-
-
+    
+    
     func getImage(isSelected: Bool) -> UIImage? {
         switch self {
         case .all:
@@ -37,14 +37,14 @@ enum SideMenuType: String {
             return isSelected ? img?.withTintColor(.white): img
         }
     }
-
+    
 }
 
 class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
-
-
+    
+    
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
-
+    
     var serverSectionsOrdered: [ServerSection] = []
     @IBOutlet weak var sideMenu: UIStackView!
     var favGroups: [Group] = []
@@ -65,9 +65,8 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     private var selectionOption = SideMenuType.all
     let disposeBag = DisposeBag()
     var myPreferredFocusedView: UIView?
-
+    
     var staticIpSelected = false
-
     var bestLocation: BestLocationModel?
     
     
@@ -105,27 +104,30 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         }
     }
 
-    override var preferredFocusedView: UIView? {
-
-       return myPreferredFocusedView
-    }
-
+//    override var preferredFocusedView: UIView? { }
+    
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        super.pressesBegan(presses, with: event)
         for press in presses {
-            if press.type == .leftArrow {
-                if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
-                    if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                        print("IndexPath is \(indexPath)")
-                        if indexPath.row == 0 {
+            super.pressesBegan(presses, with: event)
+            if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
+                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+                    print("IndexPath is \(indexPath)")
+                    if indexPath.row == 0 && selectedRow == 0 {
+                        if press.type == .leftArrow {
                             myPreferredFocusedView = optionViews.first?.button
                             self.setNeedsFocusUpdate()
                             self.updateFocusIfNeeded()
-                            return
+                            break
                         }
                     }
+                    if (0...3).contains(indexPath.row), (0...3).contains(selectedRow), press.type == .upArrow {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+                    selectedRow = indexPath.row
                 }
-                if UIScreen.main.focusedView is UIButton {
+            }
+            if UIScreen.main.focusedView is UIButton {
+                if press.type == .leftArrow {
                     myPreferredFocusedView = optionViews.first?.button
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()
@@ -133,33 +135,56 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             }
         }
     }
-
+    
     private func setupSwipeDownGesture() {
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
         swipeLeft.direction = .left
         view.addGestureRecognizer(swipeLeft)
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
     }
-
+    
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
                     print("IndexPath is \(indexPath)")
-                    if indexPath.row == 0 {
+                    if indexPath.row == 0 && selectedRow == 0 {
                         myPreferredFocusedView = optionViews.first?.button
                         self.setNeedsFocusUpdate()
                         self.updateFocusIfNeeded()
                         return
                     }
+                    selectedRow = indexPath.row
                 }
             }
             if UIScreen.main.focusedView is UIButton {
                 myPreferredFocusedView = optionViews.first?.button
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()
-            }        }
+            }
+        }
     }
-
+    
+    
+    @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if UIScreen.main.focusedView is UIButton {
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
+                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+                    if (0...3).contains(indexPath.row), (0...3).contains(selectedRow) {
+                        self.navigationController?.popToRootViewController(animated: true)
+                    }
+                    selectedRow = indexPath.row
+                }
+            }
+        }
+    }
+    
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         // myPreferredFocusedView = context.nextFocusedView
         if context.nextFocusedItem is UIButton {
@@ -189,7 +214,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         }
        
     }
-
+    
     private func setup() {
         sideMenu.distribution = .fillEqually
         sideOptions.forEach {
@@ -200,7 +225,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             optionViews.append(optionView)
         }
     }
-
+    
     func bindData(isStreaming: Bool) {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
@@ -222,7 +247,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
                 guard let staticIPModel = result.getStaticIPModel() else { return }
                 staticIPModels.append(staticIPModel)
             }
-
+            
         }).disposed(by: disposeBag)
         viewModel.favouriteGroups.subscribe(onNext: { [self] favourites in
             favGroups.removeAll()
@@ -243,20 +268,20 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             //self.configureVPN()
         }).disposed(by: disposeBag)
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         if let vc = self.presentingViewController as? MainViewController {
             vc.isFromServer = true
         }
     }
-
+    
     func optionWasSelected(with value: SideMenuType) {
         optionViews.forEach {
             $0.updateSelection(with: $0.isType(of: value))
         }
         switch value {
         case .all:
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
+            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false, hasTopSpacing: false)
             toggleView(viewToToggle: favTableView, isViewVisible: true)
             selectionOption = .all
             hideEmptyFavView()
@@ -281,8 +306,8 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             hideEmptyFavView()
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
-
-
+            
+            
         }
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = 90
@@ -294,73 +319,70 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             }
         }
     }
-
-    private func toggleView(viewToToggle: UIView, isViewVisible: Bool) {
-           let finalPosition: CGFloat
-           let finalAlpha: CGFloat
-           let transform: CGAffineTransform
-
-           if isViewVisible {
-               // Hide the view
-               finalPosition = view.bounds.height + viewToToggle.frame.height
-               finalAlpha = 0
-               transform = CGAffineTransform(translationX: 0, y: finalPosition)
-           } else {
-               // Show the view
-               finalPosition = 100
-               finalAlpha = 1
-               transform = CGAffineTransform(translationX: 0, y: finalPosition)
-               viewToToggle.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
-           }
-
-           // Animate the view sliding in or out
-           UIView.animate(withDuration: 0.5, animations: {
-               viewToToggle.transform = transform
-               viewToToggle.alpha = finalAlpha
-           }, completion: { _ in
-               if isViewVisible {
-                   viewToToggle.removeFromSuperview()
-               } else {
-                   // Ensure the view is added if it's being shown
-                   if !viewToToggle.isDescendant(of: self.view) {
-                       self.view.addSubview(viewToToggle)
-                       self.setConstraints()
-                       viewToToggle.sendToBack()
-                       self.sideMenuContainerView.bringToFront()
-                   }
-               }
-           })
-       }
-
+    
+    private func toggleView(viewToToggle: UIView, isViewVisible: Bool, hasTopSpacing: Bool = true) {
+        let finalPosition: CGFloat
+        let finalAlpha: CGFloat
+        let transform: CGAffineTransform
+        
+        if isViewVisible {
+            // Hide the view
+            finalPosition = view.bounds.height + viewToToggle.frame.height
+            finalAlpha = 0
+            transform = CGAffineTransform(translationX: 0, y: finalPosition)
+        } else {
+            // Show the view
+            finalPosition = hasTopSpacing ? 100 : 0
+            finalAlpha = 1
+            transform = CGAffineTransform(translationX: 0, y: finalPosition)
+            viewToToggle.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)
+        }
+        
+        // Animate the view sliding in or out
+        UIView.animate(withDuration: 0.5, animations: {
+            viewToToggle.transform = transform
+            viewToToggle.alpha = finalAlpha
+        }, completion: { _ in
+            if isViewVisible {
+                viewToToggle.removeFromSuperview()
+            } else {
+                // Ensure the view is added if it's being shown
+                if !viewToToggle.isDescendant(of: self.view) {
+                    self.view.addSubview(viewToToggle)
+                    self.setConstraints()
+                    viewToToggle.sendToBack()
+                    self.sideMenuContainerView.bringToFront()
+                }
+            }
+        })
+    }
+    
     private func setConstraints() {
         serverListCollectionView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
         ])
-
+        
         favTableView.translatesAutoresizingMaskIntoConstraints = false
-
+        
         NSLayoutConstraint.activate([
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
         ])
-
     }
-
 }
 
 extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return serverSectionsOrdered.count
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let serverSection = serverSectionsOrdered[indexPath.item]
@@ -375,9 +397,9 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
         }
         cell.countryCode.text = serverSection.server?.name
         return cell
-
+        
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 && self.bestLocation != nil {
             self.navigationController?.popToRootViewController(animated: true)
@@ -393,26 +415,24 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
         
         return CGSize(width: 421, height: 273)
     }
-
 }
 
 extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
-
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         // Create a container view for the header
         let headerView = UIView()
         headerView.backgroundColor = .clear
-
+        
         // Create the label
         let label = PageTitleLabel()
         label.text = staticIpSelected ? TvAssets.staticIPTitle : TvAssets.favTitle
         label.textAlignment = .left
-
+        
         label.translatesAutoresizingMaskIntoConstraints = false
-
+        
         // Add the label to the header view
         headerView.addSubview(label)
-
+        
         // Add constraints for the label
         NSLayoutConstraint.activate([
             label.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
@@ -420,14 +440,14 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 0),
             label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
         ])
-
+        
         // Set a fixed height for the header view
         let headerHeight: CGFloat = 500
         headerView.frame = CGRect(x: 0, y: 0, width: favTableView.frame.width, height: headerHeight)
-
+        
         return headerView
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if staticIpSelected {
             return staticIPModels.count
@@ -435,7 +455,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             return favGroups.count
         }
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
         if !staticIpSelected {
@@ -448,11 +468,11 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.displayingStaticIP = staticIP
             cell.staticIpDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
-
+            
         }
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 100
     }

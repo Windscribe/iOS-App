@@ -22,16 +22,16 @@ class PreferencesAccountView: UIView {
 
     func setup() {
         guard let accountViewModel = viewModel else { return }
+        contentStackView.removeAllArrangedSubviews()
         accountViewModel.getSections().forEach { section in
             let sectionView: AccountSectionView = AccountSectionView.fromNib()
             sectionView.setup(with: section)
             sectionView.delegate = self
             contentStackView.addArrangedSubview(sectionView)
         }
-        bindViews()
     }
 
-    private func bindViews() {
+    func bindViews() {
         viewModel?.languageUpdatedTrigger.subscribe { _ in
             self.contentStackView.arrangedSubviews.forEach {
                 if let sectionView = $0 as? AccountSectionView {

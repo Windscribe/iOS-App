@@ -28,4 +28,18 @@ extension RootRouter {
                               }, completion: nil)
         }
     }
+    
+    func presentInNavigationController(vc: UIViewController, from: UIViewController) {
+        let navigationController = UINavigationController()
+        navigationController.setViewControllers([vc], animated: false)
+        from.present(navigationController, animated: true)
+    }
+    
+    func presentWithPossibleNavigation(vc: UIViewController, from: UIViewController) {
+        if let navigationVC = from.navigationController {
+            navigationVC.setViewControllers([vc], animated: true)
+        } else {
+            from.present(vc, animated: true)
+        }
+    }
 }

@@ -535,6 +535,7 @@ class MainViewController: UIViewController {
     }
     
 }
+
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {

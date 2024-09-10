@@ -3,12 +3,15 @@
     <device id="appleTV" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PreferencesMainViewController" customModule="WindscribeTV" customModuleProvider="target">
             <connections>
                 <outlet property="contentStackView" destination="Qch-9T-a74" id="GUg-DQ-GX7"/>
+                <outlet property="loadingActivityView" destination="Lnr-dL-AcM" id="sLz-aq-IXy"/>
+                <outlet property="loadingView" destination="FA9-6w-vK3" id="Gjs-B9-N6h"/>
                 <outlet property="optionsStackView" destination="8os-JP-eFO" id="VT6-gY-Dxk"/>
                 <outlet property="titleLabel" destination="sJF-fG-8iv" id="luJ-Be-oBr"/>
                 <outlet property="versionLabel" destination="hFk-TB-aWd" id="a7X-sH-14Z"/>
@@ -55,6 +58,21 @@
                     <color key="textColor" white="1" alpha="0.5" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
+                <view hidden="YES" contentMode="scaleToFill" id="FA9-6w-vK3">
+                    <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Lnr-dL-AcM">
+                            <rect key="frame" x="928" y="508" width="64" height="64"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="x8n-IF-DaR"/>
+                    <color key="backgroundColor" white="1" alpha="0.14999999999999999" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="Lnr-dL-AcM" firstAttribute="centerX" secondItem="FA9-6w-vK3" secondAttribute="centerX" id="BpT-7D-in6"/>
+                        <constraint firstItem="Lnr-dL-AcM" firstAttribute="centerY" secondItem="FA9-6w-vK3" secondAttribute="centerY" id="O3v-dH-h8J"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="0.90295493197278909" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
