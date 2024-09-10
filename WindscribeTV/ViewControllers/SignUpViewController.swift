@@ -30,6 +30,7 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupLocalized()
         // Do any additional setup after loading the view.
     }
     func setup() {
@@ -63,6 +64,16 @@ class SignUpViewController: UIViewController {
         bindView()
     }
 
+    func setupLocalized() {
+        welcomeLabel.text = TextsAsset.slogan
+        signUpTitle.text = TextsAsset.signUp
+        usernameTextField.placeholder = TextsAsset.username
+        passwordTextField.placeholder = TextsAsset.password
+        signUpButton.titleLabel?.text = TextsAsset.signUp.uppercased()
+        backButton.titleLabel?.text = TextsAsset.back
+        forgotButton.titleLabel?.text = TextsAsset.forgotPassword
+    }
+    
     func bindView() {
         viewModel.showLoadingView.bind { [self] show in
             if show {

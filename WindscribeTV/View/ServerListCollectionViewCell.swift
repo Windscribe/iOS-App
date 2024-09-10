@@ -24,6 +24,8 @@ class ServerListCollectionViewCell: UICollectionViewCell {
             flagImage.layer.shadowOpacity = 1
             flagImage.layer.shadowOffset = CGSize(width: 10, height: 10)
             flagImage.layer.shadowRadius = 0.0
+        } else {
+            flagImage.layer.shadowColor = UIColor.clear.cgColor
         }
         countryCode.font = .bold(size: 30)
         countryCode.text = countryCode.text?.uppercased()

@@ -26,6 +26,7 @@ class WelcomeViewController: UIViewController {
         super.viewDidLoad()
         setup()
         bindViews()
+        setupLocalized()
         // Do any additional setup after loading the view.
     }
 
@@ -51,6 +52,13 @@ class WelcomeViewController: UIViewController {
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
 
+    }
+    
+    func setupLocalized() {
+        loginButton.titleLabel?.text = TextsAsset.login
+        welcomeLabel.text = TextsAsset.slogan
+        loginDescription.text = TvAssets.welcomeDescription
+        getStartedButton.titleLabel?.text = TextsAsset.getStarted
     }
 
     private func bindViews() {

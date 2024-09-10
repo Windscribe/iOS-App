@@ -65,7 +65,9 @@ class MainViewController: UIViewController {
         bindViews()
         setupSwipeDownGesture()
         loadLastConnection()
+        loadLastConnected()
         checkForVPNActivation()
+        sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
         
@@ -265,9 +267,6 @@ class MainViewController: UIViewController {
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
         
-        connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
-            self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
-        }).disposed(by: disposeBag)
         setFlagImages()
         
         serverListViewModel.configureVPNTrigger.subscribe(onNext: {_ in
@@ -286,6 +285,32 @@ class MainViewController: UIViewController {
             localisation()
         }, onError: { _ in }).disposed(by: disposeBag)
         
+        self.viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
+            self.setFlagImages()
+        }).disposed(by: self.disposeBag)
+        
+    }
+    
+    func loadLastConnected() {
+        if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
+            guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
+            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
+            if (self.vpnManager.selectedNode?.wgPublicKey == nil || self.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && vpnManager.isDisconnected() {
+                if self.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
+                    self.configureBestLocation(selectBestLocation: true)
+                } else {
+                    self.vpnManager.selectAnotherNode()
+                }
+                logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
+            }
+        }
+        if self.vpnManager.selectedNode == nil {
+            guard let bestLocation = try? viewModel.bestLocation.value()?.getBestLocationModel() else { return }
+            guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
+            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
+            logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
+
+        }
     }
     
     func localisation() {
@@ -304,7 +329,7 @@ class MainViewController: UIViewController {
             guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation {// && self.vpnManager.isDisconnected() {
+            if selectBestLocation && self.vpnManager.selectedNode == nil {
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
             }
             if connectToBestLocation {

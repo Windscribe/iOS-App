@@ -49,6 +49,7 @@ class LoginViewController: UIViewController {
         }
         setupCommonUI()
         bindView()
+        setupLocalized()
     }
 
     func setup() {
@@ -76,6 +77,21 @@ class LoginViewController: UIViewController {
         myPreferredFocusedView = usernameTextField
         setNeedsFocusUpdate()
         updateFocusIfNeeded()
+    }
+
+    func setupLocalized() {
+        titleLabel.text = TvAssets.lazyLogin
+        description1.text = TvAssets.lazyLoginDescription
+        orLabel.text = TvAssets.or
+        description2.text = TvAssets.lazyLoginDescription2
+        generateCodeButton.titleLabel?.text = TvAssets.generateCode
+        loginTitle.text = TvAssets.manualLogin
+        usernameTextField.placeholder = TextsAsset.username
+        passwordTextField.placeholder = TextsAsset.password
+        loginButton.titleLabel?.text = TextsAsset.login
+        backButton.titleLabel?.text = TextsAsset.back
+        forgotButton.titleLabel?.text = TextsAsset.forgotPassword
+        description2FA.text = TvAssets.twofaDescription
     }
 
     func setupCommonUI() {
