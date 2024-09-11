@@ -40,6 +40,7 @@ class WelcomeViewController: WSUIViewController {
                 window.overrideUserInterfaceStyle = .dark
             }
         }
+        setupLocalized()
     }
 
     override func setupLocalized() {

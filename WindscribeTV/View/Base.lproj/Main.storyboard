@@ -319,7 +319,6 @@
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="38"/>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="GET STARTED"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="hasBorder" value="NO"/>
                                         </userDefinedRuntimeAttributes>
@@ -332,7 +331,6 @@
                                         </constraints>
                                         <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                        <state key="normal" title="LOGIN"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="hasBorder" value="NO"/>
                                         </userDefinedRuntimeAttributes>
@@ -448,7 +446,7 @@ Secrets.</string>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="hasBorder" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                             </button>
-                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pi2-SR-bEV" customClass="WSTextFieldTv" customModule="WindscribeTV" customModuleProvider="target">
+                                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pi2-SR-bEV" customClass="PasswordTextFieldTv" customModule="WindscribeTV" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="134" width="450" height="75"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
@@ -565,7 +563,7 @@ Secrets.</string>
                         <outlet property="backButton" destination="88c-KR-24M" id="sby-6m-KCJ"/>
                         <outlet property="forgotButton" destination="mBO-lD-w1h" id="enV-CL-PfN"/>
                         <outlet property="infoLabel" destination="GlZ-al-dtt" id="ze1-0L-LnS"/>
-                        <outlet property="passwordTextField" destination="pi2-SR-bEV" id="FOl-5u-1Eo"/>
+                        <outlet property="passwordTextField" destination="pi2-SR-bEV" id="GD6-pB-5tv"/>
                         <outlet property="signUpButton" destination="by7-6d-YD3" id="7Ae-x2-cvA"/>
                         <outlet property="signUpTitle" destination="evW-0J-whC" id="h1r-Yz-5NQ"/>
                         <outlet property="usernameTextField" destination="f10-zN-peM" id="GHh-NL-6mG"/>
@@ -1005,10 +1003,10 @@ Secrets.</string>
     </scenes>
     <designables>
         <designable name="9bK-pw-zAm">
-            <size key="intrinsicContentSize" width="193" height="86"/>
+            <size key="intrinsicContentSize" width="80" height="86"/>
         </designable>
         <designable name="DTL-6M-nB9">
-            <size key="intrinsicContentSize" width="330" height="85"/>
+            <size key="intrinsicContentSize" width="80" height="85"/>
         </designable>
         <designable name="IgO-T0-k3z">
             <size key="intrinsicContentSize" width="173" height="86"/>

@@ -57,9 +57,9 @@ class WSTextFieldTv: UITextField {
 
 }
 
-class PasswordTextFieldTv: UITextField {
-    lazy var showHidePasswordButton = ImageButton(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
-
+class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
+    lazy var showHidePasswordButton = ImageButton(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+    var showingPassword: Bool = false
     override var isSecureTextEntry: Bool {
           didSet {
               if isFirstResponder {
@@ -83,9 +83,10 @@ class PasswordTextFieldTv: UITextField {
         self.isSecureTextEntry = true
         self.clearsOnBeginEditing = false
         self.clearsOnInsertion = false
-
-        showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
-        showHidePasswordButton.addTarget(self, action: #selector(showHidePasswordButtonTapped), for: .touchUpInside)
+         self.delegate = self
+         showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withTintColor(.whiteWithOpacity(opacity: 0.50)), for: .normal)
+         showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withTintColor(.whiteWithOpacity(opacity: 1.0)), for: .focused)
+        showHidePasswordButton.addTarget(self, action: #selector(showHidePasswordButtonTapped), for: .primaryActionTriggered)
         super.addSubview(showHidePasswordButton)
 
          self.backgroundColor = .clear
@@ -99,12 +100,16 @@ class PasswordTextFieldTv: UITextField {
     }
 
     @objc func showHidePasswordButtonTapped() {
+        showingPassword = true
         if self.isSecureTextEntry {
             self.isSecureTextEntry = false
-            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withTintColor(.whiteWithOpacity(opacity: 0.50)), for: .normal)
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withTintColor(.whiteWithOpacity(opacity: 1.0)), for: .focused)
+            
         } else {
             self.isSecureTextEntry = true
-            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysOriginal), for: .normal)
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withTintColor(.whiteWithOpacity(opacity: 0.50)), for: .normal)
+            showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withTintColor(.whiteWithOpacity(opacity: 1.0)), for: .focused)
         }
     }
 
@@ -133,14 +138,24 @@ class PasswordTextFieldTv: UITextField {
                                toItem: nil,
                                attribute: .height,
                                multiplier: 1.0,
-                               constant: 24),
+                               constant: 35),
             NSLayoutConstraint(item: showHidePasswordButton,
                                attribute: .width,
                                relatedBy: .equal,
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 24)
+                               constant: 35)
             ])
     }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if showingPassword {
+            showingPassword = false
+            self.endEditing(true)
+
+            return false }
+        return true
+    }
+    
 }

@@ -16,7 +16,7 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var signUpButton: WSRoundButton!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var passwordTextField: WSTextFieldTv!
+    @IBOutlet weak var passwordTextField: PasswordTextFieldTv!
     @IBOutlet weak var forgotButton: UIButton!
     @IBOutlet weak var signUpTitle: UILabel!
     @IBOutlet weak var usernameTextField: WSTextFieldTv!
@@ -26,13 +26,32 @@ class SignUpViewController: UIViewController {
     var viewModel: SignUpViewModel!, router: SignupRouter!, logger: FileLogger!
     var claimGhostAccount = false
     let disposeBag = DisposeBag()
+    var myPreferredFocusedView: UIView?
 
+    override var preferredFocusedView: UIView? {
+        return myPreferredFocusedView
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
         setupLocalized()
         // Do any additional setup after loading the view.
     }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        super.pressesBegan(presses, with: event)
+        for press in presses {
+            if passwordTextField.isFocused {
+                if press.type == .rightArrow {
+                    myPreferredFocusedView = passwordTextField.showHidePasswordButton
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
+                }
+            }
+        }
+    }
+    
+    
     func setup() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
             self.view.backgroundColor = UIColor(patternImage: backgroundImage)
@@ -69,9 +88,10 @@ class SignUpViewController: UIViewController {
         signUpTitle.text = TextsAsset.signUp
         usernameTextField.placeholder = TextsAsset.username
         passwordTextField.placeholder = TextsAsset.password
-        signUpButton.titleLabel?.text = TextsAsset.signUp.uppercased()
-        backButton.titleLabel?.text = TextsAsset.back
-        forgotButton.titleLabel?.text = TextsAsset.forgotPassword
+        
+        signUpButton.setTitle(TextsAsset.signUp.uppercased(), for: .normal)
+        backButton.setTitle(TextsAsset.back, for: .normal)
+        forgotButton.setTitle(TextsAsset.forgotPassword, for: .normal)
     }
     
     func bindView() {

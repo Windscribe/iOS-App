@@ -14,7 +14,7 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var loginButton: WSRoundButton!
     @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var passwordTextField: WSTextFieldTv!
+    @IBOutlet weak var passwordTextField: PasswordTextFieldTv!
     @IBOutlet weak var forgotButton: UIButton!
     @IBOutlet weak var loginTitle: UILabel!
     @IBOutlet weak var usernameTextField: WSTextFieldTv!
@@ -51,6 +51,27 @@ class LoginViewController: UIViewController {
         bindView()
         setupLocalized()
     }
+    
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        super.pressesBegan(presses, with: event)
+        for press in presses {
+            if loginButton.isFocused {
+                if press.type == .leftArrow {
+                    myPreferredFocusedView = generateCodeButton
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
+                }
+            }
+            if passwordTextField.isFocused {
+                if press.type == .rightArrow {
+                    myPreferredFocusedView = passwordTextField.showHidePasswordButton
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
+                }
+            }
+        }
+    }
+    
 
     func setup() {
         loadingView = UIActivityIndicatorView(style: .large)
@@ -84,14 +105,14 @@ class LoginViewController: UIViewController {
         description1.text = TvAssets.lazyLoginDescription
         orLabel.text = TvAssets.or
         description2.text = TvAssets.lazyLoginDescription2
-        generateCodeButton.titleLabel?.text = TvAssets.generateCode
+        generateCodeButton.setTitle(TvAssets.generateCode, for: .normal)
         loginTitle.text = TvAssets.manualLogin
         usernameTextField.placeholder = TextsAsset.username
         passwordTextField.placeholder = TextsAsset.password
-        loginButton.titleLabel?.text = TextsAsset.login
-        backButton.titleLabel?.text = TextsAsset.back
-        forgotButton.titleLabel?.text = TextsAsset.forgotPassword
-        description2FA.text = TvAssets.twofaDescription
+        loginButton.setTitle(TextsAsset.login.uppercased(), for: .normal)
+
+        backButton.setTitle(TextsAsset.back, for: .normal)
+        forgotButton.setTitle(TextsAsset.forgotPassword, for: .normal)
     }
 
     func setupCommonUI() {
@@ -116,6 +137,9 @@ class LoginViewController: UIViewController {
         welcomeLabel.font = UIFont.bold(size: 60)
         description2FA.font = UIFont.text(size: 35)
         description2FA.textColor = .whiteWithOpacity(opacity: 0.50)
+        description2FA.text = TvAssets.twofaDescription
+        description2FA.text = TvAssets.twofaDescription
+
      //   bindView()
 
     }
