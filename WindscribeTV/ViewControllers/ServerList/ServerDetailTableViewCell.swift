@@ -131,13 +131,13 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
         guard let pingIp = displayingFavGroup?.pingIp,
               let minTime = latencyRepository.getPingData(ip: pingIp)?.latency else {
-            self.latencyLabel.text = "  --  "
+            self.latencyLabel.text = " "
             return
         }
         if minTime > 0 {
             self.latencyLabel.text = " \(minTime.description) MS"
         } else {
-            self.latencyLabel.text = "  --  "
+            self.latencyLabel.text = " "
         }
         
         if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
@@ -176,12 +176,12 @@ class ServerDetailTableViewCell: UITableViewCell {
         latencyLabel.font = .text(size: 30)
         if let bestNode = self.displayingStaticIP?.bestNode, let bestNodeHostname = bestNode.ip1, bestNode.forceDisconnect == false {
             guard let minTime = latencyRepository.getPingData(ip: bestNodeHostname)?.latency else {
-                self.latencyLabel.text = "  --  "
+                self.latencyLabel.text = " "
                 return
             }
 
             guard let staticIp = displayingStaticIP?.staticIP else {
-                self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : "--"
+                self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : ""
                 return
             }
             self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
@@ -280,13 +280,13 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
         guard let pingIp = group.pingIp,
               let minTime = latencyRepository.getPingData(ip: pingIp)?.latency else {
-            self.latencyLabel.text = "  --  "
+            self.latencyLabel.text = " "
             return
         }
         if minTime > 0 {
             self.latencyLabel.text = " \(minTime.description) MS"
         } else {
-            self.latencyLabel.text = "  --  "
+            self.latencyLabel.text = "  "
         }
         preferences.observeFavouriteIds().subscribe(onNext: { favIDs in
             self.favIDs = favIDs

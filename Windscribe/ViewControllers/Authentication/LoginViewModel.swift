@@ -100,20 +100,24 @@ class LoginViewModelImpl: LoginViewModel {
 
     func  startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
-        Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
+        let dispose = CompositeDisposable()
+        
+        let d = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
                     .timeout(.seconds(20), scheduler: MainScheduler.instance)
                     .subscribe(onSuccess: { [ self] verifyResponse in
+                        if dispose.isDisposed {
+                            return
+                        }
                         let auth = verifyResponse.sessionAuth
                         self.apiCallManager.getSession(sessionAuth: auth).subscribe(onSuccess: { [weak self] session in
+                            dispose.dispose()
                             session.sessionAuthHash = auth
                             WifiManager.shared.configure()
                             self?.userRepository.login(session: session)
                             self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
                             self?.prepareUserData()
-//                            localDatabase.saveOldSession()
-//                            localDatabase.saveSession(session: session).disposed(by: disposeBag)
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)
                     }, onFailure: { [ self] error in
@@ -121,8 +125,8 @@ class LoginViewModelImpl: LoginViewModel {
                         invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                     }).disposed(by: self.disposeBag)
             })
-            .disposed(by: disposeBag)
-
+            
+        dispose.insert(d)
     }
 
    private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse ) {
