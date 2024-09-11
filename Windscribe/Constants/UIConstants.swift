@@ -1442,47 +1442,47 @@ struct TvAssets {
     static var staticIPTitle: String {
         return "Static IP".localize()
     }
-    
+
     static var allTitle: String {
         return "All".localize()
     }
-    
+
     static var windflixTitle: String {
         return "Windflix".localize()
     }
-    
+
     static var welcomeDescription: String {
         return "If you already have an account.".localize()
     }
-    
+
     static var lazyLogin: String {
         return "Lazy Login".localize()
     }
-    
+
     static var lazyLoginDescription: String {
         return "Go to https://windscribe.com/lazy on any device and enter the code below.".localize()
     }
-    
+
     static var or: String {
         return "OR".localize()
     }
-    
+
     static var lazyLoginDescription2: String {
         return "Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below.".localize()
     }
-    
+
     static var generateCode: String {
         return "Generate Code".localize().uppercased()
     }
-    
+
     static var manualLogin: String {
         return "Manual Login".localize()
     }
-    
+
     static var forgotPasswordInfo: String {
         return "Please visit windscribe.com to reset your password".localize()
     }
-    
+
     static var twofaDescription: String {
         return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
     }

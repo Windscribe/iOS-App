@@ -33,6 +33,7 @@ protocol MainViewModelType {
     var isBlurNetworkName: Bool { get }
     var didShowProPlanExpiredPopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
+    var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
     func loadNotifications()
     func loadServerList()
     func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void)
@@ -94,6 +95,8 @@ class MainViewModel: MainViewModelType {
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
     var session = BehaviorSubject<Session?>(value: nil)
     var favouriteGroups = BehaviorSubject<[Group]>(value: [])
+    let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
+
     var oldSession: OldSession? {
         get { localDatabase.getOldSession() }
     }
@@ -265,7 +268,7 @@ class MainViewModel: MainViewModelType {
         }).disposed(by: disposeBag)
 
     }
-    
+
     private func getFavouriteGroup(id: String, servers: [Server]) -> Group? {
         var groups: [Group] = []
         for server in servers {
@@ -275,8 +278,8 @@ class MainViewModel: MainViewModelType {
         }
         return groups.first {$0.id == Int(id)}
     }
-    
-    private func loadTvFavourites(){
+
+    private func loadTvFavourites() {
         Observable.combineLatest(preferences.observeFavouriteIds(), serverList).map { (ids, servers) in
             return ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
         }.subscribe(onNext: { groups in
@@ -381,9 +384,17 @@ class MainViewModel: MainViewModelType {
 
     func loadNotifications() {
         let pcpId = (try? pushNotificationsManager.notification.value()?.pcpid) ?? nil
+        if pcpId != nil {
+            logger.logD(self, "Adding pcpid ID: \(pcpId ?? "") to notifications request.")
+        }
         notificationsRepo.getUpdatedNotifications(pcpid: pcpId ?? "").subscribe(onSuccess: { notices in
             self.notices.onNext(notices)
         }).disposed(by: disposeBag)
+
+        pushNotificationsManager.notification.subscribe(onNext: { payload in
+            guard let payload = payload else { return }
+            self.promoPayload.onNext(payload)
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func getConnectionCount() -> Int? {

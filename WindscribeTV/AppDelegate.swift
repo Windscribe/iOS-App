@@ -69,7 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             setApplicationWindow()
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
         }
-        apiManager.getSession().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
+        apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)
         }, onFailure: { [self] error in

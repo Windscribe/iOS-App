@@ -8,7 +8,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WSNetHttpRequest : BridgeObject
 
 -(NSString*)url;
--(uint16_t)timeoutMs;
+-(uint32_t)timeoutMs;
 -(NSString*)postData;
 -(int)method;
 -(NSString*)hostname;

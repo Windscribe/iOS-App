@@ -51,7 +51,7 @@ class LoginViewController: UIViewController {
         bindView()
         setupLocalized()
     }
-    
+
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)
         for press in presses {
@@ -71,7 +71,6 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    
 
     func setup() {
         loadingView = UIActivityIndicatorView(style: .large)

@@ -37,7 +37,7 @@ class SignUpViewController: UIViewController {
         setupLocalized()
         // Do any additional setup after loading the view.
     }
-    
+
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)
         for press in presses {
@@ -50,8 +50,7 @@ class SignUpViewController: UIViewController {
             }
         }
     }
-    
-    
+
     func setup() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
             self.view.backgroundColor = UIColor(patternImage: backgroundImage)
@@ -88,12 +87,12 @@ class SignUpViewController: UIViewController {
         signUpTitle.text = TextsAsset.signUp
         usernameTextField.placeholder = TextsAsset.username
         passwordTextField.placeholder = TextsAsset.password
-        
+
         signUpButton.setTitle(TextsAsset.signUp.uppercased(), for: .normal)
         backButton.setTitle(TextsAsset.back, for: .normal)
         forgotButton.setTitle(TextsAsset.forgotPassword, for: .normal)
     }
-    
+
     func bindView() {
         viewModel.showLoadingView.bind { [self] show in
             if show {

@@ -724,14 +724,6 @@
 		C50F20DB2B62293600266B23 /* LogType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD019F22946F6C00FED749 /* LogType.swift */; };
 		C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */; };
 		C51704BF27694B4000556040 /* ServerHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51704BE27694B4000556040 /* ServerHealthView.swift */; };
-		C51A114F2C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11502C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11512C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11522C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11542C730ED800AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11552C730ED800AE2C09 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C51A11562C730EDD00AE2C09 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; };
-		C51A11572C730EDD00AE2C09 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
@@ -745,6 +737,14 @@
 		C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5926B219BE00FCB1B6 /* AboutViewController.swift */; };
 		C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */; };
 		C524AA6226B2322000FCB1B6 /* AboutViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA6126B2322000FCB1B6 /* AboutViewCell.swift */; };
+		C5273B852C91826100C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B862C91826100C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B872C91826100C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B882C91826100C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B8A2C91826900C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B8B2C91826900C24E51 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		C5273B8C2C91826E00C24E51 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; };
+		C5273B8D2C91826E00C24E51 /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C5273B832C91826100C24E51 /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5102B63820F00E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
 		C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -1142,7 +1142,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C51A11552C730ED800AE2C09 /* WSNet.xcframework in Embed Frameworks */,
+				C5273B8D2C91826E00C24E51 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1153,7 +1153,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C51A11572C730EDD00AE2C09 /* WSNet.xcframework in Embed Frameworks */,
+				C5273B8B2C91826900C24E51 /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1690,7 +1690,6 @@
 		C50F20C52B61760000266B23 /* CoreModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModule.swift; sourceTree = "<group>"; };
 		C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLogViewModel.swift; sourceTree = "<group>"; };
 		C51704BE27694B4000556040 /* ServerHealthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHealthView.swift; sourceTree = "<group>"; };
-		C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
 		C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyViewModel.swift; sourceTree = "<group>"; };
 		C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C51EEDD32C1C90CA00B01F8F /* WindscribeDevelopment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WindscribeDevelopment.entitlements; sourceTree = "<group>"; };
@@ -1699,6 +1698,7 @@
 		C524AA5926B219BE00FCB1B6 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
 		C524AA6126B2322000FCB1B6 /* AboutViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewCell.swift; sourceTree = "<group>"; };
+		C5273B832C91826100C24E51 /* WSNet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = WSNet.xcframework; sourceTree = "<group>"; };
 		C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryErrors.swift; sourceTree = "<group>"; };
 		C52DA5262B63901400E5C571 /* CustomConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepository.swift; sourceTree = "<group>"; };
 		C52DA5282B63902B00E5C571 /* CustomConfigRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigRepositoryImpl.swift; sourceTree = "<group>"; };
@@ -1933,7 +1933,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC73E12C514C2C00021CD1 /* NetworkExtension.framework in Frameworks */,
-				C51A11562C730EDD00AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B8A2C91826900C24E51 /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				DBD34EA6C49E01DD5C76308C /* Pods_WindscribeTV.framework in Frameworks */,
@@ -1949,7 +1949,7 @@
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
-				C51A11542C730ED800AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B8C2C91826E00C24E51 /* WSNet.xcframework in Frameworks */,
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
@@ -1979,7 +1979,7 @@
 				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
 				C56123822C5F25D30090EB5A /* libresolv.tbd in Frameworks */,
 				597C04F52C2F022C00C2A085 /* SystemConfiguration.framework in Frameworks */,
-				C51A114F2C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B852C91826100C24E51 /* WSNet.xcframework in Frameworks */,
 				597C04F72C2F023200C2A085 /* UIKit.framework in Frameworks */,
 				C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */,
 				C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */,
@@ -1995,7 +1995,7 @@
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
 				C56123842C5F25EC0090EB5A /* libresolv.tbd in Frameworks */,
 				9B7A6D492A314E85A229364B /* Pods_SiriIntents.framework in Frameworks */,
-				C51A11502C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B862C91826100C24E51 /* WSNet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2004,7 +2004,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
-				C51A11512C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B872C91826100C24E51 /* WSNet.xcframework in Frameworks */,
 				C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */,
 				C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
@@ -2019,7 +2019,7 @@
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
 				C56123882C5F261B0090EB5A /* libresolv.tbd in Frameworks */,
-				C51A11522C730ECB00AE2C09 /* WSNet.xcframework in Frameworks */,
+				C5273B882C91826100C24E51 /* WSNet.xcframework in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
 				C56123872C5F26130090EB5A /* libresolv.9.tbd in Frameworks */,
 				84DB83C52D55C4639941F898 /* Pods_HomeWidgetExtension.framework in Frameworks */,
@@ -3512,7 +3512,7 @@
 		C56615F72C4D883E008AA993 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				C51A114D2C730ECB00AE2C09 /* WSNet.xcframework */,
+				C5273B832C91826100C24E51 /* WSNet.xcframework */,
 				C5AB0C782C63E511005D2541 /* Proxy.xcframework */,
 			);
 			path = libs;
@@ -6319,7 +6319,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.5;
+				MARKETING_VERSION = 3.8.6;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -6373,7 +6373,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.5;
+				MARKETING_VERSION = 3.8.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -6931,7 +6931,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.5;
+				MARKETING_VERSION = 3.8.6;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

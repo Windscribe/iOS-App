@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/WSNet.h</key>
 		<data>
-		n1NRnx69KkXuMPrdQXs+uzCfpPw=
+		T7kWM/s63mTg2JnM5zr03s5UTmg=
 		</data>
 		<key>Headers/WSNetAdvancedParameters.h</key>
 		<data>
@@ -14,7 +14,7 @@
 		</data>
 		<key>Headers/WSNetApiResourcesManager.h</key>
 		<data>
-		taGsj0Ci2V+Vz+LtLwLIkXEjfac=
+		DSRDEr/RiYKuLEAfMn11rUYq6fw=
 		</data>
 		<key>Headers/WSNetCancelableCallback.h</key>
 		<data>
@@ -38,11 +38,11 @@
 		</data>
 		<key>Headers/WSNetHttpNetworkManager.h</key>
 		<data>
-		NWFuSwiSSiAl3AeInehbc/33e/Q=
+		9T/EkoCj7vYNWAwgck6eCLd2YPc=
 		</data>
 		<key>Headers/WSNetHttpRequest.h</key>
 		<data>
-		keiBe5qgcRgtFsxxkY7TQN+Zs58=
+		GsAr67E0zZBy/RAlyDYESkEMh60=
 		</data>
 		<key>Headers/WSNetPingManager.h</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Headers/WSNetServerAPI.h</key>
 		<data>
-		A6aJesw73m/7tOkk9n58q6nvrEs=
+		WOX1hooNITeD6IxZaHW5dAgW+ng=
 		</data>
 		<key>Headers/WSNetUtils.h</key>
 		<data>
@@ -67,7 +67,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ruIRgmHtC3X3lcLJfofLppVwby1rXfqr842jY1YMFno=
+			aulrLbHLaQ00FRsOpI5GelP2YzEzocmY7XWTx+sof0c=
 			</data>
 		</dict>
 		<key>Headers/WSNetAdvancedParameters.h</key>
@@ -81,7 +81,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			VXUaCI1bxuHdFdUerC35zrZCIbP7XOb1jTYO0RbrbE4=
+			fa++grGC58BeEbTzbUmMVm77wXpTmt54IInh24KiCl4=
 			</data>
 		</dict>
 		<key>Headers/WSNetCancelableCallback.h</key>
@@ -123,14 +123,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YkOxoU01tLv3sMyRL0EWyeF8SFs9sgYvfKOBbTaysdc=
+			SRGUw/DK3yH6QCQJ63aMbM0T37UPTkJJHWLzCcAB57c=
 			</data>
 		</dict>
 		<key>Headers/WSNetHttpRequest.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			luiuoMfwx1vfFTTmol/NakSY36ABWgdxEzcxTAYDeSE=
+			rjIYzHLdWko61FbJJDU8iJRyxoVESwU2SV4rhrgDr2o=
 			</data>
 		</dict>
 		<key>Headers/WSNetPingManager.h</key>
@@ -144,7 +144,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			NGeydA3OYx58j98xi6XnMhcvi01z1shBQYLn66csV40=
+			XQ85OzIE6FSemi823uBtLOp0GK3nS8NCfnbODAPyB30=
 			</data>
 		</dict>
 		<key>Headers/WSNetUtils.h</key>

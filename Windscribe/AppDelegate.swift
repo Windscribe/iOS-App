@@ -65,7 +65,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             registerForPushNotifications()
             resetCountryOverrideForServerList()
             purchaseManager.verifyPendingTransaction()
-            latencyRepository.loadLatency()
+            if preferences.userSessionAuth() != nil {
+                latencyRepository.loadLatency()
+            }
             latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in}).disposed(by: disposeBag)
             setApplicationWindow()
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
@@ -229,6 +231,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        logger.logD(self, "Push notification received [didReceiveRemoteNotification].")
+        if let userInfo = userInfo as? [String: AnyObject] {
+            logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
+            pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
+        }
         if #available(iOS 14.0, *) {
 #if arch(arm64) || arch(i386) || arch(x86_64)
             WidgetCenter.shared.reloadAllTimelines()
@@ -242,7 +249,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("", { $0 + String(format: "%02.2hhX", $1) })
         logger.logD(self, "Registered for remote notifications with token: \(token).")
-        apiManager.getSession().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
+        apiManager.getSession(token).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             logger.logD(self, "Remote notification token registered with server. \(token)")
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)
@@ -266,6 +273,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent response: UNNotification,
                                 withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        logger.logD(self, "Push notification received [willPresent].")
         if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
             pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
@@ -279,6 +287,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler: @escaping () -> Void) {
+        logger.logD(self, "Push notification received [didReiceive].")
         if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "User clicked on push notification: \(userInfo)")
             pushNotificationManager.addPushNotification(notificationPayload: PushNotificationPayload(userInfo: userInfo))

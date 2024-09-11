@@ -10,11 +10,16 @@ import Foundation
 import RxSwift
 import Realm
 import RxRealm
+import Swinject
+import NetworkExtension
 class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnManager: VPNManager
+    private var sessionManager: SessionManagerV2 {
+        return Assembler.resolve(SessionManagerV2.self)
+    }
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
     let bestLocation: BehaviorSubject <BestLocation?> = BehaviorSubject(value: nil)
@@ -64,13 +69,20 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadAllServerLatency() -> Completable {
-        let latencySingles =  self.createLatencyTask(from: self.getServerPingAndHosts())
+        self.logger.logE(self, "Attempting to update latency data.")
+        let pingServers = self.getServerPingAndHosts()
+        if pingServers.count == 0 {
+            self.logger.logE(self, "Server list not ready for latency update.")
+            return Completable.empty()
+        }
+        let latencySingles =  self.createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
 
         latencySingles.subscribe(
             onFailure: { _ in
+                self.logger.logE(self, "Failure to update latency data.")
                 let pingData = self.database.getAllPingData()
                 self.latency.onNext(pingData)
                 self.pickBestLocation(pingData: pingData)
@@ -79,6 +91,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         .disposed(by: self.disposeBag)
 
         return latencySingles.do(onSuccess: { _ in
+            self.logger.logE(self, "Successfully updated latency data.")
             let pingData = self.database.getAllPingData()
             self.latency.onNext(pingData)
             self.pickBestLocation(pingData: pingData)
@@ -161,7 +174,17 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
-        let validPingData = pingDataArray.filter { $0.latency != -1 }
+        let pingIps = database.getServers()?
+        .compactMap { region in region.groups.toArray()}
+        .reduce([], +)
+        .filter {
+            if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
+                return false
+            } else {
+                return true
+            }
+        }.map {$0.pingIp} ?? []
+        let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip)}
         let minLatencyPingData = validPingData.min(by: { $0.latency < $1.latency })
         return minLatencyPingData?.ip
     }
@@ -211,6 +234,8 @@ class LatencyRepositoryImpl: LatencyRepository {
                 }
             }
         }
+        } else {
+            return
         }
         let lastBestLocation = try? bestLocation.value()
         if !observingBestLocation || lastBestLocation == nil {

@@ -56,6 +56,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     func removeProfile() -> Completable {
         Completable.create { [self] completion in
             vpnManager.resetProfiles { [self] in
+                vpnManager.selectedNode = nil
                 vpnManager.resetProperties()
                 OpenVPNManager.shared.removeProfile(completion: { (_, _) in
                     completion(.completed)
@@ -79,6 +80,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     func disconnect() {
         vpnManager.connectIntent = false
         OpenVPNManager.shared.disconnect()
+        vpnManager.selectedNode = nil
     }
 
     /// Configures OpenVPN and attempts a connection.

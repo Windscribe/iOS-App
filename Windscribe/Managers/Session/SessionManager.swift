@@ -54,7 +54,7 @@ class SessionManager: SessionManagerV2 {
                     if  case let savedSession?? = savedSession {
                         self.logger.logD(self, "Cached session for \(savedSession.username)")
                         self.localDatabase.saveOldSession()
-                        return self.apiManager.getSession()
+                        return self.apiManager.getSession(nil)
                     } else {
                         return Single.error(Errors.sessionIsInvalid)
                     }

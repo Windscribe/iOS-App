@@ -45,7 +45,7 @@ class PreferencesMainViewController: UIViewController {
     @IBOutlet weak var versionLabel: UILabel!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var loadingActivityView: UIActivityIndicatorView!
-    
+
     let generalView: PreferencesGeneralView = PreferencesGeneralView.fromNib()
     let accountView: PreferencesAccountView = PreferencesAccountView.fromNib()
     let connnectionsView: PreferencesConnectionView = PreferencesConnectionView.fromNib()
@@ -66,7 +66,7 @@ class PreferencesMainViewController: UIViewController {
         generalView.updateSelection()
         connnectionsView.updateSelection()
         logView.scrolltoBottom()
-        
+
         accountViewModel.loadSession().subscribe(onFailure: { _ in }).disposed(by: disposeBag)
     }
 
@@ -92,12 +92,12 @@ class PreferencesMainViewController: UIViewController {
         optionsStackView.addArrangedSubview(UIView())
         bindViews()
     }
-    
+
     private func bindViews() {
         viewModel.currentLanguage.subscribe { _ in
             self.titleLabel.text = TextsAsset.Preferences.title
         }.disposed(by: disposeBag)
-        
+
         accountViewModel.cancelAccountState.subscribe(onNext: { state in
             self.logger.logD(self, "Cancel account state: \(state)")
             switch state {
@@ -119,7 +119,7 @@ class PreferencesMainViewController: UIViewController {
 
             }
         }).disposed(by: disposeBag)
-        
+
         accountViewModel.sessionUpdatedTrigger.subscribe { _ in
             self.accountView.setup()
         }.disposed(by: disposeBag)
@@ -192,12 +192,12 @@ class PreferencesMainViewController: UIViewController {
             }
         }, onFailure: { _ in }).disposed(by: disposeBag)
     }
-    
+
     private func hideLoading() {
         loadingActivityView.stopAnimating()
         loadingView.isHidden = true
     }
-    
+
     private func showLoading() {
         loadingActivityView.startAnimating()
         loadingView.isHidden = false

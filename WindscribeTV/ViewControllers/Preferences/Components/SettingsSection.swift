@@ -40,7 +40,7 @@ class SettingsSection: UIView {
         contentStackView.layoutIfNeeded()
         scrollView.layoutIfNeeded()
     }
-    
+
     private func updateTitle(with text: String?) {
         if let title = text {
             titleLabel.attributedText = NSAttributedString(string: title.uppercased(),

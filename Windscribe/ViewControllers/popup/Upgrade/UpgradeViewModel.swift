@@ -17,8 +17,9 @@ enum UpgradeState {
 }
 
 enum Plans {
-    case discounted(MobilePlan)
-    case standardPlans([WindscribeInAppProduct])
+    case discounted(WindscribeInAppProduct, MobilePlan)
+    case standardPlans([WindscribeInAppProduct], [MobilePlan])
+    case unableToLoad
 }
 
 enum RestoreState {
@@ -35,7 +36,6 @@ protocol UpgradeViewModel {
     var upgradeState: BehaviorSubject<UpgradeState?> { get }
     var plans: BehaviorSubject<Plans?> { get }
     var upgradeRouteState: BehaviorSubject<RouteID?> { get }
-    var purchaseState: BehaviorSubject<PurchaseState?> { get }
     var restoreState: BehaviorSubject<RestoreState?> { get }
     var showProgress: BehaviorSubject<Bool> { get }
     var showFreeDataOption: BehaviorSubject<Bool> { get }
@@ -49,7 +49,6 @@ protocol UpgradeViewModel {
 }
 
 class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, ConfirmEmailViewControllerDelegate {
-
     let alertManager: AlertManagerV2
     let localDatabase: LocalDatabase
     let apiManager: APIManager
@@ -64,7 +63,6 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let showProgress: BehaviorSubject<Bool> = BehaviorSubject(value: false)
     var plans: BehaviorSubject<Plans?> = BehaviorSubject(value: nil)
     var upgradeRouteState: BehaviorSubject<RouteID?> = BehaviorSubject(value: nil)
-    var purchaseState: BehaviorSubject<PurchaseState?> = BehaviorSubject(value: nil)
     var restoreState: BehaviorSubject<RestoreState?> = BehaviorSubject(value: nil)
     var showFreeDataOption = BehaviorSubject(value: false)
     let isDarkMode: BehaviorSubject<Bool>
@@ -73,6 +71,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let disposeBag = DisposeBag()
     var pcpID: String?
     var pushNotificationPayload: PushNotificationPayload?
+    private var mobilePlans: [MobilePlan]?
 
     init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManagerV2, billingRepository: BillingRepository, logger: FileLogger, themeManager: ThemeManager) {
         self.alertManager = alertManager
@@ -111,22 +110,19 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         }
         logger.logD(self, "Loading billing plans.")
         showProgress.onNext(true)
-        billingRepository.getMobilePlans(promo: promo).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { mobilePlans in
-                self.logger.logD(self, "Plans loaded successfully. Count: \(mobilePlans.count).")
-                if promoCode == nil && mobilePlans.count >= 2 {
-                    self.logger.logD(self, "Loading plan info from apple.")
-                    self.logger.logD(self, mobilePlans.map({$0.extId}).joined())
-                    self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({$0.extId}))
-                } else {
-                    self.showProgress.onNext(false)
-                    if let updatedPlan = mobilePlans.first {
-                        self.logger.logD(self, "showing promo plans.")
-                        self.plans.onNext(.discounted(updatedPlan))
-                    }
-                }
-            }, onFailure: { _ in
-                self.showProgress.onNext(false)
-            }).disposed(by: disposeBag)
+        billingRepository.getMobilePlans(promo: promoCode).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { mobilePlans in
+            mobilePlans.forEach { p in
+                self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(p.discount)%")
+            }
+            self.mobilePlans = mobilePlans
+            self.showProgress.onNext(false)
+            if mobilePlans.count > 0 {
+                self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({$0.extId}))
+            }
+
+        }, onFailure: { _ in
+            self.showProgress.onNext(false)
+        }).disposed(by: disposeBag)
     }
 
     func continuePayButtonTapped() {
@@ -159,14 +155,23 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         selectedPlan = plan
     }
 
-    func readyToMakePurchase(price1: String, price2: String) {
-        logger.logD(self, "Ready to make purchase: Apple price1: \(price1) Apple price2: \(price2)")
-        purchaseState.onNext(PurchaseState(price1: price1, price2: price2))
-    }
+    func readyToMakePurchase(price1: String, price2: String) { }
 
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct]) {
-        self.showProgress.onNext(false)
-        plans.onNext(.standardPlans(windscribeProducts))
+        DispatchQueue.main.async { [self] in
+            showProgress.onNext(false)
+            let discountedWindscribePlan = mobilePlans?.first {
+                $0.discount != 0
+            }
+            if let discountedWindscribePlan = discountedWindscribePlan,
+               let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
+                plans.onNext(.discounted(discountedApplePlan, discountedWindscribePlan))
+            } else if windscribeProducts.count > 0 && windscribeProducts.count == mobilePlans?.count {
+                plans.onNext(.standardPlans(windscribeProducts, mobilePlans ?? []))
+            } else {
+                plans.onNext(.unableToLoad)
+            }
+        }
     }
 
     func purchasedSuccessfully(transaction: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
@@ -190,7 +195,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func upgrade() {
-        apiManager.getSession().subscribe(onSuccess: { session in
+        apiManager.getSession(nil).subscribe(onSuccess: { session in
             self.upgradeState.onNext(.success(session.isUserGhost))
         },onFailure: { _ in
             self.upgradeState.onNext(.success(false))
