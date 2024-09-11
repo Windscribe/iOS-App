@@ -33,8 +33,8 @@ class PrivacyViewController: WSUIViewController {
 
     private func bindViews() {
         actionButton.rx.tap.bind {
-            self.viewModel.action()
             self.dismiss(animated: true, completion: nil)
+            self.viewModel.action()
         }.disposed(by: disposeBag)
     }
 }

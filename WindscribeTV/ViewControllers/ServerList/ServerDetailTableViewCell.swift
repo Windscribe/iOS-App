@@ -32,7 +32,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
-    
+
     @IBOutlet weak var latencyLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
 
@@ -139,7 +139,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             self.latencyLabel.text = " "
         }
-        
+
         if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
                 self.proIcon.isHidden = false
@@ -186,7 +186,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
             self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
         }
-      
+
     }
 
     func setFavButtonImage() {
@@ -249,7 +249,7 @@ class ServerDetailTableViewCell: UITableViewCell {
                         descriptionLabel.text = TextsAsset.upgrade
                     }
                 }
-               
+
             } else if favButton.isFocused {
                 if isFavourited {
                     descriptionLabel.text = TvAssets.removeFromFav
@@ -319,7 +319,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }
     }
-    
+
     @objc func connectButtonTapped() {
         if favButton.isHidden {
             guard let staticIp = displayingStaticIP else { return }
@@ -338,16 +338,16 @@ class ServerDetailTableViewCell: UITableViewCell {
             self.delegate?.setSelectedServerAndGroup(server: server, group: group)
         }
     }
-    
+
     private func buildFavNode(group: Group) -> FavNode? {
         let servers = localDB.getServers() ?? []
         let server = servers.first { server in
-            return server.groups.map{$0.id}.contains(group.id)
+            return server.groups.map {$0.id}.contains(group.id)
         }
         if let server = server, let node = group.nodes.randomElement() {
             return FavNode(node: node, group: group, server: server)
         }
         return nil
     }
-    
+
 }

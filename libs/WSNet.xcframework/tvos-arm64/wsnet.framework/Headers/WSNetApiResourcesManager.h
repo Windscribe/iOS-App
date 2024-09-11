@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)removeFromPersistentSettings;
 -(void)checkUpdate:(int)channel appVersion:(NSString*)appVersion appBuild:(NSString*)appBuild osVersion:(NSString*)osVersion osBuild:(NSString*)osBuild;
 -(void)setNotificationPcpid:(NSString*)pcpid;
+-(void)setMobileDeviceId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId;
 -(NSString*)sessionStatus;
 -(NSString*)portMap;
 -(NSString*)locations;

@@ -84,7 +84,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
            let appleData = preferences.getActiveAppleData(),
            let appleSIG = preferences.getActiveAppleSig() {
             apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
-                self.apiManager.getSession().subscribe(onSuccess: {_ in }, onFailure: { _ in }).disposed(by: self.dispose)
+                self.apiManager.getSession(nil).subscribe(onSuccess: {_ in }, onFailure: { _ in }).disposed(by: self.dispose)
                 self.logger.logD(self, "Sending Apple purchase data successful.")
                 // setting nil for successfull validation
                 self.preferences.saveActiveAppleID(id: nil)

@@ -54,7 +54,7 @@ class AccountViewModel: AccountViewModelType {
         self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.alertManager = alertManager
-        
+
         isDarkMode = themeManager.darkTheme
         sections = [.info, .plan]
         languageManager.activelanguage.subscribe { _ in
@@ -123,7 +123,7 @@ class AccountViewModel: AccountViewModelType {
     }
 
     func loadSession() -> Single<Session> {
-        let sessionSingle = apiCallManager.getSession()
+        let sessionSingle = apiCallManager.getSession(nil)
         sessionSingle.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)

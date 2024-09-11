@@ -187,6 +187,11 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         viewModel.wifiNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.refreshProtocol(from: $0)
         }).disposed(by: disposeBag)
+        viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { payload in
+            guard let payload = payload else { return }
+            self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
+            self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
+        }).disposed(by: disposeBag)
     }
 
     func checkForVPNActivation() {
@@ -289,7 +294,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func showPrivacyConfirmationPopup() {
         if !viewModel.isPrivacyPopupAccepted() {
-            popupRouter?.routeTo(to: .privacyView, from: self)
+            self.popupRouter?.routeTo(to: .privacyView, from: self)
         }
     }
 
@@ -318,6 +323,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             if selectBestLocation && self.vpnManager.isDisconnected() || self.noSelectedNodeToConnect() {
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+                self.connectionStateViewModel.connectedState.onNext(ConnectionStateInfo.defaultValue())
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")

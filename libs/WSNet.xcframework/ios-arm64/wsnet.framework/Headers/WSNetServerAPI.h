@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setIgnoreSslErrors:(BOOL)bIgnore;
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
 -(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)session:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)deleteSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverLocations:(NSString*)language revision:(NSString*)revision isPro:(BOOL)isPro alcList:(NSArray<NSString*>*)alcList callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverCredentials:(NSString*)authHash isOpenVpnProtocol:(BOOL)isOpenVpnProtocol callback:(void(^)(int, NSString*))callback;

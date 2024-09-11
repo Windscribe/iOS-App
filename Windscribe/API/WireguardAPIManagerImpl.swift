@@ -39,7 +39,7 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: Session.self) { completion in
-            return self.api.session(sessionAuth, callback: completion)
+            return self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
         }
     }
 }

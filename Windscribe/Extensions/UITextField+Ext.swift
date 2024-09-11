@@ -105,7 +105,7 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
             self.isSecureTextEntry = false
             showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withTintColor(.whiteWithOpacity(opacity: 0.50)), for: .normal)
             showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withTintColor(.whiteWithOpacity(opacity: 1.0)), for: .focused)
-            
+
         } else {
             self.isSecureTextEntry = true
             showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withTintColor(.whiteWithOpacity(opacity: 0.50)), for: .normal)
@@ -148,7 +148,7 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
                                constant: 35)
             ])
     }
-    
+
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if showingPassword {
             showingPassword = false
@@ -157,5 +157,5 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
             return false }
         return true
     }
-    
+
 }

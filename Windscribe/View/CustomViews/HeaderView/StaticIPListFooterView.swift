@@ -12,7 +12,6 @@ import RealmSwift
 import RxSwift
 import Swinject
 
-
 class StaticIPListFooterView: WSView {
 
     weak var delegate: StaticIPListFooterViewDelegate?

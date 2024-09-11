@@ -53,7 +53,7 @@ class WelcomeViewController: UIViewController {
         ])
 
     }
-    
+
     func setupLocalized() {
         loginButton.setTitle(TextsAsset.login.uppercased(), for: .normal)
         welcomeLabel.text = TextsAsset.slogan

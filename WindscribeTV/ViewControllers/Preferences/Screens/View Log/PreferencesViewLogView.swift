@@ -24,7 +24,7 @@ class PreferencesViewLogView: UIView {
         textView.showsVerticalScrollIndicator = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
     }
-    
+
     func scrolltoBottom() {
         self.textView.scrollToBottom()
     }

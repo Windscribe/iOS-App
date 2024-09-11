@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Swinject
 enum LoginErrorState: Equatable {
     case username(String), network(String), twoFa(String), api(String), loginCode(String)
 }
@@ -101,7 +102,7 @@ class LoginViewModelImpl: LoginViewModel {
     func  startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
         let dispose = CompositeDisposable()
-        
+
         let d = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
             .subscribe(onNext: { _ in
                 self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
@@ -125,7 +126,7 @@ class LoginViewModelImpl: LoginViewModel {
                         invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                     }).disposed(by: self.disposeBag)
             })
-            
+
         dispose.insert(d)
     }
 
@@ -150,6 +151,9 @@ class LoginViewModelImpl: LoginViewModel {
                 logger.logD(self, "Disconnecting emergency connect.")
                 emergencyConnectRepository.cleansEmergencyConfigs()
                 emergencyConnectRepository.removeProfile().subscribe(onCompleted: {
+                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
+                        Assembler.resolve(LatencyRepository.self).loadLatency()
+                    }
                     self.routeToMainView.onNext(true)
                 }).disposed(by: disposeBag)
             } else {

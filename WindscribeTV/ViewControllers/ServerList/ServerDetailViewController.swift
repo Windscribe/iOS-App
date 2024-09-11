@@ -23,7 +23,7 @@ class ServerDetailViewController: UIViewController {
     var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?
     let disposeBag = DisposeBag()
     var delegate: ServerListTableViewDelegate?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.delegate = self
@@ -96,8 +96,8 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
 extension ServerDetailViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {
-        
-        //self.navigationController?.popViewController(animated: true)
+
+        // self.navigationController?.popViewController(animated: true)
         self.navigationController?.popToRootViewController(animated: true)
         self.delegate?.setSelectedServerAndGroup(server: server,
                                                       group: group)

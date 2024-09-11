@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 extension SharedSecretDefaults {
-    
+
     func observeFavouriteIds() -> Observable<[String]> {
         return sharedDefault?.rx
             .observe([String].self, SharedKeys.tvFavourites)
@@ -17,7 +17,7 @@ extension SharedSecretDefaults {
             .startWith(sharedDefault?.stringArray(forKey: SharedKeys.tvFavourites) ?? [])
             .asObservable() ?? Observable.empty()
     }
-    
+
     func addFavouriteId(_ id: String) {
         var currentIds = sharedDefault?.stringArray(forKey: SharedKeys.tvFavourites) ?? []
         if !currentIds.contains(id) {
@@ -25,7 +25,7 @@ extension SharedSecretDefaults {
             sharedDefault?.set(currentIds, forKey: SharedKeys.tvFavourites)
         }
     }
-    
+
     func removeFavouriteId(_ id: String) {
         var currentIds = sharedDefault?.stringArray(forKey: SharedKeys.tvFavourites) ?? []
         if let index = currentIds.firstIndex(of: id) {

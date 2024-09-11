@@ -35,6 +35,8 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
                     VPNManager.shared.disconnectActiveVPNConnection()
                 case "account_downgraded":
                     session.keepSessionUpdated()
+                case "promo":
+                    notification.onNext(payload)
                 default:
                     return
                 }

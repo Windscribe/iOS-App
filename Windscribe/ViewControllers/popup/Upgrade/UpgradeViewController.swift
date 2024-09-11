@@ -69,11 +69,6 @@ class UpgradeViewController: WSNavigationViewController {
         super.viewWillTransition(to: size, with: coordinator)
         addAutoLayoutConstraints()
     }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        promoView.roundCorners(corners: [.bottomLeft], radius: 16)
-    }
     // MARK: - Bind State
     private func bindState() {
         titleLabel.text = TextsAsset.UpgradeView.title
@@ -82,19 +77,15 @@ class UpgradeViewController: WSNavigationViewController {
             DispatchQueue.main.async {
                 if let plans = updatedPlans {
                     switch plans {
-                    case .discounted(let plan):
-                        self.renderDiscountViews(plan: plan)
-                    case .standardPlans(let plans):
-                        self.windscribePlans = plans
-                        self.renderStandardPlans(windscribeProducts: plans)
+                    case .discounted(let applePlan, let appPlan):
+                            self.windscribePlans = [applePlan]
+                        self.renderDiscountViews(applePlan: applePlan, appPlan: appPlan)
+                    case .standardPlans(let applePlans, let appPlans):
+                            self.windscribePlans = applePlans
+                        self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
+                    case .unableToLoad:
+                        self.alertManager.showSimpleAlert(viewController: self, title: "", message: "Unable to connect to app store services. Please try again.", buttonText: TextsAsset.okay)
                     }
-                }
-            }
-        }).disposed(by: disposeBag)
-        viewModel.purchaseState.bind(onNext: { purchaseState in
-            DispatchQueue.main.async {
-                if let purchaseState = purchaseState {
-                    self.readyToMakePurchase(state: purchaseState)
                 }
             }
         }).disposed(by: disposeBag)
@@ -175,16 +166,14 @@ class UpgradeViewController: WSNavigationViewController {
     // MARK: - Helper
     private func renderPriceViews() {
         if promoCode == nil {
-            promoView.isHidden = true
             discountView.isHidden = true
-            promoIconImageView.isHidden = true
             pricesView.isHidden = false
         } else {
-            promoView.isHidden = false
             discountView.isHidden = false
-            promoIconImageView.isHidden = false
             pricesView.isHidden = true
         }
+        promoView.isHidden = true
+        promoIconImageView.isHidden = true
         view.layoutIfNeeded()
     }
 
@@ -219,35 +208,37 @@ class UpgradeViewController: WSNavigationViewController {
         legalTextView.linkTextAttributes = [ .foregroundColor: ThemeUtils.primaryTextColor(isDarkMode: isDarkMode), .underlineColor: UIColor.clear]
     }
 
-    private func readyToMakePurchase(state: PurchaseState) {
-        firstPlanOptionButton.setTitle("\(state.price2)/ \(TextsAsset.UpgradeView.year)",
-                                       for: .normal)
-        secondPlanOptionButton.setTitle("\(state.price1)/ \(TextsAsset.UpgradeView.month)",
-                                        for: .normal)
-        continuePayButton.isEnabled = true
-        renderPriceViews()
-        makeFirstPlanSelected()
-    }
-
-    private func renderDiscountViews(plan: MobilePlan) {
+    private func renderDiscountViews(applePlan: WindscribeInAppProduct, appPlan: MobilePlan) {
         var durationLabel = TextsAsset.UpgradeView.months
-        if plan.duration == 12 {
+        if appPlan.duration == 12 {
             durationLabel = TextsAsset.UpgradeView.year
-        } else if plan.duration == 1 {
+        } else if appPlan.duration == 1 {
             durationLabel = TextsAsset.UpgradeView.month
         }
-        discountLabel.text = "\(plan.price)/ \(durationLabel)"
-        discountPercentLabel.text = "Save \(plan.discount)%"
-        promoLabel.text = "\(plan.name)"
+        discountLabel.text = "\(appPlan.price)/ \(durationLabel)"
+        discountPercentLabel.text = "Save \(appPlan.discount)%"
+        promoLabel.text = "\(appPlan.name)"
         makeFirstPlanSelected()
+        renderPriceViews()
+
+        view.layoutIfNeeded()
+        promoView.roundCorners(corners: [.bottomLeft], radius: 16)
+        promoView.isHidden = promoCode == nil
+        promoIconImageView.isHidden = promoCode == nil
     }
 
-    private func renderStandardPlans(windscribeProducts: [WindscribeInAppProduct]) {
-        if windscribeProducts.count >= 2 {
-            self.firstPlanOptionButton.setTitle(windscribeProducts[0].planLabel,
+    private func renderStandardPlans(applePlans: [WindscribeInAppProduct], appPlans: [MobilePlan]) {
+        if applePlans.count >= 2 {
+            let firstPlan = applePlans.first {$0.extId == appPlans[0].extId}
+            let secondPlan = applePlans.first {$0.extId == appPlans[1].extId}
+            self.firstPlanOptionButton.setTitle(applePlans[1].planLabel,
                                                 for: .normal)
-            self.secondPlanOptionButton.setTitle(windscribeProducts[1].planLabel,
+            self.secondPlanOptionButton.setTitle(applePlans[0].planLabel,
                                                  for: .normal)
+            firstPlanOptionButton.setTitle("\(firstPlan?.price ?? "")/ \(TextsAsset.UpgradeView.month)",
+                                           for: .normal)
+            secondPlanOptionButton.setTitle("\(secondPlan?.price ?? "")/ \(TextsAsset.UpgradeView.year)",
+                                            for: .normal)
             self.continuePayButton.isEnabled = true
             self.makeFirstPlanSelected()
         }

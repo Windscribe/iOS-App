@@ -270,11 +270,7 @@ extension ConnectionStateManager {
     }
 
     private func setConnectionLabelValuesForSelectedNode() {
-        guard var selectedNode = self.vpnManager.selectedNode else { return }
-        if let id = try? latencyRepository.bestLocation.value()?.groupId, id == selectedNode.groupId {
-            selectedNode.cityName = TextsAsset.bestLocation
-            selectedNode.nickName = ""
-        }
+        guard let selectedNode = self.vpnManager.selectedNode else { return }
         selectedNodeSubject.onNext(selectedNode)
     }
 

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 protocol APIManager {
     // Session
-    func getSession() -> Single<Session>
+    func getSession(_ appleID: String?) -> Single<Session>
     func getWebSession() -> Single<WebSession>
     func deleteSession() -> Single<APIMessage>
     func getSession(sessionAuth: String) -> Single<Session>

@@ -122,7 +122,7 @@ extension VPNManager {
             return
         }
         VPNManager.shared.retryWithNewCredentials = false
-        api.getSession().observe(on: MainScheduler.instance).subscribe(onSuccess: { session in
+        api.getSession(nil).observe(on: MainScheduler.instance).subscribe(onSuccess: { session in
             if session.status == 1 {
                 self.setNewVPNConnection(forceProtocol: forceProtocol)
                 self.connectUsingDynamicWireGuard()

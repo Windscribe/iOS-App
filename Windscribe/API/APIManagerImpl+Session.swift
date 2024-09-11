@@ -9,12 +9,12 @@
 import Foundation
 import RxSwift
 extension APIManagerImpl {
-    func getSession() -> Single<Session> {
+    func getSession(_ appleID: String?) -> Single<Session> {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, callback: completion)
+            self.api.session(sessionAuth, appleId: appleID ?? "", gpDeviceId: "", callback: completion)
         }
     }
 
@@ -38,7 +38,7 @@ extension APIManagerImpl {
 
     func getSession(sessionAuth: String) -> Single<Session> {
         return makeApiCall(modalType: Session.self) { completion in
-            self.api.session(sessionAuth, callback: completion)
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
         }
     }
 }

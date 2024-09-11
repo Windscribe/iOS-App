@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Swinject
 protocol UserDataRepository {
     func prepareUserData() -> Single<Void>
 }
@@ -18,6 +19,9 @@ class UserDataRepositoryImpl: UserDataRepository {
     private let latencyRepository: LatencyRepository
     private let staticIpRepository: StaticIpRepository
     private let notificationsRepository: NotificationRepository
+    private var emergencyRepository: EmergencyRepository {
+        return Assembler.resolve(EmergencyRepository.self)
+    }
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
 
@@ -52,7 +56,9 @@ class UserDataRepositoryImpl: UserDataRepository {
             self.logger.logD(UserDataRepositoryImpl.self, "Getting Notifications.")
             return self.notificationsRepository.getUpdatedNotifications(pcpid: "").catchAndReturn([])
         }.map { _ in
-            self.latencyRepository.loadLatency()
+            DispatchQueue.main.async {
+                self.latencyRepository.loadLatency()
+            }
         }
     }
 }

@@ -7,7 +7,15 @@
 //
 
 import Foundation
-class PushNotificationPayload {
+class PushNotificationPayload: Equatable, CustomStringConvertible {
+    var description: String {
+        return "Type: \(type ?? "") PromoCode: \(promoCode ?? "") Pcpid: \(pcpid ?? "")"
+    }
+
+    static func == (lhs: PushNotificationPayload, rhs: PushNotificationPayload) -> Bool {
+        return lhs.type == rhs.type && lhs.pcpid == rhs.pcpid && lhs.promoCode == rhs.promoCode
+    }
+
     var type: String?
     var pcpid: String?
     var promoCode: String?

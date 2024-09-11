@@ -13,10 +13,6 @@ class ServerListCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var countryCode: UILabel!
     @IBOutlet weak var flagImage: UIImageView!
 
-    override func awakeFromNib() {
-       super.awakeFromNib()
-    }
-
     func setup(isShadow: Bool) {
         if isShadow {
             flagImage.layer.masksToBounds = false

@@ -17,12 +17,12 @@ class AccountItemView: UIView {
     @IBOutlet weak var valueLabel: UILabel!
     @IBOutlet weak var backgroundView: UIView!
     @IBOutlet weak var stackView: UIStackView!
-    
+
     @IBOutlet weak var itemHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var maxTitleWidth: NSLayoutConstraint!
-    
+
     let button = UIButton()
-    
+
     var delegate: AccountItemViewDelegate?
     private var item: AccountItemCell?
 
@@ -35,14 +35,14 @@ class AccountItemView: UIView {
 
         titleLabel.text = item.title
         valueLabel.attributedText = item.value
-        
+
         let fixedHeight = itemHeightConstraint.constant
         let newSize = titleLabel.sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: fixedHeight))
         if newSize.width > maxTitleWidth.constant {
             itemHeightConstraint.constant = 128.0
             stackView.layoutIfNeeded()
         }
-        
+
         if item.hasAction {
             addSubview(button)
             button.addTarget(self, action: #selector(selectUpgrade), for: .primaryActionTriggered)

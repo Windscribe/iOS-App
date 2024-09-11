@@ -79,7 +79,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
             LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: VPNManager.shared, logger: logger)
-        }.inObjectScope(.userScope)
+        }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             return EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!,fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)

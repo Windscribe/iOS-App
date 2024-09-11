@@ -43,7 +43,7 @@ class UserRepositoryImpl: UserRepository {
     }
 
     func getUpdatedUser() -> Single<User> {
-        return apiManager.getSession().flatMap { session in
+        return apiManager.getSession(nil).flatMap { session in
             self.localDatabase.saveOldSession()
             self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             let user = User(session: session)

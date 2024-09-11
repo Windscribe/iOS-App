@@ -139,6 +139,7 @@ extension UpgradeViewController {
         promoView.clipsToBounds = true
         promoView.backgroundColor = UIColor.seaGreen
         promoView.layer.opacity = 0.1
+        promoView.isHidden = true
         scrollView.addSubview(promoView)
 
         promoLabel = UILabel()
@@ -148,6 +149,7 @@ extension UpgradeViewController {
 
         promoIconImageView = UIImageView()
         promoIconImageView.image = UIImage(named: ImagesAsset.greenCheckMark)
+        promoIconImageView.isHidden = true
         scrollView.addSubview(promoIconImageView)
     }
 
