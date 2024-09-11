@@ -818,7 +818,6 @@
 		C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C56123802C5F25B60090EB5A /* libresolv.9.tbd */; };
 		C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C561237F2C5F25B60090EB5A /* libresolv.tbd */; };
 		C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5658EA62C71AACD00E8215A /* HomeRouter.swift */; };
-		C56615F02C4D72F1008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */; };
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -5100,7 +5099,6 @@
 				1AC9DBBF283BC33600BE082B /* RobertHeaderView.swift in Sources */,
 				C5FA3E8A2684E303001D03A7 /* SubmitTicketViewController+UI.swift in Sources */,
 				E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */,
-				C56615F02C4D72F1008AA993 /* UITextField+Ext.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */,
 				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
