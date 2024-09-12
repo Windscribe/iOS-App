@@ -9,7 +9,7 @@
 import UIKit
 import RxSwift
 
-class NewsFeedViewController: UIViewController {
+class NewsFeedViewController: PreferredFocusedViewController {
     @IBOutlet weak var listStackView: UIStackView!
     @IBOutlet weak var buttonContainerView: UIStackView!
     @IBOutlet weak var buttonHiddingView: UIView!
@@ -33,6 +33,7 @@ class NewsFeedViewController: UIViewController {
     private func setup() {
         button.setup(withHeight: 96)
         buttonContainerView.addArrangedSubview(button)
+        setupSwipeRightGesture()
     }
 
     private func bindViews() {
@@ -75,6 +76,38 @@ class NewsFeedViewController: UIViewController {
             currentAction = nil
             buttonHiddingView.isHidden = true
         }
+    }
+}
+
+// MARK: Touches and Keys handling
+extension NewsFeedViewController {
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        for press in presses {
+            super.pressesBegan(presses, with: event)
+            if press.type == .rightArrow, updateBodyButtonFocus() {
+                break
+            }
+        }
+    }
+    
+    private func setupSwipeRightGesture() {
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+    }
+    
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended, updateBodyButtonFocus() { return }
+    }
+    
+    private func updateBodyButtonFocus() -> Bool {
+        if button != UIScreen.main.focusedView {
+            myPreferredFocusedView = button
+            self.setNeedsFocusUpdate()
+            self.updateFocusIfNeeded()
+            return true
+        }
+        return false
     }
 }
 

@@ -364,3 +364,5 @@
 "Manual Login" = "手動ログイン";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FAは続行する必要があります\n認証アプリを使用してコード\nを生成します。";
 "Please visit windscribe.com to reset your password" = "windscribe.com にアクセスしてパスワードをリセットしてください";
+"Delete Account" = "アカウントの削除";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Windscribe のパスワードを入力してアカウントを削除します。この操作は元に戻せないことに注意してください。";

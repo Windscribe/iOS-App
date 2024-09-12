@@ -36,7 +36,7 @@ enum PreferencesType {
     }
 }
 
-class PreferencesMainViewController: UIViewController {
+class PreferencesMainViewController: PreferredFocusedViewController {
     var viewModel: PreferencesMainViewModel!, generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, helpViewModel: HelpViewModel!, logger: FileLogger!, router: HomeRouter!
 
     @IBOutlet weak var optionsStackView: UIStackView!
@@ -91,6 +91,7 @@ class PreferencesMainViewController: UIViewController {
         accountView.delegate = self
         optionsStackView.addArrangedSubview(UIView())
         bindViews()
+        setupSwipeRightGesture()
     }
 
     private func bindViews() {
@@ -98,7 +99,7 @@ class PreferencesMainViewController: UIViewController {
             self.titleLabel.text = TextsAsset.Preferences.title
         }.disposed(by: disposeBag)
 
-        accountViewModel.cancelAccountState.subscribe(onNext: { state in
+        accountViewModel.cancelAccountState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { state in
             self.logger.logD(self, "Cancel account state: \(state)")
             switch state {
                 case .initial:
@@ -204,6 +205,44 @@ class PreferencesMainViewController: UIViewController {
     }
 }
 
+// MARK: Touches and Keys handling
+extension PreferencesMainViewController {
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        for press in presses {
+            super.pressesBegan(presses, with: event)
+            if press.type == .rightArrow, updateBodyButtonFocus() {
+                break
+            }
+        }
+    }
+    
+    private func setupSwipeRightGesture() {
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+    }
+    
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended, updateBodyButtonFocus() { return }
+    }
+    
+    private func updateBodyButtonFocus() -> Bool {
+        let focusedItem = UIScreen.main.focusedView
+        optionViews.forEach { optionView in
+            if optionView.button == focusedItem, let type = optionView.optionType {
+                if !generalView.isHidden {
+                    myPreferredFocusedView = generalView.getFocusItem(onTop: [PreferencesType.account, PreferencesType.account].contains(type))
+                } else if !accountView.isHidden {
+                    myPreferredFocusedView = accountView
+                }
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            }
+        }
+        return false
+    }
+}
+
 extension PreferencesMainViewController: PreferencesOptionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) { }
 
@@ -232,7 +271,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
 extension PreferencesMainViewController: PreferencesAccountViewDelegate {
     func actionSelected(with item: AccountItemCell) {
         if item.isUpgradeButton {
-            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
+            router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             return
         }
         switch item {

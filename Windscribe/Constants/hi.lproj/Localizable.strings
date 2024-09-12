@@ -406,3 +406,5 @@
 "Manual Login" = "मैन्युअल लॉगिन";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2एफए को आगे बढ़ने की आवश्यकता है। कोड जनरेट करने के लिए प्रमाणीकरण ऐप्लिकेशन का उपयोग करें.";
 "Please visit windscribe.com to reset your password" = "अपना पासवर्ड रीसेट करने के लिए कृपया windscribe.com पर जाएँ";
+"Delete Account" = "खाता हटा दो";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "अपना खाता हटाने के लिए अपना विंडसाइड पासवर्ड दर्ज करें। कृपया ध्यान रखें कि इस कार्रवाई को पूर्ववत नहीं किया जा सकता.";

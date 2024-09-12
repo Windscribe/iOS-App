@@ -617,8 +617,8 @@ Secrets.</string>
                                     <constraint firstAttribute="height" constant="262" id="hu9-sZ-rxW"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SY1-Ra-Oqh">
-                                <rect key="frame" x="100" y="0.0" width="1820" height="1080"/>
+                            <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SY1-Ra-Oqh">
+                                <rect key="frame" x="100" y="48" width="1820" height="1008"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hHu-9Y-ana">
                                     <size key="itemSize" width="128" height="128"/>
@@ -673,13 +673,13 @@ Secrets.</string>
                             <constraint firstAttribute="bottom" secondItem="5wm-Hx-cVe" secondAttribute="bottom" id="HLQ-3u-6iL"/>
                             <constraint firstItem="SY1-Ra-Oqh" firstAttribute="leading" secondItem="OWh-7R-tKu" secondAttribute="leading" constant="100" id="ZAB-6Y-nEk"/>
                             <constraint firstItem="6ft-YL-OlT" firstAttribute="leading" secondItem="PMr-4a-o7g" secondAttribute="leading" constant="100" id="aq0-vF-BfG"/>
-                            <constraint firstAttribute="bottom" secondItem="SY1-Ra-Oqh" secondAttribute="bottom" id="hyb-WA-qk8"/>
+                            <constraint firstAttribute="bottom" secondItem="SY1-Ra-Oqh" secondAttribute="bottom" constant="24" id="hyb-WA-qk8"/>
                             <constraint firstAttribute="trailing" secondItem="6ft-YL-OlT" secondAttribute="trailing" id="jRx-k4-IKp"/>
                             <constraint firstItem="5wm-Hx-cVe" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" id="k4A-IN-EHd"/>
                             <constraint firstItem="6ft-YL-OlT" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" id="lGJ-SZ-9bA"/>
                             <constraint firstItem="oHG-FT-WDR" firstAttribute="centerY" secondItem="PMr-4a-o7g" secondAttribute="centerY" id="lqM-kz-ADa"/>
                             <constraint firstAttribute="bottom" secondItem="6ft-YL-OlT" secondAttribute="bottom" id="rgQ-qP-5az"/>
-                            <constraint firstItem="SY1-Ra-Oqh" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" id="s88-Mb-l1V"/>
+                            <constraint firstItem="SY1-Ra-Oqh" firstAttribute="top" secondItem="OWh-7R-tKu" secondAttribute="top" constant="48" id="s88-Mb-l1V"/>
                             <constraint firstAttribute="trailing" secondItem="SY1-Ra-Oqh" secondAttribute="trailing" id="uEB-DI-Aqd"/>
                             <constraint firstItem="oHG-FT-WDR" firstAttribute="centerX" secondItem="PMr-4a-o7g" secondAttribute="centerX" id="zIg-vA-dHm"/>
                         </constraints>
@@ -1009,13 +1009,13 @@ Secrets.</string>
             <size key="intrinsicContentSize" width="80" height="85"/>
         </designable>
         <designable name="IgO-T0-k3z">
-            <size key="intrinsicContentSize" width="173" height="86"/>
+            <size key="intrinsicContentSize" width="169" height="86"/>
         </designable>
         <designable name="by7-6d-YD3">
-            <size key="intrinsicContentSize" width="226" height="86"/>
+            <size key="intrinsicContentSize" width="223" height="86"/>
         </designable>
         <designable name="y2b-Xf-tBa">
-            <size key="intrinsicContentSize" width="380" height="86"/>
+            <size key="intrinsicContentSize" width="362" height="86"/>
         </designable>
     </designables>
     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

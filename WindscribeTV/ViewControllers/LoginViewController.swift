@@ -10,7 +10,7 @@ import UIKit
 import Swinject
 import RxSwift
 
-class LoginViewController: UIViewController {
+class LoginViewController: PreferredFocusedViewController {
 
     @IBOutlet weak var loginButton: WSRoundButton!
     @IBOutlet weak var backButton: UIButton!
@@ -29,17 +29,12 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var textField2FA: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var infoLabel: UILabel!
-
-    var myPreferredFocusedView: UIView?
     var is2FA: Bool = false
 
     // MARK: - State properties
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
-
-    override var preferredFocusedView: UIView? {
-        return myPreferredFocusedView
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if is2FA {

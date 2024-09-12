@@ -14,7 +14,7 @@ protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
 }
 
 class PreferencesOptionView: OptionSelectionView {
-    private var optionType: PreferencesType?
+    var optionType: PreferencesType?
     private let disposeBag = DisposeBag()
 
     var viewModel: PreferencesMainViewModel?

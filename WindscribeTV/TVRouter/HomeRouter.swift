@@ -14,9 +14,9 @@ class HomeRouter: RootRouter {
         case .preferences:
             let vc = Assembler.resolve(PreferencesMainViewController.self)
             from.present(vc, animated: true)
-        case .upgrade:
+        case let .upgrade(_, _, shouldBeRoot):
             let vc = Assembler.resolve(UpgradePopViewController.self)
-            presentWithPossibleNavigation(vc: vc, from: from)
+            presentWithPossibleNavigation(vc: vc, from: from, shouldBeRoot: shouldBeRoot)
         case .support:
             let vc: BasePopUpViewController = Assembler.resolve(BasePopUpViewController.self)
             vc.viewModel?.setPopupType(with: .support)

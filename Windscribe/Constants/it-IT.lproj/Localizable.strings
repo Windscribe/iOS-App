@@ -361,3 +361,5 @@
 "Manual Login" = "Login manuale";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA richiede di procedere.\nUsa un'app di autenticazione\nper generare il codice.";
 "Please visit windscribe.com to reset your password" = "Visita windscribe.com per reimpostare la password";
+"Delete Account" = "Elimina account";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Inserisci la tua password Windscribe per eliminare il tuo account. Tieni presente che questa azione non può essere annullata.";

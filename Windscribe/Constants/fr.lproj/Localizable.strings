@@ -363,3 +363,4 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Manual Login" = "Connexion manuelle";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA exigent de procéder.\nUtilisez une applicationd’authentification\npour générer le code.";
 "Please visit windscribe.com to reset your password" = "Veuillez visiter windscribe.com pour réinitialiser votre mot de passe";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Entrez votre mot de passe Windscribe pour supprimer votre compte. Veuillez noter que cette action ne peut pas être annulée.";

@@ -372,3 +372,5 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Manual Login" = "Đăng nhập thủ công";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA yêu cầu tiến hành.\nSử dụng ứng dụng xác\nthực để tạo mã.";
 "Please visit windscribe.com to reset your password" = "Vui lòng truy cập windscribe.com để đặt lại mật khẩu của bạn";
+"Delete Account" = "Xóa tài khoản";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Nhập mật khẩu Windscribe để xóa tài khoản của bạn. Xin lưu ý rằng hành động này không thể hoàn tác được.";

@@ -360,3 +360,5 @@
 "Manual Login" = "تسجيل الدخول اليدوي";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA تتطلب المضي قدما. استخدم تطبيق مصادقة لإنشاء الرمز.";
 "Please visit windscribe.com to reset your password" = "يرجى زيارة windscribe.com لإعادة تعيين كلمة المرور الخاصة بك";
+"Delete Account" = "حذف الحساب";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "أدخل كلمة مرور Windscribe لحذف حسابك. يرجى العلم أنه لا يمكن التراجع عن هذا الإجراء.";

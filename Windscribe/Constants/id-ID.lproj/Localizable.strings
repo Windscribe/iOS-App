@@ -362,3 +362,5 @@
 "Manual Login" = "Login Manual";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA perlu melanjutkan.\nGunakan aplikasi autentikasi\nuntuk membuat kode.";
 "Please visit windscribe.com to reset your password" = "Silakan kunjungi windscribe.com untuk mengatur ulang kata sandi Anda";
+"Delete Account" = "Hapus Akun";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Masukkan kata sandi Windscribe Anda untuk menghapus akun Anda. Perlu diketahui bahwa tindakan ini tidak dapat dibatalkan.";

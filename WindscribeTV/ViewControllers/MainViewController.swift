@@ -11,7 +11,7 @@ import RxSwift
 import Swinject
 import NetworkExtension
 
-class MainViewController: UIViewController {
+class MainViewController: PreferredFocusedViewController {
     @IBOutlet weak var settingsButton: SettingButton!
     @IBOutlet weak var notificationButton: NotificationButton!
     @IBOutlet weak var helpButton: HelpButton!
@@ -52,7 +52,6 @@ class MainViewController: UIViewController {
     let disposeBag = DisposeBag()
     let vpnManager = VPNManager.shared
     var logger: FileLogger!
-    var myPreferredFocusedView: UIView?
     var isFromServer: Bool = false
     var bestLocation: BestLocationModel?
     lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
@@ -73,12 +72,7 @@ class MainViewController: UIViewController {
 
         // Do any additional setup after loading the view.
     }
-
-    override var preferredFocusedView: UIView? {
-
-        return myPreferredFocusedView
-    }
-
+    
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
@@ -165,7 +159,7 @@ class MainViewController: UIViewController {
     }
 
     @IBAction func upgradeButtonPressed(_ sender: Any) {
-        router.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
+        router.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -569,7 +563,7 @@ extension MainViewController: ServerListTableViewDelegate {
 
         if let premiumOnly = group.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
-                router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
+                router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             } else {
                 serverListViewModel.setSelectedServerAndGroup(server: server,
                                                               group: group)
@@ -577,7 +571,7 @@ extension MainViewController: ServerListTableViewDelegate {
         }
     }
     func showUpgradeView() {
-        router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
+        router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
     }
 }
 
