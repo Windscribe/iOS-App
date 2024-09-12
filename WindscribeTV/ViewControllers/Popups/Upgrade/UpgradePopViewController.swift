@@ -65,7 +65,7 @@ class UpgradePopViewController: UIViewController {
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
                 switch plans {
-                case let .standardPlans(products):
+                case let .standardPlans(products, appPlans):
                     products.forEach {
                         let priceView: UpgradePricingView = UpgradePricingView.fromNib()
                         priceView.setup(with: $0.tvPlanLabel, and: $0.price, isSelected: $0.tvPlanLabel == products.first?.tvPlanLabel )
@@ -73,9 +73,9 @@ class UpgradePopViewController: UIViewController {
                         priceView.delegate = self
                         priceView.plan = $0
                     }
-                case let .discounted(plan):
+                case let .discounted(plan, appPlan):
                     let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                    priceView.setup(with: plan.name, and: plan.price)
+                    priceView.setup(with: appPlan.name, and: plan.price)
                     self.pricingStackView.addArrangedSubview(priceView)
                     priceView.delegate = self
                 default: return
