@@ -313,12 +313,14 @@ extension VPNManager {
     }
 
     private func connect() {
-        resetProfiles {
-            self.connectIntent = true
-            self.userTappedToDisconnect = false
-            self.restartOnDisconnect = false
-            self.isOnDemandRetry = false
-            self.configureAndConnectVPN()
+        if VPNManager.shared.isConnected() {
+            resetProfiles {
+                self.connectIntent = true
+                self.userTappedToDisconnect = false
+                self.restartOnDisconnect = false
+                self.isOnDemandRetry = false
+                self.configureAndConnectVPN()
+            }
         }
     }
 }
