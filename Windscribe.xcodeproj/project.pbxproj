@@ -150,6 +150,7 @@
 		1EE74F842BD81DC30031185F /* ViewLeaderboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F832BD81DC30031185F /* ViewLeaderboardViewModel.swift */; };
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
+		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
 		1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */; };
@@ -1330,6 +1331,7 @@
 		1EE74F832BD81DC30031185F /* ViewLeaderboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLeaderboardViewModel.swift; sourceTree = "<group>"; };
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
+		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
 		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
 		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -2643,6 +2645,7 @@
 				599BA2B72C65453F00F0D1E4 /* UpgradeButton.swift */,
 				59656F722C73C3E000707EA2 /* PageTitleLabel.swift */,
 				1EF7BB402C74B0880032A4DF /* UIVIew+Gradient.swift */,
+				1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -4993,6 +4996,7 @@
 				1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */,
 				1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */,
 				59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */,
+				1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */,
 				59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */,
 				59A218682C3C8011000D89FA /* MainViewController.swift in Sources */,
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,

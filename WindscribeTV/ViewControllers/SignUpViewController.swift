@@ -10,7 +10,7 @@ import UIKit
 import Swinject
 import RxSwift
 
-class SignUpViewController: UIViewController {
+class SignUpViewController: PreferredFocusedViewController {
 
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var signUpButton: WSRoundButton!
@@ -26,11 +26,7 @@ class SignUpViewController: UIViewController {
     var viewModel: SignUpViewModel!, router: SignupRouter!, logger: FileLogger!
     var claimGhostAccount = false
     let disposeBag = DisposeBag()
-    var myPreferredFocusedView: UIView?
-
-    override var preferredFocusedView: UIView? {
-        return myPreferredFocusedView
-    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()

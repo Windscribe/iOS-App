@@ -380,3 +380,5 @@
 "Manual Login" = "Manual Login";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA devam etmeyi gerektirir.\nKodu oluşturmak için bir kimlik\ndoğrulama uygulaması kullanın.";
 "Please visit windscribe.com to reset your password" = "Lütfen şifrenizi sıfırlamak için windscribe.com sayfasını ziyaret edin";
+"Delete Account" = "Hesabı sil";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Hesabınızı silmek için Windscribe şifrenizi girin. Lütfen bu işlemin geri alınamayacağını unutmayın.";

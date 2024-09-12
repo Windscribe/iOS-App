@@ -362,3 +362,5 @@
 "Manual Login" = "수동 로그인";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA는 계속 진행해야 합니다.\n인증 앱을 사용하여\n코드를 생성합니다.";
 "Please visit windscribe.com to reset your password" = "windscribe.com 방문하여 비밀번호를 재설정하세요.";
+"Delete Account" = "계정 삭제";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "계정을 삭제하려면 Windscribe 비밀번호를 입력하세요. 이 작업은 취소할 수 없습니다.";

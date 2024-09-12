@@ -362,3 +362,5 @@
 "Manual Login" = "手动登录";
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "需通过双重验证以继续操作。请使用 2FA 应用生成代码。";
 "Please visit windscribe.com to reset your password" = "请访问 windscribe.com 重置密码";
+"Delete Account" = "删除账户";
+"Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "输入您的 Windscribe 密码以删除您的帐户。请注意，此操作无法撤消。";

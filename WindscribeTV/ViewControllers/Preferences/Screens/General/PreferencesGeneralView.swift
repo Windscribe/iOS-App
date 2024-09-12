@@ -41,7 +41,14 @@ class PreferencesGeneralView: UIView {
         languagesView.select(option: viewModel.getCurrentLanguage(), animated: false)
         orderByView.select(option: viewModel.getCurrentLocationOrder().localize(), animated: false)
     }
-
+    
+    func getFocusItem(onTop: Bool) -> UIView? {
+        if onTop {
+            return languagesView
+        }
+        return orderByView
+    }
+    
     private func updateText() {
         languagesView.updateText(with: TextsAsset.General.languages, title: GeneralHelper.getTitle(.language))
         orderByView.updateText(with: TextsAsset.orderPreferences, title: GeneralHelper.getTitle(.locationOrder))

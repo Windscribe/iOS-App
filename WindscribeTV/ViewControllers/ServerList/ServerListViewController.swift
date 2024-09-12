@@ -39,8 +39,7 @@ enum SideMenuType: String {
 
 }
 
-class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
-
+class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
 
     var serverSectionsOrdered: [ServerSection] = []
@@ -62,7 +61,6 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
     private var optionViews = [SideMenuOptions]()
     private var selectionOption = SideMenuType.all
     let disposeBag = DisposeBag()
-    var myPreferredFocusedView: UIView?
 
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
@@ -100,8 +98,6 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             emptyFavView.subviews.forEach { $0.isHidden = true }
         }
     }
-
-//    override var preferredFocusedView: UIView? { }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
@@ -277,7 +273,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         }
         switch value {
         case .all:
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false, hasTopSpacing: false)
+            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
             toggleView(viewToToggle: favTableView, isViewVisible: true)
             selectionOption = .all
             hideEmptyFavView()
@@ -315,7 +311,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
         }
     }
 
-    private func toggleView(viewToToggle: UIView, isViewVisible: Bool, hasTopSpacing: Bool = true) {
+    private func toggleView(viewToToggle: UIView, isViewVisible: Bool) {
         let finalPosition: CGFloat
         let finalAlpha: CGFloat
         let transform: CGAffineTransform
@@ -327,7 +323,7 @@ class ServerListViewController: UIViewController, SideMenuOptionViewDelegate {
             transform = CGAffineTransform(translationX: 0, y: finalPosition)
         } else {
             // Show the view
-            finalPosition = hasTopSpacing ? 100 : 0
+            finalPosition = 0
             finalAlpha = 1
             transform = CGAffineTransform(translationX: 0, y: finalPosition)
             viewToToggle.transform = CGAffineTransform(translationX: 0, y: view.bounds.height)

@@ -35,8 +35,8 @@ extension RootRouter {
         from.present(navigationController, animated: true)
     }
 
-    func presentWithPossibleNavigation(vc: UIViewController, from: UIViewController) {
-        if let navigationVC = from.navigationController {
+    func presentWithPossibleNavigation(vc: UIViewController, from: UIViewController, shouldBeRoot: Bool = true) {
+        if let navigationVC = from.navigationController, shouldBeRoot {
             navigationVC.setViewControllers([vc], animated: true)
         } else {
             from.present(vc, animated: true)
