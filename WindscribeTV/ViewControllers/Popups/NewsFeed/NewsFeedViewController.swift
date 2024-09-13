@@ -14,6 +14,8 @@ class NewsFeedViewController: PreferredFocusedViewController {
     @IBOutlet weak var buttonContainerView: UIStackView!
     @IBOutlet weak var buttonHiddingView: UIView!
     @IBOutlet weak var newsBodyText: UITextView!
+    @IBOutlet weak var titleLabel: UILabel!
+
     var button = WSPillButton()
 
     var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!
@@ -34,6 +36,9 @@ class NewsFeedViewController: PreferredFocusedViewController {
         button.setup(withHeight: 96)
         buttonContainerView.addArrangedSubview(button)
         setupSwipeRightGesture()
+        titleLabel.text = TextsAsset.NewsFeed.title
+        titleLabel.font = UIFont.bold(size: 72)
+        titleLabel.textColor = .white
     }
 
     private func bindViews() {
@@ -89,17 +94,17 @@ extension NewsFeedViewController {
             }
         }
     }
-    
+
     private func setupSwipeRightGesture() {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
     }
-    
+
     @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended, updateBodyButtonFocus() { return }
     }
-    
+
     private func updateBodyButtonFocus() -> Bool {
         if button != UIScreen.main.focusedView {
             myPreferredFocusedView = button

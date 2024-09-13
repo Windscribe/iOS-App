@@ -1332,6 +1332,7 @@
 		1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepository.swift; sourceTree = "<group>"; };
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
+		1EF11EE72C94791100C3FD64 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
 		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
 		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -4292,6 +4293,7 @@
 				"zh-Hans",
 				ar,
 				hi,
+				bn,
 			);
 			mainGroup = AF018DE021B0866600B225FF;
 			packageReferences = (
@@ -5837,6 +5839,7 @@
 				E9CF71C6280DD3160014119C /* zh-Hans */,
 				E9CF71C7280DD36B0014119C /* ar */,
 				59D000D229E472E70018DE1B /* hi */,
+				1EF11EE72C94791100C3FD64 /* bn */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

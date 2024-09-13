@@ -364,3 +364,6 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "2FA require to proceed.\nUse an authentication\napp to generate the code." = "2FA exigent de procéder.\nUtilisez une applicationd’authentification\npour générer le code.";
 "Please visit windscribe.com to reset your password" = "Veuillez visiter windscribe.com pour réinitialiser votre mot de passe";
 "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone." = "Entrez votre mot de passe Windscribe pour supprimer votre compte. Veuillez noter que cette action ne peut pas être annulée.";
+"Locations" = "Lieux";
+"Support" = "Soutien";
+"Go to the address above on your phone or computer for all support related inquiries." = "Accédez à l’adresse ci-dessus sur votre téléphone ou votre ordinateur pour toutes les demandes liées à l’assistance.";

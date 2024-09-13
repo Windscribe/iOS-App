@@ -10,7 +10,7 @@ import UIKit
 
 class PreferredFocusedViewController: UIViewController {
     var myPreferredFocusedView: UIView?
-    
+
     override var preferredFocusedView: UIView? {
         return myPreferredFocusedView
     }

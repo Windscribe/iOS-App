@@ -152,6 +152,8 @@ class MainViewModel: MainViewModelType {
         preferences.getLanguageManagerSelectedLanguage().subscribe(onNext: { [self] _ in
             self.bestLocation.onNext(try? bestLocation.value())
         }, onError: { _ in }).disposed(by: disposeBag)
+
+        preferences.savePrivacyPopupAccepted(bool: false)
     }
 
     private func observeWifiNetwork() {

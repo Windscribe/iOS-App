@@ -12,6 +12,7 @@ import RxSwift
 class PrivacyPopUpViewController: BasePopUpViewController {
     var privacyViewModel: PrivacyViewModelType!
     var button = WSPillButton()
+    var closeCompletion: (() -> Void)?
 
     // MARK: Overrides
     override func viewDidLoad() {
@@ -31,7 +32,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
 
     private func bindViews() {
         button.rx.primaryAction.bind { [self] in
-            self.privacyViewModel.action()
+            self.privacyViewModel.action { self.closeCompletion?() }
             self.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)
     }

@@ -10,7 +10,6 @@ import UIKit
 import RxSwift
 
 class PrivacyViewController: WSUIViewController {
-
     var backgroundView: UIView!
     var descriptionLabel: UILabel!
     var actionButton: UIButton!
@@ -19,6 +18,7 @@ class PrivacyViewController: WSUIViewController {
 
     var viewModel: PrivacyViewModelType!
     var logger: FileLogger!
+    var closeCompletion: (() -> Void)?
 
     override func viewDidLoad() {
         super.viewDidLoad()

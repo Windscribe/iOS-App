@@ -28,6 +28,7 @@ protocol LocalDatabase {
     func saveIKEv2ServerCredentials(credentials: IKEv2ServerCredentials) -> Disposable
     func getPortMap() -> [PortMap]?
     func savePortMap(portMap: [PortMap])
+    func saveSuggestedPorts(suggestedPorts: [SuggestedPorts])
     func getSuggestedPorts() -> [SuggestedPorts]?
     func getNotifications() -> [Notice]?
     func getNotificationsObservable() -> Observable<[Notice]>

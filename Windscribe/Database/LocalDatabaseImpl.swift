@@ -107,6 +107,10 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjects(type: SuggestedPorts.self)
     }
 
+    func saveSuggestedPorts(suggestedPorts: [SuggestedPorts]) {
+        return updateRealmObjects(objects: suggestedPorts)
+    }
+
     func savePortMap(portMap: [PortMap]) {
         return updateRealmObjects(objects: portMap)
     }

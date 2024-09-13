@@ -203,7 +203,7 @@ struct TextsAsset {
             return "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location.".localize()
         }
         static var locationPermissionLabel: String {
-            return "Location".localize()
+            return "Locations".localize()
         }
         static var disclousarDescription: String {
             return "Windscribe needs the location permission in order to make the \"Network Whitelist\" feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.".localize()
@@ -1334,7 +1334,7 @@ struct PopupsTV {
         return "Support".localize()
     }
     static var supportBody: String {
-        return "Go to the address above on you phone or computer for all support related inquires".localize()
+        return "Go to the address above on your phone or computer for all support related inquiries.".localize()
     }
 }
 

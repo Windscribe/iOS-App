@@ -34,7 +34,7 @@ class LoginViewController: PreferredFocusedViewController {
     // MARK: - State properties
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         if is2FA {

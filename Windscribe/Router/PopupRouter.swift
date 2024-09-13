@@ -28,8 +28,10 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = Assembler.resolve(NewsFeedViewController.self)
         case .setPreferredProtocolPopup:
             vc = Assembler.resolve(SetPreferredProtocolPopupViewController.self)
-        case .privacyView:
-            vc = Assembler.resolve(PrivacyViewController.self)
+        case let .privacyView(completionHandler):
+            let privacyVC: PrivacyViewController = Assembler.resolve(PrivacyViewController.self)
+            privacyVC.closeCompletion = completionHandler
+            vc = privacyVC
         case .shakeForDataPopUp:
             vc = UINavigationController(rootViewController: Assembler.resolve(ShakeForDataPopupViewController.self))
         case .shakeForDataView:

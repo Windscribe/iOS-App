@@ -14,6 +14,7 @@
                 <outlet property="buttonHiddingView" destination="P0H-or-Bz1" id="G1k-gv-nof"/>
                 <outlet property="listStackView" destination="Zjg-Ua-Xe8" id="RkV-OW-oYC"/>
                 <outlet property="newsBodyText" destination="2Ba-mm-0W6" id="bdl-t5-4u3"/>
+                <outlet property="titleLabel" destination="btG-tm-isp" id="6bb-49-fz5"/>
                 <outlet property="view" destination="8EI-1a-T7m" id="l8s-Ag-asL"/>
             </connections>
         </placeholder>

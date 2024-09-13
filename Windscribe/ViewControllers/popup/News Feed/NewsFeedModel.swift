@@ -34,7 +34,7 @@ class NewsFeedModel: NewsFeedModelType {
 
     private func load() {
         Observable.combineLatest(localDatabase.getNotificationsObservable(), localDatabase.getReadNoticesObservable().take(1))
-            .filter { $0.0.filter{$0.isInvalidated}.count == 0 && $0.1.filter{$0.isInvalidated}.count == 0 }
+            .filter { $0.0.filter {$0.isInvalidated}.count == 0 && $0.1.filter {$0.isInvalidated}.count == 0 }
         .bind { (notifications, readNotifications) in
             if notifications.isEmpty { return }
             let setReadNotificationIDs = Set(readNotifications.map { $0.id })
