@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "notifications_icon.png",
+      "filename" : "notifications_icon.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "notifications_icon 1.png",
+      "filename" : "notifications_icon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "notifications_icon 2.png",
+      "filename" : "notifications_icon 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

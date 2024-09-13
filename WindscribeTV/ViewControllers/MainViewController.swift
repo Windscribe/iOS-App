@@ -402,7 +402,7 @@ class MainViewController: PreferredFocusedViewController {
         self.portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
         self.connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
         self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
-        self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButton), for: .focused)
+        self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTvFocused), for: .focused)
         if [.connecting].contains(info.state) { self.connectionButtonRing.rotate() } else { self.connectionButtonRing.stopRotating() }
         self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
 

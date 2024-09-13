@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 3.svg",
+      "filename" : "ic_on_button_off_focused.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group 3@2x.svg",
+      "filename" : "ic_on_button_off_focused 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group 3@3x.svg",
+      "filename" : "ic_on_button_off_focused 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

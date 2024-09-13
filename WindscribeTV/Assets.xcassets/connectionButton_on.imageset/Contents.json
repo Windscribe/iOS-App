@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "onbutton_on.png",
+      "filename" : "ic_on_button_off rotated.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "onbutton_on 1.png",
+      "filename" : "ic_on_button_off rotated 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "onbutton_on 2.png",
+      "filename" : "ic_on_button_off rotated 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

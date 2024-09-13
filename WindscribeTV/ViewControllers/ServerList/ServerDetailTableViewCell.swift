@@ -184,7 +184,7 @@ class ServerDetailTableViewCell: UITableViewCell {
                 self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS" : ""
                 return
             }
-            self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " --  \(staticIp)"
+            self.latencyLabel.text = minTime > 0 ? "\(minTime.description) MS  \(staticIp)" : " \(staticIp)"
         }
 
     }

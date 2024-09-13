@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "off_ring.png",
+      "filename" : "off_ring.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "off_ring 1.png",
+      "filename" : "off_ring 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "off_ring 2.png",
+      "filename" : "off_ring 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

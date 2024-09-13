@@ -30,7 +30,7 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ERg-zn-LsA">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_city_logo" translatesAutoresizingMaskIntoConstraints="NO" id="ERg-zn-LsA">
                     <rect key="frame" x="1904" y="50" width="68" height="89"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="89" id="Tmn-t6-Nnb"/>
@@ -38,7 +38,7 @@
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YQF-Fh-ZIB" customClass="PageTitleLabel" customModule="WindscribeTV" customModuleProvider="target">
-                    <rect key="frame" x="1782" y="93" width="92" height="46"/>
+                    <rect key="frame" x="1782" y="71.5" width="92" height="46"/>
                     <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="0.23999999999999999" colorSpace="custom" customColorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
@@ -60,7 +60,7 @@
                 <constraint firstItem="VZA-6C-CfE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fT3-ST-Flb"/>
                 <constraint firstItem="LsH-pJ-ZRU" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="fkd-Lt-uQ7"/>
                 <constraint firstAttribute="trailing" secondItem="LsH-pJ-ZRU" secondAttribute="trailing" constant="50" id="jc9-K5-KPb"/>
-                <constraint firstItem="YQF-Fh-ZIB" firstAttribute="bottom" secondItem="ERg-zn-LsA" secondAttribute="bottom" id="tNW-m0-Juw"/>
+                <constraint firstItem="YQF-Fh-ZIB" firstAttribute="centerY" secondItem="ERg-zn-LsA" secondAttribute="centerY" id="nSj-gZ-Soi"/>
                 <constraint firstItem="ERg-zn-LsA" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="tUP-xq-yRj"/>
                 <constraint firstItem="ERg-zn-LsA" firstAttribute="leading" secondItem="YQF-Fh-ZIB" secondAttribute="trailing" constant="30" id="uNu-vp-in3"/>
                 <constraint firstItem="nkI-NY-t1X" firstAttribute="bottom" secondItem="LsH-pJ-ZRU" secondAttribute="bottom" constant="50" id="zdn-IZ-5WA"/>
@@ -69,4 +69,7 @@
             <point key="canvasLocation" x="-45" y="-277.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="ic_city_logo" width="32" height="32"/>
+    </resources>
 </document>

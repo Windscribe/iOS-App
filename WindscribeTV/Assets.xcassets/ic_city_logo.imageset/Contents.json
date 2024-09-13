@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Group 3.svg",
+      "filename" : "ic_city_icon.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Group 3@2x.svg",
+      "filename" : "ic_city_icon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Group 3@3x.svg",
+      "filename" : "ic_city_icon 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }
