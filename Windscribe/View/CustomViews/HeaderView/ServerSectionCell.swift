@@ -25,8 +25,12 @@ class ServerSectionCell: UITableViewCell {
             updateUI()
         }
     }
-    lazy var preferences = Assembler.resolve(Preferences.self)
-    lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
+    var preferences: Preferences {
+       return Assembler.resolve(Preferences.self)
+    }
+    var sessionManager: SessionManagerV2 {
+        return Assembler.resolve(SessionManagerV2.self)
+    }
     let disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

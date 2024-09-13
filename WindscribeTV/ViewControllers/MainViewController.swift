@@ -323,7 +323,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.bestLocation.bind(onNext: { bestLocation in
+        viewModel.bestLocation.filter {$0?.isInvalidated == false}.bind(onNext: { bestLocation in
             guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.bestLocation = bestLocation.getBestLocationModel()

@@ -295,7 +295,8 @@ extension MainViewController {
             logger.logD(self, "Last connected node retrived from disk. \( self.vpnManager.selectedNode?.hostname ?? "")")
         }
         if self.vpnManager.selectedNode == nil {
-            guard let bestLocation = try? viewModel.bestLocation.value()?.getBestLocationModel() else { return }
+            guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
+            let bestLocation = bestLocationValue.getBestLocationModel()
             guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
             self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
             logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
@@ -323,7 +324,7 @@ extension MainViewController {
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
             self.serverListTableView.delegate = self.serverListTableViewDataSource
-            if let bestLocation = try? self.viewModel.bestLocation.value() {
+            if let bestLocation = try? self.viewModel.bestLocation.value(), bestLocation.isInvalidated == false {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             }
         }
