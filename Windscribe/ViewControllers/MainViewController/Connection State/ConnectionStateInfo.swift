@@ -101,6 +101,6 @@ extension ConnectionState {
     var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
 
     var connectButtonTV: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOff : ImagesAsset.TvAsset.connectionButtonOn }
-    
+
     var connectButtonTvFocused: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOffFocused : ImagesAsset.TvAsset.connectionButtonOnFocused }
 }

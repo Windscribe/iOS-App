@@ -44,6 +44,7 @@ class UpgradePopViewController: UIViewController {
         plansStackView.addArrangedSubview(UIView())
 
         view.addBlueGradientBackground()
+        titleLabel.text = TextsAsset.upgrade
         applyFonts()
     }
 

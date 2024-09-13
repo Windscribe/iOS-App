@@ -29,5 +29,5 @@ enum RouteID {
     case bannedAccountPopup
     case outOfDataAccountPopup
     case proPlanExpireddAccountPopup
-    case privacyView
+    case privacyView(completionHandler: () -> Void)
 }

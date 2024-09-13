@@ -232,7 +232,7 @@ extension MainViewController {
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
         if !viewModel.isPrivacyPopupAccepted() {
-            showPrivacyConfirmationPopup()
+            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
             return
         } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
             self.displayConnectingAlert()

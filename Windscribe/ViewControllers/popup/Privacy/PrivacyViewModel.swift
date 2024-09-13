@@ -11,6 +11,7 @@ import RxSwift
 
 protocol PrivacyViewModelType {
     func action()
+    func action(completionHandler: @escaping (() -> Void))
 }
 
 class PrivacyViewModel: PrivacyViewModelType {
@@ -33,23 +34,40 @@ class PrivacyViewModel: PrivacyViewModelType {
         self.logger = logger
     }
 
+    func action(completionHandler: @escaping (() -> Void)) {
+        actionWithCompletion(completionHandler: completionHandler)
+    }
+
     func action() {
+        actionWithCompletion()
+    }
+
+    private func actionWithCompletion(completionHandler: (() -> Void)? = nil) {
         preferences.savePrivacyPopupAccepted(bool: true)
         sharedVPNManager.configureDummy {[weak self] _,_ in
             guard let self = self else { return }
             NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
-            guard let suggestedProtocol = self.localDatabase.getSuggestedPorts()?.first,
-                  suggestedProtocol.protocolType != "",
-                  suggestedProtocol.port != "" else { return }
-            self.localDatabase.updateConnectionMode(value: Fields.Values.manual)
 
-            if let wifiNetwork = self.networkRepository.getCurrentNetwork() {
-                wifiNetwork.protocolType = suggestedProtocol.protocolType
-                wifiNetwork.port = suggestedProtocol.port
-                self.networkRepository.setNetworkPreferredProtocol(network: wifiNetwork)
-
+            var defaultProtocol = ""
+            var defaultPort = ""
+            if let suggestedProtocol = self.localDatabase.getSuggestedPorts()?.first,
+               suggestedProtocol.protocolType != "",
+               suggestedProtocol.port != "" {
+                defaultProtocol = suggestedProtocol.protocolType
+                defaultPort = suggestedProtocol.port
                 self.logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+            } else {
+                defaultProtocol = TextsAsset.General.protocols[0]
+                defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+                self.logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
             }
+            self.localDatabase.updateConnectionMode(value: Fields.Values.manual)
+            if let wifiNetwork = self.networkRepository.getCurrentNetwork() {
+                wifiNetwork.protocolType = defaultProtocol
+                wifiNetwork.port = defaultPort
+                self.networkRepository.setNetworkPreferredProtocol(network: wifiNetwork)
+            }
+            completionHandler?()
         }
     }
 }

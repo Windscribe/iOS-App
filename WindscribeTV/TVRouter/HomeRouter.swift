@@ -58,9 +58,10 @@ class HomeRouter: RootRouter {
             vc.bestLocDelegate = from as? any BestLocationConnectionDelegate
             vc.bestLocation = bestLocation
             from.navigationController?.pushViewController(vc, animated: true)
-        case .privacyView:
+        case let .privacyView(completionHandler):
             let vc: PrivacyPopUpViewController = Assembler.resolve(PrivacyPopUpViewController.self)
             vc.viewModel?.setPopupType(with: .privacy)
+            vc.closeCompletion = completionHandler
             from.navigationController?.pushViewController(vc, animated: true)
         case .bannedAccountPopup:
             let vc: BannedAccountPopupViewController = Assembler.resolve(BannedAccountPopupViewController.self)

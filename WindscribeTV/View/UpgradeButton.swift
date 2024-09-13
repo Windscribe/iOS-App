@@ -11,7 +11,8 @@ import RxSwift
 import Swinject
 
 class UpgradeButton: UIButton {
-    var dataLeft: UILabel!
+    let dataLeft = UILabel()
+    let upgrade = UILabel()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -45,7 +46,6 @@ class UpgradeButton: UIButton {
             divider.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
 
-        dataLeft = UILabel()
         dataLeft.text = "10 GB LEFT"
         dataLeft.font = UIFont.bold(size: 24)
         dataLeft.translatesAutoresizingMaskIntoConstraints = false
@@ -61,7 +61,6 @@ class UpgradeButton: UIButton {
             dataLeft.centerYAnchor.constraint(equalTo: self.centerYAnchor)
         ])
 
-        let upgrade = UILabel()
         upgrade.text = TextsAsset.upgrade.uppercased()
         upgrade.font = UIFont.bold(size: 24)
         upgrade.translatesAutoresizingMaskIntoConstraints = false
@@ -84,6 +83,10 @@ class UpgradeButton: UIButton {
     func setborder() {
             self.layer.borderWidth = 2
             self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+    }
+
+    func updateText() {
+        upgrade.text = TextsAsset.upgrade
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {

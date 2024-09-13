@@ -215,17 +215,17 @@ extension PreferencesMainViewController {
             }
         }
     }
-    
+
     private func setupSwipeRightGesture() {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
     }
-    
+
     @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended, updateBodyButtonFocus() { return }
     }
-    
+
     private func updateBodyButtonFocus() -> Bool {
         let focusedItem = UIScreen.main.focusedView
         optionViews.forEach { optionView in

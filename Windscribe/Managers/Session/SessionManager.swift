@@ -174,6 +174,7 @@ class SessionManager: SessionManagerV2 {
             credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
         }
         guard let portMaps = localDatabase.getPortMap()?.filter({$0.heading == wireGuard}) else { return }
+
         if portMaps.first == nil {
             serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
             portmapRepo.getUpdatedPortMap().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)

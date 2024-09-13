@@ -72,7 +72,7 @@ class MainViewController: PreferredFocusedViewController {
 
         // Do any additional setup after loading the view.
     }
-    
+
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
@@ -312,6 +312,7 @@ class MainViewController: PreferredFocusedViewController {
 
     func localisation() {
         locationsLabel.text = TextsAsset.Permission.locationPermissionLabel
+        upgradeButton.updateText()
     }
 
     func loadLastConnection() {
@@ -372,7 +373,7 @@ class MainViewController: PreferredFocusedViewController {
                 upgradeButton.isHidden = true
             } else {
                 upgradeButton.isHidden = false
-                upgradeButton.dataLeft?.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
+                upgradeButton.dataLeft.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
             }
         }
     }
@@ -542,7 +543,9 @@ class MainViewController: PreferredFocusedViewController {
 
     private func showPrivacyConfirmationPopup() {
         if !viewModel.isPrivacyPopupAccepted() {
-            router?.routeTo(to: .privacyView, from: self)
+            router?.routeTo(to: .privacyView(completionHandler: {
+                self.configureVPN()
+            }), from: self)
         }
     }
 
