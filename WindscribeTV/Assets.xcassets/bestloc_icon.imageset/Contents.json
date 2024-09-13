@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bestloc_icon.png",
+      "filename" : "bestloc_icon.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bestloc_icon 1.png",
+      "filename" : "bestloc_icon 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bestloc_icon 2.png",
+      "filename" : "bestloc_icon 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

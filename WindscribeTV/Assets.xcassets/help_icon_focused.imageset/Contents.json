@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "help_icon_focused.png",
+      "filename" : "help_icon_focused.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "help_icon_focused 1.png",
+      "filename" : "help_icon_focused 1.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "help_icon_focused 2.png",
+      "filename" : "help_icon_focused 2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

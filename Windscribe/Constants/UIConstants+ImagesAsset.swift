@@ -277,5 +277,7 @@ struct ImagesAsset {
         static let addFavIconFocused = "add_fav_icon_focused"
         static let removeFavIcon = "remove_fav_icon"
         static let removeFavIconFocused = "remove_fav_icon_focused"
+        static let connectionButtonOffFocused = "connectionButtonOffFocused"
+        static let connectionButtonOnFocused = "connectionButtonOnFocused"
     }
 }

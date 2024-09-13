@@ -12,8 +12,10 @@ class ServerListCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var countryCode: UILabel!
     @IBOutlet weak var flagImage: UIImageView!
+    var isShadow: Bool = true
 
     func setup(isShadow: Bool) {
+        self.isShadow = isShadow
         if isShadow {
             flagImage.layer.masksToBounds = false
             flagImage.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
@@ -30,11 +32,11 @@ class ServerListCollectionViewCell: UICollectionViewCell {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if self.isFocused {
             self.flagImage.alpha = 1.0
-            flagImage.layer.shadowColor = UIColor.white.cgColor
+            flagImage.layer.shadowColor = isShadow ? UIColor.white.cgColor : UIColor.clear.cgColor
             self.countryCode.textColor = .white
         } else {
             self.flagImage.alpha = 0.40
-            flagImage.layer.shadowColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
+            flagImage.layer.shadowColor = isShadow ? UIColor.whiteWithOpacity(opacity: 0.24).cgColor : UIColor.clear.cgColor
             self.countryCode.textColor = .whiteWithOpacity(opacity: 0.40)
         }
     }
