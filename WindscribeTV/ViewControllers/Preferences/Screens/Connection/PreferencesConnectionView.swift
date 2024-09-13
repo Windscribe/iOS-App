@@ -22,12 +22,6 @@ class PreferencesConnectionView: UIView {
     lazy var portsView: SettingsSection = {
         SettingsSection.fromNib()
     }()
-    lazy var allwayOnView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
-    lazy var allowLanTraficView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
     lazy var circumventCensorshipView: SettingsSection = {
         SettingsSection.fromNib()
     }()
@@ -40,10 +34,6 @@ class PreferencesConnectionView: UIView {
 
         connectionModeView.populate(with: viewModel.currentConnectionModes(), title: GeneralHelper.getTitle(.connectionMode))
 
-        allwayOnView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.killSwitch))
-
-        allowLanTraficView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.allowLan))
-
         circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
 
         protocolsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
@@ -52,11 +42,9 @@ class PreferencesConnectionView: UIView {
         portsView.delegate = self
         protocolsView.delegate = self
         connectionModeView.delegate = self
-        allwayOnView.delegate = self
-        allowLanTraficView.delegate = self
         circumventCensorshipView.delegate = self
 
-        [connectionModeView, protocolsView, portsView, allwayOnView, allowLanTraficView, circumventCensorshipView]
+        [connectionModeView, protocolsView, portsView, circumventCensorshipView]
             .forEach {
                 contentStackView.addArrangedSubview($0)
             }
@@ -69,8 +57,6 @@ class PreferencesConnectionView: UIView {
         connectionModeView.select(option: viewModel.getCurrentConnectionMode().titleValue, animated: false)
         protocolsView.select(option: viewModel.getCurrentProtocol(), animated: false)
         portsView.select(option: viewModel.getCurrentPort(), animated: false)
-        allwayOnView.select(option: viewModel.getKillSwitchStatus() ? TextsAsset.General.enabled : TextsAsset.General.disabled, animated: false)
-        allowLanTraficView.select(option: viewModel.getAllowLanStatus() ? TextsAsset.General.enabled : TextsAsset.General.disabled, animated: false)
         circumventCensorshipView.select(option: viewModel.getCircumventCensorshipStatus() ? TextsAsset.General.enabled : TextsAsset.General.disabled, animated: false)
     }
 
@@ -89,10 +75,6 @@ class PreferencesConnectionView: UIView {
         protocolsView.updateText(with: viewModel.getProtocols(), title: nil)
 
         portsView.updateText(with: viewModel.getPorts(), title: nil)
-
-        allwayOnView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.killSwitch))
-
-        allowLanTraficView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: GeneralHelper.getTitle(.allowLan))
 
         circumventCensorshipView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
     }
@@ -126,14 +108,6 @@ extension PreferencesConnectionView: SettingsSectionDelegate {
         }
         if view == portsView {
             viewModel.updatePort(value: value)
-          return
-        }
-        if view == allwayOnView {
-            viewModel.updateChangeKillSwitchStatus(status: value == TextsAsset.General.enabled)
-          return
-        }
-        if view == allowLanTraficView {
-            viewModel.updateChangeAllowLanStatus(status: value == TextsAsset.General.enabled)
           return
         }
         if view == circumventCensorshipView {
