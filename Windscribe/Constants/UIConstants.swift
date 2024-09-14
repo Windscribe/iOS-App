@@ -1486,4 +1486,12 @@ struct TvAssets {
     static var twofaDescription: String {
         return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
     }
+    
+    static var locationMaintenanceDescription: String {
+        return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status"
+    }
+    
+    static var locationMaintenanceTitle: String {
+        return "Location Maintenance"
+    }
 }
