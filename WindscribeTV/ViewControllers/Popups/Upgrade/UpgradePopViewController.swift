@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Swinject
 
 class UpgradePopViewController: UIViewController {
     @IBOutlet weak var titleLabel: UILabel!
@@ -91,16 +92,25 @@ class UpgradePopViewController: UIViewController {
                 switch state {
                 case .success(let ghostAccount):
                     self.endLoading()
-                    if ghostAccount {
-                        // TODO: Go to signup view controller
+                    if ghostAccount == true {
+                        let vc = Assembler.resolve(SignUpViewController.self)
+                        if self.navigationController == nil {
+                            self.present(vc, animated: true)
+                        } else {
+                            self.navigationController?.pushViewController(vc, animated: true)
+                        }
                     } else {
-                        self.navigationController?.popToRootViewController(animated: true)
+                        if self.navigationController == nil {
+                            self.dismiss(animated: true)
+                        } else {
+                            self.navigationController?.popToRootViewController(animated: true)
+                        }
                     }
                 case .loading:
                     self.showLoading()
                 case .error(let error):
                     self.endLoading()
-                   // TODO: Show alert for error
+                    AlertManager.shared.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
                 case .none:
                     self.endLoading()
                 }

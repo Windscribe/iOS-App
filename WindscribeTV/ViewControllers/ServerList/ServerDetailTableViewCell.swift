@@ -116,6 +116,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         if displayingFavGroup?.isInvalidated == true {
             return
         }
+        self.displayingGroup = displayingFavGroup?.getGroupModel()
         connectButtonTrailing.constant = 0
         favButton.isHidden = false
         if let city = displayingFavGroup?.city, let nick = displayingFavGroup?.nick {
@@ -131,13 +132,13 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
         guard let pingIp = displayingFavGroup?.pingIp,
               let minTime = latencyRepository.getPingData(ip: pingIp)?.latency else {
-            self.latencyLabel.text = " "
+            self.latencyLabel.text = "--"
             return
         }
         if minTime > 0 {
             self.latencyLabel.text = " \(minTime.description) MS"
         } else {
-            self.latencyLabel.text = " "
+            self.latencyLabel.text = "--"
         }
 
         if let premiumOnly = displayingFavGroup?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
@@ -321,6 +322,14 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
+        if let bestNode = displayingGroup?.bestNode,
+           let bestNodeHostname = displayingGroup?.bestNodeHostname,
+           bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
+           bestNodeHostname != "" {
+        } else {
+            AlertManager.shared.showSimpleAlert(viewController: self.delegate as? UIViewController, title: TvAssets.locationMaintenanceTitle, message: TvAssets.locationMaintenanceDescription, buttonText: TextsAsset.okay)
+            return
+        }
         if favButton.isHidden {
             guard let staticIp = displayingStaticIP else { return }
             self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
@@ -350,4 +359,21 @@ class ServerDetailTableViewCell: UITableViewCell {
         return nil
     }
 
+    func isHostStillActive(hostname: String, isStaticIP: Bool = false) -> Bool {
+        guard let nodesList = localDB.getServers()?.flatMap({ $0.groups }).map({ $0.nodes }),
+              let  staticIPNodes = localDB.getStaticIPs()?.flatMap({ $0.nodes }) else { return false }
+         for nodes in nodesList {
+             for node in nodes {
+                 if node.hostname == hostname && node.forceDisconnect == false {
+                     return true
+                 }
+             }
+         }
+         for node in staticIPNodes {
+             if node.hostname == hostname && node.forceDisconnect == false {
+                 return true
+             }
+         }
+         return false
+     }
 }

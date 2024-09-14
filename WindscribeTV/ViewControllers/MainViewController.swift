@@ -72,7 +72,13 @@ class MainViewController: PreferredFocusedViewController {
 
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        connectionStateViewModel.becameActive()
 
+    }
+    
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
