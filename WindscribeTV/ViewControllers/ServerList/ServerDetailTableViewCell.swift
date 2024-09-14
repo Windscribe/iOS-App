@@ -322,6 +322,11 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
+        if !favButton.isHidden && !proIcon.isHidden {
+            delegate?.showUpgradeView()
+            favDelegate?.showUpgradeView()
+            return
+        }
         if let bestNode = displayingGroup?.bestNode,
            let bestNodeHostname = displayingGroup?.bestNodeHostname,
            bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
@@ -333,9 +338,6 @@ class ServerDetailTableViewCell: UITableViewCell {
         if favButton.isHidden {
             guard let staticIp = displayingStaticIP else { return }
             self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIp)
-        } else if !proIcon.isHidden {
-            delegate?.showUpgradeView()
-            favDelegate?.showUpgradeView()
         } else {
             guard let server = displayingNodeServer, let group = displayingGroup else {
                 guard let favGroup = displayingFavGroup else { return }
