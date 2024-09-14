@@ -320,6 +320,20 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }
     }
+    
+    private func canAccessServer() -> Bool {
+        if staticIpDelegate != nil {
+            return true
+        }
+        if let bestNode = displayingGroup?.bestNode,
+            let bestNodeHostname = displayingGroup?.bestNodeHostname,
+            bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
+           bestNodeHostname != "" {
+            return true
+        } else {
+            return false
+        }
+    }
 
     @objc func connectButtonTapped() {
         if !favButton.isHidden && !proIcon.isHidden {
@@ -327,11 +341,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             favDelegate?.showUpgradeView()
             return
         }
-        if let bestNode = displayingGroup?.bestNode,
-           let bestNodeHostname = displayingGroup?.bestNodeHostname,
-           bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
-           bestNodeHostname != "" {
-        } else {
+        if !canAccessServer() {
             AlertManager.shared.showSimpleAlert(viewController: self.delegate as? UIViewController, title: TvAssets.locationMaintenanceTitle, message: TvAssets.locationMaintenanceDescription, buttonText: TextsAsset.okay)
             return
         }
