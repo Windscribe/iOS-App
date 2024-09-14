@@ -480,6 +480,9 @@ extension ServerListViewController: FavNodesListTableViewDelegate {
     func showUpgradeView() {
         self.delegate?.showUpgradeView()
     }
+    func showExpiredAccountView() {
+        self.delegate?.showExpiredAccountView()
+    }
 }
 
 extension ServerListViewController: StaticIPListTableViewDelegate {

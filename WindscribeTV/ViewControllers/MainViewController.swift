@@ -582,6 +582,9 @@ extension MainViewController: ServerListTableViewDelegate {
     func showUpgradeView() {
         router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
     }
+    func showExpiredAccountView() {
+        router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
+    }
 }
 
 extension MainViewController: FavNodesListTableViewDelegate {

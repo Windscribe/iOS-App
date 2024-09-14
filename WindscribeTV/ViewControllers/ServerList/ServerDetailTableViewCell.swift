@@ -13,11 +13,13 @@ import RxSwift
 protocol ServerListTableViewDelegate: AnyObject {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
     func showUpgradeView()
+    func showExpiredAccountView()
 }
 
 protocol FavNodesListTableViewDelegate: AnyObject {
     func setSelectedFavNode(favNode: FavNodeModel)
     func showUpgradeView()
+    func showExpiredAccountView()
 }
 
 protocol StaticIPListTableViewDelegate: AnyObject {
@@ -336,6 +338,14 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
+        if canAccessServer() && sessionManager.session?.status == 2 {
+            guard let delegate = delegate else {
+                favDelegate?.showExpiredAccountView()
+                return
+            }
+            delegate.showExpiredAccountView()
+            return
+        }
         if !favButton.isHidden && !proIcon.isHidden {
             delegate?.showUpgradeView()
             favDelegate?.showUpgradeView()

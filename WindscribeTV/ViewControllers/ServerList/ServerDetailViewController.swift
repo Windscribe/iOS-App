@@ -105,4 +105,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
     func showUpgradeView() {
         self.delegate?.showUpgradeView()
     }
+    func showExpiredAccountView() {
+        self.delegate?.showExpiredAccountView()
+    }
 }
