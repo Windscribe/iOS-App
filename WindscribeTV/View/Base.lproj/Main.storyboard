@@ -687,6 +687,7 @@ Secrets.</string>
                     <connections>
                         <outlet property="emptyFavView" destination="oHG-FT-WDR" id="cRz-tl-3dw"/>
                         <outlet property="favTableView" destination="6ft-YL-OlT" id="cxO-GN-ZqQ"/>
+                        <outlet property="nothingToSeeLabel" destination="VYU-dd-aiK" id="feb-Jo-1b1"/>
                         <outlet property="serverListCollectionView" destination="SY1-Ra-Oqh" id="CdY-mG-Ko4"/>
                         <outlet property="sideMenu" destination="mPM-7m-YPc" id="2NV-0d-tXV"/>
                         <outlet property="sideMenuContainerView" destination="OWh-7R-tKu" id="iTT-kR-S7e"/>
@@ -1021,8 +1022,8 @@ Secrets.</string>
     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="badge" width="224" height="224"/>
-        <image name="bestloc_icon" width="300" height="156"/>
-        <image name="disconnected_ring" width="300" height="300"/>
+        <image name="bestloc_icon" width="200" height="104"/>
+        <image name="disconnected_ring" width="200" height="200"/>
         <image name="fav-empty-white" width="16" height="14"/>
         <image name="logo" width="64" height="64"/>
         <image name="unsecure" width="32" height="32"/>

@@ -20,6 +20,7 @@ class AccountPopupViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger?.logD(self, "Displaying Account Popup View")
         bindViews()
     }
 

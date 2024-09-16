@@ -60,7 +60,7 @@ class SettingsSection: UIView {
     func updateText(with list: [String], title: String? = nil) {
         updateTitle(with: title)
         list.enumerated().forEach { (index, text) in
-            listOfOptionViewss[index].titleLabel.text = text
+            listOfOptionViewss[index].updateTitle(with: text)
         }
     }
 

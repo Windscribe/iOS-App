@@ -19,6 +19,7 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Get More Data View")
         bindViews()
     }
 
@@ -37,9 +38,11 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
 
     private func bindViews() {
         signUpButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "Signup button pressed")
             signupRouter.routeTo(to: .signup(claimGhostAccount: false), from: self)
         }.disposed(by: disposeBag)
         getProButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "Get Pro button pressed")
             router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil), from: self)
         }.disposed(by: disposeBag)
     }
