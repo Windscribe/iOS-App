@@ -62,6 +62,7 @@ class PreferencesConnectionView: UIView {
 
     private func updateProtocols() {
         protocolsView.populate(with: viewModel.getProtocols(), title: nil)
+        protocolsView.select(option: viewModel.getCurrentProtocol(), animated: false)
     }
 
     private func updatePorts() {

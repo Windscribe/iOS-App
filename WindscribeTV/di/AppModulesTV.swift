@@ -188,17 +188,20 @@ class TVViewControllers: Assembly {
         container.register(BasePopUpViewController.self) { _ in BasePopUpViewController(nibName: "BasePopUpViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
 
         container.register(RatePopupViewController.self) { _ in RatePopupViewController(nibName: "RatePopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.ruViewModel = r.resolve(RateUsPopupModelType.self)
         }.inObjectScope(.transient)
 
         container.register(GetMoreDataPopupViewController.self) { _ in GetMoreDataPopupViewController(nibName: "GetMoreDataPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
             vc.signupRouter = r.resolve(SignupRouter.self)
         }.inObjectScope(.transient)
@@ -245,24 +248,28 @@ class TVViewControllers: Assembly {
         container.register(PrivacyPopUpViewController.self) { _ in PrivacyPopUpViewController(nibName: "PrivacyPopUpViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.privacyViewModel = r.resolve(PrivacyViewModelType.self)
         }.inObjectScope(.transient)
 
         container.register(AccountPopupViewController.self) { _ in AccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(AccountPopupModelType.self)
         }.inObjectScope(.transient)
 
         container.register(BannedAccountPopupViewController.self) { _ in BannedAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(BannedAccountPopupModelType.self)
         }.inObjectScope(.transient)
 
         container.register(OutOfDataAccountPopupViewController.self) { _ in OutOfDataAccountPopupViewController(nibName: "AccountPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.accountPopupViewModel = r.resolve(OutOfDataAccountPopupModelType.self)
         }.inObjectScope(.transient)
 

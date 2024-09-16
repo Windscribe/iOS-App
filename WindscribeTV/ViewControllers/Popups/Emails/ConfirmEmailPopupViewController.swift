@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
-    var ceViewModel: ConfirmEmailViewModel!, logger: FileLogger!, router: HomeRouter!
+    var ceViewModel: ConfirmEmailViewModel!, router: HomeRouter!
 
     var resendButton = WSPillButton()
     var changeButton = WSPillButton()
@@ -19,6 +19,7 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Confirm Email Popup Shown.")
         bindViews()
     }
 
@@ -38,18 +39,20 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
 
     private func bindViews() {
         resendButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "User tapped Resend Email button.")
             self.resendButtonTapped()
         }.disposed(by: disposeBag)
         changeButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "User tapped Change Email button.")
             self.router.routeTo(to: .addEmail, from: self)
         }.disposed(by: disposeBag)
         closeButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "User tapped Close button.")
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
     }
 
     private func resendButtonTapped() {
-        logger.logE(self, "User tapped Resend Email button.")
         resendButton.isEnabled = false
         resendButton.layer.opacity = 0.35
         ceViewModel.apiManager.confirmEmail().subscribe(onSuccess: { _ in

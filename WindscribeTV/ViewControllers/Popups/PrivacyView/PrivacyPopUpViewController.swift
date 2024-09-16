@@ -17,6 +17,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Privacy Popup View")
         bindViews()
     }
 
@@ -32,6 +33,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
 
     private func bindViews() {
         button.rx.primaryAction.bind { [self] in
+            logger.logD(self, "User tapped to accept privacy conditions.")
             self.privacyViewModel.action { self.closeCompletion?() }
             self.navigationController?.popViewController(animated: true)
         }.disposed(by: disposeBag)

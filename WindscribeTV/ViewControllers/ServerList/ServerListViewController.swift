@@ -41,27 +41,29 @@ enum SideMenuType: String {
 
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
-
-    var serverSectionsOrdered: [ServerSection] = []
+    let disposeBag = DisposeBag()
+    
     @IBOutlet weak var sideMenu: UIStackView!
-    var favGroups: [Group] = []
-    var staticIPModels = [StaticIPModel]()
     @IBOutlet var sideMenuContainerView: UIView!
     @IBOutlet var serverListCollectionView: UICollectionView!
     @IBOutlet var favTableView: UITableView!
     @IBOutlet weak var sideMenuWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var nothingToSeeLabel: UILabel!
+    @IBOutlet weak var emptyFavView: UIView!
+    
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
     weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
-    @IBOutlet weak var emptyFavView: UIView!
     private var sideOptions: [SideMenuType] = [.all,.fav,.windflix,.staticIp]
     private var selectedRow: Int = 0
     private var optionViews = [SideMenuOptions]()
     private var selectionOption = SideMenuType.all
-    let disposeBag = DisposeBag()
 
+    var serverSectionsOrdered: [ServerSection] = []
+    var favGroups: [Group] = []
+    var staticIPModels = [StaticIPModel]()
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
 
@@ -216,6 +218,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             sideMenu.addArrangedSubview(optionView)
             optionViews.append(optionView)
         }
+        nothingToSeeLabel.text = TextsAsset.nothingToSeeHere
     }
 
     func bindData(isStreaming: Bool) {

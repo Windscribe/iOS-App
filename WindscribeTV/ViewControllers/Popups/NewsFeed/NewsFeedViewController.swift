@@ -27,6 +27,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Notifications View")
         setup()
         bindViews()
     }

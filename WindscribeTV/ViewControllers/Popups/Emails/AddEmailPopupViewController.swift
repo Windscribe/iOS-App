@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 class AddEmailPopupViewController: BasePopUpViewController {
-    var router: HomeRouter!, aeViewModel: EnterEmailViewModel!, logger: FileLogger!
+    var router: HomeRouter!, aeViewModel: EnterEmailViewModel!
     @IBOutlet weak var fieldStackView: UIStackView!
     @IBOutlet weak var loadingView: UIView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -21,6 +21,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Add Email Popup Shown.")
         bindViews()
     }
 
@@ -58,7 +59,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
 
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
-        logger.logE(self, "User tapped to submit email.")
+        logger.logD(self, "User tapped to submit email.")
         self.showLoading()
         self.addEmailButton.isEnabled = false
         aeViewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in

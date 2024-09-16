@@ -16,7 +16,7 @@ class BasePopUpViewController: UIViewController {
     @IBOutlet weak var mainStackView: UIStackView!
 
     let disposeBag = DisposeBag()
-    var viewModel: BasePopupViewModelType?
+    var viewModel: BasePopupViewModelType?, logger: FileLogger!
 
     override func viewDidLoad() {
         super.viewDidLoad()
