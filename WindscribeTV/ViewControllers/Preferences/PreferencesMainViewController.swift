@@ -58,6 +58,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Preferences View")
         setup()
     }
 
@@ -255,6 +256,9 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
                 $0.isHidden = true
             }
         }
+        
+        logger.logD(self, "Preference of type \(value) selected.")
+        
         switch value {
         case .general: generalView.isHidden = false
         case .account:  accountView.isHidden = false
@@ -270,6 +274,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
 
 extension PreferencesMainViewController: PreferencesAccountViewDelegate {
     func actionSelected(with item: AccountItemCell) {
+        logger.logD(self, "Account action of type \(item) selected.")
         if item.isUpgradeButton {
             router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             return

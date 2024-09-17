@@ -519,6 +519,7 @@ class MainViewController: PreferredFocusedViewController {
         }
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
+            logger.logD(self, "User Pro plan is expired.")
             self.showProPlanExpiredPopup()
             return
         }

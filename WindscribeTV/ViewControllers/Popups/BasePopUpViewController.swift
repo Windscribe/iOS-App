@@ -25,6 +25,7 @@ class BasePopUpViewController: UIViewController {
 
     func setup() {
         guard let viewModel = viewModel, let type = viewModel.type else { return }
+        logger.logD(self, "Displaying \(type.title) Pop up.")
         titleLabel?.text = type.title
         titleLabel?.font = UIFont.bold(size: 92)
         titleLabel?.textColor = .white.withAlphaComponent(0.15)

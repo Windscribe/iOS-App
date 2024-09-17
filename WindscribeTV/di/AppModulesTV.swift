@@ -158,8 +158,8 @@ class TVViewControllers: Assembly {
         }.inObjectScope(.transient)
         container.register(ForgotPasswordViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ForgotPasswordViewController") as! ForgotPasswordViewController
-        }.initCompleted {  _, _ in
-
+        }.initCompleted {  r, vc in
+            vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
 
         container.register(PreferencesMainViewController.self) { _ in
@@ -183,6 +183,7 @@ class TVViewControllers: Assembly {
         container.register(UpgradePopViewController.self) { _ in UpgradePopViewController(nibName: "UpgradePopViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(UpgradeViewModel.self)
+            vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
 
         container.register(BasePopUpViewController.self) { _ in BasePopUpViewController(nibName: "BasePopUpViewController", bundle: nil)
@@ -242,6 +243,7 @@ class TVViewControllers: Assembly {
             ServerDetailViewController(nibName: "ServerDetailViewController", bundle: nil)
         }.initCompleted {  r, vc in
             vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.logger = r.resolve(FileLogger.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
         }.inObjectScope(.transient)
 

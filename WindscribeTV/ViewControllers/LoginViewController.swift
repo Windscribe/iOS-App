@@ -38,8 +38,10 @@ class LoginViewController: PreferredFocusedViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if is2FA {
+            self.logger.logD(self, "Displaying Login Screen with 2fa.")
             setup2FA()
         } else {
+            self.logger.logD(self, "Displaying Login Screen.")
             setup()
         }
         setupCommonUI()

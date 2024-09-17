@@ -21,6 +21,7 @@ class RatePopupViewController: BasePopUpViewController {
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Rate Us popup View")
         bindViews()
     }
 
@@ -41,14 +42,17 @@ class RatePopupViewController: BasePopUpViewController {
 
     private func bindViews() {
         rateButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "Rate us button pressed.")
             ruViewModel.setRateUsActionCompleted()
             guard let url = URL(string: "com.apple.TVAppStore://itunes.apple.com/app/windscribe-vpn/id1129435228?mt=8") else { return }
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }.disposed(by: disposeBag)
         laterButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "Latter button pressed.")
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
         goAwayButton.rx.primaryAction.bind { [self] in
+            logger.logD(self, "Go away button pressed.")
             ruViewModel.setRateUsActionCompleted()
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)

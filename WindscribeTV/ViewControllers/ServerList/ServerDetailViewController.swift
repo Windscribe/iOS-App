@@ -15,14 +15,17 @@ class ServerDetailViewController: UIViewController {
     @IBOutlet weak var serverTitle: PageTitleLabel!
     @IBOutlet weak var countLabel: PageTitleLabel!
     @IBOutlet weak var tableView: UITableView!
+    
+    let disposeBag = DisposeBag()
+    
     var flagBackgroundView: UIView!
     var gradient,
         backgroundGradient,
         flagBottomGradient: CAGradientLayer!
     var server: ServerModel?
-    var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?
-    let disposeBag = DisposeBag()
+    var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
     var delegate: ServerListTableViewDelegate?
+    var favNodes: [FavNodeModel]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,8 +35,12 @@ class ServerDetailViewController: UIViewController {
         bindData()
         // Do any additional setup after loading the view.
     }
-    var favNodes: [FavNodeModel]?
-
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        logger.logD(self, "Displaying Server List View")
+    }
+    
     func setupUI() {
         flagView.contentMode = .scaleAspectFill
         flagView.layer.opacity = 0.25
@@ -60,13 +67,11 @@ class ServerDetailViewController: UIViewController {
         }
         tableView.contentInset = UIEdgeInsets.zero
         tableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
-
     }
 
     func bindData() {
         viewModel?.favNode.bind(onNext: { favNodes in
             self.favNodes = favNodes?.compactMap({ $0.getFavNodeModel() })
-
         }).disposed(by: disposeBag)
     }
 }
@@ -94,17 +99,15 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
 }
 
 extension ServerDetailViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
-
-        // self.navigationController?.popViewController(animated: true)
+    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
         self.navigationController?.popToRootViewController(animated: true)
-        self.delegate?.setSelectedServerAndGroup(server: server,
-                                                      group: group)
+        self.delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
+    
     func showUpgradeView() {
         self.delegate?.showUpgradeView()
     }
+    
     func showExpiredAccountView() {
         self.delegate?.showExpiredAccountView()
     }
