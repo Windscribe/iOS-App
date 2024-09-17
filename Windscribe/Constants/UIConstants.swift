@@ -409,6 +409,7 @@ struct TextsAsset {
         static var manual: String { "Manual".localize() }
         static var custom: String { "Custom".localize() }
         static let languages: [String] = Languages.allCases.map({ $0.name })
+        static let languagesList: [Languages] = Languages.allCases
         static var hapticFeedback: String { "Haptic Feedback".localize() }
         static var showServerHealth: String { "Show Location Load".localize() }
         static var autoSecure: String { "Auto-Secure".localize() }

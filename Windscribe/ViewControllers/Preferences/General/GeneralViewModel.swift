@@ -128,7 +128,7 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func selectLanguage(with value: String) {
-        if let language = Languages(name: value) {
+        if let language = TextsAsset.General.languagesList.first(where: { $0.name == value}) {
             languageManager.setLanguage(language: language)
         }
     }
