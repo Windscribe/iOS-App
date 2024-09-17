@@ -27,7 +27,7 @@ enum Languages: String, CaseIterable {
     case ukrainian = "uk"
     case vietnamese = "vi"
     case chineseSimplified = "zh-Hans"
-    case chineseHK = "zh-Hant-TW"
+    case chineseHK = "zh-HK"
 
     var name: String {
         switch self {
@@ -70,9 +70,5 @@ enum Languages: String, CaseIterable {
         case .chineseHK:
             return "中文(台灣)"
         }
-    }
-
-    init?(name: String) {
-        if name == Languages.arabic.name { self = .arabic } else if name == Languages.bengali.name { self = .bengali } else if name == Languages.german.name { self = .german } else if name == Languages.english.name { self = .english } else if name == Languages.spanish.name { self = .spanish } else if name == Languages.french.name { self = .french } else if name == Languages.hindi.name { self = .hindi } else if name == Languages.indonesian.name { self = .indonesian } else if name == Languages.italian.name { self = .italian } else if name == Languages.japanese.name { self = .japanese } else if name == Languages.korean.name { self = .korean } else if name == Languages.polish.name { self = .polish } else if name == Languages.portugal.name { self = .portugal } else if name == Languages.russian.name { self = .russian } else if name == Languages.ukrainian.name { self = .ukrainian } else if name == Languages.vietnamese.name { self = .vietnamese } else if name == Languages.chineseSimplified.name { self = .chineseSimplified } else if name == Languages.chineseHK.name { self = .chineseHK } else { return nil }
     }
 }
