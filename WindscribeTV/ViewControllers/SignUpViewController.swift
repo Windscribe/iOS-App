@@ -29,6 +29,7 @@ class SignUpViewController: PreferredFocusedViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.logger.logD(self, "Displaying Signup Screen.")
         setup()
         setupLocalized()
         // Do any additional setup after loading the view.

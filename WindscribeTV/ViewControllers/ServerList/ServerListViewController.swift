@@ -83,7 +83,11 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         self.serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
         hideEmptyFavView()
-
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        logger.logD(self, "Displaying Server List View")
     }
 
     private func hideEmptyFavView() {

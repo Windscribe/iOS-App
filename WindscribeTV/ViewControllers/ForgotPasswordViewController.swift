@@ -9,13 +9,15 @@
 import UIKit
 
 class ForgotPasswordViewController: UIViewController {
-
     @IBOutlet weak var infoLabel: UILabel!
 
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
+    
+    var logger: FileLogger!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.logger.logD(self, "Displaying Forgotten Password Screen.")
         setupUI()
         setupLocalized()
         // Do any additional setup after loading the view.

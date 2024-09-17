@@ -22,12 +22,14 @@ class UpgradePopViewController: UIViewController {
 
     let disposeBag = DisposeBag()
     var viewModel: UpgradeViewModel?
+    var logger: FileLogger!
     var promoCode: String?
     var pcpID: String?
 
     // MARK: Overrides
     override func viewDidLoad() {
         super.viewDidLoad()
+        logger.logD(self, "Displaying Upgrade View")
         setup()
         bindViews()
     }
@@ -143,9 +145,11 @@ extension UpgradePopViewController: UpgradePricingViewDelegate {
     func pricingOptionWasSelected(plan: WindscribeInAppProduct?) {
         if let plan = plan {
             viewModel?.setSelectedPlan(plan: plan)
+            logger.logD(self, "Pricing Option Was Selected with plan \(plan)")
             viewModel?.continuePayButtonTapped()
             return
         } else {
+            logger.logD(self, "Pricing Option Was Selected")
             viewModel?.continuePayButtonTapped()
         }
     }

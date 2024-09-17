@@ -24,6 +24,7 @@ class WelcomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.logger.logD(self, "Displaying Welcome Screen.")
         setup()
         bindViews()
         setupLocalized()

@@ -122,6 +122,7 @@ extension NewsFeedViewController: OptionSelectionViewDelegate {
         guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), newsSections.count >= index
         else { return }
         guard let details = newsSections[index-1].items.first else { return }
+        logger.logD(self, "Pressed to see details of \(details.title ?? "No title").")
         setupDetailsView(with: details)
         listStackView.arrangedSubviews.forEach {
             if let view = $0 as? OptionSelectionView {
