@@ -42,7 +42,7 @@ enum SideMenuType: String {
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
     let disposeBag = DisposeBag()
-    
+
     @IBOutlet weak var sideMenu: UIStackView!
     @IBOutlet var sideMenuContainerView: UIView!
     @IBOutlet var serverListCollectionView: UICollectionView!
@@ -50,7 +50,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @IBOutlet weak var sideMenuWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var nothingToSeeLabel: UILabel!
     @IBOutlet weak var emptyFavView: UIView!
-    
+
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
     weak var bestLocDelegate: BestLocationConnectionDelegate?
@@ -84,7 +84,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         setupSwipeDownGesture()
         hideEmptyFavView()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         logger.logD(self, "Displaying Server List View")
@@ -489,6 +489,9 @@ extension ServerListViewController: FavNodesListTableViewDelegate {
     }
     func showExpiredAccountView() {
         self.delegate?.showExpiredAccountView()
+    }
+    func showOutOfDataPopUp() {
+        self.delegate?.showOutOfDataPopUp()
     }
 }
 

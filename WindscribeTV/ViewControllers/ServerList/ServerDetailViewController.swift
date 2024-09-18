@@ -15,9 +15,9 @@ class ServerDetailViewController: UIViewController {
     @IBOutlet weak var serverTitle: PageTitleLabel!
     @IBOutlet weak var countLabel: PageTitleLabel!
     @IBOutlet weak var tableView: UITableView!
-    
+
     let disposeBag = DisposeBag()
-    
+
     var flagBackgroundView: UIView!
     var gradient,
         backgroundGradient,
@@ -35,12 +35,12 @@ class ServerDetailViewController: UIViewController {
         bindData()
         // Do any additional setup after loading the view.
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         logger.logD(self, "Displaying Server List View")
     }
-    
+
     func setupUI() {
         flagView.contentMode = .scaleAspectFill
         flagView.layer.opacity = 0.25
@@ -103,12 +103,17 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
         self.navigationController?.popToRootViewController(animated: true)
         self.delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
-    
+
     func showUpgradeView() {
         self.delegate?.showUpgradeView()
     }
-    
+
     func showExpiredAccountView() {
         self.delegate?.showExpiredAccountView()
+    }
+    
+    func showOutOfDataPopUp(){
+        self.delegate?.showOutOfDataPopUp()
+
     }
 }

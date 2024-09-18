@@ -72,13 +72,13 @@ class MainViewController: PreferredFocusedViewController {
 
         // Do any additional setup after loading the view.
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         connectionStateViewModel.becameActive()
 
     }
-    
+
     private func setupUI() {
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
@@ -513,8 +513,11 @@ class MainViewController: PreferredFocusedViewController {
             router?.routeTo(to: RouteID.bannedAccountPopup, from: self)
             return
         } else if session.status == 2 {
-            logger.logD(self, "User is out of data.")
-            self.showOutOfDataPopup()
+            if !viewModel.didShowOutOfDataPopup {
+                logger.logD(self, "User is out of data.")
+                self.showOutOfDataPopup()
+                self.viewModel.didShowOutOfDataPopup = true
+            }
             return
         }
         guard let oldSession = viewModel.oldSession else { return }
@@ -526,14 +529,12 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func showOutOfDataPopup() {
-        if !viewModel.didShowOutOfDataPopup {
-            if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
-                connectionStateViewModel.disconnect()
-            }
-            self.logger.logD(self, "Displaying Out Of Data Popup.")
-            router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
-            self.viewModel.didShowOutOfDataPopup = true
+        if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
+            connectionStateViewModel.disconnect()
         }
+        self.logger.logD(self, "Displaying Out Of Data Popup.")
+        router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
+        
     }
 
     private func showProPlanExpiredPopup() {
@@ -585,6 +586,10 @@ extension MainViewController: ServerListTableViewDelegate {
     }
     func showExpiredAccountView() {
         router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
+    }
+
+    func showOutOfDataPopUp() {
+         showOutOfDataPopup()
     }
 }
 
