@@ -160,10 +160,15 @@ class HelpHeaderView: WSTouchStackView {
 
     private lazy var iconImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: item.icon)?.withRenderingMode(.alwaysTemplate)
-        imageView.contentMode = .scaleAspectFit
-        imageView.anchor(width: 16, height: 16)
-        return imageView
+        if item.icon.count > 0 {
+           imageView.image = UIImage(named: item.icon)?.withRenderingMode(.alwaysTemplate)
+           imageView.contentMode = .scaleAspectFit
+           imageView.anchor(width: 16, height: 16)
+           return imageView
+        } else {
+            imageView.anchor(width: 0, height: 16)
+            return imageView
+        }
     }()
 
     private lazy var titleLabel: UILabel = {

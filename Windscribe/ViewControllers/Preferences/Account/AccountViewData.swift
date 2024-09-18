@@ -43,6 +43,7 @@ enum AccountItemCell {
     case confirmEmail
     case emailEmpty
     case cancelAccount
+    case lazyLogin
 
     var isUpgradeButton: Bool {
         return self == .planType && needUpgradeAccount
@@ -88,6 +89,8 @@ enum AccountItemCell {
             return TextsAsset.Account.cancelAccount
         case .emailPro:
             return TextsAsset.email
+        case .lazyLogin:
+            return TvAssets.lazyLogin
         }
     }
 
@@ -193,6 +196,7 @@ enum AccountSectionItem {
 
     case info
     case plan
+    case other
 
     var items: [AccountItemCell] {
         switch self {
@@ -200,6 +204,8 @@ enum AccountSectionItem {
             return makeInfoItems()
         case .plan:
             return makePlanItems()
+        case .other:
+            return makeOtherItems()
         }
     }
 
@@ -209,6 +215,8 @@ enum AccountSectionItem {
             return TextsAsset.Account.info
         case .plan:
             return TextsAsset.Account.plan
+        case .other:
+            return TextsAsset.Account.other.uppercased()
         }
     }
 
@@ -235,5 +243,9 @@ enum AccountSectionItem {
             return [.planType, .expiredDate, .cancelAccount]
         }
         return [.planType, .expiredDate, .dateLeft, .cancelAccount]
+    }
+
+    private func makeOtherItems() -> [AccountItemCell] {
+        return [.lazyLogin]
     }
 }

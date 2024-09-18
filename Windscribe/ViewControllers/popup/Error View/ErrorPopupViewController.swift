@@ -38,6 +38,7 @@ class ErrorPopupViewController: UIViewController {
         closeButton.setTitleColor(UIColor.backgroundGray, for: .normal)
         closeButton.setTitle("Close", for: .normal)
         view.addSubview(closeButton)
+        bindView()
     }
 
     private func bindView() {
@@ -46,7 +47,11 @@ class ErrorPopupViewController: UIViewController {
         }).disposed(by: disposeBag)
 
         closeButton.rx.tap.bind { [self] in
-            viewModel.dismissAction?()
+            if viewModel.dismissAction != nil {
+                viewModel.dismissAction?()
+            } else {
+                self.dismiss(animated: true)
+            }
         }.disposed(by: disposeBag)
     }
 

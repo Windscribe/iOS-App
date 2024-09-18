@@ -25,6 +25,7 @@ protocol APIManager {
     func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse>
     func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     func cancelAccount(password: String) -> RxSwift.Single<APIMessage>
+    func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     // VPN
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
     func getStaticIpList() -> Single<StaticIPList>

@@ -30,7 +30,6 @@ class AccountViewController: WSNavigationViewController {
         }
         return tableView
     }()
-
     // MARK: - UI Events
 
     override func viewDidLoad() {
@@ -42,11 +41,9 @@ class AccountViewController: WSNavigationViewController {
         tableView.makeLeadingAnchor(constant: 16)
         tableView.makeTrailingAnchor(constant: 16)
         tableView.makeBottomAnchor()
-
         registerCells()
         tableView.delegate = self
         tableView.dataSource = self
-
         bindViews()
     }
 
@@ -96,6 +93,7 @@ class AccountViewController: WSNavigationViewController {
         AccountEditCell.registerClass(in: tableView)
         AccountConfirmEmailCell.registerClass(in: tableView)
         AccountEmailCell.registerClass(in: tableView)
+        LazyTableViewCell.registerClass(in: tableView)
     }
 }
 
@@ -112,49 +110,53 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let data = viewModel.celldata(at: indexPath)
         switch data {
-            case .email:
-                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.bindView(isDarkMode: viewModel.isDarkMode)
-                cell.setType(.email, item: data)
-                cell.indexPath = indexPath
-                cell.delegate = self
-                return cell
-            case .emailPro:
-                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.bindView(isDarkMode: viewModel.isDarkMode)
-                cell.setType(.emailPro, item: data)
-                cell.indexPath = indexPath
-                cell.delegate = self
-                return cell
-            case .emailEmpty:
-                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.bindView(isDarkMode: viewModel.isDarkMode)
-                cell.setType(.emptyEmail, item: data)
-                cell.indexPath = indexPath
-                cell.delegate = self
-                return cell
-            case .confirmEmail:
-                let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.bindView(isDarkMode: viewModel.isDarkMode)
-                cell.setType(.confirmEmail, item: data)
-                cell.indexPath = indexPath
-                cell.delegate = self
-                cell.resendEmailAction = { [weak self] in
-                    self?.navigateToConfirmEmailVC()
-                }
-                return cell
-            case .cancelAccount:
-                let cell = AccountEditCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.bindView(isDarkMode: viewModel.isDarkMode)
-                cell.accoutItem = data
-                return cell
-            default:
-                let cell = AccountTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
-                cell.delegate = self
-                cell.indexPath = indexPath
-                cell.bindViews(isDarkMode: viewModel.isDarkMode)
-                cell.configData(item: data)
-                return cell
+        case .email:
+            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.bindView(isDarkMode: viewModel.isDarkMode)
+            cell.setType(.email, item: data)
+            cell.indexPath = indexPath
+            cell.delegate = self
+            return cell
+        case .emailPro:
+            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.bindView(isDarkMode: viewModel.isDarkMode)
+            cell.setType(.emailPro, item: data)
+            cell.indexPath = indexPath
+            cell.delegate = self
+            return cell
+        case .emailEmpty:
+            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.bindView(isDarkMode: viewModel.isDarkMode)
+            cell.setType(.emptyEmail, item: data)
+            cell.indexPath = indexPath
+            cell.delegate = self
+            return cell
+        case .confirmEmail:
+            let cell = AccountEmailCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.bindView(isDarkMode: viewModel.isDarkMode)
+            cell.setType(.confirmEmail, item: data)
+            cell.indexPath = indexPath
+            cell.delegate = self
+            cell.resendEmailAction = { [weak self] in
+                self?.navigateToConfirmEmailVC()
+            }
+            return cell
+        case .cancelAccount:
+            let cell = AccountEditCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.bindView(isDarkMode: viewModel.isDarkMode)
+            cell.accoutItem = data
+            return cell
+        case .lazyLogin:
+            let cell = LazyTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.delegate = self
+            return cell
+        default:
+            let cell = AccountTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.delegate = self
+            cell.indexPath = indexPath
+            cell.bindViews(isDarkMode: viewModel.isDarkMode)
+            cell.configData(item: data)
+            return cell
         }
     }
 
@@ -171,6 +173,81 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                 handleCancelAccount()
             default: break
         }
+    }
+
+    func showEnterCodeDialog() {
+        let alert = UIAlertController(title: NSLocalizedString(TextsAsset.Account.enterCode, comment: ""), message: nil, preferredStyle: .alert)
+
+            // Add a text field to the alert controller
+            alert.addTextField { textField in
+                textField.placeholder = NSLocalizedString(TextsAsset.Account.enterCodeHere, comment: "")
+                textField.autocapitalizationType = .allCharacters
+                textField.autocorrectionType = .no
+                textField.keyboardType = .default
+                textField.textAlignment = .center
+                textField.delegate = self
+            }
+
+            // Add actions to the alert controller
+            let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
+                guard let textField = alert.textFields?.first else { return }
+                let code = textField.text ?? ""
+                print(code)
+                self?.showLoading()
+                self?.viewModel.verifyCodeEntered(code: code,
+                                                  success: { [weak self] in
+                                                      self?.endLoading()
+                                                      self?.viewModel.alertManager.showSimpleAlert(viewController: self,
+                                                                                                   title: TextsAsset.Account.lazyLogin,
+                                                                                                   message: TextsAsset.Account.lazyLoginSuccess,
+                                                                                                   buttonText: TextsAsset.okay)
+                                                  },
+                                                  failure: { [weak self] msg in
+                                                      self?.endLoading()
+                    self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
+                                                  })
+            }
+
+            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
+                // No need to dismiss manually as the .cancel action will do it
+            }
+
+            alert.addAction(confirmAction)
+            alert.addAction(cancelAction)
+
+            // Show the alert
+            self.present(alert, animated: true) {
+                // Focus on the text field when the alert is presented
+                alert.textFields?.first?.becomeFirstResponder()
+            }
+        }
+}
+
+extension AccountViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+
+        // Enforce length limit
+        if updatedText.count > 9 {
+            return false
+        }
+
+        // Handle automatic insertion of dash
+        let formattedText = formatCodeText(updatedText)
+        textField.text = formattedText
+        return false
+    }
+
+    private func formatCodeText(_ text: String) -> String {
+        var formattedText = text
+        if formattedText.count > 4 {
+            let index = formattedText.index(formattedText.startIndex, offsetBy: 4)
+            if formattedText[index] != "-" {
+                formattedText.insert("-", at: index)
+            }
+        }
+        return formattedText
     }
 }
 
@@ -237,5 +314,11 @@ extension AccountViewController: AccountEmailCellDelegate, AccountTableViewCellD
 extension AccountViewController: ConfirmEmailViewControllerDelegate {
     func dismissWith(action: ConfirmEmailAction) {
         router?.dismissPopup(action: action, navigationVC: self.navigationController)
+    }
+}
+
+extension AccountViewController: LazyViewDelegate {
+    func lazyViewDidSelect() {
+        showEnterCodeDialog()
     }
 }

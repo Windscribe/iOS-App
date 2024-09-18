@@ -510,6 +510,30 @@ struct TextsAsset {
         static var deleteAccountMessage: String {
             return "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone.".localize()
         }
+
+        static var other: String {
+            return "other"
+        }
+
+        static var enterCode: String {
+            return "Enter Code".localize()
+        }
+
+        static var enterCodeHere: String {
+            return "Enter code here".localize()
+        }
+
+        static var lazyLogin: String {
+            return "Lazy Login".localize()
+        }
+
+        static var lazyLoginDescription: String {
+            return "Login into Windscribe's TV apps with a short code".localize()
+        }
+
+        static var lazyLoginSuccess: String {
+            return "Sweet, you should be all good to go now"
+        }
     }
 
     struct NetworkSecurity {
@@ -1486,11 +1510,11 @@ struct TvAssets {
     static var twofaDescription: String {
         return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
     }
-    
+
     static var locationMaintenanceDescription: String {
         return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status"
     }
-    
+
     static var locationMaintenanceTitle: String {
         return "Location Maintenance"
     }
