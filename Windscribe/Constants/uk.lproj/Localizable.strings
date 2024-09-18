@@ -368,4 +368,9 @@
 "Locations" = "Розташування";
 "Support" = "Підтримка";
 "Go to the address above on your phone or computer for all support related inquiries." = "Перейдіть за вказаною вище адресою на телефоні або комп\\ютері, щоб отримати всі запити, пов\\язані зі службою підтримки.";
-
+"Enter Code" = "Введіть код";
+"Enter code here" = "Введіть код тут";
+"Login into Windscribe's TV apps with a short code" = "Увійдіть у телевізійні програми Windscribe за допомогою короткого коду";
+"Sweet, you should be all good to go now" = "Мила, ти вже маєш бути готовим";
+"This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Це місце знаходиться на технічному обслуговуванні. Повторіть спробу пізніше або перейдіть на сторінку Статус, щоб дізнатися більше. https://windscribe.com/status";
+"Location Maintenance" = "Обслуговування місцезнаходження";
