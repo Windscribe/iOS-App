@@ -32,6 +32,7 @@ protocol AccountViewModelType {
     func cancelAccount(password: String)
     func logoutUser()
     func getSections() -> [AccountSectionItem]
+    func verifyCodeEntered(code: String, success: (() -> Void)?, failure: ((String) -> Void)?)
 }
 
 class AccountViewModel: AccountViewModelType {
@@ -56,7 +57,7 @@ class AccountViewModel: AccountViewModelType {
         self.alertManager = alertManager
 
         isDarkMode = themeManager.darkTheme
-        sections = [.info, .plan]
+        sections = [.info, .plan, .other]
         languageManager.activelanguage.subscribe { _ in
             self.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
@@ -138,5 +139,13 @@ class AccountViewModel: AccountViewModelType {
 
     func logoutUser() {
         sessionManager.logoutUser()
+    }
+
+    func verifyCodeEntered(code: String, success: (() -> Void)?, failure: ((String) -> Void)?) {
+        apiCallManager.verifyTvLoginCode(code: code).subscribe(onSuccess: { _ in
+            success?()
+        }, onFailure: { error in
+            failure?(error.localizedDescription)
+        }).disposed(by: disposeBag)
     }
 }

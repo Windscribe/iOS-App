@@ -72,6 +72,15 @@ extension APIManagerImpl {
         }
     }
 
+    func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse> {
+        guard let sessionAuth = userRepository?.sessionAuth else {
+            return Single.error(Errors.validationFailure)
+        }
+        return makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
+            self.api.verifyTvLoginCode(sessionAuth, xpressCode: code, callback: completion)
+        }
+    }
+
     func cancelAccount(password: String) -> RxSwift.Single<APIMessage> {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)

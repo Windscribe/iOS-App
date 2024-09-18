@@ -22,6 +22,14 @@ class AccountRouter: BaseRouter, NavigationRouter {
         case .upgrade:
             let vc = Assembler.resolve(UpgradeViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
+        case let .errorPopup(message, dismissAction):
+            let errorVC = Assembler.resolve(ErrorPopupViewController.self)
+            errorVC.viewModel.setDismissAction(with: dismissAction)
+            errorVC.viewModel.setMessage(with: message)
+            DispatchQueue.main.async{
+                errorVC.modalPresentationStyle = .fullScreen
+                from.present(errorVC, animated: true, completion: nil)
+            }
         default: ()
         }
     }

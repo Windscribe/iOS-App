@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import RxSwift
+import Swinject
 
 class AccountEditCell: WSTouchTableViewCell {
     private var disposeBag = DisposeBag()
@@ -169,5 +170,47 @@ class ArrowRowView: WSTouchStackView {
             self.arrowImage.image = ThemeUtils.prefRightIcon(isDarkMode: $0)
             wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
         }).disposed(by: disposeBag)
+    }
+}
+
+protocol LazyViewDelegate: AnyObject {
+    func lazyViewDidSelect()
+}
+
+class LazyTableViewCell: UITableViewCell {
+
+    var lazyView: HelpView?
+    private lazy var viewModel = Assembler.resolve(AccountViewModelType.self)
+    var delegate: LazyViewDelegate?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        selectionStyle = .none
+        backgroundColor = .clear
+        lazyView =  HelpView(item: HelpItem(title: TextsAsset.Account.lazyLogin,
+                                            subTitle: TextsAsset.Account.lazyLoginDescription),
+                             type: .navigation,
+                             delegate: self,
+                             isDarkMode: viewModel.isDarkMode)
+        contentView.addSubview(lazyView!)
+        lazyView?.translatesAutoresizingMaskIntoConstraints = false
+
+        lazyView?.makeLeadingAnchor(constant: 0)
+        lazyView?.makeTrailingAnchor(constant: 0)
+        lazyView?.constrainHeight(100)
+
+    }
+
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+extension LazyTableViewCell: HelpViewDelegate {
+    func helpViewDidSelect(_ sender: HelpView) {
+        self.delegate?.lazyViewDidSelect()
     }
 }
