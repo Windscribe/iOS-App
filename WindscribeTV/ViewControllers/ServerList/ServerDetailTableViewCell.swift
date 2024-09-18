@@ -14,12 +14,14 @@ protocol ServerListTableViewDelegate: AnyObject {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel)
     func showUpgradeView()
     func showExpiredAccountView()
+    func showOutOfDataPopUp()
 }
 
 protocol FavNodesListTableViewDelegate: AnyObject {
     func setSelectedFavNode(favNode: FavNodeModel)
     func showUpgradeView()
     func showExpiredAccountView()
+    func showOutOfDataPopUp()
 }
 
 protocol StaticIPListTableViewDelegate: AnyObject {
@@ -46,6 +48,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     var displayingNodeServer: ServerModel?
     var favIDs: [String] = []
     let disposeBag = DisposeBag()
+    let vpnManager = Assembler.resolve(VPNManager.self)
+
     lazy var sessionManager: SessionManagerV2 = {
         return Assembler.resolve(SessionManagerV2.self)
     }()
@@ -322,7 +326,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
         }
     }
-    
+
     private func canAccessServer() -> Bool {
         if staticIpDelegate != nil {
             return true
@@ -338,7 +342,8 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
-        if canAccessServer() && sessionManager.session?.status == 2 {
+
+        if canAccessServer() && ((displayingGroup?.premiumOnly) == true) {
             guard let delegate = delegate else {
                 favDelegate?.showExpiredAccountView()
                 return
@@ -346,6 +351,15 @@ class ServerDetailTableViewCell: UITableViewCell {
             delegate.showExpiredAccountView()
             return
         }
+        if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
+            guard let delegate = delegate else {
+                favDelegate?.showOutOfDataPopUp()
+                return
+            }
+            delegate.showOutOfDataPopUp()
+            return
+        }
+        
         if !favButton.isHidden && !proIcon.isHidden {
             delegate?.showUpgradeView()
             favDelegate?.showUpgradeView()
