@@ -342,21 +342,21 @@ class ServerDetailTableViewCell: UITableViewCell {
     }
 
     @objc func connectButtonTapped() {
-
-        if canAccessServer() && ((displayingGroup?.premiumOnly) == true) {
+        if sessionManager.session?.status == 2 && staticIpDelegate == nil {
+            let isPro = sessionManager.session?.isPremium ?? false
             guard let delegate = delegate else {
-                favDelegate?.showExpiredAccountView()
+                if isPro {
+                    favDelegate?.showExpiredAccountView()
+                } else {
+                    favDelegate?.showOutOfDataPopUp()
+                }
                 return
             }
-            delegate.showExpiredAccountView()
-            return
-        }
-        if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
-            guard let delegate = delegate else {
-                favDelegate?.showOutOfDataPopUp()
-                return
+            if isPro {
+                delegate.showExpiredAccountView()
+            } else {
+                delegate.showOutOfDataPopUp()
             }
-            delegate.showOutOfDataPopUp()
             return
         }
         
