@@ -345,16 +345,12 @@ class ServerDetailTableViewCell: UITableViewCell {
         if sessionManager.session?.status == 2 && staticIpDelegate == nil {
             let isPro = sessionManager.session?.isPremium ?? false
             guard let delegate = delegate else {
-                if isPro {
-                    favDelegate?.showExpiredAccountView()
-                } else {
+                if !isPro {
                     favDelegate?.showOutOfDataPopUp()
                 }
                 return
             }
-            if isPro {
-                delegate.showExpiredAccountView()
-            } else {
+            if !isPro {
                 delegate.showOutOfDataPopUp()
             }
             return
