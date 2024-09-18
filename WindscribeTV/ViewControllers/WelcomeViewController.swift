@@ -74,7 +74,9 @@ class WelcomeViewController: UIViewController {
             router.routeTo(to: RouteID.login, from: self)
         }.disposed(by: disposeBag)
         viewmodal.routeToSignup.bind { [self] _ in
-            router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
+            DispatchQueue.main.async {
+                self.router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: self)
+            }
         }.disposed(by: disposeBag)
         viewmodal.routeToMainView.bind { [self] _ in
             router.routeTo(to: RouteID.home, from: self)
