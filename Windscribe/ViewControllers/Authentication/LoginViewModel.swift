@@ -112,7 +112,7 @@ class LoginViewModelImpl: LoginViewModel {
                             return
                         }
                         let auth = verifyResponse.sessionAuth
-                        self.apiCallManager.getSession(sessionAuth: auth).subscribe(onSuccess: { [weak self] session in
+                        self.apiCallManager.getSession(sessionAuth: auth).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
                             dispose.dispose()
                             session.sessionAuthHash = auth
                             WifiManager.shared.configure()
