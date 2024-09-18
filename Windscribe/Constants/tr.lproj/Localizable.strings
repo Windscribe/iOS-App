@@ -385,3 +385,9 @@
 "Locations" = "Konumlar";
 "Support" = "Destek";
 "Go to the address above on your phone or computer for all support related inquiries." = "Destekle ilgili tüm sorularınız için telefonunuzda veya bilgisayarınızda yukarıdaki adrese gidin.";
+"Enter Code" = "Kodu Girin";
+"Enter code here" = "Kodu buraya girin";
+"Login into Windscribe's TV apps with a short code" = "Windscribe\\\\ın TV uygulamalarına kısa bir kodla giriş yapın";
+"Sweet, you should be all good to go now" = "Tatlım, artık gidebilirsin";
+"This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Bu konum bakım altındadır. Daha sonra tekrar deneyin veya daha fazla bilgi için Durum sayfamıza gidin. https://windscribe.com/status";
+"Location Maintenance" = "Konum Bakımı";
