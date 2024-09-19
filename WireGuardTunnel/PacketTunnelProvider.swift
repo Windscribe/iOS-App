@@ -198,6 +198,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 } else {
                     self.runningHealthCheck = false
                     wgCrendentials.delete()
+                    preferences.saveForceDisconnect(value: true)
                     self.logger.logD(self, "User status is banned/expired")
                     self.cancelTunnelWithError(NSError.init())
                 }

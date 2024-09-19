@@ -472,6 +472,14 @@ class SharedSecretDefaults: Preferences {
         sharedDefault?.set(value, forKey: SharedKeys.wireguardWakeupTime)
     }
 
+    func saveForceDisconnect(value: Bool) {
+        setBool(value, forKey: SharedKeys.forceDisconnect)
+    }
+    
+    func getForceDisconnect() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.forceDisconnect) ?? Observable.just(DefaultValues.showServerHealth)
+    }
+    
     // MARK: - Base Types
     func setString(_ value: String?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)
