@@ -209,7 +209,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     switch error {
                     case Errors.sessionIsInvalid:
                         self.wgCrendentials.delete()
-                        self.cancelTunnelWithError(NSError.init())
+                            self.cancelTunnelWithError(NEProviderStopReason.configurationDisabled as! Error)
                     case Errors.apiError(let e):
                         self.logger.logD(self, e.errorMessage ?? "")
                     default:
