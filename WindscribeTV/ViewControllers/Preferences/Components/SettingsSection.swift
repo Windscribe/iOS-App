@@ -60,6 +60,7 @@ class SettingsSection: UIView {
 
     func updateText(with list: [String], title: String? = nil) {
         updateTitle(with: title)
+        listOfOptions = list
         list.enumerated().forEach { (index, text) in
             listOfOptionViewss[index].updateTitle(with: text)
         }
@@ -71,8 +72,7 @@ class SettingsSection: UIView {
                 optionView.updateSelection(with: false)
             }
         }
-
-        if let index = listOfOptions.map({$0.localize()}).firstIndex(of: option),
+        if let index = listOfOptions.map({$0.localize()}).firstIndex(of: option.localize()),
         let optionView = contentStackView.arrangedSubviews[index] as? SettingOption {
             optionView.updateSelection(with: true)
             scrollView.delegate = self
