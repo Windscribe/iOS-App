@@ -71,7 +71,7 @@ class SettingsSection: UIView {
             }
         }
 
-        if let index = listOfOptions.firstIndex(of: option),
+        if let index = listOfOptions.map({$0.localize()}).firstIndex(of: option),
         let optionView = contentStackView.arrangedSubviews[index] as? SettingOption {
             optionView.updateSelection(with: true)
             scrollView.delegate = self
