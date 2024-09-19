@@ -57,7 +57,11 @@ class AccountViewModel: AccountViewModelType {
         self.alertManager = alertManager
 
         isDarkMode = themeManager.darkTheme
+        #if os(iOS)
         sections = [.info, .plan, .other]
+        #else
+        sections = [.info, .plan]
+        #endif
         languageManager.activelanguage.subscribe { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
