@@ -116,12 +116,18 @@ extension VPNManager {
     }
 
     func configureForConnectionState() {
+        self.preferences.getForceDisconnect().subscribe(onNext: { value in
+            if value == true {
+                self.connectIntent = false
+            }
+        }).disposed(by: self.disposeBag)
+
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()
         }
         let state = UIApplication.shared.applicationState
 
-        getVPNConnectionInfo(completion: { info in
+        getVPNConnectionInfo(completion: { [self] info in
             guard let info = info else {
                 return
             }

@@ -76,6 +76,7 @@ enum SharedKeys {
     static let countryCodeKey = "country-code"
     static let nickNameKey = "nick-name"
     static let serverCredentialsTypeKey = "server-credentials"
+    static let forceDisconnect = "force-disconnect"
 
     // language manager
     static let languageManagerSelectedLanguage = "LanguageManagerSelectedLanguage"
