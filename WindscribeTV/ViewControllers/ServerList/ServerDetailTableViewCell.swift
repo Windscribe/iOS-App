@@ -355,7 +355,7 @@ class ServerDetailTableViewCell: UITableViewCell {
             }
             return
         }
-        
+
         if !favButton.isHidden && !proIcon.isHidden {
             delegate?.showUpgradeView()
             favDelegate?.showUpgradeView()

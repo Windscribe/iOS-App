@@ -58,8 +58,8 @@ class AccountViewModel: AccountViewModelType {
 
         isDarkMode = themeManager.darkTheme
         sections = [.info, .plan, .other]
-        languageManager.activelanguage.subscribe { _ in
-            self.languageUpdatedTrigger.onNext(())
+        languageManager.activelanguage.subscribe { [weak self] _ in
+            self?.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
     }
 
@@ -87,7 +87,6 @@ class AccountViewModel: AccountViewModelType {
     func resendConfirmEmail(success: (() -> Void)?, failure: ((String) -> Void)?) {
         apiCallManager.confirmEmail().subscribe(onSuccess: { _ in
             success?()
-
         }, onFailure: { error in
             failure?(error.localizedDescription)
         }).disposed(by: disposeBag)
@@ -108,9 +107,10 @@ class AccountViewModel: AccountViewModelType {
 
     func cancelAccount(password: String) {
         cancelAccountState.onNext(.loading)
-        apiCallManager.cancelAccount(password: password).subscribe(onSuccess: { _ in
-            self.cancelAccountState.onNext(.success)
-        }, onFailure: { error in
+        apiCallManager.cancelAccount(password: password).subscribe(onSuccess: { [weak self] _ in
+            self?.cancelAccountState.onNext(.success)
+        }, onFailure: { [weak self] error in
+            guard let self = self else { return }
             switch error {
                 case Errors.validationFailure:
                     self.cancelAccountState.onNext(.error("Password is incorrect."))
@@ -125,11 +125,12 @@ class AccountViewModel: AccountViewModelType {
 
     func loadSession() -> Single<Session> {
         let sessionSingle = apiCallManager.getSession(nil)
-        sessionSingle.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-            localDatabase.saveOldSession()
-            localDatabase.saveSession(session: session).disposed(by: disposeBag)
-            if localDatabase.getOldSession() != localDatabase.getSessionSync() {
-                sessionUpdatedTrigger.onNext(())
+        sessionSingle.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
+            guard let self = self else { return }
+            self.localDatabase.saveOldSession()
+            self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
+            if self.localDatabase.getOldSession() != self.localDatabase.getSessionSync() {
+                self.sessionUpdatedTrigger.onNext(())
             }
         }, onFailure: { [self] error in
             logger.logE(self, "Failed to get session from server with error \(error).")

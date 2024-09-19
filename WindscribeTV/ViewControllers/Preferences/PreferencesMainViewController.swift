@@ -96,11 +96,13 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     }
 
     private func bindViews() {
-        viewModel.currentLanguage.subscribe { _ in
+        viewModel.currentLanguage.subscribe { [weak self] _ in
+            guard let self = self else { return }
             self.titleLabel.text = TextsAsset.Preferences.title
         }.disposed(by: disposeBag)
 
-        accountViewModel.cancelAccountState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { state in
+        accountViewModel.cancelAccountState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] state in
+            guard let self = self else { return }
             self.logger.logD(self, "Cancel account state: \(state)")
             switch state {
                 case .initial:
@@ -122,7 +124,8 @@ class PreferencesMainViewController: PreferredFocusedViewController {
             }
         }).disposed(by: disposeBag)
 
-        accountViewModel.sessionUpdatedTrigger.subscribe { _ in
+        accountViewModel.sessionUpdatedTrigger.subscribe { [weak self] _ in
+            guard let self = self else { return }
             self.accountView.setup()
         }.disposed(by: disposeBag)
     }
@@ -186,7 +189,8 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
     private func handleCancelAccount() {
         logger.logD(self, "Showing delete account popup.")
-        viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { password in
+        viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { [weak self] password in
+            guard let self = self else { return }
             if let password = password, !password.isEmpty {
                 self.accountViewModel.cancelAccount(password: password)
             } else {
@@ -256,9 +260,9 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
                 $0.isHidden = true
             }
         }
-        
+
         logger.logD(self, "Preference of type \(value) selected.")
-        
+
         switch value {
         case .general: generalView.isHidden = false
         case .account:  accountView.isHidden = false

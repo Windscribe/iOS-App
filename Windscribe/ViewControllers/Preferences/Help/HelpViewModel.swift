@@ -42,7 +42,8 @@ class HelpViewModelImpl: HelpViewModel {
     }
 
     private func observerConnectivity() {
-        connectivity.network.subscribe(onNext: { appNetwork in
+        connectivity.network.subscribe(onNext: { [weak self] appNetwork in
+            guard let self = self else { return }
             self.networkStatus = appNetwork.status
         }, onError: { _ in
 

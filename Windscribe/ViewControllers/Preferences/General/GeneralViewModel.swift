@@ -58,28 +58,28 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     private func load() {
-        preferences.getHapticFeedback().subscribe { data in
-            self.hapticFeedback.onNext(data ?? DefaultValues.hapticFeedback)
+        preferences.getHapticFeedback().subscribe { [weak self] data in
+            self?.hapticFeedback.onNext(data ?? DefaultValues.hapticFeedback)
         }.disposed(by: disposeBag)
 
-        preferences.getShowServerHealth().subscribe { data in
-            self.showServerHealth.onNext(data ?? DefaultValues.showServerHealth)
+        preferences.getShowServerHealth().subscribe { [weak self] data in
+            self?.showServerHealth.onNext(data ?? DefaultValues.showServerHealth)
         }.disposed(by: disposeBag)
 
-        preferences.getOrderLocationsBy().subscribe { data in
-            self.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
+        preferences.getOrderLocationsBy().subscribe { [weak self] data in
+            self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
         }.disposed(by: disposeBag)
 
-        preferences.getLatencyType().subscribe {data in
-            self.latencyType.onNext(data)
+        preferences.getLatencyType().subscribe { [weak self] data in
+            self?.latencyType.onNext(data)
         }.disposed(by: disposeBag)
 
-        themeManager.darkTheme.subscribe {data in
-            self.isDarkMode.onNext(data)
+        themeManager.darkTheme.subscribe { [weak self] data in
+            self?.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 
-        languageManager.activelanguage.subscribe { _ in
-            self.languageUpdatedTrigger.onNext(())
+        languageManager.activelanguage.subscribe { [weak self] _ in
+            self?.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
     }
 

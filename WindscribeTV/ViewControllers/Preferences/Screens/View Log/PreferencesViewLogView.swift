@@ -30,7 +30,8 @@ class PreferencesViewLogView: UIView {
     }
 
     private func bindViews() {
-        viewModel.logContent.subscribe(onNext: { content in
+        viewModel.logContent.subscribe(onNext: { [weak self] content in
+            guard let self = self else { return }
             self.textView.text = content
             self.scrolltoBottom()
         }, onError: { _ in })

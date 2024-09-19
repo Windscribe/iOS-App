@@ -40,7 +40,8 @@ class PreferencesOptionView: OptionSelectionView {
     }
 
     private func bindViews() {
-        viewModel?.currentLanguage.subscribe(onNext: { _ in
+        viewModel?.currentLanguage.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
             self.updateTitle()
         }).disposed(by: disposeBag)
     }

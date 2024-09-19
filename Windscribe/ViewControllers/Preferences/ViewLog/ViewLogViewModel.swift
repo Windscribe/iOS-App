@@ -30,8 +30,9 @@ class ViewLogViewModelImpl: ViewLogViewModel {
     private func load() {
         showProgress.onNext(true)
         logger.getLogData().subscribe(onSuccess: { [weak self] content in
-            self?.showProgress.onNext(false)
-            self?.logContent.onNext(content)
+            guard let self = self else { return }
+            self.showProgress.onNext(false)
+            self.logContent.onNext(content)
         }, onFailure: { [weak self] _ in
             self?.showProgress.onNext(false)
         }).disposed(by: disposeBag)

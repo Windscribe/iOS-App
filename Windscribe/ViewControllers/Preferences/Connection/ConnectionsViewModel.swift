@@ -79,34 +79,35 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     private func loadData() {
-        preferences.getSelectedProtocol().subscribe { data in
-            self.currentProtocol.onNext(data ?? DefaultValues.protocol)
+        preferences.getSelectedProtocol().subscribe { [weak self] data in
+            self?.currentProtocol.onNext(data ?? DefaultValues.protocol)
         }.disposed(by: disposeBag)
-        preferences.getSelectedPort().subscribe { data in
-            self.currentPort.onNext(data ?? DefaultValues.port)
+        preferences.getSelectedPort().subscribe { [weak self] data in
+            self?.currentPort.onNext(data ?? DefaultValues.port)
         }.disposed(by: disposeBag)
-        preferences.getFirewallMode().subscribe { data in
-            self.firewall.onNext(data ?? DefaultValues.firewallMode)
+        preferences.getFirewallMode().subscribe { [weak self] data in
+            self?.firewall.onNext(data ?? DefaultValues.firewallMode)
         }.disposed(by: disposeBag)
-        preferences.getKillSwitch().subscribe { data in
-            self.killSwitch.onNext(data ?? DefaultValues.killSwitch)
+        preferences.getKillSwitch().subscribe { [weak self] data in
+            self?.killSwitch.onNext(data ?? DefaultValues.killSwitch)
         }.disposed(by: disposeBag)
-        preferences.getAllowLane().subscribe { data in
-            self.allowLane.onNext(data ?? DefaultValues.allowLaneMode)
+        preferences.getAllowLane().subscribe { [weak self] data in
+            self?.allowLane.onNext(data ?? DefaultValues.allowLaneMode)
         }.disposed(by: disposeBag)
-        preferences.getAutoSecureNewNetworks().subscribe { data in
-            self.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
+        preferences.getAutoSecureNewNetworks().subscribe { [weak self] data in
+            self?.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
         }.disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe { data in
-            self.connectionMode = ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode)
+        preferences.getConnectionMode().subscribe { [weak self] data in
+            self?.connectionMode = ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode)
         }.disposed(by: disposeBag)
-        preferences.getConnectedDNSObservable().subscribe { data in
-            self.connectedDNS = ConnectedDNSType(fieldValue: data ?? DefaultValues.connectedDNS)
+        preferences.getConnectedDNSObservable().subscribe { [weak self] data in
+            self?.connectedDNS = ConnectedDNSType(fieldValue: data ?? DefaultValues.connectedDNS)
         }.disposed(by: disposeBag)
-        preferences.getCircumventCensorshipEnabled().subscribe { data in
-            self.isCircumventCensorshipEnabled.onNext(data)
+        preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
+            self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
-        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { (connectionMode, selectedProtocol, network) in
+        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { [weak self] (connectionMode, selectedProtocol, network) in
+            guard let self = self else { return }
             if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
                 self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
                 return
@@ -119,8 +120,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             }
             self.shouldShowCustomDNSOption.onNext(true)
         }.disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe { _ in
-            self.languageUpdatedTrigger.onNext(())
+        languageManager.activelanguage.subscribe {  [weak self] _ in
+            self?.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
     }
 

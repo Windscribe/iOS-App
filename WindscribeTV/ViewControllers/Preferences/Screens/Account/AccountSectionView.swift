@@ -16,7 +16,7 @@ class AccountSectionView: UIView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var stackView: UIStackView!
 
-    var delegate: AccountSectionViewDelegate?
+    weak var delegate: AccountSectionViewDelegate?
     private var sectionData: AccountSectionItem?
 
     func setup(with sectionData: AccountSectionItem) {

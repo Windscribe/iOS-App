@@ -17,7 +17,7 @@ class PreferencesAccountView: UIView {
     @IBOutlet weak var contentStackView: UIStackView!
 
     var viewModel: AccountViewModelType?
-    var delegate: PreferencesAccountViewDelegate?
+    weak var delegate: PreferencesAccountViewDelegate?
     private let disposeBag = DisposeBag()
 
     func setup() {
@@ -32,7 +32,8 @@ class PreferencesAccountView: UIView {
     }
 
     func bindViews() {
-        viewModel?.languageUpdatedTrigger.subscribe { _ in
+        viewModel?.languageUpdatedTrigger.subscribe { [weak self] _ in
+            guard let self = self else { return }
             self.contentStackView.arrangedSubviews.forEach {
                 if let sectionView = $0 as? AccountSectionView {
                     sectionView.updateLocalisation()

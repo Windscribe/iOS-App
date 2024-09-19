@@ -13,7 +13,7 @@ class ForgotPasswordViewController: UIViewController {
 
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var backButton: UIButton!
-    
+
     var logger: FileLogger!
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -8,6 +8,7 @@
 
 import Foundation
 
+// swiftlint:disable file_length
 struct TextsAsset {
     static var slogan: String {
         return "Keep Your Secrets.".localize()
