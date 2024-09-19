@@ -181,7 +181,7 @@ class LazyTableViewCell: UITableViewCell {
 
     var lazyView: HelpView?
     private lazy var viewModel = Assembler.resolve(AccountViewModelType.self)
-    var delegate: LazyViewDelegate?
+    weak var delegate: LazyViewDelegate?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -201,7 +201,6 @@ class LazyTableViewCell: UITableViewCell {
         lazyView?.constrainHeight(100)
 
     }
-
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

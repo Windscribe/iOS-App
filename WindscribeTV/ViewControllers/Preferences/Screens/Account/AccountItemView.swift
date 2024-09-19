@@ -23,7 +23,7 @@ class AccountItemView: UIView {
 
     let button = UIButton()
 
-    var delegate: AccountItemViewDelegate?
+    weak var delegate: AccountItemViewDelegate?
     private var item: AccountItemCell?
 
     func setup(with item: AccountItemCell) {

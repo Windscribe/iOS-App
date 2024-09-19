@@ -14,7 +14,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
     var router: ProtocolSwitchViewRouter!
     // MARK: - PROPERTIES
     var viewModel: ProtocolSetPreferredViewModelV2!
-    var delegate: ProtocolSwitchVCDelegate?
+    weak var delegate: ProtocolSwitchVCDelegate?
     var type: ProtocolViewType?
     var protocolName: String = "" {
         didSet {

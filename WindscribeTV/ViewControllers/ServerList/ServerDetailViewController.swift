@@ -24,7 +24,7 @@ class ServerDetailViewController: UIViewController {
         flagBottomGradient: CAGradientLayer!
     var server: ServerModel?
     var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
-    var delegate: ServerListTableViewDelegate?
+    weak var delegate: ServerListTableViewDelegate?
     var favNodes: [FavNodeModel]?
 
     override func viewDidLoad() {
@@ -111,8 +111,8 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
     func showExpiredAccountView() {
         self.delegate?.showExpiredAccountView()
     }
-    
-    func showOutOfDataPopUp(){
+
+    func showOutOfDataPopUp() {
         self.delegate?.showOutOfDataPopUp()
 
     }

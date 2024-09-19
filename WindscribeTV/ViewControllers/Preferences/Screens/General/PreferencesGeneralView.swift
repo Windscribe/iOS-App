@@ -55,7 +55,8 @@ class PreferencesGeneralView: UIView {
     }
 
     private func bindViews() {
-        viewModel.languageUpdatedTrigger.subscribe { _ in
+        viewModel.languageUpdatedTrigger.subscribe { [weak self] _ in
+            guard let self = self else { return }
             self.updateText()
         }.disposed(by: disposeBag)
     }

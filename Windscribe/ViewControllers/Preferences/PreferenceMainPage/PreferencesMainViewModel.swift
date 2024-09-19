@@ -56,8 +56,8 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
     }
 
     private func observeLanguage() {
-        languageManager.activelanguage.subscribe(onNext: { updatedLanguage in
-            self.currentLanguage.onNext(updatedLanguage.name)
+        languageManager.activelanguage.subscribe(onNext: { [weak self] updatedLanguage in
+            self?.currentLanguage.onNext(updatedLanguage.name)
         }, onError: { _ in }
         ).disposed(by: disposeBag)
     }

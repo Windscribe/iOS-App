@@ -26,7 +26,7 @@ class AccountRouter: BaseRouter, NavigationRouter {
             let errorVC = Assembler.resolve(ErrorPopupViewController.self)
             errorVC.viewModel.setDismissAction(with: dismissAction)
             errorVC.viewModel.setMessage(with: message)
-            DispatchQueue.main.async{
+            DispatchQueue.main.async {
                 errorVC.modalPresentationStyle = .fullScreen
                 from.present(errorVC, animated: true, completion: nil)
             }
