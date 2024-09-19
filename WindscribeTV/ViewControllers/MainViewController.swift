@@ -252,7 +252,6 @@ class MainViewController: PreferredFocusedViewController {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
         viewModel.session.subscribe(onNext: {
-            self.setUpgradeButton(session: $0)
             self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
 
@@ -288,8 +287,13 @@ class MainViewController: PreferredFocusedViewController {
             localisation()
         }, onError: { _ in }).disposed(by: disposeBag)
 
-        self.viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
+        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             self.setFlagImages()
+        }).disposed(by: self.disposeBag)
+        
+        Observable.combineLatest(viewModel.session, languageManager.activelanguage)
+            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] (session, language) in
+                self?.setUpgradeButton(session: session)
         }).disposed(by: self.disposeBag)
 
     }
