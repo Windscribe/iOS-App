@@ -543,9 +543,6 @@ class MainViewController: PreferredFocusedViewController {
 
     private func showProPlanExpiredPopup() {
         if !viewModel.didShowProPlanExpiredPopup {
-            if vpnManager.isConnected() {
-                connectionStateViewModel.disconnect()
-            }
             DispatchQueue.main.async {
                 self.router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
             }

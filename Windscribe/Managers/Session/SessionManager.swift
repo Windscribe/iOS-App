@@ -128,6 +128,7 @@ class SessionManager: SessionManagerV2 {
                 self.vpnManager.checkLocationValidity()
             }, onError: { _ in
                 self.logger.logD(self, "Failed to update latency.")
+                self.latencyRepo.pickBestLocation(pingData: self.localDatabase.getAllPingData())
                 self.vpnManager.checkLocationValidity()
             })
             .disposed(by: self.disposeBag)

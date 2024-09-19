@@ -220,7 +220,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             .map { city in return (city.pingIp, city.pingHost) } ?? []
     }
 
-    private func pickBestLocation(pingData: [PingData]) {
+    func pickBestLocation(pingData: [PingData]) {
         let servers = database.getServers()
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
         outerLoop: for server in servers ?? [] {

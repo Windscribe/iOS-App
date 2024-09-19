@@ -82,6 +82,7 @@ class VPNManager {
     var connectivityTestTimer: Timer?
     var failCountTimer: Timer?
     var disconnectCounter: Int = 0
+    var switchingLocation = false
 
     var ipAddressBeforeConnection: String = ""
     var userTappedToDisconnect: Bool = false

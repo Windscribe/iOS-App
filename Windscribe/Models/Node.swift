@@ -315,6 +315,7 @@ struct BestLocationModel {
     dynamic var groupId: Int = 0
     dynamic var linkSpeed: String = "1000"
     dynamic var health: Int = 0
+    dynamic var id = "BestLocation"
 
     convenience init(node: NodeModel,
                      group: GroupModel,
@@ -333,7 +334,7 @@ struct BestLocationModel {
     }
 
     override static func primaryKey() -> String? {
-        return "cityName"
+        return "id"
     }
 
     func getBestLocationModel() -> BestLocationModel {

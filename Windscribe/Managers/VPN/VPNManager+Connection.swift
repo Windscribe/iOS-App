@@ -314,13 +314,18 @@ extension VPNManager {
 
     private func connect() {
         if VPNManager.shared.isConnected() {
+            self.connectIntent = false
             resetProfiles {
                 self.connectIntent = true
                 self.userTappedToDisconnect = false
                 self.restartOnDisconnect = false
                 self.isOnDemandRetry = false
+                self.logger.logD(self, "Connecting to new location.")
                 self.configureAndConnectVPN()
+                self.switchingLocation = false
             }
+        } else {
+            switchingLocation = false
         }
     }
 }
