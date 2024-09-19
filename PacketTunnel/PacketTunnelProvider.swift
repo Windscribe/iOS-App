@@ -93,7 +93,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
         }
-        preferences.saveForceDisconnect(value: true)
         if reason == .authenticationCanceled {
             preferences.saveForceDisconnect(value: true)
         }

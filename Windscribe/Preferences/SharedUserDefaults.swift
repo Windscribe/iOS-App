@@ -477,7 +477,7 @@ class SharedSecretDefaults: Preferences {
     }
     
     func getForceDisconnect() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.forceDisconnect) ?? Observable.just(DefaultValues.showServerHealth)
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.forceDisconnect) ?? Observable.just(false)
     }
     
     // MARK: - Base Types
