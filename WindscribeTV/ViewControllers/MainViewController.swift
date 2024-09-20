@@ -69,14 +69,17 @@ class MainViewController: PreferredFocusedViewController {
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
-
-        // Do any additional setup after loading the view.
+        NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         connectionStateViewModel.becameActive()
 
+    }
+    
+    @objc func appEnteredForeground() {
+        sessionManager.keepSessionUpdated()
     }
 
     private func setupUI() {
