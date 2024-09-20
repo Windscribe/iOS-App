@@ -52,14 +52,14 @@ class LoginViewController: PreferredFocusedViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)
         for press in presses {
-            if loginButton.isFocused {
+            if loginButton != nil && loginButton.isFocused {
                 if press.type == .leftArrow {
                     myPreferredFocusedView = generateCodeButton
                     setNeedsFocusUpdate()
                     updateFocusIfNeeded()
                 }
             }
-            if passwordTextField.isFocused {
+            if passwordTextField != nil && passwordTextField.isFocused {
                 if press.type == .rightArrow {
                     myPreferredFocusedView = passwordTextField.showHidePasswordButton
                     setNeedsFocusUpdate()
