@@ -39,6 +39,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private func observeBestLocation() {
         observingBestLocation = true
         database.getBestLocation().subscribe(onNext: { location in
+            self.logger.logD(self, "Updated best location to \(location?.cityName ?? "")")
             self.bestLocation.onNext(location)
         }, onError: { _ in
             self.bestLocation.onNext(nil)
@@ -243,5 +244,91 @@ class LatencyRepositoryImpl: LatencyRepository {
                 self.observeBestLocation()
             }
         }
+    }
+    
+    /// Picks up Initial best location bast on user's region, status & availability..
+    /// Only if we have servers in given region.
+    func pickBestLocation(servers: [Server]) {
+        guard let countryCode = Locale.current.region?.identifier else { return }
+        logger.logD(self, "User region: \(countryCode)")
+        if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
+            logger.logD(self, "Selected best location based on region: \(regionBasedLocation.cityName)")
+            return
+        }
+        if let timeZoneBasedLocation = selectServerByTimeZone(servers: servers) {
+            logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation.cityName)")
+        }
+    }
+    
+    /// Select the best server based on the user's region
+    private func selectServerByRegion(servers: [Server], countryCode: String) -> BestLocation? {
+        for server in servers where server.countryCode == countryCode {
+            let availableGroups = server.groups.filter { group in
+                guard !group.nodes.isEmpty else { return false }
+                if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                    return false
+                }
+                return true
+            }
+            
+            if let selectedGroup = availableGroups.randomElement(),
+               let selectedNode = selectedGroup.nodes.randomElement() {
+                return buildAndSaveBestLocation(server: server, group: selectedGroup, node: selectedNode)
+            }
+        }
+        return nil
+    }
+    
+    /// Select the best server based on the timezon different
+    private func selectServerByTimeZone(servers: [Server]) -> BestLocation? {
+        let userTimeZone = TimeZone.current
+        var bestFallbackServer: Server?
+        var bestFallbackGroup: Group?
+        var bestFallbackNode: Node?
+        for server in servers {
+            guard let serverTimeZone = TimeZone(identifier: server.timezone) else { continue }
+            
+            let timeDifference = TimeInterval(abs(serverTimeZone.secondsFromGMT() - userTimeZone.secondsFromGMT()))
+            // Anything equal to 1 hour or less difference is fine.
+            if timeDifference <= 3600 {
+                let availableGroups = server.groups.filter { group in
+                    guard !group.nodes.isEmpty else { return false }
+                    if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                        return false
+                    }
+                    return true
+                }
+                if let selectedGroup = availableGroups.randomElement(),
+                   let selectedNode = selectedGroup.nodes.randomElement() {
+                    bestFallbackServer = server
+                    bestFallbackGroup = selectedGroup
+                    bestFallbackNode = selectedNode
+                }
+            }
+        }
+        if let bestServer = bestFallbackServer,
+           let bestGroup = bestFallbackGroup,
+           let bestNode = bestFallbackNode {
+            return buildAndSaveBestLocation(server: bestServer, group: bestGroup, node: bestNode)
+        }
+        return nil
+    }
+    
+    /// Build and save the best location using the selected server, group, and node
+    private func buildAndSaveBestLocation(server: Server, group: Group, node: Node) -> BestLocation {
+        let updatedBestLocation = BestLocation(
+            node: node.getNodeModel(),
+            group: group.getGroupModel(),
+            server: server.getServerModel()!
+        )
+        self.database.saveBestLocation(location: updatedBestLocation)
+            .disposed(by: disposeBag)
+        let lastBestLocation = try? bestLocation.value()
+        if !observingBestLocation || lastBestLocation == nil {
+            delay(2) {
+                self.observeBestLocation()
+            }
+        }
+        return updatedBestLocation
     }
 }
