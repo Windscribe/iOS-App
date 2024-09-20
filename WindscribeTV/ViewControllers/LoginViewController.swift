@@ -153,11 +153,11 @@ class LoginViewController: PreferredFocusedViewController {
             generateCodeButton.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
     }
-    
+
     @IBAction func backButtonAction(_ sender: Any) {
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     func bindView() {
         viewModel.showLoadingView.bind { [weak self] show in
             self?.loadingView.startAnimating()

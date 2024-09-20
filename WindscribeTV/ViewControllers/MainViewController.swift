@@ -290,9 +290,9 @@ class MainViewController: PreferredFocusedViewController {
         viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             self.setFlagImages()
         }).disposed(by: self.disposeBag)
-        
+
         Observable.combineLatest(viewModel.session, languageManager.activelanguage)
-            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] (session, language) in
+            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] (session, _) in
                 self?.setUpgradeButton(session: session)
         }).disposed(by: self.disposeBag)
 

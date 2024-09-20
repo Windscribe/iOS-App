@@ -142,12 +142,12 @@ class RobertFilterCell: UITableViewCell {
         Observable.combineLatest(isEnabledTrigger.asObservable(), isDarkMode.asObservable()).bind { (isEnabled, isDarkMode) in
             if isDarkMode {
                 self.titleLabel.textColor = UIColor.white
-                if let item = self.robertFilter {
+                if let item = self.robertFilter, self.robertFilter?.isInvalidated == false {
                     self.icon.image = UIImage(named: ImagesAsset.DarkMode.filterIcons[item.id] ?? "unknown_robert_category-white")
                 }
             } else {
                 self.titleLabel.textColor = UIColor.midnight
-                if let item = self.robertFilter {
+                if let item = self.robertFilter, self.robertFilter?.isInvalidated == false {
                     self.icon.image = UIImage(named: ImagesAsset.Robert.filterIcons[item.id] ?? "unknown_robert_category")
                 }
             }

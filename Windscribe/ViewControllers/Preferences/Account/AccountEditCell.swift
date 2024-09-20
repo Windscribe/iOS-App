@@ -198,7 +198,6 @@ class LazyTableViewCell: UITableViewCell {
 
         lazyView?.makeLeadingAnchor(constant: 0)
         lazyView?.makeTrailingAnchor(constant: 0)
-        lazyView?.constrainHeight(100)
 
     }
 
