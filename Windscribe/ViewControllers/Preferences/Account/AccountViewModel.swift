@@ -150,7 +150,14 @@ class AccountViewModel: AccountViewModelType {
         apiCallManager.verifyTvLoginCode(code: code).subscribe(onSuccess: { _ in
             success?()
         }, onFailure: { error in
-            failure?(error.localizedDescription)
+            if let error = error as? Errors {
+                switch error {
+                case .apiError(let e):
+                    failure?(e.errorMessage ?? "Failed to verify login code.")
+                default:
+                    failure?("Failed to verify login code \(error.description)")
+                }
+            }
         }).disposed(by: disposeBag)
     }
 }

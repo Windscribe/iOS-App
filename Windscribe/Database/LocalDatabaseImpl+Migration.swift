@@ -238,8 +238,8 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, newObject in
                         newObject!["isPremiumOnly"] = false
                     }
-                }else if oldSchemaVersion < 51 {
-                    migration.enumerateObjects(ofType: BestLocation.className()) { oldObject, newObject in
+                } else if oldSchemaVersion < 51 {
+                    migration.enumerateObjects(ofType: BestLocation.className()) { _, newObject in
                         newObject?["id"] = "BestLocation"
                     }
                     migration.deleteData(forType: BestLocation.className())
