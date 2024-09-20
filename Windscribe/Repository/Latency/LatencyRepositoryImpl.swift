@@ -245,21 +245,23 @@ class LatencyRepositoryImpl: LatencyRepository {
             }
         }
     }
-    
+
     /// Picks up Initial best location bast on user's region, status & availability..
     /// Only if we have servers in given region.
     func pickBestLocation(servers: [Server]) {
-        guard let countryCode = Locale.current.region?.identifier else { return }
-        logger.logD(self, "User region: \(countryCode)")
-        if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
-            logger.logD(self, "Selected best location based on region: \(regionBasedLocation.cityName)")
-            return
+        if #available(iOS 16, tvOS 17, *) {
+            guard let countryCode = Locale.current.region?.identifier else { return }
+            logger.logD(self, "User region: \(countryCode)")
+            if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
+                logger.logD(self, "Selected best location based on region: \(regionBasedLocation.cityName)")
+                return
+            }
         }
         if let timeZoneBasedLocation = selectServerByTimeZone(servers: servers) {
             logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation.cityName)")
         }
     }
-    
+
     /// Select the best server based on the user's region
     private func selectServerByRegion(servers: [Server], countryCode: String) -> BestLocation? {
         for server in servers where server.countryCode == countryCode {
@@ -270,7 +272,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 }
                 return true
             }
-            
+
             if let selectedGroup = availableGroups.randomElement(),
                let selectedNode = selectedGroup.nodes.randomElement() {
                 return buildAndSaveBestLocation(server: server, group: selectedGroup, node: selectedNode)
@@ -278,7 +280,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         }
         return nil
     }
-    
+
     /// Select the best server based on the timezon different
     private func selectServerByTimeZone(servers: [Server]) -> BestLocation? {
         let userTimeZone = TimeZone.current
@@ -287,7 +289,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         var bestFallbackNode: Node?
         for server in servers {
             guard let serverTimeZone = TimeZone(identifier: server.timezone) else { continue }
-            
+
             let timeDifference = TimeInterval(abs(serverTimeZone.secondsFromGMT() - userTimeZone.secondsFromGMT()))
             // Anything equal to 1 hour or less difference is fine.
             if timeDifference <= 3600 {
@@ -313,7 +315,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         }
         return nil
     }
-    
+
     /// Build and save the best location using the selected server, group, and node
     private func buildAndSaveBestLocation(server: Server, group: Group, node: Node) -> BestLocation {
         let updatedBestLocation = BestLocation(
