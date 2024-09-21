@@ -77,7 +77,7 @@ class MainViewController: PreferredFocusedViewController {
         connectionStateViewModel.becameActive()
 
     }
-    
+
     @objc func appEnteredForeground() {
         sessionManager.keepSessionUpdated()
     }

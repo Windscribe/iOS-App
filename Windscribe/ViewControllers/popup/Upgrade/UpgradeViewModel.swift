@@ -195,9 +195,13 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func upgrade() {
-        apiManager.getSession(nil).subscribe(onSuccess: { session in
+        self.logger.logE(self, "Getting new session.")
+        apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { session in
+            self.logger.logE(self, "Received updated session: \(session).")
+            self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             self.upgradeState.onNext(.success(session.isUserGhost))
         },onFailure: { _ in
+            self.logger.logE(self, "Failure to update session.")
             self.upgradeState.onNext(.success(false))
         }).disposed(by: disposeBag)
     }
@@ -212,6 +216,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
                 self.upgrade()
             }).disposed(by: disposeBag)
         } else {
+            self.logger.logE(self, "No pcpID now upgrading.")
             upgrade()
         }
     }
