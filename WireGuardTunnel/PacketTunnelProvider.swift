@@ -56,9 +56,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         logger.logD(self, "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
             logger.logD(self, "Wg credentials not avaialble for non custom config connection.")
-            // If user status changes to expired/banned credentials are deleted, Status may have changed to Okay. Try to get ip again & restart extension.
-            self.runningHealthCheck = true
-            self.requestNewInterfaceIp(completionHandler: completionHandler)
+            completionHandler(nil)
+            self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
             return
         }
 
@@ -200,7 +199,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     wgCrendentials.delete()
                     preferences.saveForceDisconnect(value: true)
                     self.logger.logD(self, "User status is banned/expired")
-                    self.cancelTunnelWithError(NSError.init())
+                    self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
                 }
             }, onFailure: { error in
                 self.runningHealthCheck = false
@@ -209,7 +208,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     switch error {
                     case Errors.sessionIsInvalid:
                         self.wgCrendentials.delete()
-                            self.cancelTunnelWithError(NEProviderStopReason.configurationDisabled as! Error)
+                        self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
                     case Errors.apiError(let e):
                         self.logger.logD(self, e.errorMessage ?? "")
                     default:

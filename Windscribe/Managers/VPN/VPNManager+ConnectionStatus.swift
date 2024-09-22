@@ -11,6 +11,7 @@ import RealmSwift
 import NetworkExtension
 #if canImport(WidgetKit)
 import WidgetKit
+import RxSwift
 #endif
 
 extension VPNManager {
@@ -116,17 +117,10 @@ extension VPNManager {
     }
 
     func configureForConnectionState() {
-        self.preferences.getForceDisconnect().subscribe(onNext: { value in
-            if value == true {
-                self.connectIntent = false
-            }
-        }).disposed(by: self.disposeBag)
-
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()
         }
         let state = UIApplication.shared.applicationState
-
         getVPNConnectionInfo(completion: { [self] info in
             guard let info = info else {
                 return
@@ -172,6 +166,7 @@ extension VPNManager {
                 self.setTimeoutForDisconnectingState()
             case .disconnected:
                 self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnected")
+                handleConnectError()
                 WSNet.instance().setIsConnectedToVpnState(false)
                 self.delegate?.saveDataForWidget()
                 if self.forceToKeepConnectingState() { self.delegate?.setConnecting() } else { self.delegate?.setDisconnecting() }
@@ -264,6 +259,98 @@ extension VPNManager {
             logger.logE(VPNManager.self, "Connect Intent is true. Retrying to connect.")
             self.retryWithNewCredentials = true
             self.configureAndConnectVPN()
+        }
+    }
+
+    private func handleConnectError() {
+        self.logger.logD(self, "Getting last connection error.")
+        getLastConnectionError { error in
+            guard let error = error else {
+                self.logger.logD(self, "No last connection error found")
+                return
+            }
+            if error == .credentialsFailure {
+                self.logger.logD(self, "Disconnecting due to auth failure.")
+                self.connectIntent = false
+                self.disableOnDemandMode()
+                self.logger.logE(self, "Getting new session.")
+                self.api.getSession(nil).subscribe(onSuccess: { session in
+                    self.logger.logE(self, "Received updated session: \(session).")
+                    DispatchQueue.main.async {
+                        self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
+                    }
+                },onFailure: { _ in
+                    self.logger.logE(self, "Failure to update session.")
+                }).disposed(by: self.disposeBag)
+            } else {
+                self.logger.logD(self, "Last VPN Error: \(error.description)")
+            }
+        }
+    }
+
+    @available(iOS 16.0, tvOS 17.0, *)
+    private func handleIKEv2Error(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
+        guard let error = error else {
+            completion(nil)
+            return
+        }
+        if let nsError = error as NSError?, nsError.domain == NEVPNConnectionErrorDomain {
+            switch nsError.code {
+            case 12, 8:
+                completion(.credentialsFailure)
+            default:
+                self.logger.logD(self, "NEVPNManager error: \(error)")
+                completion(nil)
+            }
+        } else {
+            self.logger.logD(self, "NEVPNManager error: \(error)")
+            completion(nil)
+        }
+    }
+
+    @available(iOS 16.0, tvOS 17.0, *)
+    private func handleNEVPNProviderError(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
+        guard let error = error as NSError? else {
+            completion(nil)
+            return
+        }
+        if error.code == 50 {
+            completion(.credentialsFailure)
+        } else {
+            self.logger.logD(self, "NEVPNProvider error: \(error)")
+            completion(nil)
+        }
+    }
+
+    private func getLastConnectionError(completion: @escaping (VPNErrors?) -> Void) {
+        guard #available(iOS 16.0, tvOS 17.0, *) else {
+            completion(nil)
+            return
+        }
+        if WireGuardVPNManager.shared.isConfigured() {
+            WireGuardVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
+                self.handleNEVPNProviderError(error, completion: completion)
+            }
+        } else if OpenVPNManager.shared.isConfigured() {
+            OpenVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
+                self.handleNEVPNProviderError(error, completion: completion)
+            }
+        } else if IKEv2VPNManager.shared.isConfigured() {
+            IKEv2VPNManager.shared.neVPNManager.connection.fetchLastDisconnectError { error in
+                self.handleIKEv2Error(error, completion: completion)
+            }
+        } else {
+            completion(nil)
+        }
+    }
+
+    private func disableOnDemandMode() {
+        if WireGuardVPNManager.shared.isConfigured() {
+            WireGuardVPNManager.shared.setOnDemandMode(false)
+        } else if OpenVPNManager.shared.isConfigured() {
+            OpenVPNManager.shared.setOnDemandMode(false)
+        } else if IKEv2VPNManager.shared.isConfigured() {
+            IKEv2VPNManager.shared.setOnDemandMode(false)
         }
     }
 }

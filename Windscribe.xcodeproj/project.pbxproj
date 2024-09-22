@@ -938,6 +938,12 @@
 		C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */; };
 		C5AB0C792C63E511005D2541 /* Proxy.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AB0C782C63E511005D2541 /* Proxy.xcframework */; };
 		C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */; };
+		C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5B8DF032C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5B8DF052C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5B8DF072C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5BF0D52277454EB009C95DF /* PushNotificationPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */; };
 		C5BF384C2B916B3D00AA725C /* WelcomeViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384B2B916B3D00AA725C /* WelcomeViewModal.swift */; };
 		C5BF384E2B91735100AA725C /* keyChainKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384D2B91735100AA725C /* keyChainKeys.swift */; };
@@ -1814,6 +1820,7 @@
 		C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLoggerImpl.swift; sourceTree = "<group>"; };
 		C5AB0C782C63E511005D2541 /* Proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Proxy.xcframework; sourceTree = "<group>"; };
 		C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+RefreshControls.swift"; sourceTree = "<group>"; };
+		C5B8DF012C9FD3450072333E /* VPNErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNErrors.swift; sourceTree = "<group>"; };
 		C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationPayload.swift; sourceTree = "<group>"; };
 		C5BF384B2B916B3D00AA725C /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
 		C5BF384D2B91735100AA725C /* keyChainKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keyChainKeys.swift; sourceTree = "<group>"; };
@@ -3041,6 +3048,7 @@
 				C580FE2B2B5101CC004FA857 /* PingData.swift */,
 				C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */,
 				C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */,
+				C5B8DF012C9FD3450072333E /* VPNErrors.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4845,6 +4853,7 @@
 				1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */,
 				59FC74492C515DF500021CD1 /* ConnectionManager.swift in Sources */,
 				1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */,
+				C5B8DF072C9FD3450072333E /* VPNErrors.swift in Sources */,
 				59FC74412C515BC000021CD1 /* WifiManager.swift in Sources */,
 				59FC742D2C51568A00021CD1 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				59FC73ED2C51510100021CD1 /* APIMessage.swift in Sources */,
@@ -5429,6 +5438,7 @@
 				59C3115F2BC5C00F004B16B3 /* ConnectionManagerV2.swift in Sources */,
 				AF8DA7AD2204BA1900885BD8 /* PreferencesTableViewCell.swift in Sources */,
 				C56FCC082B2CF3A7008DE7D4 /* HelpRouter.swift in Sources */,
+				C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */,
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
 				E97ABD4B28D47AE600B38587 /* ShareWithFriendViewController.swift in Sources */,
@@ -5537,6 +5547,7 @@
 				C50F20CD2B61A52900266B23 /* FileLogFormater.swift in Sources */,
 				C59C073D2940462200D6C3C1 /* SharedUserDefaults.swift in Sources */,
 				C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
+				C5B8DF032C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C50F20CB2B61777D00266B23 /* CoreModule.swift in Sources */,
 				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C561237A2C5F25750090EB5A /* Resolver.swift in Sources */,
@@ -5599,6 +5610,7 @@
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
+				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
 				C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
@@ -5641,6 +5653,7 @@
 				1E7A19622C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C50F20D22B62110700266B23 /* Bundle+Ext.swift in Sources */,
 				C535D28727E2E2BA00C08345 /* APIParameters.swift in Sources */,
+				C5B8DF052C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C56FCBE12B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C52DA52C2B63912C00E5C571 /* FileDatabase.swift in Sources */,
 				C5A930F52B45A4670001CFA0 /* FileLogger.swift in Sources */,
@@ -5703,6 +5716,7 @@
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Ext.swift in Sources */,
 				C56123762C5F24020090EB5A /* DNSUtil.swift .swift in Sources */,
+				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C50F20CF2B61A52C00266B23 /* FileLogFormater.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
