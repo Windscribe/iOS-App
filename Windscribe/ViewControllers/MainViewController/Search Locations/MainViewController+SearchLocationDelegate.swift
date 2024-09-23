@@ -68,7 +68,7 @@ extension MainViewController: SearchCountryViewDelegate {
         var resultServerSections = [ServerSection]()
         for serverSection in serverSections {
             let lowercasedText = text.lowercased()
-            guard let server = serverSection.server, let serverId = server.id, let serverName = serverSection.server?.name, let serverNameLowerCased = serverSection.server?.name?.lowercased(), let serverStatus = server.status, let groups = serverSection.server?.groups, let serverCountryCode = server.countryCode, let serverPremiumOnly = server.premiumOnly, let serverDnsHostname = server.dnsHostname, let serverLocType = server.locType else { continue }
+            guard let server = serverSection.server, let serverId = server.id, let serverName = serverSection.server?.name, let serverNameLowerCased = serverSection.server?.name?.lowercased(), let serverStatus = server.status, let groups = serverSection.server?.groups, let serverCountryCode = server.countryCode, let serverPremiumOnly = server.premiumOnly, let serverDnsHostname = server.dnsHostname, let serverLocType = server.locType, let p2p = server.p2p else { continue }
             if serverNameLowerCased.contains(lowercasedText) {
                 resultServerSections.append(ServerSection(server: server, collapsed: true))
             }
@@ -88,7 +88,7 @@ extension MainViewController: SearchCountryViewDelegate {
                     }
                 }
             }
-            let serverModel = ServerModel(id: serverId, name: serverName, countryCode: serverCountryCode, status: serverStatus, premiumOnly: serverPremiumOnly, dnsHostname: serverDnsHostname, groups: resultGroups, locType: serverLocType)
+            let serverModel = ServerModel(id: serverId, name: serverName, countryCode: serverCountryCode, status: serverStatus, premiumOnly: serverPremiumOnly, dnsHostname: serverDnsHostname, groups: resultGroups, locType: serverLocType, p2p: p2p)
             if !resultServerSections.contains(where: { $0.server?.name == serverSection.server?.name }) && serverModel.groups?.count != 0 {
                 resultServerSections.append(ServerSection(server: serverModel, collapsed: false))
             }

@@ -18,6 +18,7 @@ struct ServerModel {
     let dnsHostname: String?
     let groups: [GroupModel]?
     let locType: String?
+    let p2p: Bool?
 
     init(id: Int, name: String,
          countryCode: String,
@@ -25,7 +26,8 @@ struct ServerModel {
          premiumOnly: Bool,
          dnsHostname: String,
          groups: [GroupModel],
-         locType: String) {
+         locType: String,
+         p2p: Bool) {
         self.id = id
         self.name = name
         self.countryCode = countryCode
@@ -34,6 +36,7 @@ struct ServerModel {
         self.dnsHostname = dnsHostname
         self.groups = groups
         self.locType = locType
+        self.p2p = p2p
     }
 
     init(name: String) {
@@ -45,6 +48,7 @@ struct ServerModel {
         self.dnsHostname = nil
         self.groups = nil
         self.locType = nil
+        self.p2p = nil
     }
 
     func isForStreaming() -> Bool {
@@ -132,7 +136,7 @@ struct ServerModel {
     }
 
     func getServerModel() -> ServerModel? {
-        return ServerModel(id: self.id, name: self.name, countryCode: self.countryCode, status: self.status, premiumOnly: self.premiumOnly, dnsHostname: self.dnsHostname, groups: groups.map({$0.getGroupModel()}), locType: self.locType)
+        return ServerModel(id: self.id, name: self.name, countryCode: self.countryCode, status: self.status, premiumOnly: self.premiumOnly, dnsHostname: self.dnsHostname, groups: groups.map({$0.getGroupModel()}), locType: self.locType, p2p: self.p2p)
     }
 
 }

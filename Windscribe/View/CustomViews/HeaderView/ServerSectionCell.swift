@@ -15,6 +15,7 @@ class ServerSectionCell: UITableViewCell {
     var flagIcon = UIImageView()
     var serverNameLabel =  UILabel()
     var iconView = UIImageView()
+    var p2pImage = UIImageView()
     var cellDivider = UIView()
     var cellDividerFull = UIView()
     var serverHealthView = ServerHealthView()
@@ -47,12 +48,13 @@ class ServerSectionCell: UITableViewCell {
         contentView.addSubview(flagIcon)
 
         contentView.addSubview(proIcon)
-
         serverNameLabel.font = UIFont.bold(size: 14)
         serverNameLabel.textColor = UIColor.midnight
         contentView.addSubview(serverNameLabel)
         iconView.image = UIImage(named: ImagesAsset.cellExpand)
         contentView.addSubview(iconView)
+        contentView.addSubview(p2pImage)
+
         cellDivider.backgroundColor = UIColor.black
         cellDivider.layer.opacity = 0.05
         contentView.addSubview(cellDivider)
@@ -70,7 +72,7 @@ class ServerSectionCell: UITableViewCell {
         cellDivider.translatesAutoresizingMaskIntoConstraints = false
         cellDividerFull.translatesAutoresizingMaskIntoConstraints = false
         serverHealthView.translatesAutoresizingMaskIntoConstraints = false
-
+        p2pImage.translatesAutoresizingMaskIntoConstraints = false
         addConstraints([
             NSLayoutConstraint(item: flagIcon,
                                attribute: .top,
@@ -118,6 +120,12 @@ class ServerSectionCell: UITableViewCell {
             NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
             ])
         addConstraints([
+            NSLayoutConstraint(item: p2pImage, attribute: .centerY, relatedBy: .equal, toItem: flagIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: p2pImage, attribute: .right, relatedBy: .equal, toItem: iconView, attribute: .left, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: p2pImage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: p2pImage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
+            ])
+        addConstraints([
             NSLayoutConstraint(item: serverHealthView, attribute: .height, relatedBy: .equal, toItem: cellDivider, attribute: .height, multiplier: 1.0, constant: 1),
             NSLayoutConstraint(item: serverHealthView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: serverHealthView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
@@ -143,11 +151,16 @@ class ServerSectionCell: UITableViewCell {
 
     func updateUI() {
         proIcon.image = nil
-        if let serverName = displayingServer?.name, let countryCode = displayingServer?.countryCode, let premiumOnly = displayingServer?.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
+        if let serverName = displayingServer?.name, let countryCode = displayingServer?.countryCode, let premiumOnly = displayingServer?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, let isP2p = displayingServer?.p2p {
             serverNameLabel.text = serverName
             flagIcon.image = UIImage(named: "\(countryCode)-s")
             if premiumOnly && !isUserPro {
                 self.proIcon.image = UIImage(named: ImagesAsset.proServerIcon)
+            }
+            if isP2p == true {
+                self.p2pImage.isHidden = true
+            } else {
+                self.p2pImage.isHidden = false
             }
         }
     }
@@ -222,6 +235,7 @@ class ServerSectionCell: UITableViewCell {
                 if self.proIcon.image != nil {
                     self.proIcon.image = UIImage(named: ImagesAsset.proServerIcon)
                 }
+                self.p2pImage.image = UIImage(named: ImagesAsset.p2p)
             } else {
                 self.backgroundColor = UIColor.lightMidnight
                 self.cellDivider.backgroundColor = UIColor.white
@@ -233,6 +247,7 @@ class ServerSectionCell: UITableViewCell {
                 if self.proIcon.image != nil {
                     self.proIcon.image = UIImage(named: ImagesAsset.DarkMode.proServerIcon)
                 }
+                self.p2pImage.image = UIImage(named: ImagesAsset.p2pWhite)
             }
         }).disposed(by: disposeBag)
     }
