@@ -360,7 +360,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
         NSLayoutConstraint.activate([
             serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
-            serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
             serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
             serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
         ])
