@@ -35,6 +35,8 @@ struct ImagesAsset {
     static let mainLogo = "main-logo"
     static let notifications = "notifications"
     static let cellExpand = "cell-expand"
+    static let p2p = "p2p"
+    static let p2pWhite = "p2p-white"
     static let whiteExpand = "white-expand"
     static let topNavWhite = "top-nav-white"
     static let topNavWhiteSliced = "top-nav-white-sliced"
