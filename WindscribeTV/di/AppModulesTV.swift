@@ -86,16 +86,16 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(OutOfDataAccountPopupModelType.self) { r in
-            return OutOfDataAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+            return OutOfDataAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(AccountPopupModelType.self) { r in
-            return AccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+            return AccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(ProPlanExpiredAccountPopupModelType.self) { r in
-            return ProPlanExpiredAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+            return ProPlanExpiredAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(BannedAccountPopupModelType.self) { r in
-            return BannedAccountPopupModel(sessionManager: r.resolve(SessionManagerV2.self)!, router: r.resolve(HomeRouter.self)!)
+            return BannedAccountPopupModel(localDatabase: r.resolve(LocalDatabase.self)!, router: r.resolve(HomeRouter.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             return ServerListViewModel(logger: r.resolve(FileLogger.self)!,

@@ -56,7 +56,7 @@ class ProPlanExpiredAccountPopupModel: AccountPopupModel, ProPlanExpiredAccountP
 
 class AccountPopupModel: AccountPopupModelType {
     // MARK: - Dependencies
-    let sessionManager: SessionManagerV2
+    let localDatabase: LocalDatabase
     let imageName = BehaviorSubject<String>(value: "")
     let title = BehaviorSubject<String>(value: "")
     let description = BehaviorSubject<String>(value: "")
@@ -64,14 +64,14 @@ class AccountPopupModel: AccountPopupModelType {
     let cancelButtonTitle = BehaviorSubject<String>(value: "")
     var router: HomeRouter
 
-    init(sessionManager: SessionManagerV2, router: HomeRouter) {
-        self.sessionManager = sessionManager
+    init(localDatabase: LocalDatabase, router: HomeRouter) {
+        self.localDatabase = localDatabase
         self.router = router
         bindModel()
     }
 
     func getNextResetDate() -> String {
-        return sessionManager.session?.getNextReset() ?? ""
+        return localDatabase.getSessionSync()?.getNextReset() ?? ""
     }
 
     func bindModel() {
