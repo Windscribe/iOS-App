@@ -91,6 +91,7 @@ class VPNManager {
     var successfullProtocolChange: Bool = false
     var connectIntent: Bool = false
     var isOnDemandRetry: Bool = false
+    var awaitingConnectionCheck = false
 
     // siri shortcut and today extension intents
     var connectWhenReady = false

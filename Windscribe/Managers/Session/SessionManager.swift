@@ -63,6 +63,7 @@ class SessionManager: SessionManagerV2 {
                     self.logger.logD(self, "Session updated for \(session.username)")
                     self.sessionFetchInProgress = false
                 }, onFailure: { error in
+                    self.vpnManager.handleConnectError()
                     if case Errors.sessionIsInvalid = error {
                         self.logoutUser()
                     } else {

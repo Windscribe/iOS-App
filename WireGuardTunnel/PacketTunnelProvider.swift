@@ -55,9 +55,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         wgCrendentials.load()
         logger.logD(self, "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
-            logger.logD(self, "Wg credentials not avaialble for non custom config connection.")
-            completionHandler(nil)
-            self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
+            apiCallManager.getSession().subscribe(onSuccess: { [self] session in
+                if session.status == 1 {
+                    logger.logD(self, "User status is Okay attempt rebuilding credentials.")
+                    runningHealthCheck = true
+                    requestNewInterfaceIp(completionHandler: completionHandler)
+                } else {
+                    logger.logD(self, "User status is \(session.status), do not reconnect.")
+                    self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
+                    completionHandler(nil)
+                }
+            }, onFailure: { _ in
+                completionHandler(nil)
+            }).disposed(by: disposeBag)
             return
         }
 

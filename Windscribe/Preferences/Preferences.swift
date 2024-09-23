@@ -28,6 +28,7 @@ protocol Preferences {
     func getFirewallMode() -> Observable<Bool?>
     func saveKillSwitch(killSwitch: Bool)
     func getKillSwitch() -> Observable<Bool?>
+    func getKillSwitchSync() -> Bool
     func saveAllowLane(mode: Bool)
     func getAllowLane() -> Observable<Bool?>
     func saveHapticFeedback(haptic: Bool)

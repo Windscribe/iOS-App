@@ -262,28 +262,39 @@ extension VPNManager {
         }
     }
 
-    private func handleConnectError() {
-        self.logger.logD(self, "Getting last connection error.")
+    func handleConnectError() {
+        if awaitingConnectionCheck || preferences.getKillSwitchSync() {
+            return
+        }
+        self.awaitingConnectionCheck = true
+        self.logger.logD(self, "Checking last VPN connection for errors.")
         getLastConnectionError { error in
             guard let error = error else {
-                self.logger.logD(self, "No last connection error found")
+                self.awaitingConnectionCheck = false
                 return
             }
             if error == .credentialsFailure {
-                self.logger.logD(self, "Disconnecting due to auth failure.")
+                self.logger.logD(self, "VPN disconnected due to credential failure")
                 self.connectIntent = false
-                self.disableOnDemandMode()
-                self.logger.logE(self, "Getting new session.")
-                self.api.getSession(nil).subscribe(onSuccess: { session in
-                    self.logger.logE(self, "Received updated session: \(session).")
-                    DispatchQueue.main.async {
-                        self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
+                self.resetProfiles {
+                    self.logger.logE(self, "Disabling VPN Profiles to get access api access.")
+                    delay(2) {
+                        self.logger.logE(self, "Getting new session.")
+                        self.api.getSession(nil).subscribe(onSuccess: { session in
+                            self.logger.logE(self, "Saving updated session.")
+                            DispatchQueue.main.async {
+                                self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
+                            }
+                            self.awaitingConnectionCheck = false
+                        },onFailure: { _ in
+                            self.logger.logE(self, "Failure to update session after disabling VPN profile.")
+                            self.awaitingConnectionCheck = false
+                        }).disposed(by: self.disposeBag)
                     }
-                },onFailure: { _ in
-                    self.logger.logE(self, "Failure to update session.")
-                }).disposed(by: self.disposeBag)
+                }
             } else {
-                self.logger.logD(self, "Last VPN Error: \(error.description)")
+                self.awaitingConnectionCheck = false
+                self.logger.logE(self, "Unhandled connection error: \(error.description)")
             }
         }
     }
