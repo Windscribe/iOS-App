@@ -84,6 +84,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         window.backgroundColor = UIColor.black
         // Authenticated user
         if preferences.userSessionAuth() != nil {
+            if preferences.getLoginDate() == nil {
+                preferences.saveLoginDate(date: Date())
+            }
             let mainViewController = Assembler.resolve(MainViewController.self)
             mainViewController.appJustStarted = true
             let viewController = UINavigationController(rootViewController: mainViewController)

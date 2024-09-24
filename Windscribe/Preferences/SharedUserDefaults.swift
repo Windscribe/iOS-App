@@ -252,6 +252,14 @@ class SharedSecretDefaults: Preferences {
         setDate(date, forKey: SharedKeys.rateUsPopupDisplayed)
     }
 
+    func getLoginDate() -> Date? {
+        return getDate(forKey: SharedKeys.lastLoginDate)
+    }
+
+    func saveLoginDate(date: Date) {
+        setDate(date, forKey: SharedKeys.lastLoginDate)
+    }
+
     func getNativeRateUsPopupDisplayCount() -> Int? {
         return getInt(forKey: SharedKeys.rateUsPopupDisplayCount)
     }

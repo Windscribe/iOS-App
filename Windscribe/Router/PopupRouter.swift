@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+import SwiftUI
 
 class PopupRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
@@ -62,6 +63,42 @@ class PopupRouter: BaseRouter, RootRouter {
             upgradeVC.promoCode = promoCode
             upgradeVC.pcpID = pcpID
             vc = upgradeVC
+
+        case .rateUsPopUp:
+            if #available(iOS 16.0, *) {
+                let viewModel = Assembler.resolve(RateUsPopupModelType.self)
+                let ratingView = RateUsPopupView(viewModel: viewModel, onDismiss: {
+                    for child in from.children {
+                        if child is UIHostingController<RateUsPopupView> {
+                            child.willMove(toParent: nil) // Notify the child that it will be removed
+                            child.view.removeFromSuperview()
+                            child.removeFromParent()
+                        }
+                    }
+                })
+
+                let hostingController = UIHostingController(rootView: ratingView)
+                hostingController.modalPresentationStyle = .overCurrentContext
+                hostingController.modalTransitionStyle = .coverVertical
+
+                // Add the hosting controller as a child
+                from.addChild(hostingController)
+                from.view.addSubview(hostingController.view)
+
+                // Set up constraints for the hosting controller's view
+                hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    hostingController.view.leadingAnchor.constraint(equalTo: from.view.leadingAnchor),
+                    hostingController.view.trailingAnchor.constraint(equalTo: from.view.trailingAnchor),
+                    hostingController.view.topAnchor.constraint(equalTo: from.view.topAnchor),
+                    hostingController.view.bottomAnchor.constraint(equalTo: from.view.bottomAnchor)
+                ])
+
+                hostingController.didMove(toParent: from)
+            }
+
+            //vc = Assembler.resolve(RateUsPopupViewController.self)
+
         default: return
         }
 

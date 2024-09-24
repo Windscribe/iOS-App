@@ -296,6 +296,7 @@
 		59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */; };
 		59E63A2A2BD0B762002E566F /* RobertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A292BD0B762002E566F /* RobertViewModel.swift */; };
 		59E63A2E2BD145F1002E566F /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A2D2BD145F1002E566F /* MainViewModel.swift */; };
+		59EA28EB2CA0F58600F066D6 /* RateUsPopUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EA28EA2CA0F58600F066D6 /* RateUsPopUpView.swift */; };
 		59EB6D1B2B3286E600616414 /* PreferencesMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB6D1A2B3286E600616414 /* PreferencesMainViewController.swift */; };
 		59EB6D1D2B328D6400616414 /* PreferencesMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */; };
 		59FC73CA2C5042BD00021CD1 /* WSRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */; };
@@ -1429,6 +1430,7 @@
 		59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocationPermissionDisclosureViewController+UI.swift"; sourceTree = "<group>"; };
 		59E63A292BD0B762002E566F /* RobertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertViewModel.swift; sourceTree = "<group>"; };
 		59E63A2D2BD145F1002E566F /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		59EA28EA2CA0F58600F066D6 /* RateUsPopUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateUsPopUpView.swift; sourceTree = "<group>"; };
 		59EB6D1A2B3286E600616414 /* PreferencesMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainViewController.swift; sourceTree = "<group>"; };
 		59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainViewModel.swift; sourceTree = "<group>"; };
 		59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSRoundButton.swift; sourceTree = "<group>"; };
@@ -2747,6 +2749,7 @@
 				59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */,
 				59E63A1F2BD03DA1002E566F /* RateUsPopupViewController+UI.swift */,
 				59E63A202BD03DA1002E566F /* RateUsPopupViewController.swift */,
+				59EA28EA2CA0F58600F066D6 /* RateUsPopUpView.swift */,
 			);
 			path = "Rate Us";
 			sourceTree = "<group>";
@@ -5126,6 +5129,7 @@
 				AF4C9AD522F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift in Sources */,
 				AFD593D521F8EC0A00A47546 /* UILabel+Ext.swift in Sources */,
 				1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */,
+				59EA28EB2CA0F58600F066D6 /* RateUsPopUpView.swift in Sources */,
 				1A32B4DA283D1FD600B2986E /* ConnectionSecure.swift in Sources */,
 				E9D3D371274D1DB700283285 /* MainViewController+Alert.swift in Sources */,
 				1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */,

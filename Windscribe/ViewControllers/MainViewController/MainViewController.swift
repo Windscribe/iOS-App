@@ -355,10 +355,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showRateUsPopup() {
-        let vc = RateUsPopupViewController()
-        vc.modalPresentationStyle = .overCurrentContext
-        vc.modalTransitionStyle = .crossDissolve
-        self.present(vc, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            self.popupRouter?.routeTo(to: RouteID.rateUsPopUp, from: self)
+        }
     }
 
     func showProPlanExpiredPopup() {
