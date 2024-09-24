@@ -1,6 +1,6 @@
-## Windscribe for iOS
+## Windscribe for iOS and tvOS
 
-Windscribe for iOS is a native app written in Swift language. Some features include multiple protocols, per network configuration, On-Demand mode.
+Windscribe for iOS and tvOS are native apps written in Swift language. Some features include multiple protocols, per network configuration, On-Demand mode.
 
 - [Download and install](README.md#download-and-install)
 - [Acknowledgements](README.md#acknowledgements)
@@ -17,7 +17,7 @@ Windscribe for iOS is a native app written in Swift language. Some features incl
 
 ### Download and install
 
-Windscribe iOS app can be downloaded from App Store
+Windscribe iOS and tvOS app can be downloaded from App Store
 [Link](https://apps.apple.com/us/app/windscribe-vpn/id1129435228)
 
 ### Acknowledgements
@@ -27,6 +27,7 @@ Check our [Acknowledgements file](ACKNOWLEDGEMENTS.md) for the list of third par
 
 #### Requirements
 - iOS 12.0+
+- tvOS 17.0+
 - Xcode 15.0+
 - Swift 5.0+
 - CocoaPods 1.15.2+
@@ -67,6 +68,8 @@ gem install cocoapods
 ```
 - clone this repository
 - `$ cd` into the project root directory
+- open the pode file '$ open podfile' make sure the flag `is_tvos` is correct for the platform you are running 
+  (`false` if you are trying to run for iOS and `true` if you are trying to run for tvOS)
 - Run pod install to pull project dependencies
 ```sh
 pod install 
@@ -77,11 +80,12 @@ pod install
 - Setup signing with an Apple paid developer account(Windscribe > Target > Signing and capabilities)
 - Clean project (Product > clean Build folder - Cmd+Shift+K)
 - Click File > Packages > Resolve package versions.
-- Connect to an iOS device(Simulators are not supported) and Run.
+- Connect to a device, iphone/iPad for iOS, and apple tv for tvOS and run - Simulators are now supported in the default scheme, but you will not be able to connect to a VPN
 
 #### Troubleshoot
 ##### pod install
-- clean Build
+- Check the the flag `is_tvos` on the podfile
+- Clean Build
 - Clear Xcode derived data (File > Workspace settings)
 - Clear pod cache
 ```sh
