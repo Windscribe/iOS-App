@@ -130,6 +130,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window.backgroundColor = UIColor.black
         // Authenticated user
         if preferences.userSessionAuth() != nil {
+            if preferences.getLoginDate() == nil {
+                preferences.saveLoginDate(date: Date())
+            }
             let mainViewController = Assembler.resolve(MainViewController.self)
             let viewController = UINavigationController(rootViewController: mainViewController)
             UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {

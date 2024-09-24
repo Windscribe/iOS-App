@@ -135,7 +135,11 @@ protocol Preferences {
     func saveForceDisconnect(value: Bool)
     func getForceDisconnect() -> RxSwift.Observable<Bool?>
 
+
     func observeFavouriteIds() -> Observable<[String]>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)
+
+    func getLoginDate() -> Date?
+    func saveLoginDate(date: Date)
 }

@@ -202,6 +202,9 @@ class ViewModels: Assembly {
         container.register(PopUpMaintenanceLocationModelType.self) { r in
             return PopUpMaintenanceLocationModel(themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
+        container.register(RateUsPopupModelType.self) { r in
+            return RateUsPopupModel(preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -490,7 +493,13 @@ class ViewControllerModule: Assembly {
             c.router = r.resolve(GhostAccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-
+        if #available(iOS 16.0, *) {
+            container.register(RateUsPopupViewController.self) { _ in
+                RateUsPopupViewController()
+            }.initCompleted{ r, c in
+                c.viewModel = r.resolve(RateUsPopupModelType.self)
+            }.inObjectScope(.transient)
+        }
     }
 }
 // MARK: - Routers

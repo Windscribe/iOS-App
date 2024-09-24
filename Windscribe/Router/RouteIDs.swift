@@ -56,4 +56,5 @@ enum RouteID {
     case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String)
     case maintenanceLocation
     case protocolSwitchVC(delegate: ProtocolSwitchVCDelegate?, type: ProtocolFallbacksType)
+    case rateUsPopUp
 }

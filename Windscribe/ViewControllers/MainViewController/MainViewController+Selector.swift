@@ -132,9 +132,10 @@ extension MainViewController {
                 self.showOutOfDataPopup()
                 self.didShowOutOfDataPopup = true
             }
-        } else if session.getDataLeftInMB() >= 1024 && appJustStarted == false && viewModel.showRateDialog() {
+        } else if session.getDataLeftInMB() >= 1024 && viewModel.daysSinceLogin() >= 2  && viewModel.showRateDialog() {
             self.showRateUsPopup()
         }
+        self.showRateUsPopup()
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             if !didShowProPlanExpiredPopup {

@@ -49,6 +49,7 @@ protocol MainViewModelType {
     func updateServerConfig()
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
+    func daysSinceLogin() -> Int
     func showRateDialog() -> Bool
     func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
@@ -440,16 +441,19 @@ class MainViewModel: MainViewModelType {
         return localDatabase.getStaticIPs() ?? []
     }
 
+    func daysSinceLogin() -> Int {
+        let dateLoggedIn = preferences.getLoginDate() ?? Date()
+        let today = Date()
+        return today.interval(ofComponent: .day, fromDate: dateLoggedIn)
+    }
+    
     func showRateDialog() -> Bool {
-        if preferences.getRateUsActionCompleted()  == false && preferences.getConnectionCount() ?? 0 > 5 {
-            if let dateDisplayed = preferences.getWhenRateUsPopupDisplayed() {
-                let today = Date()
-                return today.interval(ofComponent: .day, fromDate: dateDisplayed) >= 2
-            } else {
-                return true
-            }
+        if let dateLastShown = preferences.getWhenRateUsPopupDisplayed() {
+            let today = Date()
+            return today.interval(ofComponent: .day, fromDate: dateLastShown) > 30
+        } else {
+            return true
         }
-        return false
     }
 
     func isPrivacyPopupAccepted() -> Bool {

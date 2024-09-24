@@ -49,6 +49,7 @@ enum SharedKeys {
     static let connectionCount = "connection-count"
     static let lastConnectedNetworkName = "last-connected-network-name"
     static let rateUsPopupDisplayed = "rate-us-popup-displayed"
+    static let lastLoginDate = "last-login-date"
     static let rateUsActionCompleted = "rate-us-action-completed"
     static let rateUsPopupDisplayCount = "rate-us-popup-display-count"
     static let privacyPopupAccepted = "privacy-popup-accepted"
