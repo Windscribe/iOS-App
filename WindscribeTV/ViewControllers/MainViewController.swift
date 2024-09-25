@@ -83,6 +83,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func setupUI() {
+        myPreferredFocusedView = connectionButton
         self.view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
 
@@ -224,15 +225,75 @@ class MainViewController: PreferredFocusedViewController {
         let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeDown(_:)))
         swipeDown.direction = .down
         view.addGestureRecognizer(swipeDown)
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
+        
+        let swipeleft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
+        swipeleft.direction = .left
+        view.addGestureRecognizer(swipeleft)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
     }
 
     @objc private func handleSwipeDown(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if UIScreen.main.focusedView == connectionButton {
+            if connectionButton.isFocused {
                 myPreferredFocusedView = connectionButton
                 self.setNeedsFocusUpdate()
                 self.updateFocusIfNeeded()
-                router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
+                DispatchQueue.main.async {
+                    self.router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
+                }
+            }
+        }
+    }
+    
+    @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if connectionButton.isFocused {
+                myPreferredFocusedView = notificationButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if preferredFocusedView == notificationButton {
+                myPreferredFocusedView = helpButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            } else if preferredFocusedView == settingsButton || settingsButton.isFocused {
+                myPreferredFocusedView = notificationButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            } else if preferredFocusedView == helpButton {
+                myPreferredFocusedView = upgradeButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if preferredFocusedView == notificationButton {
+                myPreferredFocusedView = settingsButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            } else if preferredFocusedView == helpButton {
+                myPreferredFocusedView = notificationButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            } else if preferredFocusedView == upgradeButton {
+                myPreferredFocusedView = helpButton
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
             }
         }
     }
