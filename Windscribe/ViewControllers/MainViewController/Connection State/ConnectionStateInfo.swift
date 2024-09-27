@@ -93,8 +93,8 @@ extension ConnectionState {
 
     var connectButtonRingTv: String {
         switch self {
-        case .connected, .test: ImagesAsset.connectButtonRing
-        case .connecting: ImagesAsset.connectingButtonRing
+        case .connected, .test: ImagesAsset.TvAsset.connectedRing
+        case .connecting: ImagesAsset.TvAsset.connectingRing
         case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.TvAsset.disconnectedRing
         }
     }

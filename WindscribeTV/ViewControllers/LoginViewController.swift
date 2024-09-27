@@ -47,6 +47,7 @@ class LoginViewController: PreferredFocusedViewController {
         setupCommonUI()
         bindView()
         setupLocalized()
+        setupSwipeDownGesture()
     }
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
@@ -65,6 +66,38 @@ class LoginViewController: PreferredFocusedViewController {
                     setNeedsFocusUpdate()
                     updateFocusIfNeeded()
                 }
+            }
+        }
+    }
+
+    private func setupSwipeDownGesture() {
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+        
+    }
+
+    @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if loginButton != nil && loginButton.isFocused {
+                myPreferredFocusedView = generateCodeButton
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
+            }
+        }
+    }
+    
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            if passwordTextField != nil && passwordTextField.isFocused {
+                myPreferredFocusedView = passwordTextField.showHidePasswordButton
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
+                
             }
         }
     }

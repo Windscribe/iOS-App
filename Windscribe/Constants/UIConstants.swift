@@ -1521,3 +1521,14 @@ struct TvAssets {
         return "Location Maintenance"
     }
 }
+
+struct AccessibilityIdentifier {
+    
+    static var favouriteButton: String {
+        return "favourite"
+    }
+    
+    static var connectButton: String {
+        return "connect"
+    }
+}

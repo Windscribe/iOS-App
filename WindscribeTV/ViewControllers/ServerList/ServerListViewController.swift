@@ -126,7 +126,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 }
             }
             if UIScreen.main.focusedView is UIButton {
-                if press.type == .leftArrow {
+                if press.type == .leftArrow && preferredFocusedView?.accessibilityIdentifier == AccessibilityIdentifier.connectButton {
                     myPreferredFocusedView = optionViews.first?.button
                     self.setNeedsFocusUpdate()
                     self.updateFocusIfNeeded()

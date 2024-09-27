@@ -1,19 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "ic_on_button_off_focused rotated.svg",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "ic_on_button_off_focused rotated 1.svg",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "ic_on_button_off_focused rotated 2.svg",
-      "idiom" : "universal",
-      "scale" : "3x"
+      "filename" : "ic_on_button_off_focused rotated (1).svg",
+      "idiom" : "tv"
     }
   ],
   "info" : {
