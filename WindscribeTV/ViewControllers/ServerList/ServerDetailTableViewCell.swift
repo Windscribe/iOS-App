@@ -49,7 +49,11 @@ class ServerDetailTableViewCell: UITableViewCell {
     var favIDs: [String] = []
     let disposeBag = DisposeBag()
     let vpnManager = Assembler.resolve(VPNManager.self)
+    var myPreferredFocusedView: UIView?
 
+    override var preferredFocusedView: UIView? {
+        return myPreferredFocusedView
+    }
     lazy var sessionManager: SessionManagerV2 = {
         return Assembler.resolve(SessionManagerV2.self)
     }()
@@ -89,6 +93,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         favButton.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         favButton.layer.borderWidth = 2.0
         favButton.clipsToBounds = true
+        favButton.accessibilityIdentifier = AccessibilityIdentifier.favouriteButton
         favButton.addTarget(self, action: #selector(favButtonTapped), for: .primaryActionTriggered)
         setFavButtonImage()
 
@@ -99,8 +104,8 @@ class ServerDetailTableViewCell: UITableViewCell {
         connectButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.connectIcon), for: .normal)
         connectButton.setBackgroundImage(UIImage(named: ImagesAsset.TvAsset.connectIconFocused), for: .focused)
         connectButton.addTarget(self, action: #selector(connectButtonTapped), for: .primaryActionTriggered)
-
         cityLabel.textColor = .whiteWithOpacity(opacity: 0.50)
+        connectButton.accessibilityIdentifier = AccessibilityIdentifier.connectButton
 
         latencyLabel.font = .bold(size: 30)
         latencyLabel.textColor = .whiteWithOpacity(opacity: 0.50)
@@ -228,6 +233,18 @@ class ServerDetailTableViewCell: UITableViewCell {
             return false
     }
 
+//    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+//        for press in presses {
+//            if press.type == .leftArrow {
+//               if UIScreen.main.focusedView == favButton {
+//                    myPreferredFocusedView = connectButton
+//                    self.setNeedsFocusUpdate()
+//                    self.updateFocusIfNeeded()
+//                }
+//            }
+//        }
+//    }
+    
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if (context.previouslyFocusedView != nil) && (context.nextFocusedView != nil) {
             if context.nextFocusedView is ServerDetailTableViewCell && context.previouslyFocusedView  !=  self.favButton {
