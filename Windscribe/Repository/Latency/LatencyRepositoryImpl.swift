@@ -231,6 +231,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                    let serverModel = server.getServerModel() {
                     let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
                     database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
+                    self.bestLocation.onNext(bestLocation)
                     break outerLoop
                 }
             }
@@ -325,6 +326,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         )
         self.database.saveBestLocation(location: updatedBestLocation)
             .disposed(by: disposeBag)
+        self.bestLocation.onNext(updatedBestLocation)
         let lastBestLocation = try? bestLocation.value()
         if !observingBestLocation || lastBestLocation == nil {
             delay(2) {

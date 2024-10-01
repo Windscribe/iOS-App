@@ -139,6 +139,7 @@ protocol Preferences {
     func observeFavouriteIds() -> Observable<[String]>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)
+    func clearFavourites()
 
     func getLoginDate() -> Date?
     func saveLoginDate(date: Date)

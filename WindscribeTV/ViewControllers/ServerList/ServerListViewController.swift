@@ -110,7 +110,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             super.pressesBegan(presses, with: event)
             if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                    print("IndexPath is \(indexPath)")
                     if indexPath.row == 0 && selectedRow == 0 {
                         if press.type == .leftArrow {
                             myPreferredFocusedView = optionViews.first?.button
