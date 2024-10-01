@@ -252,9 +252,12 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             favGroups.append(contentsOf: favourites)
             DispatchQueue.main.async {
                 self.favTableView.reloadData()
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
-                self.view.layoutIfNeeded()
+                if favourites.count == 0 {
+                    self.setNeedsFocusUpdate()
+                } else {
+                    self.updateFocusIfNeeded()
+                    self.view.layoutIfNeeded()
+                }
                 self.hideEmptyFavView()
             }
         }, onError: { error in
