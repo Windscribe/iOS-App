@@ -389,7 +389,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
             cell.setup(isShadow: false)
         } else {
             if let countrycode = serverSection.server?.countryCode {
-                cell.flagImage.image =  UIImage(named: "\(countrycode)")
+                cell.flagImage.image =  UIImage(named: "\(countrycode.lowercased())-s")
             }
             cell.setup(isShadow: true)
         }

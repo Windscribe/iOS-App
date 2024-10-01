@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "filename": "cz-l.png",
+      "idiom": "tv",
+      "scale": "1x"
+    },
+    {
+      "filename": "cz-l@2x.png",
+      "idiom": "tv",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

@@ -61,7 +61,7 @@ class ServerDetailViewController: UIViewController {
         self.view.addSubview(flagBackgroundView)
         flagBackgroundView.sendToBack()
         if let server = server {
-            flagView.image = UIImage(named: server.countryCode ?? "")
+            flagView.image = UIImage(named: "\(server.countryCode?.lowercased() ?? "")-l")
             serverTitle.text = server.name
             countLabel.text = String(describing: server.groups?.count ?? 0)
         }

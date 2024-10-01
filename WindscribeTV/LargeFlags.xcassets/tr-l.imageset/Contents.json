@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "filename": "tr-l.png",
+      "idiom": "tv",
+      "scale": "1x"
+    },
+    {
+      "filename": "tr-l@2x.png",
+      "idiom": "tv",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

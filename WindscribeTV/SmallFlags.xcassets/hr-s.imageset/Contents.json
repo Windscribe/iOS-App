@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "filename": "hr-s.png",
+      "idiom": "tv",
+      "scale": "1x"
+    },
+    {
+      "filename": "hr-s@2x.png",
+      "idiom": "tv",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
