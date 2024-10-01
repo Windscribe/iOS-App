@@ -343,7 +343,7 @@ class SharedSecretDefaults: Preferences {
     func getKillSwitch() -> RxSwift.Observable<Bool?> {
         return sharedDefault?.rx.observe(Bool.self, SharedKeys.killSwitch) ?? Observable.just(DefaultValues.killSwitch)
     }
-    
+
     func getKillSwitchSync() -> Bool {
         return sharedDefault?.bool(forKey: SharedKeys.killSwitch) ?? false
     }

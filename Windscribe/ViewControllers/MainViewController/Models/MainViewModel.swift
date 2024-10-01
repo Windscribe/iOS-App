@@ -446,7 +446,7 @@ class MainViewModel: MainViewModelType {
         let today = Date()
         return today.interval(ofComponent: .day, fromDate: dateLoggedIn)
     }
-    
+
     func showRateDialog() -> Bool {
         if let dateLastShown = preferences.getWhenRateUsPopupDisplayed() {
             let today = Date()

@@ -134,8 +134,6 @@ protocol Preferences {
     func getWireguardWakeupTime() -> Double
     func saveForceDisconnect(value: Bool)
     func getForceDisconnect() -> RxSwift.Observable<Bool?>
-
-
     func observeFavouriteIds() -> Observable<[String]>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)

@@ -12,13 +12,13 @@ class RateUsPopupViewController: WSUIViewController {
     @objc func showRateUsPopup() {
         if #available(iOS 16.0, *) {
             view.backgroundColor = .red
-            
+
             let swiftUIView = RateUsPopupView(viewModel: viewModel, onDismiss: {
                 self.dismiss(animated: true, completion: nil) // Dismiss the view controller
             })
-            
+
             let hostingController = UIHostingController(rootView: swiftUIView)
-            
+
             addChild(hostingController)
             view.addSubview(hostingController.view)
             hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -28,10 +28,9 @@ class RateUsPopupViewController: WSUIViewController {
                 hostingController.view.topAnchor.constraint(equalTo: view.topAnchor),
                 hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
             ])
-            
+
             hostingController.didMove(toParent: self)
-            
-            
+
         }
     }
 }

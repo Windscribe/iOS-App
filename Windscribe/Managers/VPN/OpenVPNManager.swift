@@ -14,7 +14,6 @@ import Swinject
 import RxSwift
 
 class OpenVPNManager {
-
     static let shared = OpenVPNManager()
     var providerManager: NETunnelProviderManager!
     var lastDnsHostname = ""

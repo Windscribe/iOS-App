@@ -11,34 +11,11 @@ import Intents
 import IntentsUI
 
 extension MainViewController {
-
     func setupIntentsForSiri() {
-        var shortcuts: [INShortcut] = []
-
-        let showLocationIntent = ShowLocationIntent()
-        let interaction = INInteraction(intent: showLocationIntent, response: nil)
-        interaction.donate(completion: nil)
-
-        let disconnectActivity = NSUserActivity(activityType: SiriIdentifiers.disconnect)
-        disconnectActivity.title = TextsAsset.Siri.disconnectVPN
-        disconnectActivity.userInfo = ["speech": "disconnect vpn"]
-        disconnectActivity.isEligibleForSearch = true
-        disconnectActivity.isEligibleForPrediction = true
-        disconnectActivity.persistentIdentifier = NSUserActivityPersistentIdentifier(SiriIdentifiers.disconnect)
-        view.userActivity = disconnectActivity
-        shortcuts.append(INShortcut(userActivity: disconnectActivity))
-
-        let activity = NSUserActivity(activityType: SiriIdentifiers.connect)
-        activity.title = TextsAsset.Siri.connectToVPN
-        activity.userInfo = ["speech": "connect to vpn"]
-        activity.isEligibleForSearch = true
-        activity.isEligibleForPrediction = true
-        activity.persistentIdentifier = NSUserActivityPersistentIdentifier(SiriIdentifiers.connect)
-        view.userActivity = activity
-        activity.becomeCurrent()
-        shortcuts.append(INShortcut(userActivity: activity))
-
-        INVoiceShortcutCenter.shared.setShortcutSuggestions(shortcuts)
+        [ShowLocationIntent(), ConnectIntent(), DisconnectIntent()].forEach {
+            let interaction = INInteraction(intent: $0, response: nil)
+            interaction.donate(completion: nil)
+        }
     }
 
     func displaySiriShortcutPopup() {

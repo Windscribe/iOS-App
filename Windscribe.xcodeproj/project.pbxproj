@@ -78,6 +78,15 @@
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		1E60DFE32CA2E62100623CD5 /* AppIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE12CA2E62100623CD5 /* AppIntents.intentdefinition */; };
+		1E60DFE42CA2E62100623CD5 /* AppIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE12CA2E62100623CD5 /* AppIntents.intentdefinition */; };
+		1E60DFE82CA41B1C00623CD5 /* IntentModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */; };
+		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
+		1E60DFED2CA471DC00623CD5 /* ConnectIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEC2CA471DC00623CD5 /* ConnectIntentHandler.swift */; };
+		1E60DFF02CAACCF000623CD5 /* VPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* VPNManagerType.swift */; };
+		1E60DFF22CAACD2F00623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
+		1E60DFF42CAACD5700623CD5 /* IKEv2VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2VPNManager.swift */; };
+		1E60DFF62CAACD8A00623CD5 /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* VPNManager.swift */; };
 		1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57BDE4129B93FBB00337E63 /* LinkProvider.swift */; };
 		1E79CA5B2C63D2BB006D4DE7 /* AccountViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE6D2B72837D33800276C7D /* AccountViewData.swift */; };
 		1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE6D2BC2837E46100276C7D /* AccountViewModel.swift */; };
@@ -610,8 +619,6 @@
 		AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF537A182249318C00A66683 /* MainViewController+Siri.swift */; };
 		AF54C6BC228215A700DAAB07 /* UIDevice+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF54C6BB228215A700DAAB07 /* UIDevice+Ext.swift */; };
 		AF54C6C8228B378B00DAAB07 /* AutomaticMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */; };
-		AF551D4323F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = AF551D4623F1F6370094F0A4 /* LocationIntents.intentdefinition */; };
-		AF551D4423F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = AF551D4623F1F6370094F0A4 /* LocationIntents.intentdefinition */; };
 		AF60571B236897D900986BA7 /* DropdownButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF60571A236897D900986BA7 /* DropdownButton.swift */; };
 		AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF619C4424AA348900BB331C /* PacketTunnelProvider.swift */; };
 		AF619C4A24AA348900BB331C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -976,6 +983,11 @@
 		C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
 		C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */; };
+		C5DD96032CA723D700FFABBC /* keyChainKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384D2B91735100AA725C /* keyChainKeys.swift */; };
+		C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
+		C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDE92B4D70EE004FA857 /* KeyChainDatabase.swift */; };
+		C5DD96062CA7255A00FFABBC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* Constants.swift */; };
+		C5DD96072CA7257500FFABBC /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
 		C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
 		C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
 		C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3FE29BB8BE60091FB14 /* String+ArrayConversion.swift */; };
@@ -1215,22 +1227,6 @@
 		1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BasePopUpViewController.xib; sourceTree = "<group>"; };
 		1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasePopupViewModel.swift; sourceTree = "<group>"; };
 		1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupTypes.swift; sourceTree = "<group>"; };
-		1E01D8DE2C51559B00B679E9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8E02C5155A400B679E9 /* zh-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-HK"; path = "zh-HK.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E01D8E22C5155A400B679E9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E01D8E42C5155AA00B679E9 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8E62C5155B300B679E9 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8E82C5155CD00B679E9 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8EA2C51562800B679E9 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8EC2C51562F00B679E9 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8EE2C51563300B679E9 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8F02C51563600B679E9 /* ko-KR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ko-KR"; path = "ko-KR.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E01D8F22C51563B00B679E9 /* id-ID */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "id-ID"; path = "id-ID.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E01D8F42C51564100B679E9 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8F62C51564700B679E9 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8F82C51564900B679E9 /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E01D8FA2C51564C00B679E9 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E01D8FC2C51566000B679E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LocationIntents.strings; sourceTree = "<group>"; };
 		1E01D8FD2C5164EA00B679E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/HomeWidget.intentdefinition; sourceTree = "<group>"; };
 		1E01D9022C51650200B679E9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HomeWidget.strings; sourceTree = "<group>"; };
 		1E01D9042C51651E00B679E9 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/HomeWidget.strings; sourceTree = "<group>"; };
@@ -1253,10 +1249,6 @@
 		1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@2x~ipad.png"; sourceTree = "<group>"; };
 		1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@3x~ipad.png"; sourceTree = "<group>"; };
 		1E01D9272C51675900B679E9 /* IconName@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "IconName@2x.png"; sourceTree = "<group>"; };
-		1E0D9D252C529240008AFF2D /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/LocationIntents.strings; sourceTree = "<group>"; };
-		1E0D9D272C529242008AFF2D /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "it-IT.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E0D9D292C52924A008AFF2D /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "ja-JP.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
-		1E0D9D2B2C529265008AFF2D /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "de-DE.lproj/LocationIntents.strings"; sourceTree = "<group>"; };
 		1E0D9D2D2C529277008AFF2D /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "de-DE.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
 		1E0D9D2F2C529278008AFF2D /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "it-IT.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
 		1E0D9D312C529279008AFF2D /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "ja-JP.lproj/HomeWidget.strings"; sourceTree = "<group>"; };
@@ -1291,6 +1283,14 @@
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
+		1E60DFE22CA2E62100623CD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Windscribe/Base.lproj/AppIntents.intentdefinition; sourceTree = SOURCE_ROOT; };
+		1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentModule.swift; sourceTree = "<group>"; };
+		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
+		1E60DFEC2CA471DC00623CD5 /* ConnectIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectIntentHandler.swift; sourceTree = "<group>"; };
+		1E60DFEF2CAACCF000623CD5 /* VPNManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerType.swift; sourceTree = "<group>"; };
+		1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVPNManager.swift; sourceTree = "<group>"; };
+		1E60DFF32CAACD5700623CD5 /* IKEv2VPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKEv2VPNManager.swift; sourceTree = "<group>"; };
+		1E60DFF52CAACD8A00623CD5 /* VPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManager.swift; sourceTree = "<group>"; };
 		1E6A7FA2FA7061898B36ABB7 /* Pods-PacketTunnel.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.development.xcconfig"; path = "Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.development.xcconfig"; sourceTree = "<group>"; };
 		1E79CA5D2C63D7A3006D4DE7 /* AccountSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSectionView.swift; sourceTree = "<group>"; };
 		1E79CA5F2C63D917006D4DE7 /* AccountSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountSectionView.xib; sourceTree = "<group>"; };
@@ -1609,8 +1609,6 @@
 		AF537A212249739E00A66683 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		AF54C6BB228215A700DAAB07 /* UIDevice+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Ext.swift"; sourceTree = "<group>"; };
 		AF54C6C7228B378B00DAAB07 /* AutomaticMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutomaticMode.swift; sourceTree = "<group>"; };
-		AF551D4523F1F6370094F0A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/LocationIntents.intentdefinition; sourceTree = "<group>"; };
-		AF551D4823F1F6460094F0A4 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LocationIntents.strings; sourceTree = "<group>"; };
 		AF60571A236897D900986BA7 /* DropdownButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropdownButton.swift; sourceTree = "<group>"; };
 		AF619C4224AA348900BB331C /* WireGuardTunnel.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WireGuardTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF619C4424AA348900BB331C /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
@@ -2341,6 +2339,26 @@
 			path = "Server List";
 			sourceTree = "<group>";
 		};
+		1E60DFE92CA4719E00623CD5 /* Handlers */ = {
+			isa = PBXGroup;
+			children = (
+				1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */,
+				1E60DFEC2CA471DC00623CD5 /* ConnectIntentHandler.swift */,
+			);
+			path = Handlers;
+			sourceTree = "<group>";
+		};
+		1E60DFEE2CAACCB500623CD5 /* VPN Managers */ = {
+			isa = PBXGroup;
+			children = (
+				1E60DFEF2CAACCF000623CD5 /* VPNManagerType.swift */,
+				1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */,
+				1E60DFF32CAACD5700623CD5 /* IKEv2VPNManager.swift */,
+				1E60DFF52CAACD8A00623CD5 /* VPNManager.swift */,
+			);
+			path = "VPN Managers";
+			sourceTree = "<group>";
+		};
 		1E79CA652C6413F1006D4DE7 /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -2995,7 +3013,6 @@
 				AF0AED3C22035CEB00039CAF /* ReuseIdentifiers.swift */,
 				AFD16F1022775E9F00E9FAD3 /* Notifications.swift */,
 				AFBD019F22946F6C00FED749 /* LogType.swift */,
-				AF551D4623F1F6370094F0A4 /* LocationIntents.intentdefinition */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -3123,9 +3140,13 @@
 		AF20AE2522DE4DB000375489 /* SiriIntents */ = {
 			isa = PBXGroup;
 			children = (
+				1E60DFEE2CAACCB500623CD5 /* VPN Managers */,
+				1E60DFE92CA4719E00623CD5 /* Handlers */,
+				1E60DFE12CA2E62100623CD5 /* AppIntents.intentdefinition */,
 				AF20AE2F22DE4E5B00375489 /* SiriIntents.entitlements */,
 				AF20AE2622DE4DB000375489 /* IntentHandler.swift */,
 				AF20AE2822DE4DB000375489 /* Info.plist */,
+				1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */,
 			);
 			path = SiriIntents;
 			sourceTree = "<group>";
@@ -5163,6 +5184,7 @@
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
 				1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */,
+				1E60DFE32CA2E62100623CD5 /* AppIntents.intentdefinition in Sources */,
 				1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */,
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
 				C5BF384C2B916B3D00AA725C /* WelcomeViewModal.swift in Sources */,
@@ -5360,7 +5382,6 @@
 				C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */,
 				C5592B892B394BF100F2F110 /* LocalDatabase.swift in Sources */,
 				AF4E927121F26A1400A3F584 /* AlertManager.swift in Sources */,
-				AF551D4323F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */,
 				C5D0E40129BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5A930E12B43F0270001CFA0 /* CredentialsRepositoryImpl.swift in Sources */,
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
@@ -5593,19 +5614,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				C51EEDCD2C1779B600B01F8F /* LanguageManagerV2.swift in Sources */,
+				C5DD96062CA7255A00FFABBC /* Constants.swift in Sources */,
 				C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */,
+				1E60DFF22CAACD2F00623CD5 /* GenericVPNManager.swift in Sources */,
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
+				C5DD96072CA7257500FFABBC /* Data+Ext.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
+				1E60DFF02CAACCF000623CD5 /* VPNManagerType.swift in Sources */,
+				1E60DFED2CA471DC00623CD5 /* ConnectIntentHandler.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
+				C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */,
 				5986AB492C4563BE00167023 /* APIParameterValues.swift in Sources */,
+				1E60DFF42CAACD5700623CD5 /* IKEv2VPNManager.swift in Sources */,
+				1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */,
+				1E60DFE82CA41B1C00623CD5 /* IntentModule.swift in Sources */,
 				C56FCBE32B2B8DB1008DE7D4 /* SharedUserDefaults.swift in Sources */,
 				5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */,
 				C50F20D12B62110500266B23 /* Bundle+Ext.swift in Sources */,
 				C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */,
 				C585F3E32C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
-				AF551D4423F1F6370094F0A4 /* LocationIntents.intentdefinition in Sources */,
+				1E60DFE42CA2E62100623CD5 /* AppIntents.intentdefinition in Sources */,
 				C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C50F20CE2B61A52B00266B23 /* FileLogFormater.swift in Sources */,
 				C50F20DA2B62293300266B23 /* LogType.swift in Sources */,
@@ -5614,10 +5644,13 @@
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
+				C5DD96032CA723D700FFABBC /* keyChainKeys.swift in Sources */,
+				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
 				C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
+				1E60DFF62CAACD8A00623CD5 /* VPNManager.swift in Sources */,
 				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5812,6 +5845,14 @@
 			name = HomeWidget.intentdefinition;
 			sourceTree = "<group>";
 		};
+		1E60DFE12CA2E62100623CD5 /* AppIntents.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E60DFE22CA2E62100623CD5 /* Base */,
+			);
+			name = AppIntents.intentdefinition;
+			sourceTree = "<group>";
+		};
 		592EDBFF2C3C688400351D44 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -5860,36 +5901,6 @@
 				1EF11EE72C94791100C3FD64 /* bn */,
 			);
 			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		AF551D4623F1F6370094F0A4 /* LocationIntents.intentdefinition */ = {
-			isa = PBXVariantGroup;
-			children = (
-				AF551D4523F1F6370094F0A4 /* Base */,
-				AF551D4823F1F6460094F0A4 /* tr */,
-				1E01D8DE2C51559B00B679E9 /* ar */,
-				1E01D8E02C5155A400B679E9 /* zh-HK */,
-				1E01D8E22C5155A400B679E9 /* zh-Hans */,
-				1E01D8E42C5155AA00B679E9 /* fr */,
-				1E01D8E62C5155B300B679E9 /* ru */,
-				1E01D8E82C5155CD00B679E9 /* pl */,
-				1E01D8EA2C51562800B679E9 /* vi */,
-				1E01D8EC2C51562F00B679E9 /* hi */,
-				1E01D8EE2C51563300B679E9 /* ja */,
-				1E01D8F02C51563600B679E9 /* ko-KR */,
-				1E01D8F22C51563B00B679E9 /* id-ID */,
-				1E01D8F42C51564100B679E9 /* it */,
-				1E01D8F62C51564700B679E9 /* es */,
-				1E01D8F82C51564900B679E9 /* pt-PT */,
-				1E01D8FA2C51564C00B679E9 /* de */,
-				1E01D8FC2C51566000B679E9 /* en */,
-				1E0D9D252C529240008AFF2D /* uk */,
-				1E0D9D272C529242008AFF2D /* it-IT */,
-				1E0D9D292C52924A008AFF2D /* ja-JP */,
-				1E0D9D2B2C529265008AFF2D /* de-DE */,
-			);
-			name = LocationIntents.intentdefinition;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -7046,7 +7057,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E09EC5ECC36F4C85176E3CCC /* Pods-SiriIntents.production.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntents.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntentsProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 373;

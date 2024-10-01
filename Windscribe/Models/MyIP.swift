@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+
 @objcMembers class MyIP: Object, Decodable {
     dynamic var id: String = "MyIp"
     dynamic var userIp: String = ""
