@@ -557,6 +557,9 @@ struct TextsAsset {
         static var otherNetwork: String {
             return "other network".localize()
         }
+        static var unknownNetwork: String {
+            return "Unknown Network".localize().uppercased()
+        }
     }
     struct Debug {
         static var viewLog: String {

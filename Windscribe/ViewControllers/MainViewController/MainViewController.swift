@@ -192,6 +192,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
+        viewModel.selectedProtocol.subscribe(onNext: {_ in
+            self.refreshProtocol(from: nil)
+        }).disposed(by: disposeBag)
     }
 
     func checkForVPNActivation() {

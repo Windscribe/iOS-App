@@ -126,7 +126,7 @@ class ConnectivityImpl: Connectivity {
                 let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
                 guard let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString) else {
                     let ssid = interface["SSID"] as? String
-                    return ssid == nil ? nil : ssid
+                    return ssid == nil ? TextsAsset.NetworkSecurity.unknownNetwork : ssid
                 }
                 guard let interfaceData = unsafeInterfaceData as? [String: Any] else {
                     return interface["SSID"] as? String

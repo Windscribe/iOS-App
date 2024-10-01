@@ -146,16 +146,29 @@ class GeneralViewController: WSNavigationViewController {
     private func setupViews() {
         titleLabel.text = TextsAsset.General.title
         setupFillLayoutView()
-        layoutView.stackView.addArrangedSubviews([
-            locationOrderRow,
-            latencyDisPlayRow,
-            languageRow,
-            appearanceRow,
-            locationLoadRow,
-            hapticFeedbackRow,
-            notificationRow,
-            versionRow
-        ])
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            layoutView.stackView.addArrangedSubviews([
+                locationOrderRow,
+                latencyDisPlayRow,
+                languageRow,
+                appearanceRow,
+                locationLoadRow,
+                notificationRow,
+                versionRow
+            ])
+        } else {
+            layoutView.stackView.addArrangedSubviews([
+                locationOrderRow,
+                latencyDisPlayRow,
+                languageRow,
+                appearanceRow,
+                locationLoadRow,
+                hapticFeedbackRow,
+                notificationRow,
+                versionRow
+            ])
+        }
+
         layoutView.stackView.setPadding(UIEdgeInsets(inset: 16))
         layoutView.stackView.spacing = 16
     }
