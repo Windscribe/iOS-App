@@ -15,6 +15,7 @@ class ServerDetailViewController: UIViewController {
     @IBOutlet weak var serverTitle: PageTitleLabel!
     @IBOutlet weak var countLabel: PageTitleLabel!
     @IBOutlet weak var tableView: UITableView!
+    private var focusServerDetailCellPath: IndexPath?
 
     let disposeBag = DisposeBag()
 
@@ -114,6 +115,31 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
 
     func showOutOfDataPopUp() {
         self.delegate?.showOutOfDataPopUp()
-
+    }
+    
+    /// Save last cell with focus.
+    /// Reload table.
+    /// Request focus update if last cell with focus is found.
+    func reloadTable(cell: UITableViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            focusServerDetailCellPath = indexPath
+        }
+        self.tableView.reloadData()
+        if let indexPath = focusServerDetailCellPath {
+            self.tableView.scrollToRow(at: indexPath, at: .none, animated: false)
+            if let _ = self.tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+                self.setNeedsFocusUpdate()
+                self.updateFocusIfNeeded()
+            }
+        }
+    }
+    
+    /// Bring focus back to last focused cell if required
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        if let indexPath = focusServerDetailCellPath,
+            let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+            return [cell.favButton]
+        }
+        return super.preferredFocusEnvironments
     }
 }

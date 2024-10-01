@@ -657,6 +657,7 @@ extension MainViewController: ServerListTableViewDelegate {
     func showOutOfDataPopUp() {
          showOutOfDataPopup()
     }
+    func reloadTable(cell: UITableViewCell) { }
 }
 
 extension MainViewController: FavNodesListTableViewDelegate {

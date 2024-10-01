@@ -15,6 +15,7 @@ protocol ServerListTableViewDelegate: AnyObject {
     func showUpgradeView()
     func showExpiredAccountView()
     func showOutOfDataPopUp()
+    func reloadTable(cell: UITableViewCell)
 }
 
 protocol FavNodesListTableViewDelegate: AnyObject {
@@ -334,12 +335,14 @@ class ServerDetailTableViewCell: UITableViewCell {
             setFavButtonImage()
             if let groupId = group.id {
                 self.preferences.removeFavouriteId("\(groupId)")
+                delegate?.reloadTable(cell: self)
             }
         } else {
             isFavourited = true
             setFavButtonImage()
             if let groupId = group.id {
                 self.preferences.addFavouriteId("\(groupId)")
+                delegate?.reloadTable(cell: self)
             }
         }
     }
