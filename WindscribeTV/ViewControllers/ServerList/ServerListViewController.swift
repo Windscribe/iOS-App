@@ -250,16 +250,14 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         viewModel.favouriteGroups.subscribe(onNext: { [self] favourites in
             favGroups.removeAll()
             favGroups.append(contentsOf: favourites)
-            DispatchQueue.main.async {
-                self.favTableView.reloadData()
-                if favourites.count == 0 {
-                    self.setNeedsFocusUpdate()
-                } else {
-                    self.updateFocusIfNeeded()
-                    self.view.layoutIfNeeded()
-                }
-                self.hideEmptyFavView()
+            self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+            if favourites.count == 0 {
+                self.setNeedsFocusUpdate()
+            } else {
+                self.updateFocusIfNeeded()
+                self.view.layoutIfNeeded()
             }
+            self.hideEmptyFavView()
         }, onError: { error in
             self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
