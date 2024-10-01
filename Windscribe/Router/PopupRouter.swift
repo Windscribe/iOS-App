@@ -97,7 +97,7 @@ class PopupRouter: BaseRouter, RootRouter {
                 hostingController.didMove(toParent: from)
             }
 
-            //vc = Assembler.resolve(RateUsPopupViewController.self)
+            // vc = Assembler.resolve(RateUsPopupViewController.self)
 
         default: return
         }

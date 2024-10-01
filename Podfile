@@ -1,4 +1,4 @@
-is_tvos = true
+is_tvos = false
 target_platform = is_tvos ? :tvos : :ios
 platform_version = is_tvos ? '17.0' : '12.0'
 # Core app dependecies.
@@ -64,6 +64,7 @@ end
 target 'SiriIntents' do
  platform :ios, '12.0'
   use_frameworks!
+  pod 'SimpleKeychain', '~> 1.0'
   core
 end
 # TV.

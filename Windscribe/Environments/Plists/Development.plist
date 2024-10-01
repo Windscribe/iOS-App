@@ -124,6 +124,8 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>ConfigurationIntent</string>
+		<string>ConnectIntent</string>
+		<string>DisconnectIntent</string>
 		<string>ShowLocationIntent</string>
 	</array>
 	<key>UIAppFonts</key>

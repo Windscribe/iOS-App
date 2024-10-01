@@ -6,10 +6,10 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-//import UIKit
+// import UIKit
 //
-//@available(iOS 16.0, *)
-//extension RateUsPopupViewController {
+// @available(iOS 16.0, *)
+// extension RateUsPopupViewController {
 //
 //    func addViews() {
 //        self.view.backgroundColor = UIColor.clear
@@ -156,4 +156,4 @@
 //            ])
 //    }
 //
-//}
+// }

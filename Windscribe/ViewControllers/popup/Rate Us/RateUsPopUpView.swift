@@ -10,7 +10,6 @@ import SwiftUI
 import StoreKit
 import Swinject
 
-
 @available(iOS 16.0, *)
 
 struct RateUsPopupView: View {

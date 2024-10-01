@@ -496,7 +496,7 @@ class ViewControllerModule: Assembly {
         if #available(iOS 16.0, *) {
             container.register(RateUsPopupViewController.self) { _ in
                 RateUsPopupViewController()
-            }.initCompleted{ r, c in
+            }.initCompleted { r, c in
                 c.viewModel = r.resolve(RateUsPopupModelType.self)
             }.inObjectScope(.transient)
         }
