@@ -540,7 +540,7 @@ class MainViewController: PreferredFocusedViewController {
 
     func disableConnectButton() {
         connectionButton.isUserInteractionEnabled = false
-        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
     }
 
     @objc func enableConnectButton() {

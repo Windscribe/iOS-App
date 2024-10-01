@@ -127,6 +127,8 @@ class ConnectionStateManager: ConnectionStateManagerType {
 
     func checkConnectedState() {
         if case .connecting = getCurrentState().state {
+            logger.logD(self, "Displaying connection state \(!connectivity.internetConnectionAvailable() ? TextsAsset.disconnect : TextsAsset.connecting)")
+
             updateStateInfo(to: !connectivity.internetConnectionAvailable() ? .disconnected : .connecting)
             return
         }
@@ -136,9 +138,11 @@ class ConnectionStateManager: ConnectionStateManagerType {
         }
         if let state = ConnectionState.state(from: vpnManager.connectionStatus()) {
             if state == .connecting, !connectivity.internetConnectionAvailable() {
+                logger.logD(self, "Updating connection state to \( ConnectionState.disconnected.statusText)")
                 updateStateInfo(to: .disconnected)
                 return
             }
+            logger.logD(self, "Displaying connection state \(state.statusText)")
             updateStateInfo(to: state)
         }
     }
@@ -159,6 +163,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
     }
 
     func setDisconnected() {
+        logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
         if loadLatencyValuesOnDisconnect {
             updateStateInfo(to: .disconnected)
             setConnectionLabelValuesForSelectedNode()
@@ -290,6 +295,8 @@ extension ConnectionStateManager {
                                        internetConnectionAvailable: !connectivity.internetConnectionAvailable(),
                                        customConfig: vpnManager.selectedNode?.customConfig,
                                        connectedWifi: securedNetwork.getCurrentNetwork())
+        logger.logD(self, "Updated connection state to  \(info.state.statusText)")
+
         connectedState.onNext(info)
     }
 
