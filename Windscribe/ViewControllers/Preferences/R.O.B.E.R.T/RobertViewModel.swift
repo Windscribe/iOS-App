@@ -47,7 +47,7 @@ class RobertViewModel: RobertViewModelType {
 
     func loadRobertFilters() {
         showProgress.onNext(true)
-        apiManager.getRobertFilters().subscribe(onSuccess: { [self] robertFilters in
+        apiManager.getRobertFilters().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] robertFilters in
             showProgress.onNext(false)
             localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
             DispatchQueue.main.async {
@@ -57,6 +57,7 @@ class RobertViewModel: RobertViewModelType {
 
             }
         }, onFailure: { [weak self] _ in
+            self?.showProgress.onNext(false)
             guard let robertFilters =  self?.localDB.getRobertFilters()  else {
                 self?.showError.onNext("Unable to load robert rules. Check your network connection.")
                 return
@@ -77,7 +78,14 @@ class RobertViewModel: RobertViewModelType {
                 }
             }, onFailure: { [weak self] error in
                 self?.showProgress.onNext(false)
-                self?.showError.onNext(error.localizedDescription)
+                if let error = error as? Errors {
+                    switch error {
+                    case .apiError(let e):
+                        self?.showError.onNext(e.errorMessage ?? "Failed to update Robert Setting.")
+                    default:
+                        self?.showError.onNext("Failed to update Robert Setting. \(error.description)")
+                    }
+                }
             }).disposed(by: disposeBag)
     }
 
@@ -118,7 +126,14 @@ class RobertViewModel: RobertViewModelType {
             DispatchQueue.main.async {
                 self?.showProgress.onNext(false)
                 self?.updadeinProgress.onNext(false)
-                self?.showError.onNext(error.localizedDescription)
+                if let error = error as? Errors {
+                    switch error {
+                    case .apiError(let e):
+                        self?.showError.onNext(e.errorMessage ?? "Failed to update Robert Setting.")
+                    default:
+                        self?.showError.onNext("Failed to update Robert Setting. \(error.description)")
+                    }
+                }
             }
         }).disposed(by: disposeBag)
     }
