@@ -193,6 +193,7 @@ class SessionManager: SessionManagerV2 {
             self.vpnManager.resetProfiles {
                 self.vpnManager.resetProperties()
                 self.localDatabase.clean()
+                self.preferences.clearFavourites()
                 self.preferences.saveUserSessionAuth(sessionAuth: nil)
                 self.vpnManager.selectedNode = nil
                 Assembler.container.resetObjectScope(.userScope)

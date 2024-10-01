@@ -33,4 +33,8 @@ extension SharedSecretDefaults {
             sharedDefault?.set(currentIds, forKey: SharedKeys.tvFavourites)
         }
     }
+
+    func clearFavourites() {
+        sharedDefault?.removeObject(forKey: SharedKeys.tvFavourites)
+    }
 }
