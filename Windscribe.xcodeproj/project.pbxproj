@@ -198,6 +198,8 @@
 		593607FA2B02A18E0052913C /* IBMPlexSans-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925621EF8EC600A3F584 /* IBMPlexSans-Italic.otf */; };
 		593607FB2B02A3B90052913C /* IBMPlexSans-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E924921EF8EC400A3F584 /* IBMPlexSans-BoldItalic.otf */; };
 		593607FC2B02A4710052913C /* IBMPlexSans-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E924C21EF8EC400A3F584 /* IBMPlexSans-Regular.otf */; };
+		5938EE372CAB2474008FEA9D /* LargeFlags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5938EE362CAB2474008FEA9D /* LargeFlags.xcassets */; };
+		5938EE392CAB24C3008FEA9D /* SmallFlags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5938EE382CAB24C3008FEA9D /* SmallFlags.xcassets */; };
 		5947B4AE2A214E7C00C95CF2 /* Latency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4AD2A214E7C00C95CF2 /* Latency.swift */; };
 		5947B4B22A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */; };
 		5963A2F12C66AAE30091138E /* VPNManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DDD2BECFE4100496DF8 /* VPNManagerViewModel.swift */; };
@@ -250,7 +252,6 @@
 		599BA2AA2C5D202A00F0D1E4 /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		599BA2AB2C5D21E100F0D1E4 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
 		599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59DF45832C54209100EB6DC1 /* XPressLoginVerifyResponse.swift */; };
-		599BA2AE2C63D38400F0D1E4 /* Flags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF0AED332200DACE00039CAF /* Flags.xcassets */; };
 		599BA2B02C63EA8B00F0D1E4 /* HomeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599BA2AF2C63EA8B00F0D1E4 /* HomeButton.swift */; };
 		599BA2B82C65453F00F0D1E4 /* UpgradeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 599BA2B72C65453F00F0D1E4 /* UpgradeButton.swift */; };
 		59A218682C3C8011000D89FA /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A218672C3C8011000D89FA /* MainViewController.swift */; };
@@ -1383,6 +1384,8 @@
 		592EDC022C3C688500351D44 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		592EDC052C3C688500351D44 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5932857A29DA8009009D0C3C /* BlurredLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurredLabel.swift; sourceTree = "<group>"; };
+		5938EE362CAB2474008FEA9D /* LargeFlags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LargeFlags.xcassets; sourceTree = "<group>"; };
+		5938EE382CAB24C3008FEA9D /* SmallFlags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SmallFlags.xcassets; sourceTree = "<group>"; };
 		5947B4AD2A214E7C00C95CF2 /* Latency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Latency.swift; sourceTree = "<group>"; };
 		5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWInterface.InterfaceType+Ext.swift"; sourceTree = "<group>"; };
 		59656F632C72D5D000707EA2 /* ServerListCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2663,6 +2666,7 @@
 		592EDBFA2C3C688400351D44 /* WindscribeTV */ = {
 			isa = PBXGroup;
 			children = (
+				5938EE382CAB24C3008FEA9D /* SmallFlags.xcassets */,
 				59FC748A2C53150400021CD1 /* Model */,
 				59FC74802C52D7B900021CD1 /* TVRouter */,
 				5986AB592C47432D00167023 /* Info.plist */,
@@ -2671,6 +2675,7 @@
 				592CA79B2C4F1CE80078D487 /* View */,
 				592EDBFB2C3C688400351D44 /* AppDelegate.swift */,
 				592EDC022C3C688500351D44 /* Assets.xcassets */,
+				5938EE362CAB2474008FEA9D /* LargeFlags.xcassets */,
 				592EDC042C3C688500351D44 /* LaunchScreen.storyboard */,
 			);
 			path = WindscribeTV;
@@ -4339,6 +4344,7 @@
 				1EF7BB3F2C74B0190032A4DF /* RatePopupViewController.xib in Resources */,
 				1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */,
 				1EF7BB372C6D0DBA0032A4DF /* UpgradePlanDetailView.xib in Resources */,
+				5938EE392CAB24C3008FEA9D /* SmallFlags.xcassets in Resources */,
 				5986AB532C47420400167023 /* IBMPlexSans-Bold.otf in Resources */,
 				5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */,
 				1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */,
@@ -4362,11 +4368,11 @@
 				592EDC062C3C688500351D44 /* Base in Resources */,
 				59E4A7D12C73D84300987F99 /* ServerDetailTableViewCell.xib in Resources */,
 				1EA9D70F2C82150C00566A93 /* Localizable.strings in Resources */,
-				599BA2AE2C63D38400F0D1E4 /* Flags.xcassets in Resources */,
 				1EA9D70D2C81D6D000566A93 /* TopSettingSection.xib in Resources */,
 				592EDC012C3C688400351D44 /* Base in Resources */,
 				1E0D9D6E2C6103A3008AFF2D /* SettingOption.xib in Resources */,
 				1E0D9D832C612EDF008AFF2D /* PreferencesConnectionView.xib in Resources */,
+				5938EE372CAB2474008FEA9D /* LargeFlags.xcassets in Resources */,
 				1E0D9D7F2C612D3E008AFF2D /* PreferencesAccountView.xib in Resources */,
 				59656F712C73BF1F00707EA2 /* ServerDetailViewController.xib in Resources */,
 				59656F6C2C72E06D00707EA2 /* SideMenuOptions.xib in Resources */,
@@ -5935,7 +5941,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -6032,7 +6038,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -6127,7 +6133,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -6324,7 +6330,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -6347,7 +6353,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.8;
+				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -6373,7 +6379,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -6401,7 +6407,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.8;
+				MARKETING_VERSION = 1.0.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -6487,7 +6493,7 @@
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6510,7 +6516,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6530,7 +6536,7 @@
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6549,7 +6555,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6568,7 +6574,7 @@
 				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6583,7 +6589,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6599,7 +6605,7 @@
 				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6614,7 +6620,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -6630,7 +6636,7 @@
 				CODE_SIGN_ENTITLEMENTS = WireGuardTunnel/WireGuardTunnel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -6650,7 +6656,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6671,7 +6677,7 @@
 				CODE_SIGN_ENTITLEMENTS = WireGuardTunnel/WireGuardTunnel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6690,7 +6696,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6747,7 +6753,7 @@
 				CODE_SIGN_ENTITLEMENTS = HomeWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -6762,7 +6768,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6782,7 +6788,7 @@
 				CODE_SIGN_ENTITLEMENTS = HomeWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -6796,7 +6802,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6937,7 +6943,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -6959,7 +6965,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.8;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7011,7 +7017,7 @@
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7030,7 +7036,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/libs",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.PacketTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -7049,7 +7055,7 @@
 				CODE_SIGN_ENTITLEMENTS = SiriIntents/SiriIntents.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7064,7 +7070,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.SiriIntents;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -7080,7 +7086,7 @@
 				CODE_SIGN_ENTITLEMENTS = WireGuardTunnel/WireGuardTunnelProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -7099,7 +7105,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.WireGuardTunnel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7138,7 +7144,7 @@
 				CODE_SIGN_ENTITLEMENTS = HomeWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 373;
+				CURRENT_PROJECT_VERSION = 38;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -7152,7 +7158,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 3.7.4;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.windscribe.HomeWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";

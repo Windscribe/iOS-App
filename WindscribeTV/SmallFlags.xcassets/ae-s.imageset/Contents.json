@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "filename": "ae-s.png",
+      "idiom": "tv",
+      "scale": "1x"
+    },
+    {
+      "filename": "ae-s@2x.png",
+      "idiom": "tv",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

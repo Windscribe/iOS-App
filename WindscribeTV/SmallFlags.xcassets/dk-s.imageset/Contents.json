@@ -1,0 +1,18 @@
+{
+  "images": [
+    {
+      "filename": "dk-s.png",
+      "idiom": "tv",
+      "scale": "1x"
+    },
+    {
+      "filename": "dk-s@2x.png",
+      "idiom": "tv",
+      "scale": "2x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

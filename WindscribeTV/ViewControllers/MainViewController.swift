@@ -424,9 +424,9 @@ class MainViewController: PreferredFocusedViewController {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
         self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
-            self.firstServer.image = UIImage(named: serverSectionsOrdered[0].server?.countryCode ?? "")
-            self.secondServer.image = UIImage(named: serverSectionsOrdered[1].server?.countryCode ?? "")
-            self.thirdServer.image = UIImage(named: serverSectionsOrdered[2].server?.countryCode ?? "")
+            self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode?.lowercased() ?? "")-s")
+            self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
+            self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
         }
     }
 
@@ -438,7 +438,7 @@ class MainViewController: PreferredFocusedViewController {
             } else {
                 self.connectedCityLabel.text = selectedNode.cityName
             }
-            self.flagView.image = UIImage(named: selectedNode.countryCode)
+            self.flagView.image = UIImage(named: "\(selectedNode.countryCode.lowercased())-l")
         }
     }
 
