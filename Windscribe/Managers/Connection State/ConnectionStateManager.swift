@@ -138,6 +138,10 @@ class ConnectionStateManager: ConnectionStateManagerType {
         }
         if let state = ConnectionState.state(from: vpnManager.connectionStatus()) {
             if state == .connecting, !connectivity.internetConnectionAvailable() {
+                if connectivity.getNetwork().isVPN {
+                    logger.logD(self, "Ignoring no internet state during connection \(connectivity.getNetwork()) ")
+                    return
+                }
                 logger.logD(self, "Updating connection state to \( ConnectionState.disconnected.statusText)")
                 updateStateInfo(to: .disconnected)
                 return
@@ -163,6 +167,10 @@ extension ConnectionStateManager: VPNManagerDelegate {
     }
 
     func setDisconnected() {
+        if  vpnManager.connectionStatus() == .connected {
+            logger.logD(self, "Ignoring disconnection if vpn is connected \(vpnManager.connectionStatus())")
+            return
+        }
         logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
         if loadLatencyValuesOnDisconnect {
             updateStateInfo(to: .disconnected)
