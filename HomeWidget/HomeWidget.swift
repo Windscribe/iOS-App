@@ -143,8 +143,8 @@ struct HomeWidgetEntryView : View {
                         Text(entry.name).foregroundColor(Color.white).font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
                         Text(entry.nickname).foregroundColor(Color.white.opacity(0.7)).font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
                     })
-                    Spacer()
                     if !isWidgetSmall {
+                        Spacer()
                         VStack(content: {
                             Button(action: {
                             }) {

@@ -116,7 +116,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
     func showOutOfDataPopUp() {
         self.delegate?.showOutOfDataPopUp()
     }
-    
+
     /// Save last cell with focus.
     /// Reload table.
     /// Request focus update if last cell with focus is found.
@@ -133,7 +133,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
             }
         }
     }
-    
+
     /// Bring focus back to last focused cell if required
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         if let indexPath = focusServerDetailCellPath,

@@ -74,11 +74,11 @@ class LoginViewController: PreferredFocusedViewController {
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
         swipeLeft.direction = .left
         view.addGestureRecognizer(swipeLeft)
-        
+
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
-        
+
     }
 
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
@@ -90,14 +90,14 @@ class LoginViewController: PreferredFocusedViewController {
             }
         }
     }
-    
+
     @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             if passwordTextField != nil && passwordTextField.isFocused {
                 myPreferredFocusedView = passwordTextField.showHidePasswordButton
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
-                
+
             }
         }
     }
