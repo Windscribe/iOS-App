@@ -245,7 +245,7 @@ class ServerDetailTableViewCell: UITableViewCell {
 //            }
 //        }
 //    }
-    
+
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if (context.previouslyFocusedView != nil) && (context.nextFocusedView != nil) {
             if context.nextFocusedView is ServerDetailTableViewCell && context.previouslyFocusedView  !=  self.favButton {

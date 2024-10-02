@@ -1526,11 +1526,11 @@ struct TvAssets {
 }
 
 struct AccessibilityIdentifier {
-    
+
     static var favouriteButton: String {
         return "favourite"
     }
-    
+
     static var connectButton: String {
         return "connect"
     }
