@@ -140,7 +140,7 @@ import RealmSwift
         return "\(dataLeftString) " + unit
     }
 
-    func getDataLeftInMB() -> Int {
+    func getDataUsedInMB() -> Int {
        return Int(self.trafficUsed/1024/1024)
     }
 
