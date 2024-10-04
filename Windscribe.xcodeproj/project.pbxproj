@@ -698,6 +698,8 @@
 		AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA715F21C43A8E00349195 /* ServerCredentials.swift */; };
 		AFFA716421C99B2F00349195 /* Date+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716321C99B2F00349195 /* Date+Ext.swift */; };
 		AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716921CD4D7C00349195 /* APIDebug.swift */; };
+		C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */; };
+		C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */; };
 		C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
 		C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
@@ -1692,6 +1694,8 @@
 		AFFA716921CD4D7C00349195 /* APIDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIDebug.swift; sourceTree = "<group>"; };
 		B62885658A2E16710AD78569 /* Pods-HomeWidgetExtension.production.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HomeWidgetExtension.production.xcconfig"; path = "Target Support Files/Pods-HomeWidgetExtension/Pods-HomeWidgetExtension.production.xcconfig"; sourceTree = "<group>"; };
 		C0BBF45FC24C7B3453846585 /* Pods-SiriIntents.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiriIntents.staging.xcconfig"; path = "Target Support Files/Pods-SiriIntents/Pods-SiriIntents.staging.xcconfig"; sourceTree = "<group>"; };
+		C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencePrivacyView.xib; sourceTree = "<group>"; };
+		C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencePrivacyView.swift; sourceTree = "<group>"; };
 		C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepository.swift; sourceTree = "<group>"; };
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
@@ -2405,6 +2409,7 @@
 		1E9F2C302C665F8000607BAA /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				C5007D512CAF9E3A0035AE21 /* Privacy */,
 				1E9F2C312C665FAB00607BAA /* View Log */,
 				1E79CA652C6413F1006D4DE7 /* General */,
 				1E79CA662C6413FB006D4DE7 /* Account */,
@@ -3415,6 +3420,15 @@
 			path = VPN;
 			sourceTree = "<group>";
 		};
+		C5007D512CAF9E3A0035AE21 /* Privacy */ = {
+			isa = PBXGroup;
+			children = (
+				C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */,
+				C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */,
+			);
+			path = Privacy;
+			sourceTree = "<group>";
+		};
 		C50AF6C22B6024DF00A3FBE0 /* EmergencyConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -4385,6 +4399,7 @@
 				1E0D9D762C6103A3008AFF2D /* PreferencesMainViewController.xib in Resources */,
 				592EDC032C3C688500351D44 /* Assets.xcassets in Resources */,
 				1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */,
+				C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */,
 				1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */,
 				592EDC062C3C688500351D44 /* Base in Resources */,
 				59E4A7D12C73D84300987F99 /* ServerDetailTableViewCell.xib in Resources */,
@@ -4973,6 +4988,7 @@
 				59FC73E32C51504B00021CD1 /* APIManagerImpl.swift in Sources */,
 				1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */,
 				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
+				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
 				C561237E2C5F257A0090EB5A /* Resolver.swift in Sources */,

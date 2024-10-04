@@ -13,13 +13,14 @@ enum PreferencesType {
     case general
     case account
     case connection
+    case privacy
     case viewLog
     case sendLog
     case signOut
 
     var isPrimary: Bool {
         switch self {
-        case .general, .account, .connection, .viewLog: return true
+        case .general, .account, .connection, .privacy, .viewLog: return true
         default: return false
         }
     }
@@ -29,6 +30,7 @@ enum PreferencesType {
         case .account: TextsAsset.Preferences.account
         case .general: TextsAsset.Preferences.general
         case .connection: TextsAsset.Preferences.connection
+        case .privacy: TextsAsset.Preferences.privacy
         case .viewLog: TextsAsset.Debug.viewLog
         case .sendLog: TextsAsset.Debug.sendLog
         case .signOut: TextsAsset.Preferences.logout
@@ -50,8 +52,9 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     let accountView: PreferencesAccountView = PreferencesAccountView.fromNib()
     let connnectionsView: PreferencesConnectionView = PreferencesConnectionView.fromNib()
     let logView: PreferencesViewLogView = PreferencesViewLogView.fromNib()
+    let privacyView: PreferencePrivacyView = PreferencePrivacyView.fromNib()
 
-    private var options: [PreferencesType] = [.general, .account, .connection, .viewLog, .sendLog, .signOut]
+    private var options: [PreferencesType] = [.general, .account, .connection, .privacy, .viewLog, .sendLog, .signOut]
     private var selectedRow: Int = 0
     private var optionViews = [PreferencesOptionView]()
     private let disposeBag = DisposeBag()
@@ -149,6 +152,9 @@ class PreferencesMainViewController: PreferredFocusedViewController {
         logView.setup(with: viewLogViewModel)
         addSubview(view: logView)
         logView.isHidden = true
+        
+        addSubview(view: privacyView)
+        privacyView.isHidden = true
     }
 
     private func addSubview(view: UIView) {
@@ -255,7 +261,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         optionViews.forEach {
             $0.updateSelection(with: $0 == sender)
         }
-        [generalView, accountView, connnectionsView, logView].forEach {
+        [generalView, accountView, connnectionsView, privacyView, logView].forEach {
             if ![PreferencesType.sendLog, PreferencesType.signOut].contains(value) {
                 $0.isHidden = true
             }
@@ -268,6 +274,8 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         case .account:  accountView.isHidden = false
         case .connection:
             connnectionsView.isHidden = false
+        case .privacy:
+            privacyView.isHidden = false
         case .viewLog: logView.isHidden = false
             logView.scrolltoBottom()
         case .sendLog: sendLogButtonTapped(logView: sender)
