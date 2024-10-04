@@ -359,6 +359,7 @@ struct TextsAsset {
         static var helpMe: String { return "Help Me!".localize()}
         static var leaderboard: String { return "Leaderboard".localize()}
         static var about: String { return "About".localize()}
+        static var privacy: String { return "Privacy & EULA".localize()}
         static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localize()}
         static var referForData: String { return "Refer for Data".localize()}
         static var advanceParameters: String { return "Advanced Parameters".localize()}
