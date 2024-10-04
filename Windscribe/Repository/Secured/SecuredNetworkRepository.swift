@@ -17,4 +17,5 @@ protocol SecuredNetworkRepository {
     func setNetworkPreferredProtocol(network: WifiNetwork)
     func setNetworkDontAskAgainForPreferredProtocol(network: WifiNetwork)
     func incrementNetworkDismissCount(network: WifiNetwork)
+    func updateNetworkPreferredProtocol(with preferredProtocol: String, andPort port: String)
 }
