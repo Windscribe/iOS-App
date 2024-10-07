@@ -56,6 +56,7 @@ class UpgradeViewController: WSNavigationViewController {
     var promoCode: String?
     var pcpID: String?
     var windscribePlans: [WindscribeInAppProduct] = []
+    var firstPlanExt, secondPlanExt: String?
     // MARK: - View controller callbacks
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -215,6 +216,8 @@ class UpgradeViewController: WSNavigationViewController {
         } else if appPlan.duration == 1 {
             durationLabel = TextsAsset.UpgradeView.month
         }
+        firstPlanExt = appPlan.extId
+        logger.logD(self, "Setting first plan \(firstPlanExt ?? "") for discounted view.")
         discountLabel.text = "\(appPlan.price)/ \(durationLabel)"
         discountPercentLabel.text = "Save \(appPlan.discount)%"
         promoLabel.text = "\(appPlan.name)"
@@ -231,15 +234,18 @@ class UpgradeViewController: WSNavigationViewController {
         if applePlans.count >= 2 {
             let firstPlan = applePlans.first {$0.extId == appPlans[0].extId}
             let secondPlan = applePlans.first {$0.extId == appPlans[1].extId}
-            self.firstPlanOptionButton.setTitle(applePlans[1].planLabel,
+            firstPlanExt = appPlans[0].extId
+            secondPlanExt = appPlans[1].extId
+            self.firstPlanOptionButton.setTitle(firstPlan?.planLabel,
                                                 for: .normal)
-            self.secondPlanOptionButton.setTitle(applePlans[0].planLabel,
+            self.secondPlanOptionButton.setTitle(secondPlan?.planLabel,
                                                  for: .normal)
             firstPlanOptionButton.setTitle("\(firstPlan?.price ?? "")/ \(TextsAsset.UpgradeView.month)",
                                            for: .normal)
             secondPlanOptionButton.setTitle("\(secondPlan?.price ?? "")/ \(TextsAsset.UpgradeView.year)",
                                             for: .normal)
             self.continuePayButton.isEnabled = true
+            logger.logD(self, "Setting first plan \(firstPlan?.extId ?? "") and Second plan \(secondPlanExt ?? "")")
             self.makeFirstPlanSelected()
         }
         self.continuePayButton.isEnabled = true
