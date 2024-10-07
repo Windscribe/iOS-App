@@ -65,9 +65,12 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = upgradeVC
 
         case .rateUsPopUp:
+            let logger = Assembler.resolve(FileLogger.self)
+            let viewModel = Assembler.resolve(RateUsPopupModelType.self)
             if #available(iOS 16.0, *) {
-                let viewModel = Assembler.resolve(RateUsPopupModelType.self)
+                logger.logD(self, "For iOS 16+ creating rate popup.")
                 let ratingView = RateUsPopupView(viewModel: viewModel, onDismiss: {
+                    logger.logD(self, "Dismissing rate view.")
                     for child in from.children {
                         if child is UIHostingController<RateUsPopupView> {
                             child.willMove(toParent: nil) // Notify the child that it will be removed
@@ -93,11 +96,13 @@ class PopupRouter: BaseRouter, RootRouter {
                     hostingController.view.topAnchor.constraint(equalTo: from.view.topAnchor),
                     hostingController.view.bottomAnchor.constraint(equalTo: from.view.bottomAnchor)
                 ])
-
+                logger.logD(self, "Adding to hosting controller \(ratingView)")
                 hostingController.didMove(toParent: from)
+            } else {
+                logger.logD(self, "on iOS 12+ send user to app store for review.")
+                viewModel.setRateUsActionCompleted()
+                viewModel.openAppStoreRattingView()
             }
-
-            // vc = Assembler.resolve(RateUsPopupViewController.self)
 
         default: return
         }

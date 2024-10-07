@@ -101,8 +101,7 @@ struct RateUsPopupView: View {
             requestReview()
             viewModel.increaseNativeRateUsPopupDisplayCount()
         } else {
-            guard let url = URL(string: "itms-apps://itunes.apple.com/app/1129435228") else { return }
-            UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            viewModel.openAppStoreRattingView()
         }
     }
 }

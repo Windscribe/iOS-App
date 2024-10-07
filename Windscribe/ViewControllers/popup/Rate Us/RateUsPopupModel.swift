@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import UIKit
 
 protocol RateUsPopupModelType {
     func setDate()
     func setRateUsActionCompleted()
     func getNativeRateUsDisplayCount() -> Int?
     func increaseNativeRateUsPopupDisplayCount()
+    func openAppStoreRattingView()
 }
 
 class RateUsPopupModel: RateUsPopupModelType {
@@ -37,5 +39,13 @@ class RateUsPopupModel: RateUsPopupModelType {
     func increaseNativeRateUsPopupDisplayCount() {
         let count = (getNativeRateUsDisplayCount() ?? 0) + 1
         preferences.saveNativeRateUsPopupDisplayCount(count: count)
+    }
+
+    func openAppStoreRattingView() {
+        let url = "itms-apps://apps.apple.com/app/id1129435228?action=write-review"
+        guard let writeReviewURL = URL(string: url) else {
+            return
+        }
+        UIApplication.shared.open(writeReviewURL, options: [:], completionHandler: nil)
     }
 }
