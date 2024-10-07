@@ -73,7 +73,7 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
     func setNetworkPreferredProtocol(network: WifiNetwork) {
         localdatabase.updateNetworkWithPreferredProtocolSwitch(network: network, status: true)
     }
-    
+
     func updateNetworkPreferredProtocol(with preferredProtocol: String, andPort port: String) {
         if let network = getCurrentNetwork() {
             localdatabase.updateWifiNetwork(network: network,
