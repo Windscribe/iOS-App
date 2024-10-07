@@ -12,7 +12,8 @@ import IntentsUI
 
 extension MainViewController {
     func setupIntentsForSiri() {
-        [ShowLocationIntent(), ConnectIntent(), DisconnectIntent()].forEach {
+//        [ShowLocationIntent(), ConnectIntent(), DisconnectIntent()].forEach {
+        [ShowLocationIntent()].forEach {
             let interaction = INInteraction(intent: $0, response: nil)
             interaction.donate(completion: nil)
         }
