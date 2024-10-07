@@ -78,7 +78,7 @@ class PopupRouter: BaseRouter, RootRouter {
                 })
 
                 let hostingController = UIHostingController(rootView: ratingView)
-                hostingController.modalPresentationStyle = .overCurrentContext
+                hostingController.modalPresentationStyle = .overFullScreen
                 hostingController.modalTransitionStyle = .coverVertical
 
                 // Add the hosting controller as a child

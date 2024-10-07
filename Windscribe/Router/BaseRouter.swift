@@ -47,7 +47,7 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
             navigationVC?.popToRootViewController(animated: true)
             return
         case . enterEmail:
-            let vc = EnterEmailViewController()
+            let vc = Assembler.resolve(EnterEmailViewController.self)
             navigationVC?.pushViewController(vc, animated: true)
         }
     }

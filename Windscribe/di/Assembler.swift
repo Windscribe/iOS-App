@@ -22,6 +22,10 @@ extension Assembler {
      Resolves any previously added dependecy from assembler.
      */
     static func resolve<Service>(_ serviceType: Service.Type) -> Service {
-        return assembler.resolver.resolve(serviceType)!
+        if let synchronizedResolver = (assembler.resolver as? Container)?.synchronize() {
+            return synchronizedResolver.resolve(serviceType)!
+        } else {
+            return assembler.resolver.resolve(serviceType)!
+        }
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreLocation
 import RxSwift
+import Swinject
 
 extension MainViewController {
     override func viewDidLoad() {
@@ -98,7 +99,7 @@ extension MainViewController {
     }
 
     private func openNetworkSecurity() {
-        let vc = NetworkSecurityViewController()
+        let vc = Assembler.resolve(NetworkViewController.self)
         vc.modalTransitionStyle = .coverVertical
         navigationController?.pushViewController(vc, animated: true)
     }

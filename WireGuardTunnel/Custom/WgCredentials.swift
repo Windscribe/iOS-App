@@ -52,7 +52,7 @@ class WgCredentials {
     func getPrivateKey() -> String? {
         guard let currentKey = try? simpleKeychain.string(forKey: SharedKeys.privateKey) else {
             let privateKey = PrivateKey.init().base64Key
-            try! simpleKeychain.set(privateKey, forKey: SharedKeys.privateKey)
+            try? simpleKeychain.set(privateKey, forKey: SharedKeys.privateKey)
             return privateKey
         }
         return currentKey

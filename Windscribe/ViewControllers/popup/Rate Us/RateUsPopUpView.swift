@@ -19,7 +19,8 @@ struct RateUsPopupView: View {
 
     var body: some View {
         ZStack {
-            Color.black.opacity(0.5) // Background overlay
+            Color(uiColor: UIColor.midnightWithOpacity(opacity: 0.95))
+                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
 
             VStack {
@@ -87,6 +88,7 @@ struct RateUsPopupView: View {
             .padding()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .edgesIgnoringSafeArea(.all)
         .onAppear {
             viewModel.setDate()
         }

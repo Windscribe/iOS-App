@@ -300,7 +300,6 @@
 		59E63A0F2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A0D2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift */; };
 		59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */; };
 		59E63A212BD03DA1002E566F /* RateUsPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */; };
-		59E63A222BD03DA1002E566F /* RateUsPopupViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A1F2BD03DA1002E566F /* RateUsPopupViewController+UI.swift */; };
 		59E63A232BD03DA1002E566F /* RateUsPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A202BD03DA1002E566F /* RateUsPopupViewController.swift */; };
 		59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */; };
 		59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */; };
@@ -1429,7 +1428,6 @@
 		59E63A0D2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpMaintenanceLocationModel.swift; sourceTree = "<group>"; };
 		59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedNetworkPopup.swift; sourceTree = "<group>"; };
 		59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateUsPopupModel.swift; sourceTree = "<group>"; };
-		59E63A1F2BD03DA1002E566F /* RateUsPopupViewController+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RateUsPopupViewController+UI.swift"; sourceTree = "<group>"; };
 		59E63A202BD03DA1002E566F /* RateUsPopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateUsPopupViewController.swift; sourceTree = "<group>"; };
 		59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPermissionDisclosureViewController.swift; sourceTree = "<group>"; };
 		59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocationPermissionDisclosureViewController+UI.swift"; sourceTree = "<group>"; };
@@ -2775,7 +2773,6 @@
 			isa = PBXGroup;
 			children = (
 				59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */,
-				59E63A1F2BD03DA1002E566F /* RateUsPopupViewController+UI.swift */,
 				59E63A202BD03DA1002E566F /* RateUsPopupViewController.swift */,
 				59EA28EA2CA0F58600F066D6 /* RateUsPopUpView.swift */,
 			);
@@ -5500,7 +5497,6 @@
 				E9425BA52743707B008B8786 /* URLs.swift in Sources */,
 				C580FE282B50829B004FA857 /* LatencyRepository.swift in Sources */,
 				C5D983BE2B34C1D90069FF3A /* UserRepository.swift in Sources */,
-				59E63A222BD03DA1002E566F /* RateUsPopupViewController+UI.swift in Sources */,
 				E9425BA227437064008B8786 /* FilePaths.swift in Sources */,
 				AF36A1A7237C7C2800BDDCDB /* ViewLeaderboardViewController.swift in Sources */,
 				C5A930DA2B43EF0D0001CFA0 /* StaticIpRepository.swift in Sources */,
