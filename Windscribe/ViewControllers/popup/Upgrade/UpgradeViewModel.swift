@@ -110,19 +110,21 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         }
         logger.logD(self, "Loading billing plans.")
         showProgress.onNext(true)
-        billingRepository.getMobilePlans(promo: promoCode).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { mobilePlans in
-            mobilePlans.forEach { p in
-                self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(p.discount)%")
-            }
-            self.mobilePlans = mobilePlans
-            self.showProgress.onNext(false)
-            if mobilePlans.count > 0 {
-                self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({$0.extId}))
-            }
-
-        }, onFailure: { _ in
-            self.showProgress.onNext(false)
-        }).disposed(by: disposeBag)
+        billingRepository.getMobilePlans(promo: promoCode)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onSuccess: { [weak self] mobilePlans in
+                guard let self = self else { return }
+                mobilePlans.forEach { p in
+                    self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(p.discount)%")
+                }
+                self.mobilePlans = mobilePlans
+                self.showProgress.onNext(false)
+                if mobilePlans.count > 0 {
+                    self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({$0.extId}))
+                }
+            }, onFailure: { [weak self] _ in
+                self?.showProgress.onNext(false)
+            }).disposed(by: disposeBag)
     }
 
     func continuePayButtonTapped() {

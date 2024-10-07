@@ -68,14 +68,16 @@ extension LocalDatabaseImpl {
 
     // swiftlint:disable force_try
     private func getRealmArrayObservable<T: Object>(type: T.Type) -> Observable<[T]> {
-        let realm = try! Realm()
+        guard let realm = try? Realm() else {
+            return Observable.error(Realm.Error.callFailed)
+        }
         let objects = realm.objects(type.self)
         return Observable.changeset(from: objects)
             .filter { _ , changeset in
                 guard let changeset = changeset else {
                     return true
                 }
-               return !changeset.deleted.isEmpty || !changeset.inserted.isEmpty || !changeset.updated.isEmpty
+                return !changeset.deleted.isEmpty || !changeset.inserted.isEmpty || !changeset.updated.isEmpty
             }.map { results, _ in
                 return AnyRealmCollection(results)
             }.catchAndReturn(AnyRealmCollection(try! Realm().objects(T.self)))

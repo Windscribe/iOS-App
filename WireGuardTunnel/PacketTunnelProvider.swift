@@ -55,21 +55,22 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         wgCrendentials.load()
         logger.logD(self, "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
-            apiCallManager.getSession().subscribe(onSuccess: { [self] session in
+              apiCallManager.getSession().subscribe(onSuccess: { [weak self] session in
+                guard let self = self else { return }
                 if session.status == 1 {
-                    logger.logD(self, "User status is Okay attempt rebuilding credentials.")
-                    runningHealthCheck = true
-                    requestNewInterfaceIp(completionHandler: completionHandler)
+                  self.logger.logD(self, "User status is Okay, attempt rebuilding credentials.")
+                  self.runningHealthCheck = true
+                  self.requestNewInterfaceIp(completionHandler: completionHandler)
                 } else {
-                    logger.logD(self, "User status is \(session.status), do not reconnect.")
-                    self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
-                    completionHandler(nil)
+                  self.logger.logD(self, "User status is \(session.status), do not reconnect.")
+                  self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
+                  completionHandler(nil)
                 }
-            }, onFailure: { _ in
+              }, onFailure: { _ in
                 completionHandler(nil)
-            }).disposed(by: disposeBag)
-            return
-        }
+              }).disposed(by: disposeBag)
+              return
+            }
 
         guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
               var tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
