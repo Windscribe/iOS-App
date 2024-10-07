@@ -152,7 +152,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
         logView.setup(with: viewLogViewModel)
         addSubview(view: logView)
         logView.isHidden = true
-        
+
         addSubview(view: privacyView)
         privacyView.isHidden = true
     }
