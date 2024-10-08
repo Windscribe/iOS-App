@@ -21,6 +21,7 @@ class ViewLogViewController: WSNavigationViewController {
         logger?.logD(self, "Displaying Debug View")
         addViews()
         addAutoLayoutConstraints()
+        setupLongPressGesture()
         bindViews()
     }
 
@@ -48,5 +49,21 @@ class ViewLogViewController: WSNavigationViewController {
             self.logView.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.setupViews(isDark: isDark)
         }).disposed(by: disposeBag)
+    }
+
+    private func setupLongPressGesture() {
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        logView.addGestureRecognizer(longPressGesture)
+    }
+
+    @objc private func handleLongPress() {
+        UIPasteboard.general.string = logView.text
+        showAlert()
+    }
+
+    private func showAlert() {
+        let alert = UIAlertController(title: "Copied!", message: "Log copied to clipboard", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
