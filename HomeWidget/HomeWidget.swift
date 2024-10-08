@@ -17,8 +17,7 @@ struct Provider: IntentTimelineProvider {
 
     // MARK: Dependencies
     private var container: Container = {
-        let container = Container()
-        container.injectCore()
+        let container = Container(isExt: true)
         return container
       }()
 
@@ -28,6 +27,10 @@ struct Provider: IntentTimelineProvider {
 
     func getPreferences() -> Preferences {
       return container.resolve(Preferences.self) ?? SharedSecretDefaults()
+    }
+
+    func getVPNManager() -> VPNManager? {
+      return container.resolve(VPNManager.self)
     }
 
     func placeholder(in context: Context) -> SimpleEntry {
@@ -41,61 +44,29 @@ struct Provider: IntentTimelineProvider {
     func getTimeline(for configuration: ConfigurationIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [SimpleEntry] = []
         entries.append(snapshotEntry)
-        if let selectedServerCredentialsType = getPreferences().getServerCredentialTypeKey(),
-            selectedServerCredentialsType == TextsAsset.iKEv2 {
-            NEVPNManager.shared().loadFromPreferences { error in
-                if error == nil {
-                    var statusValue = TextsAsset.Status.off
-                    switch NEVPNManager.shared().connection.status {
-                    case .connected:
-                        statusValue = TextsAsset.Status.on
-                    case .disconnected:
-                        statusValue = TextsAsset.Status.off
-                    default:
-                        statusValue = TextsAsset.Status.off
-                    }
-                    if let countryCode = getPreferences().getcountryCodeKey(),
-                       let serverName = getPreferences().getServerNameKey(),
-                       let nickName = getPreferences().getNickNameKey() {
+
+        if let vpnManager = getVPNManager() {
+            vpnManager.setup {
+                vpnManager.checkConnection {
+                    let statusValue = $0 ? TextsAsset.Status.on : TextsAsset.Status.off
+                    let preferences = getPreferences()
+                    if let countryCode = preferences.getcountryCodeKey(),
+                       let serverName = preferences.getServerNameKey(),
+                       let nickName = preferences.getNickNameKey() {
                         let entry = SimpleEntry(date: Date(), status: statusValue, name: serverName, nickname: nickName, countryCode: countryCode)
                         entries.append(entry)
+
+                        let timeline = Timeline(entries: entries, policy: .atEnd)
+                        getLogger().logD(self, "\("Logging Widget state where is connected is: \(String(describing: timeline.entries.first?.status))")")
+                        completion(timeline)
                     }
                 }
-                let timeline = Timeline(entries: entries, policy: .atEnd)
-                completion(timeline)
             }
         } else {
-            NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
-                if error == nil {
-                    var statusValue = TextsAsset.Status.off
-                    switch managers?.first?.connection.status {
-                    case .connected:
-                        statusValue = TextsAsset.Status.on
-                    case .disconnected:
-                        statusValue = TextsAsset.Status.off
-                    default:
-                        statusValue = TextsAsset.Status.off
-                    }
-                    if let countryCode = getPreferences().getcountryCodeKey(),
-                        let serverName = getPreferences().getServerNameKey(),
-                        let nickName = getPreferences().getNickNameKey() {
-                        let entry = SimpleEntry(date: Date(),
-                                                status: statusValue,
-                                                name: serverName,
-                                                nickname: nickName,
-                                                countryCode: countryCode)
-                        entries.append(entry)
-                    }
-                }
-                let timeline = Timeline(entries: entries, policy: .atEnd)
-                self.getLogger().logD(self, "\("Logging Widget state where is connected is: \(String(describing: timeline.entries.first?.status))")")
-
-                completion(timeline)
-            }
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            completion(timeline)
         }
-
     }
-
 }
 
 struct SimpleEntry: TimelineEntry {
