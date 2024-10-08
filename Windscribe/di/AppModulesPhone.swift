@@ -228,6 +228,7 @@ class ViewControllerModule: Assembly {
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
+            vc.rateViewModel = r.resolve(RateUsPopupModelType.self)
         }.inObjectScope(.transient)
         container.register(WelcomeViewController.self) { _ in
             WelcomeViewController()
@@ -493,13 +494,6 @@ class ViewControllerModule: Assembly {
             c.router = r.resolve(GhostAccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        if #available(iOS 16.0, *) {
-            container.register(RateUsPopupViewController.self) { _ in
-                RateUsPopupViewController()
-            }.initCompleted { r, c in
-                c.viewModel = r.resolve(RateUsPopupModelType.self)
-            }.inObjectScope(.transient)
-        }
     }
 }
 // MARK: - Routers

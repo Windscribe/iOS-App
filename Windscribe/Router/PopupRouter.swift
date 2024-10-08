@@ -66,44 +66,7 @@ class PopupRouter: BaseRouter, RootRouter {
 
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
-            let viewModel = Assembler.resolve(RateUsPopupModelType.self)
-            if #available(iOS 16.0, *) {
-                logger.logD(self, "For iOS 16+ creating rate popup.")
-                let ratingView = RateUsPopupView(viewModel: viewModel, onDismiss: {
-                    logger.logD(self, "Dismissing rate view.")
-                    for child in from.children {
-                        if child is UIHostingController<RateUsPopupView> {
-                            child.willMove(toParent: nil) // Notify the child that it will be removed
-                            child.view.removeFromSuperview()
-                            child.removeFromParent()
-                        }
-                    }
-                })
-
-                let hostingController = UIHostingController(rootView: ratingView)
-                hostingController.modalPresentationStyle = .overFullScreen
-                hostingController.modalTransitionStyle = .coverVertical
-
-                // Add the hosting controller as a child
-                from.addChild(hostingController)
-                from.view.addSubview(hostingController.view)
-
-                // Set up constraints for the hosting controller's view
-                hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-                NSLayoutConstraint.activate([
-                    hostingController.view.leadingAnchor.constraint(equalTo: from.view.leadingAnchor),
-                    hostingController.view.trailingAnchor.constraint(equalTo: from.view.trailingAnchor),
-                    hostingController.view.topAnchor.constraint(equalTo: from.view.topAnchor),
-                    hostingController.view.bottomAnchor.constraint(equalTo: from.view.bottomAnchor)
-                ])
-                logger.logD(self, "Adding to hosting controller \(ratingView)")
-                hostingController.didMove(toParent: from)
-            } else {
-                logger.logD(self, "on iOS 12+ send user to app store for review.")
-                viewModel.setRateUsActionCompleted()
-                viewModel.openAppStoreRattingView()
-            }
-
+            logger.logD(self, "Not implemented")
         default: return
         }
 

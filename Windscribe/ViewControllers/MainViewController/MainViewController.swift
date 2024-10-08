@@ -16,6 +16,7 @@ import WidgetKit
 import CoreLocation
 import Swinject
 import RxSwift
+import StoreKit
 
 class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
@@ -156,6 +157,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var serverListViewModel: ServerListViewModelType!
     var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!
     var latencyViewModel: LatencyViewModel!
+    var rateViewModel: RateUsPopupModelType!
     var logger: FileLogger!
 
     var headerBottomBorderViewBottomConstraint: NSLayoutConstraint!
@@ -358,8 +360,14 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showRateUsPopup() {
-        DispatchQueue.main.async {
-            self.popupRouter?.routeTo(to: RouteID.rateUsPopUp, from: self)
+        self.rateViewModel.setDate()
+        self.rateViewModel.setRateUsActionCompleted()
+        if #available(iOS 14.0, *) {
+            let scenes = UIApplication.shared.connectedScenes
+            if let windowScene = scenes.first as? UIWindowScene {
+                logger.logD(self, "Attempting show rate popup.")
+                SKStoreReviewController.requestReview(in: windowScene)
+            }
         }
     }
 
