@@ -17,6 +17,9 @@ extension ViewLogViewController {
         logView.font = UIFont.text(size: 7)
         logView.textColor = UIColor.white
         logView.isEditable = false
+        logView.isSelectable = true
+        logView.isUserInteractionEnabled = true
+
         self.view.addSubview(logView)
 
         let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
