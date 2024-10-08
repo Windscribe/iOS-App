@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import NetworkExtension
 
 class VPNManager {
     var logger: FileLogger
@@ -36,8 +37,22 @@ class VPNManager {
         (wireguardVPNManager.isConnected() && wireguardVPNManager.isConfigured())
     }
 
+    func checkConnection(completion: @escaping(Bool) -> Void) {
+        if (ikev2VPNManager.isConnected() && ikev2VPNManager.isConfigured())  {
+            completion(true)
+            return
+        }
+        NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
+            if error == nil {
+                completion(managers?.first?.connection.status == .connected)
+                return
+            }
+            completion(false)
+        }
+    }
+
     func setup(completion: @escaping() -> Void) {
-        ikev2VPNManager.setup{
+        ikev2VPNManager.setup {
             self.openVPNManager.setup {
                 self.wireguardVPNManager.setup {
                     completion()

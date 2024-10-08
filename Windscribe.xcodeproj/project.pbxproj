@@ -152,6 +152,17 @@
 		1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7822BE268E30036248B /* CardHeaderContainerView.swift */; };
 		1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */; };
 		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
+		1EDFA0E02CB54C3900F778E5 /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* VPNManager.swift */; };
+		1EDFA0E12CB54C3D00F778E5 /* VPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* VPNManagerType.swift */; };
+		1EDFA0E22CB54C4100F778E5 /* IKEv2VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2VPNManager.swift */; };
+		1EDFA0E32CB54C4100F778E5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
+		1EDFA0E42CB54D9600F778E5 /* KeyChainDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDE92B4D70EE004FA857 /* KeyChainDatabase.swift */; };
+		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
+		1EDFA0E62CB5519F00F778E5 /* IntentModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */; };
+		1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
+		1EDFA0E82CB5558B00F778E5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* Constants.swift */; };
+		1EDFA0E92CB5559700F778E5 /* keyChainKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384D2B91735100AA725C /* keyChainKeys.swift */; };
+		1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
 		1EE74F762BD67B630031185F /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */; };
 		1EE74F7A2BD6A0090031185F /* ShakeForDataPopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */; };
 		1EE74F7E2BD6C0DE0031185F /* ShakeForDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */; };
@@ -718,7 +729,6 @@
 		C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F82B45A57B0001CFA0 /* FileLoggerImpl.swift */; };
 		C50F20C62B61760000266B23 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		C50F20C72B61769F00266B23 /* WireguardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207A2B606E2200266B23 /* WireguardModule.swift */; };
-		C50F20C82B61777A00266B23 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		C50F20CB2B61777D00266B23 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
@@ -5737,35 +5747,45 @@
 			buildActionMask = 2147483647;
 			files = (
 				593607F82B029F5C0052913C /* UIFont+Ext.swift in Sources */,
+				1EDFA0E22CB54C4100F778E5 /* IKEv2VPNManager.swift in Sources */,
+				1EDFA0E32CB54C4100F778E5 /* GenericVPNManager.swift in Sources */,
 				597DDE012BA2180500F19F3F /* UIConstants+Fields.swift in Sources */,
 				C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */,
 				1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */,
+				1EDFA0E42CB54D9600F778E5 /* KeyChainDatabase.swift in Sources */,
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
 				AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */,
 				AF038CC9256409C2008F34A6 /* UIColor+Ext.swift in Sources */,
 				C5DEF9F42C52EDCD00696D06 /* AdvanceKeys.swift in Sources */,
-				C50F20C82B61777A00266B23 /* CoreModule.swift in Sources */,
 				C52DA52D2B63912D00E5C571 /* FileDatabase.swift in Sources */,
 				596E60052B8F774000D51E20 /* LanguageManagerV2.swift in Sources */,
 				1A9DB35C2817F63A00C3EC1C /* UIView+Swizzling.swift in Sources */,
 				5986AB4A2C4563C400167023 /* APIParameterValues.swift in Sources */,
+				1EDFA0E82CB5558B00F778E5 /* Constants.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
+				1EDFA0E12CB54C3D00F778E5 /* VPNManagerType.swift in Sources */,
 				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
+				1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
+				1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */,
 				C56FCBE42B2B8DB2008DE7D4 /* SharedUserDefaults.swift in Sources */,
+				1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */,
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Ext.swift in Sources */,
 				C56123762C5F24020090EB5A /* DNSUtil.swift .swift in Sources */,
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
+				1EDFA0E02CB54C3900F778E5 /* VPNManager.swift in Sources */,
 				C50F20CF2B61A52C00266B23 /* FileLogFormater.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
+				1EDFA0E62CB5519F00F778E5 /* IntentModule.swift in Sources */,
+				1EDFA0E92CB5559700F778E5 /* keyChainKeys.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
 				C50F20DB2B62293600266B23 /* LogType.swift in Sources */,
 			);
@@ -6345,7 +6365,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -6394,7 +6414,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -6958,7 +6978,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
