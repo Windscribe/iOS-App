@@ -1360,6 +1360,10 @@
 		1EDFA10E2CB5607000F778E5 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = ../Windscribe/tr.lproj/AppIntents.strings; sourceTree = "<group>"; };
 		1EDFA1102CB5607100F778E5 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = ../Windscribe/uk.lproj/AppIntents.strings; sourceTree = "<group>"; };
 		1EDFA1122CB5607200F778E5 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = ../Windscribe/vi.lproj/AppIntents.strings; sourceTree = "<group>"; };
+		1EDFA11C2CB68E2B00F778E5 /* de-DE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "de-DE"; path = "../Windscribe/de-DE.lproj/AppIntents.strings"; sourceTree = "<group>"; };
+		1EDFA11E2CB68E2C00F778E5 /* it-IT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "it-IT"; path = "../Windscribe/it-IT.lproj/AppIntents.strings"; sourceTree = "<group>"; };
+		1EDFA1202CB68E2D00F778E5 /* ja-JP */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ja-JP"; path = "../Windscribe/ja-JP.lproj/AppIntents.strings"; sourceTree = "<group>"; };
+		1EDFA1222CB68E3300F778E5 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/HomeWidget.strings; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataPopupViewModel.swift; sourceTree = "<group>"; };
 		1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataViewModel.swift; sourceTree = "<group>"; };
@@ -5890,6 +5894,7 @@
 				1E0D9D2D2C529277008AFF2D /* de-DE */,
 				1E0D9D2F2C529278008AFF2D /* it-IT */,
 				1E0D9D312C529279008AFF2D /* ja-JP */,
+				1EDFA1222CB68E3300F778E5 /* bn */,
 			);
 			name = HomeWidget.intentdefinition;
 			sourceTree = "<group>";
@@ -5917,6 +5922,9 @@
 				1EDFA10E2CB5607000F778E5 /* tr */,
 				1EDFA1102CB5607100F778E5 /* uk */,
 				1EDFA1122CB5607200F778E5 /* vi */,
+				1EDFA11C2CB68E2B00F778E5 /* de-DE */,
+				1EDFA11E2CB68E2C00F778E5 /* it-IT */,
+				1EDFA1202CB68E2D00F778E5 /* ja-JP */,
 			);
 			name = AppIntents.intentdefinition;
 			sourceTree = "<group>";
