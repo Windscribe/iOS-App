@@ -118,6 +118,9 @@ class ConnectivityImpl: Connectivity {
 
     /// Returns optional Wifi SSID for current network.
     func getWifiSSID() -> String? {
+        if getNetworkType(path: monitor.currentPath) == .cellular {
+            return getCellularNetworkName()
+        }
         var interface = [String: Any]()
 #if os(iOS)
         if let interfaces = CNCopySupportedInterfaces() {
@@ -126,7 +129,7 @@ class ConnectivityImpl: Connectivity {
                 let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
                 guard let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString) else {
                     let ssid = interface["SSID"] as? String
-                    return ssid == nil ? TextsAsset.NetworkSecurity.unknownNetwork : ssid
+                    return ssid
                 }
                 guard let interfaceData = unsafeInterfaceData as? [String: Any] else {
                     return interface["SSID"] as? String
