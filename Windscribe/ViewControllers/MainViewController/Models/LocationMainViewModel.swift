@@ -16,6 +16,7 @@ protocol LocationManagingViewModelType: DisclosureAlertDelegate {
     var shouldPresentLocationPopUp: PublishSubject<Bool> {get}
     func requestLocationPermission(callback: @escaping () -> Void)
     func logStatus()
+    func getStatus() -> CLAuthorizationStatus
 }
 
 class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
@@ -53,7 +54,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
         logger.logI(self, "\(getStatus())")
     }
 
-    private func getStatus() -> CLAuthorizationStatus {
+     func getStatus() -> CLAuthorizationStatus {
         if #available(iOS 15.0, *) {
             return locationManager.authorizationStatus
         } else {

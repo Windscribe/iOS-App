@@ -64,11 +64,16 @@ extension MainViewController {
 
     func setNetworkSsid() {
         viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { network in
-            if network.networkType == .cellular || network.networkType == .wifi {
-                self.trustedNetworkValueLabel.text = network.name ?? ""
+            if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
+                if network.networkType == .cellular || network.networkType == .wifi {
+                    self.trustedNetworkValueLabel.text = network.name ?? ""
+                } else {
+                    self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+                }
             } else {
-                self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+                self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
             }
+
         }, onError: { _ in
             self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
         })

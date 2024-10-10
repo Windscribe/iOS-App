@@ -405,6 +405,15 @@ class FavNodeTableViewCell: NodeTableViewCell {
         guard let pingIp = displayingFavNode?.pingIp else { return }
         self.displayLatencyValues(pingIp: pingIp)
         linkSpeedIcon.isHidden = displayingFavNode?.linkSpeed != "10000"
+        preferences.getShowServerHealth().subscribe(onNext: { serverHealth in
+            if let serverHealth = serverHealth {
+                if serverHealth {
+                    self.serverHealthView.health = self.displayingFavNode?.health
+                } else {
+                    self.serverHealthView.health = 0
+                }
+            }
+        }).disposed(by: disposeBag)
     }
 
     @objc override func favButtonTapped() {
