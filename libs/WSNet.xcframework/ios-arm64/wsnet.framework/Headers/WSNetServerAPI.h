@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
 -(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)claimVoucherCode:(NSString*)authHash voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)deleteSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverLocations:(NSString*)language revision:(NSString*)revision isPro:(BOOL)isPro alcList:(NSArray<NSString*>*)alcList callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)serverCredentials:(NSString*)authHash isOpenVpnProtocol:(BOOL)isOpenVpnProtocol callback:(void(^)(int, NSString*))callback;
@@ -22,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)recordInstall:(BOOL)isDesktop callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)addEmail:(NSString*)authHash email:(NSString*)email callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)confirmEmail:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)webSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)checkUpdate:(int)updateChannel appVersion:(NSString*)appVersion appBuild:(NSString*)appBuild osVersion:(NSString*)osVersion osBuild:(NSString*)osBuild callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)debugLog:(NSString*)username strLog:(NSString*)strLog callback:(void(^)(int, NSString*))callback;
@@ -45,7 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)sendSupportTicket:(NSString*)supportEmail supportName:(NSString*)supportName supportSubject:(NSString*)supportSubject supportMessage:(NSString*)supportMessage supportCategory:(NSString*)supportCategory type:(NSString*)type channel:(NSString*)channel callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)regToken:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)signupUsingToken:(NSString*)token callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)claimAccount:(NSString*)authHash username:(NSString*)username password:(NSString*)password email:(NSString*)email claimAccount:(NSString*)claimAccount callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)claimAccount:(NSString*)authHash username:(NSString*)username password:(NSString*)password email:(NSString*)email voucherCode:(NSString*)voucherCode claimAccount:(NSString*)claimAccount callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)shakeData:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)recordShakeForDataScore:(NSString*)authHash score:(NSString*)score signature:(NSString*)signature callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)verifyTvLoginCode:(NSString*)authHash xpressCode:(NSString*)xpressCode callback:(void(^)(int, NSString*))callback;

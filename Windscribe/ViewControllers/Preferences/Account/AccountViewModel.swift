@@ -33,6 +33,8 @@ protocol AccountViewModelType {
     func logoutUser()
     func getSections() -> [AccountSectionItem]
     func verifyCodeEntered(code: String, success: (() -> Void)?, failure: ((String) -> Void)?)
+    func verifyVoucherEntered(code: String, success: ((ClaimVoucherCodeResponse) -> Void)?, failure: ((String) -> Void)?)
+    func updateSession()
 }
 
 class AccountViewModel: AccountViewModelType {
@@ -48,6 +50,7 @@ class AccountViewModel: AccountViewModelType {
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
     let languageUpdatedTrigger = PublishSubject<()>()
     var sessionUpdatedTrigger = PublishSubject<()>()
+    let session = BehaviorSubject<Session?>(value: nil)
 
     init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2, localDatabase: LocalDatabase) {
         self.apiCallManager = apiCallManager
@@ -159,5 +162,26 @@ class AccountViewModel: AccountViewModelType {
                 }
             }
         }).disposed(by: disposeBag)
+    }
+
+    func verifyVoucherEntered(code: String, success: ((ClaimVoucherCodeResponse) -> Void)?, failure: ((String) -> Void)?) {
+        apiCallManager.claimVoucherCode(code: code).subscribe(onSuccess: { response in
+            success?(response)
+        }, onFailure: { error in
+            if let error = error as? Errors {
+                switch error {
+                case .apiError(let e):
+                    failure?(e.errorMessage ?? "Error applying Voucher Code: \(code)")
+                default:
+                    failure?("Error applying Voucher Code: \(error.description)")
+                }
+            }
+        }).disposed(by: disposeBag)
+    }
+
+    func updateSession() {
+        localDatabase.getSession().observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] session in
+            self.session.onNext(session)
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 }

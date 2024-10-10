@@ -99,7 +99,7 @@ class SignUpViewController: PreferredFocusedViewController {
             }
         }.disposed(by: disposeBag)
         signUpButton.rx.primaryAction.bind { [self] in
-            viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount)
+            viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount, voucherCode: "")
         }.disposed(by: disposeBag)
         viewModel.failedState.bind { [weak self] (state) in
             self?.setFailureState(state: state)

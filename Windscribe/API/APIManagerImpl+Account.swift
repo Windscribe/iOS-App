@@ -15,9 +15,9 @@ extension APIManagerImpl {
         }
     }
 
-    func signup(username: String, password: String, referringUsername: String, email: String) -> RxSwift.Single<Session> {
+    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String) -> RxSwift.Single<Session> {
         return makeApiCall(modalType: Session.self) { completion in
-            self.api.signup(username, password: password, referringUsername: referringUsername, email: email, callback: completion)
+            self.api.signup(username, password: password, referringUsername: referringUsername, email: email, voucherCode: voucherCode, callback: completion)
         }
     }
 
@@ -56,7 +56,7 @@ extension APIManagerImpl {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.claimAccount(sessionAuth, username: username, password: password, email: email, claimAccount: "1", callback: completion)
+            self.api.claimAccount(sessionAuth, username: username, password: password, email: email, voucherCode: "", claimAccount: "1", callback: completion)
         }
     }
 
@@ -87,6 +87,15 @@ extension APIManagerImpl {
         }
         return makeApiCall(modalType: APIMessage.self) { completion in
             self.api.cancelAccount(sessionAuth, password: password, callback: completion)
+        }
+    }
+
+    func claimVoucherCode(code: String) ->  RxSwift.Single<ClaimVoucherCodeResponse> {
+        guard let sessionAuth = userRepository?.sessionAuth else {
+            return Single.error(Errors.validationFailure)
+        }
+        return makeApiCall(modalType: ClaimVoucherCodeResponse.self) { completion in
+            self.api.claimVoucherCode(sessionAuth, voucherCode: code, callback: completion)
         }
     }
 

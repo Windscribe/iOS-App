@@ -23,7 +23,7 @@ protocol SignUpViewModel {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var failedState: BehaviorSubject<SignUpErrorState> { get }
 
-    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool)
+    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String?)
     func setupLaterButtonTapped()
     func referralViewTapped()
     func keyBoardWillShow()
@@ -58,7 +58,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         checkUserStatus()
     }
 
-    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool) {
+    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String? ) {
         // Validate all inputs.
         if !isUsernameValid(username: userName) {
             showLoadingView.onNext(false)
@@ -83,14 +83,14 @@ class SignUpViewModelImpl: SignUpViewModel {
         if claimAccount {
             claimGhostAccount(username: userName ?? "", password: password ?? "", email: email ?? "")
         } else {
-            signUpUser(username: userName ?? "", password: password ?? "", email: email ?? "", referralUsername: referrelUsername ?? "")
+            signUpUser(username: userName ?? "", password: password ?? "", email: email ?? "", referralUsername: referrelUsername ?? "", voucherCode: voucherCode ?? "")
         }
     }
 
-    private func signUpUser(username: String, password: String, email: String, referralUsername: String) {
+    private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
         showLoadingView.onNext(true)
         logger.logD(self, "Signing up for account.")
-        apiCallManager.signup(username: username, password: password, referringUsername: referralUsername, email: email).observe(on: MainScheduler.instance)
+        apiCallManager.signup(username: username, password: password, referringUsername: referralUsername, email: email, voucherCode: voucherCode).observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] session in
                 self?.userRepository.login(session: session)
                 self?.logger.logE(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")

@@ -229,6 +229,54 @@ class SignUpViewController: WSNavigationViewController {
         return vw
     }()
 
+
+    // MARK: - Voucher view
+    lazy var voucherLabel: UILabel = {
+        let voucherLabel = UILabel()
+        voucherLabel.font = UIFont.bold(size: 16)
+        voucherLabel.textAlignment = .left
+        return voucherLabel
+    }()
+
+    lazy var voucherOptionalLabel: UILabel = {
+        let voucherOptionalLabel = UILabel()
+        voucherOptionalLabel.font = UIFont.bold(size: 16)
+        voucherOptionalLabel.textAlignment = .left
+        return voucherOptionalLabel
+    }()
+
+    lazy var voucherTextfield: LoginTextField = {
+        let voucherTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        voucherTextfield.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 100)
+        voucherTextfield.makeCorner(24)
+        voucherTextfield.autocorrectionType = .yes
+        voucherTextfield.textContentType = .emailAddress
+        voucherTextfield.spellCheckingType = .no
+        return voucherTextfield
+    }()
+
+    lazy var voucherView: UIView = {
+        let vw = UIView()
+        vw.addSubview(voucherLabel)
+        vw.addSubview(voucherTextfield)
+        vw.addSubview(voucherOptionalLabel)
+        voucherLabel.anchor(top: vw.topAnchor,
+                          left: vw.leftAnchor,
+                          paddingTop: 30,
+                          paddingLeft: 16)
+        voucherOptionalLabel.makeCenterYAnchor(with: voucherLabel)
+        voucherOptionalLabel.anchor(left: voucherLabel.rightAnchor,
+                                  paddingLeft: 5)
+        voucherTextfield.anchor(top: voucherLabel.bottomAnchor,
+                              left: vw.leftAnchor,
+                              bottom: vw.bottomAnchor,
+                              right: vw.rightAnchor,
+                              paddingTop: 8,
+                              paddingBottom: 24,
+                              height: 48)
+        return vw
+    }()
+
     // MARK: - Referred section
     lazy var referralTitle: UILabel = {
         let referralTitle = UILabel()
@@ -366,6 +414,8 @@ class SignUpViewController: WSNavigationViewController {
         usernameLabel.text = TextsAsset.chooseUsername
         referralTitle.text = TextsAsset.referredBySomeone
         referralInfoLabel.text = TextsAsset.mustConfirmEmail
+        voucherLabel.text = TextsAsset.voucherCode
+        voucherOptionalLabel.text = "(\(TextsAsset.optional))"
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -393,6 +443,7 @@ class SignUpViewController: WSNavigationViewController {
             userNameView,
             passwordView,
             emailView,
+            voucherView,
             viewReferral
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(top: 24, left: 16, bottom: 0, right: 16))
@@ -428,7 +479,7 @@ class SignUpViewController: WSNavigationViewController {
             viewModel.referralViewTapped()
         }.disposed(by: disposeBag)
         continueButton.rx.tap.bind { [self] in
-            viewModel.continueButtonTapped(userName: usernameTextfield.text, password: passwordTextfield.text, email: emailTextfield.text, referrelUsername: referralUsernameTextfield.text, ignoreEmailCheck: false, claimAccount: claimGhostAccount)
+            viewModel.continueButtonTapped(userName: usernameTextfield.text, password: passwordTextfield.text, email: emailTextfield.text, referrelUsername: referralUsernameTextfield.text, ignoreEmailCheck: false, claimAccount: claimGhostAccount, voucherCode: voucherTextfield.text)
         }.disposed(by: disposeBag)
         setupLaterButton.rx.tap.bind { [self] in
             viewModel.setupLaterButtonTapped()
@@ -470,6 +521,8 @@ class SignUpViewController: WSNavigationViewController {
             self.emailInfoLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
             self.infoLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
             self.referralTitle.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
+            self.voucherLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
+            self.voucherOptionalLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
 
             self.referralArrowIcon.updateTheme( isDark: $0)
             super.setupViews(isDark: $0)
@@ -633,7 +686,7 @@ extension SignUpViewController: InfoPromptViewDelegate {
             return
         }
         if actionTaken {
-            viewModel.continueButtonTapped(userName: usernameTextfield.text, password: passwordTextfield.text, email: emailTextfield.text, referrelUsername: referralUsernameTextfield.text, ignoreEmailCheck: true, claimAccount: claimGhostAccount)
+            viewModel.continueButtonTapped(userName: usernameTextfield.text, password: passwordTextfield.text, email: emailTextfield.text, referrelUsername: referralUsernameTextfield.text, ignoreEmailCheck: true, claimAccount: claimGhostAccount, voucherCode: voucherTextfield.text)
         }
     }
 }

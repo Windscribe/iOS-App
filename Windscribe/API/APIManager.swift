@@ -16,7 +16,7 @@ protocol APIManager {
     func getSession(sessionAuth: String) -> Single<Session>
     // Account
     func login(username: String, password: String, code2fa: String) -> Single<Session>
-    func signup(username: String, password: String, referringUsername: String, email: String) -> Single<Session>
+    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String) -> RxSwift.Single<Session>
     func addEmail(email: String) -> Single<APIMessage>
     func confirmEmail() -> Single<APIMessage>
     func regToken() -> RxSwift.Single<Token>
@@ -26,6 +26,7 @@ protocol APIManager {
     func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     func cancelAccount(password: String) -> RxSwift.Single<APIMessage>
     func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse>
+    func claimVoucherCode(code: String) -> RxSwift.Single<ClaimVoucherCodeResponse>
     // VPN
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
     func getStaticIpList() -> Single<StaticIPList>

@@ -194,6 +194,9 @@ struct TextsAsset {
     static var referringUsername: String {
         return "Referring Username".localize()
     }
+    static var voucherCode: String {
+        return "Voucher Code".localize()
+    }
     struct SignInError {
         static var usernameExpectedEmailProvided: String {
             return "Please login with your username, not your email".localize()
@@ -537,6 +540,27 @@ struct TextsAsset {
         static var lazyLoginSuccess: String {
             return "Sweet, you should be all good to go now"
         }
+
+        static var voucherCodeDescription: String {
+            return "Apply voucher code to your account".localize()
+        }
+
+        static var voucherCodeSuccessful: String {
+            return "Sweet, Voucher code is applied successfully".localize()
+        }
+
+        static var voucherUsedMessage: String {
+            return "Voucher code is used already".localize()
+        }
+
+        static var invalidVoucherCode: String {
+            return "Voucher provided is invalid or expired.".localize()
+        }
+
+        static var emailRequired: String {
+            return "Confirmed email is required.".localize()
+        }
+
     }
 
     struct NetworkSecurity {

@@ -212,3 +212,44 @@ extension LazyTableViewCell: HelpViewDelegate {
         self.delegate?.lazyViewDidSelect()
     }
 }
+
+
+protocol VoucherDelegate: AnyObject {
+    func voucherViewDidSelect()
+}
+
+class VoucherCodeTableViewCell: UITableViewCell {
+
+    var voucherView: HelpView?
+    private lazy var viewModel = Assembler.resolve(AccountViewModelType.self)
+    weak var delegate: VoucherDelegate?
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        selectionStyle = .none
+        backgroundColor = .clear
+        voucherView =  HelpView(item: HelpItem(title: TextsAsset.voucherCode,
+                                            subTitle: TextsAsset.Account.voucherCodeDescription),
+                             type: .navigation,
+                             delegate: self,
+                             isDarkMode: viewModel.isDarkMode)
+        contentView.addSubview(voucherView!)
+        voucherView?.translatesAutoresizingMaskIntoConstraints = false
+
+        voucherView?.makeLeadingAnchor(constant: 0)
+        voucherView?.makeTrailingAnchor(constant: 0)
+
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
+extension VoucherCodeTableViewCell: HelpViewDelegate {
+    func helpViewDidSelect(_ sender: HelpView) {
+        self.delegate?.voucherViewDidSelect()
+    }
+}
