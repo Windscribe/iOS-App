@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)overrideIp;
 -(void)setIsWhiteListIps:(BOOL)isWhiteListIps;
 -(BOOL)isWhiteListIps;
+-(void)setIsDebugLogCurlError:(BOOL)isEnabled;
+-(BOOL)isDebugLogCurlError;
 
 @end
 
