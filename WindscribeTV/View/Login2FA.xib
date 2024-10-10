@@ -9,9 +9,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController" customModule="WindscribeTV" customModuleProvider="target">
             <connections>
-                <outlet property="LoginButton" destination="LH4-WQ-qhu" id="ycy-qi-KVw"/>
                 <outlet property="backButton" destination="KgT-GX-HAu" id="ANT-2y-dQY"/>
                 <outlet property="description2FA" destination="2Jc-bf-kxF" id="bcn-GM-kWl"/>
+                <outlet property="loginButton" destination="LH4-WQ-qhu" id="1cn-Aw-I6N"/>
                 <outlet property="textField2FA" destination="e3c-KE-xTh" id="X4b-Fg-a2r"/>
                 <outlet property="welcomeLabel" destination="4wL-Rh-cxB" id="zb3-jy-WhT"/>
             </connections>
@@ -38,6 +38,9 @@
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="boolean" keyPath="hasBorder" value="YES"/>
                                     </userDefinedRuntimeAttributes>
+                                    <connections>
+                                        <action selector="loginButtonAction:" destination="-1" eventType="primaryActionTriggered" id="6pT-pU-ua7"/>
+                                    </connections>
                                 </button>
                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="2FA" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e3c-KE-xTh" customClass="WSTextFieldTv" customModule="WindscribeTV" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="212.5" width="450" height="75"/>
@@ -131,6 +134,11 @@ Secrets.</string>
             <point key="canvasLocation" x="-117" y="-1104"/>
         </view>
     </objects>
+    <designables>
+        <designable name="LH4-WQ-qhu">
+            <size key="intrinsicContentSize" width="169" height="86"/>
+        </designable>
+    </designables>
     <resources>
         <image name="logo" width="64" height="64"/>
     </resources>

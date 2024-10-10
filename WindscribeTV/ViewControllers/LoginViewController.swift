@@ -34,6 +34,8 @@ class LoginViewController: PreferredFocusedViewController {
     // MARK: - State properties
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
+    
+    private var credentials: (String?, String?) = (nil, nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -157,6 +159,7 @@ class LoginViewController: PreferredFocusedViewController {
     }
 
     func setup2FA() {
+        credentials = (usernameTextField?.text, passwordTextField?.text)
         let name = "Login2FA"
         let bundle = Bundle(for: type(of: self))
         guard let view = bundle.loadNibNamed(name, owner: self, options: nil)?.first as? UIView else {
@@ -169,8 +172,6 @@ class LoginViewController: PreferredFocusedViewController {
         description2FA.text = TvAssets.twofaDescription
         description2FA.text = TvAssets.twofaDescription
 
-     //   bindView()
-
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -181,34 +182,38 @@ class LoginViewController: PreferredFocusedViewController {
         }
 
         if context.nextFocusedView == generateCodeButton {
-            generateCodeButton.layer.borderColor = UIColor.clear.cgColor
+            generateCodeButton?.layer.borderColor = UIColor.clear.cgColor
         } else if generateCodeButton != nil {
-            generateCodeButton.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+            generateCodeButton?.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
     }
 
-    @IBAction func backButtonAction(_ sender: Any) {
+    @IBAction func backButtonAction(_ sender: Any?) {
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func loginButtonAction(_ sender: Any?) {
+        guard let username = usernameTextField?.text ?? credentials.0,
+              let password = passwordTextField?.text ?? credentials.1 else { return }
+        viewModel.continueButtonTapped(username: username, password: password, twoFactorCode: textField2FA?.text)
     }
 
     func bindView() {
         viewModel.showLoadingView.bind { [weak self] show in
             self?.loadingView.startAnimating()
             self?.usernameTextField.isEnabled = !show
-            self?.passwordTextField.isEnabled = !show
+            self?.passwordTextField?.isEnabled = !show
             self?.loadingView.isHidden = !show
         }.disposed(by: disposeBag)
         loginButton.rx.primaryAction.bind { [weak self] in
-            guard let username = self?.usernameTextField?.text,
-                  let password = self?.passwordTextField?.text else { return }
-            self?.viewModel.continueButtonTapped(username: username, password: password, twoFactorCode: self?.textField2FA?.text)
+            self?.loginButtonAction(nil)
         }.disposed(by: disposeBag)
         forgotButton.rx.primaryAction.bind { [ self] in
             router.routeTo(to: .forgotPassword, from: self)
             self.logger.logD(self, "Moving to forgot password screen.")
         }.disposed(by: disposeBag)
         backButton.rx.primaryAction.bind { [weak self] in
-            self?.navigationController?.popViewController(animated: true)
+            self?.backButtonAction(nil)
         }.disposed(by: disposeBag)
         viewModel.routeToMainView.bind { [self] _ in
             self.logger.logD(self, "Moving to home screen.")
@@ -233,11 +238,11 @@ class LoginViewController: PreferredFocusedViewController {
         viewModel.failedState.distinctUntilChanged().bind { [weak self] (state) in
             switch state {
             case .username(let error), .network(let error), .api(let error), .twoFa(let error), .loginCode(let error):
-                self?.infoLabel.isHidden = false
-                self?.infoLabel.text = error
+                self?.infoLabel?.isHidden = false
+                self?.infoLabel?.text = error
             case .none:
-                self?.infoLabel.isHidden = true
-                self?.infoLabel.text = ""
+                self?.infoLabel?.isHidden = true
+                self?.infoLabel?.text = ""
 
             }
         }.disposed(by: disposeBag)
