@@ -23,7 +23,7 @@ class AccountViewController: WSNavigationViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .clear
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
@@ -94,6 +94,7 @@ class AccountViewController: WSNavigationViewController {
         AccountConfirmEmailCell.registerClass(in: tableView)
         AccountEmailCell.registerClass(in: tableView)
         LazyTableViewCell.registerClass(in: tableView)
+        VoucherCodeTableViewCell.registerClass(in: tableView)
     }
 }
 
@@ -150,6 +151,10 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = LazyTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
             cell.delegate = self
             return cell
+        case .voucherCode:
+            let cell = VoucherCodeTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
+            cell.delegate = self
+            return cell
         default:
             let cell = AccountTableViewCell.dequeueReusableCell(in: tableView, for: indexPath)
             cell.delegate = self
@@ -175,6 +180,13 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 2 {
+            return 120
+        }
+        return UITableView.automaticDimension
+    }
+
     func showEnterCodeDialog() {
         let alert = UIAlertController(title: NSLocalizedString(TextsAsset.Account.enterCode, comment: ""), message: nil, preferredStyle: .alert)
 
@@ -185,6 +197,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                 textField.autocorrectionType = .no
                 textField.keyboardType = .default
                 textField.textAlignment = .center
+                textField.tag = 0
                 textField.delegate = self
             }
 
@@ -221,22 +234,97 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                 alert.textFields?.first?.becomeFirstResponder()
             }
         }
+
+    func showEnterVoucherCodeDialog() {
+        let alert = UIAlertController(title: NSLocalizedString(TextsAsset.voucherCode, comment: ""), message: nil, preferredStyle: .alert)
+
+        // Add a text field to the alert controller
+        alert.addTextField { textField in
+            textField.autocapitalizationType = .allCharacters
+            textField.autocorrectionType = .no
+            textField.keyboardType = .default
+            textField.textAlignment = .center
+            textField.delegate = self
+            textField.tag = 1
+        }
+
+        // Add actions to the alert controller
+        let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
+            guard let textField = alert.textFields?.first else { return }
+            let code = textField.text ?? ""
+            print(code)
+            self?.showLoading()
+            self?.viewModel.verifyVoucherEntered(code: code,
+                                                 success: { [weak self] response in
+                self?.logger.logD(self, "Claimed voucher code: \(code)")
+                self?.endLoading()
+                self?.handleClaimVoucherResponse(response)
+            },
+                                                 failure: { [weak self] msg in
+                self?.logger.logD(self, "claim voucher request failed with error: \(msg)")
+                self?.endLoading()
+                self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
+            })
+        }
+
+        let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel) { _ in
+
+        }
+
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+
+        // Show the alert
+        self.present(alert, animated: true) {
+            // Focus on the text field when the alert is presented
+            alert.textFields?.first?.becomeFirstResponder()
+        }
+    }
+
+    func handleClaimVoucherResponse(_ response: ClaimVoucherCodeResponse) {
+        if response.isClaimed {
+            self.logger.logD(self, "voucher code is claimed")
+            DispatchQueue.main.async { [weak self] in
+                self?.viewModel.alertManager.showSimpleAlert(viewController: self!,
+                                                             title: TextsAsset.voucherCode,
+                                                             message: TextsAsset.Account.voucherCodeSuccessful,
+                                                             buttonText: TextsAsset.okay)
+            }
+            viewModel.loadSession().observe(on: MainScheduler.instance)
+                .subscribe(onSuccess: { [self] _ in
+                    self.updateUI()
+                }, onFailure: { _ in }).disposed(by: disposeBag)
+        } else if (response.emailRequired == true) {
+            self.logger.logD(self, "email is required for claiming voucher")
+            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.emailRequired, dismissAction: nil), from: self)
+        } else if (response.isUsed == true) {
+            self.logger.logD(self, "voucher is already claimed")
+            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.voucherUsedMessage, dismissAction: nil), from: self)
+        } else {
+            self.logger.logD(self, "invalid voucher")
+            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.invalidVoucherCode, dismissAction: nil), from: self)
+        }
+
+    }
 }
 
 extension AccountViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let currentText = textField.text ?? ""
-        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
+        if textField.tag == 0 {
+            let currentText = textField.text ?? ""
+            let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
 
-        // Enforce length limit
-        if updatedText.count > 9 {
+            // Enforce length limit
+            if updatedText.count > 9 {
+                return false
+            }
+
+            // Handle automatic insertion of dash
+            let formattedText = formatCodeText(updatedText)
+            textField.text = formattedText
             return false
         }
-
-        // Handle automatic insertion of dash
-        let formattedText = formatCodeText(updatedText)
-        textField.text = formattedText
-        return false
+        return true
     }
 
     private func formatCodeText(_ text: String) -> String {
@@ -320,5 +408,11 @@ extension AccountViewController: ConfirmEmailViewControllerDelegate {
 extension AccountViewController: LazyViewDelegate {
     func lazyViewDidSelect() {
         showEnterCodeDialog()
+    }
+}
+
+extension AccountViewController: VoucherDelegate {
+    func voucherViewDidSelect() {
+        showEnterVoucherCodeDialog()
     }
 }
