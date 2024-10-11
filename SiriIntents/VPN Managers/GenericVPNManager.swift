@@ -9,7 +9,7 @@
 import Foundation
 import NetworkExtension
 
-class GenericVPNManager: VPNManagerType {
+class GenericVPNManager: IntentVPNManagerType {
     let userName: VPNManagerUserName
     var providerManager: NETunnelProviderManager!
     var setupCompleted = false

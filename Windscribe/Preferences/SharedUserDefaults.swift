@@ -492,6 +492,14 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.rx.observe(Bool.self, SharedKeys.forceDisconnect) ?? Observable.just(false)
     }
 
+    func saveConnectionRequested(value: Bool) {
+        setBool(value, forKey: SharedKeys.widgetConnectionRequested)
+    }
+
+    func getConnectionRequested() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
+    }
+
     // MARK: - Base Types
     func setString(_ value: String?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)

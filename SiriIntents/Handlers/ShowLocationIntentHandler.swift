@@ -13,7 +13,7 @@ import Swinject
 class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
     // MARK: Dependencies
     private lazy var container: Container = {
-        self.container = Container(isExt: true)
+        self.container = Container(isIntentExt: true)
         container.injectCore()
         return container
     }()
@@ -23,11 +23,8 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
     private lazy var preferences: Preferences = {
         return container.resolve(Preferences.self)!
     }()
-    private lazy var api: WSNetServerAPI = {
-        return container.resolve(WSNetServerAPI.self)!
-    }()
-    private lazy var vpnManager: VPNManager = {
-        return container.resolve(VPNManager.self)!
+    private lazy var vpnManager: IntentVPNManager = {
+        return container.resolve(IntentVPNManager.self)!
     }()
 
     func getPreferences() -> Preferences {
@@ -49,6 +46,7 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
     func handle(intent: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
         self.getIPAddress { (ipAddress, error) in
             guard let ipAddress = ipAddress else {
+                completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
                 return
             }
             self.vpnManager.setup {
@@ -66,27 +64,8 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
     }
 
     func getIPAddress(completion: @escaping (_ ipAddress: String?, _ error: String?) -> Void) {
-        api.myIP { code, myIp in
-            if code == 0, let data = myIp.data(using: .utf8),
-               let ipObject: MyIP = try? JSONDecoder().decode(MyIP.self, from: data) {
-                completion(ipObject.userIp, nil)
-            } else {
-                completion(nil, "Unable to get IP Address.")
-            }
+        vpnManager.getIPAddress { ipAddress, error in
+            completion(ipAddress, error)
         }
-    }
-}
-
-private struct MyIP: Decodable {
-    dynamic var userIp: String = ""
-    enum CodingKeys: String, CodingKey {
-        case data = "data"
-        case userIp = "user_ip"
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        userIp = try data.decode(String.self, forKey: .userIp)
     }
 }
