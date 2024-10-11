@@ -167,6 +167,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
     }
 
     func setDisconnected() {
+        saveDataForWidget()
         if  vpnManager.connectionStatus() == .connected {
             logger.logD(self, "Ignoring disconnection if vpn is connected \(vpnManager.connectionStatus())")
             return
@@ -209,6 +210,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
             logger.logD(self, "Displaying Siri shortcut popup.")
             siriShortcutTrigger.onNext(())
         }
+        saveDataForWidget()
     }
 
     func setConnecting() {

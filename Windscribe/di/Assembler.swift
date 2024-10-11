@@ -15,7 +15,7 @@ import RealmSwift
 extension Assembler {
     static let container = Container()
     static let assembler: Assembler = {
-        return Assembler([App(), Network(), Repository(), Database(), Managers(), Routers(), ViewModels(), ViewControllerModule()], container: container)
+        return Assembler([App(), Network(), Repository(), Database(), Managers(), Routers(), ViewModels(), ViewControllerModule(), Intents()], container: container)
     }()
 
     /**

@@ -141,4 +141,8 @@ protocol Preferences {
 
     func getLoginDate() -> Date?
     func saveLoginDate(date: Date)
+
+    // Widget Info
+    func saveConnectionRequested(value: Bool)
+    func getConnectionRequested() -> Bool
 }

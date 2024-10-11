@@ -57,6 +57,7 @@ end
 # Home widget extension
 target 'HomeWidgetExtension' do
   platform :ios, '12.0'
+  pod 'SimpleKeychain', '~> 1.0'
   use_frameworks!
   pod 'SimpleKeychain', '~> 1.0'
   core
