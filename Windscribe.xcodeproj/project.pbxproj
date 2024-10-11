@@ -7390,7 +7390,7 @@
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
 				kind = revision;
-				revision = 7480f8e3ddfb431332b3488bc244e48f2bbdc6e6;
+				revision = 72821fcd765ea1c4b61a016f0cd72d3eab14800d;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
