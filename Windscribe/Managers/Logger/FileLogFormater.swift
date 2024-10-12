@@ -32,10 +32,14 @@ class FileLogFormater: NSObject, DDLogFormatter {
             logLevel = "all"
         default: ()
         }
-        if let tag = logMessage.representedObject as? String {
-            return "\(timestamp) [\(logLevel)] [\(tag)] - \(logMessage.message)"
-        } else {
-            return "\(timestamp) [\(logLevel)] - \(logMessage.message)"
+        var tagName = "Unknown"
+        if let tag = logMessage.representedObject {
+            if let tag = tag as? String {
+                tagName = tag
+            } else {
+                tagName = String(describing: type(of: tag)).components(separatedBy: ".").last ?? "Unknown"
+            }
         }
+        return "\(timestamp) [\(logLevel)] [\(tagName)] - \(logMessage.message)"
     }
 }

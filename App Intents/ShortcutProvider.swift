@@ -13,13 +13,6 @@ import AppIntents
 struct ShortcutsProvider: AppShortcutsProvider {
   @AppShortcutsBuilder
   static var appShortcuts: [AppShortcut] {
-      AppShortcut(intent: ShowLocation(),
-                   phrases: ["Show connected location in \(.applicationName)",
-                             "Show connection status in \(.applicationName)",
-                             "Show \(.applicationName) connection status",
-                             "Show \(.applicationName) location"],
-                   shortTitle: "Show connected location",
-                   systemImageName: "network")
       AppShortcut(intent: Connect(),
                   phrases: ["Connect with \(.applicationName)",
                             "Connect \(.applicationName) to VPN",

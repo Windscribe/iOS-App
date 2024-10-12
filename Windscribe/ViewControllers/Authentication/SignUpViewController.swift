@@ -229,7 +229,6 @@ class SignUpViewController: WSNavigationViewController {
         return vw
     }()
 
-
     // MARK: - Voucher view
     lazy var voucherLabel: UILabel = {
         let voucherLabel = UILabel()

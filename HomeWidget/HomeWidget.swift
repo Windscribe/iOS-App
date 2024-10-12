@@ -13,22 +13,14 @@ import Swinject
 import AppIntents
 import os
 struct Provider: TimelineProvider {
-    // MARK: Dependencies
-    private var container: Container = {
-        let container = Container(isIntentExt: true)
-        return container
-    }()
+    let resolver = ContainerResolver()
 
-    func getLogger() -> FileLogger {
-        return container.resolve(FileLogger.self) ?? FileLoggerImpl()
+    fileprivate var logger: FileLogger {
+        return resolver.getLogger()
     }
 
-    func getPreferences() -> Preferences {
-        return container.resolve(Preferences.self) ?? SharedSecretDefaults()
-    }
-
-    func getVPNManager() -> IntentVPNManager? {
-        return container.resolve(IntentVPNManager.self)
+    fileprivate var preferences: Preferences {
+        return resolver.getPreferences()
     }
 
     func placeholder(in context: Context) -> SimpleEntry {
@@ -42,36 +34,33 @@ struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [SimpleEntry] = []
         entries.append(snapshotEntry)
-        getLogger().logD(self, "Getting widget timeline")
-        if let vpnManager = getVPNManager() {
-            vpnManager.setup {
-                vpnManager.checkConnection {
-                    getLogger().logD(self, "Checking connection for manager: isConnected \($0)")
-                    let statusValue = $0 ? TextsAsset.Status.on : TextsAsset.Status.off
-                    let preferences = getPreferences()
-                    let wasConnectionRequested = preferences.getConnectionRequested()
-                    if let countryCode = preferences.getcountryCodeKey(),
-                       let serverName = preferences.getServerNameKey(),
-                       let nickName = preferences.getNickNameKey() {
-                        let entry = SimpleEntry(date: Date(),
-                                                status: statusValue,
-                                                name: serverName,
-                                                nickname: nickName,
-                                                countryCode: countryCode,
-                                                wasConnectionRequested: wasConnectionRequested)
-
+        logger.logD(self, "Getting widget timeline")
+        getActiveManager { result in
+            switch result {
+                case .success(let manager):
+                    if let entry = buildSimpleEntry(manager: manager) {
                         entries.append(entry)
                         let timeline = Timeline(entries: entries, policy: .atEnd)
-                        getLogger().logD(self, "\("Logging Widget state where is connected is: \(String(describing: timeline.entries.last?.status))")")
+                        logger.logD(self, "Updated widget with status:  \(manager.connection.status)")
                         completion(timeline)
                     }
-                }
+                case .failure(let failure):
+                    logger.logD(self, "No VPN Configuration found Error: \(failure).")
+                    let timeline = Timeline(entries: entries, policy: .atEnd)
+                    completion(timeline)
             }
-        } else {
-            getLogger().logD(self, "No VPN manager.")
-            let timeline = Timeline(entries: entries, policy: .atEnd)
-            completion(timeline)
         }
+    }
+
+    private func buildSimpleEntry(manager: NEVPNManager) -> SimpleEntry? {
+        let statusValue = manager.connection.status == NEVPNStatus.connected ? TextsAsset.Status.on : TextsAsset.Status.off
+        if let countryCode = preferences.getcountryCodeKey(),
+           let serverName = preferences.getServerNameKey(),
+           let nickName = preferences.getNickNameKey() {
+           let entry = SimpleEntry(date: Date(), status: statusValue, name: serverName, nickname: nickName, countryCode: countryCode)
+           return entry
+        }
+      return nil
     }
 }
 
@@ -81,7 +70,6 @@ struct SimpleEntry: TimelineEntry {
     let name: String
     let nickname: String
     let countryCode: String
-    let wasConnectionRequested: Bool
 }
 
 let snapshotEntry = SimpleEntry(
@@ -89,9 +77,8 @@ let snapshotEntry = SimpleEntry(
     status: TextsAsset.Status.off,
     name: "Toronto",
     nickname: "The 6",
-    countryCode: "CA",
-    wasConnectionRequested: false
-);
+    countryCode: "CA"
+)
 
 struct HomeWidgetEntryView : View {
     var entry: Provider.Entry

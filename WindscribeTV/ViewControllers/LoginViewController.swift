@@ -34,7 +34,7 @@ class LoginViewController: PreferredFocusedViewController {
     // MARK: - State properties
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
-    
+
     private var credentials: (String?, String?) = (nil, nil)
 
     override func viewDidLoad() {
@@ -191,7 +191,7 @@ class LoginViewController: PreferredFocusedViewController {
     @IBAction func backButtonAction(_ sender: Any?) {
         self.navigationController?.popViewController(animated: true)
     }
-    
+
     @IBAction func loginButtonAction(_ sender: Any?) {
         guard let username = usernameTextField?.text ?? credentials.0,
               let password = passwordTextField?.text ?? credentials.1 else { return }

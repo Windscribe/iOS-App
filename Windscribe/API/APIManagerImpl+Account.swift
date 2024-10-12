@@ -90,7 +90,7 @@ extension APIManagerImpl {
         }
     }
 
-    func claimVoucherCode(code: String) ->  RxSwift.Single<ClaimVoucherCodeResponse> {
+    func claimVoucherCode(code: String) -> RxSwift.Single<ClaimVoucherCodeResponse> {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)
         }

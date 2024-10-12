@@ -86,7 +86,6 @@
 		1E60DFF22CAACD2F00623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
 		1E60DFF42CAACD5700623CD5 /* IKEv2IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */; };
 		1E60DFF62CAACD8A00623CD5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
-		1E60E0062CAC45A400623CD5 /* ShowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF92CAB061800623CD5 /* ShowLocation.swift */; };
 		1E60E0082CAC47A000623CD5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
 		1E60E0092CAC485F00623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
 		1E60E00A2CAC486500623CD5 /* IntentVPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */; };
@@ -950,6 +949,8 @@
 		C59C074029406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
 		C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
 		C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
+		C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
+		C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */; };
@@ -1324,7 +1325,6 @@
 		1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentVPNManager.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
-		1E60DFF92CAB061800623CD5 /* ShowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocation.swift; sourceTree = "<group>"; };
 		1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutProvider.swift; sourceTree = "<group>"; };
 		1E60E0132CAC628A00623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
@@ -1859,6 +1859,7 @@
 		C59BBFC8273F30D60078BB72 /* WebSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSession.swift; sourceTree = "<group>"; };
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
+		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
 		C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
 		C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Session.swift"; sourceTree = "<group>"; };
 		C5A930C82B42165F0001CFA0 /* APIManagerImpl+Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Account.swift"; sourceTree = "<group>"; };
@@ -2427,7 +2428,7 @@
 			children = (
 				1E60DFF72CAB061800623CD5 /* Disconnect.swift */,
 				1E60DFF82CAB061800623CD5 /* Connect.swift */,
-				1E60DFF92CAB061800623CD5 /* ShowLocation.swift */,
+				C59FF19E2CB998610072EF70 /* IntentCommon.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -5242,7 +5243,6 @@
 				C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */,
 				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
 				C5D0E3EE29BB85460091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
-				1E60E0062CAC45A400623CD5 /* ShowLocation.swift in Sources */,
 				E9DF548C274BD8FE00E9C672 /* MainViewController+UILayout.swift in Sources */,
 				C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */,
 				1AE6D2B22834F0B100276C7D /* GeneralViewModel.swift in Sources */,
@@ -5534,6 +5534,7 @@
 				C51704BF27694B4000556040 /* ServerHealthView.swift in Sources */,
 				5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */,
 				C56FCC002B2CE66A008DE7D4 /* GhostAccountRouter.swift in Sources */,
+				C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				AF04ED9F21DFD1AE005C6576 /* StaticIP.swift in Sources */,
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
@@ -5858,6 +5859,7 @@
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
+				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
 				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
