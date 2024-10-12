@@ -13,6 +13,7 @@ import Swinject
 import AppIntents
 import os
 struct Provider: TimelineProvider {
+    let tag = "AppIntents"
     let resolver = ContainerResolver()
 
     fileprivate var logger: FileLogger {
@@ -34,18 +35,18 @@ struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
         var entries: [SimpleEntry] = []
         entries.append(snapshotEntry)
-        logger.logD(self, "Getting widget timeline")
+        logger.logD(tag, "Getting widget timeline")
         getActiveManager { result in
             switch result {
                 case .success(let manager):
                     if let entry = buildSimpleEntry(manager: manager) {
                         entries.append(entry)
                         let timeline = Timeline(entries: entries, policy: .atEnd)
-                        logger.logD(self, "Updated widget with status:  \(manager.connection.status)")
+                        logger.logD(tag, "Updated widget with status:  \(manager.connection.status)")
                         completion(timeline)
                     }
                 case .failure(let failure):
-                    logger.logD(self, "No VPN Configuration found Error: \(failure).")
+                    logger.logD(tag, "No VPN Configuration found Error: \(failure).")
                     let timeline = Timeline(entries: entries, policy: .atEnd)
                     completion(timeline)
             }

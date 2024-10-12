@@ -216,7 +216,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     }
 
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleLogMessage logMessage: String) {
-        self.logger.logD(self, "\(logMessage)")
+       // self.logger.logD(self, "\(logMessage)")
     }
 }
 

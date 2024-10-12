@@ -242,7 +242,6 @@ class MainViewModel: MainViewModelType {
             default:
                 serverSectionsOrdered = serverSections
             }
-            self.logger.logD(MainViewController.self, "Sorting server list by \(String(describing: try? self.locationOrderBy.value())).")
             completion(serverSectionsOrdered)
         }
 
