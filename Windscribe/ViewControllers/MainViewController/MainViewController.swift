@@ -458,7 +458,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         default:
             return serverSections
         }
-        self.logger.logD(self, "Sorting server list by \(orderLocationsBy).")
         return serverSectionsOrdered
     }
 

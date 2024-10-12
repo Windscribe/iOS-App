@@ -50,6 +50,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 iterations += 1
                 logger.logD(tag, "Awaiting connection to VPN.")
             }
+            logger.logD(tag, "Taking too long to connect.")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailure)
         } catch let error {

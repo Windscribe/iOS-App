@@ -88,7 +88,7 @@ extension VPNManager {
     }
 
     func checkForForceDisconnect() {
-        logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Checking for force_disconnect")
+        logger.logD(VPNManager.self, "Checking for force_disconnect")
         if let hostname = selectedNode?.hostname {
            let group = localDB.getServers()?.flatMap({ $0.groups }).filter({ $0.bestNodeHostname == hostname }).first
             if group?.bestNode?.forceDisconnect ?? false {

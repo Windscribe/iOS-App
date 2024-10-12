@@ -34,9 +34,21 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
             activeManager.isOnDemandEnabled = false
             try await activeManager.saveToPreferences()
             activeManager.connection.stopVPNTunnel()
+
+            var iterations = 0
+            while iterations <= 10 {
+                try? await Task.sleep(for: .milliseconds(500))
+                if activeManager.connection.status == .disconnected {
+                    WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+                    logger.logD(tag, "Disconnected from VPN.")
+                    return .result(dialog: .responseSuccess)
+                }
+                iterations += 1
+                logger.logD(tag, "Awaiting disconnect from VPN.")
+            }
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-            logger.logD(tag, "Disconnected from VPN")
-            return .result(dialog: .responseSuccess)
+            logger.logD(tag, "Taking too long to disconnect.")
+            return .result(dialog: .responseFailure)
         } catch let error {
             logger.logD(tag, "Error disconnecting from VPN: \(error)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")

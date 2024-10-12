@@ -40,6 +40,11 @@ class FileLogFormater: NSObject, DDLogFormatter {
                 tagName = String(describing: type(of: tag)).components(separatedBy: ".").last ?? "Unknown"
             }
         }
-        return "\(timestamp) [\(logLevel)] [\(tagName)] - \(logMessage.message)"
+        let paddedLogLevel = "[\(logLevel)]".padding(toLength: 7, withPad: " ", startingAt: 0)
+        var paddedTagName = "[\(tagName)]".padding(toLength: 20, withPad: " ", startingAt: 0)
+        if !paddedTagName.contains("]") {
+            paddedTagName = "\(paddedTagName.dropLast())]"
+        }
+        return "\(timestamp) \(paddedLogLevel) \(paddedTagName) - \(logMessage.message)"
     }
 }
