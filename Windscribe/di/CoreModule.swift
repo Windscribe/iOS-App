@@ -25,10 +25,10 @@ extension Container {
         register(WSNetServerAPI.self) { r in
             let preferences = r.resolve(Preferences.self)!
             let logger = r.resolve(FileLogger.self)
-//            WSNet.setLogger({ message in
-//                let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
-//                logger?.logD(self, msg)
-//            }, debugLog: false)
+            WSNet.setLogger({ message in
+                let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
+                logger?.logD("WSNet", msg)
+            }, debugLog: false)
             var language: String = "en"
             let preferredLanguages = Locale.preferredLanguages
             if let deviceLanguage = preferredLanguages.first {

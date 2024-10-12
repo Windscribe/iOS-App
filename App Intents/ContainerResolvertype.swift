@@ -9,7 +9,6 @@
 import Foundation
 
 protocol ContainerResolvertype {
-    func getVpnManager() -> IntentVPNManager?
     func getPreferences() -> Preferences
     func getLogger() -> FileLogger
 }

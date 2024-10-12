@@ -9,6 +9,7 @@
 import Foundation
 import AppIntents
 import WidgetKit
+import NetworkExtension
 
 @available(iOS 16.0, *)
 @available(iOSApplicationExtension, unavailable)
@@ -18,23 +19,29 @@ extension Disconnect: ForegroundContinuableIntent { }
 struct Disconnect: AppIntent, WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Disable Windscribe VPN"
     static var description = IntentDescription("Disconnects Windscribe from VPN.")
-
-    let resolver = ContainerResolver()
-
+    let tag = "AppIntents"
+    fileprivate let logger = ContainerResolver().getLogger()
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        resolver.getPreferences().saveConnectionRequested(value: false)
-        resolver.getLogger().logD(self, "Disable VPN action called.")
-        if let vpnManager = resolver.getVpnManager() {
-            await vpnManager.setup()
-            if await vpnManager.disconnect() ?? false {
-                resolver.getLogger().logD(self, "Reloading timeline.")
-                WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+        logger.logD(tag, "Disable VPN action called.")
+        do {
+            let activeManager = try await getActiveManager()
+            let vpnStatus = activeManager.connection.status
+            // Already disconnected just update status.
+            if [NEVPNStatus.disconnected, NEVPNStatus.disconnecting, NEVPNStatus.invalid].contains(vpnStatus) {
                 return .result(dialog: .responseSuccess)
             }
+            activeManager.isEnabled = true
+            activeManager.isOnDemandEnabled = false
+            try await activeManager.saveToPreferences()
+            activeManager.connection.stopVPNTunnel()
+            WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+            logger.logD(tag, "Disconnected from VPN")
+            return .result(dialog: .responseSuccess)
+        } catch let error {
+            logger.logD(tag, "Error disconnecting from VPN: \(error)")
+            WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+            return .result(dialog: .responseFailure)
         }
-        resolver.getLogger().logD(self, "Issue disabling the VPN")
-        WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-        return .result(dialog: .responseFailure)
     }
 }
 

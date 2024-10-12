@@ -213,7 +213,6 @@ extension LazyTableViewCell: HelpViewDelegate {
     }
 }
 
-
 protocol VoucherDelegate: AnyObject {
     func voucherViewDidSelect()
 }

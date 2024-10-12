@@ -294,10 +294,10 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                 .subscribe(onSuccess: { [self] _ in
                     self.updateUI()
                 }, onFailure: { _ in }).disposed(by: disposeBag)
-        } else if (response.emailRequired == true) {
+        } else if response.emailRequired == true {
             self.logger.logD(self, "email is required for claiming voucher")
             self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.emailRequired, dismissAction: nil), from: self)
-        } else if (response.isUsed == true) {
+        } else if response.isUsed == true {
             self.logger.logD(self, "voucher is already claimed")
             self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.voucherUsedMessage, dismissAction: nil), from: self)
         } else {
