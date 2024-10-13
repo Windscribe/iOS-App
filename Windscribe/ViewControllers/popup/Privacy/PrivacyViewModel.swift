@@ -44,24 +44,20 @@ class PrivacyViewModel: PrivacyViewModelType {
 
     private func actionWithCompletion(completionHandler: (() -> Void)? = nil) {
         preferences.savePrivacyPopupAccepted(bool: true)
-        sharedVPNManager.configureDummy {[weak self] _,_ in
-            guard let self = self else { return }
-            NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
-
-            var defaultProtocol = TextsAsset.General.protocols[0]
-            var defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-            if let suggestedProtocol = self.localDatabase.getSuggestedPorts()?.first,
-               suggestedProtocol.protocolType != "",
-               suggestedProtocol.port != "" {
-                defaultProtocol = suggestedProtocol.protocolType
-                defaultPort = suggestedProtocol.port
-                self.logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
-            } else {
-                self.logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
-            }
-            self.localDatabase.updateConnectionMode(value: Fields.Values.manual)
-            self.networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
-            completionHandler?()
+        NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
+        var defaultProtocol = TextsAsset.General.protocols[0]
+        var defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        if let suggestedProtocol = self.localDatabase.getSuggestedPorts()?.first,
+           suggestedProtocol.protocolType != "",
+           suggestedProtocol.port != "" {
+            defaultProtocol = suggestedProtocol.protocolType
+            defaultPort = suggestedProtocol.port
+            self.logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+        } else {
+            self.logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
+        self.localDatabase.updateConnectionMode(value: Fields.Values.manual)
+        self.networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
+        completionHandler?()
     }
 }

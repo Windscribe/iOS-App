@@ -88,7 +88,6 @@ extension VPNManager {
     }
 
     func checkForForceDisconnect() {
-        logger.logD(VPNManager.self, "Checking for force_disconnect")
         if let hostname = selectedNode?.hostname {
            let group = localDB.getServers()?.flatMap({ $0.groups }).filter({ $0.bestNodeHostname == hostname }).first
             if group?.bestNode?.forceDisconnect ?? false {
@@ -126,14 +125,15 @@ extension VPNManager {
                 return
             }
             self.vpnInfo.onNext(info)
-            if state == .background || state == .inactive {
-                self.logger.logI(VPNManager.self, "App is in background. connection info is \(info.description)")
+            let inactive = state == .background || state == .inactive
+            if  inactive {
                 return
             }
             let connectionStatus = info.status
-            print("#### VPN Status is \(connectionStatus)")
             let protocolType = info.selectedProtocol
             if self.lastConnectionStatus == connectionStatus { return }
+            let active = state == .background || state == .inactive
+            self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
             self.lastConnectionStatus = connectionStatus
             IKEv2VPNManager.shared.noResponseTimer?.invalidate()
             switch connectionStatus {

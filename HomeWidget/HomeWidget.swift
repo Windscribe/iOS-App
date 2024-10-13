@@ -47,6 +47,8 @@ struct Provider: TimelineProvider {
                     }
                 case .failure(let failure):
                     logger.logD(tag, "No VPN Configuration found Error: \(failure).")
+                    let entry = buildErrorEntry(failure: failure)
+                    entries.append(entry)
                     let timeline = Timeline(entries: entries, policy: .atEnd)
                     completion(timeline)
             }
@@ -54,28 +56,51 @@ struct Provider: TimelineProvider {
     }
 
     private func buildSimpleEntry(manager: NEVPNManager) -> SimpleEntry? {
-        let statusValue = manager.connection.status == NEVPNStatus.connected ? TextsAsset.Status.on : TextsAsset.Status.off
+        var status = WidgetStatus.disconnected
+        if manager.connection.status == NEVPNStatus.connected {
+            status = WidgetStatus.connected
+        }
         if let countryCode = preferences.getcountryCodeKey(),
            let serverName = preferences.getServerNameKey(),
            let nickName = preferences.getNickNameKey() {
-           let entry = SimpleEntry(date: Date(), status: statusValue, name: serverName, nickname: nickName, countryCode: countryCode)
+            let entry = SimpleEntry(date: Date(), status: status, name: serverName, nickname: nickName, countryCode: countryCode)
            return entry
         }
       return nil
     }
+
+    private func buildErrorEntry(failure: Error) -> SimpleEntry {
+        return SimpleEntry(date: Date(), status: WidgetStatus.error(failure.localizedDescription), name: "", nickname: "", countryCode: "CA")
+    }
+}
+
+enum WidgetStatus: Equatable {
+    case disconnected
+    case connected
+    case error(String)
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
-    let status: String
+    let status: WidgetStatus
     let name: String
     let nickname: String
     let countryCode: String
+    var statusDescription: String {
+        switch status {
+            case .disconnected:
+                return TextsAsset.Status.off
+            case .connected:
+                return TextsAsset.Status.on
+            case .error(let e):
+                return e
+        }
+    }
 }
 
 let snapshotEntry = SimpleEntry(
     date: Date(),
-    status: TextsAsset.Status.off,
+    status: WidgetStatus.disconnected,
     name: "Toronto",
     nickname: "The 6",
     countryCode: "CA"
@@ -86,7 +111,7 @@ struct HomeWidgetEntryView : View {
     @Environment(\.widgetFamily) private var widgetFamily
 
     var isConnected: Bool {
-        return entry.status == TextsAsset.Status.on
+        return (entry as SimpleEntry).status == WidgetStatus.connected
     }
     var isWidgetSmall: Bool {
         return widgetFamily == .systemSmall
@@ -105,8 +130,10 @@ struct HomeWidgetEntryView : View {
                     HStack {
                         VStack(alignment: .leading, spacing: 3, content: {
                             ZStack {
-                                Capsule().fill(isConnected ? midnight.opacity(0.25) : Color.white.opacity(0.25)).frame(width: 36, height: 20)
-                                Text(entry.status).foregroundColor(isConnected ? seaGreen : Color.white).font(.custom("IBMPlexSans-Bold", size: 10))
+                                if entry.status == .disconnected || entry.status == .connected {
+                                    Capsule().fill(isConnected ? midnight.opacity(0.25) : Color.white.opacity(0.25)).frame(width: 36, height: 20)
+                                }
+                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white).font(.custom("IBMPlexSans-Bold", size: 10))
                             }
                             Text(entry.name).foregroundColor(Color.white).font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
                             Text(entry.nickname).foregroundColor(Color.white.opacity(0.7)).font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))

@@ -65,7 +65,6 @@ class MainViewController: PreferredFocusedViewController {
         setupSwipeDownGesture()
         loadLastConnection()
         loadLastConnected()
-        checkForVPNActivation()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
@@ -482,22 +481,6 @@ class MainViewController: PreferredFocusedViewController {
         if [.connecting].contains(info.state) { self.connectionButtonRing.rotate() } else { self.connectionButtonRing.stopRotating() }
         self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
 
-    }
-
-    func checkForVPNActivation() {
-        NEVPNManager.shared().loadFromPreferences(completionHandler: { error in
-            if error == nil {
-                if self.viewModel.isPrivacyPopupAccepted() &&
-                    WifiManager.shared.getConnectedNetwork()?.SSID == TextsAsset.cellular &&
-                    (!IKEv2VPNManager.shared.isConfigured() &&
-                     !OpenVPNManager.shared.isConfigured() &&
-                     !WireGuardVPNManager.shared.isConfigured()) {
-                    IKEv2VPNManager.shared.configureDummy { [weak self] _,_ in
-                        self?.viewModel.refreshProtocolInfo()
-                    }
-                }
-            }
-        })
     }
 
     func refreshProtocol(from network: WifiNetwork?) {
