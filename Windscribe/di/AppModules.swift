@@ -155,12 +155,3 @@ class Database: Assembly {
         }.inObjectScope(.userScope)
     }
 }
-
-class Intents: Assembly {
-    func assemble(container: Container) {
-        container.register(IntentVPNManager.self) { r in
-            return IntentVPNManager(logger: r.resolve(FileLogger.self)!,
-                              kcDb: r.resolve(KeyChainDatabase.self)!, api: r.resolve(WSNetServerAPI.self)!)
-        }.inObjectScope(.container)
-    }
-}

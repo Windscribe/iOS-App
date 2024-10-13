@@ -9,63 +9,67 @@
 import Foundation
 import NetworkExtension
 import Swinject
+import RxSwift
 
 class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
-    // MARK: Dependencies
-    private lazy var container: Container = {
-        self.container = Container(isIntentExt: true)
-        container.injectCore()
-        return container
-    }()
+    private let resolver = ContainerResolver()
+
     private lazy var logger: FileLogger = {
-        return container.resolve(FileLogger.self)!
+        return resolver.getLogger()
     }()
+
     private lazy var preferences: Preferences = {
-        return container.resolve(Preferences.self)!
-    }()
-    private lazy var vpnManager: IntentVPNManager = {
-        return container.resolve(IntentVPNManager.self)!
+        return resolver.getPreferences()
     }()
 
-    func getPreferences() -> Preferences {
-      return container.resolve(Preferences.self) ?? SharedSecretDefaults()
-    }
+    private lazy var api: WSNetServerAPI  = {
+        return resolver.getApi()
+    }()
 
-    func confirm(intent: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
-        self.getIPAddress { (ipAddress, error) in
-            guard ipAddress != nil else {
-                completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
-                return
-            }
-            self.vpnManager.setup {
-                completion(ShowLocationIntentResponse(code: .ready, userActivity: nil))
-            }
-        }
-    }
+    private let dispose = DisposeBag()
 
     func handle(intent: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
-        self.getIPAddress { (ipAddress, error) in
-            guard let ipAddress = ipAddress else {
-                completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
-                return
-            }
-            self.vpnManager.setup {
-                if self.vpnManager.isConnected() {
-                    let prefs = self.getPreferences()
-                    if let serverName = prefs.getServerNameKey(),
-                       let nickName = prefs.getNickNameKey() {
-                        completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ipAddress))
-                    }
-                } else {
-                    completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ipAddress))
+        getIPAddress().subscribe(onSuccess: { ip in
+            getActiveManager { result in
+                switch result {
+                    case .success(let manager):
+                        guard let serverName = self.preferences.getServerNameKey(),
+                              let nickName = self.preferences.getNickNameKey() else {
+                            completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
+                            return
+                        }
+                        if manager.connection.status == .connected {
+                            completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ip.userIp))
+                        } else {
+                            completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
+                        }
+                    case .failure(_):
+                        completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
                 }
             }
-        }
+
+        }, onFailure: { _ in
+            completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
+        }).disposed(by: dispose)
     }
 
-    func getIPAddress(completion: @escaping (_ ipAddress: String?, _ error: String?) -> Void) {
-        vpnManager.getIPAddress { ipAddress, error in
-            completion(ipAddress, error)
+    fileprivate func getIPAddress() -> Single<IntentMyIP> {
+        return makeApiCall(modalType: IntentMyIP.self) { completion in
+            self.api.myIP(completion)
         }
+    }
+}
+
+private struct IntentMyIP: Decodable {
+    dynamic var userIp: String = ""
+    enum CodingKeys: String, CodingKey {
+        case data = "data"
+        case userIp = "user_ip"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        userIp = try data.decode(String.self, forKey: .userIp)
     }
 }

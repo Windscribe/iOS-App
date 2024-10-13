@@ -10,11 +10,20 @@ import Foundation
 import Swinject
 
 class ContainerResolver: ContainerResolvertype {
+    private lazy var container: Container = {
+        self.container = Container()
+        container.injectCore()
+        return container
+    }()
     func getPreferences() -> Preferences {
-        return Assembler.resolve(Preferences.self)
+        return container.resolve(Preferences.self)!
     }
 
     func getLogger() -> FileLogger {
-        return Assembler.resolve(FileLogger.self)
+        return container.resolve(FileLogger.self)!
+    }
+
+    func getApi() -> WSNetServerAPI {
+        return container.resolve(WSNetServerAPI.self)!
     }
 }

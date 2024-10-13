@@ -80,31 +80,15 @@
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
 		1E60DFE32CA2E62100623CD5 /* SiriIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE12CA2E62100623CD5 /* SiriIntents.intentdefinition */; };
 		1E60DFE42CA2E62100623CD5 /* SiriIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE12CA2E62100623CD5 /* SiriIntents.intentdefinition */; };
-		1E60DFE82CA41B1C00623CD5 /* IntentModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
-		1E60DFF02CAACCF000623CD5 /* IntentVPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */; };
-		1E60DFF22CAACD2F00623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
-		1E60DFF42CAACD5700623CD5 /* IKEv2IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */; };
-		1E60DFF62CAACD8A00623CD5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
-		1E60E0082CAC47A000623CD5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
-		1E60E0092CAC485F00623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
-		1E60E00A2CAC486500623CD5 /* IntentVPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */; };
-		1E60E00B2CAC488900623CD5 /* IKEv2IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
 		1E60E0102CAC54FC00623CD5 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF72CAB061800623CD5 /* Disconnect.swift */; };
-		1E60E0142CAC628A00623CD5 /* ContainerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0132CAC628A00623CD5 /* ContainerResolver.swift */; };
-		1E60E0152CAC628A00623CD5 /* ContainerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0132CAC628A00623CD5 /* ContainerResolver.swift */; };
 		1E60E0172CAD664300623CD5 /* ContainerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0162CAD664300623CD5 /* ContainerResolver.swift */; };
 		1E60E01A2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */; };
 		1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */; };
 		1E60E01C2CAD667200623CD5 /* ContainerResolvertype.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */; };
-		1E60E01D2CAD685500623CD5 /* IntentVPNManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */; };
-		1E60E01E2CAD685800623CD5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
-		1E60E01F2CAD685B00623CD5 /* IKEv2IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */; };
-		1E60E0202CAD685E00623CD5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
 		1E60E0212CAD68C600623CD5 /* KeyChainDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDE92B4D70EE004FA857 /* KeyChainDatabase.swift */; };
-		1E60E0222CAD68DC00623CD5 /* IntentModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */; };
 		1E60E0232CAD692400623CD5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		1E60E0242CAD693500623CD5 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* Constants.swift */; };
 		1E60E0252CAD69D000623CD5 /* keyChainKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384D2B91735100AA725C /* keyChainKeys.swift */; };
@@ -176,9 +160,6 @@
 		1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7822BE268E30036248B /* CardHeaderContainerView.swift */; };
 		1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */; };
 		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
-		1EDFA0E02CB54C3900F778E5 /* IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */; };
-		1EDFA0E22CB54C4100F778E5 /* IKEv2IntentVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */; };
-		1EDFA0E32CB54C4100F778E5 /* GenericVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
@@ -951,6 +932,15 @@
 		C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
 		C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
+		C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
+		C59FF1A22CBB8B090072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
+		C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0162CAD664300623CD5 /* ContainerResolver.swift */; };
+		C59FF1A42CBB8D920072EF70 /* ContainerResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E0162CAD664300623CD5 /* ContainerResolver.swift */; };
+		C59FF1A52CBB8DC70072EF70 /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Ext.swift */; };
+		C59FF1A62CBB8DDB0072EF70 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
+		C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
+		C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
+		C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */; };
@@ -1317,16 +1307,10 @@
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
 		1E60DFE22CA2E62100623CD5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Windscribe/Base.lproj/SiriIntents.intentdefinition; sourceTree = SOURCE_ROOT; };
-		1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentModule.swift; sourceTree = "<group>"; };
 		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
-		1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentVPNManagerType.swift; sourceTree = "<group>"; };
-		1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericVPNManager.swift; sourceTree = "<group>"; };
-		1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IKEv2IntentVPNManager.swift; sourceTree = "<group>"; };
-		1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentVPNManager.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
 		1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutProvider.swift; sourceTree = "<group>"; };
-		1E60E0132CAC628A00623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
 		1E6A7FA2FA7061898B36ABB7 /* Pods-PacketTunnel.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.development.xcconfig"; path = "Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.development.xcconfig"; sourceTree = "<group>"; };
@@ -2412,17 +2396,6 @@
 			path = Handlers;
 			sourceTree = "<group>";
 		};
-		1E60DFEE2CAACCB500623CD5 /* VPN Managers */ = {
-			isa = PBXGroup;
-			children = (
-				1E60DFEF2CAACCF000623CD5 /* IntentVPNManagerType.swift */,
-				1E60DFF12CAACD2F00623CD5 /* GenericVPNManager.swift */,
-				1E60DFF32CAACD5700623CD5 /* IKEv2IntentVPNManager.swift */,
-				1E60DFF52CAACD8A00623CD5 /* IntentVPNManager.swift */,
-			);
-			path = "VPN Managers";
-			sourceTree = "<group>";
-		};
 		1E60E00C2CAC53C800623CD5 /* Intents */ = {
 			isa = PBXGroup;
 			children = (
@@ -3227,14 +3200,11 @@
 		AF20AE2522DE4DB000375489 /* SiriIntents */ = {
 			isa = PBXGroup;
 			children = (
-				1E60DFEE2CAACCB500623CD5 /* VPN Managers */,
 				1E60DFE92CA4719E00623CD5 /* Handlers */,
 				1E60DFE12CA2E62100623CD5 /* SiriIntents.intentdefinition */,
 				AF20AE2F22DE4E5B00375489 /* SiriIntents.entitlements */,
 				AF20AE2622DE4DB000375489 /* IntentHandler.swift */,
 				AF20AE2822DE4DB000375489 /* Info.plist */,
-				1E60DFE72CA41B1C00623CD5 /* IntentModule.swift */,
-				1E60E0132CAC628A00623CD5 /* ContainerResolver.swift */,
 			);
 			path = SiriIntents;
 			sourceTree = "<group>";
@@ -5388,7 +5358,6 @@
 				1A9DB3502816859E00C3EC1C /* LanguageViewModel.swift in Sources */,
 				AF0420EC21C19FE0002132DE /* Server.swift in Sources */,
 				E90FD029273975F100721874 /* MainViewController+UIScrollViewDelegate.swift in Sources */,
-				1E60E0082CAC47A000623CD5 /* IntentVPNManager.swift in Sources */,
 				1AE6DA1F2833CFD800593495 /* GeneralViewController.swift in Sources */,
 				E97ABD4828D081BA00B38587 /* CheckView.swift in Sources */,
 				E90FD02F2739789B00721874 /* MainViewController+UIAutoModeSelectorView.swift in Sources */,
@@ -5432,7 +5401,6 @@
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
 				1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */,
 				599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */,
-				1E60E00B2CAC488900623CD5 /* IKEv2IntentVPNManager.swift in Sources */,
 				59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */,
 				1EF7BB2D2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */,
 				1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */,
@@ -5525,7 +5493,6 @@
 				E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */,
 				AF42802E22D793E9006761C5 /* ViewLogViewController.swift in Sources */,
 				AF8DA7B72204E37500885BD8 /* AccountTableViewCell.swift in Sources */,
-				1E60E0092CAC485F00623CD5 /* GenericVPNManager.swift in Sources */,
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+Ext.swift in Sources */,
 				C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */,
@@ -5572,7 +5539,6 @@
 				C56FCC082B2CF3A7008DE7D4 /* HelpRouter.swift in Sources */,
 				C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */,
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
-				1E60E00A2CAC486500623CD5 /* IntentVPNManagerType.swift in Sources */,
 				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
 				E97ABD4B28D47AE600B38587 /* ShareWithFriendViewController.swift in Sources */,
 				AF97EFDF2281F1DD00378058 /* Bundle+Ext.swift in Sources */,
@@ -5724,43 +5690,44 @@
 				C51EEDCD2C1779B600B01F8F /* LanguageManagerV2.swift in Sources */,
 				C5DD96062CA7255A00FFABBC /* Constants.swift in Sources */,
 				C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */,
-				1E60DFF22CAACD2F00623CD5 /* GenericVPNManager.swift in Sources */,
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
+				C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */,
 				C5DD96072CA7257500FFABBC /* Data+Ext.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
-				1E60DFF02CAACCF000623CD5 /* IntentVPNManagerType.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
 				1E60E01C2CAD667200623CD5 /* ContainerResolvertype.swift in Sources */,
 				C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */,
 				5986AB492C4563BE00167023 /* APIParameterValues.swift in Sources */,
-				1E60DFF42CAACD5700623CD5 /* IKEv2IntentVPNManager.swift in Sources */,
 				1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */,
-				1E60DFE82CA41B1C00623CD5 /* IntentModule.swift in Sources */,
 				C56FCBE32B2B8DB1008DE7D4 /* SharedUserDefaults.swift in Sources */,
 				5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */,
 				C50F20D12B62110500266B23 /* Bundle+Ext.swift in Sources */,
 				C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */,
 				C585F3E32C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				1E60DFE42CA2E62100623CD5 /* SiriIntents.intentdefinition in Sources */,
-				1E60E0142CAC628A00623CD5 /* ContainerResolver.swift in Sources */,
 				C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C50F20CE2B61A52B00266B23 /* FileLogFormater.swift in Sources */,
 				C50F20DA2B62293300266B23 /* LogType.swift in Sources */,
 				C52DA52F2B63913300E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
+				C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
+				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				C5DD96032CA723D700FFABBC /* keyChainKeys.swift in Sources */,
 				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
+				C59FF1A52CBB8DC70072EF70 /* String+Ext.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */,
 				C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
+				C59FF1A22CBB8B090072EF70 /* IntentCommon.swift in Sources */,
 				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
-				1E60DFF62CAACD8A00623CD5 /* IntentVPNManager.swift in Sources */,
 				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
+				C59FF1A62CBB8DDB0072EF70 /* APIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5836,16 +5803,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				593607F82B029F5C0052913C /* UIFont+Ext.swift in Sources */,
-				1EDFA0E22CB54C4100F778E5 /* IKEv2IntentVPNManager.swift in Sources */,
-				1EDFA0E32CB54C4100F778E5 /* GenericVPNManager.swift in Sources */,
 				597DDE012BA2180500F19F3F /* UIConstants+Fields.swift in Sources */,
-				1E60E01E2CAD685800623CD5 /* GenericVPNManager.swift in Sources */,
 				1E60E0252CAD69D000623CD5 /* keyChainKeys.swift in Sources */,
 				C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */,
 				1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */,
-				1E60E0222CAD68DC00623CD5 /* IntentModule.swift in Sources */,
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
 				1E60E0232CAD692400623CD5 /* KeyChainDatabaseImpl.swift in Sources */,
+				C59FF1A42CBB8D920072EF70 /* ContainerResolver.swift in Sources */,
 				AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */,
 				AF038CC9256409C2008F34A6 /* UIColor+Ext.swift in Sources */,
 				1E60E0262CAD69DC00623CD5 /* Data+Ext.swift in Sources */,
@@ -5864,8 +5828,6 @@
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
 				1E01D9002C5164EA00B679E9 /* HomeWidget.intentdefinition in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
-				1E60E0202CAD685E00623CD5 /* IntentVPNManager.swift in Sources */,
-				1E60E0152CAC628A00623CD5 /* ContainerResolver.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */,
@@ -5873,6 +5835,7 @@
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
 				1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */,
 				C56FCBE42B2B8DB2008DE7D4 /* SharedUserDefaults.swift in Sources */,
+				C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */,
 				1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */,
 				C50F20B82B61734600266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
@@ -5880,12 +5843,9 @@
 				C50F20D32B62110800266B23 /* Bundle+Ext.swift in Sources */,
 				C56123762C5F24020090EB5A /* DNSUtil.swift .swift in Sources */,
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
-				1EDFA0E02CB54C3900F778E5 /* IntentVPNManager.swift in Sources */,
 				C50F20CF2B61A52C00266B23 /* FileLogFormater.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
-				1E60E01F2CAD685B00623CD5 /* IKEv2IntentVPNManager.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
-				1E60E01D2CAD685500623CD5 /* IntentVPNManagerType.swift in Sources */,
 				C50F20DB2B62293600266B23 /* LogType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6740,7 +6700,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6771,7 +6731,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7221,7 +7181,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
