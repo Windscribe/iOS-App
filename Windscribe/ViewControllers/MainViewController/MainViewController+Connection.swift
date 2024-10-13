@@ -64,6 +64,10 @@ extension MainViewController {
 
     func setNetworkSsid() {
         viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { network in
+            let vpnInfo = try? self.vpnManager.vpnInfo.value()
+            if vpnInfo?.status == NEVPNStatus.connecting {
+                return
+            }
             if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
                 if network.networkType == .cellular || network.networkType == .wifi {
                     self.trustedNetworkValueLabel.text = network.name ?? ""
