@@ -213,7 +213,11 @@ extension MainViewController {
     func showAutoSecureViews() {
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         DispatchQueue.main.async {
-            if isOnline {
+            if !isOnline {
+                self.showNoInternetConnection()
+                return
+            }
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
                 UIView.animate(withDuration: 0.25) {
                     self.flagBottomGradientView.layer.opacity = 1.0
                     self.expandButton.imageView?.rotate(180)
@@ -226,8 +230,6 @@ extension MainViewController {
                 }
                 self.loadNetworkOptions()
                 self.updateNetworkOptions()
-            } else {
-                self.showNoInternetConnection()
             }
         }
     }

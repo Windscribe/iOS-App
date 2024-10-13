@@ -9,6 +9,14 @@
 import Foundation
 import NetworkExtension
 
+enum AppIntentError: Error, LocalizedError {
+    case VPNNotConfigured
+
+    var errorDescription: String? {
+        return "Configure using Windscribe."
+    }
+}
+
 @available(iOS 13.0.0, *)
 func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
     Task {

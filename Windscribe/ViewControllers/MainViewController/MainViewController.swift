@@ -199,48 +199,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }).disposed(by: disposeBag)
     }
 
-    func checkForVPNActivation() {
-        NEVPNManager.shared().loadFromPreferences(completionHandler: { error in
-            if error == nil {
-                if self.viewModel.isPrivacyPopupAccepted() &&
-                    WifiManager.shared.getConnectedNetwork()?.SSID == TextsAsset.cellular &&
-                    (!IKEv2VPNManager.shared.isConfigured() &&
-                     !OpenVPNManager.shared.isConfigured() &&
-                     !WireGuardVPNManager.shared.isConfigured()) {
-                    IKEv2VPNManager.shared.configureDummy { [weak self] _,_ in
-                        self?.setNetworkSsid()
-                        self?.viewModel.refreshProtocolInfo()
-                    }
-                }
-            }
-        })
-    }
-
-    func configureForUnauthorizedVPNConfiguration() {
-        IKEv2VPNManager.shared.neVPNManager.loadFromPreferences { [weak self] _ in
-            guard let self = self else { return }
-            let configuration = IKEv2VPNManager.shared.neVPNManager.protocolConfiguration?.username ?? OpenVPNManager.shared.providerManager?.protocolConfiguration?.username ?? WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.username ?? ""
-            if configuration == "" || self.userJustLoggedIn {
-                self.connectionStateViewModel.displayLocalIPAddress(force: true)
-                self.loadLatencyValues(force: true, selectBestLocation: true, connectToBestLocation: false)
-            }
-        }
-    }
-
     func configureNotificationListeners() {
-        OpenVPNManager.shared.setup { [weak self] in
-            guard let self = self else { return }
-            self.vpnManager.configureForConnectionState()
-            self.configureForUnauthorizedVPNConfiguration()
-            self.latencyLoaderObserver = NotificationCenter.default.addObserver(
-                forName: NSNotification.Name.NEVPNStatusDidChange,
-                object: nil,
-                queue: .main) { _ in
-                    self.loadLatencyWhenReady()
-                }
-            if self.vpnManager.isDisconnected() && OpenVPNManager.shared.isConfigured() {
-                self.loadLatencyWhenReady()
-            }
+        if self.vpnManager.isDisconnected() {
+            self.loadLatencyWhenReady()
         }
         NotificationCenter.default.addObserver(self, selector: #selector(self.loadLastConnected), name: Notifications.loadLastConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.popoverDismissed), name: Notifications.popoverDismissed, object: nil)

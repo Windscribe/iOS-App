@@ -10,9 +10,6 @@ import Foundation
 import AppIntents
 import WidgetKit
 import NetworkExtension
-enum AppIntentError: Error {
-    case VPNNotConfigured
-}
 @available(iOS 16.0, *)
 @available(iOSApplicationExtension, unavailable)
 extension Connect: ForegroundContinuableIntent { }
@@ -25,7 +22,16 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         Summary("Connect to VPN")
     }
 
-    fileprivate let logger = ContainerResolver().getLogger()
+    fileprivate let resolver = ContainerResolver()
+
+    var logger: FileLogger {
+        return resolver.getLogger()
+    }
+
+    var preferences: Preferences {
+        return resolver.getPreferences()
+    }
+
     func perform() async throws -> some IntentResult & ProvidesDialog {
         logger.logD(tag, "Enable VPN action called.")
         do {

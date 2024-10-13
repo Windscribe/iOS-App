@@ -47,7 +47,6 @@ extension MainViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        checkForVPNActivation()
         updateServerConfigs()
         bindViewModels()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
