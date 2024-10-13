@@ -941,6 +941,7 @@
 		C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
 		C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425B9827437024008B8786 /* APIParameters.swift */; };
+		C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */; };
 		C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */; };
 		C5A3444F2C4DF049001EBB5C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */; };
@@ -5132,6 +5133,7 @@
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
 				1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */,
 				1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */,
+				C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */,
 				59FC742E2C51569700021CD1 /* Keychain.swift in Sources */,
 				1E9F2C372C66629100607BAA /* UITextView+Ext.swift in Sources */,
 			);
