@@ -37,14 +37,24 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         do {
             let activeManager = try await getActiveManager()
             let vpnStatus = activeManager.connection.status
+            // If it's invalid it will not connect
+            guard vpnStatus != .invalid else {
+                logger.logD(tag, "Invalid VPN Manager.")
+                WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+                return .result(dialog: .responseFailure)
+            }
             // Already connected just update status.
-            if vpnStatus == NEVPNStatus.connected {
+            if vpnStatus == .connected {
+                WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                 return .result(dialog: .responseSuccess)
             }
-            activeManager.isEnabled = true
-            activeManager.isOnDemandEnabled = true
-            try await activeManager.saveToPreferences()
-            try activeManager.connection.startVPNTunnel()
+            // If already connecting then just wait for it to finish
+            if  vpnStatus != .connecting {å
+                activeManager.isEnabled = true
+                activeManager.isOnDemandEnabled = true
+                try await activeManager.saveToPreferences()
+                try activeManager.connection.startVPNTunnel()
+            }
             var iterations = 0
             while iterations <= 10 {
                 try? await Task.sleep(for: .milliseconds(500))

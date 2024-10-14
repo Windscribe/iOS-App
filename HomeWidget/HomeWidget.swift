@@ -40,37 +40,38 @@ struct Provider: TimelineProvider {
             switch result {
                 case .success(let manager):
                     if let entry = buildSimpleEntry(manager: manager) {
-                        entries.append(entry)
-                        let timeline = Timeline(entries: entries, policy: .atEnd)
                         logger.logD(tag, "Updated widget with status:  \(manager.connection.status)")
-                        completion(timeline)
+                        entries.append(entry)
                     }
                 case .failure(let failure):
                     logger.logD(tag, "No VPN Configuration found Error: \(failure).")
                     let entry = buildErrorEntry(failure: failure)
                     entries.append(entry)
-                    let timeline = Timeline(entries: entries, policy: .atEnd)
-                    completion(timeline)
             }
+            let timeline = Timeline(entries: entries, policy: .atEnd)
+            completion(timeline)
         }
     }
 
     private func buildSimpleEntry(manager: NEVPNManager) -> SimpleEntry? {
-        var status = WidgetStatus.disconnected
-        if manager.connection.status == NEVPNStatus.connected {
-            status = WidgetStatus.connected
-        }
+        let status: WidgetStatus = manager.connection.status == .connected ? .connected : .disconnected
         if let countryCode = preferences.getcountryCodeKey(),
            let serverName = preferences.getServerNameKey(),
            let nickName = preferences.getNickNameKey() {
-            let entry = SimpleEntry(date: Date(), status: status, name: serverName, nickname: nickName, countryCode: countryCode)
+            let entry = SimpleEntry(date: Date(),
+                                    status: status,
+                                    name: serverName,
+                                    nickname: nickName,
+                                    countryCode: countryCode)
            return entry
         }
       return nil
     }
 
     private func buildErrorEntry(failure: Error) -> SimpleEntry {
-        return SimpleEntry(date: Date(), status: WidgetStatus.error(failure.localizedDescription), name: "", nickname: "", countryCode: "CA")
+        return SimpleEntry(date: Date(),
+                           status: WidgetStatus.error(failure.localizedDescription),
+                           name: "", nickname: "", countryCode: "CA")
     }
 }
 
