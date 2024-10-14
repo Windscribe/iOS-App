@@ -49,7 +49,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 return .result(dialog: .responseSuccess)
             }
             // If already connecting then just wait for it to finish
-            if  vpnStatus != .connecting {å
+            if  vpnStatus != .connecting {
                 activeManager.isEnabled = true
                 activeManager.isOnDemandEnabled = true
                 try await activeManager.saveToPreferences()
