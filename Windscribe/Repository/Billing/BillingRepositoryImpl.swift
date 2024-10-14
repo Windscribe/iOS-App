@@ -24,11 +24,20 @@ class BillingRepositoryImpl: BillingRepository {
             self.localDatabase.saveMobilePlans(mobilePlansList: plans.mobilePlans.toArray())
             return Single.just(plans.mobilePlans.toArray())
         }.catch { error in
-            if let plans = self.localDatabase.getMobilePlans() {
-                return Single.just(plans)
-            } else {
-                return Single.error(error)
+            self.loadFromDatabase(error: error)
+        }
+    }
+
+    func loadFromDatabase(error: Error) -> Single<[MobilePlan]> {
+        return Single.create { single in
+            DispatchQueue.main.async {
+                if let plans = self.localDatabase.getMobilePlans() {
+                    single(.success(plans))
+                } else {
+                    single(.failure(error))
+                }
             }
+            return Disposables.create()
         }
     }
 }
