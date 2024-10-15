@@ -22,6 +22,12 @@ extension Container {
         register(Preferences.self) { _ in
             SharedSecretDefaults.shared
         }.inObjectScope(.container)
+        if WSNet.isValid() {
+            register(WSNetServerAPI.self) { _ in
+                return WSNet.instance().serverAPI()
+            }.inObjectScope(.container)
+            return
+        }
         register(WSNetServerAPI.self) { r in
             let preferences = r.resolve(Preferences.self)!
             let logger = r.resolve(FileLogger.self)

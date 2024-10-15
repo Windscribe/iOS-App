@@ -41,28 +41,18 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
                 if activeManager.connection.status == .disconnected {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                     logger.logD(tag, "Disconnected from VPN.")
-                    return .result(dialog: .responseSuccess)
+                    return .result(dialog: .responseSuccessDisconnect)
                 }
                 iterations += 1
                 logger.logD(tag, "Awaiting disconnect from VPN.")
             }
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             logger.logD(tag, "Taking too long to disconnect.")
-            return .result(dialog: .responseFailure)
+            return .result(dialog: .responseFailureDisconnect)
         } catch let error {
             logger.logD(tag, "Error disconnecting from VPN: \(error)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-            return .result(dialog: .responseFailure)
+            return .result(dialog: .responseFailureDisconnect)
         }
-    }
-}
-
-@available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
-fileprivate extension IntentDialog {
-    static var responseSuccess: Self {
-        "Disconnect request of the VPN was successful."
-    }
-    static var responseFailure: Self {
-        "Sorry, something went wrong while trying to disconnect, please check the Windscribe app."
     }
 }

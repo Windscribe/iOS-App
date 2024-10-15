@@ -76,13 +76,3 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
         }
     }
 }
-
-@available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
-fileprivate extension IntentDialog {
-    static var responseSuccess: Self {
-        "Connection request to the VPN was successful."
-    }
-    static var responseFailure: Self {
-        "Sorry, something went wrong while trying to connect, please check the Windscribe app."
-    }
-}

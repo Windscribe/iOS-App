@@ -718,6 +718,13 @@
 		AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716921CD4D7C00349195 /* APIDebug.swift */; };
 		C5007D532CAF9E740035AE21 /* PreferencePrivacyView.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */; };
 		C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */; };
+		C5035A122CBE272B00A46B6D /* ShowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5035A112CBE272B00A46B6D /* ShowLocation.swift */; };
+		C5035A132CBE272B00A46B6D /* ShowLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5035A112CBE272B00A46B6D /* ShowLocation.swift */; };
+		C5035A142CBE280600A46B6D /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
+		C5035A162CBE2BD000A46B6D /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
+		C5035A172CBE2BE900A46B6D /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Ext.swift */; };
+		C5035A182CBE2BF600A46B6D /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
+		C5035A192CBE2C0100A46B6D /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
 		C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
@@ -1738,6 +1745,7 @@
 		C0BBF45FC24C7B3453846585 /* Pods-SiriIntents.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SiriIntents.staging.xcconfig"; path = "Target Support Files/Pods-SiriIntents/Pods-SiriIntents.staging.xcconfig"; sourceTree = "<group>"; };
 		C5007D522CAF9E740035AE21 /* PreferencePrivacyView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencePrivacyView.xib; sourceTree = "<group>"; };
 		C5007D542CAF9EB10035AE21 /* PreferencePrivacyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencePrivacyView.swift; sourceTree = "<group>"; };
+		C5035A112CBE272B00A46B6D /* ShowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocation.swift; sourceTree = "<group>"; };
 		C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepository.swift; sourceTree = "<group>"; };
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
@@ -2403,6 +2411,7 @@
 				1E60DFF72CAB061800623CD5 /* Disconnect.swift */,
 				1E60DFF82CAB061800623CD5 /* Connect.swift */,
 				C59FF19E2CB998610072EF70 /* IntentCommon.swift */,
+				C5035A112CBE272B00A46B6D /* ShowLocation.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -5304,6 +5313,7 @@
 				C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */,
 				AF2531B42209FE830001CF96 /* Dropdown.swift in Sources */,
 				C5D0E40D29BB8BE70091FB14 /* FileManager+Extension.swift in Sources */,
+				C5035A122CBE272B00A46B6D /* ShowLocation.swift in Sources */,
 				1A9DB35B2817F53400C3EC1C /* String+Localized.swift in Sources */,
 				AF16C98F2225EB8A00997A2A /* LoadingSplashView.swift in Sources */,
 				E97ABD4D28D985CD00B38587 /* ShareWithFriendViewModel.swift in Sources */,
@@ -5721,6 +5731,7 @@
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				C5DD96032CA723D700FFABBC /* keyChainKeys.swift in Sources */,
 				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
+				C5035A142CBE280600A46B6D /* Connect.swift in Sources */,
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C59FF1A52CBB8DC70072EF70 /* String+Ext.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
@@ -5810,6 +5821,7 @@
 				C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */,
 				1AF57D47280FED3C004E8082 /* LanguageManager.swift in Sources */,
 				599339702B4CD28400EC615D /* DefaultValues.swift in Sources */,
+				C5035A192CBE2C0100A46B6D /* WSNetErrors.swift in Sources */,
 				1E60E0232CAD692400623CD5 /* KeyChainDatabaseImpl.swift in Sources */,
 				C59FF1A42CBB8D920072EF70 /* ContainerResolver.swift in Sources */,
 				AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */,
@@ -5834,8 +5846,11 @@
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
+				C5035A172CBE2BE900A46B6D /* String+Ext.swift in Sources */,
 				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
+				C5035A132CBE272B00A46B6D /* ShowLocation.swift in Sources */,
 				1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */,
+				C5035A162CBE2BD000A46B6D /* APIUtil.swift in Sources */,
 				C56FCBE42B2B8DB2008DE7D4 /* SharedUserDefaults.swift in Sources */,
 				C59FF1A92CBB8E700072EF70 /* APIParameters.swift in Sources */,
 				1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */,
@@ -5849,6 +5864,7 @@
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
 				C50F20DB2B62293600266B23 /* LogType.swift in Sources */,
+				C5035A182CBE2BF600A46B6D /* APIError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

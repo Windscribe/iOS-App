@@ -8,6 +8,7 @@
 
 import Foundation
 import NetworkExtension
+import AppIntents
 
 enum AppIntentError: Error, LocalizedError {
     case VPNNotConfigured
@@ -67,4 +68,26 @@ func getNEVPNManager() async throws -> NEVPNManager {
         throw AppIntentError.VPNNotConfigured
     }
     return manager
+}
+
+@available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
+extension IntentDialog {
+    static var responseSuccess: Self {
+        "Connection request to the VPN was successful."
+    }
+    static var responseFailure: Self {
+        "Sorry, something went wrong while trying to connect, please check the Windscribe app."
+    }
+    static var responseSuccessDisconnect: Self {
+        "Disconnect request of the VPN was successful."
+    }
+    static var responseFailureDisconnect: Self {
+        "Sorry, something went wrong while trying to disconnect, please check the Windscribe app."
+    }
+    static func responseSuccess(cityName: String, nickName: String, ipAddress: String) -> Self {
+        "You are connected to \(cityName), \(nickName) and your IP address is \(ipAddress)."
+    }
+    static func responseSuccessWithNoConnection(ipAddress: String) -> Self {
+        "You are not connected to VPN. Your  IP address is \(ipAddress)."
+    }
 }
