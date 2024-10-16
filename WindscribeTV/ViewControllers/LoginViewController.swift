@@ -29,6 +29,7 @@ class LoginViewController: PreferredFocusedViewController {
     @IBOutlet weak var textField2FA: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
     @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var infoView: UIView!
     var is2FA: Bool = false
 
     // MARK: - State properties
@@ -238,10 +239,10 @@ class LoginViewController: PreferredFocusedViewController {
         viewModel.failedState.distinctUntilChanged().bind { [weak self] (state) in
             switch state {
             case .username(let error), .network(let error), .api(let error), .twoFa(let error), .loginCode(let error):
-                self?.infoLabel?.isHidden = false
+                self?.infoView?.isHidden = false
                 self?.infoLabel?.text = error
             case .none:
-                self?.infoLabel?.isHidden = true
+                self?.infoView?.isHidden = true
                 self?.infoLabel?.text = ""
 
             }
