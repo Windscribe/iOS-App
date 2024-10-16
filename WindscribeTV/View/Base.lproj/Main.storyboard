@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="23094" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -492,31 +492,44 @@ Secrets.</string>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Forgot Password?"/>
                                     </button>
-                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlZ-al-dtt">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XO8-L1-cLI">
                                         <rect key="frame" x="0.0" y="0.0" width="642" height="90"/>
-                                        <color key="backgroundColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="GlZ-al-dtt">
+                                                <rect key="frame" x="16" y="0.0" width="610" height="90"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="90" id="LA1-pT-UKS"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <color key="textColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="1" green="0.23137254901960785" blue="0.23137254901960785" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="90" id="LA1-pT-UKS"/>
+                                            <constraint firstAttribute="bottom" secondItem="GlZ-al-dtt" secondAttribute="bottom" id="VQE-pr-58n"/>
+                                            <constraint firstItem="GlZ-al-dtt" firstAttribute="top" secondItem="XO8-L1-cLI" secondAttribute="top" id="a94-4a-M5b"/>
+                                            <constraint firstAttribute="trailing" secondItem="GlZ-al-dtt" secondAttribute="trailing" constant="16" id="d8F-1N-Tna"/>
+                                            <constraint firstAttribute="height" constant="90" id="ohh-yi-Zkh"/>
+                                            <constraint firstItem="GlZ-al-dtt" firstAttribute="leading" secondItem="XO8-L1-cLI" secondAttribute="leading" constant="16" id="ySu-bT-NCx"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                        <color key="textColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="XO8-L1-cLI" firstAttribute="top" secondItem="Jtg-mF-KcA" secondAttribute="top" id="1Aa-WZ-O06"/>
                                     <constraint firstItem="XMB-Vi-SNb" firstAttribute="centerX" secondItem="Jtg-mF-KcA" secondAttribute="centerX" id="5Qv-un-Lxq"/>
-                                    <constraint firstItem="GlZ-al-dtt" firstAttribute="top" secondItem="Jtg-mF-KcA" secondAttribute="top" id="75q-gm-7yX"/>
-                                    <constraint firstAttribute="trailing" secondItem="GlZ-al-dtt" secondAttribute="trailing" id="9Mf-eH-cpd"/>
                                     <constraint firstAttribute="bottom" secondItem="88c-KR-24M" secondAttribute="bottom" constant="70" id="I9D-Yu-4ln"/>
+                                    <constraint firstItem="XO8-L1-cLI" firstAttribute="leading" secondItem="Jtg-mF-KcA" secondAttribute="leading" id="K9q-lB-GCa"/>
                                     <constraint firstAttribute="width" constant="642" id="Qjk-CE-tSS"/>
                                     <constraint firstItem="XMB-Vi-SNb" firstAttribute="centerY" secondItem="Jtg-mF-KcA" secondAttribute="centerY" id="YaL-f5-Ydx"/>
                                     <constraint firstItem="evW-0J-whC" firstAttribute="centerX" secondItem="Jtg-mF-KcA" secondAttribute="centerX" id="bq0-Wb-6Wo"/>
                                     <constraint firstAttribute="bottom" secondItem="mBO-lD-w1h" secondAttribute="bottom" constant="70" id="csM-zW-bxv"/>
                                     <constraint firstItem="88c-KR-24M" firstAttribute="leading" secondItem="Jtg-mF-KcA" secondAttribute="leading" constant="70" id="dua-IO-uUH"/>
+                                    <constraint firstAttribute="trailing" secondItem="XO8-L1-cLI" secondAttribute="trailing" id="grz-fH-4ke"/>
                                     <constraint firstAttribute="trailing" secondItem="mBO-lD-w1h" secondAttribute="trailing" constant="70" id="ioP-p8-sE6"/>
                                     <constraint firstItem="evW-0J-whC" firstAttribute="top" secondItem="Jtg-mF-KcA" secondAttribute="top" constant="172" id="smd-6B-pOX"/>
-                                    <constraint firstItem="GlZ-al-dtt" firstAttribute="leading" secondItem="Jtg-mF-KcA" secondAttribute="leading" id="vfe-yK-dor"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vm-yO-3oB">
@@ -563,6 +576,7 @@ Secrets.</string>
                         <outlet property="backButton" destination="88c-KR-24M" id="sby-6m-KCJ"/>
                         <outlet property="forgotButton" destination="mBO-lD-w1h" id="enV-CL-PfN"/>
                         <outlet property="infoLabel" destination="GlZ-al-dtt" id="ze1-0L-LnS"/>
+                        <outlet property="infoView" destination="XO8-L1-cLI" id="J8O-5F-jcX"/>
                         <outlet property="passwordTextField" destination="pi2-SR-bEV" id="GD6-pB-5tv"/>
                         <outlet property="signUpButton" destination="by7-6d-YD3" id="7Ae-x2-cvA"/>
                         <outlet property="signUpTitle" destination="evW-0J-whC" id="h1r-Yz-5NQ"/>
@@ -780,28 +794,42 @@ Secrets.</string>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" title="Forgot Password?"/>
                                     </button>
-                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lYz-8P-8Fa">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DEu-xj-847">
                                         <rect key="frame" x="0.0" y="0.0" width="642" height="90"/>
-                                        <color key="backgroundColor" red="1" green="0.23137254901960785" blue="0.23137254901960785" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="RuU-do-PXi">
+                                                <rect key="frame" x="16" y="0.0" width="610" height="90"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="90" id="ugG-zy-uXp"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                <color key="textColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="0.20000000000000001" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="90" id="mkV-eU-Xqh"/>
+                                            <constraint firstItem="RuU-do-PXi" firstAttribute="leading" secondItem="DEu-xj-847" secondAttribute="leading" constant="16" id="Ccw-Mr-8JV"/>
+                                            <constraint firstAttribute="height" constant="90" id="CsT-uf-myL"/>
+                                            <constraint firstItem="RuU-do-PXi" firstAttribute="top" secondItem="DEu-xj-847" secondAttribute="top" id="Fr5-Hg-aYT"/>
+                                            <constraint firstAttribute="bottom" secondItem="RuU-do-PXi" secondAttribute="bottom" id="XS9-6E-nmM"/>
+                                            <constraint firstAttribute="trailing" secondItem="RuU-do-PXi" secondAttribute="trailing" constant="16" id="hsz-bZ-02C"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="90" id="wlR-m7-1gs"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="30"/>
-                                        <color key="textColor" red="1" green="0.23137254900000001" blue="0.23137254900000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0078431372550000003" green="0.050980392159999999" blue="0.10980392160000001" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="lYz-8P-8Fa" firstAttribute="leading" secondItem="28H-Ir-xTd" secondAttribute="leading" id="1Mc-Ym-arB"/>
+                                    <constraint firstAttribute="trailing" secondItem="DEu-xj-847" secondAttribute="trailing" id="1Qn-qE-KMy"/>
                                     <constraint firstItem="bq2-zW-Rna" firstAttribute="leading" secondItem="28H-Ir-xTd" secondAttribute="leading" constant="70" id="3h3-YI-463"/>
+                                    <constraint firstItem="DEu-xj-847" firstAttribute="top" secondItem="28H-Ir-xTd" secondAttribute="top" id="58R-5h-6Lk"/>
                                     <constraint firstAttribute="bottom" secondItem="ezs-3U-Ga9" secondAttribute="bottom" constant="70" id="Go9-Ah-3Ix"/>
                                     <constraint firstAttribute="width" constant="642" id="I6m-1P-ViB"/>
                                     <constraint firstAttribute="trailing" secondItem="ezs-3U-Ga9" secondAttribute="trailing" constant="70" id="QYk-23-zsp"/>
-                                    <constraint firstItem="lYz-8P-8Fa" firstAttribute="top" secondItem="28H-Ir-xTd" secondAttribute="top" id="SGX-UW-dqe"/>
                                     <constraint firstItem="OkN-q4-vWr" firstAttribute="centerY" secondItem="28H-Ir-xTd" secondAttribute="centerY" id="SLH-Te-dPO"/>
-                                    <constraint firstAttribute="trailing" secondItem="lYz-8P-8Fa" secondAttribute="trailing" id="bis-3Y-rZ1"/>
                                     <constraint firstAttribute="bottom" secondItem="bq2-zW-Rna" secondAttribute="bottom" constant="70" id="dXX-ZP-Fyp"/>
+                                    <constraint firstItem="DEu-xj-847" firstAttribute="leading" secondItem="28H-Ir-xTd" secondAttribute="leading" id="dtT-H4-eOz"/>
                                     <constraint firstItem="tWk-Ce-Bu3" firstAttribute="top" secondItem="28H-Ir-xTd" secondAttribute="top" constant="172" id="jyQ-qI-suA"/>
                                     <constraint firstItem="tWk-Ce-Bu3" firstAttribute="centerX" secondItem="28H-Ir-xTd" secondAttribute="centerX" id="nIW-11-O7h"/>
                                     <constraint firstItem="OkN-q4-vWr" firstAttribute="centerX" secondItem="28H-Ir-xTd" secondAttribute="centerX" id="t7t-ve-eeo"/>
@@ -897,7 +925,8 @@ under “Account” choose “Lazy Login” and enter the code below.</string>
                         <outlet property="description2" destination="COr-8m-8me" id="qtM-g0-ON2"/>
                         <outlet property="forgotButton" destination="ezs-3U-Ga9" id="W9v-V8-5HC"/>
                         <outlet property="generateCodeButton" destination="y2b-Xf-tBa" id="xuF-Lx-Nrf"/>
-                        <outlet property="infoLabel" destination="lYz-8P-8Fa" id="NmC-nd-Y8l"/>
+                        <outlet property="infoLabel" destination="RuU-do-PXi" id="bPY-Uj-pw2"/>
+                        <outlet property="infoView" destination="DEu-xj-847" id="Khh-7k-Gnn"/>
                         <outlet property="loginTitle" destination="tWk-Ce-Bu3" id="cdc-2D-8QU"/>
                         <outlet property="orLabel" destination="u4Q-np-Mo1" id="dlm-T2-TsL"/>
                         <outlet property="passwordTextField" destination="G1u-7k-jRL" id="SVt-6R-g0L"/>
@@ -1002,23 +1031,6 @@ Secrets.</string>
             <point key="canvasLocation" x="-846" y="3034"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="9bK-pw-zAm">
-            <size key="intrinsicContentSize" width="80" height="86"/>
-        </designable>
-        <designable name="DTL-6M-nB9">
-            <size key="intrinsicContentSize" width="80" height="85"/>
-        </designable>
-        <designable name="IgO-T0-k3z">
-            <size key="intrinsicContentSize" width="169" height="86"/>
-        </designable>
-        <designable name="by7-6d-YD3">
-            <size key="intrinsicContentSize" width="223" height="86"/>
-        </designable>
-        <designable name="y2b-Xf-tBa">
-            <size key="intrinsicContentSize" width="362" height="86"/>
-        </designable>
-    </designables>
     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="badge" width="224" height="224"/>

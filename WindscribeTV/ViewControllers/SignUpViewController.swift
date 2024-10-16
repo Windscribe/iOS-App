@@ -15,6 +15,7 @@ class SignUpViewController: PreferredFocusedViewController {
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var signUpButton: WSRoundButton!
     @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var passwordTextField: PasswordTextFieldTv!
     @IBOutlet weak var forgotButton: UIButton!
@@ -118,25 +119,25 @@ class SignUpViewController: PreferredFocusedViewController {
         case .username(let error):
             self.usernameTextField.textColor = UIColor.failRed
             self.infoLabel.text = error
-            self.infoLabel.isHidden = false
+            self.infoView.isHidden = false
         case .password(let error):
             self.passwordTextField.textColor = UIColor.failRed
             self.infoLabel.text = error
-            self.infoLabel.isHidden = false
+            self.infoView.isHidden = false
         case .email(let error):
             self.infoLabel.text = error
             self.infoLabel.textColor = UIColor.failRed
-            self.infoLabel.isHidden = false
+            self.infoView.isHidden = false
         case .api(let error):
             self.infoLabel.text = error
             self.infoLabel.textColor = UIColor.failRed
-            self.infoLabel.isHidden = false
+            self.infoView.isHidden = false
         case .network(let error):
             self.infoLabel.text = error
             self.infoLabel.textColor = UIColor.failRed
-            self.infoLabel.isHidden = false
+            self.infoView.isHidden = false
         case .none:
-            self.infoLabel.isHidden = true
+            self.infoView.isHidden = true
             infoLabel.text = ""
         }
     }
