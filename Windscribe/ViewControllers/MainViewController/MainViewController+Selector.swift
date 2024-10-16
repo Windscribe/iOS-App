@@ -133,7 +133,7 @@ extension MainViewController {
                 self.didShowOutOfDataPopup = true
             }
         } else if session.getDataUsedInMB() >= 1024 && viewModel.daysSinceLogin() >= 2  && viewModel.showRateDialog() {
-            logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
+            logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
             self.showRateUsPopup()
         }
         logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
