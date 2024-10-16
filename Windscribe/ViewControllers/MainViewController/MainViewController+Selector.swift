@@ -136,6 +136,7 @@ extension MainViewController {
             logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
             self.showRateUsPopup()
         }
+        logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             if !didShowProPlanExpiredPopup {

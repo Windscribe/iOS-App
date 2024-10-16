@@ -99,6 +99,7 @@ extension MainViewController {
                 self.protocolLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
                 self.portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
                 self.preferredProtocolBadge.image = UIImage(named: info.state.preferredProtocolBadge)
+                self.trustedNetworkIcon.image = UIImage(named: info.trustedNetworkImage)
                 self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
                 self.connectButtonRingView.isHidden = [.disconnected, .disconnecting].contains(info.state)
                 self.connectButtonRingView.image = UIImage(named: info.state.connectButtonRing)
