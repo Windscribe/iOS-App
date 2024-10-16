@@ -44,6 +44,20 @@ struct ConnectionStateInfo {
     static func defaultValue(startState: ConnectionState = .disconnected) -> ConnectionStateInfo {
         return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, customConfig: nil, connectedWifi: nil)
     }
+
+    var trustedNetworkImage: String {
+        if let status = connectedWifi?.status {
+            if status == true {
+                return ImagesAsset.wifiUnsecure
+            } else {
+               return ImagesAsset.wifi
+            }
+        } else {
+            return ImagesAsset.wifi
+
+        }
+
+    }
 }
 
 extension ConnectionState {

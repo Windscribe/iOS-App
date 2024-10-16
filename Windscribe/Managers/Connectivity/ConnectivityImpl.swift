@@ -55,6 +55,7 @@ class ConnectivityImpl: Connectivity {
         getNetworkName(networkType: networkType) { ssid in
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
             self.network.onNext(appNetwork)
+            NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         }
     }
 

@@ -14,7 +14,6 @@ extension MainViewController {
        DispatchQueue.main.async { [weak self] in
            UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
                guard let self = self else { return }
-               self.trustedNetworkIcon.image = UIImage(named: ImagesAsset.wifiUnsecure)
                self.preferredProtocolLabel.isHidden = true
                self.preferredProtocolInfoButton.isHidden = true
                self.preferredProtocolSwitch.isHidden = true
@@ -39,7 +38,6 @@ extension MainViewController {
                 self.preferredProtocolInfoButton.isHidden = false
                 self.preferredProtocolSwitch.isHidden = false
                 self.cellDivider1.isHidden = false
-                self.trustedNetworkIcon.image = UIImage(named: ImagesAsset.wifi)
             })
         }
    }
