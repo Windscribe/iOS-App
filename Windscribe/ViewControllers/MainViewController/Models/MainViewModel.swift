@@ -448,6 +448,7 @@ class MainViewModel: MainViewModelType {
 
     func showRateDialog() -> Bool {
         if let dateLastShown = preferences.getWhenRateUsPopupDisplayed() {
+            logger.logD(self, "Date last rate dialog shown is : \(dateLastShown)")
             let today = Date()
             logger.logD(self, "Time elapsed since last rate dialog shown is \(today.interval(ofComponent: .day, fromDate: dateLastShown))")
             return today.interval(ofComponent: .day, fromDate: dateLastShown) > 30

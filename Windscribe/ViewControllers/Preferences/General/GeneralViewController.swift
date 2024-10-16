@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 import RxGesture
+import StoreKit
 
 class GeneralViewController: WSNavigationViewController {
     // MARK: - State properties
@@ -137,6 +138,24 @@ class GeneralViewController: WSNavigationViewController {
         currentVersionLabel.rx.anyGesture(.longPress()).skip(1).subscribe(onNext: { _ in
             self.popupRouter.routeTo(to: RouteID.shakeForDataPopUp, from: self)
         }).disposed(by: disposeBag)
+
+
+        currentVersionLabel.rx.tapGesture { gesture, _ in
+            gesture.numberOfTapsRequired = 3
+        }
+        .when(.recognized)
+        .subscribe(onNext: { _ in
+            self.logger.logD(self, "Tried showing rate dialog manually")
+            if #available(iOS 14.0, *) {
+                let scenes = UIApplication.shared.connectedScenes
+                if let windowScene = scenes.first as? UIWindowScene {
+                    self.logger.logD(self, "Attempting show rate popup.")
+                    SKStoreReviewController.requestReview(in: windowScene)
+                }
+            }
+        })
+        .disposed(by: disposeBag)
+
     }
 
     override func viewWillLayoutSubviews() {
