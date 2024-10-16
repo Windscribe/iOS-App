@@ -360,6 +360,7 @@ extension MainViewController {
     @objc func connectButtonTapped() {
         VPNManager.shared.resetProperties()
         disableConnectButton()
+        HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logE(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
