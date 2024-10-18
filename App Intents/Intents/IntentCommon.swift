@@ -90,4 +90,7 @@ extension IntentDialog {
     static func responseSuccessWithNoConnection(ipAddress: String) -> Self {
         "You are not connected to VPN. Your  IP address is \(ipAddress)."
     }
+    static var responseFailureState: Self {
+        "Sorry, something went wrong while trying to get your connection state, please check the Windscribe app."
+    }
 }

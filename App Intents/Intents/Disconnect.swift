@@ -28,7 +28,7 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
             let vpnStatus = activeManager.connection.status
             // Already disconnected just update status.
             if [NEVPNStatus.disconnected, NEVPNStatus.disconnecting, NEVPNStatus.invalid].contains(vpnStatus) {
-                return .result(dialog: .responseSuccess)
+                return .result(dialog: .responseSuccessDisconnect)
             }
             activeManager.isEnabled = true
             activeManager.isOnDemandEnabled = false

@@ -57,7 +57,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
                 return .result(dialog: .responseSuccessWithNoConnection(ipAddress: ip))
             }
         } catch {
-            return .result(dialog: .responseFailure)
+            return .result(dialog: .responseFailureState)
         }
     }
 
