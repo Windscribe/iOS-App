@@ -66,24 +66,30 @@ extension LocalDatabaseImpl {
         }
     }
 
-    // swiftlint:disable force_try
     private func getRealmArrayObservable<T: Object>(type: T.Type) -> Observable<[T]> {
-        guard let realm = try? Realm() else {
-            return Observable.error(Realm.Error.callFailed)
+        let realm: Realm
+        do {
+            realm = try Realm()
+        } catch {
+            return Observable.just([])
         }
         let objects = realm.objects(type.self)
         return Observable.changeset(from: objects)
-            .filter { _ , changeset in
+            .filter { _, changeset in
                 guard let changeset = changeset else {
                     return true
                 }
                 return !changeset.deleted.isEmpty || !changeset.inserted.isEmpty || !changeset.updated.isEmpty
-            }.map { results, _ in
-                return AnyRealmCollection(results)
-            }.catchAndReturn(AnyRealmCollection(try! Realm().objects(T.self)))
-            .map { $0.toArray() }
+            }
+            .map { results, _ in
+                return Array(results)
+            }
+            .catch { _ in
+                return Observable.just((try? Realm().objects(T.self).toArray()) ?? [])
+            }
+            .subscribe(on: MainScheduler.instance)
+            .observe(on: MainScheduler.instance)
     }
-    // swiftlint:enable force_try
 
     func deleteRealmObject<T: Object>(object: T) {
         try? object.realm?.write {
