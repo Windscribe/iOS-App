@@ -139,7 +139,6 @@ class GeneralViewController: WSNavigationViewController {
             self.popupRouter.routeTo(to: RouteID.shakeForDataPopUp, from: self)
         }).disposed(by: disposeBag)
 
-
         currentVersionLabel.rx.tapGesture { gesture, _ in
             gesture.numberOfTapsRequired = 3
         }
