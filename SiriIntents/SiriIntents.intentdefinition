@@ -11,9 +11,9 @@
 	<key>INIntentDefinitionSystemVersion</key>
 	<string>23F79</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>15F31d</string>
+	<string>16A242d</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>15.4</string>
+	<string>16.0</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -27,8 +27,6 @@
 			<string>View connected location and ip address.</string>
 			<key>INIntentDescriptionID</key>
 			<string>4LgglN</string>
-			<key>INIntentEligibleForWidgets</key>
-			<true/>
 			<key>INIntentLastParameterTag</key>
 			<integer>4</integer>
 			<key>INIntentManagedParameterCombinations</key>

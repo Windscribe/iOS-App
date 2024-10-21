@@ -9,6 +9,7 @@
 import NetworkExtension
 import OpenVPNAdapter
 import Swinject
+import WidgetKit
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
@@ -78,9 +79,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         if startProxy(ovpnData: ovpnFileContent) {
             // Wait for proxy to start listening for incoming connections..
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5){ [self] in
-                startHandler = completionHandler
-                vpnAdapter.connect(using: packetFlow)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5){ [weak self] in
+                guard let self = self else { return }
+                self.startHandler = completionHandler
+                self.vpnAdapter.connect(using: self.packetFlow)
             }
         } else {
             startHandler = completionHandler
@@ -177,6 +179,9 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     }
 
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message: String?) {
+        if #available(iOSApplicationExtension 14.0, *) {
+            WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+        }
         switch event {
         case .connected:
             if reasserting {
