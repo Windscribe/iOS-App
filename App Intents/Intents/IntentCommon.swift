@@ -78,6 +78,9 @@ extension IntentDialog {
     static var responseFailure: Self {
         "Sorry, something went wrong while trying to connect, please check the Windscribe app."
     }
+    static var responseTimeoutFailure: Self {
+        "Sorry, VPN is taking too long to connect, please check the Windscribe app."
+    }
     static var responseSuccessDisconnect: Self {
         "Disconnect request of the VPN was successful."
     }

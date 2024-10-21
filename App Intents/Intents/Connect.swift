@@ -56,7 +56,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 try activeManager.connection.startVPNTunnel()
             }
             var iterations = 0
-            while iterations <= 10 {
+            while iterations <= 20 {
                 try? await Task.sleep(for: .milliseconds(500))
                 if activeManager.connection.status == .connected {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
@@ -68,7 +68,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
             }
             logger.logD(tag, "Taking too long to connect.")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-            return .result(dialog: .responseFailure)
+            return .result(dialog: .responseTimeoutFailure)
         } catch let error {
             logger.logD(tag, "Error connecting to VPN: \(error)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
