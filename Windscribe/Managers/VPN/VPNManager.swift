@@ -299,33 +299,28 @@ class VPNManager {
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
         Task {
-            await loadManagers()
-            let ikev2ManagerStatus = IKEv2VPNManager.shared.neVPNManager.connection.status
-            let openVPNManagerStatus = OpenVPNManager.shared.providerManager?.connection.status ?? .invalid
-            let wireguardManagerStatus = WireGuardVPNManager.shared.providerManager?.connection.status ?? .invalid
-            // Get VPN connection info from manager with priority state if multiple exists.
-            let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
-            if priorityStates.contains(ikev2ManagerStatus) {
-                completion(VPNManagerType.iKEV2.getVPNConnectionInfo())
-                return
-            }
-            if priorityStates.contains(wireguardManagerStatus) {
-                completion(VPNManagerType.wg.getVPNConnectionInfo())
-                return
-            }
-            if priorityStates.contains(openVPNManagerStatus) {
-                completion(VPNManagerType.openVPN.getVPNConnectionInfo())
-                return
-            }
-            if priorityStates.contains(ikev2ManagerStatus) {
-                completion(VPNManagerType.iKEV2.getVPNConnectionInfo())
-                return
-            }
-            // No VPN Manager is configured
-            if ikev2ManagerStatus == .invalid && wireguardManagerStatus == .invalid && openVPNManagerStatus == .invalid {
+            guard let managers = try? await VPNManagerUtils.getAllManagers() else {
                 completion(nil)
                 return
             }
+            let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
+            managers.forEach {
+                if priorityStates.contains($0.connection.status) {
+                    if VPNManagerUtils.isIKEV2(manager: $0) {
+                        completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: $0))
+                    } else {
+                        completion(VPNManagerUtils.getVPNConnectionInfo(manager: $0))
+                    }
+                    return
+                }
+            }
+            
+            // No VPN Manager is configured
+            if !(managers.filter { $0.connection.status != .invalid }).isEmpty {
+                completion(nil)
+                return
+            }
+            
             // Get VPN connection info from last active manager.
             switch activeVPNManager {
             case .iKEV2:
