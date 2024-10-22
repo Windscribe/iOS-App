@@ -153,6 +153,7 @@ class VPNManager {
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             guard error != nil else { return }
             managers?.forEach { $0.removeFromPreferences { _ in }
+            }
         }
     }
 

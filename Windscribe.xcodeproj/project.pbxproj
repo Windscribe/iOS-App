@@ -75,6 +75,8 @@
 		1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */; };
 		1E2CBFEC2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */; };
 		1E2CBFED2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */; };
+		1E2CBFEF2CC7CACD00748D9F /* VPNManagerCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* VPNManagerCommon.swift */; };
+		1E2CBFF02CC7CACD00748D9F /* VPNManagerCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* VPNManagerCommon.swift */; };
 		1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */; };
 		1E49334A2BF3A52500C853AF /* StaticIPListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */; };
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
@@ -1288,6 +1290,7 @@
 		1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewModel.swift; sourceTree = "<group>"; };
 		1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDebugLogCompletedViewModel.swift; sourceTree = "<group>"; };
 		1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = SiriIntents.intentdefinition; sourceTree = "<group>"; };
+		1E2CBFEE2CC7CABC00748D9F /* VPNManagerCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerCommon.swift; sourceTree = "<group>"; };
 		1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+FavNodes.swift"; sourceTree = "<group>"; };
 		1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPListViewModel.swift; sourceTree = "<group>"; };
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
@@ -3418,6 +3421,7 @@
 		AFF507D9229D97FD00C094A0 /* VPN */ = {
 			isa = PBXGroup;
 			children = (
+				1E2CBFEE2CC7CABC00748D9F /* VPNManagerCommon.swift */,
 				AF0318BC21E7A9C20094D6D4 /* IKEv2VPNManager.swift */,
 				AF37EC9E227116A9005C19CC /* OpenVPNManager.swift */,
 				AFC75F7A24AB84EA00897C18 /* WireGuardVPNManager.swift */,
@@ -4957,6 +4961,7 @@
 				59FC74582C51613000021CD1 /* VPNManager+Selector.swift in Sources */,
 				1EF7BB392C6F93670032A4DF /* UILabel+Ext.swift in Sources */,
 				59A218752C3CA091000D89FA /* TVAssembler.swift in Sources */,
+				1E2CBFF02CC7CACD00748D9F /* VPNManagerCommon.swift in Sources */,
 				C56615F32C4D7AEB008AA993 /* UITextField+Ext.swift in Sources */,
 				59DA7FCC2C3DC55F00042E57 /* APIParameters.swift in Sources */,
 				59FC73FE2C51539F00021CD1 /* ServerCredentials.swift in Sources */,
@@ -5503,6 +5508,7 @@
 				59C3115F2BC5C00F004B16B3 /* ConnectionManagerV2.swift in Sources */,
 				AF8DA7AD2204BA1900885BD8 /* PreferencesTableViewCell.swift in Sources */,
 				C56FCC082B2CF3A7008DE7D4 /* HelpRouter.swift in Sources */,
+				1E2CBFEF2CC7CACD00748D9F /* VPNManagerCommon.swift in Sources */,
 				C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */,
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
