@@ -217,6 +217,13 @@ class WifiManager {
                 self.connectionMode.onNext(data)
             }.disposed(by: disposeBag)
             guard let connectionMode = try? self.connectionMode.value() else {return}
+            
+            WifiManager.shared.selectedPreferredProtocolStatus =  network.preferredProtocolStatus
+            WifiManager.shared.selectedPreferredProtocol = network.preferredProtocol
+            WifiManager.shared.selectedPreferredPort = network.preferredPort
+            WifiManager.shared.selectedProtocol = network.protocolType
+            WifiManager.shared.selectedPort = network.port
+            
             if connectionMode != Fields.Values.manual && network.preferredProtocolStatus == false {
                 if network.protocolType != defaultProtocol {
                     localDb.updateWifiNetwork(network: network,
@@ -224,15 +231,10 @@ class WifiManager {
                                                 Fields.protocolType: defaultProtocol,
                                                 Fields.port: defaultPort
                                               ])
-                    network.protocolType = defaultProtocol
-                    network.port = defaultPort
+                    WifiManager.shared.selectedProtocol = defaultProtocol
+                    WifiManager.shared.selectedPort = defaultPort
                 }
             }
-            WifiManager.shared.selectedPreferredProtocolStatus =  network.preferredProtocolStatus
-            WifiManager.shared.selectedPreferredProtocol = network.preferredProtocol
-            WifiManager.shared.selectedPreferredPort = network.preferredPort
-            WifiManager.shared.selectedProtocol = network.protocolType
-            WifiManager.shared.selectedPort = network.port
         } else {
             // Added condition to not add unknown in networks list
             if network.SSID != "Unknown" {
