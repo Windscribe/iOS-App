@@ -25,20 +25,18 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
         guard !didShowedDialog() else {
             return
         }
-        guard VPNManager.shared.isActive else {
-            return
-        }
-        guard let regDate = sessionManager.session?.regDate else {
-            return
-        }
-        let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
-        let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
-        if !(sessionManager.session?.isUserPro ?? false)
-            && !(sessionManager.session?.isUserGhost ?? false)
-            && daysRegisteredSince > 30 {
-            setShowedShareDialog()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                completion()
+        Task {
+            guard await VPNManager.shared.isActive() else { return }
+            guard let regDate = sessionManager.session?.regDate else { return }
+            let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
+            let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
+            if !(sessionManager.session?.isUserPro ?? false)
+                && !(sessionManager.session?.isUserGhost ?? false)
+                && daysRegisteredSince > 30 {
+                setShowedShareDialog()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    completion()
+                }
             }
         }
     }

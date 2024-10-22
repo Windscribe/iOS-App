@@ -152,9 +152,11 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     private func resetConnectionStatus() {
-        if vpnManager.isActive {
-            logger.logD(self, "Disconnecting from selected custom config.")
-            vpnManager.disconnectActiveVPNConnection()
+        Task {
+            if await vpnManager.isActive() {
+                logger.logD(self, "Disconnecting from selected custom config.")
+                vpnManager.disconnectActiveVPNConnection()
+            }
         }
         self.setBestLocation()
     }

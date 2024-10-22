@@ -65,10 +65,6 @@ class VPNManager {
     var uniqueConnectionId = ""
     var lastConnectionStatus: NEVPNStatus = .disconnected
 
-    var isActive: Bool {
-        return OpenVPNManager.shared.isConfigured() || WireGuardVPNManager.shared.isConfigured() || IKEv2VPNManager.shared.isConfigured()
-    }
-
     var restartOnDisconnect: Bool = false
     var retryWithNewCredentials: Bool = false
     var retryInProgress: Bool = false
@@ -131,6 +127,14 @@ class VPNManager {
         contentIntentTimer?.invalidate()
         connectivityTestTimer?.invalidate()
         failCountTimer?.invalidate()
+    }
+
+    func isActive() async -> Bool {
+        var value = false
+        try? await VPNManagerUtils.getAllManagers().forEach {
+            if VPNManagerUtils.isManagerConfigured(for: $0) { value = true }
+        }
+        return value
     }
 
     func getStatus() -> Observable<NEVPNStatus> {
