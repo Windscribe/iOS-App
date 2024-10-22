@@ -105,11 +105,11 @@ class ConnectivityImpl: Connectivity {
         case .cellular:
             completion(getCellularNetworkName())
         case .wifi:
-            getSsidFromNeHotspotHelper { ssid in
+            getSsidFromNeHotspotHelper { [weak self] ssid in
                 if let ssid = ssid {
                     completion(ssid)
                 } else {
-                    completion(self.getWifiSSID())
+                    completion(self?.getWifiSSID())
                 }
             }
         case .none:
