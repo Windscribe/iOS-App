@@ -26,13 +26,26 @@ extension LocalDatabaseImpl {
     }
 
     func updateRealmObject<T: Object>(object: T) -> Disposable {
-        return Observable.from(object: object)
-            .subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { obj in
-                let realm = try? Realm()
-                try?realm?.safeWrite {
-                    realm?.add(obj, update: .modified)
+        // Check if the object is already managed by Realm
+        if let realm = object.realm {
+            return Observable.from(object: object)
+                .subscribe(on: MainScheduler.asyncInstance)
+                .subscribe(onNext: { obj in
+                    do {
+                        try realm.safeWrite {
+                            realm.add(obj, update: .modified)
+                        }
+                    } catch { }
+                }, onError: { _ in })
+        } else {
+            do {
+                let realm = try Realm()
+                try realm.safeWrite {
+                    realm.add(object, update: .modified)
                 }
-            }, onError: { _ in})
+            } catch {}
+            return Disposables.create()
+        }
     }
 
     func updateRealmObjects<T: Object>(objects: [T]) {
