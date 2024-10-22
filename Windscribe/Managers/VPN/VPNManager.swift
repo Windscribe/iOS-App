@@ -130,11 +130,8 @@ class VPNManager {
     }
 
     func isActive() async -> Bool {
-        var value = false
-        try? await VPNManagerUtils.getAllManagers().forEach {
-            if VPNManagerUtils.isManagerConfigured(for: $0) { value = true }
-        }
-        return value
+        guard let manager = try? await VPNManagerUtils.getConfiguredManager() else { return false }
+        return true
     }
 
     func getStatus() -> Observable<NEVPNStatus> {
@@ -185,36 +182,6 @@ class VPNManager {
         let ruleConnect = NEOnDemandRuleConnect()
         onDemandRules.append(ruleConnect)
         return onDemandRules
-    }
-
-    func setOnDemandModes() {
-        if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.setOnDemandMode()
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.setOnDemandMode()
-        } else if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.setOnDemandMode()
-        }
-    }
-
-    func setKillSwitchMode() {
-        if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.setKillSwitchMode()
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.setKillSwitchMode()
-        } else if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.setKillSwitchMode()
-        }
-    }
-
-    func setAllowLanMode() {
-        if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.setAllowLanMode()
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.setAllowLanMode()
-        } else if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.setAllowLanMode()
-        }
     }
 
     func updateOnDemandRules() {
@@ -321,40 +288,9 @@ class VPNManager {
         }
     }
 
-    private func loadIKEV2Manager(completion: @escaping () -> Void) {
-        IKEv2VPNManager.shared.neVPNManager.loadFromPreferences { _ in
-            completion()
-        }
-    }
-
-    private func loadOpenVPNManager(completion: @escaping () -> Void) {
-        if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.providerManager?.loadFromPreferences { _ in
-                completion()
-            }
-        } else {
-            completion()
-        }
-    }
-
-    private func loadWgManager(completion: @escaping () -> Void) {
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.providerManager?.loadFromPreferences { _ in
-                completion()
-            }
-        } else {
-            completion()
-        }
-    }
-
-    private func loadManagers(completion: @escaping () -> Void) {
-        loadIKEV2Manager {
-            self.loadWgManager {
-                self.loadOpenVPNManager {
-                    completion()
-                }
-            }
-        }
+    private func loadManagers() async {
+        guard let managers = try? await VPNManagerUtils.getAllManagers() else { return }
+        for manager in managers { await VPNManagerUtils.load(manager: manager) }
     }
 
     /**
@@ -362,7 +298,8 @@ class VPNManager {
      */
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
-        loadManagers { [self] in
+        Task {
+            await loadManagers()
             let ikev2ManagerStatus = IKEv2VPNManager.shared.neVPNManager.connection.status
             let openVPNManagerStatus = OpenVPNManager.shared.providerManager?.connection.status ?? .invalid
             let wireguardManagerStatus = WireGuardVPNManager.shared.providerManager?.connection.status ?? .invalid

@@ -70,4 +70,19 @@ struct VPNManagerUtils {
         }
         return manager.protocolConfiguration?.username != nil
     }
+
+    static func getConfiguredManager() async throws -> NEVPNManager? {
+        try? await VPNManagerUtils.getAllManagers().first { VPNManagerUtils.isManagerConfigured(for: $0) }
+    }
+
+    static func save(manager: NEVPNManager) async {
+        try? await manager.saveToPreferences()
+        try? await manager.loadFromPreferences()
+    }
+    
+    static func load(manager: NEVPNManager) async {
+        if VPNManagerUtils.isManagerConfigured(for: manager) {
+            try? await manager.loadFromPreferences()
+        }
+    }
 }
