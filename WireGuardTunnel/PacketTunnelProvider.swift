@@ -13,7 +13,9 @@ import os.log
 import WireGuardKit
 import Swinject
 import RxSwift
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: dependencies
@@ -96,9 +98,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
                 self.logger.logD(self, "Tunnel interface is \(interfaceName)")
+            #if os(iOS)
                 if #available(iOSApplicationExtension 14.0, *) {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                 }
+            #endif
                 completionHandler(nil)
                 return
             }

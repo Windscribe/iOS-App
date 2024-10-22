@@ -9,7 +9,9 @@
 import NetworkExtension
 import OpenVPNAdapter
 import Swinject
+#if canImport(WidgetKit)
 import WidgetKit
+#endif
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
@@ -179,9 +181,12 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     }
 
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message: String?) {
+    #if os(iOS)
+        
         if #available(iOSApplicationExtension 14.0, *) {
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
         }
+    #endif
         switch event {
         case .connected:
             if reasserting {
