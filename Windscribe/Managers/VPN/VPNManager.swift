@@ -149,9 +149,11 @@ class VPNManager {
     }
 
     func removeAllVPNProfiles() {
-        IKEv2VPNManager.shared.neVPNManager.removeFromPreferences { _ in }
-        OpenVPNManager.shared.providerManager?.removeFromPreferences { _ in }
-        WireGuardVPNManager.shared.providerManager?.removeFromPreferences { _ in }
+        NEVPNManager.shared().removeFromPreferences { _ in }
+        NETunnelProviderManager.loadAllFromPreferences { managers, error in
+            guard error != nil else { return }
+            managers?.forEach { $0.removeFromPreferences { _ in }
+        }
     }
 
     func getOnDemandRules() -> [NEOnDemandRule] {
