@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="23094" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -81,14 +81,14 @@
                                             <constraint firstAttribute="width" constant="75" id="xQZ-yA-18w"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000.000.00.00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qmD-x7-wZF">
-                                        <rect key="frame" x="1527" y="60" width="243" height="45"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--.--.--.--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qmD-x7-wZF">
+                                        <rect key="frame" x="1620" y="60" width="150" height="45"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="38"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unsecure" translatesAutoresizingMaskIntoConstraints="NO" id="iSx-db-ARW">
-                                        <rect key="frame" x="1467" y="67.5" width="30" height="30"/>
+                                        <rect key="frame" x="1560" y="67.5" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="4a4-lv-4kM"/>
                                             <constraint firstAttribute="width" constant="30" id="Sra-aL-jUO"/>
@@ -1031,6 +1031,23 @@ Secrets.</string>
             <point key="canvasLocation" x="-846" y="3034"/>
         </scene>
     </scenes>
+    <designables>
+        <designable name="9bK-pw-zAm">
+            <size key="intrinsicContentSize" width="80" height="86"/>
+        </designable>
+        <designable name="DTL-6M-nB9">
+            <size key="intrinsicContentSize" width="80" height="85"/>
+        </designable>
+        <designable name="IgO-T0-k3z">
+            <size key="intrinsicContentSize" width="173" height="86"/>
+        </designable>
+        <designable name="by7-6d-YD3">
+            <size key="intrinsicContentSize" width="226" height="86"/>
+        </designable>
+        <designable name="y2b-Xf-tBa">
+            <size key="intrinsicContentSize" width="380" height="86"/>
+        </designable>
+    </designables>
     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="badge" width="224" height="224"/>
