@@ -58,7 +58,7 @@ struct VPNManagerUtils {
     }
 
     static func getAllManagers() async throws -> [NEVPNManager] {
-        var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap{ $0 }
+        var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap { $0 }
         providers.append(contentsOf: (try? await NETunnelProviderManager.loadAllFromPreferences()) ?? [])
         guard providers.count > 0 else { throw AppIntentError.VPNNotConfigured }
         return providers
@@ -80,45 +80,44 @@ struct VPNManagerUtils {
         try? await manager.loadFromPreferences()
     }
 
-    static func load(manager: NEVPNManager) async {
-        if VPNManagerUtils.isManagerConfigured(for: manager) {
-            try? await manager.loadFromPreferences()
-        }
-    }
-    
     static func isIKEV2(manager: NEVPNManager) -> Bool {
         return ![TextsAsset.openVPN, TextsAsset.wireGuard].contains(manager.protocolConfiguration?.username)
         && manager.protocolConfiguration?.username != nil
     }
-    
+
     static func iKEV2(from managers: [NEVPNManager]) -> NEVPNManager? {
         managers.first { isIKEV2(manager: $0 ) }
     }
-    
-    static func getIKEV2ConnectionInfo(manager: NEVPNManager) -> VPNConnectionInfo? {
+
+    static func manager(from managers: [NEVPNManager], with type: VPNManagerType) -> NEVPNManager? {
+        managers.first { $0.protocolConfiguration?.username == type.username }
+    }
+
+    static func getIKEV2ConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
+        guard let manager = manager else { return nil }
 #if os(iOS)
         return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
 #else
         return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress,killSwitch: false, onDemand: manager.isOnDemandEnabled)
 #endif
     }
-    
+
     static func getVPNConnectionInfo(manager: NEVPNManager) -> VPNConnectionInfo? {
-        if let conf = manager as? NETunnelProviderManager {
-            if let wgConfig = conf.tunnelConfiguration,
-                let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
-                #if os(iOS)
-                    return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
-                #else
-                return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
-                #endif
-            }
-            if let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,let ovpn = neProtocol.providerConfiguration?["ovpn"] as? Data {
-                return getVPNConnectionInfo(ovpn: ovpn, manager: manager)
-            }
+        guard let conf = manager as? NETunnelProviderManager else { return nil }
+        if let wgConfig = conf.tunnelConfiguration,
+           let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
+#if os(iOS)
+            return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
+#else
+            return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
+#endif
         }
+        guard let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,
+              let ovpn = neProtocol.providerConfiguration?["ovpn"] as? Data
+        else { return nil }
+        return getVPNConnectionInfo(ovpn: ovpn, manager: manager)
     }
-    
+
     private static func getVPNConnectionInfo(ovpn: Data, manager: NEVPNManager) -> VPNConnectionInfo? {
         var proto: String?
         var port: String?
@@ -149,11 +148,7 @@ struct VPNManagerUtils {
         }
         if let proto = proto, let port = port {
 #if os(iOS)
-            if #available(iOS 14.0, *) {
-                return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
-            } else {
-                return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
-            }
+            return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
 #else
             return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
 #endif

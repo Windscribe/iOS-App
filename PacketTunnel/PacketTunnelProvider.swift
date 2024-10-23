@@ -182,7 +182,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
 
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message: String?) {
     #if os(iOS)
-        
+
         if #available(iOSApplicationExtension 14.0, *) {
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
         }

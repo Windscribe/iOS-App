@@ -288,11 +288,6 @@ class VPNManager {
         }
     }
 
-    private func loadManagers() async {
-        guard let managers = try? await VPNManagerUtils.getAllManagers() else { return }
-        for manager in managers { await VPNManagerUtils.load(manager: manager) }
-    }
-
     /**
      Parses updated VPN connection info from configured VPN managers.
      */
@@ -314,24 +309,18 @@ class VPNManager {
                     return
                 }
             }
-            
+
             // No VPN Manager is configured
-            if !(managers.filter { $0.connection.status != .invalid }).isEmpty {
+            if (managers.filter { $0.connection.status != .invalid }).isEmpty {
                 completion(nil)
                 return
             }
-            
+
             // Get VPN connection info from last active manager.
-            switch activeVPNManager {
-            case .iKEV2:
-                completion(VPNManagerType.iKEV2.getVPNConnectionInfo())
-                return
-            case .wg:
-                completion(VPNManagerType.wg.getVPNConnectionInfo())
-                return
-            case .openVPN:
-                completion(VPNManagerType.openVPN.getVPNConnectionInfo())
-                return
+            if activeVPNManager == .iKEV2 {
+                completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: VPNManagerUtils.iKEV2(from: managers)))
+            } else {
+                completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: VPNManagerUtils.manager(from: managers, with: activeVPNManager)))
             }
         }
     }
@@ -343,91 +332,11 @@ enum VPNManagerType: String {
     // OpenVPN supports UDP, TCP, Stealth and WSTunnel.
     case openVPN = "OpenVPN"
 
-    func getVPNConnectionInfo() -> VPNConnectionInfo? {
-        guard let manager = self.getManager() else {
-            return nil
-        }
-        // Wireguard and OpenVPN uses NETunnelProviderManager.
-        if let conf = manager as? NETunnelProviderManager {
-            if let wgConfig = conf.tunnelConfiguration,
-                let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
-                #if os(iOS)
-                if #available(iOS 14.0, *) {
-                    return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
-                } else {
-                    return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
-                }
-                #else
-                return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: false, onDemand: manager.isOnDemandEnabled)
-                #endif
-            }
-            if let neProtocol = conf.protocolConfiguration as? NETunnelProviderProtocol,let ovpn = neProtocol.providerConfiguration?["ovpn"] as? Data {
-                return getVPNConnectionInfo(ovpn: ovpn, manager: manager)
-            }
-        }
-        // iKEV2 use NEVPNManager
-#if os(iOS)
-        if #available(iOS 14.0, *) {
-            return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
-        } else {
-            return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress,killSwitch: false, onDemand: manager.isOnDemandEnabled)
-        }
-        #else
-        return VPNConnectionInfo(selectedProtocol: iKEv2, selectedPort: "500", status: manager.connection.status, server: manager.protocolConfiguration?.serverAddress,killSwitch: false, onDemand: manager.isOnDemandEnabled)
-        #endif
-    }
-
-    private func getVPNConnectionInfo(ovpn: Data, manager: NEVPNManager) -> VPNConnectionInfo? {
-        var proto: String?
-        var port: String?
-        var server: String?
-        let rows = String(data: ovpn, encoding: .utf8)?.splitToArray(separator: "\n")
-        // check if OpenVPN connection is using local proxy.
-        let proxyRow = rows?.first { line in line.starts(with: "local-proxy")}
-        if let proxyColumns = proxyRow?.splitToArray(separator: " "), proxyColumns.count > 4, let proxyType = Int(proxyColumns[4]) {
-            if proxyType == 1 {
-                proto = wsTunnel
-            }
-            if proxyType == 2 {
-                proto = stealth
-            }
-            port = proxyColumns[3]
-            server = proxyColumns[2]
-        } else {
-            // Direct UDP and TCP OpenVPN connection.
-            let protoRow = rows?.first { line in line.starts(with: "proto") }
-            if let protoColumns = protoRow?.splitToArray(separator: " "), protoColumns.count > 1 {
-                proto = protoColumns[1].uppercased()
-            }
-            let remoteRow = rows?.first { line in line.starts(with: "remote") }
-            if let remoteColumns = remoteRow?.splitToArray(separator: " ") , remoteColumns.count > 2 {
-                port = remoteColumns[2].uppercased()
-                server = remoteColumns[1]
-            }
-        }
-        if let proto = proto, let port = port {
-#if os(iOS)
-            if #available(iOS 14.0, *) {
-                return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
-            } else {
-                return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
-            }
-#else
-            return VPNConnectionInfo(selectedProtocol: proto, selectedPort: port, status: manager.connection.status, server: server, killSwitch: false, onDemand: manager.isOnDemandEnabled)
-#endif
-        } else {
-            return nil
-        }
-    }
-
-    private func getManager() -> NEVPNManager? {
+    var username: String {
         switch self {
-        case .iKEV2:
-            return IKEv2VPNManager.shared.neVPNManager
-        case .wg:
-            return WireGuardVPNManager.shared.providerManager
-        case .openVPN:
-            return OpenVPNManager.shared.providerManager
+        case .wg: return TextsAsset.wireGuard
+        case .openVPN: return TextsAsset.openVPN
+        default: return ""
         }
     }
 }
