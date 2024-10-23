@@ -60,7 +60,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
-        vpnManager.setup { [self] in
+        Task {
+            await vpnManager.setup()
             recordInstallIfFirstLoad()
             registerForPushNotifications()
             resetCountryOverrideForServerList()

@@ -130,7 +130,7 @@ class VPNManager {
     }
 
     func isActive() async -> Bool {
-        guard let manager = try? await VPNManagerUtils.getConfiguredManager() else { return false }
+        guard (try? await VPNManagerUtils.getConfiguredManager()) != nil else { return false }
         return true
     }
 
@@ -141,12 +141,8 @@ class VPNManager {
             .distinctUntilChanged()
     }
 
-    func setup(completion: @escaping() -> Void) {
-        OpenVPNManager.shared.setup {
-            WireGuardVPNManager.shared.setup {
-               completion()
-            }
-        }
+    func setup() async {
+       let _ = try? await VPNManagerUtils.getAllManagers()
     }
 
     func removeAllVPNProfiles() {
@@ -185,10 +181,14 @@ class VPNManager {
     }
 
     func updateOnDemandRules() {
-        VPNManager.shared.isOnDemandRetry = false
-        IKEv2VPNManager.shared.updateOnDemandRules()
-        OpenVPNManager.shared.updateOnDemandRules()
-        WireGuardVPNManager.shared.updateOnDemandRules()
+        isOnDemandRetry = false
+        Task {
+            guard let managers = try? await VPNManagerUtils.getAllManagers() else { return }
+            let onDemandRules = getOnDemandRules()
+            for manager in managers {
+                await VPNManagerUtils.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
+            }
+        }
     }
 
     private func onCredentialsUpdated(isIKEv2: Bool) {

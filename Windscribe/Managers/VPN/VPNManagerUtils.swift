@@ -74,6 +74,12 @@ struct VPNManagerUtils {
     static func getConfiguredManager() async throws -> NEVPNManager? {
         try? await VPNManagerUtils.getAllManagers().first { VPNManagerUtils.isManagerConfigured(for: $0) }
     }
+    
+    static func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
+        manager.onDemandRules?.removeAll()
+        manager.onDemandRules = onDemandRules
+        await VPNManagerUtils.save(manager: manager)
+    }
 
     static func save(manager: NEVPNManager) async {
         try? await manager.saveToPreferences()
