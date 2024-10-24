@@ -90,6 +90,11 @@ class VPNManagerUtils {
         try? await manager.saveToPreferences()
         try? await manager.loadFromPreferences()
     }
+    
+    static func saveThrowing(manager: NEVPNManager) async throws {
+        try await manager.saveToPreferences()
+        try await manager.loadFromPreferences()
+    }
 
     static func isIKEV2(manager: NEVPNManager) -> Bool {
         return ![TextsAsset.openVPN, TextsAsset.wireGuard].contains(manager.protocolConfiguration?.username)
