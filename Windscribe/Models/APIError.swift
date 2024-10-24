@@ -83,6 +83,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case apiError(APIError)
     case datanotfound
     case handled
+    case ipNotAvailable
 
     public var description: String {
         switch self {
@@ -110,6 +111,8 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "no data found."
         case .handled:
             return ""
+        case .ipNotAvailable:
+            return "Ip1 and ip3 are not avaialble to configure this profile."
         default:
             return "Unknown error."
         }

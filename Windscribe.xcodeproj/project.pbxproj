@@ -82,6 +82,8 @@
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		1E593DAA2CC937960051FF5E /* VPNManagerUtils+Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E593DA92CC9378F0051FF5E /* VPNManagerUtils+Credentials.swift */; };
+		1E593DAB2CC937960051FF5E /* VPNManagerUtils+Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E593DA92CC9378F0051FF5E /* VPNManagerUtils+Credentials.swift */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -1296,6 +1298,7 @@
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
+		1E593DA92CC9378F0051FF5E /* VPNManagerUtils+Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+Credentials.swift"; sourceTree = "<group>"; };
 		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
@@ -2353,6 +2356,15 @@
 				1E4933522BF50BC200C853AF /* ServerListViewModel.swift */,
 			);
 			path = "Server List";
+			sourceTree = "<group>";
+		};
+		1E593DA82CC9377D0051FF5E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1E593DA92CC9378F0051FF5E /* VPNManagerUtils+Credentials.swift */,
+				1E2CBFEE2CC7CABC00748D9F /* VPNManagerUtils.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		1E60DFE92CA4719E00623CD5 /* Handlers */ = {
@@ -3421,7 +3433,7 @@
 		AFF507D9229D97FD00C094A0 /* VPN */ = {
 			isa = PBXGroup;
 			children = (
-				1E2CBFEE2CC7CABC00748D9F /* VPNManagerUtils.swift */,
+				1E593DA82CC9377D0051FF5E /* Utils */,
 				AF0318BC21E7A9C20094D6D4 /* IKEv2VPNManager.swift */,
 				AF37EC9E227116A9005C19CC /* OpenVPNManager.swift */,
 				AFC75F7A24AB84EA00897C18 /* WireGuardVPNManager.swift */,
@@ -5091,6 +5103,7 @@
 				59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */,
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,
 				59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */,
+				1E593DAA2CC937960051FF5E /* VPNManagerUtils+Credentials.swift in Sources */,
 				59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */,
 				59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */,
 				59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */,
@@ -5150,6 +5163,7 @@
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepositoryImpl.swift in Sources */,
+				1E593DAB2CC937960051FF5E /* VPNManagerUtils+Credentials.swift in Sources */,
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
 				AFBD01A022946F6C00FED749 /* LogType.swift in Sources */,
 				C5592B852B3940AE00F2F110 /* IPRepositoryImpl.swift in Sources */,

@@ -16,7 +16,6 @@ import Swinject
 import RxSwift
 
 class VPNManager {
-
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()

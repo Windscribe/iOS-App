@@ -8,8 +8,13 @@
 
 import Foundation
 import NetworkExtension
+import Swinject
 
-struct VPNManagerUtils {
+class VPNManagerUtils {
+    lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
+    lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
+    lazy var keychainDb = Assembler.resolve(KeyChainDatabase.self)
+    
     static func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
         Task {
             do {
