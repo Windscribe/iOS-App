@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtils+Credentials.swift
+//  VPNManagerUtils+IKEV2Credentials.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 23/10/2024.
@@ -13,7 +13,9 @@ extension VPNManagerUtils {
     func configureIKEV2WithSavedCredentials(with selectedNode: SelectedNode?,
                                             for manager: NEVPNManager,
                                             with killSwitch: Bool,
-                                            and allowLane: Bool) async throws -> Bool {
+                                            and allowLane: Bool,
+                                            isRFC: Bool,
+                                            onDemandRules: [NEOnDemandRule]?) async throws -> Bool {
         guard let selectedNode = selectedNode else {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
@@ -28,19 +30,16 @@ extension VPNManagerUtils {
         
         var base64username = ""
         var base64password = ""
-        if let staticIPCredentials = VPNManager.shared.selectedNode?.staticIPCredentials,
+        if let staticIPCredentials = selectedNode.staticIPCredentials,
            let username = staticIPCredentials.username,
            let password = staticIPCredentials.password {
             base64username = username
             base64password = password
-        } else {
-            if let credentials = localDatabase.getIKEv2ServerCredentials() {
-                base64username = credentials.username.base64Decoded()
-                base64password = credentials.password.base64Decoded()
-            }
+        } else if let credentials = localDatabase.getIKEv2ServerCredentials() {
+            base64username = credentials.username.base64Decoded()
+            base64password = credentials.password.base64Decoded()
         }
-        if base64username == "" ||
-            base64password == "" {
+        if base64username == "" || base64password == "" {
             logger.logE(self, "Can't establish a VPN connection, missing authentication values.")
             throw Errors.missingAuthenticationValues
         }
@@ -49,12 +48,14 @@ extension VPNManagerUtils {
                                         username: base64username,
                                         dnsHostname: selectedNode.dnsHostname,
                                         hostname: selectedNode.hostname, ip: ip,
-                                        killSwitch: killSwitch, allowLane: allowLane)
+                                        killSwitch: killSwitch, allowLane: allowLane,
+                                        isRFC: isRFC, onDemandRules: onDemandRules)
     }
     
     func configureIKEV2(manager: NEVPNManager, username: String,
                         dnsHostname: String, hostname: String,
-                        ip: String, killSwitch: Bool, allowLane: Bool) async throws -> Bool {
+                        ip: String, killSwitch: Bool, allowLane: Bool, isRFC: Bool,
+                        onDemandRules: [NEOnDemandRule]?) async throws -> Bool {
         try await manager.loadFromPreferences()
         let serverCredentials = self.keychainDb.retrieve(username: username)
         let ikeV2Protocol = NEVPNProtocolIKEv2()
@@ -102,8 +103,8 @@ extension VPNManagerUtils {
         ikeV2Protocol.enableFallback = true
         // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
         if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? killSwitch  : true
-            manager.protocolConfiguration?.excludeLocalNetworks = VPNManager.shared.checkLocalIPIsRFC() ? allowLane  : false
+            manager.protocolConfiguration?.includeAllNetworks = isRFC ? killSwitch : true
+            manager.protocolConfiguration?.excludeLocalNetworks = isRFC ? allowLane : false
         }
         // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
         if #available(iOS 16.0, *) {
@@ -111,7 +112,7 @@ extension VPNManagerUtils {
         }
 #endif
         manager.onDemandRules?.removeAll()
-        manager.onDemandRules = VPNManager.shared.getOnDemandRules()
+        manager.onDemandRules = onDemandRules
         manager.isEnabled = true
         manager.localizedDescription = Constants.appName
         do {

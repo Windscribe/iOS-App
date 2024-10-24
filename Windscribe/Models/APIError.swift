@@ -84,6 +84,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case datanotfound
     case handled
     case ipNotAvailable
+    case missingRemoteAddress
 
     public var description: String {
         switch self {
@@ -113,6 +114,8 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return ""
         case .ipNotAvailable:
             return "Ip1 and ip3 are not avaialble to configure this profile."
+        case .missingRemoteAddress:
+            return "Missing remote address in selected location."
         default:
             return "Unknown error."
         }
