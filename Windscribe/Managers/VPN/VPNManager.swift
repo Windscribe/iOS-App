@@ -15,7 +15,11 @@ import WidgetKit
 import Swinject
 import RxSwift
 
-class VPNManager {
+protocol VPNManagerProtocol {
+    
+}
+
+class VPNManager: VPNManagerProtocol {
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
@@ -157,7 +161,7 @@ class VPNManager {
         var onDemandRules: [NEOnDemandRule] = []
         if let networks = localDB.getNetworksSync() {
             networks.filter { $0.status == true }.forEach { network in
-                if network.SSID == TextsAsset.cellular && network.SSID != VPNManager.shared.untrustedOneTimeOnlySSID {
+                if network.SSID == TextsAsset.cellular && network.SSID != untrustedOneTimeOnlySSID {
                     let ruleDisconnect = NEOnDemandRuleDisconnect()
                     #if os(iOS)
                     ruleDisconnect.interfaceTypeMatch = .cellular
@@ -166,7 +170,7 @@ class VPNManager {
                     logger.logD(VPNManager.self, "Added On demand disconnect rule for cellular network.")
                 }
             }
-            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != VPNManager.shared.untrustedOneTimeOnlySSID }.map {$0.SSID}.sorted()
+            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != untrustedOneTimeOnlySSID }.map {$0.SSID}.sorted()
             if unsecureWifiNetworks.count > 0 {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
                 ruleDisconnect.ssidMatch = unsecureWifiNetworks
@@ -225,23 +229,23 @@ class VPNManager {
             if info?.status != .connected {
                 return
             }
-            logger.logD(self, "[\(VPNManager.shared.uniqueConnectionId)] Running connectivity Test")
+            logger.logD(self, "[\(uniqueConnectionId)] Running connectivity Test")
             api.getIp().observe(on: MainScheduler.asyncInstance).subscribe( onSuccess: { myIp in
                 self.executeForConnectivityTestSuccessful(ipAddress: myIp.userIp, checkForIPAddressChange: checkForIPAddressChange)
             },onFailure: { _ in
                 if retry {
-                    self.logger.logD(self, "[\(VPNManager.shared.uniqueConnectionId)] Retrying connectivity test.")
+                    self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test.")
                     self.connectivityTestTimer = Timer.scheduledTimer(timeInterval: 3.0,
                                                                       target: self,
                                                                       selector: #selector(self.runConnectivityTestWithNoRetry),
                                                                       userInfo: nil,
                                                                       repeats: false)
                 } else if connectToAnotherNode {
-                    self.logger.logD(self, "[\(VPNManager.shared.uniqueConnectionId)] Retrying connectivity test with different node.")
+                    self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test with different node.")
                     self.connectToAnotherNode()
                 } else {
                     self.logger.logD(self, "Connectivity failed.")
-                    VPNManager.shared.isOnDemandRetry = false
+                    self.isOnDemandRetry = false
                     self.disconnectOrFail()
                 }
             }).disposed(by: disposeBag)
@@ -250,7 +254,7 @@ class VPNManager {
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
                                               checkForIPAddressChange: Bool = true) {
-        self.logger.logE(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connectivity Test successful.")
+        self.logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
         ConnectionManager.shared.goodProtocol = ConnectionManager.shared.getNextProtocol()
@@ -258,13 +262,13 @@ class VPNManager {
         ConnectionManager.shared.onConnectStateChange(state: NEVPNStatus.connected)
         DispatchQueue.main.async {
             if self.isConnected() {
-                VPNManager.shared.isOnDemandRetry = false
+                self.isOnDemandRetry = false
                 self.preferences.saveConnectionCount(count: ((self.preferences.getConnectionCount() ?? 0) + 1))
                 self.delegate?.setConnected(ipAddress: ipAddress)
                 self.resetProperties()
-                VPNManager.shared.connectIntent = true
+                self.connectIntent = true
                 if self.selectedFirewallMode == true {
-                    VPNManager.shared.isOnDemandRetry = true
+                    self.isOnDemandRetry = true
                 }
             }
         }

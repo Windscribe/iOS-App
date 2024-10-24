@@ -93,10 +93,7 @@ extension VPNManagerUtils {
                           compressionEnabled: Bool? = false,
                           x509Name: String?,
                           proxyInfo: ProxyInfo? = nil) async throws -> Bool {
-        providerManager?.loadFromPreferences { [weak self] error in
-            guard let self = self else { return }
-            if error == nil {
-                self.getConfiguration(username: username,
+                getConfiguration(username: username,
                                       password: password,
                                       protocolType: protocolType,
                                       serverAddress: serverAddress,
@@ -157,11 +154,5 @@ extension VPNManagerUtils {
                         })
                     }
                 })
-            } else {
-                completion(false, "Error when loading vpn prefences.")
-                self.logger.logE( OpenVPNManager.self, "Error when loading vpn prefences. \(String(describing: error?.localizedDescription))")
             }
-        }
-    }
-    
 }
