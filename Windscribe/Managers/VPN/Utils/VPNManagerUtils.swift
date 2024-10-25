@@ -14,6 +14,7 @@ class VPNManagerUtils {
     lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
     lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
     lazy var keychainDb = Assembler.resolve(KeyChainDatabase.self)
+    lazy var fileDatabase = Assembler.resolve(FileDatabase.self)
     
     func connect() {
         // UserSettings - allowLane, killSwitch, etc

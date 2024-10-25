@@ -12,10 +12,7 @@ import UIKit
 extension VPNManagerUtils {
     func configureIKEV2WithSavedCredentials(with selectedNode: SelectedNode?,
                                             for manager: NEVPNManager,
-                                            with killSwitch: Bool,
-                                            and allowLane: Bool,
-                                            isRFC: Bool,
-                                            onDemandRules: [NEOnDemandRule]?) async throws -> Bool {
+                                            userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode else {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
@@ -47,15 +44,14 @@ extension VPNManagerUtils {
         return try await configureIKEV2(manager: manager,
                                         username: base64username,
                                         dnsHostname: selectedNode.dnsHostname,
-                                        hostname: selectedNode.hostname, ip: ip,
-                                        killSwitch: killSwitch, allowLane: allowLane,
-                                        isRFC: isRFC, onDemandRules: onDemandRules)
+                                        hostname: selectedNode.hostname,
+                                        ip: ip,
+                                        userSettings: userSettings)
     }
     
     func configureIKEV2(manager: NEVPNManager, username: String,
                         dnsHostname: String, hostname: String,
-                        ip: String, killSwitch: Bool, allowLane: Bool, isRFC: Bool,
-                        onDemandRules: [NEOnDemandRule]?) async throws -> Bool {
+                        ip: String, userSettings: VPNUserSettings) async throws -> Bool {
         try await manager.loadFromPreferences()
         let serverCredentials = self.keychainDb.retrieve(username: username)
         let ikeV2Protocol = NEVPNProtocolIKEv2()
@@ -67,7 +63,7 @@ extension VPNManagerUtils {
         let legacyOS = await NSString(string: UIDevice.current.systemVersion).doubleValue <= 13
         // Changes for the ikev2 issue on ios 16 and kill switch on
         if #available(iOS 16.0, *) {
-            if killSwitch || !allowLane {
+            if userSettings.killSwitch || !userSettings.allowLane {
                 ikeV2Protocol.remoteIdentifier = hostname
                 ikeV2Protocol.localIdentifier = username
                 ikeV2Protocol.serverAddress = hostname
@@ -103,16 +99,16 @@ extension VPNManagerUtils {
         ikeV2Protocol.enableFallback = true
         // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
         if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = isRFC ? killSwitch : true
-            manager.protocolConfiguration?.excludeLocalNetworks = isRFC ? allowLane : false
+            manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
+            manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
         }
         // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
         if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = allowLane
+            manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
         }
 #endif
         manager.onDemandRules?.removeAll()
-        manager.onDemandRules = onDemandRules
+        manager.onDemandRules = userSettings.onDemandRules
         manager.isEnabled = true
         manager.localizedDescription = Constants.appName
         do {
@@ -123,8 +119,8 @@ extension VPNManagerUtils {
             throw error
         }
         logger.logD(self, "VPN configuration successful. Username: \(username)")
-        logger.logD(self, "KillSwitch option set by user is \(killSwitch )")
-        logger.logD(self, "Allow lan option set by user is \(allowLane )")
+        logger.logD(self, "KillSwitch option set by user is \(userSettings.killSwitch )")
+        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLane )")
 #if os(iOS)
         if #available(iOS 15.1, *) {
             logger.logD(self, "KillSwitch in IKEv2 VPNManager is \( String(describing: manager.protocolConfiguration?.includeAllNetworks))")

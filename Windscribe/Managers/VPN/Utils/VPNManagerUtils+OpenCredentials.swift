@@ -11,7 +11,8 @@ import UIKit
 
 extension VPNManagerUtils {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
-                                              for manager: NEVPNManager) async throws -> Bool {
+                                              for manager: NEVPNManager,
+                                              userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode,
               let x509Name = selectedNode.ovpnX509 else {
             throw Errors.hostnameNotFound
@@ -28,6 +29,8 @@ extension VPNManagerUtils {
         
         guard VPNManager.shared.selectedNode?.customConfig?.authRequired ?? false else {
             return try await configureOpenVPN(manager: manager,
+                                              selectedNode: selectedNode,
+                                              userSettings: userSettings,
                                               username: base64username,
                                               password: base64password,
                                               protocolType: protocolType,
@@ -74,6 +77,8 @@ extension VPNManagerUtils {
         
         keychainDb.save(username: base64username, password: base64password)
         return try await configureOpenVPN(manager: manager,
+                                          selectedNode: selectedNode,
+                                          userSettings: userSettings,
                                           username: base64username,
                                           password: base64password,
                                           protocolType: protocolType,
@@ -85,6 +90,8 @@ extension VPNManagerUtils {
     }
     
     func configureOpenVPN(manager: NEVPNManager,
+                          selectedNode: SelectedNode?,
+                          userSettings: VPNUserSettings,
                           username: String,
                           password: String,
                           protocolType: String,
@@ -93,66 +100,139 @@ extension VPNManagerUtils {
                           compressionEnabled: Bool? = false,
                           x509Name: String?,
                           proxyInfo: ProxyInfo? = nil) async throws -> Bool {
-                getConfiguration(username: username,
-                                      password: password,
-                                      protocolType: protocolType,
-                                      serverAddress: serverAddress,
-                                      port: port,
-                                      x509Name: x509Name,
-                                      proxyInfo: proxyInfo,
-                                      completion: { (result, configUsername, configPassword, _, configData) in
-                    if result {
-                        guard let configData = configData else { return }
-                        let tunnelProtocol = NETunnelProviderProtocol()
-                        tunnelProtocol.username = TextsAsset.openVPN
-                        tunnelProtocol.serverAddress = serverAddress
-                        tunnelProtocol.providerBundleIdentifier = "\(Bundle.main.bundleID ?? "").PacketTunnel"
-                        if let configUsername = configUsername, let configPassword = configPassword {
-                            tunnelProtocol.providerConfiguration = ["ovpn": configData,
-                                                                    "username": configUsername,
-                                                                    "password": configPassword,
-                                                                    "compressionEnabled": compressionEnabled ?? false]
-                        } else {
-                            tunnelProtocol.providerConfiguration = ["ovpn": configData,
-                                                                    "compressionEnabled": compressionEnabled ?? false]
-                        }
-                        
-                        tunnelProtocol.disconnectOnSleep = false
-                        
-                        self.providerManager.protocolConfiguration = tunnelProtocol
-                        
+        guard let configuration = await getConfiguration(selectedNode: selectedNode,
+                                            userSettings: userSettings,
+                                            username: username,
+                                            password: password,
+                                            protocolType: protocolType,
+                                            serverAddress: serverAddress,
+                                            port: port,
+                                            x509Name: x509Name,
+                                                         proxyInfo: proxyInfo),
+              let configData = configuration.configData
+        else { return false }
+        
+        let tunnelProtocol = NETunnelProviderProtocol()
+        tunnelProtocol.username = TextsAsset.openVPN
+        tunnelProtocol.serverAddress = serverAddress
+        tunnelProtocol.providerBundleIdentifier = "\(Bundle.main.bundleID ?? "").PacketTunnel"
+        if let configUsername = configuration.configUsername, let configPassword = configuration.configPassword {
+            tunnelProtocol.providerConfiguration = ["ovpn": configData,
+                                                    "username": configUsername,
+                                                    "password": configPassword,
+                                                    "compressionEnabled": compressionEnabled ?? false]
+        } else {
+            tunnelProtocol.providerConfiguration = ["ovpn": configData,
+                                                    "compressionEnabled": compressionEnabled ?? false]
+        }
+        
+        tunnelProtocol.disconnectOnSleep = false
+        
+        manager.protocolConfiguration = tunnelProtocol
+        
 #if os(iOS)
-                        
-                        // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
-                        if #available(iOS 15.1, *) {
-                            
-                            self.providerManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch : true
-                            self.providerManager.protocolConfiguration?.excludeLocalNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.allowLane : false
-                        }
-                        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-                        if #available(iOS 16.0, *) {
-                            if !self.allowLane {
-                                self.providerManager.protocolConfiguration?.includeAllNetworks = true
-                            }
-                        }
+        if #available(iOS 15.1, *) {
+            manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
+            manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+        }
+        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+        if #available(iOS 16.0, *) {
+            manager.protocolConfiguration?.includeAllNetworks = manager.protocolConfiguration?.includeAllNetworks ?? !userSettings.allowLane
+        }
 #endif
-                        self.providerManager.onDemandRules?.removeAll()
-                        self.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
-                        self.providerManager.isEnabled = true
-                        self.providerManager.localizedDescription = Constants.appName
-                        self.providerManager.saveToPreferences(completionHandler: { (error) in
-                            if error == nil {
-                                self.providerManager.loadFromPreferences(completionHandler: { _ in
-                                    self.logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(username)")
-                                    completion(true, nil)
-                                })
-                            } else {
-                                completion(false, "Error when loading vpn prefences.")
-                                self.logger.logE( OpenVPNManager.self, "Error when loading vpn prefences. \(String(describing: error?.localizedDescription))")
-                                
-                            }
-                        })
-                    }
-                })
+        manager.onDemandRules?.removeAll()
+        manager.onDemandRules = userSettings.onDemandRules
+        manager.isEnabled = true
+        manager.localizedDescription = Constants.appName
+        
+        do {
+            try await VPNManagerUtils.saveThrowing(manager: manager)
+        } catch let error {
+            guard let error = error as? Errors else { throw Errors.notDefined }
+            logger.logE(self, "Error when saving vpn preferences \(error.description).")
+            throw error
+        }
+        logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(username)")
+        
+        return true
+    }
+    
+    func getConfiguration(selectedNode: SelectedNode?,
+                          userSettings: VPNUserSettings,
+                          username: String,
+                          password: String,
+                          protocolType: String,
+                          serverAddress: String,
+                          port: String,
+                          x509Name: String?,
+                          proxyInfo: ProxyInfo?) async -> OpenVPNConfiguration? {
+
+        let openVPNConfigFilePath = FilePaths.openVPN
+        if let customConfig = selectedNode?.customConfig,
+           let customConfigId = customConfig.id,
+           let authRequired = customConfig.authRequired {
+            let configFilePath = "\(customConfigId).ovpn"
+            guard let configData = fileDatabase.readFile(path: configFilePath) else { return nil }
+            if customConfig.username != "" &&
+                customConfig.password != "" {
+                let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
+                let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
+                return OpenVPNConfiguration(result: true, configUsername: user, configPassword: pass, configFilePath: configFilePath, configData: configData)
+                
+            } else {
+                return OpenVPNConfiguration(result: !authRequired, configUsername: nil, configPassword: nil, configFilePath: configFilePath, configData: configData)
             }
+        } else {
+            let protoLine = "proto \(protocolType.lowercased())"
+            let remoteLine = "remote \(serverAddress) \(port)"
+            let x509NameLine = "verify-x509-name \(x509Name!) name"
+            let proxyLine = proxyInfo?.text
+            self.logger.logD( OpenVPNManager.self, proxyLine?.debugDescription ?? "")
+            guard let configData = fileDatabase.readFile(path: openVPNConfigFilePath),
+                  let stringData = String(data: configData, encoding: String.Encoding.utf8)
+            else { return nil }
+            var lines = stringData.components(separatedBy: "\n")
+            lines.removeAll { s in
+                s.starts(with: "local-proxy")
+            }
+            var configFound = false
+            var x509Found = false
+            for (index, line) in lines.enumerated() {
+                if line.contains("proto ") {
+                    lines[index] = protoLine
+                    configFound = true
+                }
+                if line.contains("remote ") {
+                    lines[index] = remoteLine
+                    configFound = true
+                }
+                if line.starts(with: "verify-x509-name") {
+                    lines[index] = x509NameLine
+                    x509Found = true
+                }
+            }
+            if configFound == false {
+                lines.insert(protoLine, at: 2)
+                lines.insert(remoteLine, at: 3)
+            }
+            
+            if x509Found == false {
+                lines.insert(x509NameLine, at: 4)
+            }
+            
+            if let proxyLine = proxyLine {
+                lines.append(proxyLine)
+            }
+            if userSettings.isCircumventCensorshipEnabled {
+                lines.append("udp-stuffing")
+                lines.append("tcp-split-reset")
+            }
+            guard let appendedConfigData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return nil }
+            
+            fileDatabase.removeFile(path: FilePaths.openVPN)
+            fileDatabase.saveFile(data: appendedConfigData,
+                                  path: FilePaths.openVPN)
+            return OpenVPNConfiguration(result: true, configUsername: username, configPassword: password, configFilePath: openVPNConfigFilePath, configData: appendedConfigData)
+        }
+    }
 }

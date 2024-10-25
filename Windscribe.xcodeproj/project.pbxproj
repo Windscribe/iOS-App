@@ -166,6 +166,8 @@
 		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
 		1EDAA9172CCA9BA20014E678 /* VPNManagerUtils+OpenCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */; };
 		1EDAA9182CCA9BA20014E678 /* VPNManagerUtils+OpenCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */; };
+		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
+		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
@@ -1348,6 +1350,7 @@
 		1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CardHeaderViewDelegate.swift"; sourceTree = "<group>"; };
 		1EC6C7892BE293690036248B /* LocationMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMainViewModel.swift; sourceTree = "<group>"; };
 		1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+OpenCredentials.swift"; sourceTree = "<group>"; };
+		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataPopupViewModel.swift; sourceTree = "<group>"; };
 		1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataViewModel.swift; sourceTree = "<group>"; };
@@ -2364,6 +2367,7 @@
 		1E593DA82CC9377D0051FF5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */,
 				1E593DA92CC9378F0051FF5E /* VPNManagerUtils+IKEV2Credentials.swift */,
 				1E2CBFEE2CC7CABC00748D9F /* VPNManagerUtils.swift */,
@@ -5030,6 +5034,7 @@
 				59FC74012C5153B200021CD1 /* PreferenceItem.swift in Sources */,
 				59FC74172C51543E00021CD1 /* Latency.swift in Sources */,
 				59FC73D22C514AF000021CD1 /* AlertManagerV2.swift in Sources */,
+				1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
 				59FC74852C52D9ED00021CD1 /* RouteIDTv.swift in Sources */,
 				59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */,
 				59FC74872C52FCEE00021CD1 /* Router.swift in Sources */,
@@ -5457,6 +5462,7 @@
 				1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				C5D0F2FE27E1959D00DB3E49 /* WgErrorCodes.swift in Sources */,
+				1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
 				C5BF384E2B91735100AA725C /* keyChainKeys.swift in Sources */,
 				1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */,
 				E96AFFF428A2BEB800B53EEE /* AccountEmailCell.swift in Sources */,
