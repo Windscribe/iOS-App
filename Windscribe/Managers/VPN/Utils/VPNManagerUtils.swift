@@ -15,6 +15,13 @@ class VPNManagerUtils {
     lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
     lazy var keychainDb = Assembler.resolve(KeyChainDatabase.self)
     
+    func connect() {
+        // UserSettings - allowLane, killSwitch, etc
+        // Credentials
+        // Protocol, Port
+        // LocaionID
+    }
+    
     static func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
         Task {
             do {
