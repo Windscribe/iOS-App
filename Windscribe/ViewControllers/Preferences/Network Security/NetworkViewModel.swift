@@ -50,12 +50,14 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
 
     private let localDatabase: LocalDatabase
+    private let connectivity: Connectivity
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager) {
+    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity) {
         self.localDatabase = localDatabase
         self.themeManager = themeManager
+        self.connectivity = connectivity
         loadData()
     }
 
@@ -83,8 +85,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
         } else {
             self.showPreferredProtocol = false
         }
-
-         if WifiManager.shared.getConnectedWifiNetworkSSID() ==  self.displayingNetwork?.SSID {
+        if connectivity.getWifiSSID() ==  self.displayingNetwork?.SSID {
              self.hideForgetNetwork = true
         }
         completion()

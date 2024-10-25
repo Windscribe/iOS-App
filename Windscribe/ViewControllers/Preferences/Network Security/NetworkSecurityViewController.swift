@@ -136,26 +136,28 @@ class NetworkSecurityViewController: WSNavigationViewController {
     private func createListNetworkView() {
         currentNetworkStackView.removeAllArrangedSubviews()
         otherNetworkStackView.removeAllArrangedSubviews()
-        let currentSSID = WifiManager.shared.getConnectedWifiNetworkSSID()
-        guard let lst = try? viewModel.networks.value() else { return }
-        var prevOtherCell: NetworkCellView?
-        for (_, network) in lst.enumerated() {
-            // Only show networks that have an SSID
-            guard !network.SSID.isEmpty else { continue }
-            let vw = NetworkCellView(isDarkMode: viewModel.isDarkMode)
-            vw.bindData(network)
-            vw.delegate = self
-            if network.SSID == currentSSID {
-                currentNetworkStackView.addArrangedSubview(vw)
-            } else {
-                if prevOtherCell != nil {
-                    vw.addTopDivider()
+        viewModel.currentNetwork.bind(onNext: { [self] network in
+            let currentSSID = network?.name
+            guard let lst = try? self.viewModel.networks.value() else { return }
+            var prevOtherCell: NetworkCellView?
+            for (_, network) in lst.enumerated() {
+                // Only show networks that have an SSID
+                guard !network.SSID.isEmpty else { continue }
+                let vw = NetworkCellView(isDarkMode: viewModel.isDarkMode)
+                vw.bindData(network)
+                vw.delegate = self
+                if network.SSID == currentSSID {
+                    currentNetworkStackView.addArrangedSubview(vw)
+                } else {
+                    if prevOtherCell != nil {
+                        vw.addTopDivider()
+                    }
+                    otherNetworkStackView.addArrangedSubview(vw)
+                    prevOtherCell = vw
                 }
-                otherNetworkStackView.addArrangedSubview(vw)
-                prevOtherCell = vw
-            }
 
-        }
+            }
+        }).disposed(by: disposeBag)
     }
 
     private func createHeader(text: String) -> UIView {

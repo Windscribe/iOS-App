@@ -47,14 +47,59 @@ class WifiManager {
         return connectedWifi
     }
 
-    private func observeSavedNetworks() {
-        logger.logD(self, "Observing saved network list.")
-        observingNetworks = true
+    func isConnectedWifiTrusted() -> Bool {
+        let results = try? wifiNetworks.value()
+        let SSIDs = results?.filter({ $0.status == true }).map({ $0.SSID })
+        guard let connectedNetwork = connectivity.getWifiSSID() else {
+            return false
+        }
+        return SSIDs?.contains(connectedNetwork) ?? false
+    }
 
+    func saveCurrentWifiNetworks() {
+        _ = connectivity.network.take(1).map {$0.name}.subscribe(onNext: { wifiSSID in
+            guard let wifiSSID = wifiSSID else { return }
+            var defaultProtocol = TextsAsset.General.protocols[0]
+            var defaultPort = self.localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+
+            if let suggestedPorts = self.localDb.getSuggestedPorts()?.first, suggestedPorts.protocolType != "", suggestedPorts.port != "" {
+                defaultProtocol = suggestedPorts.protocolType
+                defaultPort = suggestedPorts.port
+            }
+            guard let autoSecureNewNetworks = try? self.selectedAutoSecureNewNetworks.value() else {return}
+            let wifiNetwork = WifiNetwork(SSID: wifiSSID,
+                                          status: !autoSecureNewNetworks,
+                                          protocolType: defaultProtocol,
+                                          port: defaultPort,
+                                          preferredProtocol: defaultProtocol,
+                                          preferredPort: defaultPort)
+
+            if let results = try? self.wifiNetworks.value() {
+                let SSIDs = results.map({ $0.SSID })
+                if !SSIDs.contains(wifiNetwork.SSID) {
+                    if "Unknown" != wifiNetwork.SSID {
+                        VPNManager.shared.updateOnDemandRules()
+                    }
+                    self.logger.logI(self, "\(wifiNetwork.SSID) not found in secured network database.")
+                    self.setSelectedNetworkSettings(wifiNetwork, existingNetwork: false, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
+
+                } else {
+                    if let network = results.filter({ $0.SSID == wifiSSID}).first {
+                        self.setSelectedNetworkSettings(network, existingNetwork: true, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
+                    }
+                }
+            } else {
+                self.logger.logE(self, "Error when saving Wi-fi networks")
+            }
+        })
+    }
+
+    private func observeSavedNetworks() {
+        observingNetworks = true
         Observable.combineLatest(
             localDb.getNetworks(),
             connectivity.network.asObservable()
-        ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, _) in
+        ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
             self.wifiNetworks.onNext(networks)
             guard !networks.isEmpty else {
                 self.connectedWifi = nil
@@ -66,11 +111,10 @@ class WifiManager {
                 self.updateSelectedPreferences()
             }
             self.initialNetworkFetch = false
-            self.getNetworkName { wifiSSID in
-                self.connectedWifi = networks.filter { $0.SSID == wifiSSID }.first
-                if self.connectedWifi == nil {
-                    self.saveNewNetwork(wifiSSID: wifiSSID ?? "")
-                }
+            self.connectedWifi = networks.filter { $0.SSID == network.name }.first
+            if self.connectedWifi == nil {
+                guard let networkName = network.name else { return }
+                self.saveNewNetwork(wifiSSID: networkName)
             }
         }, onError: { e in
             self.logger.logE(self, "Error getting network list. \(e)")
@@ -100,7 +144,7 @@ class WifiManager {
                                     port: defaultPort,
                                     preferredProtocol: defaultProtocol,
                                     preferredPort: defaultPort)
-            logger.logD(self, "Saving \(wifiSSID) to network list.")
+            logger.logD(self, "Adding \"\(wifiSSID)\" to secured networks database.")
             localDb.saveNetwork(wifiNetwork: network).disposed(by: disposeBag)
             if !observingNetworks {
                 observeSavedNetworks()
@@ -108,22 +152,17 @@ class WifiManager {
         }
     }
 
-    func configure() {
-        saveCellularNetwork()
-        saveCurrentWifiNetworks()
-    }
-
-    func setSelectedPreferences() {
+    private func setSelectedPreferences() {
         guard let result = getConnectedNetwork() else { return }
         self.selectedPreferredProtocol = result.preferredProtocol
         self.selectedPreferredPort = result.preferredPort
         self.selectedPreferredProtocolStatus = result.preferredProtocolStatus
     }
 
-    func updateSelectedPreferences() {
+    private func updateSelectedPreferences() {
         guard let result = getConnectedNetwork() else { return }
         if (result.protocolType != self.selectedProtocol) || (result.port != self.selectedPort) {
-            self.logger.logE(self, "Selected Protocol Changed. \(result.protocolType):\(result.port)")
+            self.logger.logI(self, "Selected Protocol Changed. \(result.protocolType):\(result.port)")
              self.selectedProtocol = result.protocolType
              self.selectedPort = result.port
          }
@@ -142,76 +181,8 @@ class WifiManager {
         }
     }
 
-    func saveCurrentWifiNetworks() {
-        self.getNetworkName { wifiSSID in
-            guard let wifiSSID = wifiSSID else { return }
-            var defaultProtocol = TextsAsset.General.protocols[0]
-            var defaultPort = self.localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-
-            if let suggestedPorts = self.localDb.getSuggestedPorts()?.first, suggestedPorts.protocolType != "", suggestedPorts.port != "" {
-                defaultProtocol = suggestedPorts.protocolType
-                defaultPort = suggestedPorts.port
-            }
-            guard let autoSecureNewNetworks = try? self.selectedAutoSecureNewNetworks.value() else {return}
-            let wifiNetwork = WifiNetwork(SSID: wifiSSID,
-                                          status: !autoSecureNewNetworks,
-                                          protocolType: defaultProtocol,
-                                          port: defaultPort,
-                                          preferredProtocol: defaultProtocol,
-                                          preferredPort: defaultPort)
-
-            if let results = try? self.wifiNetworks.value() {
-                let SSIDs = results.map({ $0.SSID })
-                if !SSIDs.contains(wifiNetwork.SSID) {
-                    if "Unknown" != wifiNetwork.SSID {
-                        VPNManager.shared.updateOnDemandRules()
-                    }
-                    self.logger.logD(self, "New Wi-fi added \(wifiNetwork.SSID)")
-                    self.setSelectedNetworkSettings(wifiNetwork, existingNetwork: false, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
-
-                } else {
-                    if let network = results.filter({ $0.SSID == wifiSSID}).first {
-                        self.setSelectedNetworkSettings(network, existingNetwork: true, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
-                    }
-                }
-            } else {
-                self.logger.logE(self, "Error when saving Wi-fi networks")
-            }
-        }
-    }
-
-    func saveCellularNetwork() {
-        var defaultProtocol = TextsAsset.General.protocols[0]
-        var defaultPort = localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-
-        if let suggestedPorts = localDb.getSuggestedPorts()?.first, suggestedPorts.protocolType != "", suggestedPorts.port != "" {
-            defaultProtocol = suggestedPorts.protocolType
-            defaultPort = suggestedPorts.port
-        }
-        let cellularNetwork = WifiNetwork(SSID: TextsAsset.cellular,
-                                          status: false,
-                                          protocolType: defaultProtocol,
-                                          port: defaultPort,
-                                          preferredProtocol: defaultProtocol,
-                                          preferredPort: defaultPort)
-        if let results = try? wifiNetworks.value() {
-            let SSIDs = results.map({ $0.SSID })
-            if !SSIDs.contains(cellularNetwork.SSID) {
-                self.logger.logD(self, "Cellular network added.")
-
-                setSelectedNetworkSettings(cellularNetwork, existingNetwork: false, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
-            } else {
-                if let network = results.filter({ $0.SSID == cellularNetwork.SSID}).first {
-                    setSelectedNetworkSettings(network, existingNetwork: true, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
-                }
-            }
-        } else {
-            self.logger.logD(self, "Error when saving cellular network")
-        }
-    }
-
     // added selected network settings to current WifiManager
-    func setSelectedNetworkSettings(_ network: WifiNetwork, existingNetwork: Bool, defaultProtocol: String = "", defaultPort: String = "") {
+    private func setSelectedNetworkSettings(_ network: WifiNetwork, existingNetwork: Bool, defaultProtocol: String = "", defaultPort: String = "") {
         if existingNetwork {
             preferences.getConnectionMode().subscribe { data in
                 self.connectionMode.onNext(data)
@@ -245,26 +216,5 @@ class WifiManager {
             WifiManager.shared.selectedPort = defaultPort
         }
 
-    }
-
-    func getConnectedWifiNetworkSSID() -> String? {
-        return connectivity.getWifiSSID()
-    }
-
-    private func getNetworkName(completion: @escaping (String?) -> Void) {
-        let networkType = connectivity.getNetwork().networkType
-        if networkType == .cellular {
-            completion(TextsAsset.cellular)
-        }
-        connectivity.getNetworkName(networkType: networkType, completion: completion)
-    }
-
-    func isConnectedWifiTrusted() -> Bool {
-        let results = try? wifiNetworks.value()
-        let SSIDs = results?.filter({ $0.status == true }).map({ $0.SSID })
-        guard let connectedNetwork = getConnectedWifiNetworkSSID() else {
-            return false
-        }
-        return SSIDs?.contains(connectedNetwork) ?? false
     }
 }

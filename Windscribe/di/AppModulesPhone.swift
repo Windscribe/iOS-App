@@ -58,7 +58,7 @@ class ViewModels: Assembly {
             return NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(NetworkOptionViewModelType.self) { r in
-            return NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!)
+            return NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(GhostAccountViewModelType.self) { r in
             return GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!)

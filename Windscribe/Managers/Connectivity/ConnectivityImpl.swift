@@ -12,6 +12,10 @@ import RxSwift
 
 /// Manages network connectivity state using reachability and network path monitor.
 class ConnectivityImpl: Connectivity {
+    func getWifiSSID() -> String? {
+        return try? network.value().name
+    }
+
     private let logger: FileLogger
     /// Observe this subject to get network change events.
     let network: BehaviorSubject<AppNetwork> = BehaviorSubject(value: AppNetwork(.disconnected))
@@ -53,6 +57,7 @@ class ConnectivityImpl: Connectivity {
         let networkType = self.getNetworkType(path: path)
         getNetworkName(networkType: networkType) { ssid in
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
+            self.logger.logI(self, "\(appNetwork.description)")
             self.network.onNext(appNetwork)
             NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         }
@@ -99,15 +104,13 @@ class ConnectivityImpl: Connectivity {
     }
 
     /// Returns  optional network carier name or SSID for network type
-    func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void) {
+    private func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void) {
         switch networkType {
         case .cellular:
             completion(getCellularNetworkName())
         case .wifi:
-            getSsidFromNeHotspotHelper { [weak self] ssid in
-                if let ssid = ssid {
-                    completion(ssid)
-                }
+            getSsidFromNeHotspotHelper { ssid in
+                completion(ssid)
             }
         case .none:
             completion(nil)

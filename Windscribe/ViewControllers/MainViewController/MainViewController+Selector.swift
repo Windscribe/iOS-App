@@ -388,7 +388,7 @@ extension MainViewController {
             }
         } else {
             self.hideAutoSecureViews()
-            WifiManager.shared.configure()
+            WifiManager.shared.saveCurrentWifiNetworks()
             guard let result = WifiManager.shared.getConnectedNetwork() else { return }
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
             VPNManager.shared.getVPNConnectionInfo { [self] info in

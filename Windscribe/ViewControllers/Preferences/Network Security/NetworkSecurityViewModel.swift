@@ -15,6 +15,7 @@ protocol NetworkSecurityViewModelType {
     var networks: BehaviorSubject<[WifiNetwork]> {get}
     var isDarkMode: BehaviorSubject<Bool> {get}
     var isOnline: BehaviorSubject<Bool> { get }
+    var currentNetwork: BehaviorSubject<AppNetwork?> { get }
     func getAutoSecureNetworkStatus() -> Bool
     func updateAutoSecureNetworkStatus()
 }
@@ -27,6 +28,7 @@ class NetworkSecurityViewModel: NetworkSecurityViewModelType {
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
     let networks: BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
+    let currentNetwork: BehaviorSubject<AppNetwork?> = BehaviorSubject(value: nil)
     let isOnline: BehaviorSubject<Bool> = BehaviorSubject(value: false)
     private var isObserving = false
 
@@ -45,6 +47,7 @@ class NetworkSecurityViewModel: NetworkSecurityViewModelType {
             self.autoSecureNetworkStatus.onNext(data ?? DefaultValues.hapticFeedback)
         }.disposed(by: disposeBag)
         connectivity.network.subscribe(onNext: { network in
+            self.currentNetwork.onNext(network)
             self.isOnline.onNext(network.networkType != .none)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
