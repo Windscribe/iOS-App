@@ -69,13 +69,13 @@ extension LocationManagingViewModel: CLLocationManagerDelegate {
     }
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        connectivity.refreshNetwork()
         if #available(iOS 15.0, *) {
             if manager.authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse {
                 locationCallback?()
                 // The SSID can only be otained after there are location permissions
                 // We need to update the networks now
                 connectivityManager.saveCurrentWifiNetworks()
-                wifiManager.configure()
             }
         }
     }
@@ -89,7 +89,6 @@ extension LocationManagingViewModel: DisclosureAlertDelegate {
     func grantPermissionClicked() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
-        connectivity.refreshNetwork()
     }
 
     func openLocationSettingsClicked() {

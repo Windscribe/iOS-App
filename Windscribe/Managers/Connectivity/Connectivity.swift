@@ -14,5 +14,4 @@ protocol Connectivity {
     func refreshNetwork()
     func internetConnectionAvailable() -> Bool
     func getWifiSSID() -> String?
-    func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void)
 }

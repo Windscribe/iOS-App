@@ -44,7 +44,7 @@ extension LocalDatabaseImpl {
                     }
                 } else if oldSchemaVersion < 6 {
                     migration.enumerateObjects(ofType: AutomaticMode.className()) { _, newObject in
-                        newObject!["SSID"] = WifiManager.shared.getConnectedWifiNetworkSSID() ?? "NO_CONN"
+                        newObject!["SSID"] = TextsAsset.unknownNetworkName
                     }
                 } else if oldSchemaVersion < 7 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _,_ in }

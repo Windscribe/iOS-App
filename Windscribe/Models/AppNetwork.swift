@@ -31,6 +31,6 @@ struct AppNetwork: CustomStringConvertible {
         self.isVPN = isVPN
     }
     var description: String {
-        return "Status: \(status) NetworkType: \(networkType) Name: \(name ?? "") isVPN: \(isVPN)"
+        return "Internet Connection [Status:\(status) NetworkType:\(networkType) Name:\(name ?? "Unknown") isVPN:\(isVPN)]"
     }
 }
