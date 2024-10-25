@@ -10,7 +10,7 @@ import Foundation
 import StoreKit
 struct UncompletedTransactions: CustomStringConvertible {
     private let date: Date?
-    private let transaction: SKPaymentTransaction
+    let transaction: SKPaymentTransaction
     private let productID: String
     let appleData: String
     let transactionID: String
