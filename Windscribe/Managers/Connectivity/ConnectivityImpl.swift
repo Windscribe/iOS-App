@@ -9,7 +9,6 @@
 import Foundation
 import Network
 import RxSwift
-import SystemConfiguration.CaptiveNetwork
 
 /// Manages network connectivity state using reachability and network path monitor.
 class ConnectivityImpl: Connectivity {
@@ -108,41 +107,11 @@ class ConnectivityImpl: Connectivity {
             getSsidFromNeHotspotHelper { [weak self] ssid in
                 if let ssid = ssid {
                     completion(ssid)
-                } else {
-                    completion(self?.getWifiSSID())
                 }
             }
         case .none:
             completion(nil)
         }
-    }
-
-    /// Returns optional Wifi SSID for current network.
-    func getWifiSSID() -> String? {
-        if getNetworkType(path: monitor.currentPath) == .cellular {
-            return getCellularNetworkName()
-        }
-        var interface = [String: Any]()
-#if os(iOS)
-        if let interfaces = CNCopySupportedInterfaces() {
-            for i in 0 ..< CFArrayGetCount(interfaces) {
-                let interfaceName = CFArrayGetValueAtIndex(interfaces, i)
-                let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
-                guard let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString) else {
-                    let ssid = interface["SSID"] as? String
-                    return ssid
-                }
-                guard let interfaceData = unsafeInterfaceData as? [String: Any] else {
-                    return interface["SSID"] as? String
-                }
-                interface = interfaceData
-            }
-        }
-        if let SSID = interface["SSID"] as? String {
-            return SSID
-        }
-#endif
-        return nil
     }
 
     /// Returns carrier name for cellular network

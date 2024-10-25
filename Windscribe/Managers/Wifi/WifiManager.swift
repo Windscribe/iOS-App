@@ -217,13 +217,13 @@ class WifiManager {
                 self.connectionMode.onNext(data)
             }.disposed(by: disposeBag)
             guard let connectionMode = try? self.connectionMode.value() else {return}
-            
+
             WifiManager.shared.selectedPreferredProtocolStatus =  network.preferredProtocolStatus
             WifiManager.shared.selectedPreferredProtocol = network.preferredProtocol
             WifiManager.shared.selectedPreferredPort = network.preferredPort
             WifiManager.shared.selectedProtocol = network.protocolType
             WifiManager.shared.selectedPort = network.port
-            
+
             if connectionMode != Fields.Values.manual && network.preferredProtocolStatus == false {
                 if network.protocolType != defaultProtocol {
                     localDb.updateWifiNetwork(network: network,

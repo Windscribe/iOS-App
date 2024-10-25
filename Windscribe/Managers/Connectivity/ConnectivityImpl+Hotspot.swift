@@ -7,6 +7,8 @@
 //
 
 import NetworkExtension
+import SystemConfiguration.CaptiveNetwork
+
 extension Connectivity {
     func getSsidFromNeHotspotHelper(completion: @escaping (String?) -> Void) {
 #if os(iOS)
@@ -14,11 +16,19 @@ extension Connectivity {
             NEHotspotNetwork.fetchCurrent { network in
                 if let ssid = network?.ssid {
                     completion(ssid)
-                } else {
-                    completion(nil)
+                    return
                 }
+                completion(nil)
             }
         } else {
+            if let interfaces = CNCopySupportedInterfaces() as? [CFString] {
+                for interface in interfaces {
+                    if let networkInfo = CNCopyCurrentNetworkInfo(interface) as NSDictionary? {
+                        completion(networkInfo[kCNNetworkInfoKeySSID as String] as? String)
+                        return
+                    }
+                }
+            }
             completion(nil)
         }
 #else

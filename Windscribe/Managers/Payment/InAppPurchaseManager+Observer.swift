@@ -96,8 +96,8 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
     func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         if isComingFromRestore {
             uncompletedTransactions = filterUncompletedTransactions(transactions: transactions)
-            transactions.forEach { transaction in
-                SKPaymentQueue.default().finishTransaction(transaction)
+            uncompletedTransactions.forEach { transaction in
+                SKPaymentQueue.default().finishTransaction(transaction.transaction)
             }
             return
         }
