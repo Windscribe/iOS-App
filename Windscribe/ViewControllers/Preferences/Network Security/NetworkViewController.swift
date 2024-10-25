@@ -87,6 +87,9 @@ class NetworkViewController: WSNavigationViewController {
         viewModel.isDarkMode.subscribe(onNext: { [self] isDark in
             self.setupTheme(isDark: isDark)
         }).disposed(by: disposeBag)
+        viewModel.networks.subscribe(onNext: { [weak self] _ in
+            self?.loadNetwork()
+        }).disposed(by: disposeBag)
 
     }
     private func setupTheme(isDark: Bool) {
