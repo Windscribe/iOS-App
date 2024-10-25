@@ -16,7 +16,6 @@ import RxSwift
 
 extension VPNManager {
     @objc func configureAndConnectVPN() {
-
         guard let selectedNode = VPNManager.shared.selectedNode else {
             return
         }

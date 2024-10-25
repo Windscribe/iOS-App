@@ -127,7 +127,6 @@ extension VPNManagerUtils {
         }
         
         tunnelProtocol.disconnectOnSleep = false
-        
         manager.protocolConfiguration = tunnelProtocol
         
 #if os(iOS)

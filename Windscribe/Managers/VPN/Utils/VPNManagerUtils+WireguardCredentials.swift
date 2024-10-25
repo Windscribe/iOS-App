@@ -40,17 +40,19 @@ extension VPNManagerUtils {
 #if os(iOS)
         // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
         if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-            manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+            providerManager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
+            providerManager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
         }
         // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
         if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
+            providerManager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
         }
 #endif
         providerManager.onDemandRules?.removeAll()
         providerManager.onDemandRules = userSettings.onDemandRules
         providerManager.isEnabled = true
+        providerManager.localizedDescription = Constants.appName
+        
         do {
             try await VPNManagerUtils.saveThrowing(manager: manager)
         } catch let error {
@@ -59,7 +61,30 @@ extension VPNManagerUtils {
             throw error
         }
         
-        logger.logD( WireGuardVPNManager.self, "WireGuard VPN configuration successful.")
+        logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(TextsAsset.wireGuard)")
         return true
+    }
+    
+    func configureWithSavedConfig(selectedNode: SelectedNode?,
+                                  manager: NEVPNManager,
+                                  userSettings: VPNUserSettings) async throws -> Bool {
+        guard let selectedNode = selectedNode,
+              let ip3 = selectedNode.ip3 else { return  false}
+        logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with saved configuration. \(String(describing: ip3))")
+        if manager.connection.status != .connecting {
+            return try await configureWireguard(with: selectedNode, for: manager, userSettings: userSettings)
+        }
+        return false
+    }
+    
+    func configureWithCustomConfig(selectedNode: SelectedNode?,
+                                   manager: NEVPNManager,
+                                   userSettings: VPNUserSettings) async throws -> Bool {
+        guard let selectedNode = selectedNode else { return false }
+        logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
+        if manager.connection.status != .connecting {
+            return try await configureWireguard(with: selectedNode, for: manager, userSettings: userSettings)
+        }
+        return false
     }
 }
