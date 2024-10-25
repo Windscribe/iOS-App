@@ -168,6 +168,8 @@
 		1EDAA9182CCA9BA20014E678 /* VPNManagerUtils+OpenCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */; };
 		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
+		1EDAA91D2CCBF1040014E678 /* VPNManagerUtils+WireguardCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91C2CCBF0EF0014E678 /* VPNManagerUtils+WireguardCredentials.swift */; };
+		1EDAA91E2CCBF1040014E678 /* VPNManagerUtils+WireguardCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91C2CCBF0EF0014E678 /* VPNManagerUtils+WireguardCredentials.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
@@ -1351,6 +1353,7 @@
 		1EC6C7892BE293690036248B /* LocationMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMainViewModel.swift; sourceTree = "<group>"; };
 		1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+OpenCredentials.swift"; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
+		1EDAA91C2CCBF0EF0014E678 /* VPNManagerUtils+WireguardCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+WireguardCredentials.swift"; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataPopupViewModel.swift; sourceTree = "<group>"; };
 		1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataViewModel.swift; sourceTree = "<group>"; };
@@ -2367,6 +2370,7 @@
 		1E593DA82CC9377D0051FF5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1EDAA91C2CCBF0EF0014E678 /* VPNManagerUtils+WireguardCredentials.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */,
 				1E593DA92CC9378F0051FF5E /* VPNManagerUtils+IKEV2Credentials.swift */,
@@ -4988,6 +4992,7 @@
 				59FC73FE2C51539F00021CD1 /* ServerCredentials.swift in Sources */,
 				59FC73CA2C5042BD00021CD1 /* WSRoundButton.swift in Sources */,
 				59FC74642C5167A300021CD1 /* NotificationRepositoryImpl.swift in Sources */,
+				1EDAA91D2CCBF1040014E678 /* VPNManagerUtils+WireguardCredentials.swift in Sources */,
 				1E0D9D732C6103A3008AFF2D /* PreferencesGeneralView.swift in Sources */,
 				59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */,
 				1EF7BB412C74B0880032A4DF /* UIVIew+Gradient.swift in Sources */,
@@ -5488,6 +5493,7 @@
 				C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */,
 				E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */,
 				AF42802E22D793E9006761C5 /* ViewLogViewController.swift in Sources */,
+				1EDAA91E2CCBF1040014E678 /* VPNManagerUtils+WireguardCredentials.swift in Sources */,
 				AF8DA7B72204E37500885BD8 /* AccountTableViewCell.swift in Sources */,
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+Ext.swift in Sources */,
 				C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */,
