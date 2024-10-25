@@ -151,7 +151,7 @@ struct GroupModel {
                 self.bestNodeHostname = forceNode
                 return
             }
-            let filteredNodes = nodes.filter{$0.forceDisconnect == false}
+            let filteredNodes = nodes.filter {$0.forceDisconnect == false}
             var weightCounter = nodes.reduce(0, { $0 + $1.weight })
             if weightCounter >= 1 {
                 let randomNumber = arc4random_uniform(UInt32(weightCounter))

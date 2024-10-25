@@ -87,8 +87,11 @@ class NetworkViewController: WSNavigationViewController {
         viewModel.isDarkMode.subscribe(onNext: { [self] isDark in
             self.setupTheme(isDark: isDark)
         }).disposed(by: disposeBag)
-        viewModel.networks.subscribe(onNext: { [weak self] _ in
-            self?.loadNetwork()
+        viewModel.networks.subscribe(onNext: { [weak self] networks in
+            let allNetworksValid = networks.filter({$0.isInvalidated}).count == 0
+            if allNetworksValid {
+                self?.loadNetwork()
+            }
         }).disposed(by: disposeBag)
 
     }

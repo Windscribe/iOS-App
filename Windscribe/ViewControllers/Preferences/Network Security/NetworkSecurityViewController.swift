@@ -134,12 +134,14 @@ class NetworkSecurityViewController: WSNavigationViewController {
     }
 
     private func createListNetworkView() {
-        currentNetworkStackView.removeAllArrangedSubviews()
-        otherNetworkStackView.removeAllArrangedSubviews()
-        viewModel.currentNetwork.bind(onNext: { [self] network in
+        viewModel.currentNetwork.distinctUntilChanged().bind(onNext: { [self] network in
+            currentNetworkStackView.removeAllArrangedSubviews()
+            otherNetworkStackView.removeAllArrangedSubviews()
             let currentSSID = network?.name
             guard let lst = try? self.viewModel.networks.value() else { return }
             var prevOtherCell: NetworkCellView?
+            var currentNetworkFound = false
+            var otherNetworkFound = false
             for (_, network) in lst.enumerated() {
                 // Only show networks that have an SSID
                 guard !network.SSID.isEmpty else { continue }
@@ -147,16 +149,19 @@ class NetworkSecurityViewController: WSNavigationViewController {
                 vw.bindData(network)
                 vw.delegate = self
                 if network.SSID == currentSSID {
+                    currentNetworkFound = true
                     currentNetworkStackView.addArrangedSubview(vw)
                 } else {
+                    otherNetworkFound = true
                     if prevOtherCell != nil {
                         vw.addTopDivider()
                     }
                     otherNetworkStackView.addArrangedSubview(vw)
                     prevOtherCell = vw
                 }
-
             }
+            currentNetworkTitle.isHidden = !currentNetworkFound
+            otherNetworkTitle.isHidden = !otherNetworkFound
         }).disposed(by: disposeBag)
     }
 

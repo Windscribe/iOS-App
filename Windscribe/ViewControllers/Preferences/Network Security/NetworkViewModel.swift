@@ -13,7 +13,7 @@ typealias CompletionHandler = (() -> Void)
 
 protocol NetworkOptionViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
-    var networks : BehaviorSubject<[WifiNetwork]> {get set}
+    var networks: BehaviorSubject<[WifiNetwork]> {get set}
     var themeManager: ThemeManager {get set}
     var displayingNetwork: WifiNetwork? {get set}
     var preferredProtocol: String? {get set}
@@ -46,7 +46,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     var trustNetworkStatus: Bool = false
     var preferredProtocolStatus: Bool = false
     var showPreferredProtocol: Bool = false
-    var networks : BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
+    var networks: BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
 
     private let localDatabase: LocalDatabase
@@ -62,7 +62,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     private func loadData() {
-        localDatabase.getNetworks().subscribe { networks in
+        localDatabase.getNetworks().filter {$0.filter({$0.isInvalidated}).count == 0}.subscribe { networks in
             self.networks.onNext(networks)
         }.disposed(by: disposeBag)
 
@@ -72,7 +72,14 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func loadNetwork(completion: CompletionHandler) {
-        guard let networkSSID = self.displayingNetwork?.SSID, let network = try? networks.value().filter({ !$0.isInvalidated && $0.SSID == networkSSID }).first else { return }
+        let existingNetworks = (try? networks.value().filter {!$0.isInvalidated}) ?? []
+        if displayingNetwork?.isInvalidated == true {
+            completion()
+            return
+        }
+        guard let networkSSID = self.displayingNetwork?.SSID, let network = existingNetworks
+        .filter({$0.SSID == networkSSID })
+        .first else { return }
 
         self.preferredProtocol = network.preferredProtocol
         self.preferredPort = network.preferredPort

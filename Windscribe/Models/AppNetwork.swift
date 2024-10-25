@@ -19,7 +19,7 @@ enum NetworkType {
     case none
 }
 
-struct AppNetwork: CustomStringConvertible {
+struct AppNetwork: CustomStringConvertible, Equatable {
     let status: NetworkStatus
     let networkType: NetworkType
     let name: String?
