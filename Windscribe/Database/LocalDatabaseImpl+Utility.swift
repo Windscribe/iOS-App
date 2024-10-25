@@ -105,8 +105,9 @@ extension LocalDatabaseImpl {
     }
 
     func deleteRealmObject<T: Object>(object: T) {
-        try? object.realm?.write {
-            object.realm?.delete(object)
+        let realm = try? Realm()
+        try? realm?.safeWrite {
+            realm?.delete(object)
         }
     }
 

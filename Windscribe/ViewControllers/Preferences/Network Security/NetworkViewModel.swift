@@ -13,6 +13,7 @@ typealias CompletionHandler = (() -> Void)
 
 protocol NetworkOptionViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var networks : BehaviorSubject<[WifiNetwork]> {get set}
     var themeManager: ThemeManager {get set}
     var displayingNetwork: WifiNetwork? {get set}
     var preferredProtocol: String? {get set}
@@ -45,7 +46,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     var trustNetworkStatus: Bool = false
     var preferredProtocolStatus: Bool = false
     var showPreferredProtocol: Bool = false
-    var networks: [WifiNetwork]?
+    var networks : BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
 
     private let localDatabase: LocalDatabase
@@ -60,7 +61,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
 
     private func loadData() {
         localDatabase.getNetworks().subscribe { networks in
-            self.networks = networks
+            self.networks.onNext(networks)
         }.disposed(by: disposeBag)
 
         themeManager.darkTheme.subscribe { data in
@@ -69,7 +70,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func loadNetwork(completion: CompletionHandler) {
-         guard let networkSSID = self.displayingNetwork?.SSID, let network = networks?.filter({ $0.SSID == networkSSID }).first else { return }
+        guard let networkSSID = self.displayingNetwork?.SSID, let network = try? networks.value().filter({ !$0.isInvalidated && $0.SSID == networkSSID }).first else { return }
 
         self.preferredProtocol = network.preferredProtocol
         self.preferredPort = network.preferredPort

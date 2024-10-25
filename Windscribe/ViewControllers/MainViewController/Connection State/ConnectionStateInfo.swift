@@ -46,17 +46,16 @@ struct ConnectionStateInfo {
     }
 
     var trustedNetworkImage: String {
-        if let status = connectedWifi?.status {
-            if status == true {
-                return ImagesAsset.wifiUnsecure
+            if let status = WifiManager.shared.getConnectedNetwork()?.status {
+                if status == true {
+                    return ImagesAsset.wifiUnsecure
+                } else {
+                   return ImagesAsset.wifi
+                }
             } else {
-               return ImagesAsset.wifi
+                return ImagesAsset.wifi
+
             }
-        } else {
-            return ImagesAsset.wifi
-
-        }
-
     }
 }
 
