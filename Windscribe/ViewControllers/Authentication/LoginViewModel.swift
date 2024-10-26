@@ -149,9 +149,9 @@ class LoginViewModelImpl: LoginViewModel {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
             logger.logD(self, "User data is ready")
             showLoadingView.onNext(false)
+            emergencyConnectRepository.cleansEmergencyConfigs()
             if emergencyConnectRepository.isConnected() == true {
                 logger.logD(self, "Disconnecting emergency connect.")
-                emergencyConnectRepository.cleansEmergencyConfigs()
                 emergencyConnectRepository.removeProfile().subscribe(onCompleted: {
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
                         Assembler.resolve(LatencyRepository.self).loadLatency()

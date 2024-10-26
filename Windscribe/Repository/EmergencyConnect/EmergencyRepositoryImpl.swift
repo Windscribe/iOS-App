@@ -69,6 +69,9 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     func cleansEmergencyConfigs() {
         vpnManager.selectedNode = nil
         localDatabase.removeLastConnectedNode()
+        if localDatabase.getLastConnectedNode()?.nickName == configuationName {
+            localDatabase.removeLastConnectedNode()
+        }
         localDatabase.getCustomConfigs().filter { config in
             config.name == configuationName && config.isInvalidated == false
         }.forEach {
