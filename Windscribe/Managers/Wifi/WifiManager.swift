@@ -45,6 +45,9 @@ class WifiManager {
         preferences.getConnectionMode().subscribe { data in
             self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
         }.disposed(by: disposeBag)
+        preferences.getAutoSecureNewNetworks().subscribe { data in
+            self.autoSecureNewNetworks.onNext(data ?? DefaultValues.autoSecureNewNetworks)
+        }.disposed(by: disposeBag)
     }
 
     func getConnectedNetwork() -> WifiNetwork? {
