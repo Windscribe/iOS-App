@@ -97,29 +97,28 @@ extension VPNManagerUtils {
             throw Errors.hostnameNotFound
         }
         self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
-        if providerManager.connection.status != .connecting {
-            guard let customConfig = selectedNode.customConfig,
-                  let protocolType = customConfig.protocolType,
-                  let port = customConfig.port else { return false }
-            
-            var username = ""
-            var password = ""
-            if customConfig.authRequired ?? false {
-                if let usern = customConfig.username, let pass = customConfig.password {
-                    username = usern
-                    password = pass
-                } else { return false }
-            }
-            return try await configureOpenVPN(manager: providerManager,
-                                              selectedNode: selectedNode,
-                                              userSettings: userSettings,
-                                              username: username,
-                                              password: password,
-                                              protocolType: protocolType,
-                                              serverAddress: selectedNode.serverAddress,
-                                              port: port,
-                                              x509Name: nil)
+        guard providerManager.connection.status != .connecting,
+              let customConfig = selectedNode.customConfig,
+              let protocolType = customConfig.protocolType,
+              let port = customConfig.port else { return false }
+        
+        var username = ""
+        var password = ""
+        if customConfig.authRequired ?? false {
+            if let usern = customConfig.username, let pass = customConfig.password {
+                username = usern
+                password = pass
+            } else { return false }
         }
+        return try await configureOpenVPN(manager: providerManager,
+                                          selectedNode: selectedNode,
+                                          userSettings: userSettings,
+                                          username: username,
+                                          password: password,
+                                          protocolType: protocolType,
+                                          serverAddress: selectedNode.serverAddress,
+                                          port: port,
+                                          x509Name: nil)
     }
     
     func configureOpenVPN(manager: NEVPNManager,

@@ -20,7 +20,7 @@ extension VPNManager {
             return
         }
         VPNManager.shared.uniqueConnectionId = UUID().uuidString
-
+        
         if let customConfig = VPNManager.shared.selectedNode?.customConfig {
             logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
             if customConfig.protocolType == TextsAsset.wireGuard {
@@ -41,17 +41,17 @@ extension VPNManager {
             }
         }
     }
-
+    
     @objc func hideAskToRetryPopup() {
         displayingAskToRetryPopup?.dismiss(animated: true, completion: nil)
         connectUsingAutomaticMode()
     }
-
+    
     @objc func retryWithAutomaticMode(protocolType: String?) {
         retryInProgress = false
         connectUsingAutomaticMode()
     }
-
+    
     @objc func retryConnection() {
         logger.logD( VPNManager.self, "Retrying connection")
         if VPNManager.shared.userTappedToDisconnect { return }
@@ -69,72 +69,75 @@ extension VPNManager {
             }
         }
     }
-
+    
     @objc func restartIKEv2Connection() {
         if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
             return
         }
-        IKEv2VPNManager.shared.configureWithSavedCredentials { (_, error) in
-            if error == nil {
+        Task {
+            if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: selectedNode,
+                                                                                   userSettings: makeUserSettings())) ?? false {
                 IKEv2VPNManager.shared.connect()
             }
         }
     }
-
+    
     @objc func restartOpenVPNConnection() {
         if VPNManager.shared.userTappedToDisconnect {
             return
         }
-        DispatchQueue.main.async {
-            OpenVPNManager.shared.configureWithSavedCredentials { (_, error) in
-                if error == nil {
-                    OpenVPNManager.shared.connect()
-                }
-            }
-        }
-    }
-
-    @objc func restartWireGuardConnection() {
-        if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
-            return
-        }
-        WireGuardVPNManager.shared.configureWithSavedConfig { (_, error) in
-            if error == nil {
-                WireGuardVPNManager.shared.connect()
-            }
-        }
-    }
-
-    @objc func restartCustomOpenVPNConnection() {
-        if VPNManager.shared.userTappedToDisconnect { return }
-        OpenVPNManager.shared.configureWithCustomConfig { (_, error) in
-            if error == nil {
+        Task {
+            if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: selectedNode,
+                                                                                     userSettings: makeUserSettings())) ?? false {
                 OpenVPNManager.shared.connect()
             }
         }
     }
-
-    @objc func restartCustomWireGuardConnection() {
-        if VPNManager.shared.userTappedToDisconnect { return }
-        WireGuardVPNManager.shared.configureWithCustomConfig { (_, error) in
-            if error == nil {
+    
+    @objc func restartWireGuardConnection() {
+        if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
+            return
+        }
+        Task {
+            if (try? await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: selectedNode,
+                                                                                  userSettings: makeUserSettings())) ?? false {
                 WireGuardVPNManager.shared.connect()
             }
         }
     }
-
+    
+    @objc func restartCustomOpenVPNConnection() {
+        if VPNManager.shared.userTappedToDisconnect { return }
+        Task {
+            if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: selectedNode,
+                                                                                 userSettings: makeUserSettings())) ?? false {
+                OpenVPNManager.shared.connect()
+            }
+        }
+    }
+    
+    @objc func restartCustomWireGuardConnection() {
+        if VPNManager.shared.userTappedToDisconnect { return }
+        Task {
+            if (try? await self.vpnManagerUtils.configureWireguardWithCustomConfig(selectedNode: selectedNode,
+                                                                                  userSettings: makeUserSettings())) ?? false {
+                WireGuardVPNManager.shared.connect()
+            }
+        }
+    }
+    
     @objc func retryIKEv2Connection() {
         IKEv2VPNManager.shared.connect()
     }
-
+    
     @objc func retryOpenVPNConnection() {
         OpenVPNManager.shared.connect()
     }
-
+    
     @objc func retryWireGuardVPNConnection() {
         WireGuardVPNManager.shared.connect()
     }
-
+    
     @objc func retryConnectionWithNewServerCredentials() {
         if userTappedToDisconnect || self.isCustomConfigSelected() { return }
         logger.logD(self, "Disconnecting from VPN after first attempt.")
@@ -163,7 +166,7 @@ extension VPNManager {
                 self.disconnectOrFail()
             }).disposed(by: disposeBag)
     }
-
+    
     private func updateCredentials(protocolType: String, isStatic: Bool) -> Completable {
         Single.just(protocolType).flatMap { (proto: String) -> Single<Bool> in
             if isStatic {
@@ -180,7 +183,7 @@ extension VPNManager {
             }
         }.asCompletable()
     }
-
+    
     private func selectAnotherNode() -> Completable {
         return Completable.create { completion in
             guard let selectedNode = self.selectedNode else {
@@ -203,10 +206,10 @@ extension VPNManager {
             } else {
                 completion(.error(ManagerErrors.missingipinnode))
             }
-           return Disposables.create {}
+            return Disposables.create {}
         }
     }
-
+    
     private func resetProfiles() -> Completable {
         return Completable.create { completable in
             self.resetWireguard {
@@ -219,10 +222,10 @@ extension VPNManager {
             return Disposables.create {}
         }
     }
-
+    
     @objc func disconnectActiveVPNConnection(setDisconnect: Bool = false, disableConnectIntent: Bool = false) {
         logger.logD( VPNManager.self, "[\(uniqueConnectionId)] [\(self.selectedConnectionMode ?? "")] Disconnecting Active VPN connection")
-
+        
         IKEv2VPNManager.shared.noResponseTimer?.invalidate()
         if self.selectedConnectionMode == Fields.Values.auto {
             self.resetProperties()
@@ -239,7 +242,7 @@ extension VPNManager {
             WireGuardVPNManager.shared.disconnect()
         }
     }
-
+    
     func disconnectIfRequired(completion: @escaping () -> Void) {
         if self.selectedConnectionMode == Fields.Values.auto {
             self.resetProperties()
@@ -263,26 +266,26 @@ extension VPNManager {
             completion()
         }
     }
-
+    
     @objc func disconnectAllVPNConnections(setDisconnect: Bool = false, force: Bool = false) {
-          resetProfiles {
+        resetProfiles {
             if setDisconnect {
                 self.delegate?.setDisconnected()
             }
         }
     }
-
+    
     func resetWireguard(comletion: @escaping () -> Void) {
         WireGuardVPNManager.shared.setup {
             if WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.username == TextsAsset.wireGuard {
                 WireGuardVPNManager.shared.providerManager?.isOnDemandEnabled = false
                 WireGuardVPNManager.shared.providerManager?.isEnabled = false
 #if os(iOS)
-
+                
                 if #available(iOS 14.0, *) {
                     WireGuardVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
-                #endif
+#endif
                 WireGuardVPNManager.shared.providerManager?.saveToPreferences { error in
                     if error == nil {
                         WireGuardVPNManager.shared.providerManager?.loadFromPreferences { error in
@@ -306,18 +309,18 @@ extension VPNManager {
             }
         }
     }
-
+    
     func resetOpenVPN(comletion: @escaping () -> Void) {
         OpenVPNManager.shared.setup {
             if OpenVPNManager.shared.providerManager?.protocolConfiguration?.username == TextsAsset.openVPN {
                 OpenVPNManager.shared.providerManager?.isOnDemandEnabled = false
                 OpenVPNManager.shared.providerManager?.isEnabled = false
 #if os(iOS)
-
+                
                 if #available(iOS 14.0, *) {
                     OpenVPNManager.shared.providerManager?.protocolConfiguration?.includeAllNetworks = false
                 }
-                #endif
+#endif
                 OpenVPNManager.shared.providerManager?.saveToPreferences { error in
                     if error == nil {
                         OpenVPNManager.shared.providerManager?.loadFromPreferences { _ in
@@ -337,17 +340,17 @@ extension VPNManager {
             }
         }
     }
-
+    
     func resetIkev2(comletion: @escaping () -> Void) {
         IKEv2VPNManager.shared.neVPNManager.loadFromPreferences {  error in
             if error == nil {
                 IKEv2VPNManager.shared.neVPNManager.isOnDemandEnabled = false
                 IKEv2VPNManager.shared.neVPNManager.isEnabled = false
-                #if os(iOS)
+#if os(iOS)
                 if #available(iOS 14.0, *) {
                     IKEv2VPNManager.shared.neVPNManager.protocolConfiguration?.includeAllNetworks = false
                 }
-                #endif
+#endif
                 IKEv2VPNManager.shared.neVPNManager.saveToPreferences { error in
                     if error == nil {
                         IKEv2VPNManager.shared.neVPNManager.loadFromPreferences { _ in
@@ -363,11 +366,11 @@ extension VPNManager {
                     }
                 }
             } else {
-              comletion()
+                comletion()
             }
         }
     }
-
+    
     func resetProfiles(comletion: @escaping () -> Void) {
         resetWireguard {
             self.resetOpenVPN {
@@ -377,7 +380,7 @@ extension VPNManager {
             }
         }
     }
-
+    
     @objc func disconnectAndDisable() {
         self.disableOrFailOnDisconnect = true
         if IKEv2VPNManager.shared.neVPNManager.connection.status == .connected ||
@@ -391,7 +394,7 @@ extension VPNManager {
             WireGuardVPNManager.shared.disconnect()
         }
     }
-
+    
     @objc func disconnectIfStillConnecting() {
         if IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting &&
             IKEv2VPNManager.shared.neVPNManager.connection.status != .disconnected {
@@ -405,7 +408,7 @@ extension VPNManager {
             VPNManager.shared.isOnDemandRetry = false
             OpenVPNManager.shared.disconnect()
             logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for OpenVPN connection.")
-
+            
         }
         if WireGuardVPNManager.shared.providerManager?.connection.status == .connecting && WireGuardVPNManager.shared.providerManager?.connection.status != .disconnected {
             self.disableOrFailOnDisconnect = true
@@ -414,7 +417,7 @@ extension VPNManager {
             logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for WireGuard connection.")
         }
     }
-
+    
     @objc func removeVPNProfileIfStillDisconnecting() {
         getVPNConnectionInfo(completion: { info in
             guard let info = info else {
@@ -439,24 +442,24 @@ extension VPNManager {
                 WireGuardVPNManager.shared.removeProfile { _,_ in }
                 self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing WireGuard VPN profile.")
             }
-
+            
         })
     }
-
+    
     @objc func runConnectivityTestWithNoRetry() {
         runConnectivityTest(retry: false,
                             connectToAnotherNode: false)
     }
-
+    
     @objc func runConnectivityTestWithRetry() {
         runConnectivityTest(retry: true,
                             connectToAnotherNode: false)
     }
-
+    
     @objc func increaseFailCountsOrRetry() {
-
+        
     }
-
+    
     // function to check if local ip belongs to RFC 1918 ips
     func checkLocalIPIsRFC() -> Bool {
         if let localIPAddress = NWInterface.InterfaceType.wifi.ipv4 {
