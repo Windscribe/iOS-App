@@ -145,7 +145,7 @@ extension VPNManagerUtils {
         manager.localizedDescription = Constants.appName
         
         do {
-            try await VPNManagerUtils.saveThrowing(manager: manager)
+            try await saveThrowing(manager: manager)
         } catch let error {
             guard let error = error as? Errors else { throw Errors.notDefined }
             logger.logE(self, "Error when saving vpn preferences \(error.description).")

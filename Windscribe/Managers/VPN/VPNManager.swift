@@ -53,6 +53,9 @@ class VPNManager: VPNManagerProtocol {
     lazy var sessionManager: SessionManagerV2 = {
         return Assembler.resolve(SessionManagerV2.self)
     }()
+    lazy var vpnManagerUtils: VPNManagerUtils = {
+        return Assembler.resolve(VPNManagerUtils.self)
+    }()
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()
@@ -99,6 +102,9 @@ class VPNManager: VPNManagerProtocol {
     var displayingAskToRetryPopup: UIAlertController?
 
     var untrustedOneTimeOnlySSID: String = ""
+    
+    var killSwitch: Bool = DefaultValues.killSwitch
+    var allowLane: Bool = DefaultValues.allowLaneMode
 
     init(withStatusObserver: Bool = false) {
         if withStatusObserver {
@@ -133,7 +139,7 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func isActive() async -> Bool {
-        guard (try? await VPNManagerUtils.getConfiguredManager()) != nil else { return false }
+        guard (try? await vpnManagerUtils.getConfiguredManager()) != nil else { return false }
         return true
     }
 
@@ -145,7 +151,13 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func setup() async {
-       let _ = try? await VPNManagerUtils.getAllManagers()
+       let _ = try? await vpnManagerUtils.getAllManagers()
+        preferences.getKillSwitch().subscribe { data in
+            self.killSwitch = data ?? DefaultValues.killSwitch
+        }.disposed(by: disposeBag)
+        preferences.getAllowLane().subscribe { data in
+            self.allowLane = data ?? DefaultValues.allowLaneMode
+        }.disposed(by: disposeBag)
     }
 
     func removeAllVPNProfiles() {
@@ -186,10 +198,10 @@ class VPNManager: VPNManagerProtocol {
     func updateOnDemandRules() {
         isOnDemandRetry = false
         Task {
-            guard let managers = try? await VPNManagerUtils.getAllManagers() else { return }
+            guard let managers = try? await vpnManagerUtils.getAllManagers() else { return }
             let onDemandRules = getOnDemandRules()
             for manager in managers {
-                await VPNManagerUtils.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
+                await vpnManagerUtils.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
             }
         }
     }
@@ -297,17 +309,17 @@ class VPNManager: VPNManagerProtocol {
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
         Task {
-            guard let managers = try? await VPNManagerUtils.getAllManagers() else {
+            guard let managers = try? await vpnManagerUtils.getAllManagers() else {
                 completion(nil)
                 return
             }
             let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
             managers.forEach {
                 if priorityStates.contains($0.connection.status) {
-                    if VPNManagerUtils.isIKEV2(manager: $0) {
-                        completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: $0))
+                    if vpnManagerUtils.isIKEV2(manager: $0) {
+                        completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: $0))
                     } else {
-                        completion(VPNManagerUtils.getVPNConnectionInfo(manager: $0))
+                        completion(vpnManagerUtils.getVPNConnectionInfo(manager: $0))
                     }
                     return
                 }
@@ -321,11 +333,19 @@ class VPNManager: VPNManagerProtocol {
 
             // Get VPN connection info from last active manager.
             if activeVPNManager == .iKEV2 {
-                completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: VPNManagerUtils.iKEV2(from: managers)))
+                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2(from: managers)))
             } else {
-                completion(VPNManagerUtils.getIKEV2ConnectionInfo(manager: VPNManagerUtils.manager(from: managers, with: activeVPNManager)))
+                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.manager(from: managers, with: activeVPNManager)))
             }
         }
+    }
+    
+    func makeUserSettings() -> VPNUserSettings {
+        return VPNUserSettings(killSwitch: killSwitch,
+                               allowLane: allowLane,
+                               isRFC: checkLocalIPIsRFC(),
+                               isCircumventCensorshipEnabled: preferences.isCircumventCensorshipEnabled(),
+                               onDemandRules: getOnDemandRules())
     }
 }
 

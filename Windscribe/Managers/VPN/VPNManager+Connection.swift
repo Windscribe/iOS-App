@@ -187,6 +187,10 @@ extension VPNManager {
 
     func connectUsingCustomConfigWireGuard() {
         if VPNManager.shared.userTappedToDisconnect { return }
+        Task {
+            try await vpnManagerUtils.configureWireguard(with: selectedNode,
+                                                         userSettings: makeUserSettings())
+        }
         WireGuardVPNManager.shared.configureWithCustomConfig {  (_, error) in
             if error == nil {
                 self.preferences.saveConnectingToCustomConfig(value: true)

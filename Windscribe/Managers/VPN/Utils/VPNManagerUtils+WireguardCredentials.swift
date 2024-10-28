@@ -31,10 +31,9 @@ extension VPNManagerUtils {
     }
     
     func configureWireguard(with selectedNode: SelectedNode?,
-                   for manager: NEVPNManager,
                    userSettings: VPNUserSettings)  async throws -> Bool {
         guard let selectedNode = selectedNode,
-              let providerManager = manager as? NETunnelProviderManager,
+              let providerManager = wireguardManager(from: try await getAllManagers()) as? NETunnelProviderManager,
               let tunnelConfiguration = try await getWireguardConfiguration(selectedNode: selectedNode)
         else { return false }
         providerManager.setTunnelConfiguration(tunnelConfiguration, username: TextsAsset.wireGuard, description: Constants.appName)
@@ -55,7 +54,7 @@ extension VPNManagerUtils {
         providerManager.localizedDescription = Constants.appName
         
         do {
-            try await VPNManagerUtils.saveThrowing(manager: manager)
+            try await saveThrowing(manager: providerManager)
         } catch let error {
             guard let error = error as? Errors else { throw Errors.notDefined }
             logger.logE(self, "Error when saving vpn preferences \(error.description).")
@@ -92,7 +91,7 @@ extension VPNManagerUtils {
                                               userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
         logger.logD(WireGuardVPNManager.self, logMessage)
         if manager.connection.status != .connecting {
-            return try await configureWireguard(with: selectedNode, for: manager, userSettings: userSettings)
+            return try await configureWireguard(with: selectedNode, userSettings: userSettings)
         }
         return false
     }
