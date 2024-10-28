@@ -9,10 +9,13 @@
 import Foundation
 import Network
 import RxSwift
-import SystemConfiguration.CaptiveNetwork
 
 /// Manages network connectivity state using reachability and network path monitor.
 class ConnectivityImpl: Connectivity {
+    func getWifiSSID() -> String? {
+        return try? network.value().name
+    }
+
     private let logger: FileLogger
     /// Observe this subject to get network change events.
     let network: BehaviorSubject<AppNetwork> = BehaviorSubject(value: AppNetwork(.disconnected))
@@ -54,6 +57,7 @@ class ConnectivityImpl: Connectivity {
         let networkType = self.getNetworkType(path: path)
         getNetworkName(networkType: networkType) { ssid in
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
+            self.logger.logI(self, "\(appNetwork.description)")
             self.network.onNext(appNetwork)
             NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         }
@@ -100,49 +104,17 @@ class ConnectivityImpl: Connectivity {
     }
 
     /// Returns  optional network carier name or SSID for network type
-    func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void) {
+    private func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void) {
         switch networkType {
         case .cellular:
             completion(getCellularNetworkName())
         case .wifi:
-            getSsidFromNeHotspotHelper { [weak self] ssid in
-                if let ssid = ssid {
-                    completion(ssid)
-                } else {
-                    completion(self?.getWifiSSID())
-                }
+            getSsidFromNeHotspotHelper { ssid in
+                completion(ssid)
             }
         case .none:
             completion(nil)
         }
-    }
-
-    /// Returns optional Wifi SSID for current network.
-    func getWifiSSID() -> String? {
-        if getNetworkType(path: monitor.currentPath) == .cellular {
-            return getCellularNetworkName()
-        }
-        var interface = [String: Any]()
-#if os(iOS)
-        if let interfaces = CNCopySupportedInterfaces() {
-            for i in 0 ..< CFArrayGetCount(interfaces) {
-                let interfaceName = CFArrayGetValueAtIndex(interfaces, i)
-                let rec = unsafeBitCast(interfaceName, to: AnyObject.self)
-                guard let unsafeInterfaceData = CNCopyCurrentNetworkInfo("\(rec)" as CFString) else {
-                    let ssid = interface["SSID"] as? String
-                    return ssid
-                }
-                guard let interfaceData = unsafeInterfaceData as? [String: Any] else {
-                    return interface["SSID"] as? String
-                }
-                interface = interfaceData
-            }
-        }
-        if let SSID = interface["SSID"] as? String {
-            return SSID
-        }
-#endif
-        return nil
     }
 
     /// Returns carrier name for cellular network

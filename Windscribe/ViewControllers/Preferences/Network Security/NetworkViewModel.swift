@@ -13,6 +13,7 @@ typealias CompletionHandler = (() -> Void)
 
 protocol NetworkOptionViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var networks: BehaviorSubject<[WifiNetwork]> {get set}
     var themeManager: ThemeManager {get set}
     var displayingNetwork: WifiNetwork? {get set}
     var preferredProtocol: String? {get set}
@@ -45,22 +46,24 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     var trustNetworkStatus: Bool = false
     var preferredProtocolStatus: Bool = false
     var showPreferredProtocol: Bool = false
-    var networks: [WifiNetwork]?
+    var networks: BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
 
     private let localDatabase: LocalDatabase
+    private let connectivity: Connectivity
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager) {
+    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity) {
         self.localDatabase = localDatabase
         self.themeManager = themeManager
+        self.connectivity = connectivity
         loadData()
     }
 
     private func loadData() {
-        localDatabase.getNetworks().subscribe { networks in
-            self.networks = networks
+        localDatabase.getNetworks().filter {$0.filter({$0.isInvalidated}).count == 0}.subscribe { networks in
+            self.networks.onNext(networks)
         }.disposed(by: disposeBag)
 
         themeManager.darkTheme.subscribe { data in
@@ -69,7 +72,14 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func loadNetwork(completion: CompletionHandler) {
-         guard let networkSSID = self.displayingNetwork?.SSID, let network = networks?.filter({ $0.SSID == networkSSID }).first else { return }
+        let existingNetworks = (try? networks.value().filter {!$0.isInvalidated}) ?? []
+        if displayingNetwork?.isInvalidated == true {
+            completion()
+            return
+        }
+        guard let networkSSID = self.displayingNetwork?.SSID, let network = existingNetworks
+        .filter({$0.SSID == networkSSID })
+        .first else { return }
 
         self.preferredProtocol = network.preferredProtocol
         self.preferredPort = network.preferredPort
@@ -82,8 +92,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
         } else {
             self.showPreferredProtocol = false
         }
-
-         if WifiManager.shared.getConnectedWifiNetworkSSID() ==  self.displayingNetwork?.SSID {
+        if connectivity.getWifiSSID() ==  self.displayingNetwork?.SSID {
              self.hideForgetNetwork = true
         }
         completion()

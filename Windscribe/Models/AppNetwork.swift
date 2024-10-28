@@ -19,7 +19,7 @@ enum NetworkType {
     case none
 }
 
-struct AppNetwork: CustomStringConvertible {
+struct AppNetwork: CustomStringConvertible, Equatable {
     let status: NetworkStatus
     let networkType: NetworkType
     let name: String?
@@ -31,6 +31,6 @@ struct AppNetwork: CustomStringConvertible {
         self.isVPN = isVPN
     }
     var description: String {
-        return "Status: \(status) NetworkType: \(networkType) Name: \(name ?? "") isVPN: \(isVPN)"
+        return "Internet Connection [Status:\(status) NetworkType:\(networkType) Name:\(name ?? "Unknown") isVPN:\(isVPN)]"
     }
 }

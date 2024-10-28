@@ -151,11 +151,12 @@ struct GroupModel {
                 self.bestNodeHostname = forceNode
                 return
             }
+            let filteredNodes = nodes.filter {$0.forceDisconnect == false}
             var weightCounter = nodes.reduce(0, { $0 + $1.weight })
             if weightCounter >= 1 {
                 let randomNumber = arc4random_uniform(UInt32(weightCounter))
                 weightCounter = 0
-                for node in nodes {
+                for node in filteredNodes {
                     weightCounter += node.weight
                     if randomNumber < weightCounter {
                         self.bestNodeHostname = node.hostname
@@ -163,7 +164,7 @@ struct GroupModel {
                     }
                 }
             }
-            self.bestNodeHostname = nodes.last?.hostname ?? ""
+            self.bestNodeHostname = filteredNodes.last?.hostname ?? ""
             return
         }
     }

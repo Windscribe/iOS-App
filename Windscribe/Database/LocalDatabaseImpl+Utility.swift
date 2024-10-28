@@ -29,21 +29,36 @@ extension LocalDatabaseImpl {
         // Check if the object is already managed by Realm
         if let realm = object.realm {
             return Observable.from(object: object)
+                .take(1)
                 .subscribe(on: MainScheduler.asyncInstance)
                 .subscribe(onNext: { obj in
-                    do {
-                        try realm.safeWrite {
-                            realm.add(obj, update: .modified)
+                    DispatchQueue.main.async {
+                        do {
+                            if !obj.isInvalidated {
+                                try realm.safeWrite {
+                                    realm.add(obj, update: .modified)
+                                }
+                            } else {
+                                print("Realm object is invalidated and cannot be updated.")
+                            }
+                        } catch {
+                            print("Error updating Realm object: \(error.localizedDescription)")
                         }
-                    } catch { }
-                }, onError: { _ in })
+                    }
+                }, onError: { error in
+                    print("Error in Observable: \(error.localizedDescription)")
+                })
         } else {
-            do {
-                let realm = try Realm()
-                try realm.safeWrite {
-                    realm.add(object, update: .modified)
+            DispatchQueue.main.async {
+                do {
+                    let realm = try Realm()
+                    try realm.safeWrite {
+                        realm.add(object, update: .modified)
+                    }
+                } catch {
+                    print("Error adding object to Realm: \(error.localizedDescription)")
                 }
-            } catch {}
+            }
             return Disposables.create()
         }
     }
@@ -105,8 +120,9 @@ extension LocalDatabaseImpl {
     }
 
     func deleteRealmObject<T: Object>(object: T) {
-        try? object.realm?.write {
-            object.realm?.delete(object)
+        let realm = try? Realm()
+        try? realm?.safeWrite {
+            realm?.delete(object)
         }
     }
 

@@ -134,28 +134,35 @@ class NetworkSecurityViewController: WSNavigationViewController {
     }
 
     private func createListNetworkView() {
-        currentNetworkStackView.removeAllArrangedSubviews()
-        otherNetworkStackView.removeAllArrangedSubviews()
-        let currentSSID = WifiManager.shared.getConnectedWifiNetworkSSID()
-        guard let lst = try? viewModel.networks.value() else { return }
-        var prevOtherCell: NetworkCellView?
-        for (_, network) in lst.enumerated() {
-            // Only show networks that have an SSID
-            guard !network.SSID.isEmpty else { continue }
-            let vw = NetworkCellView(isDarkMode: viewModel.isDarkMode)
-            vw.bindData(network)
-            vw.delegate = self
-            if network.SSID == currentSSID {
-                currentNetworkStackView.addArrangedSubview(vw)
-            } else {
-                if prevOtherCell != nil {
-                    vw.addTopDivider()
+        viewModel.currentNetwork.distinctUntilChanged().bind(onNext: { [self] network in
+            currentNetworkStackView.removeAllArrangedSubviews()
+            otherNetworkStackView.removeAllArrangedSubviews()
+            let currentSSID = network?.name
+            guard let lst = try? self.viewModel.networks.value() else { return }
+            var prevOtherCell: NetworkCellView?
+            var currentNetworkFound = false
+            var otherNetworkFound = false
+            for (_, network) in lst.enumerated() {
+                // Only show networks that have an SSID
+                guard !network.SSID.isEmpty else { continue }
+                let vw = NetworkCellView(isDarkMode: viewModel.isDarkMode)
+                vw.bindData(network)
+                vw.delegate = self
+                if network.SSID == currentSSID {
+                    currentNetworkFound = true
+                    currentNetworkStackView.addArrangedSubview(vw)
+                } else {
+                    otherNetworkFound = true
+                    if prevOtherCell != nil {
+                        vw.addTopDivider()
+                    }
+                    otherNetworkStackView.addArrangedSubview(vw)
+                    prevOtherCell = vw
                 }
-                otherNetworkStackView.addArrangedSubview(vw)
-                prevOtherCell = vw
             }
-
-        }
+            currentNetworkTitle.isHidden = !currentNetworkFound
+            otherNetworkTitle.isHidden = !otherNetworkFound
+        }).disposed(by: disposeBag)
     }
 
     private func createHeader(text: String) -> UIView {

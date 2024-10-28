@@ -64,7 +64,7 @@ class LoginViewModelImpl: LoginViewModel {
         apiCallManager.login(username: username, password: password, code2fa: twoFactorCode ?? "").observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] session in
                 self?.preferences.saveLoginDate(date: Date())
-                WifiManager.shared.configure()
+                WifiManager.shared.saveCurrentWifiNetworks()
                 self?.userRepository.login(session: session)
                 self?.logger.logE(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
@@ -116,7 +116,7 @@ class LoginViewModelImpl: LoginViewModel {
                         self.apiCallManager.getSession(sessionAuth: auth).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
                             dispose.dispose()
                             session.sessionAuthHash = auth
-                            WifiManager.shared.configure()
+                            WifiManager.shared.saveCurrentWifiNetworks()
                             self?.preferences.saveLoginDate(date: Date())
                             self?.userRepository.login(session: session)
                             self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
@@ -149,9 +149,9 @@ class LoginViewModelImpl: LoginViewModel {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
             logger.logD(self, "User data is ready")
             showLoadingView.onNext(false)
+            emergencyConnectRepository.cleansEmergencyConfigs()
             if emergencyConnectRepository.isConnected() == true {
                 logger.logD(self, "Disconnecting emergency connect.")
-                emergencyConnectRepository.cleansEmergencyConfigs()
                 emergencyConnectRepository.removeProfile().subscribe(onCompleted: {
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
                         Assembler.resolve(LatencyRepository.self).loadLatency()

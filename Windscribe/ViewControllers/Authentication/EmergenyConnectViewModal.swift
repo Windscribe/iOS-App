@@ -72,13 +72,15 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
         if let ovpnInfo = ovpnInfoList.first, shouldRetry == true {
             ovpnInfoList.removeFirst()
             logger.logD(EmergencyConnectModalImpl.self, "Connecting to emergency connect. \(ovpnInfo)")
-            emergencyRepository.connect(configInfo: ovpnInfo).subscribe(onCompleted: { [self] in
-                logger.logD(self, "Successfully started OpenVPN.")
-            }, onError: { error in
-                if let error = error as? RepositoryError {
-                    self.logger.logE(self, error.description)
-                }
-            }).disposed(by: disposeBag)
+            DispatchQueue.main.async {
+                self.emergencyRepository.connect(configInfo: ovpnInfo).subscribe(onCompleted: { [self] in
+                    logger.logD(self, "Successfully started OpenVPN.")
+                }, onError: { error in
+                    if let error = error as? RepositoryError {
+                        self.logger.logE(self, error.description)
+                    }
+                }).disposed(by: self.disposeBag)
+            }
         }
     }
 }
