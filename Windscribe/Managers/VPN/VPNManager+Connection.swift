@@ -156,12 +156,16 @@ extension VPNManager {
         wgCrendentials.setNodeToConnect(serverEndPoint: endpoint, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port)
         wgRepository.getCredentials().subscribe(onCompleted: {
             DispatchQueue.global(qos: .background).async {
-                WireGuardVPNManager.shared.configureWithSavedConfig { (_, error) in
-                    if error == nil {
-                        self.preferences.saveConnectingToCustomConfig(value: false)
-                        WireGuardVPNManager.shared.connect()
-                    } else {
-                        self.logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(error ?? "")")
+                Task {
+                    do {
+                        if try await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
+                                                                                              userSettings: self.makeUserSettings()) {
+                            self.preferences.saveConnectingToCustomConfig(value: false)
+                            WireGuardVPNManager.shared.connect()
+                       }
+                    } catch let error {
+                        let description = (error as? Errors)?.description ?? ""
+                        self.logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(description)")
                     }
                 }
             }
@@ -188,13 +192,11 @@ extension VPNManager {
     func connectUsingCustomConfigWireGuard() {
         if VPNManager.shared.userTappedToDisconnect { return }
         Task {
-            try await vpnManagerUtils.configureWireguard(with: selectedNode,
-                                                         userSettings: makeUserSettings())
-        }
-        WireGuardVPNManager.shared.configureWithCustomConfig {  (_, error) in
-            if error == nil {
-                self.preferences.saveConnectingToCustomConfig(value: true)
-                WireGuardVPNManager.shared.connect()
+            if (try? await vpnManagerUtils.configureWireguard(with: selectedNode,
+                                                            userSettings: makeUserSettings())) ?? false {
+
+                    self.preferences.saveConnectingToCustomConfig(value: true)
+                    WireGuardVPNManager.shared.connect()
             }
         }
     }

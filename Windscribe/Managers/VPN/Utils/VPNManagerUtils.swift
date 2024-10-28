@@ -15,21 +15,21 @@ class VPNManagerUtils {
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
     let fileDatabase: FileDatabase// = Assembler.resolve(FileDatabase.self)
-    
+
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
         self.fileDatabase = fileDatabase
     }
-    
+
     func connect() {
         // UserSettings - allowLane, killSwitch, etc
         // Credentials
         // Protocol, Port
         // LocaionID
     }
-    
+
     func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
         Task {
             do {
@@ -94,7 +94,7 @@ class VPNManagerUtils {
     func getConfiguredManager() async throws -> NEVPNManager? {
         try? await getAllManagers().first { isManagerConfigured(for: $0) }
     }
-    
+
     func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = onDemandRules
@@ -105,7 +105,7 @@ class VPNManagerUtils {
         try? await manager.saveToPreferences()
         try? await manager.loadFromPreferences()
     }
-    
+
     func saveThrowing(manager: NEVPNManager) async throws {
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()
@@ -119,7 +119,7 @@ class VPNManagerUtils {
     func iKEV2(from managers: [NEVPNManager]) -> NEVPNManager? {
         managers.first { isIKEV2(manager: $0 ) }
     }
-    
+
     func isWireguard(manager: NEVPNManager) -> Bool {
         return  manager.protocolConfiguration?.username == TextsAsset.wireGuard
     }
@@ -127,7 +127,7 @@ class VPNManagerUtils {
     func wireguardManager(from managers: [NEVPNManager]) -> NEVPNManager? {
         managers.first { isWireguard(manager: $0 ) }
     }
-    
+
     func isOpenVPN(manager: NEVPNManager) -> Bool {
         return  manager.protocolConfiguration?.username == TextsAsset.openVPN
     }
@@ -135,7 +135,7 @@ class VPNManagerUtils {
     func openVPNdManager(from managers: [NEVPNManager]) -> NEVPNManager? {
         managers.first { isOpenVPN(manager: $0 ) }
     }
-    
+
     func manager(from managers: [NEVPNManager], with type: VPNManagerType) -> NEVPNManager? {
         managers.first { $0.protocolConfiguration?.username == type.username }
     }

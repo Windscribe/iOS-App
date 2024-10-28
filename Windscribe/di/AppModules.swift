@@ -95,6 +95,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(VPNManagerUtils.self) { r in
             return VPNManagerUtils(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!)
+        }.inObjectScope(.userScope)
     }
 }
 

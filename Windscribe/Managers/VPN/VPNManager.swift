@@ -16,7 +16,7 @@ import Swinject
 import RxSwift
 
 protocol VPNManagerProtocol {
-    
+
 }
 
 class VPNManager: VPNManagerProtocol {
@@ -102,7 +102,7 @@ class VPNManager: VPNManagerProtocol {
     var displayingAskToRetryPopup: UIAlertController?
 
     var untrustedOneTimeOnlySSID: String = ""
-    
+
     var killSwitch: Bool = DefaultValues.killSwitch
     var allowLane: Bool = DefaultValues.allowLaneMode
 
@@ -151,7 +151,7 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func setup() async {
-       let _ = try? await vpnManagerUtils.getAllManagers()
+       _ = try? await vpnManagerUtils.getAllManagers()
         preferences.getKillSwitch().subscribe { data in
             self.killSwitch = data ?? DefaultValues.killSwitch
         }.disposed(by: disposeBag)
@@ -339,7 +339,7 @@ class VPNManager: VPNManagerProtocol {
             }
         }
     }
-    
+
     func makeUserSettings() -> VPNUserSettings {
         return VPNUserSettings(killSwitch: killSwitch,
                                allowLane: allowLane,

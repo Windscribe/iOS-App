@@ -17,14 +17,14 @@ extension VPNManagerUtils {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
         }
-        
+
         let ip = selectedNode.ip1 ?? selectedNode.staticIpToConnect
         guard let ip = ip else {
             logger.logE(self, "Ip1 and ip3 are not avaialble to configure this profile.")
             throw Errors.ipNotAvailable
         }
         logger.logD(self, "Configuring VPN profile with saved credentials. \(selectedNode.hostname)")
-        
+
         var base64username = ""
         var base64password = ""
         if let staticIPCredentials = selectedNode.staticIPCredentials,
@@ -48,7 +48,7 @@ extension VPNManagerUtils {
                                         ip: ip,
                                         userSettings: userSettings)
     }
-    
+
     func configureIKEV2(manager: NEVPNManager, username: String,
                         dnsHostname: String, hostname: String,
                         ip: String, userSettings: VPNUserSettings) async throws -> Bool {
@@ -79,7 +79,7 @@ extension VPNManagerUtils {
             ikeV2Protocol.serverAddress = ip
             ikeV2Protocol.serverCertificateCommonName = hostname
         }
-        
+
         ikeV2Protocol.passwordReference = serverCredentials
         ikeV2Protocol.username = username
         ikeV2Protocol.sharedSecretReference = serverCredentials
@@ -91,9 +91,9 @@ extension VPNManagerUtils {
         ikeV2Protocol.childSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
         ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
         ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
-        
+
         manager.protocolConfiguration = ikeV2Protocol
-        
+
 #if os(iOS)
         // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
         ikeV2Protocol.enableFallback = true
@@ -130,4 +130,3 @@ extension VPNManagerUtils {
         return true
     }
 }
-

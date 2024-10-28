@@ -6,7 +6,6 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-
 import NetworkExtension
 import UIKit
 import WireGuardKit
@@ -31,7 +30,7 @@ extension VPNManagerUtils {
     }
     
     func configureWireguard(with selectedNode: SelectedNode?,
-                   userSettings: VPNUserSettings)  async throws -> Bool {
+                            userSettings: VPNUserSettings)  async throws -> Bool {
         guard let selectedNode = selectedNode,
               let providerManager = wireguardManager(from: try await getAllManagers()) as? NETunnelProviderManager,
               let tunnelConfiguration = try await getWireguardConfiguration(selectedNode: selectedNode)
@@ -67,29 +66,25 @@ extension VPNManagerUtils {
     
     // This could potentially be an enum
     func configureWireguardWithSavedConfig(selectedNode: SelectedNode?,
-                                  manager: NEVPNManager,
-                                  userSettings: VPNUserSettings) async throws -> Bool {
+                                           userSettings: VPNUserSettings) async throws -> Bool {
         guard let ip3 = selectedNode?.ip3 else { return  false }
         return try await configureWireguardWithConfig(selectedNode: selectedNode,
-                                                      manager: manager,
                                                       userSettings: userSettings,
                                                       logMessage: "Configuring VPN profile with saved configuration. \(String(describing: ip3))")
     }
     
     func configureWireguardWithCustomConfig(selectedNode: SelectedNode?,
-                                   manager: NEVPNManager,
-                                   userSettings: VPNUserSettings) async throws -> Bool {
+                                            userSettings: VPNUserSettings) async throws -> Bool {
         guard let serverAddress = selectedNode?.serverAddress else { return false }
         return try await configureWireguardWithConfig(selectedNode: selectedNode,
-                                                      manager: manager,
                                                       userSettings: userSettings,
                                                       logMessage: "Configuring VPN profile with custom configuration. \(String(describing: serverAddress))")
     }
     
     private func configureWireguardWithConfig(selectedNode: SelectedNode?,
-                                              manager: NEVPNManager,
                                               userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
         logger.logD(WireGuardVPNManager.self, logMessage)
+        guard let manager = wireguardManager(from: try await getAllManagers()) else { return false }
         if manager.connection.status != .connecting {
             return try await configureWireguard(with: selectedNode, userSettings: userSettings)
         }
