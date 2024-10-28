@@ -11,9 +11,9 @@ import UIKit
 
 extension VPNManagerUtils {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
-                                              for manager: NEVPNManager,
                                               userSettings: VPNUserSettings) async throws -> Bool {
-        guard let selectedNode = selectedNode,
+        guard let manager = openVPNdManager(from: try await getAllManagers()) as? NETunnelProviderManager,
+              let selectedNode = selectedNode,
               let x509Name = selectedNode.ovpnX509 else {
             throw Errors.hostnameNotFound
         }

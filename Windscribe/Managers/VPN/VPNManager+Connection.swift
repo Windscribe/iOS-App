@@ -93,8 +93,9 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
         self.setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.main.async {
-            OpenVPNManager.shared.configureWithSavedCredentials { (_, error) in
-                if error == nil {
+            Task {
+                if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
+                                                                       userSettings: self.makeUserSettings())) ?? false {
                     OpenVPNManager.shared.connect()
                 } else {
                     self.disconnectOrFail()
