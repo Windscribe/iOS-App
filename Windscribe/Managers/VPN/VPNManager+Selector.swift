@@ -107,13 +107,7 @@ extension VPNManager {
     }
     
     @objc func restartCustomOpenVPNConnection() {
-        if VPNManager.shared.userTappedToDisconnect { return }
-        Task {
-            if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: selectedNode,
-                                                                                 userSettings: makeUserSettings())) ?? false {
-                OpenVPNManager.shared.connect()
-            }
-        }
+        connectUsingCustomConfigOpenVPN()
     }
     
     @objc func restartCustomWireGuardConnection() {
