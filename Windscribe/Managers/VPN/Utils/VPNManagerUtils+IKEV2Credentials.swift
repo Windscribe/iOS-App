@@ -11,9 +11,9 @@ import UIKit
 
 extension VPNManagerUtils {
     func configureIKEV2WithSavedCredentials(with selectedNode: SelectedNode?,
-                                            for manager: NEVPNManager,
                                             userSettings: VPNUserSettings) async throws -> Bool {
-        guard let selectedNode = selectedNode else {
+        guard let manager = iKEV2(from: try await getAllManagers()) as? NETunnelProviderManager,
+            let selectedNode = selectedNode else {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
         }

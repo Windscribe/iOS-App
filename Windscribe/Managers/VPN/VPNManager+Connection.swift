@@ -80,8 +80,9 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
         self.setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async {
-            IKEv2VPNManager.shared.configureWithSavedCredentials { (_, error) in
-                if error == nil {
+            Task {
+                if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: self.selectedNode,
+                                                                       userSettings: self.makeUserSettings())) ?? false {
                     IKEv2VPNManager.shared.connect()
                 }
             }
