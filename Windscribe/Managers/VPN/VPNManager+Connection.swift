@@ -92,7 +92,7 @@ extension VPNManager {
     func connectUsingOpenVPN(forceProtocol: String? = nil) {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
         self.setNewVPNConnection(forceProtocol: forceProtocol)
-        DispatchQueue.main.async {
+        DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
                                                                        userSettings: self.makeUserSettings())) ?? false {
@@ -108,8 +108,9 @@ extension VPNManager {
     func connectUsingCustomConfigOpenVPN() {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover { return }
         DispatchQueue.global(qos: .background).async {
-            OpenVPNManager.shared.configureWithCustomConfig { (_, error) in
-                if error == nil {
+            Task {
+                if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: self.selectedNode,
+                                                                       userSettings: self.makeUserSettings())) ?? false {
                     OpenVPNManager.shared.connect()
                 } else {
                     self.disconnectOrFail()
