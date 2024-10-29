@@ -99,11 +99,11 @@ extension VPNManager {
     }
 
     @objc func retryIKEv2Connection() {
-        IKEv2VPNManager.shared.connect()
+        Task { await vpnManagerUtils.connect(with: .iKEV2, killSwitch: killSwitch) }
     }
 
     @objc func retryOpenVPNConnection() {
-        OpenVPNManager.shared.connect()
+        Task { await vpnManagerUtils.connect(with: .openVPN, killSwitch: killSwitch) }
     }
 
     @objc func retryWireGuardVPNConnection() {

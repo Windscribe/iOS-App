@@ -58,9 +58,10 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             vpnManager.resetProfiles { [self] in
                 vpnManager.selectedNode = nil
                 vpnManager.resetProperties()
-                OpenVPNManager.shared.removeProfile(completion: { (_, _) in
+                Task {
+                    await self.vpnManager.vpnManagerUtils.removeProfile(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
                     completion(.completed)
-                })
+                }
             }
             return Disposables.create()
         }
@@ -82,8 +83,10 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     // Stops tunnel
     func disconnect() {
         vpnManager.connectIntent = false
-        OpenVPNManager.shared.disconnect()
-        vpnManager.selectedNode = nil
+        Task {
+            await self.vpnManager.vpnManagerUtils.disconnect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
+            vpnManager.selectedNode = nil
+        }
     }
 
     /// Configures OpenVPN and attempts a connection.
@@ -92,7 +95,9 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             let customConfig = saveConfiguration(data: data, configInfo: configInfo)
             return loadConfiguration(name: configuationName, serverAddress: configInfo.ip, customConfig: customConfig.getModel())
         }.do(onCompleted: {
-            OpenVPNManager.shared.connect()
+            Task {
+                await self.vpnManager.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
+            }
         })
     }
 

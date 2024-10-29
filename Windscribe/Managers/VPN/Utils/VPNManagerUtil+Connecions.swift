@@ -9,7 +9,6 @@
 import NetworkExtension
 
 extension VPNManagerUtils {
-
     func connect() {
         // UserSettings - allowLane, killSwitch, etc
         // Credentials
@@ -52,10 +51,10 @@ extension VPNManagerUtils {
                 do {
                     try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
                     handleVPNManagerNoResponse(for: type)
-                    self.logger.logD(WireGuardVPNManager.self, "WireGuard tunnel started.")
+                    self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
 
                 } catch {
-                    self.logger.logE(WireGuardVPNManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
+                    self.logger.logE(VPNManagerUtils.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
                 }
             }
         }
@@ -70,6 +69,12 @@ extension VPNManagerUtils {
         guard let managers = try? await getAllManagers(),
               let manager = getManager(for: type, from: managers) else { return }
         await disconnect(restartOnDisconnect: restartOnDisconnect, force: force, killSwitch: killSwitch, manager: manager)
+    }
+
+    func removeProfile(with type: VPNManagerType, killSwitch: Bool) async {
+        guard let managers = try? await getAllManagers(),
+              let manager = getManager(for: type, from: managers) else { return }
+        await removeProfile(killSwitch: killSwitch, manager: manager)
     }
 
     func removeProfile(killSwitch: Bool, manager: NEVPNManager) async {

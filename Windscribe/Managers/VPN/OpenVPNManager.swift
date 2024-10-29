@@ -220,7 +220,7 @@ class OpenVPNManager {
         }
     }
 
-    func connect() {
+    private func connect() {
 //        self.logger.logD( OpenVPNManager.self, "Connecting via OpenVPN.")
 //
 //        VPNManager.shared.activeVPNManager = VPNManagerType.openVPN
@@ -253,7 +253,7 @@ class OpenVPNManager {
 //        }
     }
 
-    func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
+    private func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
         if self.providerManager.connection.status == .disconnected && !force { return }
         self.providerManager?.loadFromPreferences(completionHandler: { (error) in
             if error == nil, self.isConfigured() {
@@ -273,7 +273,7 @@ class OpenVPNManager {
         })
     }
 
-    func restartConnection() {
+    private func restartConnection() {
         self.logger.logD( OpenVPNManager.self, "Restarting OpenVPN connection.")
         self.disconnect(restartOnDisconnect: true)
     }
@@ -473,7 +473,7 @@ class OpenVPNManager {
         }
     }
 
-    func removeProfile(completion: @escaping (_ result: Bool,
+    private func removeProfile(completion: @escaping (_ result: Bool,
                                               _ error: String?) -> Void) {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
             guard let self = self else { return }

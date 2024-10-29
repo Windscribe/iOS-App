@@ -24,7 +24,7 @@ extension VPNManagerUtils {
             tunnelConfiguration =  try TunnelConfiguration(fromWgQuickConfig: stringData, called: configFilePath)
             return tunnelConfiguration
         } catch let error {
-            logger.logE(WireGuardVPNManager.self, "WireGuard tunnel Error: \(error)")
+            logger.logE(VPNManagerUtils.self, "WireGuard tunnel Error: \(error)")
             throw error
         }
     }
@@ -85,7 +85,7 @@ extension VPNManagerUtils {
 
     private func configureWireguardWithConfig(selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
-        logger.logD(WireGuardVPNManager.self, logMessage)
+        logger.logD(VPNManagerUtils.self, logMessage)
 
         let manager = wireguardManager(from: try? await getAllManagers())
         if manager?.connection.status != .connecting {

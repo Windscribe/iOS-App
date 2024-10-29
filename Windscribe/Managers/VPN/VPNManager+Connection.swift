@@ -79,11 +79,11 @@ extension VPNManager {
     func connectUsingIKEv2(forceProtocol: String? = nil) {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
         self.setNewVPNConnection(forceProtocol: forceProtocol)
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [self] in
             Task {
                 if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: self.selectedNode,
                                                                                        userSettings: self.makeUserSettings())) ?? false {
-                    IKEv2VPNManager.shared.connect()
+                    await self.vpnManagerUtils.connect(with: .iKEV2, killSwitch: self.killSwitch)
                 }
             }
         }
@@ -96,7 +96,7 @@ extension VPNManager {
             Task {
                 if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
                                                                                          userSettings: self.makeUserSettings())) ?? false {
-                    OpenVPNManager.shared.connect()
+                    await self.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
                     return
@@ -111,7 +111,7 @@ extension VPNManager {
             Task {
                 if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: self.selectedNode,
                                                                                      userSettings: self.makeUserSettings())) ?? false {
-                    OpenVPNManager.shared.connect()
+                    await self.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
                     return

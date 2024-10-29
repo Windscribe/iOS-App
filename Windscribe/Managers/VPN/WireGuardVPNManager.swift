@@ -120,39 +120,39 @@ class WireGuardVPNManager {
     }
 
     private func connect() {
-        VPNManager.shared.activeVPNManager = VPNManagerType.wg
-        if WireGuardVPNManager.shared.providerManager?.connection.status == .connected || WireGuardVPNManager.shared.providerManager?.connection.status == .connecting {
-            VPNManager.shared.restartOnDisconnect = true
-            WireGuardVPNManager.shared.restartConnection()
-        } else {
-            IKEv2VPNManager.shared.removeProfile(completion: { (result, error) in
-                OpenVPNManager.shared.removeProfile { (result, error) in
-                     if result {
-                         self.providerManager?.isOnDemandEnabled = DefaultValues.firewallMode
-                        self.providerManager?.isEnabled = true
-                        self.providerManager?.saveToPreferences { (error) in
-                            self.providerManager?.loadFromPreferences(completionHandler: { (error) in
-                                do {
-                                    if let activationId = self.wgCredentials.address?.SHA1() as? NSObject {
-                                        let params: [String: NSObject] = ["activationAttemptId": activationId]
-                                        try self.providerManager?.connection.startVPNTunnel(options: params)
-                                    } else {
-                                        try self.providerManager?.connection.startVPNTunnel()
-                                    }
-                                    self.logger.logD(WireGuardVPNManager.self, "WireGuard tunnel started.")
-
-                                } catch {
-                                    self.logger.logE(WireGuardVPNManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
-
-                                }
-                            })
-                        }
-                    } else {
-                        self.logger.logE(WireGuardVPNManager.self, "Error when removing IKEv2 VPN profile. \(error ?? "")")
-                    }
-                }
-            })
-        }
+//        VPNManager.shared.activeVPNManager = VPNManagerType.wg
+//        if WireGuardVPNManager.shared.providerManager?.connection.status == .connected || WireGuardVPNManager.shared.providerManager?.connection.status == .connecting {
+//            VPNManager.shared.restartOnDisconnect = true
+//            WireGuardVPNManager.shared.restartConnection()
+//        } else {
+//            IKEv2VPNManager.shared.removeProfile(completion: { (result, error) in
+//                OpenVPNManager.shared.removeProfile { (result, error) in
+//                     if result {
+//                         self.providerManager?.isOnDemandEnabled = DefaultValues.firewallMode
+//                        self.providerManager?.isEnabled = true
+//                        self.providerManager?.saveToPreferences { (error) in
+//                            self.providerManager?.loadFromPreferences(completionHandler: { (error) in
+//                                do {
+//                                    if let activationId = self.wgCredentials.address?.SHA1() as? NSObject {
+//                                        let params: [String: NSObject] = ["activationAttemptId": activationId]
+//                                        try self.providerManager?.connection.startVPNTunnel(options: params)
+//                                    } else {
+//                                        try self.providerManager?.connection.startVPNTunnel()
+//                                    }
+//                                    self.logger.logD(WireGuardVPNManager.self, "WireGuard tunnel started.")
+//
+//                                } catch {
+//                                    self.logger.logE(WireGuardVPNManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
+//
+//                                }
+//                            })
+//                        }
+//                    } else {
+//                        self.logger.logE(WireGuardVPNManager.self, "Error when removing IKEv2 VPN profile. \(error ?? "")")
+//                    }
+//                }
+//            })
+//        }
     }
 
     private func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
