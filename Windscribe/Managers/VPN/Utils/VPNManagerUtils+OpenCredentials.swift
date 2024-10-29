@@ -94,7 +94,7 @@ extension VPNManagerUtils {
         guard let selectedNode = selectedNode else {
             throw Errors.hostnameNotFound
         }
-        
+
         let providerManager = openVPNdManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
         self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         guard providerManager.connection.status != .connecting,

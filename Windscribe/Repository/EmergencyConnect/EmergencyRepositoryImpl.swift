@@ -109,27 +109,34 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     /// Loads configuration in OpenVPNManager
     private func loadConfiguration(name: String,  serverAddress: String, customConfig: CustomConfigModel) -> Completable {
         vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                                                      dnsHostname: serverAddress,
-                                                      hostname: serverAddress,
-                                                      serverAddress: serverAddress,
-                                                      nickName: name,
-                                                      cityName: TextsAsset.configuredLocation,
-                                                      customConfig: customConfig,
-                                                      groupId: 0)
+                                               dnsHostname: serverAddress,
+                                               hostname: serverAddress,
+                                               serverAddress: serverAddress,
+                                               nickName: name,
+                                               cityName: TextsAsset.configuredLocation,
+                                               customConfig: customConfig,
+                                               groupId: 0)
 
         return Completable.create { completion in
-            OpenVPNManager.shared.configure(username: customConfig.username ?? "",
-                                            password: customConfig.password ?? "",
-                                            protocolType: customConfig.protocolType ?? "",
-                                            serverAddress: serverAddress,
-                                            port: customConfig.port ?? "",
-                                            x509Name: nil,
-                                            proxyInfo: nil
-            ) { (_, error) in
-                if error == nil {
-                    completion(.completed)
-                } else {
-                    completion(.error(RepositoryError.failedToLoadConfiguration))
+            Task {
+                if let managers = try? await self.vpnManager.vpnManagerUtils.getAllManagers(),
+                   let manager = self.vpnManager.vpnManagerUtils.openVPNdManager(from: managers) {
+                    do {
+                        _ = try await self.vpnManager.vpnManagerUtils.configureOpenVPN(manager: manager,
+                                                                                       selectedNode: self.vpnManager.selectedNode,
+                                                                                       userSettings: self.vpnManager.makeUserSettings(),
+                                                                                       username: customConfig.username ?? "",
+                                                                                       password: customConfig.password ?? "",
+                                                                                       protocolType: customConfig.protocolType ?? "",
+                                                                                       serverAddress: serverAddress,
+                                                                                       port: customConfig.port ?? "",
+                                                                                       x509Name: nil,
+                                                                                       proxyInfo: nil)
+                        completion(.completed)
+
+                    } catch let error {
+                        completion(.error(RepositoryError.failedToLoadConfiguration))
+                    }
                 }
             }
             return Disposables.create()

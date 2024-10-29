@@ -119,7 +119,7 @@ class WireGuardVPNManager {
         }
     }
 
-    func connect() {
+    private func connect() {
         VPNManager.shared.activeVPNManager = VPNManagerType.wg
         if WireGuardVPNManager.shared.providerManager?.connection.status == .connected || WireGuardVPNManager.shared.providerManager?.connection.status == .connecting {
             VPNManager.shared.restartOnDisconnect = true
@@ -155,7 +155,7 @@ class WireGuardVPNManager {
         }
     }
 
-    func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
+    private func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
         if self.providerManager.connection.status == .disconnected && !force { return }
         self.providerManager?.loadFromPreferences(completionHandler: { [weak self] (error) in
             guard let self = self else { return }
@@ -176,7 +176,7 @@ class WireGuardVPNManager {
         })
     }
 
-    func restartConnection() {
+    private func restartConnection() {
         self.logger.logD(WireGuardVPNManager.self, "Restarting WireGuard connection.")
         disconnect(restartOnDisconnect: true)
     }
@@ -204,7 +204,7 @@ class WireGuardVPNManager {
         }
     }
 
-    func removeProfile(completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
+    private func removeProfile(completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
             if self?.isConfigured() ?? false {
                 self?.disconnect()

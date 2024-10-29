@@ -19,11 +19,11 @@ class VPNManagerUtils {
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
     let fileDatabase: FileDatabase// = Assembler.resolve(FileDatabase.self)
-    
+
     let wgCredentials = Assembler.resolve(WgCredentials.self)
 
     weak var delegate: VPNManagerUtilsDelegate?
-    
+
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
         self.logger = logger
         self.localDatabase = localDatabase
@@ -107,7 +107,7 @@ class VPNManagerUtils {
         try? await manager.saveToPreferences()
         try? await manager.loadFromPreferences()
     }
-    
+
     func remove(manager: NEVPNManager) async {
         try? await manager.removeFromPreferences()
         try? await manager.loadFromPreferences()
@@ -145,6 +145,16 @@ class VPNManagerUtils {
 
     func manager(from managers: [NEVPNManager], with type: VPNManagerType) -> NEVPNManager? {
         managers.first { $0.protocolConfiguration?.username == type.username }
+    }
+
+    func getManagerName(from manager: NEVPNManager) -> String {
+        if let username = manager.protocolConfiguration?.username {
+            if username == TextsAsset.wireGuard || username == TextsAsset.wireGuard {
+                return username
+            }
+            return TextsAsset.iKEv2
+        }
+        return ""
     }
 
     func getIKEV2ConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {

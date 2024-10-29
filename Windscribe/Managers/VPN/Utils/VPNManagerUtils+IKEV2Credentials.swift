@@ -90,7 +90,7 @@ extension VPNManagerUtils {
         ikeV2Protocol.childSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
         ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
         ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
-        
+
 #if os(iOS)
         // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
         ikeV2Protocol.enableFallback = true

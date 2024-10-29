@@ -140,14 +140,14 @@ class OpenVPNManager {
     }
 
     private func configure(username: String,
-                   password: String,
-                   protocolType: String,
-                   serverAddress: String,
-                   port: String,
-                   compressionEnabled: Bool? = false,
-                   x509Name: String?,
-                   proxyInfo: ProxyInfo? = nil,
-                   completion: @escaping (_ result: Bool,
+                           password: String,
+                           protocolType: String,
+                           serverAddress: String,
+                           port: String,
+                           compressionEnabled: Bool? = false,
+                           x509Name: String?,
+                           proxyInfo: ProxyInfo? = nil,
+                           completion: @escaping (_ result: Bool,
                                           _ error: String?) -> Void ) {
         providerManager?.loadFromPreferences { [weak self] error in
             guard let self = self else { return }
@@ -221,36 +221,36 @@ class OpenVPNManager {
     }
 
     func connect() {
-        self.logger.logD( OpenVPNManager.self, "Connecting via OpenVPN.")
-
-        VPNManager.shared.activeVPNManager = VPNManagerType.openVPN
-        if OpenVPNManager.shared.providerManager?.connection.status == .connected ||
-            OpenVPNManager.shared.providerManager?.connection.status == .connecting {
-            VPNManager.shared.restartOnDisconnect = true
-            OpenVPNManager.shared.restartConnection()
-        } else {
-            IKEv2VPNManager.shared.removeProfile(completion: { (result, error) in
-                WireGuardVPNManager.shared.removeProfile { [weak self] (result, error) in
-                    guard let self = self else { return }
-                    if result {
-                        self.providerManager?.isOnDemandEnabled = DefaultValues.firewallMode
-                        self.providerManager?.isEnabled = true
-                        self.providerManager?.saveToPreferences { (error) in
-                            self.providerManager?.loadFromPreferences(completionHandler: { (error) in
-                                do {
-                                    try self.providerManager?.connection.startVPNTunnel()
-                                    self.logger.logD( OpenVPNManager.self, "OpenVPN tunnel started.")
-                                } catch {
-                                    self.logger.logE( OpenVPNManager.self, "Error occured when establishing OpenVPN connection: \(error.localizedDescription)")
-                                }
-                            })
-                        }
-                    } else {
-                        self.logger.logE( OpenVPNManager.self, "Error when removing IKEv2 VPN profile. \(error ?? "")")
-                    }
-                }
-            })
-        }
+//        self.logger.logD( OpenVPNManager.self, "Connecting via OpenVPN.")
+//
+//        VPNManager.shared.activeVPNManager = VPNManagerType.openVPN
+//        if OpenVPNManager.shared.providerManager?.connection.status == .connected ||
+//            OpenVPNManager.shared.providerManager?.connection.status == .connecting {
+//            VPNManager.shared.restartOnDisconnect = true
+//            OpenVPNManager.shared.restartConnection()
+//        } else {
+//            IKEv2VPNManager.shared.removeProfile(completion: { (result, error) in
+//                WireGuardVPNManager.shared.removeProfile { [weak self] (result, error) in
+//                    guard let self = self else { return }
+//                    if result {
+//                        self.providerManager?.isOnDemandEnabled = DefaultValues.firewallMode
+//                        self.providerManager?.isEnabled = true
+//                        self.providerManager?.saveToPreferences { (error) in
+//                            self.providerManager?.loadFromPreferences(completionHandler: { (error) in
+//                                do {
+//                                    try self.providerManager?.connection.startVPNTunnel()
+//                                    self.logger.logD( OpenVPNManager.self, "OpenVPN tunnel started.")
+//                                } catch {
+//                                    self.logger.logE( OpenVPNManager.self, "Error occured when establishing OpenVPN connection: \(error.localizedDescription)")
+//                                }
+//                            })
+//                        }
+//                    } else {
+//                        self.logger.logE( OpenVPNManager.self, "Error when removing IKEv2 VPN profile. \(error ?? "")")
+//                    }
+//                }
+//            })
+//        }
     }
 
     func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {

@@ -18,7 +18,7 @@ extension VPNManager {
     func selectAnotherNode() {
         if let selectedNode = VPNManager.shared.selectedNode {
             if let randomNode = getRandomNodeInSameGroup(groupId: selectedNode.groupId,
-                                                                                   excludeHostname: selectedNode.hostname),
+                                                         excludeHostname: selectedNode.hostname),
                let newHostname = randomNode.hostname,
                let newIP2 = randomNode.ip2 {
                 VPNManager.shared.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
@@ -82,7 +82,7 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: self.selectedNode,
-                                                                       userSettings: self.makeUserSettings())) ?? false {
+                                                                                       userSettings: self.makeUserSettings())) ?? false {
                     IKEv2VPNManager.shared.connect()
                 }
             }
@@ -95,7 +95,7 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
-                                                                       userSettings: self.makeUserSettings())) ?? false {
+                                                                                         userSettings: self.makeUserSettings())) ?? false {
                     OpenVPNManager.shared.connect()
                 } else {
                     self.disconnectOrFail()
@@ -110,7 +110,7 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: self.selectedNode,
-                                                                       userSettings: self.makeUserSettings())) ?? false {
+                                                                                     userSettings: self.makeUserSettings())) ?? false {
                     OpenVPNManager.shared.connect()
                 } else {
                     self.disconnectOrFail()
@@ -131,7 +131,7 @@ extension VPNManager {
                 self.connectUsingDynamicWireGuard()
             } else {
                 self.wgCrendentials.delete()
-                WireGuardVPNManager.shared.disconnect()
+                Task { await self.vpnManagerUtils.disconnect(with: .wg, killSwitch: self.killSwitch) }
             }
             completion(nil)
         }, onFailure: { error in
@@ -162,10 +162,10 @@ extension VPNManager {
                 Task {
                     do {
                         if try await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
-                                                                                              userSettings: self.makeUserSettings()) {
+                                                                                            userSettings: self.makeUserSettings()) {
                             self.preferences.saveConnectingToCustomConfig(value: false)
-                            WireGuardVPNManager.shared.connect()
-                       }
+                            Task { await self.vpnManagerUtils.connect(with: .wg, killSwitch: self.killSwitch) }
+                        }
                     } catch let error {
                         let description = (error as? Errors)?.description ?? ""
                         self.logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(description)")
@@ -196,10 +196,9 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect { return }
         Task {
             if (try? await vpnManagerUtils.configureWireguard(with: selectedNode,
-                                                            userSettings: makeUserSettings())) ?? false {
-
-                    self.preferences.saveConnectingToCustomConfig(value: true)
-                    WireGuardVPNManager.shared.connect()
+                                                              userSettings: makeUserSettings())) ?? false {
+                self.preferences.saveConnectingToCustomConfig(value: true)
+                Task { await self.vpnManagerUtils.connect(with: .wg, killSwitch: self.killSwitch) }
             }
         }
     }
@@ -299,23 +298,23 @@ extension VPNManager {
                   let cityName = serverGroup.1.city,
                   let groupId = serverGroup.1.id else { return }
             selectedNode = SelectedNode(countryCode: countryCode,
-                                                   dnsHostname: dnsHostname,
-                                                   hostname: hostname,
-                                                   serverAddress: serverAddress,
-                                                   nickName: nickName,
-                                                   cityName: cityName,
-                                                   groupId: groupId)
+                                        dnsHostname: dnsHostname,
+                                        hostname: hostname,
+                                        serverAddress: serverAddress,
+                                        nickName: nickName,
+                                        cityName: cityName,
+                                        groupId: groupId)
             self.connect()
         } else {
             localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
                 guard let bestLocation = bestLocation else { return }
                 self.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
-                                            dnsHostname: bestLocation.dnsHostname,
-                                            hostname: bestLocation.hostname,
-                                            serverAddress: bestLocation.ipAddress,
-                                            nickName: bestLocation.nickName,
-                                            cityName: bestLocation.cityName,
-                                            groupId: bestLocation.groupId)
+                                                 dnsHostname: bestLocation.dnsHostname,
+                                                 hostname: bestLocation.hostname,
+                                                 serverAddress: bestLocation.ipAddress,
+                                                 nickName: bestLocation.nickName,
+                                                 cityName: bestLocation.cityName,
+                                                 groupId: bestLocation.groupId)
                 self.connect()
             }).disposed(by: disposeBag)
         }

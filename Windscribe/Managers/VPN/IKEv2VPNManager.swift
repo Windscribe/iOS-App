@@ -159,37 +159,37 @@ class IKEv2VPNManager {
             OpenVPNManager.shared.disconnect()
         } else if WireGuardVPNManager.shared.isConnected() {
             VPNManager.shared.restartOnDisconnect = true
-            WireGuardVPNManager.shared.disconnect()
+//            WireGuardVPNManager.shared.disconnect()
         } else {
             if IKEv2VPNManager.shared.neVPNManager.connection.status == .connected ||
                 IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting {
                 VPNManager.shared.restartOnDisconnect = true
                 IKEv2VPNManager.shared.restartConnection()
             } else {
-                OpenVPNManager.shared.removeProfile(completion: { (result, error) in
-                    WireGuardVPNManager.shared.removeProfile { [weak self] (result, error) in
-                        if result {
-                            self?.neVPNManager.isOnDemandEnabled = DefaultValues.firewallMode
-                           self?.neVPNManager.isEnabled = true
-                           self?.neVPNManager.saveToPreferences { (error) in
-                               self?.neVPNManager.loadFromPreferences(completionHandler: { (error) in
-                                   do {
-                                       try self?.neVPNManager.connection.startVPNTunnel()
-                                       self?.handleVPNManagerNoResponse()
-                                       self?.logger.logD(IKEv2VPNManager.self, "IKEv2 VPN tunnel started.")
+                OpenVPNManager.shared.removeProfile { [weak self] (result, error) in
+                    //                    WireGuardVPNManager.shared.removeProfile { [weak self] (result, error) in
+                    if result {
+                        self?.neVPNManager.isOnDemandEnabled = DefaultValues.firewallMode
+                        self?.neVPNManager.isEnabled = true
+                        self?.neVPNManager.saveToPreferences { (error) in
+                            self?.neVPNManager.loadFromPreferences(completionHandler: { (error) in
+                                do {
+                                    try self?.neVPNManager.connection.startVPNTunnel()
+                                    self?.handleVPNManagerNoResponse()
+                                    self?.logger.logD(IKEv2VPNManager.self, "IKEv2 VPN tunnel started.")
 
-                                   } catch let error {
-                                       self?.logger.logE(IKEv2VPNManager.self, "Error when trying to connect with vpn. \(error.localizedDescription)")
+                                } catch let error {
+                                    self?.logger.logE(IKEv2VPNManager.self, "Error when trying to connect with vpn. \(error.localizedDescription)")
 
-                                   }
-                               })
-                           }
-                       } else {
-                           self?.logger.logE(IKEv2VPNManager.self, "Error when removing OpenVPN VPN profile. \(error ?? "")")
+                                }
+                            })
+                        }
+                    } else {
+                        self?.logger.logE(IKEv2VPNManager.self, "Error when removing OpenVPN VPN profile. \(error ?? "")")
 
-                       }
                     }
-                })
+                }
+//            }
             }
         }
     }

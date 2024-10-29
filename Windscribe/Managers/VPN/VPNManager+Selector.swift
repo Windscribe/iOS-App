@@ -69,7 +69,7 @@ extension VPNManager {
             }
         }
     }
-    
+
     @objc func restartWireGuardConnection() {
         if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
             return
@@ -77,11 +77,11 @@ extension VPNManager {
         Task {
             if (try? await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: selectedNode,
                                                                                   userSettings: makeUserSettings())) ?? false {
-                WireGuardVPNManager.shared.connect()
+                await vpnManagerUtils.connect(with: .wg, killSwitch: killSwitch)
             }
         }
     }
-    
+
     @objc func restartIKEv2Connection() {
         connectUsingIKEv2()
     }
@@ -107,7 +107,7 @@ extension VPNManager {
     }
 
     @objc func retryWireGuardVPNConnection() {
-        WireGuardVPNManager.shared.connect()
+        Task { await vpnManagerUtils.connect(with: .wg, killSwitch: killSwitch) }
     }
 
     @objc func retryConnectionWithNewServerCredentials() {
@@ -204,14 +204,14 @@ extension VPNManager {
         }
         if setDisconnect { self.delegate?.setDisconnected() }
         if disableConnectIntent { VPNManager.shared.connectIntent = false }
-        if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.disconnect()
-        }
-        if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.disconnect()
-        }
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.disconnect()
+
+        Task {
+            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
+            for manager in managers {
+                if manager.protocolConfiguration?.username != nil {
+                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                }
+            }
         }
     }
 
@@ -223,16 +223,16 @@ extension VPNManager {
             logger.logD( VPNManager.self, "Reconnecting...")
             self.keepConnectingState = true
             self.delegate?.setConnecting()
-            if IKEv2VPNManager.shared.isConfigured() {
-                IKEv2VPNManager.shared.disconnect()
+
+            Task {
+                let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
+                for manager in managers {
+                    if manager.protocolConfiguration?.username != nil {
+                        await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                    }
+                }
+                completion()
             }
-            if OpenVPNManager.shared.isConfigured() {
-                OpenVPNManager.shared.disconnect()
-            }
-            if WireGuardVPNManager.shared.isConfigured() {
-                WireGuardVPNManager.shared.disconnect()
-            }
-            completion()
         } else {
             logger.logD( VPNManager.self, "Connecting...")
             completion()
@@ -355,38 +355,27 @@ extension VPNManager {
 
     @objc func disconnectAndDisable() {
         self.disableOrFailOnDisconnect = true
-        if IKEv2VPNManager.shared.neVPNManager.connection.status == .connected ||
-            IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting {
-            IKEv2VPNManager.shared.disconnect()
-        }
-        if OpenVPNManager.shared.providerManager?.connection.status == .connected || OpenVPNManager.shared.providerManager?.connection.status == .connecting {
-            OpenVPNManager.shared.disconnect()
-        }
-        if WireGuardVPNManager.shared.providerManager?.connection.status == .connected || WireGuardVPNManager.shared.providerManager?.connection.status == .connecting {
-            WireGuardVPNManager.shared.disconnect()
+        Task {
+            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
+            for manager in managers {
+                if manager.connection.status == .connected || manager.connection.status == .connecting {
+                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                }
+            }
         }
     }
 
     @objc func disconnectIfStillConnecting() {
-        if IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting &&
-            IKEv2VPNManager.shared.neVPNManager.connection.status != .disconnected {
-            self.disableOrFailOnDisconnect = true
-            VPNManager.shared.isOnDemandRetry = false
-            IKEv2VPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for IKEv2 connection.")
-        }
-        if OpenVPNManager.shared.providerManager?.connection.status == .connecting && OpenVPNManager.shared.providerManager?.connection.status != .disconnected {
-            self.disableOrFailOnDisconnect = true
-            VPNManager.shared.isOnDemandRetry = false
-            OpenVPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for OpenVPN connection.")
-
-        }
-        if WireGuardVPNManager.shared.providerManager?.connection.status == .connecting && WireGuardVPNManager.shared.providerManager?.connection.status != .disconnected {
-            self.disableOrFailOnDisconnect = true
-            VPNManager.shared.isOnDemandRetry = false
-            WireGuardVPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for WireGuard connection.")
+        Task {
+            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
+            for manager in managers {
+                if manager.connection.status == .connecting && manager.connection.status != .disconnected {
+                    disableOrFailOnDisconnect = true
+                    isOnDemandRetry = false
+                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                    logger.logE( VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(vpnManagerUtils.getManagerName(from: manager)) connection.")
+                }
+            }
         }
     }
 
@@ -399,22 +388,18 @@ extension VPNManager {
                 self.logger.logI( VPNManager.self, "Kill-Switch/Firewall on unable to remove VPN Profile.")
                 return
             }
-            if IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnecting {
-                VPNManager.shared.isOnDemandRetry = false
-                IKEv2VPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing IKEv2 VPN profile.")
-            }
-            if OpenVPNManager.shared.providerManager?.connection.status == .disconnecting {
-                VPNManager.shared.isOnDemandRetry = false
-                OpenVPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing OpenVPN VPN profile.")
-            }
-            if WireGuardVPNManager.shared.providerManager?.connection.status == .disconnecting {
-                VPNManager.shared.isOnDemandRetry = false
-                WireGuardVPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing WireGuard VPN profile.")
-            }
 
+            Task {
+                let managers = (try? await self.vpnManagerUtils.getAllManagers()) ?? []
+                for manager in managers {
+                    if manager.connection.status == .disconnecting {
+                        self.isOnDemandRetry = false
+                        await self.vpnManagerUtils.disconnect(killSwitch: self.killSwitch, manager: manager)
+                        await self.vpnManagerUtils.removeProfile(killSwitch: self.killSwitch, manager: manager)
+                        self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing \(self.vpnManagerUtils.getManagerName(from: manager)) VPN profile.")
+                    }
+                }
+            }
         })
     }
 
