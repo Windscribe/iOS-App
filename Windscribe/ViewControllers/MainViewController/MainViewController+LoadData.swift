@@ -98,7 +98,7 @@ extension MainViewController {
 
     func loadCustomConfigs() {
         logger.logD(self, "Loading custom configs list from disk.")
-        self.viewModel.customConfigs.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
+        self.viewModel.customConfigs.subscribe(on: MainScheduler.instance).observe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
             var customConfigs = [CustomConfigModel]()
             guard let customconfigs = customconfigs else { return }
             for result in customconfigs {
