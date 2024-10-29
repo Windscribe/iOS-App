@@ -427,10 +427,10 @@ class MainViewController: PreferredFocusedViewController {
                     self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
                     self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
                 }
-               
+
             }
         }).disposed(by: self.disposeBag)
-        
+
     }
 
     func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {

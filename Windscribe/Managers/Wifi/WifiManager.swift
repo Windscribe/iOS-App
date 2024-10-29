@@ -64,7 +64,7 @@ class WifiManager {
     }
 
     func saveCurrentWifiNetworks() {
-        _ = connectivity.network.take(1).map {$0.name}.subscribe(onNext: { wifiSSID in
+        _ = connectivity.network.take(1).map {$0.name}.subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { wifiSSID in
             guard let wifiSSID = wifiSSID else {
                 return
             }
