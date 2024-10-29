@@ -183,7 +183,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        // myPreferredFocusedView = context.nextFocusedView
         if context.nextFocusedItem is UIButton {
             let view = context.nextFocusedView as? UIButton
             if view?.superview?.superview is UITableViewCell {
@@ -225,19 +224,20 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     func bindData(isStreaming: Bool) {
-        guard let results = try? viewModel.serverList.value() else { return }
-        if results.count == 0 { return }
-        viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
-            self.serverSectionsOrdered = serverSectionsOrdered
+        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
+            viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
+                self.serverSectionsOrdered = serverSectionsOrdered
 
-           if  self.bestLocation != nil {
-                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
-                if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
-                    self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+               if  self.bestLocation != nil {
+                    let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+                    if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
+                        self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+                    }
                 }
+                self.serverListCollectionView.reloadData()
             }
-            self.serverListCollectionView.reloadData()
-        }
+        }).disposed(by: self.disposeBag)
+        
         self.viewModel.staticIPs.subscribe(onNext: { [self] staticips in
             let staticips = self.viewModel.getStaticIp()
             staticIPModels.removeAll()
