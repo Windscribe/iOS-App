@@ -263,7 +263,7 @@ extension VPNManager {
     }
 
     func handleConnectError() {
-        if awaitingConnectionCheck || preferences.getKillSwitchSync() {
+        if awaitingConnectionCheck {
             return
         }
         self.awaitingConnectionCheck = true
@@ -274,6 +274,7 @@ extension VPNManager {
                 return
             }
             if error == .credentialsFailure {
+                AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logD(self, "VPN disconnected due to credential failure")
                 self.connectIntent = false
                 self.resetProfiles {
