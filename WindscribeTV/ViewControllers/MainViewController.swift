@@ -420,13 +420,17 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func setFlagImages() {
-        guard let results = try? viewModel.serverList.value() else { return }
-        if results.count == 0 { return }
-        self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
-            self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode?.lowercased() ?? "")-s")
-            self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
-            self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
-        }
+        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
+            self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
+                if serverSectionsOrdered.count > 2 {
+                    self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode?.lowercased() ?? "")-s")
+                    self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
+                    self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
+                }
+               
+            }
+        }).disposed(by: self.disposeBag)
+        
     }
 
     func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {
