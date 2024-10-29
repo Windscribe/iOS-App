@@ -55,7 +55,7 @@ class OpenVPNManager {
         }.disposed(by: disposeBag)
     }
 
-    func getConfiguration(username: String,
+    private func getConfiguration(username: String,
                           password: String,
                           protocolType: String,
                           serverAddress: String,
@@ -139,7 +139,7 @@ class OpenVPNManager {
         }
     }
 
-    func configure(username: String,
+    private func configure(username: String,
                    password: String,
                    protocolType: String,
                    serverAddress: String,
@@ -357,7 +357,7 @@ class OpenVPNManager {
         }
     }
 
-    func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
+    private func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
                                                               _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode,
               let x509Name = selectedNode.ovpnX509 else { return }
@@ -438,7 +438,7 @@ class OpenVPNManager {
         }
     }
 
-    func configureWithCustomConfig(completion: @escaping (_ result: Bool,
+    private func configureWithCustomConfig(completion: @escaping (_ result: Bool,
                                                          _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else { return }
         self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")

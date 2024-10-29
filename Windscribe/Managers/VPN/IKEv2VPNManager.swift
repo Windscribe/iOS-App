@@ -42,7 +42,7 @@ class IKEv2VPNManager {
         }.disposed(by: disposeBag)
     }
 
-    func configure(username: String,
+    private func configure(username: String,
                    dnsHostname: String,
                    hostname: String,
                    ip: String,
@@ -340,7 +340,7 @@ class IKEv2VPNManager {
         }
     }
 
-    func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
+    private func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
                                                               _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else {
             self.logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")

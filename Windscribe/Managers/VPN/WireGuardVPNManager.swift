@@ -56,7 +56,7 @@ class WireGuardVPNManager {
         }.disposed(by: disposeBag)
     }
 
-    func getConfiguration(completion: @escaping (_ tunnelConfiguration: TunnelConfiguration?) -> Void) {
+    private func getConfiguration(completion: @escaping (_ tunnelConfiguration: TunnelConfiguration?) -> Void) {
         var configFilePath = "config.conf"
         if let customConfig = VPNManager.shared.selectedNode?.customConfig,
             let customConfigId = customConfig.id {
@@ -74,7 +74,7 @@ class WireGuardVPNManager {
         }
     }
 
-    func configure(completion: @escaping (_ result: Bool,
+    private func configure(completion: @escaping (_ result: Bool,
                                           _ error: String?) -> Void ) {
         providerManager?.loadFromPreferences { [weak self] error in
             if error == nil,
@@ -181,7 +181,7 @@ class WireGuardVPNManager {
         disconnect(restartOnDisconnect: true)
     }
 
-    func configureWithSavedConfig(completion: @escaping (_ result: Bool,
+    private func configureWithSavedConfig(completion: @escaping (_ result: Bool,
                                                          _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode,
               let ip3 = selectedNode.ip3 else { return }
@@ -194,7 +194,7 @@ class WireGuardVPNManager {
         }
     }
 
-    func configureWithCustomConfig(completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
+    private func configureWithCustomConfig(completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else { return }
         self.logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         if self.providerManager?.connection.status != .connecting {
