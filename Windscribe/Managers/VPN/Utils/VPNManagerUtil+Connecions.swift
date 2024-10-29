@@ -44,8 +44,8 @@ extension VPNManagerUtils {
                 //            VPNManager.shared.restartOnDisconnect = true
                 await restartConnection(killSwitch: killSwitch, manager: manager)
             } else {
-                otherManagers.forEach { otherManager in
-                    // Remove Profile
+                for otherManager in otherManagers {
+                    await removeProfile(killSwitch: killSwitch, manager: otherManager)
                 }
                 
                 manager.isOnDemandEnabled = DefaultValues.firewallMode
@@ -72,6 +72,14 @@ extension VPNManagerUtils {
         guard let managers = try? await getAllManagers(),
               let manager = getManager(for: type, from: managers) else { return }
         await disconnect(restartOnDisconnect: restartOnDisconnect, force: force, killSwitch: killSwitch, manager: manager)
+    }
+    
+    func removeProfile(killSwitch: Bool, manager: NEVPNManager) async {
+        guard (try? await manager.loadFromPreferences()) != nil else { return }
+        if manager.protocolConfiguration?.username != nil  {
+            await disconnect(killSwitch: killSwitch, manager: manager)
+            await remove(manager: manager)
+        }
     }
     
     func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool, manager: NEVPNManager) async {
@@ -104,10 +112,10 @@ extension VPNManagerUtils {
     
     /// Sometimes If another ikev2 profile is configured and kill switch is on VPNManager may not respond.
     private func handleVPNManagerNoResponse(for type: VPNManagerType) {
-//        if type == .iKEV2, self.killSwitch {
-//            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-//                VPNManager.shared.disconnectOrFail()
-//            }
-//        }
+        //        if type == .iKEV2, self.killSwitch {
+        //            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
+        //                VPNManager.shared.disconnectOrFail()
+        //            }
+        //        }
     }
 }

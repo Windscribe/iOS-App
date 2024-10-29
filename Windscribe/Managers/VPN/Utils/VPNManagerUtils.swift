@@ -101,6 +101,11 @@ class VPNManagerUtils {
         try? await manager.saveToPreferences()
         try? await manager.loadFromPreferences()
     }
+    
+    func remove(manager: NEVPNManager) async {
+        try? await manager.removeFromPreferences()
+        try? await manager.loadFromPreferences()
+    }
 
     func saveThrowing(manager: NEVPNManager) async throws {
         try await manager.saveToPreferences()
