@@ -56,9 +56,11 @@ extension VPNManager {
     }
 
     func checkIfUserIsOutOfData() {
-        guard let session = sessionManager.session else { return }
-        if session.status == 2 && !isCustomConfigSelected() {
-            VPNManager.shared.disconnectAllVPNConnections(setDisconnect: true)
+        DispatchQueue.main.async {
+            guard let session = self.sessionManager.session else { return }
+            if session.status == 2 && !self.isCustomConfigSelected() {
+                VPNManager.shared.disconnectAllVPNConnections(setDisconnect: true)
+            }
         }
     }
 

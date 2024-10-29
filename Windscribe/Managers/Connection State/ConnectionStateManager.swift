@@ -234,24 +234,26 @@ extension ConnectionStateManager: VPNManagerDelegate {
     }
 
     func saveDataForWidget() {
-        if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
-            preferences.saveServerNameKey(key: cityName)
-            preferences.saveNickNameKey(key: nickName)
-            preferences.saveCountryCodeKey(key: countryCode)
+        DispatchQueue.main.async {
+            if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
+                self.preferences.saveServerNameKey(key: cityName)
+                self.preferences.saveNickNameKey(key: nickName)
+                self.preferences.saveCountryCodeKey(key: countryCode)
 
-            if credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
-                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
-            } else {
-                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
+                if self.credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
+                    self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
+                } else {
+                    self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
+                }
             }
-        }
-        #if os(iOS)
-        if #available(iOS 14.0, *) {
-            #if arch(arm64) || arch(i386) || arch(x86_64)
-            WidgetCenter.shared.reloadAllTimelines()
+            #if os(iOS)
+            if #available(iOS 14.0, *) {
+                #if arch(arm64) || arch(i386) || arch(x86_64)
+                WidgetCenter.shared.reloadAllTimelines()
+                #endif
+            }
             #endif
         }
-        #endif
     }
 
     func displaySetPrefferedProtocol() {
@@ -300,14 +302,16 @@ extension ConnectionStateManager {
     }
 
     private func updateStateInfo(to state: ConnectionState) {
-        let info = ConnectionStateInfo(state: state,
-                                       isCustomConfigSelected: vpnManager.isCustomConfigSelected(),
-                                       internetConnectionAvailable: !connectivity.internetConnectionAvailable(),
-                                       customConfig: vpnManager.selectedNode?.customConfig,
-                                       connectedWifi: securedNetwork.getCurrentNetwork())
-        logger.logD(self, "Updated connection state to  \(info.state.statusText)")
+        DispatchQueue.main.async {
+            let info = ConnectionStateInfo(state: state,
+                                           isCustomConfigSelected: self.vpnManager.isCustomConfigSelected(),
+                                           internetConnectionAvailable: !self.connectivity.internetConnectionAvailable(),
+                                           customConfig: self.vpnManager.selectedNode?.customConfig,
+                                           connectedWifi: self.securedNetwork.getCurrentNetwork())
+            self.logger.logD(self, "Updated connection state to  \(info.state.statusText)")
 
-        connectedState.onNext(info)
+            self.connectedState.onNext(info)
+        }
     }
 
     private func getCurrentState() -> ConnectionStateInfo {
