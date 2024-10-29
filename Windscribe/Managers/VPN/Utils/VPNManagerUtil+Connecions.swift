@@ -36,13 +36,13 @@ extension VPNManagerUtils {
         for otherManager in otherManagers {
             if otherManager.connection.status == .connected {
                 //                VPNManager.shared.restartOnDisconnect = true
-                await disconnect(killSwitch: killSwitch, manager: manager)
+                await disconnect(killSwitch: killSwitch, manager: otherManager)
                 break
             }
             
             if manager.connection.status == .connected || manager.connection.status == .connecting {
                 //            VPNManager.shared.restartOnDisconnect = true
-                //            WireGuardVPNManager.shared.restartConnection()
+                await restartConnection(killSwitch: killSwitch, manager: manager)
             } else {
                 otherManagers.forEach { otherManager in
                     // Remove Profile
@@ -61,6 +61,11 @@ extension VPNManagerUtils {
                 }
             }
         }
+    }
+    
+    func restartConnection(killSwitch: Bool, manager: NEVPNManager) async {
+        logger.logD( OpenVPNManager.self, "Restarting OpenVPN connection.")
+        await disconnect(restartOnDisconnect: true, killSwitch: killSwitch, manager: manager)
     }
     
     func disconnect(with type: VPNManagerType, restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool) async {
