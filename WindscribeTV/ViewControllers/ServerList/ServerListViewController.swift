@@ -237,7 +237,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 self.serverListCollectionView.reloadData()
             }
         }).disposed(by: self.disposeBag)
-        
+
         self.viewModel.staticIPs.subscribe(onNext: { [self] staticips in
             let staticips = self.viewModel.getStaticIp()
             staticIPModels.removeAll()
