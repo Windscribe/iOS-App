@@ -12,15 +12,14 @@ import UIKit
 extension VPNManagerUtils {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings) async throws -> Bool {
-        guard let manager = openVPNdManager(from: try await getAllManagers()) as? NETunnelProviderManager,
-              let selectedNode = selectedNode,
+        guard let selectedNode = selectedNode,
               let x509Name = selectedNode.ovpnX509 else {
             throw Errors.hostnameNotFound
         }
 
         var serverAddress = selectedNode.serverAddress
         logger.logD( OpenVPNManager.self, "Configuring VPN profile with saved credentials. \(String(describing: serverAddress))")
-
+        let manager = openVPNdManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
         var base64username = ""
         var base64password = ""
         var protocolType = ConnectionManager.shared.getNextProtocol().protocolName
@@ -92,10 +91,11 @@ extension VPNManagerUtils {
     func configureOpenVPNWithCustomConfig(with selectedNode: SelectedNode?,
                                    userSettings: VPNUserSettings) async throws -> Bool {
 
-        guard let providerManager = openVPNdManager(from: try await getAllManagers()) as? NETunnelProviderManager,
-              let selectedNode = selectedNode else {
+        guard let selectedNode = selectedNode else {
             throw Errors.hostnameNotFound
         }
+        
+        let providerManager = openVPNdManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
         self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         guard providerManager.connection.status != .connecting,
               let customConfig = selectedNode.customConfig,

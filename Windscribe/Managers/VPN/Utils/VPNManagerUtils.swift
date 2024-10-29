@@ -117,8 +117,8 @@ class VPNManagerUtils {
         && manager.protocolConfiguration?.username != nil
     }
 
-    func iKEV2(from managers: [NEVPNManager]) -> NEVPNManager? {
-        managers.first { isIKEV2(manager: $0 ) }
+    func iKEV2(from managers: [NEVPNManager]?) -> NEVPNManager? {
+        managers?.first { isIKEV2(manager: $0 ) }
     }
 
     func isWireguard(manager: NEVPNManager) -> Bool {
@@ -133,8 +133,8 @@ class VPNManagerUtils {
         return  manager.protocolConfiguration?.username == TextsAsset.openVPN
     }
 
-    func openVPNdManager(from managers: [NEVPNManager]) -> NEVPNManager? {
-        managers.first { isOpenVPN(manager: $0 ) }
+    func openVPNdManager(from managers: [NEVPNManager]?) -> NEVPNManager? {
+        managers?.first { isOpenVPN(manager: $0 ) }
     }
 
     func manager(from managers: [NEVPNManager], with type: VPNManagerType) -> NEVPNManager? {
