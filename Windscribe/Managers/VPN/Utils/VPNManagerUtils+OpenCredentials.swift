@@ -17,16 +17,16 @@ extension VPNManagerUtils {
               let x509Name = selectedNode.ovpnX509 else {
             throw Errors.hostnameNotFound
         }
-        
+
         var serverAddress = selectedNode.serverAddress
         logger.logD( OpenVPNManager.self, "Configuring VPN profile with saved credentials. \(String(describing: serverAddress))")
-        
+
         var base64username = ""
         var base64password = ""
         var protocolType = ConnectionManager.shared.getNextProtocol().protocolName
         var port = ConnectionManager.shared.getNextProtocol().portName
         logger.logD(self, "\(protocolType) \(port)")
-        
+
         guard VPNManager.shared.selectedNode?.customConfig?.authRequired ?? false else {
             return try await configureOpenVPN(manager: manager,
                                               selectedNode: selectedNode,
@@ -39,7 +39,7 @@ extension VPNManagerUtils {
                                               x509Name: x509Name,
                                               proxyInfo: nil)
         }
-        
+
         if let staticIPCredentials = selectedNode.staticIPCredentials,
            let username = staticIPCredentials.username,
            let password = staticIPCredentials.password {
@@ -49,12 +49,12 @@ extension VPNManagerUtils {
             base64username = credentials.username.base64Decoded()
             base64password = credentials.password.base64Decoded()
         }
-        
+
         guard base64username != "" && base64password != "" else {
             logger.logE( OpenVPNManager.self, "Can't establish a VPN connection, missing authentication values.")
             throw Errors.missingAuthenticationValues
         }
-        
+
         // Build proxy info
         var proxyInfo: ProxyInfo?
         if protocolType == stealth  || protocolType == wsTunnel {
@@ -65,7 +65,7 @@ extension VPNManagerUtils {
                 remoteAddress = selectedNode.ip3
             }
             guard let remoteAddress = remoteAddress else { throw Errors.missingRemoteAddress }
-            
+
             proxyInfo = ProxyInfo(remoteServer: remoteAddress, remotePort: port, proxyType: proxyProtocol)
             if proxyInfo != nil {
                 // Connect OpenVPN to proxy
@@ -74,7 +74,7 @@ extension VPNManagerUtils {
                 protocolType = Proxy.internalProtocol
             }
         }
-        
+
         keychainDb.save(username: base64username, password: base64password)
         return try await configureOpenVPN(manager: manager,
                                           selectedNode: selectedNode,
@@ -88,10 +88,10 @@ extension VPNManagerUtils {
                                           x509Name: x509Name,
                                           proxyInfo: proxyInfo)
     }
-    
+
     func configureOpenVPNWithCustomConfig(with selectedNode: SelectedNode?,
                                    userSettings: VPNUserSettings) async throws -> Bool {
-        
+
         guard let providerManager = openVPNdManager(from: try await getAllManagers()) as? NETunnelProviderManager,
               let selectedNode = selectedNode else {
             throw Errors.hostnameNotFound
@@ -101,7 +101,7 @@ extension VPNManagerUtils {
               let customConfig = selectedNode.customConfig,
               let protocolType = customConfig.protocolType,
               let port = customConfig.port else { return false }
-        
+
         var username = ""
         var password = ""
         if customConfig.authRequired ?? false {
@@ -120,7 +120,7 @@ extension VPNManagerUtils {
                                           port: port,
                                           x509Name: nil)
     }
-    
+
     func configureOpenVPN(manager: NEVPNManager,
                           selectedNode: SelectedNode?,
                           userSettings: VPNUserSettings,
@@ -143,7 +143,7 @@ extension VPNManagerUtils {
                                                          proxyInfo: proxyInfo),
               let configData = configuration.configData
         else { return false }
-        
+
         let tunnelProtocol = NETunnelProviderProtocol()
         tunnelProtocol.username = TextsAsset.openVPN
         tunnelProtocol.serverAddress = serverAddress
@@ -157,10 +157,10 @@ extension VPNManagerUtils {
             tunnelProtocol.providerConfiguration = ["ovpn": configData,
                                                     "compressionEnabled": compressionEnabled ?? false]
         }
-        
+
         tunnelProtocol.disconnectOnSleep = false
         manager.protocolConfiguration = tunnelProtocol
-        
+
 #if os(iOS)
         if #available(iOS 15.1, *) {
             manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
@@ -175,7 +175,7 @@ extension VPNManagerUtils {
         manager.onDemandRules = userSettings.onDemandRules
         manager.isEnabled = true
         manager.localizedDescription = Constants.appName
-        
+
         do {
             try await saveThrowing(manager: manager)
         } catch let error {
@@ -184,10 +184,10 @@ extension VPNManagerUtils {
             throw error
         }
         logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(username)")
-        
+
         return true
     }
-    
+
     func getConfiguration(selectedNode: SelectedNode?,
                           userSettings: VPNUserSettings,
                           username: String,
@@ -197,7 +197,7 @@ extension VPNManagerUtils {
                           port: String,
                           x509Name: String?,
                           proxyInfo: ProxyInfo?) async -> OpenVPNConfiguration? {
-        
+
         let openVPNConfigFilePath = FilePaths.openVPN
         if let customConfig = selectedNode?.customConfig,
            let customConfigId = customConfig.id,
@@ -209,7 +209,7 @@ extension VPNManagerUtils {
                 let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
                 let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
                 return OpenVPNConfiguration(result: true, configUsername: user, configPassword: pass, configFilePath: configFilePath, configData: configData)
-                
+
             } else {
                 return OpenVPNConfiguration(result: !authRequired, configUsername: nil, configPassword: nil, configFilePath: configFilePath, configData: configData)
             }
@@ -246,11 +246,11 @@ extension VPNManagerUtils {
                 lines.insert(protoLine, at: 2)
                 lines.insert(remoteLine, at: 3)
             }
-            
+
             if x509Found == false {
                 lines.insert(x509NameLine, at: 4)
             }
-            
+
             if let proxyLine = proxyLine {
                 lines.append(proxyLine)
             }
@@ -259,7 +259,7 @@ extension VPNManagerUtils {
                 lines.append("tcp-split-reset")
             }
             guard let appendedConfigData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return nil }
-            
+
             fileDatabase.removeFile(path: FilePaths.openVPN)
             fileDatabase.saveFile(data: appendedConfigData,
                                   path: FilePaths.openVPN)

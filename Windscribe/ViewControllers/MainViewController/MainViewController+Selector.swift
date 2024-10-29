@@ -148,68 +148,72 @@ extension MainViewController {
 
     func refreshProtocol(from network: WifiNetwork?) {
         self.vpnManager.getVPNConnectionInfo { [self] info in
-            if info?.status == NEVPNStatus.disconnecting {
-                return
-            }
-            if info != nil && [NEVPNStatus.connected, NEVPNStatus.connecting].contains(info!.status) {
-                protocolLabel.text = info?.selectedProtocol
-                portLabel.text = info?.selectedPort
+            DispatchQueue.main.async {
+                if info?.status == NEVPNStatus.disconnecting {
+                    return
+                }
+                if info != nil && [NEVPNStatus.connected, NEVPNStatus.connecting].contains(info!.status) {
+                    protocolLabel.text = info?.selectedProtocol
+                    portLabel.text = info?.selectedPort
+                    if let network = network, network.preferredProtocolStatus {
+                        self.setPreferredProtocolBadgeVisibility(hidden: false)
+                    } else {
+                        self.setPreferredProtocolBadgeVisibility(hidden: true)
+                    }
+                    return
+                }
+                if self.vpnManager.isCustomConfigSelected() {
+                    guard let customConfig = self.vpnManager.selectedNode?.customConfig else { return }
+                    self.protocolLabel.text = customConfig.protocolType
+                    self.portLabel.text = customConfig.port
+                    self.setPreferredProtocolBadgeVisibility(hidden: true)
+                    return
+                }
+                if self.vpnManager.isFromProtocolFailover || self.vpnManager.isFromProtocolChange {
+                    if WifiManager.shared.selectedPreferredProtocolStatus ?? false && WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text && WifiManager.shared.selectedPreferredPort == self.portLabel.text {
+                        self.setPreferredProtocolBadgeVisibility(hidden: false)
+                    } else {
+                        self.setPreferredProtocolBadgeVisibility(hidden: true)
+                    }
+                    let nextProtocolToConnect = ConnectionManager.shared.getNextProtocol()
+                    self.protocolLabel.text = nextProtocolToConnect.protocolName
+                    self.portLabel.text = nextProtocolToConnect.portName
+                    return
+                }
                 if let network = network, network.preferredProtocolStatus {
                     self.setPreferredProtocolBadgeVisibility(hidden: false)
+                    self.protocolLabel.text = network.preferredProtocol
+                    self.portLabel.text = network.preferredPort
+                    return
                 } else {
                     self.setPreferredProtocolBadgeVisibility(hidden: true)
                 }
-                return
-            }
-            if self.vpnManager.isCustomConfigSelected() {
-                guard let customConfig = self.vpnManager.selectedNode?.customConfig else { return }
-                self.protocolLabel.text = customConfig.protocolType
-                self.portLabel.text = customConfig.port
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-                return
-            }
-            if self.vpnManager.isFromProtocolFailover || self.vpnManager.isFromProtocolChange {
-                if WifiManager.shared.selectedPreferredProtocolStatus ?? false && WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text && WifiManager.shared.selectedPreferredPort == self.portLabel.text {
-                    self.setPreferredProtocolBadgeVisibility(hidden: false)
-                } else {
+                if ((try? self.viewModel.connectionMode.value()) ?? DefaultValues.connectionMode) == Fields.Values.manual {
                     self.setPreferredProtocolBadgeVisibility(hidden: true)
+                    self.protocolLabel.text = try? self.viewModel.selectedProtocol.value()
+                    self.portLabel.text = try? self.viewModel.selectedPort.value()
+                    return
                 }
-                let nextProtocolToConnect = ConnectionManager.shared.getNextProtocol()
-                self.protocolLabel.text = nextProtocolToConnect.protocolName
-                self.portLabel.text = nextProtocolToConnect.portName
-                return
+                self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? self.protocolLabel.text
+                self.portLabel.text = WifiManager.shared.selectedPort ?? self.portLabel.text
             }
-            if let network = network, network.preferredProtocolStatus {
-                self.setPreferredProtocolBadgeVisibility(hidden: false)
-                self.protocolLabel.text = network.preferredProtocol
-                self.portLabel.text = network.preferredPort
-                return
-            } else {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-            }
-            if ((try? self.viewModel.connectionMode.value()) ?? DefaultValues.connectionMode) == Fields.Values.manual {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-                self.protocolLabel.text = try? self.viewModel.selectedProtocol.value()
-                self.portLabel.text = try? self.viewModel.selectedPort.value()
-                return
-            }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? protocolLabel.text
-            self.portLabel.text = WifiManager.shared.selectedPort ?? portLabel.text
         }
     }
 
     private func setPreferredProtocolBadgeVisibility(hidden: Bool) {
-        if hidden {
-            preferredBadgeConstraints[2].constant = 0
-            preferredBadgeConstraints[3].constant = 0
-        } else {
-            preferredBadgeConstraints[2].constant = 10
-            preferredBadgeConstraints[3].constant = 8
-        }
-        preferredProtocolBadge.layoutIfNeeded()
-        changeProtocolArrow.layoutIfNeeded()
-        if let info = try? connectionStateViewModel.connectedState.value() {
-            self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
+        DispatchQueue.main.async {
+            if hidden {
+                self.preferredBadgeConstraints[2].constant = 0
+                self.preferredBadgeConstraints[3].constant = 0
+            } else {
+                self.preferredBadgeConstraints[2].constant = 10
+                self.preferredBadgeConstraints[3].constant = 8
+            }
+            self.preferredProtocolBadge.layoutIfNeeded()
+            self.changeProtocolArrow.layoutIfNeeded()
+            if let info = try? self.connectionStateViewModel.connectedState.value() {
+                self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
+            }
         }
     }
 

@@ -79,7 +79,8 @@ class VPNManagerUtils {
 
     func getAllManagers() async throws -> [NEVPNManager] {
         var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap { $0 }
-        providers.append(contentsOf: (try? await NETunnelProviderManager.loadAllFromPreferences()) ?? [])
+        let tunnelProviders = try? await NETunnelProviderManager.loadAllFromPreferences()
+        providers.append(contentsOf: tunnelProviders ?? [])
         guard providers.count > 0 else { throw AppIntentError.VPNNotConfigured }
         return providers
     }
@@ -124,8 +125,8 @@ class VPNManagerUtils {
         return  manager.protocolConfiguration?.username == TextsAsset.wireGuard
     }
 
-    func wireguardManager(from managers: [NEVPNManager]) -> NEVPNManager? {
-        managers.first { isWireguard(manager: $0 ) }
+    func wireguardManager(from managers: [NEVPNManager]?) -> NEVPNManager? {
+        managers?.first { isWireguard(manager: $0 ) }
     }
 
     func isOpenVPN(manager: NEVPNManager) -> Bool {
