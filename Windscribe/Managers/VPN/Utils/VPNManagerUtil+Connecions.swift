@@ -25,7 +25,7 @@ extension VPNManagerUtils {
         }
     }
     
-    func connect(with type: VPNManagerType) async {
+    func connect(with type: VPNManagerType, killSwitch: Bool) async {
         VPNManager.shared.activeVPNManager = type
         
         guard let managers = try? await getAllManagers(),
@@ -36,7 +36,7 @@ extension VPNManagerUtils {
         for otherManager in otherManagers {
             if otherManager.connection.status == .connected {
                 //                VPNManager.shared.restartOnDisconnect = true
-                //                OpenVPNManager.shared.disconnect()
+                await disconnect(killSwitch: killSwitch, manager: manager)
                 break
             }
             
@@ -60,6 +60,31 @@ extension VPNManagerUtils {
                     self.logger.logE(WireGuardVPNManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
                 }
             }
+        }
+    }
+    
+    func disconnect(with type: VPNManagerType, restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool) async {
+        guard let managers = try? await getAllManagers(),
+              let manager = getManager(for: type, from: managers) else { return }
+        await disconnect(restartOnDisconnect: restartOnDisconnect, force: force, killSwitch: killSwitch, manager: manager)
+    }
+    
+    func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool, manager: NEVPNManager) async {
+        if manager.connection.status == .disconnected && !force { return }
+        guard (try? await manager.loadFromPreferences()) != nil else { return }
+        if manager.protocolConfiguration?.username != nil {
+            manager.isOnDemandEnabled = VPNManager.shared.connectIntent
+#if os(iOS)
+            if #available(iOS 15.1, *) {
+                if restartOnDisconnect {
+                    manager.protocolConfiguration?.includeAllNetworks = false
+                } else {
+                    manager.protocolConfiguration?.includeAllNetworks = killSwitch
+                }
+            }
+#endif
+            await save(manager: manager)
+            manager.connection.stopVPNTunnel()
         }
     }
     
