@@ -69,31 +69,7 @@ extension VPNManager {
             }
         }
     }
-
-    @objc func restartIKEv2Connection() {
-        if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
-            return
-        }
-        Task {
-            if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: selectedNode,
-                                                                                   userSettings: makeUserSettings())) ?? false {
-                IKEv2VPNManager.shared.connect()
-            }
-        }
-    }
-
-    @objc func restartOpenVPNConnection() {
-        if VPNManager.shared.userTappedToDisconnect {
-            return
-        }
-        Task {
-            if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: selectedNode,
-                                                                                     userSettings: makeUserSettings())) ?? false {
-                OpenVPNManager.shared.connect()
-            }
-        }
-    }
-
+    
     @objc func restartWireGuardConnection() {
         if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
             return
@@ -105,19 +81,21 @@ extension VPNManager {
             }
         }
     }
+    
+    @objc func restartIKEv2Connection() {
+        connectUsingIKEv2()
+    }
+
+    @objc func restartOpenVPNConnection() {
+        connectUsingOpenVPN()
+    }
 
     @objc func restartCustomOpenVPNConnection() {
         connectUsingCustomConfigOpenVPN()
     }
 
     @objc func restartCustomWireGuardConnection() {
-        if VPNManager.shared.userTappedToDisconnect { return }
-        Task {
-            if (try? await self.vpnManagerUtils.configureWireguardWithCustomConfig(selectedNode: selectedNode,
-                                                                                  userSettings: makeUserSettings())) ?? false {
-                WireGuardVPNManager.shared.connect()
-            }
-        }
+        connectUsingCustomConfigWireGuard()
     }
 
     @objc func retryIKEv2Connection() {

@@ -15,19 +15,14 @@ class VPNManagerUtils {
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
     let fileDatabase: FileDatabase// = Assembler.resolve(FileDatabase.self)
+    
+    let wgCredentials = Assembler.resolve(WgCredentials.self)
 
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
         self.fileDatabase = fileDatabase
-    }
-
-    func connect() {
-        // UserSettings - allowLane, killSwitch, etc
-        // Credentials
-        // Protocol, Port
-        // LocaionID
     }
 
     func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
