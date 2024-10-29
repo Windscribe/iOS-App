@@ -10,6 +10,10 @@ import Foundation
 import NetworkExtension
 import Swinject
 
+protocol VPNManagerUtilsDelegate: AnyObject {
+    func setRestartOnDisconnect(with value: Bool)
+}
+
 class VPNManagerUtils {
     let logger: FileLogger// = Assembler.resolve(FileLogger.self)
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
@@ -18,6 +22,8 @@ class VPNManagerUtils {
     
     let wgCredentials = Assembler.resolve(WgCredentials.self)
 
+    weak var delegate: VPNManagerUtilsDelegate?
+    
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
         self.logger = logger
         self.localDatabase = localDatabase

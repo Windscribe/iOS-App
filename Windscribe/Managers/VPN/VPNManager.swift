@@ -152,6 +152,7 @@ class VPNManager: VPNManagerProtocol {
 
     func setup() async {
        _ = try? await vpnManagerUtils.getAllManagers()
+        vpnManagerUtils.delegate = self
         preferences.getKillSwitch().subscribe { data in
             self.killSwitch = data ?? DefaultValues.killSwitch
         }.disposed(by: disposeBag)
@@ -373,5 +374,11 @@ struct VPNConnectionInfo: CustomStringConvertible {
     var onDemand: Bool
     var description: String {
         "Protocol: \(selectedProtocol) Port: \(selectedPort) Status: \(status) Server: \(server ?? "") KillSwitch: \(killSwitch) OnDemand: \(onDemand)"
+    }
+}
+
+extension VPNManager: VPNManagerUtilsDelegate {
+    func setRestartOnDisconnect(with value: Bool) {
+        restartOnDisconnect = value
     }
 }

@@ -35,19 +35,18 @@ extension VPNManagerUtils {
         
         for otherManager in otherManagers {
             if otherManager.connection.status == .connected {
-                //                VPNManager.shared.restartOnDisconnect = true
+                delegate?.setRestartOnDisconnect(with: true)
                 await disconnect(killSwitch: killSwitch, manager: otherManager)
                 break
             }
             
             if manager.connection.status == .connected || manager.connection.status == .connecting {
-                //            VPNManager.shared.restartOnDisconnect = true
+                delegate?.setRestartOnDisconnect(with: true)
                 await restartConnection(killSwitch: killSwitch, manager: manager)
             } else {
                 for otherManager in otherManagers {
                     await removeProfile(killSwitch: killSwitch, manager: otherManager)
                 }
-                
                 manager.isOnDemandEnabled = DefaultValues.firewallMode
                 manager.isEnabled = true
                 await save(manager: manager)
