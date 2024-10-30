@@ -15,11 +15,6 @@ import RxSwift
 #endif
 
 extension VPNManager {
-    func isConnected() -> Bool {
-        return (IKEv2VPNManager.shared.neVPNManager.connection.status == .connected && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .connected && OpenVPNManager.shared.isConfigured()) ||
-        (WireGuardVPNManager.shared.providerManager?.connection.status == .connected && WireGuardVPNManager.shared.isConfigured())
-    }
-
      func isConnectedToVpn() -> Bool {
         if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
             let scopes = settings["__SCOPED__"] as? [String: Any] {
@@ -31,18 +26,41 @@ extension VPNManager {
         }
         return false
     }
-
+    
+    func isConnected() -> Bool {
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .connected && manager.protocolConfiguration?.username != nil {
+                return true
+            }
+        }
+        return false
+    }
+    
     func isConnecting() -> Bool {
-        return (IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .connecting && OpenVPNManager.shared.isConfigured()) ||
-            (WireGuardVPNManager.shared.providerManager?.connection.status == .connecting && WireGuardVPNManager.shared.isConfigured())
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .connecting && manager.protocolConfiguration?.username != nil {
+                return true
+            }
+        }
+        return false
     }
-
+    
     func isDisconnected() -> Bool {
-       return (IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnected && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .disconnected && OpenVPNManager.shared.isConfigured()) || (WireGuardVPNManager.shared.providerManager?.connection.status == .disconnected && WireGuardVPNManager.shared.isConfigured())
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .disconnected && manager.protocolConfiguration?.username != nil {
+                return true
+            }
+        }
+        return false
     }
-
+    
     func isDisconnecting() -> Bool {
-        return IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnecting ||  OpenVPNManager.shared.providerManager?.connection.status == .disconnecting ||  WireGuardVPNManager.shared.providerManager?.connection.status == .disconnecting
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .disconnecting {
+                return true
+            }
+        }
+        return false
     }
 
     func isInvalid() -> Bool {
