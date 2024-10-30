@@ -36,25 +36,24 @@ extension VPNManagerUtils {
                 await disconnect(killSwitch: killSwitch, manager: otherManager)
                 break
             }
+        }
+        if manager.connection.status == .connected || manager.connection.status == .connecting {
+            delegate?.setRestartOnDisconnect(with: true)
+            await restartConnection(killSwitch: killSwitch, manager: manager)
+        } else {
+            for otherManager in otherManagers {
+                await removeProfile(killSwitch: killSwitch, manager: otherManager)
+            }
+            manager.isOnDemandEnabled = DefaultValues.firewallMode
+            manager.isEnabled = true
+            await save(manager: manager)
+            do {
+                try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
+                handleVPNManagerNoResponse(for: type)
+                self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
 
-            if manager.connection.status == .connected || manager.connection.status == .connecting {
-                delegate?.setRestartOnDisconnect(with: true)
-                await restartConnection(killSwitch: killSwitch, manager: manager)
-            } else {
-                for otherManager in otherManagers {
-                    await removeProfile(killSwitch: killSwitch, manager: otherManager)
-                }
-                manager.isOnDemandEnabled = DefaultValues.firewallMode
-                manager.isEnabled = true
-                await save(manager: manager)
-                do {
-                    try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
-                    handleVPNManagerNoResponse(for: type)
-                    self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
-
-                } catch {
-                    self.logger.logE(VPNManagerUtils.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
-                }
+            } catch {
+                self.logger.logE(VPNManagerUtils.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
             }
         }
     }

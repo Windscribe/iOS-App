@@ -26,7 +26,7 @@ extension VPNManager {
         }
         return false
     }
-    
+
     func isConnected() -> Bool {
         for manager in vpnManagerUtils.managers {
             if manager.connection.status == .connected && manager.protocolConfiguration?.username != nil {
@@ -35,7 +35,7 @@ extension VPNManager {
         }
         return false
     }
-    
+
     func isConnecting() -> Bool {
         for manager in vpnManagerUtils.managers {
             if manager.connection.status == .connecting && manager.protocolConfiguration?.username != nil {
@@ -44,7 +44,7 @@ extension VPNManager {
         }
         return false
     }
-    
+
     func isDisconnected() -> Bool {
         for manager in vpnManagerUtils.managers {
             if manager.connection.status == .disconnected && manager.protocolConfiguration?.username != nil {
@@ -53,7 +53,7 @@ extension VPNManager {
         }
         return false
     }
-    
+
     func isDisconnecting() -> Bool {
         for manager in vpnManagerUtils.managers {
             if manager.connection.status == .disconnecting {
