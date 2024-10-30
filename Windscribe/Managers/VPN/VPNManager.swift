@@ -151,7 +151,6 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func setup() async {
-       _ = try? await vpnManagerUtils.getAllManagers()
         vpnManagerUtils.delegate = self
         preferences.getKillSwitch().subscribe { data in
             self.killSwitch = data ?? DefaultValues.killSwitch
@@ -198,10 +197,9 @@ class VPNManager: VPNManagerProtocol {
 
     func updateOnDemandRules() {
         isOnDemandRetry = false
-        Task {
-            guard let managers = try? await vpnManagerUtils.getAllManagers() else { return }
-            let onDemandRules = getOnDemandRules()
-            for manager in managers {
+        let onDemandRules = getOnDemandRules()
+        for manager in vpnManagerUtils.managers {
+            Task {
                 await vpnManagerUtils.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
             }
         }
@@ -309,13 +307,8 @@ class VPNManager: VPNManagerProtocol {
      */
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
-        Task {
-            guard let managers = try? await vpnManagerUtils.getAllManagers() else {
-                completion(nil)
-                return
-            }
             let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
-            managers.forEach {
+            vpnManagerUtils.managers.forEach {
                 if priorityStates.contains($0.connection.status) {
                     if vpnManagerUtils.isIKEV2(manager: $0) {
                         completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: $0))
@@ -327,18 +320,16 @@ class VPNManager: VPNManagerProtocol {
             }
 
             // No VPN Manager is configured
-            if (managers.filter { $0.connection.status != .invalid }).isEmpty {
+        if (vpnManagerUtils.managers.filter { $0.connection.status != .invalid }).isEmpty {
                 completion(nil)
                 return
             }
-
             // Get VPN connection info from last active manager.
             if activeVPNManager == .iKEV2 {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2(from: managers)))
+                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2()))
             } else {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.manager(from: managers, with: activeVPNManager)))
+                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.manager(with: activeVPNManager)))
             }
-        }
     }
 
     func makeUserSettings() -> VPNUserSettings {

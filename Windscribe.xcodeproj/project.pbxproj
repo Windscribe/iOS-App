@@ -2373,12 +2373,12 @@
 		1E593DA82CC9377D0051FF5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1E2CBFEE2CC7CABC00748D9F /* VPNManagerUtils.swift */,
 				1EDAA91F2CD143280014E678 /* VPNManagerUtil+Connecions.swift */,
 				1EDAA91C2CCBF0EF0014E678 /* VPNManagerUtils+WireguardCredentials.swift */,
-				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */,
 				1E593DA92CC9378F0051FF5E /* VPNManagerUtils+IKEV2Credentials.swift */,
-				1E2CBFEE2CC7CABC00748D9F /* VPNManagerUtils.swift */,
+				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";

@@ -19,7 +19,7 @@ extension VPNManagerUtils {
 
         var serverAddress = selectedNode.serverAddress
         logger.logD( OpenVPNManager.self, "Configuring VPN profile with saved credentials. \(String(describing: serverAddress))")
-        let manager = openVPNdManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
+        let manager = openVPNdManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
         var base64username = ""
         var base64password = ""
         var protocolType = ConnectionManager.shared.getNextProtocol().protocolName
@@ -95,7 +95,7 @@ extension VPNManagerUtils {
             throw Errors.hostnameNotFound
         }
 
-        let providerManager = openVPNdManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
+        let providerManager = openVPNdManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
         self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         guard providerManager.connection.status != .connecting,
               let customConfig = selectedNode.customConfig,

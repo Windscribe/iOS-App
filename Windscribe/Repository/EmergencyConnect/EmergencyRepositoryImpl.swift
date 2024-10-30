@@ -123,27 +123,26 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                                                groupId: 0)
 
         return Completable.create { completion in
-            Task {
-                if let managers = try? await self.vpnManager.vpnManagerUtils.getAllManagers(),
-                   let manager = self.vpnManager.vpnManagerUtils.openVPNdManager(from: managers) {
-                    do {
-                        _ = try await self.vpnManager.vpnManagerUtils.configureOpenVPN(manager: manager,
-                                                                                       selectedNode: self.vpnManager.selectedNode,
-                                                                                       userSettings: self.vpnManager.makeUserSettings(),
-                                                                                       username: customConfig.username ?? "",
-                                                                                       password: customConfig.password ?? "",
-                                                                                       protocolType: customConfig.protocolType ?? "",
-                                                                                       serverAddress: serverAddress,
-                                                                                       port: customConfig.port ?? "",
-                                                                                       x509Name: nil,
-                                                                                       proxyInfo: nil)
-                        completion(.completed)
+                if let manager = self.vpnManager.vpnManagerUtils.openVPNdManager() {
+                    Task {
+                        do {
+                            _ = try await self.vpnManager.vpnManagerUtils.configureOpenVPN(manager: manager,
+                                                                                           selectedNode: self.vpnManager.selectedNode,
+                                                                                           userSettings: self.vpnManager.makeUserSettings(),
+                                                                                           username: customConfig.username ?? "",
+                                                                                           password: customConfig.password ?? "",
+                                                                                           protocolType: customConfig.protocolType ?? "",
+                                                                                           serverAddress: serverAddress,
+                                                                                           port: customConfig.port ?? "",
+                                                                                           x509Name: nil,
+                                                                                           proxyInfo: nil)
+                            completion(.completed)
 
-                    } catch let error {
-                        completion(.error(RepositoryError.failedToLoadConfiguration))
+                        } catch let error {
+                            completion(.error(RepositoryError.failedToLoadConfiguration))
+                        }
                     }
                 }
-            }
             return Disposables.create()
         }
     }

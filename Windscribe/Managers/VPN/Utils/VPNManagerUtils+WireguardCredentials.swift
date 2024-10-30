@@ -36,7 +36,7 @@ extension VPNManagerUtils {
         else {
             return false
         }
-        let providerManager = wireguardManager(from: try? await getAllManagers()) as? NETunnelProviderManager ?? NETunnelProviderManager()
+        let providerManager = wireguardManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
         providerManager.setTunnelConfiguration(tunnelConfiguration, username: TextsAsset.wireGuard, description: Constants.appName)
 #if os(iOS)
         // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
@@ -86,9 +86,7 @@ extension VPNManagerUtils {
     private func configureWireguardWithConfig(selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
         logger.logD(VPNManagerUtils.self, logMessage)
-
-        let manager = wireguardManager(from: try? await getAllManagers())
-        if manager?.connection.status != .connecting {
+        if wireguardManager()?.connection.status != .connecting {
             return try await configureWireguard(with: selectedNode, userSettings: userSettings)
         }
         return false

@@ -206,8 +206,7 @@ extension VPNManager {
         if disableConnectIntent { VPNManager.shared.connectIntent = false }
 
         Task {
-            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
-            for manager in managers {
+            for manager in vpnManagerUtils.managers {
                 if manager.protocolConfiguration?.username != nil {
                     await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
                 }
@@ -225,8 +224,7 @@ extension VPNManager {
             self.delegate?.setConnecting()
 
             Task {
-                let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
-                for manager in managers {
+                for manager in vpnManagerUtils.managers {
                     if manager.protocolConfiguration?.username != nil {
                         await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
                     }
@@ -355,10 +353,9 @@ extension VPNManager {
 
     @objc func disconnectAndDisable() {
         self.disableOrFailOnDisconnect = true
-        Task {
-            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
-            for manager in managers {
-                if manager.connection.status == .connected || manager.connection.status == .connecting {
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .connected || manager.connection.status == .connecting {
+                Task {
                     await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
                 }
             }
@@ -366,12 +363,11 @@ extension VPNManager {
     }
 
     @objc func disconnectIfStillConnecting() {
-        Task {
-            let managers = (try? await vpnManagerUtils.getAllManagers()) ?? []
-            for manager in managers {
-                if manager.connection.status == .connecting && manager.connection.status != .disconnected {
-                    disableOrFailOnDisconnect = true
-                    isOnDemandRetry = false
+        for manager in vpnManagerUtils.managers {
+            if manager.connection.status == .connecting && manager.connection.status != .disconnected {
+                disableOrFailOnDisconnect = true
+                isOnDemandRetry = false
+                Task {
                     await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
                     logger.logE( VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(vpnManagerUtils.getManagerName(from: manager)) connection.")
                 }
@@ -380,7 +376,7 @@ extension VPNManager {
     }
 
     @objc func removeVPNProfileIfStillDisconnecting() {
-        getVPNConnectionInfo(completion: { info in
+        getVPNConnectionInfo { info in
             guard let info = info else {
                 return
             }
@@ -389,18 +385,17 @@ extension VPNManager {
                 return
             }
 
-            Task {
-                let managers = (try? await self.vpnManagerUtils.getAllManagers()) ?? []
-                for manager in managers {
-                    if manager.connection.status == .disconnecting {
-                        self.isOnDemandRetry = false
+            for manager in self.vpnManagerUtils.managers {
+                if manager.connection.status == .disconnecting {
+                    self.isOnDemandRetry = false
+                    Task {
                         await self.vpnManagerUtils.disconnect(killSwitch: self.killSwitch, manager: manager)
                         await self.vpnManagerUtils.removeProfile(killSwitch: self.killSwitch, manager: manager)
                         self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing \(self.vpnManagerUtils.getManagerName(from: manager)) VPN profile.")
                     }
                 }
             }
-        })
+        }
     }
 
     @objc func runConnectivityTestWithNoRetry() {

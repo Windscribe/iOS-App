@@ -16,19 +16,18 @@ extension VPNManagerUtils {
         // LocaionID
     }
 
-    func getManager(for type: VPNManagerType, from managers: [NEVPNManager]) -> NEVPNManager? {
+    func getManager(for type: VPNManagerType) -> NEVPNManager? {
         switch type {
-        case .iKEV2: iKEV2(from: managers)
-        case .wg: wireguardManager(from: managers)
-        case .openVPN: openVPNdManager(from: managers)
+        case .iKEV2: iKEV2()
+        case .wg: wireguardManager()
+        case .openVPN: openVPNdManager()
         }
     }
 
     func connect(with type: VPNManagerType, killSwitch: Bool) async {
         VPNManager.shared.activeVPNManager = type
 
-        guard let managers = try? await getAllManagers(),
-              let manager = getManager(for: type, from: managers) else { return }
+        guard let manager = getManager(for: type) else { return }
         let otherManagers = Array(Set(managers).subtracting([manager]))
 
         for otherManager in otherManagers {
@@ -66,14 +65,12 @@ extension VPNManagerUtils {
     }
 
     func disconnect(with type: VPNManagerType, restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool) async {
-        guard let managers = try? await getAllManagers(),
-              let manager = getManager(for: type, from: managers) else { return }
+        guard let manager = getManager(for: type) else { return }
         await disconnect(restartOnDisconnect: restartOnDisconnect, force: force, killSwitch: killSwitch, manager: manager)
     }
 
     func removeProfile(with type: VPNManagerType, killSwitch: Bool) async {
-        guard let managers = try? await getAllManagers(),
-              let manager = getManager(for: type, from: managers) else { return }
+        guard let manager = getManager(for: type) else { return }
         await removeProfile(killSwitch: killSwitch, manager: manager)
     }
 
