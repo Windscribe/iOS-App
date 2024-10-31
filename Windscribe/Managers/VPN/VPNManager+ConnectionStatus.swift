@@ -55,22 +55,24 @@ extension VPNManager {
     }
 
     func isDisconnecting() -> Bool {
-        for manager in vpnManagerUtils.managers {
-            if manager.connection.status == .disconnecting {
-                return true
-            }
+        for manager in vpnManagerUtils.managers where manager.connection.status == .disconnecting {
+            return true
         }
         return false
     }
 
     func isInvalid() -> Bool {
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && IKEv2VPNManager.shared.neVPNManager.connection.status != .invalid {
+        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && vpnManagerUtils.iKEV2Manager()?.connection.status != .invalid {
             return false
         }
-        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNManager.self &&  OpenVPNManager.shared.providerManager?.connection.status != .invalid {
+        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNServerCredentials.self &&  vpnManagerUtils.openVPNdManager()?.connection.status != .invalid {
             return false
         }
         return true
+    }
+
+    func isDisconnectedAndNotConfigured() -> Bool {
+        return isDisconnected() || (!vpnManagerUtils.isConfigured(manager: vpnManagerUtils.iKEV2Manager()) && !vpnManagerUtils.isConfigured(manager: vpnManagerUtils.openVPNdManager()))
     }
 
     func checkIfUserIsOutOfData() {
@@ -357,8 +359,8 @@ extension VPNManager {
             completion(nil)
             return
         }
-        
-        var manager: NEVPNManager? = nil
+
+        var manager: NEVPNManager?
         if let provider = vpnManagerUtils.wireguardManager(), provider.protocolConfiguration?.username != nil {
             manager = provider
         } else if let provider = vpnManagerUtils.openVPNdManager(), provider.protocolConfiguration?.username != nil {
@@ -366,7 +368,7 @@ extension VPNManager {
         } else if let provider = vpnManagerUtils.iKEV2Manager(), provider.protocolConfiguration?.username != nil {
             manager = provider
         }
-        
+
         if let manager = manager {
             manager.connection.fetchLastDisconnectError { error in
                 self.handleNEVPNProviderError(error, completion: completion)

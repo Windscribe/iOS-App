@@ -62,7 +62,7 @@ extension VPNManagerUtils {
             throw error
         }
 
-        logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(TextsAsset.wireGuard)")
+        logger.logD(VPNManagerUtils.self, "VPN configuration successful. Username: \(TextsAsset.wireGuard)")
         return true
     }
 

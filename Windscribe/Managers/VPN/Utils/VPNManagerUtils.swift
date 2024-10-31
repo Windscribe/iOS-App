@@ -113,6 +113,11 @@ class VPNManagerUtils {
         try? await getAllManagers().first { isManagerConfigured(for: $0) }
     }
 
+    func isConfigured(manager: NEVPNManager?) -> Bool {
+        guard let manager = manager else { return false }
+        return manager.protocolConfiguration?.username != nil
+    }
+
     func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = onDemandRules

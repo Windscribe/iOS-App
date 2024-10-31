@@ -59,7 +59,7 @@ extension VPNManagerUtils {
     }
 
     func restartConnection(killSwitch: Bool, manager: NEVPNManager) async {
-        logger.logD( OpenVPNManager.self, "Restarting OpenVPN connection.")
+        logger.logD(VPNManagerUtils.self, "Restarting OpenVPN connection.")
         await disconnect(restartOnDisconnect: true, killSwitch: killSwitch, manager: manager)
     }
 
