@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtils.swift
+//  ConfigurationsManager.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 22/10/2024.
@@ -11,11 +11,11 @@ import NetworkExtension
 import Swinject
 import RxSwift
 
-protocol VPNManagerUtilsDelegate: AnyObject {
+protocol ConfigurationsManagerDelegate: AnyObject {
     func setRestartOnDisconnect(with value: Bool)
 }
 
-class VPNManagerUtils {
+class ConfigurationsManager {
     let logger: FileLogger// = Assembler.resolve(FileLogger.self)
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
@@ -23,7 +23,7 @@ class VPNManagerUtils {
 
     let wgCredentials = Assembler.resolve(WgCredentials.self)
 
-    weak var delegate: VPNManagerUtilsDelegate?
+    weak var delegate: ConfigurationsManagerDelegate?
 
     var managers: [NEVPNManager] = []
     var reloadManagersTrigger = BehaviorSubject<Void>(value: ())

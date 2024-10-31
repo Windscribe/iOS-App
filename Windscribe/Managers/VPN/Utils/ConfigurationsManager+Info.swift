@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtils+Info.swift
+//  ConfigurationsManager+Info.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 31/10/2024.
@@ -9,7 +9,7 @@
 import Foundation
 import NetworkExtension
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func getIKEV2ConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
         guard let manager = manager else { return nil }
 #if os(iOS)

@@ -81,9 +81,9 @@ extension VPNManager {
         self.setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async { [self] in
             Task {
-                if (try? await self.vpnManagerUtils.configureIKEV2WithSavedCredentials(with: self.selectedNode,
+                if (try? await self.configManager.configureIKEV2WithSavedCredentials(with: self.selectedNode,
                                                                                        userSettings: self.makeUserSettings())) ?? false {
-                    await self.vpnManagerUtils.connect(with: .iKEV2, killSwitch: self.killSwitch)
+                    await self.configManager.connect(with: .iKEV2, killSwitch: self.killSwitch)
                 }
             }
         }
@@ -94,9 +94,9 @@ extension VPNManager {
         self.setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async {
             Task {
-                if (try? await self.vpnManagerUtils.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
+                if (try? await self.configManager.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
                                                                                          userSettings: self.makeUserSettings())) ?? false {
-                    await self.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.killSwitch)
+                    await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
                     return
@@ -109,9 +109,9 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover { return }
         DispatchQueue.global(qos: .background).async {
             Task {
-                if (try? await self.vpnManagerUtils.configureOpenVPNWithCustomConfig(with: self.selectedNode,
+                if (try? await self.configManager.configureOpenVPNWithCustomConfig(with: self.selectedNode,
                                                                                      userSettings: self.makeUserSettings())) ?? false {
-                    await self.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.killSwitch)
+                    await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
                     return
@@ -131,7 +131,7 @@ extension VPNManager {
                 self.connectUsingDynamicWireGuard()
             } else {
                 self.wgCrendentials.delete()
-                Task { await self.vpnManagerUtils.disconnect(with: .wg, killSwitch: self.killSwitch) }
+                Task { await self.configManager.disconnect(with: .wg, killSwitch: self.killSwitch) }
             }
             completion(nil)
         }, onFailure: { error in
@@ -161,10 +161,10 @@ extension VPNManager {
             DispatchQueue.global(qos: .background).async {
                 Task {
                     do {
-                        if try await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
+                        if try await self.configManager.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
                                                                                             userSettings: self.makeUserSettings()) {
                             self.preferences.saveConnectingToCustomConfig(value: false)
-                            Task { await self.vpnManagerUtils.connect(with: .wg, killSwitch: self.killSwitch) }
+                            Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
                         }
                     } catch let error {
                         let description = (error as? Errors)?.description ?? ""
@@ -195,10 +195,10 @@ extension VPNManager {
     func connectUsingCustomConfigWireGuard() {
         if VPNManager.shared.userTappedToDisconnect { return }
         Task {
-            if (try? await vpnManagerUtils.configureWireguard(with: selectedNode,
+            if (try? await configManager.configureWireguard(with: selectedNode,
                                                               userSettings: makeUserSettings())) ?? false {
                 self.preferences.saveConnectingToCustomConfig(value: true)
-                Task { await self.vpnManagerUtils.connect(with: .wg, killSwitch: self.killSwitch) }
+                Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
             }
         }
     }

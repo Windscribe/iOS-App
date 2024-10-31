@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtils+WireguardCredentials.swift
+//  ConfigurationsManager+WireguardCredentials.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 25/10/2024.
@@ -10,7 +10,7 @@ import NetworkExtension
 import UIKit
 import WireGuardKit
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func getWireguardConfiguration(selectedNode: SelectedNode?) async throws -> TunnelConfiguration? {
         var configFilePath = "config.conf"
         if let customConfig = selectedNode?.customConfig,
@@ -24,7 +24,7 @@ extension VPNManagerUtils {
             tunnelConfiguration =  try TunnelConfiguration(fromWgQuickConfig: stringData, called: configFilePath)
             return tunnelConfiguration
         } catch let error {
-            logger.logE(VPNManagerUtils.self, "WireGuard tunnel Error: \(error)")
+            logger.logE(ConfigurationsManager.self, "WireGuard tunnel Error: \(error)")
             throw error
         }
     }
@@ -62,7 +62,7 @@ extension VPNManagerUtils {
             throw error
         }
 
-        logger.logD(VPNManagerUtils.self, "VPN configuration successful. Username: \(TextsAsset.wireGuard)")
+        logger.logD(ConfigurationsManager.self, "VPN configuration successful. Username: \(TextsAsset.wireGuard)")
         return true
     }
 
@@ -85,7 +85,7 @@ extension VPNManagerUtils {
 
     private func configureWireguardWithConfig(selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
-        logger.logD(VPNManagerUtils.self, logMessage)
+        logger.logD(ConfigurationsManager.self, logMessage)
         if wireguardManager()?.connection.status != .connecting {
             return try await configureWireguard(with: selectedNode, userSettings: userSettings)
         }

@@ -93,8 +93,8 @@ class Repository: Assembly {
             return ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
                                            sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.userScope)
-        container.register(VPNManagerUtils.self) { r in
-            return VPNManagerUtils(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!)
+        container.register(ConfigurationsManager.self) { r in
+            return ConfigurationsManager(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!)
         }.inObjectScope(.userScope)
     }
 }

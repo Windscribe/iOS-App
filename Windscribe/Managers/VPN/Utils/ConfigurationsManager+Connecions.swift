@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtil+Connecions.swift
+//  ConfigurationsManager+Connecions.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 29/10/2024.
@@ -8,7 +8,7 @@
 
 import NetworkExtension
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func connect() {
         // UserSettings - allowLane, killSwitch, etc
         // Credentials
@@ -50,16 +50,16 @@ extension VPNManagerUtils {
             do {
                 try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
                 handleVPNManagerNoResponse(for: type, killSwitch: killSwitch)
-                self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
+                self.logger.logD(ConfigurationsManager.self, "WireGuard tunnel started.")
 
             } catch {
-                self.logger.logE(VPNManagerUtils.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
+                self.logger.logE(ConfigurationsManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
             }
         }
     }
 
     func restartConnection(killSwitch: Bool, manager: NEVPNManager) async {
-        logger.logD(VPNManagerUtils.self, "Restarting OpenVPN connection.")
+        logger.logD(ConfigurationsManager.self, "Restarting OpenVPN connection.")
         await disconnect(restartOnDisconnect: true, killSwitch: killSwitch, manager: manager)
     }
 
@@ -99,7 +99,7 @@ extension VPNManagerUtils {
             manager.connection.stopVPNTunnel()
         }
     }
-    
+
     func invalidateTimer() {
         noResponseTimer?.invalidate()
     }

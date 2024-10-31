@@ -75,9 +75,9 @@ extension VPNManager {
             return
         }
         Task {
-            if (try? await self.vpnManagerUtils.configureWireguardWithSavedConfig(selectedNode: selectedNode,
+            if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
                                                                                   userSettings: makeUserSettings())) ?? false {
-                await vpnManagerUtils.connect(with: .wg, killSwitch: killSwitch)
+                await configManager.connect(with: .wg, killSwitch: killSwitch)
             }
         }
     }
@@ -99,15 +99,15 @@ extension VPNManager {
     }
 
     @objc func retryIKEv2Connection() {
-        Task { await vpnManagerUtils.connect(with: .iKEV2, killSwitch: killSwitch) }
+        Task { await configManager.connect(with: .iKEV2, killSwitch: killSwitch) }
     }
 
     @objc func retryOpenVPNConnection() {
-        Task { await vpnManagerUtils.connect(with: .openVPN, killSwitch: killSwitch) }
+        Task { await configManager.connect(with: .openVPN, killSwitch: killSwitch) }
     }
 
     @objc func retryWireGuardVPNConnection() {
-        Task { await vpnManagerUtils.connect(with: .wg, killSwitch: killSwitch) }
+        Task { await configManager.connect(with: .wg, killSwitch: killSwitch) }
     }
 
     @objc func retryConnectionWithNewServerCredentials() {
@@ -197,8 +197,8 @@ extension VPNManager {
 
     @objc func disconnectActiveVPNConnection(setDisconnect: Bool = false, disableConnectIntent: Bool = false) {
         logger.logD( VPNManager.self, "[\(uniqueConnectionId)] [\(self.selectedConnectionMode ?? "")] Disconnecting Active VPN connection")
-        
-        vpnManagerUtils.invalidateTimer()
+
+        configManager.invalidateTimer()
         if self.selectedConnectionMode == Fields.Values.auto {
             self.resetProperties()
         }
@@ -206,9 +206,9 @@ extension VPNManager {
         if disableConnectIntent { VPNManager.shared.connectIntent = false }
 
         Task {
-            for manager in vpnManagerUtils.managers {
+            for manager in configManager.managers {
                 if manager.protocolConfiguration?.username != nil {
-                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                    await configManager.disconnect(killSwitch: killSwitch, manager: manager)
                 }
             }
         }
@@ -224,9 +224,9 @@ extension VPNManager {
             self.delegate?.setConnecting()
 
             Task {
-                for manager in vpnManagerUtils.managers {
+                for manager in configManager.managers {
                     if manager.protocolConfiguration?.username != nil {
-                        await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                        await configManager.disconnect(killSwitch: killSwitch, manager: manager)
                     }
                 }
                 completion()
@@ -247,21 +247,21 @@ extension VPNManager {
 
     func resetWireguard(comletion: @escaping () -> Void) {
         Task {
-            await vpnManagerUtils.reset(manager: vpnManagerUtils.wireguardManager())
+            await configManager.reset(manager: configManager.wireguardManager())
             comletion()
         }
     }
 
     func resetOpenVPN(comletion: @escaping () -> Void) {
         Task {
-            await vpnManagerUtils.reset(manager: vpnManagerUtils.openVPNdManager())
+            await configManager.reset(manager: configManager.openVPNdManager())
             comletion()
         }
     }
 
     func resetIkev2(comletion: @escaping () -> Void) {
         Task {
-            await vpnManagerUtils.reset(manager: vpnManagerUtils.iKEV2Manager())
+            await configManager.reset(manager: configManager.iKEV2Manager())
             comletion()
         }
     }
@@ -278,23 +278,23 @@ extension VPNManager {
 
     @objc func disconnectAndDisable() {
         self.disableOrFailOnDisconnect = true
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             if manager.connection.status == .connected || manager.connection.status == .connecting {
                 Task {
-                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
+                    await configManager.disconnect(killSwitch: killSwitch, manager: manager)
                 }
             }
         }
     }
 
     @objc func disconnectIfStillConnecting() {
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             if manager.connection.status == .connecting && manager.connection.status != .disconnected {
                 disableOrFailOnDisconnect = true
                 isOnDemandRetry = false
                 Task {
-                    await vpnManagerUtils.disconnect(killSwitch: killSwitch, manager: manager)
-                    logger.logE( VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(vpnManagerUtils.getManagerName(from: manager)) connection.")
+                    await configManager.disconnect(killSwitch: killSwitch, manager: manager)
+                    logger.logE( VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(configManager.getManagerName(from: manager)) connection.")
                 }
             }
         }
@@ -310,13 +310,13 @@ extension VPNManager {
                 return
             }
 
-            for manager in self.vpnManagerUtils.managers {
+            for manager in self.configManager.managers {
                 if manager.connection.status == .disconnecting {
                     self.isOnDemandRetry = false
                     Task {
-                        await self.vpnManagerUtils.disconnect(killSwitch: self.killSwitch, manager: manager)
-                        await self.vpnManagerUtils.removeProfile(killSwitch: self.killSwitch, manager: manager)
-                        self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing \(self.vpnManagerUtils.getManagerName(from: manager)) VPN profile.")
+                        await self.configManager.disconnect(killSwitch: self.killSwitch, manager: manager)
+                        await self.configManager.removeProfile(killSwitch: self.killSwitch, manager: manager)
+                        self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing \(self.configManager.getManagerName(from: manager)) VPN profile.")
                     }
                 }
             }

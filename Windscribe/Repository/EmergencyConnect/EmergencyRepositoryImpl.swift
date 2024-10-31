@@ -59,7 +59,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 vpnManager.selectedNode = nil
                 vpnManager.resetProperties()
                 Task {
-                    await self.vpnManager.vpnManagerUtils.removeProfile(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
+                    await self.vpnManager.configManager.removeProfile(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
                     completion(.completed)
                 }
             }
@@ -84,7 +84,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     func disconnect() {
         vpnManager.connectIntent = false
         Task {
-            await self.vpnManager.vpnManagerUtils.disconnect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
+            await self.vpnManager.configManager.disconnect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
             vpnManager.selectedNode = nil
         }
     }
@@ -96,7 +96,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             return loadConfiguration(name: configuationName, serverAddress: configInfo.ip, customConfig: customConfig.getModel())
         }.do(onCompleted: {
             Task {
-                await self.vpnManager.vpnManagerUtils.connect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
+                await self.vpnManager.configManager.connect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
             }
         })
     }
@@ -123,10 +123,10 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                                                groupId: 0)
 
         return Completable.create { completion in
-                if let manager = self.vpnManager.vpnManagerUtils.openVPNdManager() {
+                if let manager = self.vpnManager.configManager.openVPNdManager() {
                     Task {
                         do {
-                            _ = try await self.vpnManager.vpnManagerUtils.configureOpenVPN(manager: manager,
+                            _ = try await self.vpnManager.configManager.configureOpenVPN(manager: manager,
                                                                                            selectedNode: self.vpnManager.selectedNode,
                                                                                            userSettings: self.vpnManager.makeUserSettings(),
                                                                                            username: customConfig.username ?? "",
