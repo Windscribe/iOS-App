@@ -176,6 +176,15 @@ class VPNManagerUtils {
         return ""
     }
 
+    func setOnDemandMode(_ status: Bool, for manager: NEVPNManager?) {
+        guard let manager = manager else { return }
+        Task {
+            guard (try? await manager.loadFromPreferences()) != nil else { return }
+            manager.isOnDemandEnabled = status
+            await save(manager: manager)
+        }
+    }
+    
     func getIKEV2ConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
         guard let manager = manager else { return nil }
 #if os(iOS)
