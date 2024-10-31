@@ -28,6 +28,7 @@ class VPNManagerUtils {
     var managers: [NEVPNManager] = []
     var reloadManagersTrigger = BehaviorSubject<Void>(value: ())
     var disposeBag = DisposeBag()
+    var noResponseTimer: Timer?
 
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
         self.logger = logger

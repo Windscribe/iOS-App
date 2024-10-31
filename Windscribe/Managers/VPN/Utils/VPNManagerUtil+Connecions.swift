@@ -49,7 +49,7 @@ extension VPNManagerUtils {
             await save(manager: manager)
             do {
                 try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
-                handleVPNManagerNoResponse(for: type)
+                handleVPNManagerNoResponse(for: type, killSwitch: killSwitch)
                 self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
 
             } catch {
@@ -99,6 +99,10 @@ extension VPNManagerUtils {
             manager.connection.stopVPNTunnel()
         }
     }
+    
+    func invalidateTimer() {
+        noResponseTimer?.invalidate()
+    }
 
     private func getTunnelParams(for type: VPNManagerType) -> [String: NSObject]? {
         if type == .wg,
@@ -110,11 +114,11 @@ extension VPNManagerUtils {
     }
 
     /// Sometimes If another ikev2 profile is configured and kill switch is on VPNManager may not respond.
-    private func handleVPNManagerNoResponse(for type: VPNManagerType) {
-        //        if type == .iKEV2, self.killSwitch {
-        //            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-        //                VPNManager.shared.disconnectOrFail()
-        //            }
-        //        }
+    private func handleVPNManagerNoResponse(for type: VPNManagerType, killSwitch: Bool) {
+        if type == .iKEV2, killSwitch {
+            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
+                VPNManager.shared.disconnectOrFail()
+            }
+        }
     }
 }

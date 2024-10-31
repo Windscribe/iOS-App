@@ -102,7 +102,6 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 networkRepository: r.resolve(SecuredNetworkRepository.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                sharedVPNManager: r.resolve(IKEv2VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(TrustedNetworkPopupType.self) { r in

@@ -197,8 +197,8 @@ extension VPNManager {
 
     @objc func disconnectActiveVPNConnection(setDisconnect: Bool = false, disableConnectIntent: Bool = false) {
         logger.logD( VPNManager.self, "[\(uniqueConnectionId)] [\(self.selectedConnectionMode ?? "")] Disconnecting Active VPN connection")
-
-        IKEv2VPNManager.shared.noResponseTimer?.invalidate()
+        
+        vpnManagerUtils.invalidateTimer()
         if self.selectedConnectionMode == Fields.Values.auto {
             self.resetProperties()
         }

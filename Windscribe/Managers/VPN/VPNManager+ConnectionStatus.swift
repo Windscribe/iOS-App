@@ -156,7 +156,7 @@ extension VPNManager {
             let active = state == .background || state == .inactive
             self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
             self.lastConnectionStatus = connectionStatus
-            IKEv2VPNManager.shared.noResponseTimer?.invalidate()
+            vpnManagerUtils.invalidateTimer()
             switch connectionStatus {
             case .connecting:
                 self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")

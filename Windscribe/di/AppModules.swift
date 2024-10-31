@@ -119,9 +119,6 @@ class Managers: Assembly {
         container.register(VPNManager.self) { _ in
             VPNManager.shared
         }.inObjectScope(.userScope)
-        container.register(IKEv2VPNManager.self) { _ in
-            IKEv2VPNManager.shared
-        }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.userScope)
