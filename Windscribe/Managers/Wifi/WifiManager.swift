@@ -64,7 +64,7 @@ class WifiManager {
     }
 
     func saveCurrentWifiNetworks() {
-        _ = connectivity.network.take(1).map {$0.name}.subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { wifiSSID in
+        _ = connectivity.network.take(1).map {$0.name}.timeout(RxTimeInterval.milliseconds(100), scheduler: MainScheduler.instance).subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { wifiSSID in
             guard let wifiSSID = wifiSSID else {
                 return
             }
@@ -96,6 +96,8 @@ class WifiManager {
                     self.setSelectedNetworkSettings(network, existingNetwork: true, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
                 }
             }
+        }, onError: { _ in
+            self.logger.logD(self, "Unable to get network name")
         })
     }
 
