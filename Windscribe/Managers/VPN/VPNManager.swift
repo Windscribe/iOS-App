@@ -53,8 +53,8 @@ class VPNManager: VPNManagerProtocol {
     lazy var sessionManager: SessionManagerV2 = {
         return Assembler.resolve(SessionManagerV2.self)
     }()
-    lazy var vpnManagerUtils: VPNManagerUtils = {
-        return Assembler.resolve(VPNManagerUtils.self)
+    lazy var configManager: ConfigurationsManager = {
+        return Assembler.resolve(ConfigurationsManager.self)
     }()
     var selectedNode: SelectedNode? {
         didSet {
@@ -139,7 +139,7 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func isActive() async -> Bool {
-        guard (try? await vpnManagerUtils.getConfiguredManager()) != nil else { return false }
+        guard (try? await configManager.getConfiguredManager()) != nil else { return false }
         return true
     }
 
@@ -151,7 +151,7 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func setup() async {
-        vpnManagerUtils.delegate = self
+        configManager.delegate = self
         preferences.getKillSwitch().subscribe { data in
             self.killSwitch = data ?? DefaultValues.killSwitch
         }.disposed(by: disposeBag)
@@ -198,9 +198,9 @@ class VPNManager: VPNManagerProtocol {
     func updateOnDemandRules() {
         isOnDemandRetry = false
         let onDemandRules = getOnDemandRules()
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             Task {
-                await vpnManagerUtils.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
+                await configManager.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
             }
         }
     }
@@ -308,27 +308,27 @@ class VPNManager: VPNManagerProtocol {
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
             let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
-            vpnManagerUtils.managers.forEach {
+            configManager.managers.forEach {
                 if priorityStates.contains($0.connection.status) {
-                    if vpnManagerUtils.isIKEV2(manager: $0) {
-                        completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: $0))
+                    if configManager.isIKEV2(manager: $0) {
+                        completion(configManager.getIKEV2ConnectionInfo(manager: $0))
                     } else {
-                        completion(vpnManagerUtils.getVPNConnectionInfo(manager: $0))
+                        completion(configManager.getVPNConnectionInfo(manager: $0))
                     }
                     return
                 }
             }
 
             // No VPN Manager is configured
-        if (vpnManagerUtils.managers.filter { $0.connection.status != .invalid }).isEmpty {
+        if (configManager.managers.filter { $0.connection.status != .invalid }).isEmpty {
                 completion(nil)
                 return
             }
             // Get VPN connection info from last active manager.
             if activeVPNManager == .iKEV2 {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2()))
+                completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
             } else {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.manager(with: activeVPNManager)))
+                completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
             }
     }
 
@@ -368,7 +368,7 @@ struct VPNConnectionInfo: CustomStringConvertible {
     }
 }
 
-extension VPNManager: VPNManagerUtilsDelegate {
+extension VPNManager: ConfigurationsManagerDelegate {
     func setRestartOnDisconnect(with value: Bool) {
         restartOnDisconnect = value
     }

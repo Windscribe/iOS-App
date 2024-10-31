@@ -28,7 +28,7 @@ extension VPNManager {
     }
 
     func isConnected() -> Bool {
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             if manager.connection.status == .connected && manager.protocolConfiguration?.username != nil {
                 return true
             }
@@ -37,7 +37,7 @@ extension VPNManager {
     }
 
     func isConnecting() -> Bool {
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             if manager.connection.status == .connecting && manager.protocolConfiguration?.username != nil {
                 return true
             }
@@ -46,7 +46,7 @@ extension VPNManager {
     }
 
     func isDisconnected() -> Bool {
-        for manager in vpnManagerUtils.managers {
+        for manager in configManager.managers {
             if manager.connection.status == .disconnected && manager.protocolConfiguration?.username != nil {
                 return true
             }
@@ -55,22 +55,24 @@ extension VPNManager {
     }
 
     func isDisconnecting() -> Bool {
-        for manager in vpnManagerUtils.managers {
-            if manager.connection.status == .disconnecting {
-                return true
-            }
+        for manager in configManager.managers where manager.connection.status == .disconnecting {
+            return true
         }
         return false
     }
 
     func isInvalid() -> Bool {
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && IKEv2VPNManager.shared.neVPNManager.connection.status != .invalid {
+        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && configManager.iKEV2Manager()?.connection.status != .invalid {
             return false
         }
-        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNManager.self &&  OpenVPNManager.shared.providerManager?.connection.status != .invalid {
+        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNServerCredentials.self &&  configManager.openVPNdManager()?.connection.status != .invalid {
             return false
         }
         return true
+    }
+
+    func isDisconnectedAndNotConfigured() -> Bool {
+        return isDisconnected() || (!configManager.isConfigured(manager: configManager.iKEV2Manager()) && !configManager.isConfigured(manager: configManager.openVPNdManager()))
     }
 
     func checkIfUserIsOutOfData() {
@@ -97,12 +99,11 @@ extension VPNManager {
     }
 
     func connectionStatus() -> NEVPNStatus {
-        var status = IKEv2VPNManager.shared.neVPNManager.connection.status
-        if OpenVPNManager.shared.isConfigured() {
-            status = OpenVPNManager.shared.providerManager?.connection.status ?? .disconnected
-        }
-        if WireGuardVPNManager.shared.isConfigured() {
-            status = WireGuardVPNManager.shared.providerManager?.connection.status ?? .disconnected
+        var status = NEVPNStatus.disconnected
+        configManager.managers.forEach {
+            if $0.protocolConfiguration?.username != nil {
+                status = $0.connection.status
+            }
         }
         return status
     }
@@ -155,7 +156,7 @@ extension VPNManager {
             let active = state == .background || state == .inactive
             self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
             self.lastConnectionStatus = connectionStatus
-            IKEv2VPNManager.shared.noResponseTimer?.invalidate()
+            configManager.invalidateTimer()
             switch connectionStatus {
             case .connecting:
                 self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
@@ -358,17 +359,19 @@ extension VPNManager {
             completion(nil)
             return
         }
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
+
+        var manager: NEVPNManager?
+        if let provider = configManager.wireguardManager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        } else if let provider = configManager.openVPNdManager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        } else if let provider = configManager.iKEV2Manager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        }
+
+        if let manager = manager {
+            manager.connection.fetchLastDisconnectError { error in
                 self.handleNEVPNProviderError(error, completion: completion)
-            }
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
-                self.handleNEVPNProviderError(error, completion: completion)
-            }
-        } else if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.neVPNManager.connection.fetchLastDisconnectError { error in
-                self.handleIKEv2Error(error, completion: completion)
             }
         } else {
             completion(nil)
@@ -376,12 +379,10 @@ extension VPNManager {
     }
 
     private func disableOnDemandMode() {
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.setOnDemandMode(false)
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.setOnDemandMode(false)
-        } else if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.setOnDemandMode(false)
+        configManager.managers.forEach {
+            if $0.protocolConfiguration?.username != nil {
+                configManager.setOnDemandMode(false, for: $0)
+            }
         }
     }
 }

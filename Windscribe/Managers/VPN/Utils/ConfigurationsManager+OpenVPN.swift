@@ -9,7 +9,7 @@
 import NetworkExtension
 import UIKit
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode,
@@ -18,7 +18,7 @@ extension VPNManagerUtils {
         }
 
         var serverAddress = selectedNode.serverAddress
-        logger.logD( OpenVPNManager.self, "Configuring VPN profile with saved credentials. \(String(describing: serverAddress))")
+        logger.logD(ConfigurationsManager.self, "Configuring VPN profile with saved credentials. \(String(describing: serverAddress))")
         let manager = openVPNdManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
         var base64username = ""
         var base64password = ""
@@ -50,7 +50,7 @@ extension VPNManagerUtils {
         }
 
         guard base64username != "" && base64password != "" else {
-            logger.logE( OpenVPNManager.self, "Can't establish a VPN connection, missing authentication values.")
+            logger.logE(ConfigurationsManager.self, "Can't establish a VPN connection, missing authentication values.")
             throw Errors.missingAuthenticationValues
         }
 
@@ -96,7 +96,7 @@ extension VPNManagerUtils {
         }
 
         let providerManager = openVPNdManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
-        self.logger.logD( OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
+        self.logger.logD(ConfigurationsManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         guard providerManager.connection.status != .connecting,
               let customConfig = selectedNode.customConfig,
               let protocolType = customConfig.protocolType,
@@ -183,7 +183,7 @@ extension VPNManagerUtils {
             logger.logE(self, "Error when saving vpn preferences \(error.description).")
             throw error
         }
-        logger.logD( OpenVPNManager.self, "VPN configuration successful. Username: \(username)")
+        logger.logD(ConfigurationsManager.self, "VPN configuration successful. Username: \(username)")
 
         return true
     }
@@ -218,7 +218,7 @@ extension VPNManagerUtils {
             let remoteLine = "remote \(serverAddress) \(port)"
             let x509NameLine = "verify-x509-name \(x509Name!) name"
             let proxyLine = proxyInfo?.text
-            self.logger.logD( OpenVPNManager.self, proxyLine?.debugDescription ?? "")
+            self.logger.logD(ConfigurationsManager.self, proxyLine?.debugDescription ?? "")
             guard let configData = fileDatabase.readFile(path: openVPNConfigFilePath),
                   let stringData = String(data: configData, encoding: String.Encoding.utf8)
             else { return nil }

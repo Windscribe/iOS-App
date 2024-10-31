@@ -19,18 +19,15 @@ class PrivacyViewModel: PrivacyViewModelType {
     let preferences: Preferences
     let networkRepository: SecuredNetworkRepository
     let localDatabase: LocalDatabase
-    let sharedVPNManager: IKEv2VPNManager
     let logger: FileLogger
 
     init(preferences: Preferences,
          networkRepository: SecuredNetworkRepository,
          localDatabase: LocalDatabase,
-         sharedVPNManager: IKEv2VPNManager,
          logger: FileLogger) {
         self.preferences = preferences
         self.networkRepository = networkRepository
         self.localDatabase = localDatabase
-        self.sharedVPNManager = sharedVPNManager
         self.logger = logger
     }
 

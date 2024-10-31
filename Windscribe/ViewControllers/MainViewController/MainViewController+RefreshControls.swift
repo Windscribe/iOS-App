@@ -17,10 +17,7 @@ extension MainViewController {
         }
         if isRefreshing == false && isLoadingLatencyValues == false {
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
-            if VPNManager.shared.isDisconnected() ||
-                (!IKEv2VPNManager.shared.isConfigured() &&
-                !OpenVPNManager.shared.isConfigured()) ||
-                isOnline {
+            if vpnManager.isDisconnectedAndNotConfigured() || isOnline {
                 self.beginRefreshControls()
                 self.isRefreshing = true
                 self.isLoadingLatencyValues = true
@@ -77,7 +74,7 @@ extension MainViewController {
     }
 
     @objc func updateRefreshControls() {
-        if VPNManager.shared.isDisconnected() || (!IKEv2VPNManager.shared.isConfigured() && !OpenVPNManager.shared.isConfigured()) {
+        if vpnManager.isDisconnectedAndNotConfigured() {
             if let serverRefreshControl = self.serverListTableView.refreshControl as? WSRefreshControl {
                 self.showRefreshControlDisconnectedState(serverRefreshControl)
             }

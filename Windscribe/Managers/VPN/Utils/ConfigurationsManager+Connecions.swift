@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtil+Connecions.swift
+//  ConfigurationsManager+Connecions.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 29/10/2024.
@@ -8,7 +8,7 @@
 
 import NetworkExtension
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func connect() {
         // UserSettings - allowLane, killSwitch, etc
         // Credentials
@@ -18,7 +18,7 @@ extension VPNManagerUtils {
 
     func getManager(for type: VPNManagerType) -> NEVPNManager? {
         switch type {
-        case .iKEV2: iKEV2()
+        case .iKEV2: iKEV2Manager()
         case .wg: wireguardManager()
         case .openVPN: openVPNdManager()
         }
@@ -49,17 +49,17 @@ extension VPNManagerUtils {
             await save(manager: manager)
             do {
                 try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
-                handleVPNManagerNoResponse(for: type)
-                self.logger.logD(VPNManagerUtils.self, "WireGuard tunnel started.")
+                handleVPNManagerNoResponse(for: type, killSwitch: killSwitch)
+                self.logger.logD(ConfigurationsManager.self, "WireGuard tunnel started.")
 
             } catch {
-                self.logger.logE(VPNManagerUtils.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
+                self.logger.logE(ConfigurationsManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
             }
         }
     }
 
     func restartConnection(killSwitch: Bool, manager: NEVPNManager) async {
-        logger.logD( OpenVPNManager.self, "Restarting OpenVPN connection.")
+        logger.logD(ConfigurationsManager.self, "Restarting OpenVPN connection.")
         await disconnect(restartOnDisconnect: true, killSwitch: killSwitch, manager: manager)
     }
 
@@ -100,6 +100,10 @@ extension VPNManagerUtils {
         }
     }
 
+    func invalidateTimer() {
+        noResponseTimer?.invalidate()
+    }
+
     private func getTunnelParams(for type: VPNManagerType) -> [String: NSObject]? {
         if type == .wg,
            let activationId = wgCredentials.address?.SHA1() as? NSObject {
@@ -110,11 +114,11 @@ extension VPNManagerUtils {
     }
 
     /// Sometimes If another ikev2 profile is configured and kill switch is on VPNManager may not respond.
-    private func handleVPNManagerNoResponse(for type: VPNManagerType) {
-        //        if type == .iKEV2, self.killSwitch {
-        //            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-        //                VPNManager.shared.disconnectOrFail()
-        //            }
-        //        }
+    private func handleVPNManagerNoResponse(for type: VPNManagerType, killSwitch: Bool) {
+        if type == .iKEV2, killSwitch {
+            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
+                VPNManager.shared.disconnectOrFail()
+            }
+        }
     }
 }

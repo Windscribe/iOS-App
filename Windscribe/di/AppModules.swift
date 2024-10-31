@@ -93,8 +93,8 @@ class Repository: Assembly {
             return ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
                                            sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.userScope)
-        container.register(VPNManagerUtils.self) { r in
-            return VPNManagerUtils(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, wgCredentials: r.resolve(WgCredentials.self)!)
+        container.register(ConfigurationsManager.self) { r in
+            return ConfigurationsManager(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, wgCredentials: r.resolve(WgCredentials.self)!)
         }.inObjectScope(.userScope)
     }
 }
@@ -118,9 +118,6 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { _ in
             VPNManager.shared
-        }.inObjectScope(.userScope)
-        container.register(IKEv2VPNManager.self) { _ in
-            IKEv2VPNManager.shared
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
