@@ -1,5 +1,5 @@
 //
-//  VPNManagerUtils+config.swift
+//  ConfigurationsManager+config.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-10-30.
@@ -9,7 +9,7 @@
 import Foundation
 import WireGuardKit
 
-extension VPNManagerUtils {
+extension ConfigurationsManager {
     func connectAsync () async {
         let locationID = "89"
         let proto = TextsAsset.iKEv2

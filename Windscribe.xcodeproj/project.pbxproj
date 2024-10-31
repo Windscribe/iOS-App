@@ -40,8 +40,8 @@
 		1E006BBB2C6AA91500EE6389 /* BasePopUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */; };
 		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
 		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
-		1E01D8FF2C5164EA00B679E9 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
-		1E01D9002C5164EA00B679E9 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		1E01D8FF2C5164EA00B679E9 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		1E01D9002C5164EA00B679E9 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		1E01D9282C51675900B679E9 /* IconName@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */; };
 		1E01D9292C51675900B679E9 /* IconName@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */; };
 		1E01D92A2C51675900B679E9 /* IconName@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9272C51675900B679E9 /* IconName@2x.png */; };
@@ -741,7 +741,7 @@
 		C50537AA2CD34B9E00EA8856 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
-		C50B2CE62CD2804D00EED01A /* VPNManagerUtils+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */; };
+		C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
 		C50B2CEB2CD2D11D00EED01A /* VPNManagerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CEA2CD2D11D00EED01A /* VPNManagerUtilsTests.swift */; };
 		C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
@@ -1722,7 +1722,7 @@
 		C5035A112CBE272B00A46B6D /* ShowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocation.swift; sourceTree = "<group>"; };
 		C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepository.swift; sourceTree = "<group>"; };
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
-		C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+config.swift"; sourceTree = "<group>"; };
+		C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+config.swift"; sourceTree = "<group>"; };
 		C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfigurationErrors.swift; sourceTree = "<group>"; };
 		C50B2CEA2CD2D11D00EED01A /* VPNManagerUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerUtilsTests.swift; sourceTree = "<group>"; };
 		C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
@@ -2377,14 +2377,14 @@
 		1E593DA82CC9377D0051FF5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */,
 				1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */,
+				1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */,
 				1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */,
 				1EDAA91C2CCBF0EF0014E678 /* ConfigurationsManager+Wireguard.swift */,
 				1EDAA9162CCA9BA10014E678 /* ConfigurationsManager+OpenVPN.swift */,
 				1E593DA92CC9378F0051FF5E /* ConfigurationsManager+IKEV2.swift */,
+				C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
-				C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */,
 				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
 			);
 			path = Utils;
@@ -4408,10 +4408,10 @@
 			);
 			mainGroup = AF018DE021B0866600B225FF;
 			packageReferences = (
-				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */,
-				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS.git" */,
-				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */,
-				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */,
+				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
+				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
+				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
+				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -5595,7 +5595,7 @@
 				E97ABD5728E5F95E00B38587 /* ProtocolSetPreferredViewController.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,
 				AF04983021FA43690046D33B /* Section.swift in Sources */,
-				1E01D8FF2C5164EA00B679E9 /* BuildFile in Sources */,
+				1E01D8FF2C5164EA00B679E9 /* (null) in Sources */,
 				C57BDE4229B93FBB00337E63 /* LinkProvider.swift in Sources */,
 				AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */,
 				AF8DA7AB2204B50200885BD8 /* PreferencesViewController+UI.swift in Sources */,
@@ -5630,7 +5630,7 @@
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
 				AF15B8CF2475BCEA0086BB2A /* SpacedLabel.swift in Sources */,
 				C5FA3E882684E232001D03A7 /* SubmitTicketViewController.swift in Sources */,
-				C50B2CE62CD2804D00EED01A /* VPNManagerUtils+config.swift in Sources */,
+				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
 				59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */,
 				E998651728A5E2FC0091B6A3 /* SwitchHeaderView.swift in Sources */,
 				1AE6D2C32838C9ED00276C7D /* AccountConfirmEmailCell.swift in Sources */,
@@ -5854,7 +5854,7 @@
 				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
-				1E01D9002C5164EA00B679E9 /* BuildFile in Sources */,
+				1E01D9002C5164EA00B679E9 /* (null) in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
@@ -6312,7 +6312,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6382,7 +6382,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6997,7 +6997,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
+				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -7366,7 +7366,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS.git" */ = {
+		1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Bouke/DNS.git";
 			requirement = {
@@ -7374,7 +7374,7 @@
 				minimumVersion = 1.2.0;
 			};
 		};
-		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */ = {
+		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/seznam/swift-resolver.git";
 			requirement = {
@@ -7382,7 +7382,7 @@
 				minimumVersion = 0.3.0;
 			};
 		};
-		C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */ = {
+		C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/OpenVPNAdapter.git";
 			requirement = {
@@ -7390,7 +7390,7 @@
 				kind = branch;
 			};
 		};
-		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */ = {
+		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
@@ -7403,12 +7403,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		AF9E08A325E6B1BF00A0E372 /* Resolver */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */;
+			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */;
 			productName = Resolver;
 		};
 		C56615F52C4D84BC008AA993 /* OpenVPNAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */;
+			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */;
 			productName = OpenVPNAdapter;
 		};
 		C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */ = {
@@ -7421,12 +7421,12 @@
 		};
 		C598706A2C63210B00DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
 			productName = WireGuardKit;
 		};
 		C598706C2C63212700DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
 			productName = WireGuardKit;
 		};
 		C5E3C4A72C36CAC0009B67DC /* WireGuardKit */ = {

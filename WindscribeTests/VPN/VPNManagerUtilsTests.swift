@@ -4,8 +4,8 @@ import RxSwift
 import Mockingbird
 @testable import Windscribe
 
-final class VPNManagerUtilsTests: XCTestCase {
-    var vpnManagerUtils: VPNManagerUtils?
+final class ConfigurationsManagerTests: XCTestCase {
+    var configManager: ConfigurationsManager?
     let disposeBag = DisposeBag()
     var db: LocalDatabase?
 
@@ -14,13 +14,13 @@ final class VPNManagerUtilsTests: XCTestCase {
     }
     override func setUp() {
         db = Assembler.resolve(LocalDatabase.self)
-        vpnManagerUtils = Assembler.resolve(VPNManagerUtils.self)
+        configManager = Assembler.resolve(ConfigurationsManager.self)
         super.setUp()
     }
 
     override func tearDown() {
         db?.clean()
-        vpnManagerUtils = nil
+        configManager = nil
         super.tearDown()
     }
 
@@ -122,7 +122,7 @@ final class VPNManagerUtilsTests: XCTestCase {
 
         do {
           //  try await Task.sleep(nanoseconds: 2_000_000_000)
-            let config = try await vpnManagerUtils?.buildConfig(location: locationID, proto: proto, port: port, userSettings: userSettings)
+            let config = try await configManager?.buildConfig(location: locationID, proto: proto, port: port, userSettings: userSettings)
             if let wg = config as? WireguardVPNConfiguration {
                 logger.logD(self, "Config: \(wg.description)")
             }
