@@ -150,7 +150,7 @@ class VPNManagerUtils {
         return  manager.protocolConfiguration?.username == TextsAsset.openVPN
     }
 
-    func iKEV2() -> NEVPNManager? {
+    func iKEV2Manager() -> NEVPNManager? {
         managers.first { isIKEV2(manager: $0 ) }
     }
 
@@ -185,7 +185,8 @@ class VPNManagerUtils {
 #endif
     }
 
-    func getVPNConnectionInfo(manager: NEVPNManager) -> VPNConnectionInfo? {
+    func getVPNConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
+        guard let manager = manager else { return nil }
         guard let conf = manager as? NETunnelProviderManager else { return nil }
         if let wgConfig = conf.tunnelConfiguration,
            let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {

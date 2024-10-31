@@ -16,7 +16,7 @@ extension VPNManagerUtils {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
         }
-        let manager = iKEV2() ?? NEVPNManager.shared()
+        let manager = iKEV2Manager() ?? NEVPNManager.shared()
         let ip = selectedNode.ip1 ?? selectedNode.staticIpToConnect
         guard let ip = ip else {
             logger.logE(self, "Ip1 and ip3 are not avaialble to configure this profile.")

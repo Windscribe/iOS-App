@@ -18,7 +18,7 @@ extension VPNManagerUtils {
 
     func getManager(for type: VPNManagerType) -> NEVPNManager? {
         switch type {
-        case .iKEV2: iKEV2()
+        case .iKEV2: iKEV2Manager()
         case .wg: wireguardManager()
         case .openVPN: openVPNdManager()
         }

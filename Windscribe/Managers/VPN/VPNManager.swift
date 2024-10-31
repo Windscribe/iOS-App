@@ -326,9 +326,9 @@ class VPNManager: VPNManagerProtocol {
             }
             // Get VPN connection info from last active manager.
             if activeVPNManager == .iKEV2 {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2()))
+                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.iKEV2Manager()))
             } else {
-                completion(vpnManagerUtils.getIKEV2ConnectionInfo(manager: vpnManagerUtils.manager(with: activeVPNManager)))
+                completion(vpnManagerUtils.getVPNConnectionInfo(manager: vpnManagerUtils.getManager(for: activeVPNManager)))
             }
     }
 
