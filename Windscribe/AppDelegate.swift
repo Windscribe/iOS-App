@@ -57,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }()
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        print("$$$ \(ProcessInfo.processInfo.processName)")
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()

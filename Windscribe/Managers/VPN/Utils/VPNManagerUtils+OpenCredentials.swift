@@ -140,21 +140,21 @@ extension VPNManagerUtils {
                                                          serverAddress: serverAddress,
                                                          port: port,
                                                          x509Name: x509Name,
-                                                         proxyInfo: proxyInfo),
-              let configData = configuration.configData
-        else { return false }
+                                                         proxyInfo: proxyInfo) else {
+            return false
+        }
 
         let tunnelProtocol = NETunnelProviderProtocol()
         tunnelProtocol.username = TextsAsset.openVPN
         tunnelProtocol.serverAddress = serverAddress
         tunnelProtocol.providerBundleIdentifier = "\(Bundle.main.bundleID ?? "").PacketTunnel"
-        if let configUsername = configuration.configUsername, let configPassword = configuration.configPassword {
-            tunnelProtocol.providerConfiguration = ["ovpn": configData,
+                if let configUsername = configuration.username, let configPassword = configuration.password {
+                    tunnelProtocol.providerConfiguration = ["ovpn": configuration.data,
                                                     "username": configUsername,
                                                     "password": configPassword,
                                                     "compressionEnabled": compressionEnabled ?? false]
         } else {
-            tunnelProtocol.providerConfiguration = ["ovpn": configData,
+            tunnelProtocol.providerConfiguration = ["ovpn": configuration.data,
                                                     "compressionEnabled": compressionEnabled ?? false]
         }
 
@@ -208,10 +208,10 @@ extension VPNManagerUtils {
                 customConfig.password != "" {
                 let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
                 let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
-                return OpenVPNConfiguration(result: true, configUsername: user, configPassword: pass, configFilePath: configFilePath, configData: configData)
+                return OpenVPNConfiguration(proto: protocolType, username: user, password: pass, path: configFilePath, data: configData)
 
             } else {
-                return OpenVPNConfiguration(result: !authRequired, configUsername: nil, configPassword: nil, configFilePath: configFilePath, configData: configData)
+                return OpenVPNConfiguration(proto: protocolType, username: nil, password: nil, path: configFilePath, data: configData)
             }
         } else {
             let protoLine = "proto \(protocolType.lowercased())"
@@ -263,7 +263,7 @@ extension VPNManagerUtils {
             fileDatabase.removeFile(path: FilePaths.openVPN)
             fileDatabase.saveFile(data: appendedConfigData,
                                   path: FilePaths.openVPN)
-            return OpenVPNConfiguration(result: true, configUsername: username, configPassword: password, configFilePath: openVPNConfigFilePath, configData: appendedConfigData)
+            return OpenVPNConfiguration(proto: protocolType, username: username, password: password, path: openVPNConfigFilePath, data: appendedConfigData)
         }
     }
 }

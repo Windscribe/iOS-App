@@ -40,8 +40,8 @@
 		1E006BBB2C6AA91500EE6389 /* BasePopUpViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */; };
 		1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */; };
 		1E006BC12C6B7AC300EE6389 /* PopupTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */; };
-		1E01D8FF2C5164EA00B679E9 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		1E01D9002C5164EA00B679E9 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		1E01D8FF2C5164EA00B679E9 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		1E01D9002C5164EA00B679E9 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		1E01D9282C51675900B679E9 /* IconName@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9252C51675900B679E9 /* IconName@2x~ipad.png */; };
 		1E01D9292C51675900B679E9 /* IconName@3x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9262C51675900B679E9 /* IconName@3x~ipad.png */; };
 		1E01D92A2C51675900B679E9 /* IconName@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E01D9272C51675900B679E9 /* IconName@2x.png */; };
@@ -235,7 +235,6 @@
 		5947B4AE2A214E7C00C95CF2 /* Latency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4AD2A214E7C00C95CF2 /* Latency.swift */; };
 		5947B4B22A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */; };
 		595329FE2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595329FD2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift */; };
-		59532A0D2CB852670069CC8F /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		59532A0E2CB852670069CC8F /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		59532A0F2CB852670069CC8F /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		59532A102CB852670069CC8F /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
@@ -278,9 +277,7 @@
 		598F173929F05723007137A4 /* EmergencyConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173729F05723007137A4 /* EmergencyConnectViewController.swift */; };
 		598F173A29F05723007137A4 /* EmergencyConnectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 598F173829F05723007137A4 /* EmergencyConnectViewController.xib */; };
 		59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59909FC52C778D68008FA4C7 /* ServerListRouter.swift */; };
-		599339692B4CD18800EC615D /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* SharedUserDefaults.swift */; };
 		5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
-		5993396C2B4CD28100EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
@@ -508,7 +505,7 @@
 		59FC74872C52FCEE00021CD1 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74862C52FCEE00021CD1 /* Router.swift */; };
 		59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74882C530A4100021CD1 /* LoginRouter.swift */; };
 		59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC748B2C53151D00021CD1 /* XPressLoginCodeResponse.swift */; };
-		7A1DE672FFECEDB72F5C2CE5 /* Pods_WindscribeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47775886EC119FCBB01D2A6C /* Pods_WindscribeTests.framework */; platformFilter = ios; };
+		6EAD66CD3E1833D08E47CDC1 /* Pods_WindscribeTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 47775886EC119FCBB01D2A6C /* Pods_WindscribeTests.framework */; };
 		84DB83C52D55C4639941F898 /* Pods_HomeWidgetExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5481CF5C95B230B8691EB78 /* Pods_HomeWidgetExtension.framework */; };
 		9B7A6D492A314E85A229364B /* Pods_SiriIntents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F3DA431C10D934B8C8448C9 /* Pods_SiriIntents.framework */; };
 		AF018DED21B0866600B225FF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018DEC21B0866600B225FF /* AppDelegate.swift */; };
@@ -737,8 +734,14 @@
 		C5035A172CBE2BE900A46B6D /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Ext.swift */; };
 		C5035A182CBE2BF600A46B6D /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		C5035A192CBE2C0100A46B6D /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
+		C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */; };
+		C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0982B3B672B0011EF56 /* TestModules.swift */; };
+		C50537AA2CD34B9E00EA8856 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
+		C50B2CE62CD2804D00EED01A /* VPNManagerUtils+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */; };
+		C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
+		C50B2CEB2CD2D11D00EED01A /* VPNManagerUtilsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CEA2CD2D11D00EED01A /* VPNManagerUtilsTests.swift */; };
 		C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
 		C50F20762B606B1D00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
 		C50F20782B606B3000266B23 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
@@ -779,7 +782,6 @@
 		C51EEDCD2C1779B600B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		C51EEDCE2C1779B800B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */; };
-		C51EEDD42C235C4900B01F8F /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F7B73276D0AAB0074A025 /* RobertFilters.swift */; };
 		C524AA5826B0A06300FCB1B6 /* DynamicSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5726B0A06300FCB1B6 /* DynamicSizeTableView.swift */; };
 		C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5926B219BE00FCB1B6 /* AboutViewController.swift */; };
@@ -831,8 +833,6 @@
 		C5592B8B2B394C0300F2F110 /* LocalDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */; };
 		C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0912B3A68820011EF56 /* PreferencesTests.swift */; };
 		C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */; };
-		C55AF0992B3B672B0011EF56 /* TestModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0982B3B672B0011EF56 /* TestModules.swift */; };
-		C55AF09B2B3B75D10011EF56 /* PreferencesSampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */; };
 		C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */; };
 		C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A32B3E80300011EF56 /* RxExtensions.swift */; };
 		C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */; };
@@ -872,7 +872,6 @@
 		C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBD12B2A42B9008DE7D4 /* RouteIDs.swift */; };
 		C56FCBDB2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDA2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift */; };
 		C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
-		C56FCBDE2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBE12B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
@@ -880,7 +879,6 @@
 		C56FCBE42B2B8DB2008DE7D4 /* SharedUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535D29827E4E85700C08345 /* SharedUserDefaults.swift */; };
 		C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */; };
-		C56FCBE92B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */; };
 		C56FCBEA2B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */; };
 		C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */; };
 		C56FCBEC2B2B8E4F008DE7D4 /* SharedKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */; };
@@ -1721,6 +1719,9 @@
 		C5035A112CBE272B00A46B6D /* ShowLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocation.swift; sourceTree = "<group>"; };
 		C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepository.swift; sourceTree = "<group>"; };
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
+		C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManagerUtils+config.swift"; sourceTree = "<group>"; };
+		C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfigurationErrors.swift; sourceTree = "<group>"; };
+		C50B2CEA2CD2D11D00EED01A /* VPNManagerUtilsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManagerUtilsTests.swift; sourceTree = "<group>"; };
 		C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
 		C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50F207A2B606E2200266B23 /* WireguardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardModule.swift; sourceTree = "<group>"; };
@@ -2007,8 +2008,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A1DE672FFECEDB72F5C2CE5 /* Pods_WindscribeTests.framework in Frameworks */,
-				59532A0D2CB852670069CC8F /* WSNet.xcframework in Frameworks */,
+				C50537AA2CD34B9E00EA8856 /* WSNet.xcframework in Frameworks */,
+				6EAD66CD3E1833D08E47CDC1 /* Pods_WindscribeTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2379,6 +2380,8 @@
 				1EDAA9162CCA9BA10014E678 /* VPNManagerUtils+OpenCredentials.swift */,
 				1E593DA92CC9378F0051FF5E /* VPNManagerUtils+IKEV2Credentials.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
+				C50B2CE52CD2804D00EED01A /* VPNManagerUtils+config.swift */,
+				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -3132,6 +3135,7 @@
 		AF018E1721B1AA2D00B225FF /* WindscribeTests */ = {
 			isa = PBXGroup;
 			children = (
+				C50B2CE92CD2D10A00EED01A /* VPN */,
 				AF018E1A21B1AA2D00B225FF /* Info.plist */,
 				C55AF0902B3A686E0011EF56 /* Preferences */,
 				C55AF0952B3B58940011EF56 /* Database */,
@@ -3480,6 +3484,14 @@
 				C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */,
 			);
 			path = EmergencyConnect;
+			sourceTree = "<group>";
+		};
+		C50B2CE92CD2D10A00EED01A /* VPN */ = {
+			isa = PBXGroup;
+			children = (
+				C50B2CEA2CD2D11D00EED01A /* VPNManagerUtilsTests.swift */,
+			);
+			path = VPN;
 			sourceTree = "<group>";
 		};
 		C50F20732B606AF200266B23 /* WgConfig */ = {
@@ -4392,10 +4404,10 @@
 			);
 			mainGroup = AF018DE021B0866600B225FF;
 			packageReferences = (
-				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
-				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
-				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
-				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
+				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */,
+				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS.git" */,
+				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */,
+				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -5247,7 +5259,6 @@
 				1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */,
 				E9219FF12885AFB90026E544 /* UIStackView+Ext.swift in Sources */,
 				C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */,
-				C55AF0992B3B672B0011EF56 /* TestModules.swift in Sources */,
 				E998651928AB29390091B6A3 /* NetworkSecurityViewController.swift in Sources */,
 				AF69DC5022331BE000AC6FDC /* PushNotificationViewController.swift in Sources */,
 				AF60571B236897D900986BA7 /* DropdownButton.swift in Sources */,
@@ -5532,6 +5543,7 @@
 				C585F3E12C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */,
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
+				C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */,
 				AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */,
 				5986AB5C2C47569E00167023 /* UIImage+Ext.swift in Sources */,
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
@@ -5577,7 +5589,7 @@
 				E97ABD5728E5F95E00B38587 /* ProtocolSetPreferredViewController.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,
 				AF04983021FA43690046D33B /* Section.swift in Sources */,
-				1E01D8FF2C5164EA00B679E9 /* (null) in Sources */,
+				1E01D8FF2C5164EA00B679E9 /* BuildFile in Sources */,
 				C57BDE4229B93FBB00337E63 /* LinkProvider.swift in Sources */,
 				AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */,
 				AF8DA7AB2204B50200885BD8 /* PreferencesViewController+UI.swift in Sources */,
@@ -5598,6 +5610,7 @@
 				591CF9B12BBB3ED1004DEB48 /* EmailRouter.swift in Sources */,
 				AF2A752F230DAF6400548088 /* URLRequest+Ext.swift in Sources */,
 				591CF9B52BBDC3F6004DEB48 /* UpgradeViewModel.swift in Sources */,
+				C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */,
 				AF0AED382203549000039CAF /* ServerListTableViewDataSource+Delegate.swift in Sources */,
 				C5A930D72B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift in Sources */,
 				AF4B92F0221DB3290054580D /* EnterEmailViewController+UI.swift in Sources */,
@@ -5611,6 +5624,7 @@
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
 				AF15B8CF2475BCEA0086BB2A /* SpacedLabel.swift in Sources */,
 				C5FA3E882684E232001D03A7 /* SubmitTicketViewController.swift in Sources */,
+				C50B2CE62CD2804D00EED01A /* VPNManagerUtils+config.swift in Sources */,
 				59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */,
 				E998651728A5E2FC0091B6A3 /* SwitchHeaderView.swift in Sources */,
 				1AE6D2C32838C9ED00276C7D /* AccountConfirmEmailCell.swift in Sources */,
@@ -5631,21 +5645,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C56FCBE92B2B8E4D008DE7D4 /* SharedKeys.swift in Sources */,
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
-				C56FCBDE2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C56F5DB129537C2C008CD223 /* ConcurrentDictionary.swift in Sources */,
+				C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */,
 				C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */,
-				C51EEDD42C235C4900B01F8F /* Language.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
-				C55AF09B2B3B75D10011EF56 /* PreferencesSampleData.swift in Sources */,
+				C50B2CEB2CD2D11D00EED01A /* VPNManagerUtilsTests.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
-				5993396C2B4CD28100EC615D /* DefaultValues.swift in Sources */,
 				C5592B802B388B2800F2F110 /* APISampleData.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				C56F5DB029537B8C008CD223 /* ConcurrentDictionaryTest.swift in Sources */,
-				599339692B4CD18800EC615D /* SharedUserDefaults.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5838,7 +5848,7 @@
 				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
-				1E01D9002C5164EA00B679E9 /* (null) in Sources */,
+				1E01D9002C5164EA00B679E9 /* BuildFile in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
@@ -6296,7 +6306,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
+				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -6313,7 +6323,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/scapix/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -6366,7 +6376,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
+				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6377,7 +6387,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -6510,6 +6520,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6523,7 +6534,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/Windscribe";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Windscribe";
 			};
 			name = Development;
 		};
@@ -6543,6 +6554,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6555,7 +6567,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/Windscribe";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Windscribe";
 			};
 			name = Staging;
 		};
@@ -6579,7 +6591,7 @@
 					"COCOAPODS=1",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6618,7 +6630,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6656,7 +6668,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6687,7 +6699,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6719,7 +6731,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6759,7 +6771,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6979,7 +6991,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				FRAMEWORK_SEARCH_PATHS = $PROJECT_DIR;
+				FRAMEWORK_SEARCH_PATHS = "$PROJECT_DIR";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -6990,7 +7002,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/scapix/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -7067,6 +7079,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7079,7 +7092,7 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/Windscribe";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Windscribe.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Windscribe";
 			};
 			name = Production;
 		};
@@ -7099,7 +7112,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7137,7 +7150,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7168,7 +7181,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7347,7 +7360,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */ = {
+		1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Bouke/DNS.git";
 			requirement = {
@@ -7355,7 +7368,7 @@
 				minimumVersion = 1.2.0;
 			};
 		};
-		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */ = {
+		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/seznam/swift-resolver.git";
 			requirement = {
@@ -7363,7 +7376,7 @@
 				minimumVersion = 0.3.0;
 			};
 		};
-		C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */ = {
+		C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/OpenVPNAdapter.git";
 			requirement = {
@@ -7371,7 +7384,7 @@
 				kind = branch;
 			};
 		};
-		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */ = {
+		C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
@@ -7384,12 +7397,12 @@
 /* Begin XCSwiftPackageProductDependency section */
 		AF9E08A325E6B1BF00A0E372 /* Resolver */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */;
+			package = AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver.git" */;
 			productName = Resolver;
 		};
 		C56615F52C4D84BC008AA993 /* OpenVPNAdapter */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */;
+			package = C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter.git" */;
 			productName = OpenVPNAdapter;
 		};
 		C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */ = {
@@ -7402,12 +7415,12 @@
 		};
 		C598706A2C63210B00DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */;
 			productName = WireGuardKit;
 		};
 		C598706C2C63212700DA4DB1 /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */;
+			package = C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple.git" */;
 			productName = WireGuardKit;
 		};
 		C5E3C4A72C36CAC0009B67DC /* WireGuardKit */ = {

@@ -32,10 +32,10 @@ class SessionManager: SessionManagerV2 {
     let userRepo = Assembler.resolve(UserRepository.self)
 
     func setSessionTimer() {
-        logger.logD(MainViewController.self, "60 seconds fetch session timer scheduled.")
-        sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
-        keepSessionUpdated()
-        NotificationCenter.default.addObserver(self, selector: #selector(self.cancelTimers), name: Notifications.userLoggedOut, object: nil)
+//        logger.logD(MainViewController.self, "60 seconds fetch session timer scheduled.")
+//        sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
+//        keepSessionUpdated()
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.cancelTimers), name: Notifications.userLoggedOut, object: nil)
     }
 
     @objc func cancelTimers() {

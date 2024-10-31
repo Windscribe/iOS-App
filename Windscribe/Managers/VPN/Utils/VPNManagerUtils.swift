@@ -20,8 +20,9 @@ class VPNManagerUtils {
     let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
     let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
     let fileDatabase: FileDatabase// = Assembler.resolve(FileDatabase.self)
-
-    let wgCredentials = Assembler.resolve(WgCredentials.self)
+    let advanceRepository: AdvanceRepository
+    let wgRepository: WireguardConfigRepository
+    let wgCredentials: WgCredentials
 
     weak var delegate: VPNManagerUtilsDelegate?
 
@@ -29,11 +30,14 @@ class VPNManagerUtils {
     var reloadManagersTrigger = BehaviorSubject<Void>(value: ())
     var disposeBag = DisposeBag()
 
-    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase) {
+    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository ,wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
         self.fileDatabase = fileDatabase
+        self.advanceRepository = advanceRepository
+        self.wgRepository = wgRepository
+        self.wgCredentials = wgCredentials
         load()
     }
 
