@@ -62,7 +62,7 @@ extension ConfigurationsManager {
         let legacyOS = await NSString(string: UIDevice.current.systemVersion).doubleValue <= 13
         // Changes for the ikev2 issue on ios 16 and kill switch on
         if #available(iOS 16.0, *) {
-            if userSettings.killSwitch || !userSettings.allowLane {
+            if userSettings.killSwitch || !userSettings.allowLan {
                 ikeV2Protocol.remoteIdentifier = hostname
                 ikeV2Protocol.localIdentifier = username
                 ikeV2Protocol.serverAddress = hostname
@@ -98,11 +98,11 @@ extension ConfigurationsManager {
             // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
             if #available(iOS 15.1, *) {
                 manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLan : false
             }
             // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
             if #available(iOS 16.0, *) {
-                manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
+                manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLan
             }
         #else
             manager.protocolConfiguration = ikeV2Protocol
@@ -120,7 +120,7 @@ extension ConfigurationsManager {
         }
         logger.logD(self, "VPN configuration successful. Username: \(username)")
         logger.logD(self, "KillSwitch option set by user is \(userSettings.killSwitch)")
-        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLane)")
+        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLan)")
         #if os(iOS)
             if #available(iOS 15.1, *) {
                 logger.logD(self, "KillSwitch in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.includeAllNetworks))")

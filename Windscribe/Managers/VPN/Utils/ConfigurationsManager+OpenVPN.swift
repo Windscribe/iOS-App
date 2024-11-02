@@ -165,11 +165,11 @@ extension ConfigurationsManager {
         #if os(iOS)
             if #available(iOS 15.1, *) {
                 manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLan : false
             }
             // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
             if #available(iOS 16.0, *) {
-                manager.protocolConfiguration?.includeAllNetworks = manager.protocolConfiguration?.includeAllNetworks ?? !userSettings.allowLane
+                manager.protocolConfiguration?.includeAllNetworks = manager.protocolConfiguration?.includeAllNetworks ?? !userSettings.allowLan
             }
         #endif
         manager.onDemandRules?.removeAll()

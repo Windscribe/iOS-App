@@ -16,12 +16,12 @@ enum LocationType {
 
 struct VPNUserSettings: CustomStringConvertible {
     let killSwitch: Bool
-    let allowLane: Bool
+    let allowLan: Bool
     let isRFC: Bool
     let isCircumventCensorshipEnabled: Bool
     let onDemandRules: [NEOnDemandRule]?
     var description: String {
-        return "User Settings: [KillSwitch: \(killSwitch) allowLan: \(allowLane), isRfc: \(isRFC), CircumventCensorship: \(isCircumventCensorshipEnabled)]"
+        return "User Settings: [KillSwitch: \(killSwitch) allowLan: \(allowLan), isRfc: \(isRFC), CircumventCensorship: \(isCircumventCensorshipEnabled)]"
     }
 }
 
@@ -44,7 +44,7 @@ struct IKEv2VPNConfiguration: VPNConfiguration {
         let legacyOS = NSString(string: UIDevice.current.systemVersion).doubleValue <= 13
         // Changes for the ikev2 issue on ios 16 and kill switch on
         if #available(iOS 16.0, *) {
-            if settings.killSwitch || !settings.allowLane {
+            if settings.killSwitch || !settings.allowLan {
                 ikeV2Protocol.remoteIdentifier = hostname
                 ikeV2Protocol.localIdentifier = username
                 ikeV2Protocol.serverAddress = hostname
@@ -137,11 +137,16 @@ protocol VPNConfiguration: CustomStringConvertible {
 extension VPNConfiguration {
     func applySettings(settings: VPNUserSettings, manager: NEVPNManager) -> NEVPNManager {
         #if os(iOS)
-            // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
+            // For Non RFC address. set [includeallnetworks​ =  True & excludeLocalNetworks​ = False]
+            // For RFC address follow user settings.
             if #available(iOS 15.1, *) {
                 manager.protocolConfiguration?.includeAllNetworks = settings.isRFC ? settings.killSwitch : true
-                manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLane : false
+                manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLan : false
             }
+        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+        if #available(iOS 16.0, *) {
+            manager.protocolConfiguration?.includeAllNetworks = settings.allowLan
+        }
         #endif
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = settings.onDemandRules

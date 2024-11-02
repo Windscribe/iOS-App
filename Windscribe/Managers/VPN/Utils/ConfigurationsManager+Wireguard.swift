@@ -42,11 +42,11 @@ extension ConfigurationsManager {
             // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
             if #available(iOS 15.1, *) {
                 providerManager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-                providerManager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+                providerManager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLan : false
             }
             // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
             if #available(iOS 16.0, *) {
-                providerManager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
+                providerManager.protocolConfiguration?.includeAllNetworks = userSettings.allowLan
             }
         #endif
         providerManager.onDemandRules?.removeAll()

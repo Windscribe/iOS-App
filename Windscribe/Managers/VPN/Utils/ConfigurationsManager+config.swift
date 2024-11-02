@@ -13,7 +13,7 @@ extension ConfigurationsManager {
     /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
         let locationType = try getLocationType(id: location)
-        // If location type is custom config proto does not matter just use whats in the profile.
+        // If location type is custom config, proto/port does not matter just use whats in the profile.
         if locationType == .custom {
             let locationId = getId(location: location)
             do {

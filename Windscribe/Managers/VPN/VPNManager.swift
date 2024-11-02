@@ -327,7 +327,7 @@ class VPNManager: VPNManagerProtocol {
 
     func makeUserSettings() -> VPNUserSettings {
         return VPNUserSettings(killSwitch: killSwitch,
-                               allowLane: allowLane,
+                               allowLan: allowLane,
                                isRFC: checkLocalIPIsRFC(),
                                isCircumventCensorshipEnabled: preferences.isCircumventCensorshipEnabled(),
                                onDemandRules: getOnDemandRules())
