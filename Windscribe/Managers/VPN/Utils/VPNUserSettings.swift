@@ -143,10 +143,10 @@ extension VPNConfiguration {
                 manager.protocolConfiguration?.includeAllNetworks = settings.isRFC ? settings.killSwitch : true
                 manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLan : false
             }
-        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-        if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = settings.allowLan
-        }
+            // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+            if #available(iOS 16.0, *) {
+                manager.protocolConfiguration?.includeAllNetworks = settings.allowLan
+            }
         #endif
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = settings.onDemandRules

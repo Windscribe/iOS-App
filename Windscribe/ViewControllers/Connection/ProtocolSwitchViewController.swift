@@ -19,6 +19,8 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     var viewModel: ProtocolSwitchViewModelType!
     var connectionManager: ConnectionManagerV2!
     var router: ProtocolSwitchViewRouter!
+    var onSelection: ((Bool) -> Void)?
+    var error: String?
     // MARK: - Properties
     var type: ProtocolFallbacksType = .change
 
@@ -43,7 +45,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
 
     private lazy var subHeaderLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = type.getDescription()
+        lbl.text = (error != nil) ? error : type.getDescription()
         lbl.alpha = 0.5
         lbl.font = UIFont.text(size: 16)
         lbl.textAlignment = .center
@@ -115,6 +117,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             } else {
                 AutomaticMode.shared.resetFailCounts()
                 self.delegate?.disconnectFromFailOver()
+                self.onSelection?(false)
                 self.backButtonTapped()
             }
         }.disposed(by: disposeBag)
@@ -162,7 +165,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         } else if protocolView.type != .fail {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
             delegate?.protocolSwitchVCCountdownCompleted()
-
+            self.onSelection?(true)
             backButtonTapped()
         }
     }
@@ -172,7 +175,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         if !VPNManager.shared.isConnected() {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
             delegate?.protocolSwitchVCCountdownCompleted()
-
+            self.onSelection?(true)
         }
         backButtonTapped()
     }

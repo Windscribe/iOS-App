@@ -342,7 +342,7 @@ extension ConfigurationsManager {
             let validNodes = nodes.filter { $0.forceDisconnect == false }
             var weightCounter = nodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
-                let randomNumber = arc4random_uniform(UInt32(weightCounter))
+                let randomNumber = Int.random(in: 0 ..< Int(weightCounter))
                 weightCounter = 0
                 for node in validNodes {
                     weightCounter += node.weight

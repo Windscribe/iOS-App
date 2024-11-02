@@ -34,6 +34,24 @@ class ConfigurationsManager {
     var disposeBag = DisposeBag()
     var noResponseTimer: Timer?
 
+    /// Wait for disconnect event after manager is disabled.
+    let disconnectWaitTimeout = 5.0
+
+    /// Max timeout for each connection.
+    func getMaxTimeout(proto: String) -> Double {
+        if proto == TextsAsset.openVPN {
+            return 30
+        } else {
+            return 20
+        }
+    }
+
+    /// Number of times to retry connectivity test
+    let maxConnectivityTestAttempts = 3
+
+    /// Delay between connectivity test attempt.
+    let delayBetweenConnectivityAttempts: UInt64 = 500_000_000
+
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials) {
         self.logger = logger
         self.localDatabase = localDatabase

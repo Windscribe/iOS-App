@@ -7,7 +7,7 @@
 //
 
 import Foundation
-enum VPNConfigurationErrors: Error, LocalizedError {
+enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case credentialsNotFound(String)
     case customConfigSupportNotAvailable
     case locationNotFound(String)
@@ -19,7 +19,7 @@ enum VPNConfigurationErrors: Error, LocalizedError {
     case connectionTimeout
     case connectivityTestFailed
 
-    var errorDescription: String {
+    var description: String {
         switch self {
         case let .credentialsNotFound(proto):
             return "Couldn't find auth credentials for protocol \(proto)"

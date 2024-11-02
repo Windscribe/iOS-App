@@ -49,6 +49,8 @@ class VPNManager: VPNManagerProtocol {
 
     lazy var configManager: ConfigurationsManager = Assembler.resolve(ConfigurationsManager.self)
 
+    lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
+
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()

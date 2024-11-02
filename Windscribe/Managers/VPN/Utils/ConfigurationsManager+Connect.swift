@@ -33,65 +33,69 @@ extension ConfigurationsManager {
     ///   publisher terminates with an `VPNConnectionErrors`.
     func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings) -> AnyPublisher<State, Error> {
         let progressPublisher = PassthroughSubject<State, Error>()
-        let maxTimeout: TimeInterval = 30
 
         Task {
-            let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
-            progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
-            try await disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
-            var nextManager = try await prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
-            try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
-            progressPublisher.send(.update("Building configuration."))
-            let config = try await buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
-            progressPublisher.send(.update("Configuration built successfully \(config.description)"))
+            do {
+                let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
+                progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
+                try await disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
+                var nextManager = try await prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
+                try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+                progressPublisher.send(.update("Building configuration."))
+                let config = try await buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+                progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
-            progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
-            nextManager = try config.buildProtocol(settings: vpnSettings, manager: nextManager)
+                progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
+                nextManager = try config.buildProtocol(settings: vpnSettings, manager: nextManager)
 
-            progressPublisher.send(.update("Applying user settings."))
-            nextManager = config.applySettings(settings: vpnSettings, manager: nextManager)
+                progressPublisher.send(.update("Applying user settings."))
+                nextManager = config.applySettings(settings: vpnSettings, manager: nextManager)
 
-            progressPublisher.send(.update("Saving configuration."))
-            try await saveThrowing(manager: nextManager)
+                progressPublisher.send(.update("Saving configuration."))
+                try await saveThrowing(manager: nextManager)
 
-            progressPublisher.send(.update("Starting VPN connection."))
-            try nextManager.connection.startVPNTunnel()
+                progressPublisher.send(.update("Starting VPN connection."))
+                try nextManager.connection.startVPNTunnel()
 
-            progressPublisher.send(.update("Awaiting connection update."))
-            let startTime = Date()
-            let timerPublisher = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-            var cancellable: AnyCancellable?
+                progressPublisher.send(.update("Awaiting connection update."))
+                let startTime = Date()
+                let timerPublisher = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+                var cancellable: AnyCancellable?
+                let maxTimeout = getMaxTimeout(proto: wrapperProtocol)
+                cancellable = timerPublisher.sink { _ in
+                    let elapsedTime = Date().timeIntervalSince(startTime)
+                    progressPublisher.send(.vpn(nextManager.connection.status))
 
-            cancellable = timerPublisher.sink { _ in
-                let elapsedTime = Date().timeIntervalSince(startTime)
-                progressPublisher.send(.vpn(nextManager.connection.status))
-
-                if nextManager.connection.status == .connected {
-                    progressPublisher.send(.update("Testing connectivity."))
-                    progressPublisher.send(.validating)
-                    Task {
-                        do {
-                            let userIp = try await self.testConnectivityWithRetries()
-                            progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
-                            progressPublisher.send(.validated(userIp))
-                            progressPublisher.send(completion: .finished)
-                        } catch {
-                            progressPublisher.send(completion: .failure(error))
+                    if nextManager.connection.status == .connected {
+                        progressPublisher.send(.update("Testing connectivity."))
+                        progressPublisher.send(.validating)
+                        Task {
+                            do {
+                                let userIp = try await self.testConnectivityWithRetries()
+                                progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
+                                progressPublisher.send(.validated(userIp))
+                                progressPublisher.send(completion: .finished)
+                            } catch {
+                                progressPublisher.send(completion: .failure(error))
+                            }
                         }
+                        cancellable?.cancel()
+                    } else if elapsedTime >= maxTimeout {
+                        progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
+                        Task {
+                            try await self.disableProfile(nextManager)
+                        }
+                        progressPublisher.send(completion: .failure(VPNConfigurationErrors.connectionTimeout))
+                        cancellable?.cancel()
+                    } else {
+                        progressPublisher.send(.update("Attempting to connect... elapsed time: \(Int(elapsedTime)) seconds"))
                     }
-                    cancellable?.cancel()
-                } else if elapsedTime >= maxTimeout {
-                    progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
-                    Task {
-                        try await self.disableProfile(nextManager)
-                    }
-                    progressPublisher.send(completion: .failure(VPNConfigurationErrors.connectionTimeout))
-                    cancellable?.cancel()
-                } else {
-                    progressPublisher.send(.update("Attempting to connect... elapsed time: \(Int(elapsedTime)) seconds"))
                 }
+            } catch {
+                progressPublisher.send(completion: .failure(error))
             }
         }
+
         return progressPublisher.eraseToAnyPublisher()
     }
 
@@ -170,18 +174,15 @@ extension ConfigurationsManager {
 
     /// Test VPN connection for network connectivity.
     private func testConnectivityWithRetries() async throws -> String {
-        let maxAttempts = 3
-        let delayBetweenAttempts: UInt64 = 500_000_000
-
-        for attempt in 1 ... maxAttempts {
+        for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 let userIp = try await api.getIp().value.userIp
                 return userIp
             } catch {
-                if attempt == maxAttempts {
+                if attempt == maxConnectivityTestAttempts {
                     throw error
                 }
-                try await Task.sleep(nanoseconds: delayBetweenAttempts)
+                try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
             }
         }
         throw VPNConfigurationErrors.connectivityTestFailed
@@ -189,10 +190,9 @@ extension ConfigurationsManager {
 
     /// Block untill disconnect event is received.
     private func waitForDisconnection(manager: NEVPNManager) async throws {
-        let maxWaitTime: TimeInterval = 5
         let startTime = Date()
         while manager.connection.status != .disconnected {
-            if Date().timeIntervalSince(startTime) > maxWaitTime {
+            if Date().timeIntervalSince(startTime) > disconnectWaitTimeout {
                 break
             }
             try await Task.sleep(nanoseconds: 500_000_000)
