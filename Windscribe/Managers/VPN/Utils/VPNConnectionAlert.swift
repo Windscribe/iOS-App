@@ -80,7 +80,7 @@ class VPNConnectionAlert: UIViewController {
 
             actionButton.topAnchor.constraint(equalTo: progressLabel.bottomAnchor, constant: 16),
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
         ])
     }
 

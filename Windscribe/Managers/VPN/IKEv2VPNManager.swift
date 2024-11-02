@@ -46,8 +46,7 @@ class IKEv2VPNManager {
                            hostname: String,
                            ip: String,
                            completion: @escaping (_ result: Bool,
-                                                  _ error: String?) -> Void)
-    {
+                                                  _ error: String?) -> Void) {
         loadData()
         neVPNManager.loadFromPreferences { error in
             if error == nil {
@@ -281,8 +280,7 @@ class IKEv2VPNManager {
     }
 
     private func removeProfile(completion: @escaping (_ result: Bool,
-                                                      _ error: String?) -> Void)
-    {
+                                                      _ error: String?) -> Void) {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
             if self?.neVPNManager.protocolConfiguration?.username != nil {
                 self?.neVPNManager.removeFromPreferences { [weak self] _ in
@@ -332,19 +330,16 @@ class IKEv2VPNManager {
     }
 
     func configureDummy(completion: @escaping (_ result: Bool,
-                                               _ error: String?) -> Void)
-    {
+                                               _ error: String?) -> Void) {
         configure(username: "Windscribe",
                   dnsHostname: "0.0.0.0",
-                  hostname: "127.0.0.1", ip: "0.0.0.0")
-        { result, error in
+                  hostname: "127.0.0.1", ip: "0.0.0.0") { result, error in
             completion(result, error)
         }
     }
 
     private func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
-                                                                      _ error: String?) -> Void)
-    {
+                                                                      _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             completion(false, Errors.hostnameNotFound.localizedDescription)
@@ -363,8 +358,7 @@ class IKEv2VPNManager {
         var base64password = ""
         if let staticIPCredentials = VPNManager.shared.selectedNode?.staticIPCredentials,
            let username = staticIPCredentials.username,
-           let password = staticIPCredentials.password
-        {
+           let password = staticIPCredentials.password {
             base64username = username
             base64password = password
         } else {
@@ -374,8 +368,7 @@ class IKEv2VPNManager {
             }
         }
         if base64username == "" ||
-            base64password == ""
-        {
+            base64password == "" {
             completion(false, Errors.missingAuthenticationValues.localizedDescription)
             logger.logE(self, "Can't establish a VPN connection, missing authentication values.")
         } else {
@@ -383,8 +376,7 @@ class IKEv2VPNManager {
                             password: base64password)
             configure(username: base64username,
                       dnsHostname: selectedNode.dnsHostname,
-                      hostname: selectedNode.hostname, ip: ip)
-            { result, error in
+                      hostname: selectedNode.hostname, ip: ip) { result, error in
                 completion(result, error)
             }
         }
