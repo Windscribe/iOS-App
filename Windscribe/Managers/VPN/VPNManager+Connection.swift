@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 import RxSwift
 
@@ -19,8 +19,9 @@ extension VPNManager {
         if let selectedNode = VPNManager.shared.selectedNode {
             if let randomNode = getRandomNodeInSameGroup(groupId: selectedNode.groupId,
                                                          excludeHostname: selectedNode.hostname),
-               let newHostname = randomNode.hostname,
-               let newIP2 = randomNode.ip2 {
+                let newHostname = randomNode.hostname,
+                let newIP2 = randomNode.ip2
+            {
                 VPNManager.shared.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
                                                               dnsHostname: selectedNode.dnsHostname,
                                                               hostname: newHostname,
@@ -34,18 +35,18 @@ extension VPNManager {
 
     func getRandomNodeInSameGroup(groupId: Int, excludeHostname: String) -> NodeModel? {
         guard let group = localDB.getServers()?.flatMap({ $0.groups }).filter({ $0.id == groupId }).first else { return nil }
-        let nodes = group.nodes.filter({ $0.hostname != excludeHostname })
+        let nodes = group.nodes.filter { $0.hostname != excludeHostname }
         if nodes.count > 0 {
-            let randomIndex = Int.random(in: 0...nodes.count-1)
+            let randomIndex = Int.random(in: 0 ... nodes.count - 1)
             return nodes[randomIndex].getNodeModel()
         }
         return nil
     }
 
-    func connectToAnotherNode(forceProtocol: String? = nil) {
+    func connectToAnotherNode(forceProtocol _: String? = nil) {
         selectAnotherNode()
         connectUsingAutomaticMode()
-        self.logger.logD(VPNManager.self, "Establishing a new connection with a random node in the same group.")
+        logger.logD(VPNManager.self, "Establishing a new connection with a random node in the same group.")
     }
 
     /// Saves Connection Params before connecting.
@@ -61,7 +62,7 @@ extension VPNManager {
             selectedPort = preferences.getSelectedPortSync()
         }
         if let connectedWifi = WifiManager.shared.getConnectedNetwork() {
-            if connectedWifi.preferredProtocolStatus == true && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange {
+            if connectedWifi.preferredProtocolStatus == true, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange {
                 selectedProtocol = connectedWifi.preferredProtocol
                 selectedPort = connectedWifi.port
             }
@@ -77,12 +78,13 @@ extension VPNManager {
     }
 
     func connectUsingIKEv2(forceProtocol: String? = nil) {
-        if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
-        self.setNewVPNConnection(forceProtocol: forceProtocol)
+        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange { return }
+        setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async { [self] in
             Task {
                 if (try? await self.configManager.configureIKEV2WithSavedCredentials(with: self.selectedNode,
-                                                                                       userSettings: self.makeUserSettings())) ?? false {
+                                                                                     userSettings: self.makeUserSettings())) ?? false
+                {
                     await self.configManager.connect(with: .iKEV2, killSwitch: self.killSwitch)
                 }
             }
@@ -90,12 +92,13 @@ extension VPNManager {
     }
 
     func connectUsingOpenVPN(forceProtocol: String? = nil) {
-        if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange { return }
-        self.setNewVPNConnection(forceProtocol: forceProtocol)
+        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange { return }
+        setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
-                                                                                         userSettings: self.makeUserSettings())) ?? false {
+                                                                                       userSettings: self.makeUserSettings())) ?? false
+                {
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
@@ -106,11 +109,12 @@ extension VPNManager {
     }
 
     func connectUsingCustomConfigOpenVPN() {
-        if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover { return }
+        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover { return }
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithCustomConfig(with: self.selectedNode,
-                                                                                     userSettings: self.makeUserSettings())) ?? false {
+                                                                                   userSettings: self.makeUserSettings())) ?? false
+                {
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
@@ -121,7 +125,7 @@ extension VPNManager {
     }
 
     func connectUsingWireGuard(forceProtocol: String? = nil, completion: @escaping (_ error: String?) -> Void) {
-        if VPNManager.shared.userTappedToDisconnect && !VPNManager.shared.isFromProtocolFailover && !VPNManager.shared.isFromProtocolChange {
+        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange {
             return
         }
         VPNManager.shared.retryWithNewCredentials = false
@@ -149,8 +153,9 @@ extension VPNManager {
     private func connectUsingDynamicWireGuard() {
         guard let hostname = VPNManager.shared.selectedNode?.hostname,
               let endpoint = VPNManager.shared.selectedNode?.ip3,
-              let serverPublicKey = VPNManager.shared.selectedNode?.wgPublicKey else {
-            self.logger.logE(VPNManager.self, "Missing WireGuard Info - Public Key: \(VPNManager.shared.selectedNode?.wgPublicKey ?? "nil") - WG IP \(VPNManager.shared.selectedNode?.ip3 ?? "nil")")
+              let serverPublicKey = VPNManager.shared.selectedNode?.wgPublicKey
+        else {
+            logger.logE(VPNManager.self, "Missing WireGuard Info - Public Key: \(VPNManager.shared.selectedNode?.wgPublicKey ?? "nil") - WG IP \(VPNManager.shared.selectedNode?.ip3 ?? "nil")")
             VPNManager.shared.selectAnotherNode()
             serverRepository.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
             return
@@ -162,17 +167,18 @@ extension VPNManager {
                 Task {
                     do {
                         if try await self.configManager.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
-                                                                                            userSettings: self.makeUserSettings()) {
+                                                                                          userSettings: self.makeUserSettings())
+                        {
                             self.preferences.saveConnectingToCustomConfig(value: false)
                             Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
                         }
-                    } catch let error {
+                    } catch {
                         let description = (error as? Errors)?.description ?? ""
                         self.logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(description)")
                     }
                 }
             }
-        },onError: { error in
+        }, onError: { error in
             DispatchQueue.main.async {
                 self.handleWgConnectionError(error: error)
             }
@@ -182,7 +188,7 @@ extension VPNManager {
     func handleWgConnectionError(error: Error) {
         if let error = error as? Errors {
             if error != Errors.handled {
-                self.logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(error.description)")
+                logger.logE(VPNManager.self, "Error when trying to configure WireGuard VPN profile \(error.description)")
 
                 AlertManager.shared.showAlert(title: "",
                                               message: error.description,
@@ -196,7 +202,8 @@ extension VPNManager {
         if VPNManager.shared.userTappedToDisconnect { return }
         Task {
             if (try? await configManager.configureWireguard(with: selectedNode,
-                                                              userSettings: makeUserSettings())) ?? false {
+                                                            userSettings: makeUserSettings())) ?? false
+            {
                 self.preferences.saveConnectingToCustomConfig(value: true)
                 Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
             }
@@ -206,7 +213,7 @@ extension VPNManager {
     func connectUsingPreferredProtocol() {
         guard let selectedNode = VPNManager.shared.selectedNode else { return }
         guard let connectedWifiNetwork = WifiManager.shared.getConnectedNetwork() else { return }
-        self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Preferred Protocol: Establishing VPN connection to  \(selectedNode.hostname) using \(connectedWifiNetwork.preferredProtocol) \(connectedWifiNetwork.preferredPort)")
+        logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Preferred Protocol: Establishing VPN connection to  \(selectedNode.hostname) using \(connectedWifiNetwork.preferredProtocol) \(connectedWifiNetwork.preferredPort)")
         switch connectedWifiNetwork.preferredProtocol {
         case iKEv2:
             connectUsingIKEv2()
@@ -235,12 +242,12 @@ extension VPNManager {
         return
         guard let selectedNode = selectedNode else { return }
         delegate?.setConnecting()
-        self.keepConnectingState = true
+        keepConnectingState = true
         let nextProtocol = ConnectionManager.shared.getNextProtocol().protocolName
-        self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Engaging Automatic Mode: Establishing VPN connection to  \(selectedNode.hostname) using \(nextProtocol)")
+        logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Engaging Automatic Mode: Establishing VPN connection to  \(selectedNode.hostname) using \(nextProtocol)")
         switch nextProtocol {
         case iKEv2:
-            self.connectUsingIKEv2()
+            connectUsingIKEv2()
         case wireGuard:
             connectUsingWireGuard(forceProtocol: wireGuard) { error in
                 if error != nil {
@@ -256,17 +263,17 @@ extension VPNManager {
     func checkLocationValidity() {
         guard let selectedNode = selectedNode else { return }
         guard let currentLocation = getCurrentLocation() else {
-            self.logger.logD(self, "Unable to find \(selectedNode.cityName). Switching to Sister location.")
+            logger.logD(self, "Unable to find \(selectedNode.cityName). Switching to Sister location.")
             if let sisterLocation = getSisterLocation() {
                 logger.logD(self, "Switching to \(sisterLocation.1.city ?? "").")
                 switchLocation(from: sisterLocation)
             } else {
-                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                logger.logD(self, "Unable to find sister location. Switching to Best location.")
                 switchLocation(from: nil)
             }
             return
         }
-        if !sessionManager.canAccesstoProLocation() && currentLocation.1.premiumOnly ?? false {
+        if !sessionManager.canAccesstoProLocation(), currentLocation.1.premiumOnly ?? false {
             switchLocation(from: nil)
         }
     }
@@ -281,10 +288,10 @@ extension VPNManager {
         guard let servers = localDB.getServers() else { return nil }
         var serverResult: ServerModel?
         var groupResult: GroupModel?
-        for server in servers.map({$0.getServerModel()}) {
+        for server in servers.map({ $0.getServerModel() }) {
             for group in server?.groups ?? [] where group.id == selectedNode?.groupId {
                 serverResult = server
-                groupResult = server?.groups?.filter {$0.isNodesAvailable()}.randomElement()
+                groupResult = server?.groups?.filter { $0.isNodesAvailable() }.randomElement()
             }
         }
         guard let serverResultSafe = serverResult, let groupResultSafe = groupResult else { return nil }
@@ -308,7 +315,7 @@ extension VPNManager {
                                         nickName: nickName,
                                         cityName: cityName,
                                         groupId: groupId)
-            self.connect()
+            connect()
         } else {
             localDB.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
                 guard let bestLocation = bestLocation else { return }
@@ -326,7 +333,7 @@ extension VPNManager {
 
     private func connect() {
         if VPNManager.shared.isConnected() {
-            self.connectIntent = false
+            connectIntent = false
             resetProfiles {
                 self.connectIntent = true
                 self.userTappedToDisconnect = false

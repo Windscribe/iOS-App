@@ -19,11 +19,10 @@ enum VPNActionType {
 }
 
 class VPNConnectionAlert: UIViewController {
-
     weak var delegate: VPNConnectionAlertDelegate?
     private var actionType: VPNActionType = .connect
     private let protocols = [TextsAsset.wireGuard, TextsAsset.iKEv2, udp, tcp, stealth, wsTunnel]
-    private var selectedProtocol: String?
+    private var selectedProtocol = TextsAsset.wireGuard
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -81,7 +80,7 @@ class VPNConnectionAlert: UIViewController {
 
             actionButton.topAnchor.constraint(equalTo: progressLabel.bottomAnchor, constant: 16),
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
         ])
     }
 
@@ -89,27 +88,25 @@ class VPNConnectionAlert: UIViewController {
         self.actionType = actionType
 
         switch actionType {
-            case .connect:
-                titleLabel.text = "Select protocol"
-                actionButton.setTitle("Connect", for: .normal)
-                protocolPicker.isHidden = false
-            case .disconnect:
-                titleLabel.text = "Disconnecting..."
-                actionButton.setTitle("Disconnect", for: .normal)
-                protocolPicker.isHidden = true
+        case .connect:
+            titleLabel.text = "Let's connect"
+            actionButton.setTitle("Connect", for: .normal)
+            protocolPicker.isHidden = false
+        case .disconnect:
+            titleLabel.text = "Lets' disconnect"
+            actionButton.setTitle("Disconnect", for: .normal)
+            protocolPicker.isHidden = true
         }
     }
 
     @objc private func actionButtonTapped() {
         switch actionType {
-            case .connect:
-                if let selectedProtocol = selectedProtocol {
-                    delegate?.didSelectProtocol(selectedProtocol)
-                    progressLabel.text = "Connecting..."
-                }
-            case .disconnect:
-                delegate?.didTapDisconnect()
-                progressLabel.text = "Disconnecting..."
+        case .connect:
+            delegate?.didSelectProtocol(selectedProtocol)
+            progressLabel.text = "Connecting..."
+        case .disconnect:
+            delegate?.didTapDisconnect()
+            progressLabel.text = "Disconnecting..."
         }
     }
 
@@ -123,20 +120,21 @@ class VPNConnectionAlert: UIViewController {
 }
 
 // MARK: - UIPickerViewDelegate & UIPickerViewDataSource
+
 extension VPNConnectionAlert: UIPickerViewDelegate, UIPickerViewDataSource {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in _: UIPickerView) -> Int {
         return 1
     }
 
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_: UIPickerView, numberOfRowsInComponent _: Int) -> Int {
         return protocols.count
     }
 
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
         return protocols[row]
     }
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
         selectedProtocol = protocols[row]
     }
 }

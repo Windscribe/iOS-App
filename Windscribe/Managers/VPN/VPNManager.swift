@@ -7,18 +7,16 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
-import Swinject
-import RxSwift
 import Combine
+import RxSwift
+import Swinject
 
-protocol VPNManagerProtocol {
-
-}
+protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
     static let shared = VPNManager(withStatusObserver: true)
@@ -28,47 +26,37 @@ class VPNManager: VPNManagerProtocol {
     var selectedProtocol = TextsAsset.wireGuard
     let connectionAlert = VPNConnectionAlert()
     let disconnectAlert = VPNConnectionAlert()
-    lazy var wgCrendentials: WgCredentials = {
-        return Assembler.resolve(WgCredentials.self)
-    }()
-    lazy var wgRepository: WireguardConfigRepository = {
-        return Assembler.resolve(WireguardConfigRepository.self)
-    }()
-    lazy var api: APIManager = {
-        return Assembler.resolve(APIManager.self)
-    }()
-    lazy var logger: FileLogger = {
-        return Assembler.resolve(FileLogger.self)
-    }()
-    lazy var localDB: LocalDatabase = {
-        return Assembler.resolve(LocalDatabase.self)
-    }()
-    lazy var serverRepository: ServerRepository = {
-        return Assembler.resolve(ServerRepository.self)
-    }()
-    lazy var staticIpRepository: StaticIpRepository = {
-        return Assembler.resolve(StaticIpRepository.self)
-    }()
-    lazy var preferences: Preferences = {
-        return Assembler.resolve(Preferences.self)
-    }()
-    lazy var connectivity: Connectivity = {
-        return Assembler.resolve(Connectivity.self)
-    }()
-    lazy var sessionManager: SessionManagerV2 = {
-        return Assembler.resolve(SessionManagerV2.self)
-    }()
-    lazy var configManager: ConfigurationsManager = {
-        return Assembler.resolve(ConfigurationsManager.self)
-    }()
+    let tag = "VPNConfiguration"
+    lazy var wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
+
+    lazy var wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
+
+    lazy var api: APIManager = Assembler.resolve(APIManager.self)
+
+    lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
+
+    lazy var localDB: LocalDatabase = Assembler.resolve(LocalDatabase.self)
+
+    lazy var serverRepository: ServerRepository = Assembler.resolve(ServerRepository.self)
+
+    lazy var staticIpRepository: StaticIpRepository = Assembler.resolve(StaticIpRepository.self)
+
+    lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
+
+    lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
+
+    lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+
+    lazy var configManager: ConfigurationsManager = Assembler.resolve(ConfigurationsManager.self)
+
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()
         }
     }
-    lazy var credentialsRepository: CredentialsRepository = {
-        return Assembler.resolve(CredentialsRepository.self)
-    }()
+
+    lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
+
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
     var selectedFirewallMode: Bool = true
     var selectedConnectionMode: String?
@@ -114,7 +102,7 @@ class VPNManager: VPNManagerProtocol {
     init(withStatusObserver: Bool = false) {
         if withStatusObserver {
             NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(self.connectionStatusChanged(_:)),
+                                                   selector: #selector(connectionStatusChanged(_:)),
                                                    name: NSNotification.Name.NEVPNStatusDidChange,
                                                    object: nil)
         }
@@ -131,10 +119,10 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func resetProperties() {
-        self.retryWithNewCredentials = false
-        self.restartOnDisconnect = false
-        self.keepConnectingState = false
-        self.disableOrFailOnDisconnect = false
+        retryWithNewCredentials = false
+        restartOnDisconnect = false
+        keepConnectingState = false
+        disableOrFailOnDisconnect = false
         retryTimer?.invalidate()
         connectingTimer?.invalidate()
         disconnectingTimer?.invalidate()
@@ -181,13 +169,13 @@ class VPNManager: VPNManagerProtocol {
                 if network.SSID == TextsAsset.cellular && network.SSID != untrustedOneTimeOnlySSID {
                     let ruleDisconnect = NEOnDemandRuleDisconnect()
                     #if os(iOS)
-                    ruleDisconnect.interfaceTypeMatch = .cellular
+                        ruleDisconnect.interfaceTypeMatch = .cellular
                     #endif
                     onDemandRules.append(ruleDisconnect)
                     logger.logD(VPNManager.self, "Added On demand disconnect rule for cellular network.")
                 }
             }
-            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != untrustedOneTimeOnlySSID }.map {$0.SSID}.sorted()
+            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
             if unsecureWifiNetworks.count > 0 {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
                 ruleDisconnect.ssidMatch = unsecureWifiNetworks
@@ -225,7 +213,7 @@ class VPNManager: VPNManagerProtocol {
 
     private func onFailToGetCredentials(error: String?) -> Bool {
         if error != nil {
-            self.logger.logE(VPNManager.self, "Failed to load vpn credentials.")
+            logger.logE(VPNManager.self, "Failed to load vpn credentials.")
             DispatchQueue.main.async {
                 self.delegate?.setDisconnected()
             }
@@ -240,15 +228,16 @@ class VPNManager: VPNManagerProtocol {
 
     func runConnectivityTest(retry: Bool = true,
                              connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true) {
+                             checkForIPAddressChange: Bool = true)
+    {
         getVPNConnectionInfo { [self] info in
             if info?.status != .connected {
                 return
             }
             logger.logD(self, "[\(uniqueConnectionId)] Running connectivity Test")
-            api.getIp().observe(on: MainScheduler.asyncInstance).subscribe( onSuccess: { myIp in
+            api.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
                 self.executeForConnectivityTestSuccessful(ipAddress: myIp.userIp, checkForIPAddressChange: checkForIPAddressChange)
-            },onFailure: { _ in
+            }, onFailure: { _ in
                 if retry {
                     self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test.")
                     self.connectivityTestTimer = Timer.scheduledTimer(timeInterval: 3.0,
@@ -269,17 +258,18 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
-                                              checkForIPAddressChange: Bool = true) {
-        self.logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
+                                              checkForIPAddressChange _: Bool = true)
+    {
+        logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
         ConnectionManager.shared.goodProtocol = ConnectionManager.shared.getNextProtocol()
-        self.delegate?.displaySetPrefferedProtocol()
+        delegate?.displaySetPrefferedProtocol()
         ConnectionManager.shared.onConnectStateChange(state: NEVPNStatus.connected)
         DispatchQueue.main.async {
             if self.isConnected() {
                 self.isOnDemandRetry = false
-                self.preferences.saveConnectionCount(count: ((self.preferences.getConnectionCount() ?? 0) + 1))
+                self.preferences.saveConnectionCount(count: (self.preferences.getConnectionCount() ?? 0) + 1)
                 self.delegate?.setConnected(ipAddress: ipAddress)
                 self.resetProperties()
                 self.connectIntent = true
@@ -300,7 +290,7 @@ class VPNManager: VPNManagerProtocol {
         }
         set(value) {
             if value != activeVPNManager {
-                self.logger.logE(VPNManager.self, "Active VPN Manager changed to \(value)")
+                logger.logE(VPNManager.self, "Active VPN Manager changed to \(value)")
                 preferences.saveActiveManagerKey(key: value.rawValue)
                 UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
             }
@@ -312,29 +302,29 @@ class VPNManager: VPNManagerProtocol {
      */
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
-            let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
-            configManager.managers.forEach {
-                if priorityStates.contains($0.connection.status) {
-                    if configManager.isIKEV2(manager: $0) {
-                        completion(configManager.getIKEV2ConnectionInfo(manager: $0))
-                    } else {
-                        completion(configManager.getVPNConnectionInfo(manager: $0))
-                    }
-                    return
+        let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
+        configManager.managers.forEach {
+            if priorityStates.contains($0.connection.status) {
+                if configManager.isIKEV2(manager: $0) {
+                    completion(configManager.getIKEV2ConnectionInfo(manager: $0))
+                } else {
+                    completion(configManager.getVPNConnectionInfo(manager: $0))
                 }
-            }
-
-            // No VPN Manager is configured
-        if (configManager.managers.filter { $0.connection.status != .invalid }).isEmpty {
-                completion(nil)
                 return
             }
-            // Get VPN connection info from last active manager.
-            if activeVPNManager == .iKEV2 {
-                completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
-            } else {
-                completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
-            }
+        }
+
+        // No VPN Manager is configured
+        if (configManager.managers.filter { $0.connection.status != .invalid }).isEmpty {
+            completion(nil)
+            return
+        }
+        // Get VPN connection info from last active manager.
+        if activeVPNManager == .iKEV2 {
+            completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
+        } else {
+            completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
+        }
     }
 
     func makeUserSettings() -> VPNUserSettings {
@@ -347,7 +337,7 @@ class VPNManager: VPNManagerProtocol {
 }
 
 enum VPNManagerType: String {
-    case iKEV2 = "iKEV2"
+    case iKEV2
     case wg = "Wg"
     // OpenVPN supports UDP, TCP, Stealth and WSTunnel.
     case openVPN = "OpenVPN"

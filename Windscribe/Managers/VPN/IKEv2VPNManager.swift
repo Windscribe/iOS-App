@@ -1,5 +1,5 @@
 //
-//  VPNManager.swift
+//  IKEv2VPNManager.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-10.
@@ -8,13 +8,12 @@
 
 import Foundation
 import NetworkExtension
-import Security
 import RealmSwift
-import Swinject
 import RxSwift
+import Security
+import Swinject
 
 class IKEv2VPNManager {
-
     static let shared = IKEv2VPNManager()
     let neVPNManager = NEVPNManager.shared()
     var lastConnectionStatus: NEVPNStatus?
@@ -43,13 +42,14 @@ class IKEv2VPNManager {
     }
 
     private func configure(username: String,
-                   dnsHostname: String,
-                   hostname: String,
-                   ip: String,
-                   completion: @escaping (_ result: Bool,
-                                          _ error: String?) -> Void ) {
+                           dnsHostname _: String,
+                           hostname: String,
+                           ip: String,
+                           completion: @escaping (_ result: Bool,
+                                                  _ error: String?) -> Void)
+    {
         loadData()
-        neVPNManager.loadFromPreferences { (error) in
+        neVPNManager.loadFromPreferences { error in
             if error == nil {
                 let serverCredentials = self.keychainDb.retrieve(username: username)
                 let ikeV2Protocol = NEVPNProtocolIKEv2()
@@ -82,43 +82,43 @@ class IKEv2VPNManager {
                 ikeV2Protocol.username = username
                 ikeV2Protocol.sharedSecretReference = serverCredentials
                 #if os(iOS)
-                if #available(iOS 13.0, *) {
-                    // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
-                    ikeV2Protocol.enableFallback = true
-                }
+                    if #available(iOS 13.0, *) {
+                        // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
+                        ikeV2Protocol.enableFallback = true
+                    }
                 #endif
-                ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm =  NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+                ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
                 ikeV2Protocol.ikeSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
                 ikeV2Protocol.ikeSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
                 ikeV2Protocol.ikeSecurityAssociationParameters.lifetimeMinutes = 1440
-                ikeV2Protocol.childSecurityAssociationParameters.encryptionAlgorithm =  NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+                ikeV2Protocol.childSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
                 ikeV2Protocol.childSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
                 ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
                 ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
 
                 self.neVPNManager.protocolConfiguration = ikeV2Protocol
 
-#if os(iOS)
+                #if os(iOS)
 
-                // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
-                if #available(iOS 15.1, *) {
-                    self.neVPNManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch  : true
-                    self.neVPNManager.protocolConfiguration?.excludeLocalNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.allowLane  : false
-                }
-                // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-                if #available(iOS 16.0, *) {
-                    if !self.allowLane {
-                        self.neVPNManager.protocolConfiguration?.includeAllNetworks = true
+                    // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
+                    if #available(iOS 15.1, *) {
+                        self.neVPNManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch : true
+                        self.neVPNManager.protocolConfiguration?.excludeLocalNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.allowLane : false
                     }
-                }
-#endif
+                    // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+                    if #available(iOS 16.0, *) {
+                        if !self.allowLane {
+                            self.neVPNManager.protocolConfiguration?.includeAllNetworks = true
+                        }
+                    }
+                #endif
 
                 self.neVPNManager.onDemandRules?.removeAll()
                 self.neVPNManager.onDemandRules = VPNManager.shared.getOnDemandRules()
                 self.neVPNManager.isEnabled = true
                 self.neVPNManager.localizedDescription = Constants.appName
-                self.neVPNManager.saveToPreferences(completionHandler: { (error) in
-                    self.neVPNManager.loadFromPreferences { (error) in
+                self.neVPNManager.saveToPreferences(completionHandler: { error in
+                    self.neVPNManager.loadFromPreferences { error in
                         if error == nil {
                             self.logger.logD(self, "VPN configuration successful. Username: \(username)")
                             completion(true, nil)
@@ -128,23 +128,23 @@ class IKEv2VPNManager {
                         }
                     }
                 })
-                self.logger.logD(self, "KillSwitch option set by user is \(self.killSwitch )")
-                self.logger.logD(self, "Allow lan option set by user is \(self.allowLane )")
+                self.logger.logD(self, "KillSwitch option set by user is \(self.killSwitch)")
+                self.logger.logD(self, "Allow lan option set by user is \(self.allowLane)")
 
-#if os(iOS)
+                #if os(iOS)
 
-                if #available(iOS 15.1, *) {
-                    self.logger.logD(self, "KillSwitch in IKEv2 VPNManager is \( String(describing: self.neVPNManager.protocolConfiguration?.includeAllNetworks))")
-                    self.logger.logD(self, "Allow lan in IKEv2 VPNManager is \( String(describing: self.neVPNManager.protocolConfiguration?.excludeLocalNetworks))")
-                }
-#endif
+                    if #available(iOS 15.1, *) {
+                        self.logger.logD(self, "KillSwitch in IKEv2 VPNManager is \(String(describing: self.neVPNManager.protocolConfiguration?.includeAllNetworks))")
+                        self.logger.logD(self, "Allow lan in IKEv2 VPNManager is \(String(describing: self.neVPNManager.protocolConfiguration?.excludeLocalNetworks))")
+                    }
+                #endif
             }
         }
     }
 
     /// Sometimes If another ikev2 profile is configured and kill switch is on VPNManager may not respond.
     private func handleVPNManagerNoResponse() {
-        if self.killSwitch {
+        if killSwitch {
             noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
                 VPNManager.shared.disconnectOrFail()
             }
@@ -159,7 +159,7 @@ class IKEv2VPNManager {
 //            OpenVPNManager.shared.disconnect()
 //        } else if WireGuardVPNManager.shared.isConnected() {
 //            VPNManager.shared.restartOnDisconnect = true
-////            WireGuardVPNManager.shared.disconnect()
+        ////            WireGuardVPNManager.shared.disconnect()
 //        } else {
 //            if IKEv2VPNManager.shared.neVPNManager.connection.status == .connected ||
 //                IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting {
@@ -188,27 +188,27 @@ class IKEv2VPNManager {
 //
 //                    }
 //                }
-////            }
+        ////            }
 //            }
 //        }
     }
 
     private func disconnect(restartOnDisconnect: Bool = false, force: Bool = false) {
-        if neVPNManager.connection.status == .disconnected && !force {
+        if neVPNManager.connection.status == .disconnected, !force {
             return
         }
-        neVPNManager.loadFromPreferences(completionHandler: { [weak self] (error) in
+        neVPNManager.loadFromPreferences(completionHandler: { [weak self] error in
             if error == nil, self?.neVPNManager.protocolConfiguration?.username != nil {
                 self?.neVPNManager.isOnDemandEnabled = VPNManager.shared.connectIntent
-#if os(iOS)
+                #if os(iOS)
 
-                if #available(iOS 15.1, *) {
-                    if restartOnDisconnect {
-                        self?.neVPNManager.protocolConfiguration?.includeAllNetworks = false
-                    } else {
-                        self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
+                    if #available(iOS 15.1, *) {
+                        if restartOnDisconnect {
+                            self?.neVPNManager.protocolConfiguration?.includeAllNetworks = false
+                        } else {
+                            self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
+                        }
                     }
-                }
                 #endif
                 self?.neVPNManager.saveToPreferences { [weak self] _ in
                     self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
@@ -220,22 +220,22 @@ class IKEv2VPNManager {
     }
 
     private func restartConnection() {
-        self.logger.logD(self, "Restarting IKEv2 connection.")
+        logger.logD(self, "Restarting IKEv2 connection.")
 
         disconnect(restartOnDisconnect: true)
     }
 
     func setOnDemandMode() {
-        self.setOnDemandMode(DefaultValues.firewallMode)
+        setOnDemandMode(DefaultValues.firewallMode)
     }
 
     func setKillSwitchMode() {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
-#if os(iOS)
+            #if os(iOS)
 
-            if #available(iOS 15.1, *) {
-                self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
-            }
+                if #available(iOS 15.1, *) {
+                    self?.neVPNManager.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
+                }
             #endif
             self?.neVPNManager.saveToPreferences { [weak self] _ in
                 self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
@@ -246,11 +246,11 @@ class IKEv2VPNManager {
 
     func setAllowLanMode() {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
-#if os(iOS)
+            #if os(iOS)
 
-            if #available(iOS 15.1, *) {
-                self?.neVPNManager.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
-            }
+                if #available(iOS 15.1, *) {
+                    self?.neVPNManager.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
+                }
             #endif
             self?.neVPNManager.saveToPreferences { [weak self] _ in
                 self?.neVPNManager.loadFromPreferences(completionHandler: { _ in
@@ -281,7 +281,8 @@ class IKEv2VPNManager {
     }
 
     private func removeProfile(completion: @escaping (_ result: Bool,
-                                              _ error: String?) -> Void) {
+                                                      _ error: String?) -> Void)
+    {
         neVPNManager.loadFromPreferences(completionHandler: { [weak self] _ in
             if self?.neVPNManager.protocolConfiguration?.username != nil {
                 self?.neVPNManager.removeFromPreferences { [weak self] _ in
@@ -316,7 +317,7 @@ class IKEv2VPNManager {
     }
 
     func getVPNStatus() -> String {
-        switch self.neVPNManager.connection.status {
+        switch neVPNManager.connection.status {
         case .connected:
             return "Connected"
         case .connecting:
@@ -331,35 +332,39 @@ class IKEv2VPNManager {
     }
 
     func configureDummy(completion: @escaping (_ result: Bool,
-                                              _ error: String?) -> Void) {
+                                               _ error: String?) -> Void)
+    {
         configure(username: "Windscribe",
                   dnsHostname: "0.0.0.0",
-                  hostname: "127.0.0.1", ip: "0.0.0.0") { (result, error) in
+                  hostname: "127.0.0.1", ip: "0.0.0.0")
+        { result, error in
             completion(result, error)
         }
     }
 
     private func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
-                                                              _ error: String?) -> Void) {
+                                                                      _ error: String?) -> Void)
+    {
         guard let selectedNode = VPNManager.shared.selectedNode else {
-            self.logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
+            logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             completion(false, Errors.hostnameNotFound.localizedDescription)
             return
         }
 
         let ip = selectedNode.ip1 ?? selectedNode.staticIpToConnect
         guard let ip = ip else {
-            self.logger.logE(self, "Ip1 and ip3 are not avaialble to configure this profile.")
+            logger.logE(self, "Ip1 and ip3 are not avaialble to configure this profile.")
             completion(false, "Ip1 and ip3 are not avaialble to configure this profile.")
             return
         }
-        self.logger.logD(self, "Configuring VPN profile with saved credentials. \(selectedNode.hostname)")
+        logger.logD(self, "Configuring VPN profile with saved credentials. \(selectedNode.hostname)")
 
         var base64username = ""
         var base64password = ""
         if let staticIPCredentials = VPNManager.shared.selectedNode?.staticIPCredentials,
            let username = staticIPCredentials.username,
-           let password = staticIPCredentials.password {
+           let password = staticIPCredentials.password
+        {
             base64username = username
             base64password = password
         } else {
@@ -369,15 +374,17 @@ class IKEv2VPNManager {
             }
         }
         if base64username == "" ||
-            base64password == "" {
+            base64password == ""
+        {
             completion(false, Errors.missingAuthenticationValues.localizedDescription)
-            self.logger.logE(self, "Can't establish a VPN connection, missing authentication values.")
+            logger.logE(self, "Can't establish a VPN connection, missing authentication values.")
         } else {
             keychainDb.save(username: base64username,
-                                        password: base64password)
+                            password: base64password)
             configure(username: base64username,
                       dnsHostname: selectedNode.dnsHostname,
-                      hostname: selectedNode.hostname, ip: ip) { (result, error) in
+                      hostname: selectedNode.hostname, ip: ip)
+            { result, error in
                 completion(result, error)
             }
         }

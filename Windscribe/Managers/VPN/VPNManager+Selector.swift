@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
+import Combine
 import RxSwift
 import Swinject
-import Combine
 
 extension VPNManager {
     @objc func configureAndConnectVPN() {
@@ -23,8 +23,7 @@ extension VPNManager {
         }
         VPNManager.shared.uniqueConnectionId = UUID().uuidString
         connectNow()
-        return
-//        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
+        //        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
 //            logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
 //            if customConfig.protocolType == TextsAsset.wireGuard {
 //                connectUsingCustomConfigWireGuard()
@@ -50,25 +49,25 @@ extension VPNManager {
         connectUsingAutomaticMode()
     }
 
-    @objc func retryWithAutomaticMode(protocolType: String?) {
+    @objc func retryWithAutomaticMode(protocolType _: String?) {
         retryInProgress = false
         connectUsingAutomaticMode()
     }
 
     @objc func retryConnection() {
-        logger.logD( VPNManager.self, "Retrying connection")
+        logger.logD(VPNManager.self, "Retrying connection")
         if VPNManager.shared.userTappedToDisconnect { return }
-        if self.isCustomConfigSelected() {
+        if isCustomConfigSelected() {
             if selectedNode?.customConfig?.protocolType == TextsAsset.wireGuard { restartCustomWireGuardConnection() } else { restartCustomOpenVPNConnection() }
         } else {
             let proto = ConnectionManager.shared.getNextProtocol()
             switch proto.protocolName {
             case iKEv2:
-                self.restartIKEv2Connection()
+                restartIKEv2Connection()
             case wireGuard:
-                self.restartWireGuardConnection()
+                restartWireGuardConnection()
             default:
-                self.restartOpenVPNConnection()
+                restartOpenVPNConnection()
             }
         }
     }
@@ -79,7 +78,8 @@ extension VPNManager {
         }
         Task {
             if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
-                                                                                  userSettings: makeUserSettings())) ?? false {
+                                                                                userSettings: makeUserSettings())) ?? false
+            {
                 await configManager.connect(with: .wg, killSwitch: killSwitch)
             }
         }
@@ -114,14 +114,14 @@ extension VPNManager {
     }
 
     @objc func retryConnectionWithNewServerCredentials() {
-        if userTappedToDisconnect || self.isCustomConfigSelected() { return }
+        if userTappedToDisconnect || isCustomConfigSelected() { return }
         logger.logD(self, "Disconnecting from VPN after first attempt.")
         let protocolType = ConnectionManager.shared.getNextProtocol().protocolName
-        let isStatic = self.selectedNode?.staticIPCredentials != nil
-        self.retryWithNewCredentials = false
+        let isStatic = selectedNode?.staticIPCredentials != nil
+        retryWithNewCredentials = false
         resetProfiles()
             .andThen(selectAnotherNode())
-            .andThen(self.updateCredentials(protocolType: protocolType, isStatic: isStatic))
+            .andThen(updateCredentials(protocolType: protocolType, isStatic: isStatic))
             .subscribe(on: MainScheduler.instance)
             .subscribe(onCompleted: {
                 switch protocolType {
@@ -199,13 +199,13 @@ extension VPNManager {
     }
 
     @objc func disconnectActiveVPNConnection(setDisconnect: Bool = false, disableConnectIntent: Bool = false) {
-        logger.logD( VPNManager.self, "[\(uniqueConnectionId)] [\(self.selectedConnectionMode ?? "")] Disconnecting Active VPN connection")
+        logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(selectedConnectionMode ?? "")] Disconnecting Active VPN connection")
 
         configManager.invalidateTimer()
-        if self.selectedConnectionMode == Fields.Values.auto {
-            self.resetProperties()
+        if selectedConnectionMode == Fields.Values.auto {
+            resetProperties()
         }
-        if setDisconnect { self.delegate?.setDisconnected() }
+        if setDisconnect { delegate?.setDisconnected() }
         if disableConnectIntent { VPNManager.shared.connectIntent = false }
 
         Task {
@@ -218,13 +218,13 @@ extension VPNManager {
     }
 
     func disconnectIfRequired(completion: @escaping () -> Void) {
-        if self.selectedConnectionMode == Fields.Values.auto {
-            self.resetProperties()
+        if selectedConnectionMode == Fields.Values.auto {
+            resetProperties()
         }
         if isConnected() || isConnecting() {
-            logger.logD( VPNManager.self, "Reconnecting...")
-            self.keepConnectingState = true
-            self.delegate?.setConnecting()
+            logger.logD(VPNManager.self, "Reconnecting...")
+            keepConnectingState = true
+            delegate?.setConnecting()
 
             Task {
                 for manager in configManager.managers {
@@ -235,12 +235,12 @@ extension VPNManager {
                 completion()
             }
         } else {
-            logger.logD( VPNManager.self, "Connecting...")
+            logger.logD(VPNManager.self, "Connecting...")
             completion()
         }
     }
 
-    @objc func disconnectAllVPNConnections(setDisconnect: Bool = false, force: Bool = false) {
+    @objc func disconnectAllVPNConnections(setDisconnect: Bool = false, force _: Bool = false) {
         resetProfiles {
             if setDisconnect {
                 self.delegate?.setDisconnected()
@@ -280,7 +280,7 @@ extension VPNManager {
     }
 
     @objc func disconnectAndDisable() {
-        self.disableOrFailOnDisconnect = true
+        disableOrFailOnDisconnect = true
         for manager in configManager.managers {
             if manager.connection.status == .connected || manager.connection.status == .connecting {
                 Task {
@@ -292,12 +292,12 @@ extension VPNManager {
 
     @objc func disconnectIfStillConnecting() {
         for manager in configManager.managers {
-            if manager.connection.status == .connecting && manager.connection.status != .disconnected {
+            if manager.connection.status == .connecting, manager.connection.status != .disconnected {
                 disableOrFailOnDisconnect = true
                 isOnDemandRetry = false
                 Task {
                     await configManager.disconnect(killSwitch: killSwitch, manager: manager)
-                    logger.logE( VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(configManager.getManagerName(from: manager)) connection.")
+                    logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connecting timeout for \(configManager.getManagerName(from: manager)) connection.")
                 }
             }
         }
@@ -309,7 +309,7 @@ extension VPNManager {
                 return
             }
             if info.killSwitch || info.onDemand {
-                self.logger.logI( VPNManager.self, "Kill-Switch/Firewall on unable to remove VPN Profile.")
+                self.logger.logI(VPNManager.self, "Kill-Switch/Firewall on unable to remove VPN Profile.")
                 return
             }
 
@@ -319,7 +319,7 @@ extension VPNManager {
                     Task {
                         await self.configManager.disconnect(killSwitch: self.killSwitch, manager: manager)
                         await self.configManager.removeProfile(killSwitch: self.killSwitch, manager: manager)
-                        self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing \(self.configManager.getManagerName(from: manager)) VPN profile.")
+                        self.logger.logE(VPNManager.self, "Disconnecting timeout. Removing \(self.configManager.getManagerName(from: manager)) VPN profile.")
                     }
                 }
             }
@@ -336,22 +336,20 @@ extension VPNManager {
                             connectToAnotherNode: false)
     }
 
-    @objc func increaseFailCountsOrRetry() {
-
-    }
+    @objc func increaseFailCountsOrRetry() {}
 
     // function to check if local ip belongs to RFC 1918 ips
     func checkLocalIPIsRFC() -> Bool {
         if let localIPAddress = NWInterface.InterfaceType.wifi.ipv4 {
             if localIPAddress.isRFC1918IPAddress {
-                self.logger.logD( VPNManager.self, "It's an RFC1918 address. \(localIPAddress)")
+                logger.logD(VPNManager.self, "It's an RFC1918 address. \(localIPAddress)")
                 return true
             } else {
-                self.logger.logD( VPNManager.self, "Non Rfc-1918 address found  \(localIPAddress)")
+                logger.logD(VPNManager.self, "Non Rfc-1918 address found  \(localIPAddress)")
                 return false
             }
         } else {
-            self.logger.logD( VPNManager.self, "Failed to retrieve local IP address.")
+            logger.logD(VPNManager.self, "Failed to retrieve local IP address.")
             return true
         }
     }

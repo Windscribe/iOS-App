@@ -8,14 +8,13 @@
 
 import Foundation
 import NetworkExtension
-import Security
 import RealmSwift
-import WireGuardKit
-import Swinject
 import RxSwift
+import Security
+import Swinject
+import WireGuardKit
 
 class WireGuardVPNManager {
-
     static let shared = WireGuardVPNManager()
     var providerManager: NETunnelProviderManager!
     var lastDnsHostname = ""
@@ -32,7 +31,7 @@ class WireGuardVPNManager {
 
     func setup(completion: @escaping () -> Void) {
         loadData()
-        NETunnelProviderManager.loadAllFromPreferences { [weak self] (managers, error) in
+        NETunnelProviderManager.loadAllFromPreferences { [weak self] managers, error in
             if error == nil {
                 self?.providerManager = managers?.first {
                     $0.protocolConfiguration?.username == TextsAsset.wireGuard
@@ -59,47 +58,50 @@ class WireGuardVPNManager {
     private func getConfiguration(completion: @escaping (_ tunnelConfiguration: TunnelConfiguration?) -> Void) {
         var configFilePath = "config.conf"
         if let customConfig = VPNManager.shared.selectedNode?.customConfig,
-            let customConfigId = customConfig.id {
-           configFilePath = "\(customConfigId).conf"
+           let customConfigId = customConfig.id
+        {
+            configFilePath = "\(customConfigId).conf"
         }
         guard let configData = fileDatabase.readFile(path: configFilePath) else { return }
-       guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else { return }
-       var tunnelConfiguration: TunnelConfiguration?
-       do {
-          tunnelConfiguration =  try TunnelConfiguration(fromWgQuickConfig: stringData, called: configFilePath)
-          completion(tunnelConfiguration)
-       } catch let error {
+        guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else { return }
+        var tunnelConfiguration: TunnelConfiguration?
+        do {
+            tunnelConfiguration = try TunnelConfiguration(fromWgQuickConfig: stringData, called: configFilePath)
+            completion(tunnelConfiguration)
+        } catch {
             logger.logE(WireGuardVPNManager.self, "WireGuard tunnel Error: \(error)")
             completion(nil)
         }
     }
 
     private func configure(completion: @escaping (_ result: Bool,
-                                          _ error: String?) -> Void ) {
+                                                  _ error: String?) -> Void)
+    {
         providerManager?.loadFromPreferences { [weak self] error in
             if error == nil,
-               let self = self {
-                self.getConfiguration { (tunnelConfiguration) in
+               let self = self
+            {
+                self.getConfiguration { tunnelConfiguration in
                     guard let tunnelConfiguration = tunnelConfiguration else { return }
                     self.providerManager.setTunnelConfiguration(tunnelConfiguration, username: TextsAsset.wireGuard, description: Constants.appName)
-#if os(iOS)
-                    // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
-                    if #available(iOS 15.1, *) {
-                        self.providerManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch : true
-                        self.providerManager.protocolConfiguration?.excludeLocalNetworks =
-                        VPNManager.shared.checkLocalIPIsRFC() ? self.allowLane : false
-                    }
-                    // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-                    if #available(iOS 16.0, *) {
-                        if !self.allowLane {
-                            self.providerManager.protocolConfiguration?.includeAllNetworks = true
+                    #if os(iOS)
+                        // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
+                        if #available(iOS 15.1, *) {
+                            self.providerManager.protocolConfiguration?.includeAllNetworks = VPNManager.shared.checkLocalIPIsRFC() ? self.killSwitch : true
+                            self.providerManager.protocolConfiguration?.excludeLocalNetworks =
+                                VPNManager.shared.checkLocalIPIsRFC() ? self.allowLane : false
                         }
-                    }
-#endif
+                        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+                        if #available(iOS 16.0, *) {
+                            if !self.allowLane {
+                                self.providerManager.protocolConfiguration?.includeAllNetworks = true
+                            }
+                        }
+                    #endif
                     self.providerManager.onDemandRules?.removeAll()
                     self.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
                     self.providerManager.isEnabled = true
-                    self.providerManager.saveToPreferences(completionHandler: { (error) in
+                    self.providerManager.saveToPreferences(completionHandler: { error in
                         if error == nil {
                             self.providerManager.loadFromPreferences(completionHandler: { _ in
                                 self.logger.logD(WireGuardVPNManager.self, "WireGuard VPN configuration successful.")
@@ -108,7 +110,6 @@ class WireGuardVPNManager {
                         } else {
                             completion(false, "Error when loading vpn prefences.")
                             self.logger.logE(WireGuardVPNManager.self, "Error when loading vpn prefences. \(String(describing: error?.localizedDescription))")
-
                         }
                     })
                 }
@@ -155,18 +156,19 @@ class WireGuardVPNManager {
 //        }
     }
 
-    private func disconnect(restartOnDisconnect: Bool = false, force: Bool = true) {
-        if self.providerManager.connection.status == .disconnected && !force { return }
-        self.providerManager?.loadFromPreferences(completionHandler: { [weak self] (error) in
+    private func disconnect(restartOnDisconnect _: Bool = false, force: Bool = true) {
+        if providerManager.connection.status == .disconnected, !force { return }
+        providerManager?.loadFromPreferences(completionHandler: { [weak self] error in
             guard let self = self else { return }
             if error == nil,
-                self.isConfigured() {
+               self.isConfigured()
+            {
                 self.providerManager?.isOnDemandEnabled = VPNManager.shared.connectIntent
-#if os(iOS)
-                if #available(iOS 15.1, *) {
-                    self.providerManager?.protocolConfiguration?.includeAllNetworks = self.killSwitch
-                }
-#endif
+                #if os(iOS)
+                    if #available(iOS 15.1, *) {
+                        self.providerManager?.protocolConfiguration?.includeAllNetworks = self.killSwitch
+                    }
+                #endif
                 self.providerManager?.saveToPreferences { _ in
                     self.providerManager?.loadFromPreferences(completionHandler: { _ in
                         self.providerManager?.connection.stopVPNTunnel()
@@ -177,15 +179,16 @@ class WireGuardVPNManager {
     }
 
     private func restartConnection() {
-        self.logger.logD(WireGuardVPNManager.self, "Restarting WireGuard connection.")
+        logger.logD(WireGuardVPNManager.self, "Restarting WireGuard connection.")
         disconnect(restartOnDisconnect: true)
     }
 
     private func configureWithSavedConfig(completion: @escaping (_ result: Bool,
-                                                         _ error: String?) -> Void) {
+                                                                 _ error: String?) -> Void)
+    {
         guard let selectedNode = VPNManager.shared.selectedNode,
               let ip3 = selectedNode.ip3 else { return }
-        self.logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with saved configuration. \(String(describing: ip3))")
+        logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with saved configuration. \(String(describing: ip3))")
 
         if providerManager?.connection.status != .connecting {
             configure { result, error in
@@ -196,9 +199,9 @@ class WireGuardVPNManager {
 
     private func configureWithCustomConfig(completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else { return }
-        self.logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
-        if self.providerManager?.connection.status != .connecting {
-            configure { (result, error) in
+        logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
+        if providerManager?.connection.status != .connecting {
+            configure { result, error in
                 completion(result, error)
             }
         }
@@ -209,7 +212,7 @@ class WireGuardVPNManager {
             if self?.isConfigured() ?? false {
                 self?.disconnect()
                 self?.providerManager?.removeFromPreferences { _ in
-                   self?.providerManager?.loadFromPreferences(completionHandler: { _ in
+                    self?.providerManager?.loadFromPreferences(completionHandler: { _ in
                         self?.setup {
                             completion(true, nil)
                         }
@@ -233,17 +236,17 @@ class WireGuardVPNManager {
         return providerManager?.connection.status == .connecting
     }
 
-     func setOnDemandMode() {
-         setOnDemandMode(DefaultValues.firewallMode)
-     }
+    func setOnDemandMode() {
+        setOnDemandMode(DefaultValues.firewallMode)
+    }
 
     func setKillSwitchMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
-#if os(iOS)
-            if #available(iOS 15.1, *) {
-                self?.providerManager?.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
-            }
-#endif
+            #if os(iOS)
+                if #available(iOS 15.1, *) {
+                    self?.providerManager?.protocolConfiguration?.includeAllNetworks = self?.killSwitch ?? DefaultValues.killSwitch
+                }
+            #endif
             self?.providerManager?.saveToPreferences { _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
             }
@@ -252,33 +255,33 @@ class WireGuardVPNManager {
 
     func setAllowLanMode() {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
-#if os(iOS)
-            if #available(iOS 15.1, *) {
-                self?.providerManager?.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
-            }
-#endif
+            #if os(iOS)
+                if #available(iOS 15.1, *) {
+                    self?.providerManager?.protocolConfiguration?.excludeLocalNetworks = self?.allowLane ?? DefaultValues.allowLaneMode
+                }
+            #endif
             self?.providerManager?.saveToPreferences { _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
             }
         })
     }
 
-     func setOnDemandMode(_ status: Bool) {
+    func setOnDemandMode(_ status: Bool) {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
             self?.providerManager?.isOnDemandEnabled = status
             self?.providerManager?.saveToPreferences { _ in
                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
             }
         })
-     }
+    }
 
-     func updateOnDemandRules() {
-         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
-             self?.providerManager.onDemandRules?.removeAll()
-             self?.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
-             self?.providerManager?.saveToPreferences { _ in
-                 self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
-             }
-         })
-     }
+    func updateOnDemandRules() {
+        providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
+            self?.providerManager.onDemandRules?.removeAll()
+            self?.providerManager.onDemandRules = VPNManager.shared.getOnDemandRules()
+            self?.providerManager?.saveToPreferences { _ in
+                self?.providerManager?.loadFromPreferences(completionHandler: { _ in })
+            }
+        })
+    }
 }

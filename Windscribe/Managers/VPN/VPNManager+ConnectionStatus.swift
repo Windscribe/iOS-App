@@ -1,5 +1,5 @@
 //
-//  VPNManager+Connection.swift
+//  VPNManager+ConnectionStatus.swift
 //  Windscribe
 //
 //  Created by Thomas on 10/11/2021.
@@ -7,19 +7,20 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 #if canImport(WidgetKit)
-import WidgetKit
-import RxSwift
+    import RxSwift
+    import WidgetKit
 #endif
 
 extension VPNManager {
-     func isConnectedToVpn() -> Bool {
+    func isConnectedToVpn() -> Bool {
         if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
-            let scopes = settings["__SCOPED__"] as? [String: Any] {
+           let scopes = settings["__SCOPED__"] as? [String: Any]
+        {
             for (key, _) in scopes {
-             if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
+                if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
                     return true
                 }
             }
@@ -65,7 +66,7 @@ extension VPNManager {
         if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && configManager.iKEV2Manager()?.connection.status != .invalid {
             return false
         }
-        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNServerCredentials.self &&  configManager.openVPNdManager()?.connection.status != .invalid {
+        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNServerCredentials.self && configManager.openVPNdManager()?.connection.status != .invalid {
             return false
         }
         return true
@@ -78,7 +79,7 @@ extension VPNManager {
     func checkIfUserIsOutOfData() {
         DispatchQueue.main.async {
             guard let session = self.sessionManager.session else { return }
-            if session.status == 2 && !self.isCustomConfigSelected() {
+            if session.status == 2, !self.isCustomConfigSelected() {
                 VPNManager.shared.disconnectAllVPNConnections(setDisconnect: true)
             }
         }
@@ -110,12 +111,12 @@ extension VPNManager {
 
     func checkForForceDisconnect() {
         if let hostname = selectedNode?.hostname {
-           let group = localDB.getServers()?.flatMap({ $0.groups }).filter({ $0.bestNodeHostname == hostname }).first
+            let group = localDB.getServers()?.flatMap { $0.groups }.filter { $0.bestNodeHostname == hostname }.first
             if group?.bestNode?.forceDisconnect ?? false {
                 logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] force_disconnect found on \(hostname)")
-                self.selectAnotherNode()
-                if self.isConnected() {
-                    self.configureAndConnectVPN()
+                selectAnotherNode()
+                if isConnected() {
+                    configureAndConnectVPN()
                 }
             }
         }
@@ -125,14 +126,14 @@ extension VPNManager {
         return VPNManager.shared.selectedNode?.customConfig != nil
     }
 
-    @objc func connectionStatusChanged(_ notification: Notification?) {
-        self.configureForConnectionState()
+    @objc func connectionStatusChanged(_: Notification?) {
+        configureForConnectionState()
         #if os(iOS)
-        if #available(iOS 14.0, *) {
-            #if arch(arm64) || arch(i386) || arch(x86_64)
-            WidgetCenter.shared.reloadAllTimelines()
-            #endif
-        }
+            if #available(iOS 14.0, *) {
+                #if arch(arm64) || arch(i386) || arch(x86_64)
+                    WidgetCenter.shared.reloadAllTimelines()
+                #endif
+            }
         #endif
     }
 
@@ -147,7 +148,7 @@ extension VPNManager {
             }
             self.vpnInfo.onNext(info)
             let inactive = state == .background || state == .inactive
-            if  inactive {
+            if inactive {
                 return
             }
             let connectionStatus = info.status
@@ -157,7 +158,7 @@ extension VPNManager {
             self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
             self.lastConnectionStatus = connectionStatus
             return
-            configManager.invalidateTimer()
+                configManager.invalidateTimer()
             switch connectionStatus {
             case .connecting:
                 self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
@@ -211,7 +212,7 @@ extension VPNManager {
     }
 
     func forceToKeepConnectingState() -> Bool {
-        return (keepConnectingState || VPNManager.shared.connectIntent || self.retryWithNewCredentials) && connectivity.internetConnectionAvailable()
+        return (keepConnectingState || VPNManager.shared.connectIntent || retryWithNewCredentials) && connectivity.internetConnectionAvailable()
     }
 
     func checkForRetry() {
@@ -219,44 +220,45 @@ extension VPNManager {
             return
         }
         disconnectCounter += 1
-        if disconnectCounter > 3 && !isFromProtocolFailover && !isFromProtocolChange {
+        if disconnectCounter > 3, !isFromProtocolFailover, !isFromProtocolChange {
             disconnectCounter = 0
-            self.logger.logE(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
+            logger.logE(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
             VPNManager.shared.userTappedToDisconnect = true
-            self.resetProfiles {
+            resetProfiles {
                 VPNManager.shared.userTappedToDisconnect = false
             }
-            self.disconnectOrFail()
+            disconnectOrFail()
             return
         }
         if restartOnDisconnect {
-            self.logger.logI(ConnectionManager.self, "Reconnecting..")
-            self.restartOnDisconnect = false
-            self.retryTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.retryConnection), userInfo: nil, repeats: false)
+            logger.logI(ConnectionManager.self, "Reconnecting..")
+            restartOnDisconnect = false
+            retryTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(retryConnection), userInfo: nil, repeats: false)
             return
-        } else if retryWithNewCredentials && VPNManager.shared.selectedNode?.customConfig == nil && !isFromProtocolFailover && !isFromProtocolChange {
-            self.logger.logI(ConnectionManager.self, "Trying with server credentials.")
-            self.retryWithNewCredentials = false
-            self.retryConnectionWithNewServerCredentials()
+        } else if retryWithNewCredentials, VPNManager.shared.selectedNode?.customConfig == nil, !isFromProtocolFailover, !isFromProtocolChange {
+            logger.logI(ConnectionManager.self, "Trying with server credentials.")
+            retryWithNewCredentials = false
+            retryConnectionWithNewServerCredentials()
             return
         } else if disableOrFailOnDisconnect {
-            self.disconnectOrFail()
+            disconnectOrFail()
             return
         }
     }
 
     func disconnectOrFail() {
-        self.delegate?.setConnecting()
+        delegate?.setConnecting()
         let state = UIApplication.shared.applicationState
         if state == .background || state == .inactive {
-            self.logger.logI(VPNManager.self, "App is in background.")
+            logger.logI(VPNManager.self, "App is in background.")
             return
         }
-        if self.selectedConnectionMode != Fields.Values.auto ||
-            self.isCustomConfigSelected() {
-            self.disconnectActiveVPNConnection(setDisconnect: true)
+        if selectedConnectionMode != Fields.Values.auto ||
+            isCustomConfigSelected()
+        {
+            disconnectActiveVPNConnection(setDisconnect: true)
         } else {
-            self.disconnectActiveVPNConnection()
+            disconnectActiveVPNConnection()
             retryInProgress = true
             retryTimer?.invalidate()
             delay(3) { [self] in
@@ -274,13 +276,13 @@ extension VPNManager {
     @objc func checkForConnectIntent() {
         let state = UIApplication.shared.applicationState
         if state == .background || state == .inactive {
-            self.logger.logI(VPNManager.self, "App is in background.")
+            logger.logI(VPNManager.self, "App is in background.")
             return
         }
-        if VPNManager.shared.connectIntent && !WifiManager.shared.isConnectedWifiTrusted() && connectivity.internetConnectionAvailable() && VPNManager.shared.isDisconnected() && self.selectedFirewallMode == true {
+        if VPNManager.shared.connectIntent, !WifiManager.shared.isConnectedWifiTrusted(), connectivity.internetConnectionAvailable(), VPNManager.shared.isDisconnected(), selectedFirewallMode == true {
             logger.logE(VPNManager.self, "Connect Intent is true. Retrying to connect.")
-            self.retryWithNewCredentials = true
-            self.configureAndConnectVPN()
+            retryWithNewCredentials = true
+            configureAndConnectVPN()
         }
     }
 
@@ -288,7 +290,7 @@ extension VPNManager {
         if awaitingConnectionCheck || preferences.getKillSwitchSync() {
             return
         }
-        self.awaitingConnectionCheck = true
+        awaitingConnectionCheck = true
         getLastConnectionError { error in
             guard let error = error else {
                 self.awaitingConnectionCheck = false
@@ -307,7 +309,7 @@ extension VPNManager {
                                 self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
                             }
                             self.awaitingConnectionCheck = false
-                        },onFailure: { _ in
+                        }, onFailure: { _ in
                             self.logger.logE(self, "Failure to update session after disabling VPN profile.")
                             self.awaitingConnectionCheck = false
                         }).disposed(by: self.disposeBag)
@@ -331,11 +333,11 @@ extension VPNManager {
             case 12, 8:
                 completion(.credentialsFailure)
             default:
-                self.logger.logD(self, "NEVPNManager error: \(error)")
+                logger.logD(self, "NEVPNManager error: \(error)")
                 completion(nil)
             }
         } else {
-            self.logger.logD(self, "NEVPNManager error: \(error)")
+            logger.logD(self, "NEVPNManager error: \(error)")
             completion(nil)
         }
     }
@@ -349,7 +351,7 @@ extension VPNManager {
         if error.code == 50 {
             completion(.credentialsFailure)
         } else {
-            self.logger.logD(self, "NEVPNProvider error: \(error)")
+            logger.logD(self, "NEVPNProvider error: \(error)")
             completion(nil)
         }
     }

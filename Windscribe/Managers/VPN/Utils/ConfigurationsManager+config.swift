@@ -10,8 +10,10 @@ import Foundation
 import WireGuardKit
 
 extension ConfigurationsManager {
+    /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
         let locationType = try getLocationType(id: location)
+        // If location type is custom config proto does not matter just use whats in the profile.
         if locationType == .custom {
             let locationId = getId(location: location)
             do {
@@ -29,11 +31,13 @@ extension ConfigurationsManager {
         }
     }
 
+    /// Builds WireGuard configuration from a custom  config's location id..
     private func wgConfigFromCustomConfig(locationID: String) throws -> WireguardVPNConfiguration {
         let configFilePath = "\(locationID).conf"
         return try wgConfigurationFromPath(path: configFilePath)
     }
 
+    /// Gets the protocol type from the stored configuration based on location ID.
     func getProtoFromConfig(locationId: String) -> String? {
         if let _ = try? wgConfigFromCustomConfig(locationID: "\(locationId)") {
             return TextsAsset.wireGuard
@@ -44,6 +48,7 @@ extension ConfigurationsManager {
         return nil
     }
 
+    /// Buildsn OpenVPN configuration from a custom config location.
     private func openConfigFromCustomConfig(locationID: String) throws -> OpenVPNConfiguration {
         let configFilePath = "\(locationID).ovpn"
         guard let configData = fileDatabase.readFile(path: configFilePath) else {
@@ -55,6 +60,7 @@ extension ConfigurationsManager {
         return OpenVPNConfiguration(proto: config.protocolType ?? udp, ip: config.serverAddress ?? "", username: config.username?.base64Decoded(), password: config.password?.base64Decoded(), path: configFilePath, data: configData)
     }
 
+    /// Loads a WireGuard configuration from a file path.
     private func wgConfigurationFromPath(path: String) throws -> WireguardVPNConfiguration {
         guard let configData = fileDatabase.readFile(path: path) else {
             throw VPNConfigurationErrors.configNotFound
@@ -66,6 +72,7 @@ extension ConfigurationsManager {
         return WireguardVPNConfiguration(content: tunnelConfiguration)
     }
 
+    /// Builds WireGuard configuration for a location based on its type.
     private func buildWgConfig(location: String, port: String) async throws -> WireguardVPNConfiguration {
         switch try getLocationType(id: location) {
         case .server:
@@ -74,7 +81,7 @@ extension ConfigurationsManager {
             let ip = node.ip3
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
-            try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
             return try wgConfigurationFromPath(path: FilePaths.wireGuard)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
@@ -84,7 +91,7 @@ extension ConfigurationsManager {
             let ip = node.ip
             let hostname = node.hostname
             let publickey = location.wgPublicKey
-            try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
             return try wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         default:
@@ -92,11 +99,13 @@ extension ConfigurationsManager {
         }
     }
 
-    private func saveWgConfig(ip: String, hostname: String, serverPublicKey: String, port: String) async throws {
+    /// Gets Wireguard configuration from Api and saves to file.
+    private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String) async throws {
         wgCredentials.setNodeToConnect(serverEndPoint: ip, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port)
         return try await wgRepository.getCredentials().value
     }
 
+    /// Creates an IKEv2 VPN configuration for the specified location.
     private func buildIKEv2Config(location: String) throws -> IKEv2VPNConfiguration {
         switch try getLocationType(id: location) {
         case .server:
@@ -134,6 +143,7 @@ extension ConfigurationsManager {
         }
     }
 
+    /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) throws -> OpenVPNConfiguration {
         let locationID = getId(location: location)
         switch try getLocationType(id: location) {
@@ -166,6 +176,7 @@ extension ConfigurationsManager {
         }
     }
 
+    /// Builds proxy info for OpenVPN if protocols is stealth or wstunnel.
     private func getProxyInfo(proto: String, port: String, ip1: String, ip3: String) -> ProxyInfo? {
         if ![stealth, wsTunnel].contains(proto) {
             return nil
@@ -179,6 +190,24 @@ extension ConfigurationsManager {
         return ProxyInfo(remoteServer: remoteAddress, remotePort: port, proxyType: proxyProtocol)
     }
 
+    /**
+     Edits the OpenVPN configuration server config with the specified parameters.
+     - Parameters:
+     - proto: The protocol to be used for the OpenVPN connection (e.g., "udp" or "tcp"). The protocol will be converted to lowercase.
+     - serverAddress: Ip address of the node.
+     - port: The port number for the OpenVPN connection.
+     - x509Name: The X.509 certificate name for verification.
+     - proxyInfo: An optional `ProxyInfo` object containing proxy settings. If nil, no proxy configuration will be added.
+     - userSettings: A `VPNUserSettings` object containing user-specific settings, such as whether to enable censorship circumvention.
+
+     - Throws:
+     - `VPNConfigurationErrors.invalidServerConfig`: Thrown if the OpenVPN configuration file cannot be read or if an invalid server configuration is detected.
+
+     - Returns: A tuple containing:
+     - The path to the OpenVPN configuration file.
+     - The modified configuration data as `Data`.
+     If the existing configuration file does not contain the protocol, remote, or x509 settings, they are added at specified positions in the configuration file.
+     */
     private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) throws -> (String, Data) {
         var protoLine = "proto \(proto.lowercased())"
         if [stealth, wsTunnel].contains(proto) {
@@ -187,7 +216,6 @@ extension ConfigurationsManager {
         let remoteLine = "remote \(serverAddress) \(port)"
         let x509NameLine = "verify-x509-name \(x509Name) name"
         let proxyLine = proxyInfo?.text
-        logger.logD(OpenVPNManager.self, proxyLine?.debugDescription ?? "")
         guard let configData = fileDatabase.readFile(path: FilePaths.openVPN),
               let stringData = String(data: configData,
                                       encoding: String.Encoding.utf8)
@@ -240,6 +268,7 @@ extension ConfigurationsManager {
         return (FilePaths.openVPN, appendedConfigData)
     }
 
+    /// Gets server location from database.
     private func getLocation(id: String) throws -> (Server, Group) {
         guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(id) }
         var serverResult: Server?
@@ -256,6 +285,7 @@ extension ConfigurationsManager {
         return (serverResultSafe, groupResultSafe)
     }
 
+    /// Gets static ip location from database.
     private func getStaticIPLocation(id: String) throws -> StaticIP {
         let ipId = getId(location: id)
         guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.ipId)" }) else {
@@ -264,6 +294,7 @@ extension ConfigurationsManager {
         return location
     }
 
+    /// Gets id from location id which can be used to access data from database.
     private func getId(location: String) -> String {
         let parts = location.split(separator: "_")
         if parts.count == 1 {
@@ -272,6 +303,7 @@ extension ConfigurationsManager {
         return String(parts[1])
     }
 
+    /// Gets location type based on id.
     private func getLocationType(id: String) throws -> LocationType {
         let parts = id.split(separator: "_")
         if parts.count == 1 {
@@ -287,18 +319,27 @@ extension ConfigurationsManager {
         throw VPNConfigurationErrors.invalidLocationType
     }
 
+    /// Selects a random node from the provided list of nodes, considering specific constraints and preferences.
+    ///
+    /// - Parameters:
+    ///   - nodes: An array of `Node` objects representing server or static ip location.
+    ///
+    /// - Throws:
+    ///   - `VPNConfigurationErrors.noValidNodeFound` if there are no nodes available to select from.
+    /// - Discussion:
+    ///   The selection logic prioritizes any user-specified forced node. If not applicable, it filters nodes under
+    ///   maintenance and then uses weighted random selection. This ensures that nodes with fewer connections or lowers weight are
+    ///   chosen more frequently, balancing load across nodes. If no weighted selection is possible, it falls back
+    ///   to a purely random selection. This function guarantees that a valid node is selected, if available.
     private func getRandomNode(nodes: [Node]) throws -> Node {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
-            // Always pick node with forced node option.
             let forceNode = advanceRepository.getForcedNode()
             if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
                 return node
             }
-            // Locations may be under maintence.
             let validNodes = nodes.filter { $0.forceDisconnect == false }
-            // Pick random node with least amount of connections.
             var weightCounter = nodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
                 let randomNumber = arc4random_uniform(UInt32(weightCounter))

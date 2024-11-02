@@ -6,11 +6,10 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Swinject
 import NetworkExtension
-
+import Swinject
+/// Sample to test everything.
 extension VPNManager: VPNConnectionAlertDelegate {
-
     private func connectTask() {
         Task { @MainActor in
             let id = "\(selectedNode?.groupId ?? 0)"
@@ -21,22 +20,22 @@ extension VPNManager: VPNConnectionAlertDelegate {
             }
             cancellable = configManager.connectAsync(locationID: id, proto: selectedProtocol, port: port, vpnSettings: makeUserSettings())
                 .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    self?.connectionAlert.dismissAlert()
+                .sink(receiveCompletion: { completion in
+                    self.connectionAlert.dismissAlert()
                     switch completion {
-                        case .finished:
-                            self?.logger.logD("VPNManager", "Connection process completed.")
-                        case let .failure(_):
-                            self?.delegate?.setDisconnected()
+                    case .finished:
+                        self.logger.logD("VPNConfiguration", "Connection process completed.")
+                    case .failure:
+                        self.delegate?.setDisconnected()
                     }
                 }, receiveValue: { state in
                     switch state {
-                        case .update(let message):
-                            self.connectionAlert.updateProgress(message: message)
-                        case .validated(let ip):
-                            self.delegate?.setConnected(ipAddress: ip)
-                        default: ()
-
+                    case let .update(message):
+                        self.logger.logD("VPNConfiguration", message)
+                        self.connectionAlert.updateProgress(message: message)
+                    case let .validated(ip):
+                        self.delegate?.setConnected(ipAddress: ip)
+                    default: ()
                     }
                 })
         }
@@ -46,29 +45,28 @@ extension VPNManager: VPNConnectionAlertDelegate {
         delegate?.setDisconnecting()
         cancellable = configManager.disconnectAsync()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                self?.disconnectAlert.dismissAlert()
-                self?.delegate?.setDisconnected()
+            .sink(receiveCompletion: { completion in
+                self.disconnectAlert.dismissAlert()
+                self.delegate?.setDisconnected()
                 switch completion {
-                    case .finished:
-                        self?.logger.logD("VPNManager", "Disconnect process completed.")
-                        self?.disconnectAlert.dismissAlert()
-                    case let .failure(error):
-                        self?.disconnectAlert.dismissAlert()
-                        if let e = error as? VPNConfigurationErrors {
-                            self?.logger.logD("VPNManager", "Failed to disconnect with error: \(e.errorDescription)")
-                        }
+                case .finished:
+                    self.logger.logD("VPNConfiguration", "Disconnect process completed.")
+                    self.disconnectAlert.dismissAlert()
+                case let .failure(error):
+                    self.disconnectAlert.dismissAlert()
+                    if let e = error as? VPNConfigurationErrors {
+                        self.logger.logD("VPNConfiguration", "Failed to disconnect with error: \(e.errorDescription)")
+                    }
                 }
             }, receiveValue: { state in
                 switch state {
-                    case .update(let message):
-                        self.disconnectAlert.updateProgress(message: message)
-                    case .vpn(let status):
-                        if status == NEVPNStatus.connected {
-                            self.disconnectAlert.dismissAlert()
-                        }
-                    default: ()
-
+                case let .update(message):
+                    self.disconnectAlert.updateProgress(message: message)
+                case let .vpn(status):
+                    if status == NEVPNStatus.connected {
+                        self.disconnectAlert.dismissAlert()
+                    }
+                default: ()
                 }
             })
     }
@@ -84,7 +82,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
         disconnectTask()
     }
-    
+
     func connectNow() {
         DispatchQueue.main.async {
             self.connectionAlert.delegate = self
@@ -95,7 +93,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
             }
         }
     }
-
 
     func didSelectProtocol(_ protocolName: String) {
         selectedProtocol = protocolName
