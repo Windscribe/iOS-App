@@ -28,6 +28,7 @@ class VPNConnectionAlert: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
         label.textAlignment = .center
+        label.textColor = .white
         return label
     }()
 
@@ -36,11 +37,19 @@ class VPNConnectionAlert: UIViewController {
     private let progressLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
+        label.textColor = .white
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.numberOfLines = 0
         return label
     }()
 
     private let actionButton: UIButton = {
         let button = UIButton(type: .system)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.cornerRadius = 24
+        button.backgroundColor = .seaGreen
         button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -48,7 +57,7 @@ class VPNConnectionAlert: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(white: 0.4, alpha: 1.0)
+        view.backgroundColor = UIColor.midnight
         view.layer.cornerRadius = 10
         setupSubviews()
 
@@ -75,12 +84,16 @@ class VPNConnectionAlert: UIViewController {
             protocolPicker.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             protocolPicker.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
 
-            progressLabel.topAnchor.constraint(equalTo: protocolPicker.bottomAnchor, constant: 8),
+            progressLabel.topAnchor.constraint(equalTo: protocolPicker.bottomAnchor, constant: 16),
             progressLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            progressLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
             actionButton.topAnchor.constraint(equalTo: progressLabel.bottomAnchor, constant: 16),
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            actionButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
+            actionButton.heightAnchor.constraint(equalToConstant: 48.0),
         ])
     }
 
@@ -92,10 +105,14 @@ class VPNConnectionAlert: UIViewController {
             titleLabel.text = "Let's connect"
             actionButton.setTitle("Connect", for: .normal)
             protocolPicker.isHidden = false
+            actionButton.isEnabled = true
+            actionButton.alpha = 1.0
         case .disconnect:
-            titleLabel.text = "Lets' disconnect"
+            titleLabel.text = "Let's disconnect"
             actionButton.setTitle("Disconnect", for: .normal)
             protocolPicker.isHidden = true
+            actionButton.isEnabled = true
+            actionButton.alpha = 1.0
         }
     }
 

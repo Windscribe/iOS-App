@@ -36,7 +36,8 @@ enum DNSSettingsManager {
 
     static func getDNSValue(from value: String, opensURL _: OpensURlType,
                             completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,
-                            completion: @escaping (_ isValid: Bool) -> Void) {
+                            completion: @escaping (_ isValid: Bool) -> Void)
+    {
         let customValue = value.lowercased()
         if IPv4Address(customValue) != nil || IPv6Address(customValue) != nil {
             completion(true)
@@ -45,7 +46,8 @@ enum DNSSettingsManager {
             }
             return
         } else if let urlHttpsRegex = try? NSRegularExpression(pattern: RegexConstants.urlHttpsRegex),
-                  let urlTlsRegex = try? NSRegularExpression(pattern: RegexConstants.urlTlsRegex) {
+                  let urlTlsRegex = try? NSRegularExpression(pattern: RegexConstants.urlTlsRegex)
+        {
             let range = NSRange(location: 0, length: customValue.utf16.count)
             if urlHttpsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
