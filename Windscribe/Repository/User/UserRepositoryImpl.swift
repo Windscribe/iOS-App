@@ -30,7 +30,7 @@ class UserRepositoryImpl: UserRepository {
         self.vpnmanager = vpnmanager
         self.wgCredentials = wgCredentials
         self.logger = logger
-        localDatabase.getSession().subscribe(onNext: { [self] session in
+        localDatabase.getSession().subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] session in
             if let session = session {
                 self.user.onNext(User(session: session))
             } else {

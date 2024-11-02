@@ -23,7 +23,9 @@ class ConfigurationsManager {
     let advanceRepository: AdvanceRepository
     let wgRepository: WireguardConfigRepository
     let wgCredentials: WgCredentials
-    let api = Assembler.resolve(APIManager.self)
+    var api: APIManager {
+        return Assembler.resolve(APIManager.self)
+    }
 
     weak var delegate: ConfigurationsManagerDelegate?
 
