@@ -12,11 +12,19 @@ import Swinject
 extension VPNManager: VPNConnectionAlertDelegate {
     private func connectTask() {
         Task { @MainActor in
-            let id = "\(selectedNode?.groupId ?? 0)"
+            var id = "\(selectedNode?.groupId ?? 0)"
             connectionAlert.updateProgress(message: "Please select protocol and connect")
             var port = "443"
             if selectedProtocol == TextsAsset.iKEv2 {
                 port = "500"
+            }
+            if selectedNode?.staticIPCredentials != nil {
+                let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
+                id = "static_\(ipId)"
+            }
+            if let customId = selectedNode?.customConfig?.id {
+                id = "custom_\(customId)"
+                selectedProtocol = configManager.getProtoFromConfig(locationId: customId) ?? TextsAsset.wireGuard
             }
             cancellable = configManager.connectAsync(locationID: id, proto: selectedProtocol, port: port, vpnSettings: makeUserSettings())
                 .receive(on: DispatchQueue.main)

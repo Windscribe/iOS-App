@@ -243,8 +243,7 @@ class ConfigurationsManager {
             manager.protocolConfiguration?.includeAllNetworks = false
         #endif
         if (try? await saveThrowing(manager: manager)) != nil,
-           [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status)
-        {
+           [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status) {
             manager.connection.stopVPNTunnel()
         }
         try? await Task.sleep(nanoseconds: 2_000_000_000)

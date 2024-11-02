@@ -11,8 +11,7 @@ import UIKit
 
 extension ConfigurationsManager {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
-                                              userSettings: VPNUserSettings) async throws -> Bool
-    {
+                                              userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode,
               let x509Name = selectedNode.ovpnX509
         else {
@@ -43,8 +42,7 @@ extension ConfigurationsManager {
 
         if let staticIPCredentials = selectedNode.staticIPCredentials,
            let username = staticIPCredentials.username,
-           let password = staticIPCredentials.password
-        {
+           let password = staticIPCredentials.password {
             base64username = username
             base64password = password
         } else if let credentials = localDatabase.getOpenVPNServerCredentials() {
@@ -92,8 +90,7 @@ extension ConfigurationsManager {
     }
 
     func configureOpenVPNWithCustomConfig(with selectedNode: SelectedNode?,
-                                          userSettings: VPNUserSettings) async throws -> Bool
-    {
+                                          userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode else {
             throw Errors.hostnameNotFound
         }
@@ -134,8 +131,7 @@ extension ConfigurationsManager {
                           port: String,
                           compressionEnabled: Bool? = false,
                           x509Name: String?,
-                          proxyInfo: ProxyInfo? = nil) async throws -> Bool
-    {
+                          proxyInfo: ProxyInfo? = nil) async throws -> Bool {
         guard let configuration = await getConfiguration(selectedNode: selectedNode,
                                                          userSettings: userSettings,
                                                          username: username,
@@ -201,18 +197,15 @@ extension ConfigurationsManager {
                           serverAddress: String,
                           port: String,
                           x509Name: String?,
-                          proxyInfo: ProxyInfo?) async -> OpenVPNConfiguration?
-    {
+                          proxyInfo: ProxyInfo?) async -> OpenVPNConfiguration? {
         let openVPNConfigFilePath = FilePaths.openVPN
         if let customConfig = selectedNode?.customConfig,
            let customConfigId = customConfig.id,
-           let authRequired = customConfig.authRequired
-        {
+           let authRequired = customConfig.authRequired {
             let configFilePath = "\(customConfigId).ovpn"
             guard let configData = fileDatabase.readFile(path: configFilePath) else { return nil }
             if customConfig.username != "",
-               customConfig.password != ""
-            {
+               customConfig.password != "" {
                 let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
                 let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
                 return OpenVPNConfiguration(proto: protocolType, ip: customConfig.serverAddress ?? "", username: user, password: pass, path: configFilePath, data: configData)
