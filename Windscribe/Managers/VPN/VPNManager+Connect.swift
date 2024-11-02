@@ -1,0 +1,108 @@
+//
+//  VPNManager+Connect.swift
+//  Windscribe
+//
+//  Created by Ginder Singh on 2024-10-31.
+//  Copyright © 2024 Windscribe. All rights reserved.
+//
+
+import Swinject
+import NetworkExtension
+
+extension VPNManager: VPNConnectionAlertDelegate {
+
+    private func connectTask() {
+        Task { @MainActor in
+            let id = "\(selectedNode?.groupId ?? 0)"
+            connectionAlert.updateProgress(message: "Please select protocol and connect")
+            var port = "443"
+            if selectedProtocol == TextsAsset.iKEv2 {
+                port = "500"
+            }
+            cancellable = configManager.connectAsync(locationID: id, proto: selectedProtocol, port: port, vpnSettings: makeUserSettings())
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { [weak self] completion in
+                    self?.connectionAlert.dismissAlert()
+                    switch completion {
+                        case .finished:
+                            self?.logger.logD("VPNManager", "Connection process completed.")
+                        case let .failure(_):
+                            self?.delegate?.setDisconnected()
+                    }
+                }, receiveValue: { state in
+                    switch state {
+                        case .update(let message):
+                            self.connectionAlert.updateProgress(message: message)
+                        case .validated(let ip):
+                            self.delegate?.setConnected(ipAddress: ip)
+                        default: ()
+
+                    }
+                })
+        }
+    }
+
+    private func disconnectTask() {
+        delegate?.setDisconnecting()
+        cancellable = configManager.disconnectAsync()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                self?.disconnectAlert.dismissAlert()
+                self?.delegate?.setDisconnected()
+                switch completion {
+                    case .finished:
+                        self?.logger.logD("VPNManager", "Disconnect process completed.")
+                        self?.disconnectAlert.dismissAlert()
+                    case let .failure(error):
+                        self?.disconnectAlert.dismissAlert()
+                        if let e = error as? VPNConfigurationErrors {
+                            self?.logger.logD("VPNManager", "Failed to disconnect with error: \(e.errorDescription)")
+                        }
+                }
+            }, receiveValue: { state in
+                switch state {
+                    case .update(let message):
+                        self.disconnectAlert.updateProgress(message: message)
+                    case .vpn(let status):
+                        if status == NEVPNStatus.connected {
+                            self.disconnectAlert.dismissAlert()
+                        }
+                    default: ()
+
+                }
+            })
+    }
+
+    func disconnectNow() {
+        DispatchQueue.main.async {
+            self.disconnectAlert.delegate = self
+            self.disconnectAlert.configure(for: .disconnect)
+            self.disconnectAlert.updateProgress(message: "")
+            if let topController = UIApplication.shared.keyWindow?.rootViewController {
+                topController.present(self.disconnectAlert, animated: true, completion: nil)
+            }
+        }
+        disconnectTask()
+    }
+    
+    func connectNow() {
+        DispatchQueue.main.async {
+            self.connectionAlert.delegate = self
+            self.connectionAlert.configure(for: .connect)
+            self.connectionAlert.updateProgress(message: "")
+            if let topController = UIApplication.shared.keyWindow?.rootViewController {
+                topController.present(self.connectionAlert, animated: true, completion: nil)
+            }
+        }
+    }
+
+
+    func didSelectProtocol(_ protocolName: String) {
+        selectedProtocol = protocolName
+        connectTask()
+    }
+
+    func didTapDisconnect() {
+        disconnectNow()
+    }
+}

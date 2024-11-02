@@ -47,6 +47,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         else {
             fatalError()
         }
+        logger.logD(self, "Started OpenVPNAdapter.")
         let  properties:OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
         let configuration = OpenVPNConfiguration()
@@ -56,6 +57,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         do {
             properties = try vpnAdapter.apply(configuration: configuration)
         } catch {
+            logger.logD(self, "Failed to apply configuration to OpenVPNAdapter.")
             completionHandler(error)
             return
         }
@@ -66,6 +68,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 credentials.username = username
                 credentials.password = password
                 do {
+                    logger.logD(self, "Added credentials to OpenVPNAdapter.")
                     try vpnAdapter.provide(credentials: credentials)
                 } catch {
                     completionHandler(error)
@@ -73,7 +76,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 }
             }
         }
-
+        logger.logD(self, "OpenVPNAdapter started successfully.")
         vpnReachability.startTracking { [weak self] status in
             guard status != .notReachable else { return }
             self?.vpnAdapter.reconnect(afterTimeInterval: 5)
@@ -88,11 +91,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         } else {
             startHandler = completionHandler
+            logger.logD(self, "Connecting to OpenVPNAdapter.")
             vpnAdapter.connect(using: packetFlow)
         }
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+        logger.logD(self, "Stopping OpenVPNAdapter with \(reason)")
         stopHandler = completionHandler
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
@@ -227,6 +232,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
 
     func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleLogMessage logMessage: String) {
        // self.logger.logD(self, "\(logMessage)")
+        logger.logD(self, "OpenVPNAdapter: \(logMessage)")
     }
 }
 

@@ -13,6 +13,8 @@ import NetworkExtension
 import WidgetKit
 #endif
 import RxSwift
+import Swinject
+import Combine
 
 extension VPNManager {
     @objc func configureAndConnectVPN() {
@@ -20,26 +22,27 @@ extension VPNManager {
             return
         }
         VPNManager.shared.uniqueConnectionId = UUID().uuidString
-
-        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
-            logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
-            if customConfig.protocolType == TextsAsset.wireGuard {
-                connectUsingCustomConfigWireGuard()
-            } else {
-                connectUsingCustomConfigOpenVPN()
-            }
-        } else {
-            ConnectionManager.shared.loadProtocols(shouldReset: true) { [self] _ in
-                switch ConnectionManager.shared.getNextProtocol().protocolName {
-                case iKEv2:
-                    connectUsingIKEv2()
-                case wireGuard:
-                    connectUsingWireGuard { _ in }
-                default:
-                    connectUsingOpenVPN()
-                }
-            }
-        }
+        connectNow()
+        return
+//        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
+//            logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
+//            if customConfig.protocolType == TextsAsset.wireGuard {
+//                connectUsingCustomConfigWireGuard()
+//            } else {
+//                connectUsingCustomConfigOpenVPN()
+//            }
+//        } else {
+//            ConnectionManager.shared.loadProtocols(shouldReset: true) { [self] _ in
+//                switch ConnectionManager.shared.getNextProtocol().protocolName {
+//                case iKEv2:
+//                    connectUsingIKEv2()
+//                case wireGuard:
+//                    connectUsingWireGuard { _ in }
+//                default:
+//                    connectUsingOpenVPN()
+//                }
+//            }
+//        }
     }
 
     @objc func hideAskToRetryPopup() {

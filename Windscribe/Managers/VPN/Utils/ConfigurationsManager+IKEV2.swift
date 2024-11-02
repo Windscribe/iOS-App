@@ -1,5 +1,5 @@
 //
-//  ConfigurationsManager+IKEV2Credentials.swift
+//  ConfigurationsManager+IKEV2.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 23/10/2024.
@@ -49,10 +49,10 @@ extension ConfigurationsManager {
     }
 
     func configureIKEV2(manager: NEVPNManager, username: String,
-                        dnsHostname: String, hostname: String,
+                        dnsHostname _: String, hostname: String,
                         ip: String, userSettings: VPNUserSettings) async throws -> Bool {
         try await manager.loadFromPreferences()
-        let serverCredentials = self.keychainDb.retrieve(username: username)
+        let serverCredentials = keychainDb.retrieve(username: username)
         let ikeV2Protocol = NEVPNProtocolIKEv2()
         ikeV2Protocol.disconnectOnSleep = false
         ikeV2Protocol.authenticationMethod = .none
@@ -82,51 +82,51 @@ extension ConfigurationsManager {
         ikeV2Protocol.passwordReference = serverCredentials
         ikeV2Protocol.username = username
         ikeV2Protocol.sharedSecretReference = serverCredentials
-        ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm =  NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+        ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
         ikeV2Protocol.ikeSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
         ikeV2Protocol.ikeSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
         ikeV2Protocol.ikeSecurityAssociationParameters.lifetimeMinutes = 1440
-        ikeV2Protocol.childSecurityAssociationParameters.encryptionAlgorithm =  NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+        ikeV2Protocol.childSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
         ikeV2Protocol.childSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
         ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
         ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
 
-#if os(iOS)
-        // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
-        ikeV2Protocol.enableFallback = true
-        manager.protocolConfiguration = ikeV2Protocol
-        // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
-        if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-            manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
-        }
-        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-        if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
-        }
-#else
-        manager.protocolConfiguration = ikeV2Protocol
-#endif
+        #if os(iOS)
+            // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
+            ikeV2Protocol.enableFallback = true
+            manager.protocolConfiguration = ikeV2Protocol
+            // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
+            if #available(iOS 15.1, *) {
+                manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
+                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+            }
+            // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+            if #available(iOS 16.0, *) {
+                manager.protocolConfiguration?.includeAllNetworks = userSettings.allowLane
+            }
+        #else
+            manager.protocolConfiguration = ikeV2Protocol
+        #endif
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = userSettings.onDemandRules
         manager.isEnabled = true
         manager.localizedDescription = Constants.appName
         do {
             try await saveThrowing(manager: manager)
-        } catch let error {
+        } catch {
             guard let error = error as? Errors else { throw Errors.notDefined }
             logger.logE(self, "Error when saving vpn preferences \(error.description).")
             throw error
         }
         logger.logD(self, "VPN configuration successful. Username: \(username)")
-        logger.logD(self, "KillSwitch option set by user is \(userSettings.killSwitch )")
-        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLane )")
-#if os(iOS)
-        if #available(iOS 15.1, *) {
-            logger.logD(self, "KillSwitch in IKEv2 VPNManager is \( String(describing: manager.protocolConfiguration?.includeAllNetworks))")
-            logger.logD(self, "Allow lan in IKEv2 VPNManager is \( String(describing: manager.protocolConfiguration?.excludeLocalNetworks))")
-        }
-#endif
+        logger.logD(self, "KillSwitch option set by user is \(userSettings.killSwitch)")
+        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLane)")
+        #if os(iOS)
+            if #available(iOS 15.1, *) {
+                logger.logD(self, "KillSwitch in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.includeAllNetworks))")
+                logger.logD(self, "Allow lan in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.excludeLocalNetworks))")
+            }
+        #endif
         return true
     }
 }

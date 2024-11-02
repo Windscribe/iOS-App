@@ -10,21 +10,16 @@ import Foundation
 import WireGuardKit
 
 extension ConfigurationsManager {
-    func connectAsync () async {
-        let locationID = "89"
-        let proto = TextsAsset.iKEv2
-        let port = "500"
-        let userSettings = VPNUserSettings(killSwitch: false, allowLane: true, isRFC: true, isCircumventCensorshipEnabled: true, onDemandRules: [])
-        do {
-            logger.logD(self, "Building VPN Conifguration for [\(locationID) \(proto) \(port)]")
-            let config = try await buildConfig(location: locationID, proto: proto, port: port, userSettings: userSettings)
-            logger.logD(self, config.description)
-        } catch let error {
-            logger.logD(self, "Unable to build VPN configuration error: \(error)")
-        }
-    }
-
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
+        let locationType = try getLocationType(id: location)
+        if locationType == .custom {
+            let locationId = getId(location: location)
+            do {
+                return try wgConfigFromCustomConfig(locationID: locationId)
+            } catch {
+                return try openConfigFromCustomConfig(locationID: locationId)
+            }
+        }
         if [udp, tcp, stealth, wsTunnel].contains(proto) {
             return try buildOpenVPNConfig(location: location, proto: proto, port: port, userSettings: userSettings)
         } else if proto == TextsAsset.iKEv2 {
@@ -32,6 +27,32 @@ extension ConfigurationsManager {
         } else {
             return try await buildWgConfig(location: location, port: port)
         }
+    }
+
+    private func wgConfigFromCustomConfig(locationID: String) throws -> WireguardVPNConfiguration {
+        let configFilePath = "\(locationID).conf"
+        return try wgConfigurationFromPath(path: configFilePath)
+    }
+
+    func getProtoFromConfig(locationId: String) -> String? {
+        if let _ = try? wgConfigFromCustomConfig(locationID: "\(locationId)") {
+            return TextsAsset.wireGuard
+        }
+        if let config = try? openConfigFromCustomConfig(locationID: "\(locationId)") {
+            return config.proto
+        }
+        return nil
+    }
+
+    private func openConfigFromCustomConfig(locationID: String) throws -> OpenVPNConfiguration {
+        let configFilePath = "\(locationID).ovpn"
+        guard let configData = fileDatabase.readFile(path: configFilePath) else {
+            throw VPNConfigurationErrors.configNotFound
+        }
+        guard let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() else {
+            throw VPNConfigurationErrors.configNotFound
+        }
+        return OpenVPNConfiguration(proto: config.protocolType ?? udp, ip: config.serverAddress ?? "", username: config.username?.base64Decoded(), password: config.password?.base64Decoded(), path: configFilePath, data: configData)
     }
 
     private func wgConfigurationFromPath(path: String) throws -> WireguardVPNConfiguration {
@@ -47,32 +68,27 @@ extension ConfigurationsManager {
 
     private func buildWgConfig(location: String, port: String) async throws -> WireguardVPNConfiguration {
         switch try getLocationType(id: location) {
-            case .server:
-                let location = try getLocation(id: location)
-                let node = try getRandomNode(group: location.1)
-                let ip = node.ip3
-                let hostname = node.hostname
-                let publickey = location.1.wgPublicKey
-                try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
-                return try wgConfigurationFromPath(path: FilePaths.wireGuard)
-            case .staticIP:
-                let location = try getStaticIPLocation(id: location)
-                guard let node = location.nodes.toArray().randomElement() else {
-                    throw VPNConfigurationErrors.noValidNodeFound
-                }
-                let ip = node.ip
-                let hostname = node.hostname
-                let publickey = location.wgPublicKey
-                try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
-                return try wgConfigurationFromPath(path: FilePaths.wireGuard)
+        case .server:
+            let location = try getLocation(id: location)
+            let node = try getRandomNode(nodes: location.1.nodes.toArray())
+            let ip = node.ip3
+            let hostname = node.hostname
+            let publickey = location.1.wgPublicKey
+            try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            return try wgConfigurationFromPath(path: FilePaths.wireGuard)
+        case .staticIP:
+            let location = try getStaticIPLocation(id: location)
+            guard let node = location.nodes.toArray().randomElement() else {
+                throw VPNConfigurationErrors.noValidNodeFound
+            }
+            let ip = node.ip
+            let hostname = node.hostname
+            let publickey = location.wgPublicKey
+            try await saveWgConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            return try wgConfigurationFromPath(path: FilePaths.wireGuard)
 
-            default:
-                let locationID = getId(location: location)
-                let configFilePath = "\(locationID).conf"
-                guard let configData = fileDatabase.readFile(path: configFilePath) else {
-                    throw VPNConfigurationErrors.configNotFound
-                }
-                return try wgConfigurationFromPath(path: configFilePath)
+        default:
+            throw VPNConfigurationErrors.customConfigSupportNotAvailable
         }
     }
 
@@ -84,79 +100,75 @@ extension ConfigurationsManager {
     private func buildIKEv2Config(location: String) throws -> IKEv2VPNConfiguration {
         switch try getLocationType(id: location) {
         case .server:
-                guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
-                    throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
-                }
-            let username = credentials.username
-            let password = credentials.password
+            guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
+                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+            }
+            let username = credentials.username.base64Decoded()
+            let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
             let location = try getLocation(id: location)
-            let node = try getRandomNode(group: location.1)
+            let node = try getRandomNode(nodes: location.1.nodes.toArray())
             let ip = node.ip
             let hostname = node.hostname
-            return IKEv2VPNConfiguration(username: username, hostname: hostname, ip: ip)
+            guard let auth = keychainDb.retrieve(username: username) else {
+                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+            }
+            return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
-            guard let node = location.nodes.toArray().randomElement() else {
-                throw VPNConfigurationErrors.noValidNodeFound
-            }
+            let node = try getRandomNode(nodes: location.nodes.toArray())
             let ip = node.ip
             let hostname = node.hostname
-            guard let credentials = location.credentials.first else {
+            guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
             }
             let username = credentials.username
             let password = credentials.password
-                keychainDb.save(username: username, password: password)
-            return IKEv2VPNConfiguration(username: username, hostname: hostname, ip: ip)
-            default:
-                throw VPNConfigurationErrors.customConfigSupportNotAvailable
+            keychainDb.save(username: username, password: password)
+            guard let auth = keychainDb.retrieve(username: username) else {
+                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
+            }
+            return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
+        default:
+            throw VPNConfigurationErrors.customConfigSupportNotAvailable
         }
     }
 
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) throws -> OpenVPNConfiguration {
         let locationID = getId(location: location)
         switch try getLocationType(id: location) {
-            case .server:
-                guard let credentials = localDatabase.getOpenVPNServerCredentials() else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)}
-                let username = credentials.username
-                let password = credentials.password
-                let location = try getLocation(id: location)
-                let node = try getRandomNode(group: location.1)
-                let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
-                let hostname = node.hostname
-                let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
-
-                return OpenVPNConfiguration(proto: proto, username: username, password: password, path: config.0, data: config.1)
-            case .staticIP:
-                let location = try getStaticIPLocation(id: location)
-                guard let node = location.nodes.toArray().randomElement() else {
-                    throw VPNConfigurationErrors.noValidNodeFound
-                }
-                guard let credentials = location.credentials.first else {
-                    throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
-                }
-                let username = credentials.username
-                let password = credentials.password
-                let hostname = node.hostname
-                let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: nil, userSettings: userSettings)
-
-                return OpenVPNConfiguration(proto: proto, username: username, password: password, path: config.0, data: config.1)
-            default:
-                let configFilePath = "\(getId(location: locationID)).ovpn"
-                guard let configData = fileDatabase.readFile(path: configFilePath) else {
-                    throw VPNConfigurationErrors.configNotFound
-                }
-                guard let config = localDatabase.getCustomConfigs().first(where: {$0.id == locationID})?.getModel() else {
-                    throw VPNConfigurationErrors.configNotFound
-                }
-                return OpenVPNConfiguration(proto: config.protocolType ?? udp, username: config.username, password: config.password, path: configFilePath, data: configData)
+        case .server:
+            guard let credentials = localDatabase.getOpenVPNServerCredentials() else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
+            let username = credentials.username.base64Decoded()
+            let password = credentials.password.base64Decoded()
+            keychainDb.save(username: username, password: password)
+            let location = try getLocation(id: location)
+            let node = try getRandomNode(nodes: location.1.nodes.toArray())
+            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
+            let hostname = node.ip2
+            let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
+        case .staticIP:
+            let location = try getStaticIPLocation(id: locationID)
+            let node = try getRandomNode(nodes: location.nodes.toArray())
+            guard let credentials = location.credentials.last else {
+                throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
+            }
+            let username = credentials.username
+            let password = credentials.password
+            keychainDb.save(username: username, password: password)
+            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
+            let hostname = node.ip2
+            let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
+        default:
+            throw VPNConfigurationErrors.customConfigSupportNotAvailable
         }
     }
 
     private func getProxyInfo(proto: String, port: String, ip1: String, ip3: String) -> ProxyInfo? {
         if ![stealth, wsTunnel].contains(proto) {
-           return nil
+            return nil
         }
         var proxyProtocol = ProxyType.wstunnel
         var remoteAddress = ip1
@@ -168,14 +180,18 @@ extension ConfigurationsManager {
     }
 
     private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) throws -> (String, Data) {
-        let protoLine = "proto \(proto.lowercased())"
+        var protoLine = "proto \(proto.lowercased())"
+        if [stealth, wsTunnel].contains(proto) {
+            protoLine = "proto tcp"
+        }
         let remoteLine = "remote \(serverAddress) \(port)"
         let x509NameLine = "verify-x509-name \(x509Name) name"
         let proxyLine = proxyInfo?.text
-        self.logger.logD( OpenVPNManager.self, proxyLine?.debugDescription ?? "")
+        logger.logD(OpenVPNManager.self, proxyLine?.debugDescription ?? "")
         guard let configData = fileDatabase.readFile(path: FilePaths.openVPN),
               let stringData = String(data: configData,
-                                      encoding: String.Encoding.utf8) else {
+                                      encoding: String.Encoding.utf8)
+        else {
             throw VPNConfigurationErrors.invalidServerConfig
         }
         var lines = stringData.components(separatedBy: "\n")
@@ -230,7 +246,7 @@ extension ConfigurationsManager {
         var groupResult: Group?
         for server in servers {
             let groups = server.groups
-            for group in groups where "\(group.id)" == id {
+            for group in groups where id == "\(group.id)" {
                 serverResult = server
                 groupResult = group
             }
@@ -242,22 +258,22 @@ extension ConfigurationsManager {
 
     private func getStaticIPLocation(id: String) throws -> StaticIP {
         let ipId = getId(location: id)
-        guard let location = localDatabase.getStaticIPs()?.first(where: {"\($0.ipId)" == ipId}) else {
+        guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.ipId)" }) else {
             throw VPNConfigurationErrors.locationNotFound(id)
         }
         return location
     }
 
     private func getId(location: String) -> String {
-        let parts = location.split(separator: "-")
-        if parts.count == 0 {
+        let parts = location.split(separator: "_")
+        if parts.count == 1 {
             return location
         }
-        return parts[1].lowercased()
+        return String(parts[1])
     }
 
     private func getLocationType(id: String) throws -> LocationType {
-        let parts = id.split(separator: "-")
+        let parts = id.split(separator: "_")
         if parts.count == 1 {
             return LocationType.server
         }
@@ -271,20 +287,19 @@ extension ConfigurationsManager {
         throw VPNConfigurationErrors.invalidLocationType
     }
 
-    private func getRandomNode(group: Group) throws -> Node {
-        let nodes = group.nodes.toArray()
+    private func getRandomNode(nodes: [Node]) throws -> Node {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
             // Always pick node with forced node option.
             let forceNode = advanceRepository.getForcedNode()
-            if let forceNode = forceNode, let node = nodes.first(where: {$0.hostname == forceNode}) {
+            if let forceNode = forceNode, let node = nodes.first(where: { $0.hostname == forceNode }) {
                 return node
             }
             // Locations may be under maintence.
             let validNodes = nodes.filter { $0.forceDisconnect == false }
             // Pick random node with least amount of connections.
-            var weightCounter = nodes.reduce(0, { $0 + $1.weight })
+            var weightCounter = nodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
                 let randomNumber = arc4random_uniform(UInt32(weightCounter))
                 weightCounter = 0

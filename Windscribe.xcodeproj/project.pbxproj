@@ -821,6 +821,8 @@
 		C535D2A027E5127F00C08345 /* LogType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD019F22946F6C00FED749 /* LogType.swift */; };
 		C535D2A127E5133300C08345 /* URLRequest+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2A752E230DAF6300548088 /* URLRequest+Ext.swift */; };
 		C535D2A227E5136700C08345 /* URLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90E56A6275E4A02004E4AC0 /* URLRequestExtension.swift */; };
+		C5387E992CD46C18008A26EE /* VPNManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */; };
+		C5387E9A2CD46C18008A26EE /* VPNManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */; };
 		C54AE8722B8E5BEF00646529 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */; };
 		C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88C116F79ED9C24091D3B53F /* Pods_WireGuardTunnel.framework */; };
 		C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; };
@@ -949,6 +951,8 @@
 		C59C074029406EB800D6C3C1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
 		C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
 		C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
+		C59CA15F2CD400E4007517DA /* Configuration+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59CA15E2CD400D9007517DA /* Configuration+Connect.swift */; };
+		C59CA1602CD400E4007517DA /* Configuration+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59CA15E2CD400D9007517DA /* Configuration+Connect.swift */; };
 		C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
@@ -1043,6 +1047,8 @@
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
 		C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4A72C36CAC0009B67DC /* WireGuardKit */; };
 		C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */; };
+		C5F0747B2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */; };
+		C5F0747C2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */; };
 		C5FA3E802684BA56001D03A7 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */; };
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E882684E232001D03A7 /* SubmitTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E872684E232001D03A7 /* SubmitTicketViewController.swift */; };
@@ -1747,6 +1753,7 @@
 		C535D28327E2CE0500C08345 /* WindscribeProduction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WindscribeProduction.entitlements; sourceTree = "<group>"; };
 		C535D29827E4E85700C08345 /* SharedUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedUserDefaults.swift; sourceTree = "<group>"; };
 		C535D29B27E4F96C00C08345 /* WireGuardTunnelProduction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardTunnelProduction.entitlements; sourceTree = "<group>"; };
+		C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+Connect.swift"; sourceTree = "<group>"; };
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
 		C5481CF5C95B230B8691EB78 /* Pods_HomeWidgetExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HomeWidgetExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
@@ -1829,6 +1836,7 @@
 		C59BBFC8273F30D60078BB72 /* WebSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSession.swift; sourceTree = "<group>"; };
 		C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProxyInfo.swift; sourceTree = "<group>"; };
 		C59C074329424CF300D6C3C1 /* Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Proxy.swift; sourceTree = "<group>"; };
+		C59CA15E2CD400D9007517DA /* Configuration+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Configuration+Connect.swift"; sourceTree = "<group>"; };
 		C59FF19E2CB998610072EF70 /* IntentCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentCommon.swift; sourceTree = "<group>"; };
 		C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
 		C5A930C62B4203F70001CFA0 /* APIManagerImpl+Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Session.swift"; sourceTree = "<group>"; };
@@ -1879,6 +1887,7 @@
 		C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryImpl.swift; sourceTree = "<group>"; };
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
+		C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnectionAlert.swift; sourceTree = "<group>"; };
 		C5F550AADF77DA1974F7700A /* Pods-Windscribe TV.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Windscribe TV.staging.xcconfig"; path = "Target Support Files/Pods-Windscribe TV/Pods-Windscribe TV.staging.xcconfig"; sourceTree = "<group>"; };
 		C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
@@ -2377,6 +2386,8 @@
 		1E593DA82CC9377D0051FF5E /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */,
+				C59CA15E2CD400D9007517DA /* Configuration+Connect.swift */,
 				1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */,
 				1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */,
 				1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */,
@@ -3457,6 +3468,7 @@
 		AFF507D9229D97FD00C094A0 /* VPN */ = {
 			isa = PBXGroup;
 			children = (
+				C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */,
 				1E593DA82CC9377D0051FF5E /* Utils */,
 				AF0318BC21E7A9C20094D6D4 /* IKEv2VPNManager.swift */,
 				AF37EC9E227116A9005C19CC /* OpenVPNManager.swift */,
@@ -4891,6 +4903,7 @@
 				59FC74592C51616100021CD1 /* UIEdgeInsets+Ext.swift in Sources */,
 				1E79CA5B2C63D2BB006D4DE7 /* AccountViewData.swift in Sources */,
 				59FC74182C51544200021CD1 /* MyIP.swift in Sources */,
+				C5387E992CD46C18008A26EE /* VPNManager+Connect.swift in Sources */,
 				C56123752C5F24010090EB5A /* DNSUtil.swift .swift in Sources */,
 				1EDAA9172CCA9BA20014E678 /* ConfigurationsManager+OpenVPN.swift in Sources */,
 				59E4A7D02C73D84300987F99 /* ServerDetailTableViewCell.swift in Sources */,
@@ -5099,8 +5112,10 @@
 				59FC741E2C51547000021CD1 /* AdvanceRepositoryImpl.swift in Sources */,
 				59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */,
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
+				C5F0747C2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				59FC743E2C515B9E00021CD1 /* SessionManager.swift in Sources */,
+				C59CA1602CD400E4007517DA /* Configuration+Connect.swift in Sources */,
 				1EF7BB352C6D0DAE0032A4DF /* UpgradePlanDetailView.swift in Sources */,
 				C5658EA72C71AACD00E8215A /* HomeRouter.swift in Sources */,
 				1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */,
@@ -5394,6 +5409,7 @@
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
 				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
 				AF2199582270B147009B42E5 /* Resolver.swift in Sources */,
+				C5F0747B2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */,
 				1A9DB35428168E8500C3EC1C /* UITableViewCell.swift in Sources */,
 				AF2C1869234F5429008657FA /* VPNConnection.swift in Sources */,
 				E90E56A7275E4A02004E4AC0 /* URLRequestExtension.swift in Sources */,
@@ -5526,6 +5542,7 @@
 				5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */,
 				C56FCC002B2CE66A008DE7D4 /* GhostAccountRouter.swift in Sources */,
 				C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */,
+				C5387E9A2CD46C18008A26EE /* VPNManager+Connect.swift in Sources */,
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				AF04ED9F21DFD1AE005C6576 /* StaticIP.swift in Sources */,
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
@@ -5624,6 +5641,7 @@
 				AF04EDA321E50E99005C6576 /* PortMap.swift in Sources */,
 				AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */,
 				AF42803022D7943B006761C5 /* ViewLogViewController+UI.swift in Sources */,
+				C59CA15F2CD400E4007517DA /* Configuration+Connect.swift in Sources */,
 				59215B4C2B63925B0086CBF6 /* LanguageManagerV2.swift in Sources */,
 				C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */,
 				1EE74F762BD67B630031185F /* PushNotificationViewModel.swift in Sources */,

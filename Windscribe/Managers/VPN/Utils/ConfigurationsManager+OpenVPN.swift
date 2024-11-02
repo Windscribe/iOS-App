@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  ConfigurationsManager+OpenVPN.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 24/10/2024.
@@ -13,7 +13,8 @@ extension ConfigurationsManager {
     func configureOpenVPNWithSavedCredentials(with selectedNode: SelectedNode?,
                                               userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode,
-              let x509Name = selectedNode.ovpnX509 else {
+              let x509Name = selectedNode.ovpnX509
+        else {
             throw Errors.hostnameNotFound
         }
 
@@ -56,7 +57,7 @@ extension ConfigurationsManager {
 
         // Build proxy info
         var proxyInfo: ProxyInfo?
-        if protocolType == stealth  || protocolType == wsTunnel {
+        if protocolType == stealth || protocolType == wsTunnel {
             var proxyProtocol = ProxyType.wstunnel
             var remoteAddress = selectedNode.ip1
             if protocolType == stealth {
@@ -89,14 +90,13 @@ extension ConfigurationsManager {
     }
 
     func configureOpenVPNWithCustomConfig(with selectedNode: SelectedNode?,
-                                   userSettings: VPNUserSettings) async throws -> Bool {
-
+                                          userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode else {
             throw Errors.hostnameNotFound
         }
 
         let providerManager = openVPNdManager() as? NETunnelProviderManager ?? NETunnelProviderManager()
-        self.logger.logD(ConfigurationsManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
+        logger.logD(ConfigurationsManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         guard providerManager.connection.status != .connecting,
               let customConfig = selectedNode.customConfig,
               let protocolType = customConfig.protocolType,
@@ -140,7 +140,8 @@ extension ConfigurationsManager {
                                                          serverAddress: serverAddress,
                                                          port: port,
                                                          x509Name: x509Name,
-                                                         proxyInfo: proxyInfo) else {
+                                                         proxyInfo: proxyInfo)
+        else {
             return false
         }
 
@@ -148,8 +149,8 @@ extension ConfigurationsManager {
         tunnelProtocol.username = TextsAsset.openVPN
         tunnelProtocol.serverAddress = serverAddress
         tunnelProtocol.providerBundleIdentifier = "\(Bundle.main.bundleID ?? "").PacketTunnel"
-                if let configUsername = configuration.username, let configPassword = configuration.password {
-                    tunnelProtocol.providerConfiguration = ["ovpn": configuration.data,
+        if let configUsername = configuration.username, let configPassword = configuration.password {
+            tunnelProtocol.providerConfiguration = ["ovpn": configuration.data,
                                                     "username": configUsername,
                                                     "password": configPassword,
                                                     "compressionEnabled": compressionEnabled ?? false]
@@ -161,16 +162,16 @@ extension ConfigurationsManager {
         tunnelProtocol.disconnectOnSleep = false
         manager.protocolConfiguration = tunnelProtocol
 
-#if os(iOS)
-        if #available(iOS 15.1, *) {
-            manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
-            manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
-        }
-        // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
-        if #available(iOS 16.0, *) {
-            manager.protocolConfiguration?.includeAllNetworks = manager.protocolConfiguration?.includeAllNetworks ?? !userSettings.allowLane
-        }
-#endif
+        #if os(iOS)
+            if #available(iOS 15.1, *) {
+                manager.protocolConfiguration?.includeAllNetworks = userSettings.isRFC ? userSettings.killSwitch : true
+                manager.protocolConfiguration?.excludeLocalNetworks = userSettings.isRFC ? userSettings.allowLane : false
+            }
+            // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
+            if #available(iOS 16.0, *) {
+                manager.protocolConfiguration?.includeAllNetworks = manager.protocolConfiguration?.includeAllNetworks ?? !userSettings.allowLane
+            }
+        #endif
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = userSettings.onDemandRules
         manager.isEnabled = true
@@ -178,7 +179,7 @@ extension ConfigurationsManager {
 
         do {
             try await saveThrowing(manager: manager)
-        } catch let error {
+        } catch {
             guard let error = error as? Errors else { throw Errors.notDefined }
             logger.logE(self, "Error when saving vpn preferences \(error.description).")
             throw error
@@ -197,28 +198,27 @@ extension ConfigurationsManager {
                           port: String,
                           x509Name: String?,
                           proxyInfo: ProxyInfo?) async -> OpenVPNConfiguration? {
-
         let openVPNConfigFilePath = FilePaths.openVPN
         if let customConfig = selectedNode?.customConfig,
            let customConfigId = customConfig.id,
            let authRequired = customConfig.authRequired {
             let configFilePath = "\(customConfigId).ovpn"
             guard let configData = fileDatabase.readFile(path: configFilePath) else { return nil }
-            if customConfig.username != "" &&
-                customConfig.password != "" {
+            if customConfig.username != "",
+               customConfig.password != "" {
                 let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
                 let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
-                return OpenVPNConfiguration(proto: protocolType, username: user, password: pass, path: configFilePath, data: configData)
+                return OpenVPNConfiguration(proto: protocolType, ip: customConfig.serverAddress ?? "", username: user, password: pass, path: configFilePath, data: configData)
 
             } else {
-                return OpenVPNConfiguration(proto: protocolType, username: nil, password: nil, path: configFilePath, data: configData)
+                return OpenVPNConfiguration(proto: protocolType, ip: customConfig.serverAddress ?? "", username: nil, password: nil, path: configFilePath, data: configData)
             }
         } else {
             let protoLine = "proto \(protocolType.lowercased())"
             let remoteLine = "remote \(serverAddress) \(port)"
             let x509NameLine = "verify-x509-name \(x509Name!) name"
             let proxyLine = proxyInfo?.text
-            self.logger.logD(ConfigurationsManager.self, proxyLine?.debugDescription ?? "")
+            logger.logD(ConfigurationsManager.self, proxyLine?.debugDescription ?? "")
             guard let configData = fileDatabase.readFile(path: openVPNConfigFilePath),
                   let stringData = String(data: configData, encoding: String.Encoding.utf8)
             else { return nil }
@@ -263,7 +263,7 @@ extension ConfigurationsManager {
             fileDatabase.removeFile(path: FilePaths.openVPN)
             fileDatabase.saveFile(data: appendedConfigData,
                                   path: FilePaths.openVPN)
-            return OpenVPNConfiguration(proto: protocolType, username: username, password: password, path: openVPNConfigFilePath, data: appendedConfigData)
+            return OpenVPNConfiguration(proto: protocolType, ip: serverAddress, username: username, password: password, path: openVPNConfigFilePath, data: appendedConfigData)
         }
     }
 }

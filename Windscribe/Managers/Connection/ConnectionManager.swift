@@ -124,6 +124,23 @@ class ConnectionManager: ConnectionManagerV2 {
         }
     }
 
+    private var called = false
+    func getNextProtocol(shouldReset: Bool) async throws -> ProtocolPort {
+        called = false
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.main.async {
+                self.loadProtocols(shouldReset: shouldReset) { protocols in
+                    if self.called {
+                        return
+                    }
+                    self.called = true
+                    self.logger.logD("VPNManager", "\(protocols)")
+                    continuation.resume(returning: self.getNextProtocol())
+                }
+            }
+        }
+    }
+
     /// Next protocol to connect.
     func getNextProtocol() -> ProtocolPort {
         accessQueue.sync {

@@ -229,6 +229,10 @@ extension VPNManager {
     }
 
     func connectUsingAutomaticMode() {
+        DispatchQueue.main.async {
+            self.connectNow()
+        }
+        return
         guard let selectedNode = selectedNode else { return }
         delegate?.setConnecting()
         self.keepConnectingState = true

@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 import NetworkExtension
+import UIKit
 import WireGuardKit
 enum LocationType {
     case server
@@ -24,31 +25,129 @@ struct VPNUserSettings: CustomStringConvertible {
     }
 }
 
+struct IKEv2VPNConfiguration: VPNConfiguration {
+    let username: String
+    let auth: Data
+    let hostname: String
+    let ip: String
+    var description: String {
+        return "IKEv2: [username: \(username) ip: \(ip) hostname: \(hostname)] auth: \(auth)"
+    }
+
+    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+        let ikeV2Protocol = NEVPNProtocolIKEv2()
+        ikeV2Protocol.disconnectOnSleep = false
+        ikeV2Protocol.authenticationMethod = .none
+        ikeV2Protocol.useExtendedAuthentication = true
+        ikeV2Protocol.enablePFS = true
+        // Using direct ip for server does not work in iOS <=13
+        let legacyOS = NSString(string: UIDevice.current.systemVersion).doubleValue <= 13
+        // Changes for the ikev2 issue on ios 16 and kill switch on
+        if #available(iOS 16.0, *) {
+            if settings.killSwitch || !settings.allowLane {
+                ikeV2Protocol.remoteIdentifier = hostname
+                ikeV2Protocol.localIdentifier = username
+                ikeV2Protocol.serverAddress = hostname
+            } else {
+                ikeV2Protocol.serverAddress = ip
+                ikeV2Protocol.serverCertificateCommonName = hostname
+            }
+        } else if legacyOS {
+            ikeV2Protocol.remoteIdentifier = hostname
+            ikeV2Protocol.localIdentifier = username
+            ikeV2Protocol.serverAddress = hostname
+        } else {
+            ikeV2Protocol.serverAddress = ip
+            ikeV2Protocol.serverCertificateCommonName = hostname
+        }
+
+        ikeV2Protocol.passwordReference = auth
+        ikeV2Protocol.username = username
+        ikeV2Protocol.sharedSecretReference = auth
+        #if os(iOS)
+            if #available(iOS 13.0, *) {
+                // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
+                ikeV2Protocol.enableFallback = true
+            }
+        #endif
+        ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+        ikeV2Protocol.ikeSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
+        ikeV2Protocol.ikeSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
+        ikeV2Protocol.ikeSecurityAssociationParameters.lifetimeMinutes = 1440
+        ikeV2Protocol.childSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
+        ikeV2Protocol.childSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21
+        ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
+        ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
+        manager.protocolConfiguration = ikeV2Protocol
+        return manager
+    }
+}
+
 struct OpenVPNConfiguration: VPNConfiguration {
     let proto: String
+    let ip: String
     let username: String?
     let password: String?
     let path: String
     let data: Data
     var description: String {
-        return "OpenVPN: [proto: \(proto) path: \(path) username: \(username ?? "N/A") password: \(password ?? "N/A")]"
+        return "OpenVPN: [proto: \(proto) ip: \(ip)  username: \(username ?? "N/A") password: \(password ?? "N/A") path: \(path) data: \(data)]"
     }
-}
 
-struct IKEv2VPNConfiguration: VPNConfiguration {
-    let username: String
-    let hostname: String
-    let ip: String
-    var description: String {
-        return "IKEv2: [username: \(username) ip: \(ip) hostname: \(hostname)]"
+    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+        let tunnelProtocol = NETunnelProviderProtocol()
+        tunnelProtocol.username = TextsAsset.openVPN
+        tunnelProtocol.serverAddress = ip
+        tunnelProtocol.providerBundleIdentifier = "\(Bundle.main.bundleID ?? "").PacketTunnel"
+        if let configUsername = username, let configPassword = password {
+            tunnelProtocol.providerConfiguration = ["ovpn": data,
+                                                    "username": configUsername,
+                                                    "password": configPassword,
+                                                    "compressionEnabled": false]
+        } else {
+            tunnelProtocol.providerConfiguration = ["ovpn": data,
+                                                    "compressionEnabled": false]
+        }
+
+        tunnelProtocol.disconnectOnSleep = false
+        manager.protocolConfiguration = tunnelProtocol
+        return manager
     }
 }
 
 struct WireguardVPNConfiguration: VPNConfiguration {
     let content: TunnelConfiguration
     var description: String {
-        return "Wireguard: [content: \(content)"
+        return "Wireguard: [content: \(content.asWgQuickConfig())"
+    }
+
+    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+        guard let manager = manager as? NETunnelProviderManager else {
+            throw VPNConfigurationErrors.incorrectVPNManager
+        }
+        manager.setTunnelConfiguration(content, username: TextsAsset.wireGuard, description: Constants.appName)
+        return manager
     }
 }
 
-protocol VPNConfiguration: CustomStringConvertible {}
+protocol VPNConfiguration: CustomStringConvertible {
+    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager
+}
+
+extension VPNConfiguration {
+    func applySettings(settings: VPNUserSettings, manager: NEVPNManager) -> NEVPNManager {
+        #if os(iOS)
+            // Changes made for Non Rfc-1918 . includeallnetworks​ =  True and excludeLocalNetworks​ = False
+            if #available(iOS 15.1, *) {
+                manager.protocolConfiguration?.includeAllNetworks = settings.isRFC ? settings.killSwitch : true
+                manager.protocolConfiguration?.excludeLocalNetworks = settings.isRFC ? settings.allowLane : false
+            }
+        #endif
+        manager.onDemandRules?.removeAll()
+        manager.onDemandRules = settings.onDemandRules
+        manager.isEnabled = true
+        manager.isOnDemandEnabled = true
+        manager.localizedDescription = Constants.appName
+        return manager
+    }
+}

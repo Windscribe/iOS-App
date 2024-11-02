@@ -19,4 +19,5 @@ protocol ConnectionManagerV2 {
     func onConnectStateChange(state: NEVPNStatus)
     func scheduleTimer()
     func saveCurrentWifiNetworks()
+    func getNextProtocol(shouldReset: Bool) async throws -> ProtocolPort
 }

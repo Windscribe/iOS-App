@@ -61,7 +61,7 @@ extension MainViewController {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.connectedState.subscribe(onNext: {
+        connectionStateViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
     }

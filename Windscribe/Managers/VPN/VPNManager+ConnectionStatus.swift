@@ -156,6 +156,7 @@ extension VPNManager {
             let active = state == .background || state == .inactive
             self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
             self.lastConnectionStatus = connectionStatus
+            return
             configManager.invalidateTimer()
             switch connectionStatus {
             case .connecting:
@@ -288,7 +289,6 @@ extension VPNManager {
             return
         }
         self.awaitingConnectionCheck = true
-        self.logger.logD(self, "Checking last VPN connection for errors.")
         getLastConnectionError { error in
             guard let error = error else {
                 self.awaitingConnectionCheck = false

@@ -16,7 +16,7 @@ extension MainViewController {
     @objc func appEnteredForeground() {
         if VPNManager.shared.isConnecting() && !internetConnectionLost {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
-            configureVPN(bypassConnectingCheck: true)
+          //  configureVPN(bypassConnectingCheck: true)
         }
         clearScrollHappened()
         connectionStateViewModel.becameActive()
@@ -237,28 +237,30 @@ extension MainViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        if !viewModel.isPrivacyPopupAccepted() {
-            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
-            return
-        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
-            self.displayConnectingAlert()
-            logger.logD(self, "User attempted to connect while in connecting state.")
-
-            return
-        } else if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
-            self.showOutOfDataPopup()
-            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
-            logger.logD(self, "User attempted to connect when out of data.")
-            return
-        }
-        vpnManager.connectIntent = false
-        vpnManager.userTappedToDisconnect = false
-        vpnManager.isOnDemandRetry = false
-        if WifiManager.shared.isConnectedWifiTrusted() {
-            router?.routeTo(to: .trustedNetwork, from: self)
-        } else {
-            viewModel.reconnect()
-        }
+        vpnManager.connectNow()
+        return
+//        if !viewModel.isPrivacyPopupAccepted() {
+//            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
+//            return
+//        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
+//            self.displayConnectingAlert()
+//            logger.logD(self, "User attempted to connect while in connecting state.")
+//
+//            return
+//        } else if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
+//            self.showOutOfDataPopup()
+//            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+//            logger.logD(self, "User attempted to connect when out of data.")
+//            return
+//        }
+//        vpnManager.connectIntent = false
+//        vpnManager.userTappedToDisconnect = false
+//        vpnManager.isOnDemandRetry = false
+//        if WifiManager.shared.isConnectedWifiTrusted() {
+//            router?.routeTo(to: .trustedNetwork, from: self)
+//        } else {
+//            viewModel.reconnect()
+//        }
     }
 
     @objc func reloadServerListOrder() {
@@ -370,14 +372,14 @@ extension MainViewController {
             logger.logE(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                configureVPN()
+                vpnManager.connectNow()
             } else {
                 enableConnectButton()
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
-            connectionStateViewModel.disconnect()
+            vpnManager.disconnectNow()
         }
     }
 

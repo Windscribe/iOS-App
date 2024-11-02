@@ -8,18 +8,18 @@
 
 import Foundation
 import NetworkExtension
-import Swinject
 import RxSwift
+import Swinject
 
 protocol ConfigurationsManagerDelegate: AnyObject {
     func setRestartOnDisconnect(with value: Bool)
 }
 
 class ConfigurationsManager {
-    let logger: FileLogger// = Assembler.resolve(FileLogger.self)
-    let localDatabase: LocalDatabase// = Assembler.resolve(LocalDatabase.self)
-    let keychainDb: KeyChainDatabase// = Assembler.resolve(KeyChainDatabase.self)
-    let fileDatabase: FileDatabase// = Assembler.resolve(FileDatabase.self)
+    let logger: FileLogger // = Assembler.resolve(FileLogger.self)
+    let localDatabase: LocalDatabase // = Assembler.resolve(LocalDatabase.self)
+    let keychainDb: KeyChainDatabase // = Assembler.resolve(KeyChainDatabase.self)
+    let fileDatabase: FileDatabase // = Assembler.resolve(FileDatabase.self)
     let advanceRepository: AdvanceRepository
     let wgRepository: WireguardConfigRepository
     let wgCredentials: WgCredentials
@@ -31,7 +31,7 @@ class ConfigurationsManager {
     var disposeBag = DisposeBag()
     var noResponseTimer: Timer?
 
-    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository ,wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials) {
+    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
@@ -99,7 +99,7 @@ class ConfigurationsManager {
         return manager
     }
 
-    private func getAllManagers() async throws -> [NEVPNManager] {
+    func getAllManagers() async throws -> [NEVPNManager] {
         var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap { $0 }
         let tunnelProviders = try? await NETunnelProviderManager.loadAllFromPreferences()
         providers.append(contentsOf: tunnelProviders ?? [])
@@ -149,36 +149,73 @@ class ConfigurationsManager {
 
     func isIKEV2(manager: NEVPNManager) -> Bool {
         return ![TextsAsset.openVPN, TextsAsset.wireGuard].contains(manager.protocolConfiguration?.username)
-        && manager.protocolConfiguration?.username != nil
+            && manager.protocolConfiguration?.username != nil
     }
 
     func isWireguard(manager: NEVPNManager) -> Bool {
-        return  manager.protocolConfiguration?.username == TextsAsset.wireGuard
+        return manager.protocolConfiguration?.username == TextsAsset.wireGuard
     }
 
     func isOpenVPN(manager: NEVPNManager) -> Bool {
-        return  manager.protocolConfiguration?.username == TextsAsset.openVPN
+        return manager.protocolConfiguration?.username == TextsAsset.openVPN
     }
 
     func iKEV2Manager() -> NEVPNManager? {
-        managers.first { isIKEV2(manager: $0 ) }
+        managers.first { isIKEV2(manager: $0) }
     }
 
     func wireguardManager() -> NEVPNManager? {
-        managers.first { isWireguard(manager: $0 ) }
+        managers.first { isWireguard(manager: $0) }
     }
 
     func openVPNdManager() -> NEVPNManager? {
-        managers.first { isOpenVPN(manager: $0 ) }
+        managers.first { isOpenVPN(manager: $0) }
     }
 
     func manager(with type: VPNManagerType) -> NEVPNManager? {
         managers.first { $0.protocolConfiguration?.username == type.username }
     }
 
+    private func currentManagerMap() async -> [String: NEVPNManager] {
+        var managerMap = [String: NEVPNManager]()
+        guard let managers = try? await getAllManagers() else {
+            return managerMap
+        }
+        for manager in managers {
+            switch manager.protocolConfiguration {
+            case is NEVPNProtocolIKEv2:
+                managerMap[TextsAsset.iKEv2] = manager
+            case let tunnelProtocol as NETunnelProviderProtocol where tunnelProtocol.username == TextsAsset.openVPN:
+                managerMap[TextsAsset.openVPN] = manager
+            case let tunnelProtocol as NETunnelProviderProtocol where tunnelProtocol.username == TextsAsset.wireGuard:
+                managerMap[TextsAsset.wireGuard] = manager
+            default:
+                break
+            }
+        }
+        return managerMap
+    }
+
+    func getNextManager(proto: String) async -> NEVPNManager {
+        let map = await currentManagerMap()
+        if map.keys.contains(proto) {
+            return map[proto]!
+        }
+        if proto == TextsAsset.iKEv2 {
+            return NEVPNManager.shared()
+        } else {
+            return NETunnelProviderManager()
+        }
+    }
+
+    func getOtherManagers(proto: String) async -> [NEVPNManager] {
+        let map = await currentManagerMap().filter { $0.key != proto }
+        return map.map { $0.value }
+    }
+
     func getManagerName(from manager: NEVPNManager) -> String {
         if let username = manager.protocolConfiguration?.username {
-            if username == TextsAsset.wireGuard || username == TextsAsset.wireGuard {
+            if username == TextsAsset.wireGuard || username == TextsAsset.openVPN {
                 return username
             }
             return TextsAsset.iKEv2
@@ -199,13 +236,13 @@ class ConfigurationsManager {
         guard let manager = manager else { return }
         manager.isOnDemandEnabled = false
         manager.isEnabled = false
-#if os(iOS)
-        manager.protocolConfiguration?.includeAllNetworks = false
-#endif
+        #if os(iOS)
+            manager.protocolConfiguration?.includeAllNetworks = false
+        #endif
         if (try? await saveThrowing(manager: manager)) != nil,
            [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status) {
-                manager.connection.stopVPNTunnel()
-            }
-        try? await Task.sleep(nanoseconds: 2000000000)
+            manager.connection.stopVPNTunnel()
+        }
+        try? await Task.sleep(nanoseconds: 2_000_000_000)
     }
 }

@@ -14,6 +14,7 @@ import WidgetKit
 #endif
 import Swinject
 import RxSwift
+import Combine
 
 protocol VPNManagerProtocol {
 
@@ -23,6 +24,10 @@ class VPNManager: VPNManagerProtocol {
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
+    var cancellable: AnyCancellable?
+    var selectedProtocol = TextsAsset.wireGuard
+    let connectionAlert = VPNConnectionAlert()
+    let disconnectAlert = VPNConnectionAlert()
     lazy var wgCrendentials: WgCredentials = {
         return Assembler.resolve(WgCredentials.self)
     }()
