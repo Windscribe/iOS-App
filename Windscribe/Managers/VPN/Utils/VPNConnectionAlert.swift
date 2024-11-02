@@ -16,6 +16,7 @@ protocol VPNConnectionAlertDelegate: AnyObject {
 enum VPNActionType {
     case connect
     case disconnect
+    case error(String)
 }
 
 class VPNConnectionAlert: UIViewController {
@@ -93,7 +94,7 @@ class VPNConnectionAlert: UIViewController {
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
             actionButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            actionButton.heightAnchor.constraint(equalToConstant: 48.0)
+            actionButton.heightAnchor.constraint(equalToConstant: 48.0),
         ])
     }
 
@@ -113,6 +114,12 @@ class VPNConnectionAlert: UIViewController {
             protocolPicker.isHidden = true
             actionButton.isEnabled = true
             actionButton.alpha = 1.0
+        case let .error(error):
+            titleLabel.text = error
+            actionButton.setTitle("Okay", for: .normal)
+            protocolPicker.isHidden = true
+            actionButton.isEnabled = true
+            actionButton.alpha = 1.0
         }
     }
 
@@ -124,6 +131,8 @@ class VPNConnectionAlert: UIViewController {
         case .disconnect:
             delegate?.didTapDisconnect()
             progressLabel.text = "Disconnecting..."
+        case .error:
+            dismissAlert()
         }
     }
 

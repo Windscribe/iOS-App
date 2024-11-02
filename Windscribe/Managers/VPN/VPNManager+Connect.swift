@@ -13,7 +13,7 @@ import Swinject
 extension VPNManager: VPNConnectionAlertDelegate {
     private func connectTask() {
         Task { @MainActor in
-           // var id = "\(selectedNode?.groupId ?? 0)"
+            // var id = "\(selectedNode?.groupId ?? 0)"
             var id = "9000"
             connectionAlert.updateProgress(message: "Please select protocol and connect")
             var port = "443"
@@ -36,8 +36,11 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     switch completion {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
-                    case .failure(let e):
-                            self.logger.logD("VPNConfiguration", "Connection process failed: \(e)")
+                    case let .failure(e):
+                        let alert = VPNConnectionAlert()
+                        alert.configure(for: .error("\(e)"))
+                        self.showPopup(popup: alert)
+                        self.logger.logD("VPNConfiguration", "Connection process failed: \(e)")
                         self.delegate?.setDisconnected()
                     }
                 }, receiveValue: { state in
@@ -57,15 +60,29 @@ extension VPNManager: VPNConnectionAlertDelegate {
     private func connectWithInitialRetry(id: String, proto: String, port: String) -> AnyPublisher<State, Error> {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings())
             .catch { error in
-                if let error = error as? VPNConfigurationErrors, error == .connectionTimeout || error == .connectivityTestFailed {
-                    self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
-                    return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                if let error = error as? VPNConfigurationErrors {
+                    switch error {
+                    // Retry protocol once with new node.
+                    case .connectionTimeout, .connectivityTestFailed:
+                        self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
+                        return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                    default: ()
+                    }
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
+                // Pass error down if there is no resoultion.
+                if let error = error as? VPNConfigurationErrors {
+                    switch error {
+                    case .locationNotFound:
+                        return Fail<State, any Error>(error: error).eraseToAnyPublisher()
+                    default: ()
+                    }
+                }
+                // Handle error
                 return self.showProtocolSelectionPopup(for: error)
                     .flatMap { userSelection in
-                        return self.connectWithUserSelection(id: id, userSelection: userSelection)
+                        self.connectWithUserSelection(id: id, userSelection: userSelection)
                     }
                     .eraseToAnyPublisher()
             }.eraseToAnyPublisher()
@@ -74,9 +91,9 @@ extension VPNManager: VPNConnectionAlertDelegate {
     private func connectWithUserSelection(id: String, userSelection: ProtocolPort) -> AnyPublisher<State, Error> {
         return configManager.connectAsync(locationID: id, proto: userSelection.protocolName, port: userSelection.portName, vpnSettings: makeUserSettings())
             .catch { error in
-                return self.showProtocolSelectionPopup(for: error)
+                self.showProtocolSelectionPopup(for: error)
                     .flatMap { newSelection in
-                        return self.connectWithUserSelection(id: id, userSelection: newSelection)
+                        self.connectWithUserSelection(id: id, userSelection: newSelection)
                     }
                     .eraseToAnyPublisher()
             }
@@ -91,6 +108,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 self.presentProtocolSelectionPopup(
                     error: error,
                     onSelection: { result in
+                        self.changeProtocol.onSelection = nil
                         if result {
                             let newSelection = self.connectionManager.getNextProtocol()
                             self.logger.logD("VPNConfiguration", "User selected: \(newSelection)")
@@ -106,13 +124,16 @@ extension VPNManager: VPNConnectionAlertDelegate {
     }
 
     private func presentProtocolSelectionPopup(error: Error, onSelection: @escaping (Bool) -> Void) {
-        let changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
         changeProtocol.onSelection = onSelection
         if let e = error as? VPNConfigurationErrors {
             changeProtocol.error = e.description
         }
+        showPopup(popup: changeProtocol)
+    }
+
+    private func showPopup(popup: UIViewController) {
         if let topController = UIApplication.shared.keyWindow?.rootViewController {
-            topController.present(changeProtocol, animated: true, completion: nil)
+            topController.present(popup, animated: true, completion: nil)
         }
     }
 
@@ -151,9 +172,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
             self.disconnectAlert.delegate = self
             self.disconnectAlert.configure(for: .disconnect)
             self.disconnectAlert.updateProgress(message: "")
-            if let topController = UIApplication.shared.keyWindow?.rootViewController {
-                topController.present(self.disconnectAlert, animated: true, completion: nil)
-            }
+            self.showPopup(popup: self.disconnectAlert)
         }
         disconnectTask()
     }
@@ -163,9 +182,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
             self.connectionAlert.delegate = self
             self.connectionAlert.configure(for: .connect)
             self.connectionAlert.updateProgress(message: "")
-            if let topController = UIApplication.shared.keyWindow?.rootViewController {
-                topController.present(self.connectionAlert, animated: true, completion: nil)
-            }
+            self.showPopup(popup: self.connectionAlert)
         }
     }
 

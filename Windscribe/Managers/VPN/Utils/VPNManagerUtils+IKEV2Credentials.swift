@@ -11,7 +11,8 @@ import UIKit
 
 extension ConfigurationsManager {
     func configureIKEV2WithSavedCredentials(with selectedNode: SelectedNode?,
-                                            userSettings: VPNUserSettings) async throws -> Bool {
+                                            userSettings: VPNUserSettings) async throws -> Bool
+    {
         guard let selectedNode = selectedNode else {
             logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
@@ -28,7 +29,8 @@ extension ConfigurationsManager {
         var base64password = ""
         if let staticIPCredentials = selectedNode.staticIPCredentials,
            let username = staticIPCredentials.username,
-           let password = staticIPCredentials.password {
+           let password = staticIPCredentials.password
+        {
             base64username = username
             base64password = password
         } else if let credentials = localDatabase.getIKEv2ServerCredentials() {
@@ -50,7 +52,8 @@ extension ConfigurationsManager {
 
     func configureIKEV2(manager: NEVPNManager, username: String,
                         dnsHostname _: String, hostname: String,
-                        ip: String, userSettings: VPNUserSettings) async throws -> Bool {
+                        ip: String, userSettings: VPNUserSettings) async throws -> Bool
+    {
         try await manager.loadFromPreferences()
         let serverCredentials = keychainDb.retrieve(username: username)
         let ikeV2Protocol = NEVPNProtocolIKEv2()

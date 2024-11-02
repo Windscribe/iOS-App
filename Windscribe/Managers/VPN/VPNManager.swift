@@ -51,6 +51,8 @@ class VPNManager: VPNManagerProtocol {
 
     lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
 
+    lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
+
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()
@@ -230,7 +232,8 @@ class VPNManager: VPNManagerProtocol {
 
     func runConnectivityTest(retry: Bool = true,
                              connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true) {
+                             checkForIPAddressChange: Bool = true)
+    {
         getVPNConnectionInfo { [self] info in
             if info?.status != .connected {
                 return
@@ -259,7 +262,8 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
-                                              checkForIPAddressChange _: Bool = true) {
+                                              checkForIPAddressChange _: Bool = true)
+    {
         logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
