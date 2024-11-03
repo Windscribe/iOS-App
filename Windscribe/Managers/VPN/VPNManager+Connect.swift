@@ -13,23 +13,19 @@ import Swinject
 extension VPNManager: VPNConnectionAlertDelegate {
     private func connectTask() {
         Task { @MainActor in
-            // var id = "\(selectedNode?.groupId ?? 0)"
-            var id = "9000"
+            var id = "\(selectedNode?.groupId ?? 0)"
             connectionAlert.updateProgress(message: "Please select protocol and connect")
-            var port = "443"
-
-            if selectedProtocol == TextsAsset.iKEv2 {
-                port = "500"
-            }
             if selectedNode?.staticIPCredentials != nil {
                 let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
                 id = "static_\(ipId)"
             }
             if let customId = selectedNode?.customConfig?.id {
                 id = "custom_\(customId)"
-                selectedProtocol = configManager.getProtoFromConfig(locationId: customId) ?? TextsAsset.wireGuard
+                if let proto = configManager.getProtoFromConfig(locationId: customId) {
+                    selectedProtocol = ProtocolPort(proto, "443")
+                }
             }
-            cancellable = connectWithInitialRetry(id: id, proto: selectedProtocol, port: port)
+            cancellable = connectWithInitialRetry(id: id, proto: selectedProtocol.protocolName, port: selectedProtocol.portName)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     self.connectionAlert.dismissAlert()
@@ -186,9 +182,12 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
-    func didSelectProtocol(_ protocolName: String) {
-        selectedProtocol = protocolName
-        connectTask()
+    func didSelectProtocol(protocolPort: ProtocolPort) {
+        connectionManager.onUserSelectProtocol(proto: protocolPort)
+        connectionManager.loadProtocols(shouldReset: false) { _ in
+            self.selectedProtocol = protocolPort
+            self.connectTask()
+        }
     }
 
     func didTapDisconnect() {

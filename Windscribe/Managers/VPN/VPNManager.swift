@@ -23,7 +23,7 @@ class VPNManager: VPNManagerProtocol {
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
     var cancellable: AnyCancellable?
-    var selectedProtocol = TextsAsset.wireGuard
+    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
     let connectionAlert = VPNConnectionAlert()
     let disconnectAlert = VPNConnectionAlert()
     let tag = "VPNConfiguration"
@@ -307,15 +307,28 @@ class VPNManager: VPNManagerProtocol {
     func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
         // Refresh and load all VPN Managers from system preferrances.
         let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
+        var priorityManagers: [NEVPNManager] = []
         configManager.managers.forEach {
             if priorityStates.contains($0.connection.status) {
-                if configManager.isIKEV2(manager: $0) {
-                    completion(configManager.getIKEV2ConnectionInfo(manager: $0))
-                } else {
-                    completion(configManager.getVPNConnectionInfo(manager: $0))
-                }
-                return
+                priorityManagers.append($0)
             }
+        }
+        if priorityManagers.count == 1 {
+            if configManager.isIKEV2(manager: priorityManagers[0]) {
+                completion(configManager.getIKEV2ConnectionInfo(manager: priorityManagers[0]))
+            } else {
+                completion(configManager.getVPNConnectionInfo(manager: priorityManagers[0]))
+            }
+            return
+        }
+
+        if let enabledManager = priorityManagers.filter({ $0.isEnabled }).first {
+            if configManager.isIKEV2(manager: enabledManager) {
+                completion(configManager.getIKEV2ConnectionInfo(manager: enabledManager))
+            } else {
+                completion(configManager.getVPNConnectionInfo(manager: enabledManager))
+            }
+            return
         }
 
         // No VPN Manager is configured

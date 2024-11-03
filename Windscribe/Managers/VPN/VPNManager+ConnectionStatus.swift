@@ -140,75 +140,52 @@ extension VPNManager {
     func configureForConnectionState() {
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()
-        }
-        let state = UIApplication.shared.applicationState
-        getVPNConnectionInfo(completion: { [self] info in
-            guard let info = info else {
-                return
-            }
-            self.vpnInfo.onNext(info)
-            let inactive = state == .background || state == .inactive
-            if inactive {
-                return
-            }
-            let connectionStatus = info.status
-            let protocolType = info.selectedProtocol
-            if self.lastConnectionStatus == connectionStatus { return }
-            let active = state == .background || state == .inactive
-            self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
-            self.lastConnectionStatus = connectionStatus
-            return
-                configManager.invalidateTimer()
-            switch connectionStatus {
-            case .connecting:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
-                WSNet.instance().setIsConnectedToVpnState(false)
-                self.delegate?.saveDataForWidget()
-                self.delegate?.setConnecting()
-                self.checkIfUserIsOutOfData()
-                self.setTimeoutForConnectingState()
-                VPNManager.shared.triedToConnect = true
-            case .connected:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connected")
-                WSNet.instance().setIsConnectedToVpnState(true)
-                VPNManager.shared.untrustedOneTimeOnlySSID = ""
-                VPNManager.shared.triedToConnect = true
-                self.disconnectCounter = 0
-                self.delegate?.saveDataForWidget()
-                self.delegate?.setConnectivityTest()
-                self.contentIntentTimer?.invalidate()
-                self.connectingTimer?.invalidate()
-                self.connectivityTestTimer?.invalidate()
-                self.connectivityTestTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.runConnectivityTestWithRetry), userInfo: nil, repeats: false)
-
-            case .disconnecting:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnecting")
-
-                WSNet.instance().setIsConnectedToVpnState(false)
-                if self.forceToKeepConnectingState() { self.delegate?.setConnecting() } else { self.delegate?.setDisconnecting() }
-                self.setTimeoutForDisconnectingState()
-            case .disconnected:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnected")
-                handleConnectError()
-                WSNet.instance().setIsConnectedToVpnState(false)
-                self.delegate?.saveDataForWidget()
-                if self.forceToKeepConnectingState() { self.delegate?.setConnecting() } else { self.delegate?.setDisconnecting() }
-                self.disconnectingTimer?.invalidate()
-                self.checkForRetry()
-                self.contentIntentTimer?.invalidate()
-                self.contentIntentTimer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(self.checkForConnectIntent), userInfo: nil, repeats: false)
-            case .invalid:
-                if !self.restartOnDisconnect {
-                    self.delegate?.setDisconnected()
+            self.getVPNConnectionInfo(completion: { [self] info in
+                guard let info = info else {
+                    return
                 }
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Invalid")
-                WSNet.instance().setIsConnectedToVpnState(false)
-            case .reasserting:
-                self.keepConnectingState = false
-            default:
-                return
-            }
-        })
+                self.vpnInfo.onNext(info)
+                let connectionStatus = info.status
+                let protocolType = info.selectedProtocol
+                if self.lastConnectionStatus == connectionStatus { return }
+                self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
+                self.lastConnectionStatus = connectionStatus
+                switch connectionStatus {
+                case .connecting:
+                    self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                    self.delegate?.saveDataForWidget()
+                    self.delegate?.setConnecting()
+                    self.checkIfUserIsOutOfData()
+                case .connected:
+                    self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connected")
+                    WSNet.instance().setIsConnectedToVpnState(true)
+                    VPNManager.shared.untrustedOneTimeOnlySSID = ""
+                    VPNManager.shared.triedToConnect = true
+                    self.delegate?.saveDataForWidget()
+                    self.delegate?.setConnected(ipAddress: "")
+
+                case .disconnecting:
+                    self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnecting")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                    self.delegate?.setDisconnecting()
+                case .disconnected:
+                    self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnected")
+                    handleConnectError()
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                    self.delegate?.saveDataForWidget()
+                    self.delegate?.setDisconnected()
+                case .invalid:
+                    self.delegate?.setDisconnected()
+                    self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Invalid")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                case .reasserting:
+                    self.keepConnectingState = false
+                default:
+                    return
+                }
+            })
+        }
     }
 
     func forceToKeepConnectingState() -> Bool {

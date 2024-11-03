@@ -9,7 +9,7 @@
 import UIKit
 
 protocol VPNConnectionAlertDelegate: AnyObject {
-    func didSelectProtocol(_ protocolName: String)
+    func didSelectProtocol(protocolPort: ProtocolPort)
     func didTapDisconnect()
 }
 
@@ -22,8 +22,8 @@ enum VPNActionType {
 class VPNConnectionAlert: UIViewController {
     weak var delegate: VPNConnectionAlertDelegate?
     private var actionType: VPNActionType = .connect
-    private let protocols = [TextsAsset.wireGuard, TextsAsset.iKEv2, udp, tcp, stealth, wsTunnel]
-    private var selectedProtocol = TextsAsset.wireGuard
+    private let protocols = [ProtocolPort(TextsAsset.wireGuard, "443"), ProtocolPort(TextsAsset.iKEv2, "500"), ProtocolPort(udp, "443"), ProtocolPort(tcp, "443"), ProtocolPort(stealth, "443"), ProtocolPort(wsTunnel, "443")]
+    private var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
 
     private let titleLabel: UILabel = {
         let label = UILabel()
@@ -126,7 +126,7 @@ class VPNConnectionAlert: UIViewController {
     @objc private func actionButtonTapped() {
         switch actionType {
         case .connect:
-            delegate?.didSelectProtocol(selectedProtocol)
+            delegate?.didSelectProtocol(protocolPort: selectedProtocol)
             progressLabel.text = "Connecting..."
         case .disconnect:
             delegate?.didTapDisconnect()
@@ -157,7 +157,7 @@ extension VPNConnectionAlert: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_: UIPickerView, titleForRow row: Int, forComponent _: Int) -> String? {
-        return protocols[row]
+        return protocols[row].protocolName
     }
 
     func pickerView(_: UIPickerView, didSelectRow row: Int, inComponent _: Int) {
