@@ -72,7 +72,6 @@ class ConfigurationsManager {
     private func reloadManagers() {
         Task {
             managers = (try? await getAllManagers()) ?? []
-            self.logger.logD("VPNConfiguration", "Loading managers. \(managers.count)")
             VPNManager.shared.configureForConnectionState()
         }
     }

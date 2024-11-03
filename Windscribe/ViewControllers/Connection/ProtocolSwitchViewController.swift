@@ -19,8 +19,8 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     var viewModel: ProtocolSwitchViewModelType!
     var connectionManager: ConnectionManagerV2!
     var router: ProtocolSwitchViewRouter!
-    var onSelection: ((Bool) -> Void)?
-    var error: String?
+    var onSelection: ((Error?) -> Void)?
+    var error: VPNConfigurationErrors?
     // MARK: - Properties
     var type: ProtocolFallbacksType = .change
 
@@ -45,7 +45,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
 
     private lazy var subHeaderLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = (error != nil) ? error : type.getDescription()
+        lbl.text = (error != nil) ? error?.description : type.getDescription()
         lbl.alpha = 0.5
         lbl.font = UIFont.text(size: 16)
         lbl.textAlignment = .center
@@ -117,7 +117,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             } else {
                 AutomaticMode.shared.resetFailCounts()
                 self.delegate?.disconnectFromFailOver()
-                self.onSelection?(false)
+                self.onSelection?(self.error)
                 self.backButtonTapped()
             }
         }.disposed(by: disposeBag)
@@ -164,8 +164,8 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            delegate?.protocolSwitchVCCountdownCompleted()
-            self.onSelection?(true)
+          //  delegate?.protocolSwitchVCCountdownCompleted()
+            self.onSelection?(nil)
             backButtonTapped()
         }
     }
@@ -174,8 +174,8 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         protocolView.invalidateTimer()
         if !VPNManager.shared.isConnected() {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            delegate?.protocolSwitchVCCountdownCompleted()
-            self.onSelection?(true)
+          //  delegate?.protocolSwitchVCCountdownCompleted()
+            self.onSelection?(nil)
         }
         backButtonTapped()
     }

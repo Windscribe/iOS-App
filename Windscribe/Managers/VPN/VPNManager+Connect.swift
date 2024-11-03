@@ -14,6 +14,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     private func connectTask() {
         Task { @MainActor in
             var id = "\(selectedNode?.groupId ?? 0)"
+            id = "900"
             connectionAlert.updateProgress(message: "Please select protocol and connect")
             if selectedNode?.staticIPCredentials != nil {
                 let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
@@ -33,11 +34,9 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
                     case let .failure(e):
-                        let alert = VPNConnectionAlert()
-                        alert.configure(for: .error("\(e)"))
-                        self.showPopup(popup: alert)
-                        self.logger.logD("VPNConfiguration", "Connection process failed: \(e)")
-                        self.delegate?.setDisconnected()
+                        if let e = e as? VPNConfigurationErrors {
+                            self.handleError(error: e)
+                        }
                     }
                 }, receiveValue: { state in
                     switch state {
@@ -50,6 +49,19 @@ extension VPNManager: VPNConnectionAlertDelegate {
                         break
                     }
                 })
+        }
+    }
+
+    private func handleError(error: VPNConfigurationErrors) {
+        switch error {
+        case .allProtocolFailed:
+            logger.logD("VPNConfiguration", "Connection process failed: \(error)")
+        default:
+            let alert = VPNConnectionAlert()
+            alert.configure(for: .error("\(error)"))
+            showPopup(popup: alert)
+            logger.logD("VPNConfiguration", "Connection process failed: \(error)")
+            delegate?.setDisconnected()
         }
     }
 
@@ -70,12 +82,12 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 // Pass error down if there is no resoultion.
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
-                    case .locationNotFound:
+                    case .invalidServerConfig:
                         return Fail<State, any Error>(error: error).eraseToAnyPublisher()
                     default: ()
                     }
                 }
-                // Handle error
+                // Show option for other protocols.
                 return self.showProtocolSelectionPopup(for: error)
                     .flatMap { userSelection in
                         self.connectWithUserSelection(id: id, userSelection: userSelection)
@@ -103,15 +115,15 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 self.connectionAlert.dismissAlert()
                 self.presentProtocolSelectionPopup(
                     error: error,
-                    onSelection: { result in
+                    onSelection: { customError in
                         self.changeProtocol.onSelection = nil
-                        if result {
+                        if let customError = customError {
+                            self.logger.logD("VPNConfiguration", "User cancelled selection.")
+                            promise(.failure(customError))
+                        } else {
                             let newSelection = self.connectionManager.getNextProtocol()
                             self.logger.logD("VPNConfiguration", "User selected: \(newSelection)")
                             promise(.success(newSelection))
-                        } else {
-                            self.logger.logD("VPNConfiguration", "User cancelled selection.")
-                            promise(.failure(error))
                         }
                     }
                 )
@@ -119,12 +131,20 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
-    private func presentProtocolSelectionPopup(error: Error, onSelection: @escaping (Bool) -> Void) {
-        changeProtocol.onSelection = onSelection
-        if let e = error as? VPNConfigurationErrors {
-            changeProtocol.error = e.description
+    private func presentProtocolSelectionPopup(error: Error, onSelection: @escaping (Error?) -> Void) {
+        changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
+        changeProtocol.type = .failure
+        connectionManager.onProtocolFail { allProtocolFailed in
+            if allProtocolFailed {
+                onSelection(VPNConfigurationErrors.allProtocolFailed)
+                return
+            }
+            self.changeProtocol.onSelection = onSelection
+            if let e = error as? VPNConfigurationErrors {
+                self.changeProtocol.error = e
+            }
+            self.showPopup(popup: self.changeProtocol)
         }
-        showPopup(popup: changeProtocol)
     }
 
     private func showPopup(popup: UIViewController) {
