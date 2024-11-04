@@ -36,11 +36,12 @@ extension ConfigurationsManager {
 
         Task {
             do {
+                progressPublisher.send(.vpn(NEVPNStatus.connecting))
                 let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
                 try await disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
                 var nextManager = try await prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
-                try await Task.sleep(nanoseconds: 3 * 1_000_000_000)
+                try await Task.sleep(nanoseconds: 1_000_000_000)
                 progressPublisher.send(.update("Building configuration."))
                 let config = try await buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
                 progressPublisher.send(.update("Configuration built successfully \(config.description)"))
@@ -84,9 +85,11 @@ extension ConfigurationsManager {
                         progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
                         Task {
                             try await self.disableProfile(nextManager)
+                            self.getConnectError(manager: nextManager) { error in
+                                progressPublisher.send(completion: .failure(error))
+                            }
+                            cancellable?.cancel()
                         }
-                        progressPublisher.send(completion: .failure(VPNConfigurationErrors.connectionTimeout))
-                        cancellable?.cancel()
                     } else {
                         progressPublisher.send(.update("Attempting to connect... elapsed time: \(Int(elapsedTime)) seconds"))
                     }
@@ -97,6 +100,27 @@ extension ConfigurationsManager {
         }
 
         return progressPublisher.eraseToAnyPublisher()
+    }
+
+    private func getConnectError(manager: NEVPNManager, completion: @escaping (Error) -> Void) {
+        if #available(iOS 16.0, *) {
+            manager.connection.fetchLastDisconnectError { error in
+                guard let error = error else {
+                    completion(VPNConfigurationErrors.connectionTimeout)
+                    return
+                }
+                if let nsError = error as NSError? {
+                    self.logger.logD("VPNConfiguration", "\(nsError)")
+                }
+                if let nsError = error as NSError?, [12, 8, 50].contains(nsError.code) {
+                    completion(VPNConfigurationErrors.authFailure)
+                    return
+                }
+                completion(VPNConfigurationErrors.connectionTimeout)
+            }
+        } else {
+            completion(VPNConfigurationErrors.connectionTimeout)
+        }
     }
 
     /// Initiates an asynchronous VPN disconnection process for any active VPN managers.

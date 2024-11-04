@@ -23,8 +23,7 @@ extension ConfigurationsManager {
         guard let manager = manager else { return nil }
         guard let conf = manager as? NETunnelProviderManager else { return nil }
         if let wgConfig = conf.tunnelConfiguration,
-           let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":")
-        {
+           let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
             #if os(iOS)
                 return VPNConnectionInfo(selectedProtocol: wireGuard, selectedPort: hostAndPort[1], status: manager.connection.status, server: hostAndPort[0], killSwitch: manager.protocolConfiguration?.includeAllNetworks ?? false, onDemand: manager.isOnDemandEnabled)
             #else

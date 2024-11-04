@@ -94,7 +94,7 @@ class VPNConnectionAlert: UIViewController {
             actionButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
             actionButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-            actionButton.heightAnchor.constraint(equalToConstant: 48.0),
+            actionButton.heightAnchor.constraint(equalToConstant: 48.0)
         ])
     }
 

@@ -14,4 +14,5 @@ protocol Connectivity {
     func refreshNetwork()
     func internetConnectionAvailable() -> Bool
     func getWifiSSID() -> String?
+    func awaitNetwork(maxTime: Double) async throws
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Swinject
 import WireGuardKit
 
 extension ConfigurationsManager {
@@ -356,5 +357,59 @@ extension ConfigurationsManager {
             }
             return randomNode
         }
+    }
+
+    @MainActor
+    func validateLocation(lastLocation: String) async throws -> String? {
+        do {
+            let locationID = getId(location: lastLocation)
+            let locationType = try getLocationType(id: locationID)
+
+            switch locationType {
+            case .server:
+                let location = try getLocation(id: locationID)
+                let isFreeUser = localDatabase.getSessionSync()?.isPremium == false
+                if isFreeUser, location.1.premiumOnly {
+                    throw VPNConfigurationErrors.invalidLocationType
+                }
+                _ = try getRandomNode(nodes: location.1.nodes.toArray())
+                return lastLocation
+            case .staticIP:
+                let location = try getStaticIPLocation(id: locationID)
+                _ = try getRandomNode(nodes: location.nodes.toArray())
+                return lastLocation
+            case .custom:
+                do {
+                    _ = try wgConfigFromCustomConfig(locationID: locationID)
+                } catch {
+                    _ = try openConfigFromCustomConfig(locationID: locationID)
+                }
+                return lastLocation
+            }
+        } catch {
+            let updatedLocation = handleLocationFallback(for: lastLocation)
+            logger.logD("VPNConfiguration", "Updated location to \(updatedLocation ?? "n/a")")
+            return updatedLocation
+        }
+    }
+
+    private func handleLocationFallback(for location: String) -> String? {
+        let locationID = getId(location: location)
+        logger.logD("VPNConfiguration", "Looking for fallback location for \(location)")
+        guard let servers = localDatabase.getServers() else { return nil }
+
+        var groupResult: GroupModel?
+        for server in servers.map({ $0.getServerModel() }) {
+            for group in server?.groups ?? [] where locationID == "\(group.id ?? 0)" {
+                groupResult = server?.groups?.filter { $0.isNodesAvailable() }.randomElement()
+            }
+        }
+        if let city = groupResult {
+            return "\(city.id ?? 0)"
+        } else if let bestLocation = try? Assembler.resolve(LatencyRepository.self).bestLocation.value()?.groupId {
+            return "\(bestLocation)"
+        }
+
+        return nil
     }
 }

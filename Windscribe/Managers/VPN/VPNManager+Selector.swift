@@ -22,7 +22,7 @@ extension VPNManager {
             return
         }
         VPNManager.shared.uniqueConnectionId = UUID().uuidString
-        connectNow()
+        showConnectPopup()
         //        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
 //            logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
 //            if customConfig.protocolType == TextsAsset.wireGuard {
@@ -78,8 +78,7 @@ extension VPNManager {
         }
         Task {
             if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
-                                                                                userSettings: makeUserSettings())) ?? false
-            {
+                                                                                userSettings: makeUserSettings())) ?? false {
                 await configManager.connect(with: .wg, killSwitch: killSwitch)
             }
         }

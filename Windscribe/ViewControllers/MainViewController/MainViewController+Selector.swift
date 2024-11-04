@@ -237,7 +237,7 @@ extension MainViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        vpnManager.connectNow()
+        vpnManager.showConnectPopup()
         return
 //        if !viewModel.isPrivacyPopupAccepted() {
 //            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
@@ -372,14 +372,14 @@ extension MainViewController {
             logger.logE(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                vpnManager.connectNow()
+                vpnManager.showConnectPopup()
             } else {
                 enableConnectButton()
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
-            vpnManager.disconnectNow()
+            vpnManager.showDisconnectPopup()
         }
     }
 

@@ -19,6 +19,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case connectionTimeout
     case connectivityTestFailed
     case allProtocolFailed
+    case authFailure
 
     var description: String {
         switch self {
@@ -44,6 +45,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "Connectivity test failed."
         case .allProtocolFailed:
             return TextsAsset.AutomaticModeFailedAlert.message
+        case .authFailure:
+            return "Authentication failure."
         }
     }
 }

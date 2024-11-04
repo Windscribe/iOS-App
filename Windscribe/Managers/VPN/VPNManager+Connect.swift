@@ -8,25 +8,36 @@
 
 import Combine
 import NetworkExtension
+import RxSwift
 import Swinject
-/// Sample to test everything.
+/// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
 extension VPNManager: VPNConnectionAlertDelegate {
+    /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
+    ///
+    /// - Returns: A tuple containing the connection `id` and `ProtocolPort` with protocol and port details.
+    private func prepareConnectionPreferences() -> (String, ProtocolPort) {
+        var id = "\(selectedNode?.groupId ?? 0)"
+        connectionAlert.updateProgress(message: "Please select protocol and connect")
+        if selectedNode?.staticIPCredentials != nil {
+            let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
+            id = "static_\(ipId)"
+        }
+        if let customId = selectedNode?.customConfig?.id {
+            id = "custom_\(customId)"
+            if let proto = configManager.getProtoFromConfig(locationId: customId) {
+                selectedProtocol = ProtocolPort(proto, "443")
+            }
+        }
+        return (id, selectedProtocol)
+    }
+
+    /// Initiates the VPN connection process, handling connection states and errors, and updating the user through progress alerts.
+    ///
+    /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
     private func connectTask() {
         Task { @MainActor in
-            var id = "\(selectedNode?.groupId ?? 0)"
-            id = "900"
-            connectionAlert.updateProgress(message: "Please select protocol and connect")
-            if selectedNode?.staticIPCredentials != nil {
-                let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
-                id = "static_\(ipId)"
-            }
-            if let customId = selectedNode?.customConfig?.id {
-                id = "custom_\(customId)"
-                if let proto = configManager.getProtoFromConfig(locationId: customId) {
-                    selectedProtocol = ProtocolPort(proto, "443")
-                }
-            }
-            cancellable = connectWithInitialRetry(id: id, proto: selectedProtocol.protocolName, port: selectedProtocol.portName)
+            let data = prepareConnectionPreferences()
+            cancellable = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     self.connectionAlert.dismissAlert()
@@ -34,8 +45,9 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
                     case let .failure(e):
+                        self.delegate?.setDisconnected()
                         if let e = e as? VPNConfigurationErrors {
-                            self.handleError(error: e)
+                            self.showError(error: e)
                         }
                     }
                 }, receiveValue: { state in
@@ -45,6 +57,10 @@ extension VPNManager: VPNConnectionAlertDelegate {
                         self.connectionAlert.updateProgress(message: message)
                     case let .validated(ip):
                         self.delegate?.setConnected(ipAddress: ip)
+                    case let .vpn(status):
+                        if status == .connecting {
+                            self.delegate?.setConnecting()
+                        }
                     default:
                         break
                     }
@@ -52,24 +68,34 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
-    private func handleError(error: VPNConfigurationErrors) {
-        switch error {
-        case .allProtocolFailed:
-            logger.logD("VPNConfiguration", "Connection process failed: \(error)")
-        default:
-            let alert = VPNConnectionAlert()
-            alert.configure(for: .error("\(error)"))
-            showPopup(popup: alert)
-            logger.logD("VPNConfiguration", "Connection process failed: \(error)")
-            delegate?.setDisconnected()
-        }
+    /// Displays an error alert to the user in case of a VPN connection error and logs the error.
+    ///
+    /// - Parameter error: A `VPNConfigurationErrors` instance representing the encountered error.
+    private func showError(error: VPNConfigurationErrors) {
+        let alert = VPNConnectionAlert()
+        alert.configure(for: .error("\(error)"))
+        showPopup(popup: alert)
+        logger.logD("VPNConfiguration", "Connection process failed: \(error)")
+        delegate?.setDisconnected()
     }
 
+    /// Attempts to connect to the VPN, with retry logic for handling authentication failures and connectivity issues.
+    ///
+    /// - Parameters:
+    ///   - id: The location ID for the VPN connection.
+    ///   - proto: The protocol to be used for the connection (e.g., OpenVPN, IKEv2).
+    ///   - port: The port number for the protocol.
+    /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
     private func connectWithInitialRetry(id: String, proto: String, port: String) -> AnyPublisher<State, Error> {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings())
             .catch { error in
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
+                    case .authFailure:
+                        return self.updateConnectionData(locationID: id, connectionError: error)
+                            .flatMap { updatedLocation in
+                                self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                            }.eraseToAnyPublisher()
                     // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
                         self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
@@ -79,16 +105,8 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
-                // Pass error down if there is no resoultion.
-                if let error = error as? VPNConfigurationErrors {
-                    switch error {
-                    case .invalidServerConfig:
-                        return Fail<State, any Error>(error: error).eraseToAnyPublisher()
-                    default: ()
-                    }
-                }
-                // Show option for other protocols.
-                return self.showProtocolSelectionPopup(for: error)
+                // Show options for other protocols.
+                self.showProtocolSelectionPopup(for: error)
                     .flatMap { userSelection in
                         self.connectWithUserSelection(id: id, userSelection: userSelection)
                     }
@@ -96,6 +114,12 @@ extension VPNManager: VPNConnectionAlertDelegate {
             }.eraseToAnyPublisher()
     }
 
+    /// Initiates a connection using a protocol selected by the user.
+    ///
+    /// - Parameters:
+    ///   - id: The location ID for the VPN connection.
+    ///   - userSelection: The protocol and port selected by the user.
+    /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails.
     private func connectWithUserSelection(id: String, userSelection: ProtocolPort) -> AnyPublisher<State, Error> {
         return configManager.connectAsync(locationID: id, proto: userSelection.protocolName, port: userSelection.portName, vpnSettings: makeUserSettings())
             .catch { error in
@@ -108,6 +132,10 @@ extension VPNManager: VPNConnectionAlertDelegate {
             .eraseToAnyPublisher()
     }
 
+    /// Shows a protocol selection popup for the user to choose an alternate protocol upon connection failure.
+    ///
+    /// - Parameter error: The error that triggered the protocol selection popup.
+    /// - Returns: A `Future` containing the selected `ProtocolPort` or an `Error` if selection fails.
     private func showProtocolSelectionPopup(for error: Error) -> Future<ProtocolPort, Error> {
         return Future { promise in
             DispatchQueue.main.async {
@@ -131,6 +159,11 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
+    /// Presents the protocol selection popup to the user and registers a callback for their selection.
+    ///
+    /// - Parameters:
+    ///   - error: The error that prompted the protocol selection.
+    ///   - onSelection: A closure called with the user's selection or error.
     private func presentProtocolSelectionPopup(error: Error, onSelection: @escaping (Error?) -> Void) {
         changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
         changeProtocol.type = .failure
@@ -147,12 +180,55 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
+    /// Displays a modal popup alert for the specified view controller.
+    ///
+    /// - Parameter popup: The `UIViewController` to present as a modal popup.
     private func showPopup(popup: UIViewController) {
         if let topController = UIApplication.shared.keyWindow?.rootViewController {
             topController.present(popup, animated: true, completion: nil)
         }
     }
 
+    /// Attempts to update VPN connection data, including server data and credentials, in case of an authentication failure.
+    /// This method fetches updated session information, credentials, and server details, and validates the specified location.
+    /// If successful, it returns the updated location ID; otherwise, it returns a connection error.
+    ///
+    /// - Parameters:
+    ///   - locationID: The ID of the location to be validated and updated if necessary.
+    ///   - connectionError: An error that represents the connection failure, returned if updating or validation fails.
+    /// - Returns: A `Future` containing the updated location ID as a `String?` if successful, or an `Error` if the process fails.
+    ///
+    /// - Note:
+    ///   It checks for network availability before attempting to update server and credential data, with a maximum wait time of 3 seconds.
+    private func updateConnectionData(locationID: String, connectionError: Error) -> Future<String?, Error> {
+        logger.logD("VPNConfiguration", "Auth failure: attempting to update server data + credentials.")
+        return Future { promise in
+            Task {
+                do {
+                    try await self.connectivity.awaitNetwork(maxTime: 3)
+                    _ = try await self.sessionManager.getUppdatedSession().value
+                    _ = try await self.credentialsRepository.getUpdatedOpenVPNCrendentials().value
+                    _ = try await self.credentialsRepository.getUpdatedIKEv2Crendentials().value
+                    _ = try await self.serverRepository.getUpdatedServers().value
+                    do {
+                        if let updatedLocation = try await self.configManager.validateLocation(lastLocation: locationID) {
+                            promise(.success(updatedLocation))
+                        } else {
+                            promise(.failure(connectionError))
+                        }
+                    } catch {
+                        self.logger.logD("VPNConfiguration", "Failure update location: \(error)")
+                        promise(.failure(connectionError))
+                    }
+                } catch {
+                    self.logger.logD("VPNConfiguration", "Failure to update user data: \(error)")
+                    promise(.failure(connectionError))
+                }
+            }
+        }
+    }
+
+    /// Initiates the VPN disconnection process, updating the user on progress and handling completion and errors.
     private func disconnectTask() {
         delegate?.setDisconnecting()
         cancellable = configManager.disconnectAsync()
@@ -183,7 +259,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
             })
     }
 
-    func disconnectNow() {
+    func showDisconnectPopup() {
         DispatchQueue.main.async {
             self.disconnectAlert.delegate = self
             self.disconnectAlert.configure(for: .disconnect)
@@ -193,7 +269,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
         disconnectTask()
     }
 
-    func connectNow() {
+    func showConnectPopup() {
         DispatchQueue.main.async {
             self.connectionAlert.delegate = self
             self.connectionAlert.configure(for: .connect)
@@ -211,6 +287,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
     }
 
     func didTapDisconnect() {
-        disconnectNow()
+        showDisconnectPopup()
     }
 }

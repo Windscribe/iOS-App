@@ -65,18 +65,15 @@ class OpenVPNManager {
                                                          _ configUsername: String?,
                                                          _ configPassword: String?,
                                                          _ configFilePath: String?,
-                                                         _ configData: Data?) -> Void)
-    {
+                                                         _ configData: Data?) -> Void) {
         let openVPNConfigFilePath = FilePaths.openVPN
         if let customConfig = VPNManager.shared.selectedNode?.customConfig,
            let customConfigId = customConfig.id,
-           let authRequired = customConfig.authRequired
-        {
+           let authRequired = customConfig.authRequired {
             let configFilePath = "\(customConfigId).ovpn"
             guard let configData = fileDatabase.readFile(path: configFilePath) else { return }
             if customConfig.username != "",
-               customConfig.password != ""
-            {
+               customConfig.password != "" {
                 let user = customConfig.username!.base64Decoded() == "" ? customConfig.username! : customConfig.username!.base64Decoded()
                 let pass = customConfig.password!.base64Decoded() == "" ? customConfig.password! : customConfig.password!.base64Decoded()
                 completion(true,
@@ -150,8 +147,7 @@ class OpenVPNManager {
                            x509Name: String?,
                            proxyInfo: ProxyInfo? = nil,
                            completion: @escaping (_ result: Bool,
-                                                  _ error: String?) -> Void)
-    {
+                                                  _ error: String?) -> Void) {
         providerManager?.loadFromPreferences { [weak self] error in
             guard let self = self else { return }
             if error == nil {
@@ -359,8 +355,7 @@ class OpenVPNManager {
     }
 
     private func configureWithSavedCredentials(completion: @escaping (_ result: Bool,
-                                                                      _ error: String?) -> Void)
-    {
+                                                                      _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode,
               let x509Name = selectedNode.ovpnX509 else { return }
 
@@ -380,15 +375,13 @@ class OpenVPNManager {
                       serverAddress: serverAddress,
                       port: port,
                       x509Name: x509Name,
-                      proxyInfo: nil)
-            { result, error in
+                      proxyInfo: nil) { result, error in
                 completion(result, error)
             }
         } else {
             if let staticIPCredentials = VPNManager.shared.selectedNode?.staticIPCredentials,
                let username = staticIPCredentials.username,
-               let password = staticIPCredentials.password
-            {
+               let password = staticIPCredentials.password {
                 base64username = username
                 base64password = password
             } else {
@@ -433,8 +426,7 @@ class OpenVPNManager {
                           port: port,
                           compressionEnabled: true,
                           x509Name: x509Name,
-                          proxyInfo: proxyInfo)
-                { result, error in
+                          proxyInfo: proxyInfo) { result, error in
                     completion(result, error)
                 }
             }
@@ -442,8 +434,7 @@ class OpenVPNManager {
     }
 
     private func configureWithCustomConfig(completion: @escaping (_ result: Bool,
-                                                                  _ error: String?) -> Void)
-    {
+                                                                  _ error: String?) -> Void) {
         guard let selectedNode = VPNManager.shared.selectedNode else { return }
         logger.logD(OpenVPNManager.self, "Configuring VPN profile with custom configuration. \(String(describing: selectedNode.serverAddress))")
         if providerManager?.connection.status != .connecting {
@@ -456,8 +447,7 @@ class OpenVPNManager {
                           protocolType: protocolType,
                           serverAddress: selectedNode.serverAddress,
                           port: port,
-                          x509Name: nil)
-                { result, error in
+                          x509Name: nil) { result, error in
                     completion(result, error)
                 }
             } else {
@@ -469,8 +459,7 @@ class OpenVPNManager {
                           serverAddress: selectedNode.serverAddress,
                           port: port,
                           x509Name: nil,
-                          proxyInfo: nil)
-                { result, error in
+                          proxyInfo: nil) { result, error in
                     completion(result, error)
                 }
             }
@@ -478,8 +467,7 @@ class OpenVPNManager {
     }
 
     private func removeProfile(completion: @escaping (_ result: Bool,
-                                                      _ error: String?) -> Void)
-    {
+                                                      _ error: String?) -> Void) {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
             guard let self = self else { return }
             if self.isConfigured() {

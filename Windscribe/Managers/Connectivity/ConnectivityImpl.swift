@@ -9,6 +9,7 @@
 import Foundation
 import Network
 import RxSwift
+import Combine
 
 /// Manages network connectivity state using reachability and network path monitor.
 class ConnectivityImpl: Connectivity {
@@ -60,6 +61,17 @@ class ConnectivityImpl: Connectivity {
             self.logger.logI(self, "\(appNetwork.description)")
             self.network.onNext(appNetwork)
             NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
+        }
+    }
+
+    func awaitNetwork(maxTime: Double) async throws {
+        let timeout: TimeInterval = maxTime
+        let startTime = Date()
+        while getNetwork().status != .connected {
+            if Date().timeIntervalSince(startTime) > timeout {
+                return
+            }
+            try? await Task.sleep(nanoseconds: 500_000_000)
         }
     }
 

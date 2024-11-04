@@ -75,6 +75,14 @@ class SessionManager: SessionManagerV2 {
         self.updateServerConfigs()
     }
 
+    func getUppdatedSession() -> Single<Session> {
+        return self.apiManager.getSession(nil)
+           .flatMap { session in
+                self.userRepo.update(session: session)
+                return Single.just(session)
+            }
+    }
+
     func canAccesstoProLocation() -> Bool {
         guard let session = session else { return false }
         return session.isPremium

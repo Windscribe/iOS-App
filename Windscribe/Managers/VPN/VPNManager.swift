@@ -232,8 +232,7 @@ class VPNManager: VPNManagerProtocol {
 
     func runConnectivityTest(retry: Bool = true,
                              connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true)
-    {
+                             checkForIPAddressChange: Bool = true) {
         getVPNConnectionInfo { [self] info in
             if info?.status != .connected {
                 return
@@ -262,8 +261,7 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
-                                              checkForIPAddressChange _: Bool = true)
-    {
+                                              checkForIPAddressChange _: Bool = true) {
         logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
