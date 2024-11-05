@@ -48,7 +48,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
         connectionTask?.cancel()
         connectionTaskPublisher?.cancel()
-        connectionTask = Task { @MainActor in
+        connectionTask = Task(priority: TaskPriority.userInitiated) { @MainActor in
             let data = prepareConnectionPreferences()
             connectionTaskPublisher = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
                 .handleEvents(receiveSubscription: { _ in
