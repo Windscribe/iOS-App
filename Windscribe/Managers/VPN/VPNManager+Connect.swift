@@ -128,8 +128,20 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
+                if let e = error as? Errors {
+                    switch e {
+                    case let .apiError(apiError) where apiError.errorCode == wgLimitExceeded:
+                        return self.showDeleteWgKeyPopup(for: error, message: apiError.errorMessage ?? "")
+                            .flatMap {
+                                var settings = self.makeUserSettings()
+                                settings.deleteOldestKey = true
+                                return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: settings)
+                            }.eraseToAnyPublisher()
+                    default: ()
+                    }
+                }
                 // Show options for other protocols.
-                self.showProtocolSelectionPopup(for: error)
+                return self.showProtocolSelectionPopup(for: error)
                     .flatMap { userSelection in
                         self.connectWithUserSelection(id: id, userSelection: userSelection)
                     }
@@ -178,6 +190,25 @@ extension VPNManager: VPNConnectionAlertDelegate {
                         }
                     }
                 )
+            }
+        }
+    }
+
+    /// Shows a confirmation popup to ask if user wish to delete last wg key.
+    ///
+    /// - Parameter error: The error that triggered the delete key alert.
+    /// - Returns: A `Future` containing success or an `Error` if user cancel.
+    private func showDeleteWgKeyPopup(for error: Error, message: String) -> Future<Void, Error> {
+        return Future { promise in
+            Task {
+                self.logger.logD("VPNConfiguration", "Showing delete oldest key popup.")
+                await self.connectionAlert.dismissAlert()
+                let accept = try await self.alertManager.askUser(message: message).value
+                if accept {
+                    promise(.success(()))
+                } else {
+                    promise(.failure(error))
+                }
             }
         }
     }

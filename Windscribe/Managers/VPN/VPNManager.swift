@@ -54,6 +54,8 @@ class VPNManager: VPNManagerProtocol {
 
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
 
+    lazy var alertManager = Assembler.resolve(AlertManagerV2.self)
+
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()

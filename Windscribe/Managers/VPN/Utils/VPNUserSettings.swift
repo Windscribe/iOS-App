@@ -20,6 +20,7 @@ struct VPNUserSettings: CustomStringConvertible {
     let isRFC: Bool
     let isCircumventCensorshipEnabled: Bool
     let onDemandRules: [NEOnDemandRule]?
+    var deleteOldestKey = false
     var description: String {
         return "User Settings: [KillSwitch: \(killSwitch) allowLan: \(allowLan), isRfc: \(isRFC), CircumventCensorship: \(isCircumventCensorshipEnabled)]"
     }

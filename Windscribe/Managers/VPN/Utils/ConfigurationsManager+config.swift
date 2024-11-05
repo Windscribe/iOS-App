@@ -28,7 +28,7 @@ extension ConfigurationsManager {
         } else if proto == TextsAsset.iKEv2 {
             return try buildIKEv2Config(location: location)
         } else {
-            return try await buildWgConfig(location: location, port: port)
+            return try await buildWgConfig(location: location, port: port, vpnSettings: userSettings)
         }
     }
 
@@ -74,7 +74,7 @@ extension ConfigurationsManager {
     }
 
     /// Builds WireGuard configuration for a location based on its type.
-    private func buildWgConfig(location: String, port: String) async throws -> WireguardVPNConfiguration {
+    private func buildWgConfig(location: String, port: String, vpnSettings: VPNUserSettings) async throws -> WireguardVPNConfiguration {
         switch try getLocationType(id: location) {
         case .server:
             let location = try getLocation(id: location)
@@ -82,7 +82,7 @@ extension ConfigurationsManager {
             let ip = node.ip3
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
-            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try wgConfigurationFromPath(path: FilePaths.wireGuard)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
@@ -92,7 +92,7 @@ extension ConfigurationsManager {
             let ip = node.ip
             let hostname = node.hostname
             let publickey = location.wgPublicKey
-            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port)
+            try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         default:
@@ -101,8 +101,9 @@ extension ConfigurationsManager {
     }
 
     /// Gets Wireguard configuration from Api and saves to file.
-    private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String) async throws {
+    private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String, vpnSettings: VPNUserSettings) async throws {
         wgCredentials.setNodeToConnect(serverEndPoint: ip, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port)
+        wgCredentials.deleteOldestKey = vpnSettings.deleteOldestKey
         return try await wgRepository.getCredentials().value
     }
 
