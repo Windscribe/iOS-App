@@ -12,6 +12,49 @@ import RxSwift
 import Swinject
 /// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
 extension VPNManager: VPNConnectionAlertDelegate {
+    /// Initiates a disconnect action from the ViewModel, updating the connection state throughout the process.
+    /// - Returns: An `AnyPublisher` that publishes updates on the disconnection `State` or an error if the disconnection fails.
+    ///
+    /// Usage:
+    /// Call this function to start the disconnection process. See more: DisconnectTask
+    func disconnectFromViewModel() -> AnyPublisher<State, Error> {
+        return configManager.disconnectAsync()
+            .handleEvents(receiveSubscription: { _ in
+                self.configurationState = .disabling
+            }, receiveCompletion: { _ in
+                self.configurationState = .initial
+            }, receiveCancel: {
+                self.configurationState = .initial
+            }).eraseToAnyPublisher()
+    }
+
+    /// Initiates a connection from the ViewModel using the provided location ID and protocol port configuration.
+    /// - Parameters:
+    ///   - locationId: The ID of the location prepared for connection.
+    ///   - proto: The `ProtocolPort` specifying the protocol and port to be used for the connection.
+    /// - Returns: An `AnyPublisher` that publishes updates on the connection `State` or an error if the connection fails.
+    ///
+    /// Usage: Check connectTask function for more Info.
+    /// 1. Prepare the `locationId` and `proto`.
+    /// 2. Validate the current state and ensure the conditions are met to start a connection.
+    /// 3. Call this function to initiate the connection process.
+    /// 4. See connectTask func for more info
+    func connectFromViewModel(locationId: String, proto: ProtocolPort) -> AnyPublisher<State, Error> {
+        return configManager.validateAccessToLocation(locationID: locationId).flatMap { () in
+            let status = self.connectivity.getNetwork().status
+            if [NetworkStatus.disconnected].contains(status) {
+                return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
+            }
+            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName)
+        }.handleEvents(receiveSubscription: { _ in
+            self.configurationState = .configuring
+        }, receiveCompletion: { _ in
+            self.configurationState = .initial
+        }, receiveCancel: {
+            self.configurationState = .initial
+        }).eraseToAnyPublisher()
+    }
+
     /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
     ///
     /// - Returns: A tuple containing the connection `id` and `ProtocolPort` with protocol and port details.
@@ -50,14 +93,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
         connectionTaskPublisher?.cancel()
         connectionTask = Task(priority: TaskPriority.userInitiated) { @MainActor in
             let data = prepareConnectionPreferences()
-            connectionTaskPublisher = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
-                .handleEvents(receiveSubscription: { _ in
-                    self.configurationState = .configuring
-                }, receiveCompletion: { _ in
-                    self.configurationState = .initial
-                }, receiveCancel: {
-                    self.configurationState = .initial
-                })
+            connectionTaskPublisher = connectFromViewModel(locationId: data.0, proto: data.1)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     self.connectionAlert.dismissAlert()
@@ -65,7 +101,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
                     case let .failure(e):
-                        self.logger.logD("VPNConfiguration", "Connection process failure: \(e)")
                         self.delegate?.setDisconnected()
                         if let e = e as? VPNConfigurationErrors {
                             self.showError(error: e)
@@ -128,6 +163,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
+                self.logger.logD("VPNConfiguration", "\(error)")
                 // Handle wg api errors.
                 if let e = error as? Errors {
                     switch e {
@@ -286,14 +322,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     /// Initiates the VPN disconnection process, updating the user on progress and handling completion and errors.
     private func disconnectTask() {
         delegate?.setDisconnecting()
-        connectionTaskPublisher = configManager.disconnectAsync()
-            .handleEvents(receiveSubscription: { _ in
-                self.configurationState = .disabling
-            }, receiveCompletion: { _ in
-                self.configurationState = .initial
-            }, receiveCancel: {
-                self.configurationState = .initial
-            })
+        connectionTaskPublisher = disconnectFromViewModel()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 self.disconnectAlert.dismissAlert()

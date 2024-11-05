@@ -58,7 +58,8 @@ class WireGuardVPNManager {
     private func getConfiguration(completion: @escaping (_ tunnelConfiguration: TunnelConfiguration?) -> Void) {
         var configFilePath = "config.conf"
         if let customConfig = VPNManager.shared.selectedNode?.customConfig,
-           let customConfigId = customConfig.id {
+           let customConfigId = customConfig.id
+        {
             configFilePath = "\(customConfigId).conf"
         }
         guard let configData = fileDatabase.readFile(path: configFilePath) else { return }
@@ -74,10 +75,12 @@ class WireGuardVPNManager {
     }
 
     private func configure(completion: @escaping (_ result: Bool,
-                                                  _ error: String?) -> Void) {
+                                                  _ error: String?) -> Void)
+    {
         providerManager?.loadFromPreferences { [weak self] error in
             if error == nil,
-               let self = self {
+               let self = self
+            {
                 self.getConfiguration { tunnelConfiguration in
                     guard let tunnelConfiguration = tunnelConfiguration else { return }
                     self.providerManager.setTunnelConfiguration(tunnelConfiguration, username: TextsAsset.wireGuard, description: Constants.appName)
@@ -158,7 +161,8 @@ class WireGuardVPNManager {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] error in
             guard let self = self else { return }
             if error == nil,
-               self.isConfigured() {
+               self.isConfigured()
+            {
                 self.providerManager?.isOnDemandEnabled = VPNManager.shared.connectIntent
                 #if os(iOS)
                     if #available(iOS 15.1, *) {
@@ -180,7 +184,8 @@ class WireGuardVPNManager {
     }
 
     private func configureWithSavedConfig(completion: @escaping (_ result: Bool,
-                                                                 _ error: String?) -> Void) {
+                                                                 _ error: String?) -> Void)
+    {
         guard let selectedNode = VPNManager.shared.selectedNode,
               let ip3 = selectedNode.ip3 else { return }
         logger.logD(WireGuardVPNManager.self, "Configuring VPN profile with saved configuration. \(String(describing: ip3))")

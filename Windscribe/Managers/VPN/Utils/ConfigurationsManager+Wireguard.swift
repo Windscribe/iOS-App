@@ -14,7 +14,8 @@ extension ConfigurationsManager {
     func getWireguardConfiguration(selectedNode: SelectedNode?) async throws -> TunnelConfiguration? {
         var configFilePath = "config.conf"
         if let customConfig = selectedNode?.customConfig,
-           let customConfigId = customConfig.id {
+           let customConfigId = customConfig.id
+        {
             configFilePath = "\(customConfigId).conf"
         }
         guard let configData = fileDatabase.readFile(path: configFilePath),
@@ -30,7 +31,8 @@ extension ConfigurationsManager {
     }
 
     func configureWireguard(with selectedNode: SelectedNode?,
-                            userSettings: VPNUserSettings) async throws -> Bool {
+                            userSettings: VPNUserSettings) async throws -> Bool
+    {
         guard let selectedNode = selectedNode,
               let tunnelConfiguration = try await getWireguardConfiguration(selectedNode: selectedNode)
         else {
@@ -68,7 +70,8 @@ extension ConfigurationsManager {
 
     // This could potentially be an enum
     func configureWireguardWithSavedConfig(selectedNode: SelectedNode?,
-                                           userSettings: VPNUserSettings) async throws -> Bool {
+                                           userSettings: VPNUserSettings) async throws -> Bool
+    {
         guard let ip3 = selectedNode?.ip3 else { return false }
         return try await configureWireguardWithConfig(selectedNode: selectedNode,
                                                       userSettings: userSettings,
@@ -76,7 +79,8 @@ extension ConfigurationsManager {
     }
 
     func configureWireguardWithCustomConfig(selectedNode: SelectedNode?,
-                                            userSettings: VPNUserSettings) async throws -> Bool {
+                                            userSettings: VPNUserSettings) async throws -> Bool
+    {
         guard let serverAddress = selectedNode?.serverAddress else { return false }
         return try await configureWireguardWithConfig(selectedNode: selectedNode,
                                                       userSettings: userSettings,
@@ -84,7 +88,8 @@ extension ConfigurationsManager {
     }
 
     private func configureWireguardWithConfig(selectedNode: SelectedNode?,
-                                              userSettings: VPNUserSettings, logMessage: String) async throws -> Bool {
+                                              userSettings: VPNUserSettings, logMessage: String) async throws -> Bool
+    {
         logger.logD(ConfigurationsManager.self, logMessage)
         if wireguardManager()?.connection.status != .connecting {
             return try await configureWireguard(with: selectedNode, userSettings: userSettings)

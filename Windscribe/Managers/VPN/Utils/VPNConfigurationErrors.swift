@@ -20,6 +20,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case connectivityTestFailed
     case allProtocolFailed
     case authFailure
+    case upgradeRequired
+    case networkIsOffline
 
     var description: String {
         switch self {
@@ -47,6 +49,10 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return TextsAsset.AutomaticModeFailedAlert.message
         case .authFailure:
             return "Authentication failure."
+        case .upgradeRequired:
+            return "Upgrade required to access location."
+        case .networkIsOffline:
+            return "Network seems offline."
         }
     }
 }

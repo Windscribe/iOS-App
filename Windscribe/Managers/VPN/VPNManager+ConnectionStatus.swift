@@ -17,7 +17,8 @@ import RealmSwift
 extension VPNManager {
     func isConnectedToVpn() -> Bool {
         if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
-           let scopes = settings["__SCOPED__"] as? [String: Any] {
+           let scopes = settings["__SCOPED__"] as? [String: Any]
+        {
             for (key, _) in scopes {
                 if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
                     return true
@@ -224,7 +225,8 @@ extension VPNManager {
             return
         }
         if selectedConnectionMode != Fields.Values.auto ||
-            isCustomConfigSelected() {
+            isCustomConfigSelected()
+        {
             disconnectActiveVPNConnection(setDisconnect: true)
         } else {
             disconnectActiveVPNConnection()
