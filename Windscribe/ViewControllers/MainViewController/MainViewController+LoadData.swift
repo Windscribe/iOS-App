@@ -44,7 +44,7 @@ extension MainViewController {
     }
 
     @objc func reloadFavNodeOrder() {
-        viewModel.favNode.subscribe(onNext: { [self] favNodes in
+        viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] favNodes in
             if favNodes?.count == 0 {
                 favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: [], viewModel: viewModel)
                 favTableView.dataSource = favNodesListTableViewDataSource
