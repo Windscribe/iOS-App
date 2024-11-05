@@ -55,7 +55,7 @@ extension ConfigurationsManager {
         providerManager.localizedDescription = Constants.appName
 
         do {
-            try await saveThrowing(manager: providerManager)
+            try await saveToPreferences(manager: providerManager)
         } catch {
             guard let error = error as? Errors else { throw Errors.notDefined }
             logger.logE(self, "Error when saving vpn preferences \(error.description).")

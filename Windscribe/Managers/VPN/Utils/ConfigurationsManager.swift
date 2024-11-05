@@ -76,21 +76,6 @@ class ConfigurationsManager {
         }
     }
 
-    func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
-        Task {
-            do {
-                let manager = try await getActiveManager()
-                await MainActor.run {
-                    completionHandler(.success(manager))
-                }
-            } catch {
-                await MainActor.run {
-                    completionHandler(.failure(error))
-                }
-            }
-        }
-    }
-
     func getActiveManager() async throws -> NEVPNManager {
         do {
             return try await getNETunnelProvider()
@@ -145,33 +130,20 @@ class ConfigurationsManager {
         return manager.protocolConfiguration?.username != nil
     }
 
-    func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
-        manager.onDemandRules?.removeAll()
-        manager.onDemandRules = onDemandRules
-        await save(manager: manager)
-    }
-
-    func save(manager: NEVPNManager) async {
-        try? await manager.saveToPreferences()
-        try? await manager.loadFromPreferences()
-        reloadManagersTrigger.onNext(())
-    }
-
     func remove(manager: NEVPNManager) async {
         try? await manager.removeFromPreferences()
         try? await manager.loadFromPreferences()
         reloadManagersTrigger.onNext(())
     }
 
-    func saveThrowing(manager: NEVPNManager) async throws {
+    func saveToPreferences(manager: NEVPNManager) async throws {
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()
         reloadManagersTrigger.onNext(())
     }
 
     func isIKEV2(manager: NEVPNManager) -> Bool {
-        return ![TextsAsset.openVPN, TextsAsset.wireGuard].contains(manager.protocolConfiguration?.username)
-            && manager.protocolConfiguration?.username != nil
+        return manager.protocolConfiguration is NEVPNProtocolIKEv2
     }
 
     func isWireguard(manager: NEVPNManager) -> Bool {
@@ -194,12 +166,17 @@ class ConfigurationsManager {
         managers.first { isOpenVPN(manager: $0) }
     }
 
-    func manager(with type: VPNManagerType) -> NEVPNManager? {
-        managers.first { $0.protocolConfiguration?.username == type.username }
+    func getManager(for type: VPNManagerType) -> NEVPNManager? {
+        switch type {
+        case .iKEV2: iKEV2Manager()
+        case .wg: wireguardManager()
+        case .openVPN: openVPNdManager()
+        }
     }
 
     private func currentManagerMap() async -> [String: NEVPNManager] {
         var managerMap = [String: NEVPNManager]()
+        // Not sure if this needs to do getAllManagers, I think just accessing the `managers` would do
         guard let managers = try? await getAllManagers() else {
             return managerMap
         }
@@ -245,12 +222,18 @@ class ConfigurationsManager {
         return ""
     }
 
+    func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
+        manager.onDemandRules?.removeAll()
+        manager.onDemandRules = onDemandRules
+        try? await saveToPreferences(manager: manager)
+    }
+
     func setOnDemandMode(_ status: Bool, for manager: NEVPNManager?) {
         guard let manager = manager else { return }
         Task {
             guard (try? await manager.loadFromPreferences()) != nil else { return }
             manager.isOnDemandEnabled = status
-            await save(manager: manager)
+            try? await saveToPreferences(manager: manager)
         }
     }
 
@@ -261,7 +244,7 @@ class ConfigurationsManager {
         #if os(iOS)
             manager.protocolConfiguration?.includeAllNetworks = false
         #endif
-        if (try? await saveThrowing(manager: manager)) != nil,
+        if (try? await saveToPreferences(manager: manager)) != nil,
            [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status) {
             manager.connection.stopVPNTunnel()
         }

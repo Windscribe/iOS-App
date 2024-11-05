@@ -53,7 +53,7 @@ extension ConfigurationsManager {
                 nextManager = config.applySettings(settings: vpnSettings, manager: nextManager)
 
                 progressPublisher.send(.update("Saving configuration."))
-                try await saveThrowing(manager: nextManager)
+                try await saveToPreferences(manager: nextManager)
 
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()
@@ -72,6 +72,7 @@ extension ConfigurationsManager {
                         progressPublisher.send(.validating)
                         Task {
                             do {
+                                // This might lead to more than one check as the test bellow might take more than the time for the next loop, maybe put the cancel before?
                                 let userIp = try await self.testConnectivityWithRetries()
                                 progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
                                 progressPublisher.send(.validated(userIp))
@@ -145,12 +146,13 @@ extension ConfigurationsManager {
         Task {
             progressPublisher.send(.update("Retrieving active VPN manager..."))
             do {
+                // Maybe it doesn't really need to reload all the managers, just get the local `managers`
                 let managers = (try? await getAllManagers()) ?? []
                 for activeManager in managers {
                     progressPublisher.send(.update("Active VPN manager found, starting disconnection process..."))
                     activeManager.protocolConfiguration?.includeAllNetworks = false
                     activeManager.isOnDemandEnabled = false
-                    try await activeManager.saveToPreferences()
+                    try await saveToPreferences(manager: activeManager)
                     activeManager.connection.stopVPNTunnel()
                     try? await waitForDisconnection(manager: activeManager)
                     progressPublisher.send(.update("VPN disconnection initiated."))
@@ -176,9 +178,11 @@ extension ConfigurationsManager {
                 other.connection.stopVPNTunnel()
                 try? await waitForDisconnection(manager: other)
             }
+
+            // this seems out of order, it already loaded before, it's loading again and then saving?
             try await other.loadFromPreferences()
             other.onDemandRules = []
-            try await other.saveToPreferences()
+            try await saveToPreferences(manager: other)
         }
     }
 
@@ -229,8 +233,7 @@ extension ConfigurationsManager {
             manager.isEnabled = false
             manager.isOnDemandEnabled = false
             manager.protocolConfiguration?.includeAllNetworks = false
-            try await manager.saveToPreferences()
-            try await manager.loadFromPreferences()
+            try await saveToPreferences(manager: manager)
         }
     }
 }

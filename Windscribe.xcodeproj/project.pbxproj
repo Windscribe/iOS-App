@@ -170,8 +170,8 @@
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91D2CCBF1040014E678 /* ConfigurationsManager+Wireguard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91C2CCBF0EF0014E678 /* ConfigurationsManager+Wireguard.swift */; };
 		1EDAA91E2CCBF1040014E678 /* ConfigurationsManager+Wireguard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91C2CCBF0EF0014E678 /* ConfigurationsManager+Wireguard.swift */; };
-		1EDAA9202CD1433B0014E678 /* ConfigurationsManager+Connecions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */; };
-		1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connecions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */; };
+		1EDAA9202CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connections.swift */; };
+		1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connections.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
 		1EDAA9242CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
@@ -1361,7 +1361,7 @@
 		1EDAA9162CCA9BA10014E678 /* ConfigurationsManager+OpenVPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+OpenVPN.swift"; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA91C2CCBF0EF0014E678 /* ConfigurationsManager+Wireguard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Wireguard.swift"; sourceTree = "<group>"; };
-		1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Connecions.swift"; sourceTree = "<group>"; };
+		1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Connections.swift"; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataPopupViewModel.swift; sourceTree = "<group>"; };
@@ -2386,13 +2386,13 @@
 			children = (
 				1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */,
 				1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */,
-				1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connecions.swift */,
+				1EDAA91F2CD143280014E678 /* ConfigurationsManager+Connections.swift */,
 				1EDAA91C2CCBF0EF0014E678 /* ConfigurationsManager+Wireguard.swift */,
 				1EDAA9162CCA9BA10014E678 /* ConfigurationsManager+OpenVPN.swift */,
 				1E593DA92CC9378F0051FF5E /* ConfigurationsManager+IKEV2.swift */,
-				C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */,
 				C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */,
 				C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */,
+				C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
 			);
@@ -3471,10 +3471,10 @@
 				AF37EC9E227116A9005C19CC /* OpenVPNManager.swift */,
 				AFC75F7A24AB84EA00897C18 /* WireGuardVPNManager.swift */,
 				AFF507D7229D86BA00C094A0 /* VPNManager.swift */,
-				E9E5F344273C147200226BED /* VPNManagerDelegate.swift */,
 				E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */,
 				E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */,
 				E93AE6682744BA060097843B /* VPNManager+Selector.swift */,
+				E9E5F344273C147200226BED /* VPNManagerDelegate.swift */,
 				C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */,
 				1E7A19512C34236700851AE2 /* DNS */,
 			);
@@ -4980,7 +4980,7 @@
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59FC740D2C5153F400021CD1 /* Score.swift in Sources */,
 				59A2186A2C3C9C24000D89FA /* SharedUserDefaults.swift in Sources */,
-				1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connecions.swift in Sources */,
+				1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */,
 				59FC740E2C51540300021CD1 /* SuggestedPorts.swift in Sources */,
 				59C96D6A2C6A883300546C72 /* LatencyViewModel.swift in Sources */,
 				59DA7FB82C3D897100042E57 /* FileLogFormater.swift in Sources */,
@@ -5454,7 +5454,7 @@
 				C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */,
 				AF16CA22222884E700997A2A /* UITextView+Ext.swift in Sources */,
 				AF7F30842376099C0097C6D6 /* ShakeForDataViewController+UI.swift in Sources */,
-				1EDAA9202CD1433B0014E678 /* ConfigurationsManager+Connecions.swift in Sources */,
+				1EDAA9202CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */,
 				E9425B9C2743703D008B8786 /* APIParameterValues.swift in Sources */,
 				AF038CCF257FAC6C008F34A6 /* WelcomeViewController.swift in Sources */,
 				AFD593D721F8EECF00A47546 /* ServerSectionCell.swift in Sources */,

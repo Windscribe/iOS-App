@@ -20,8 +20,8 @@ extension ConfigurationsManager {
     }
 
     func getVPNConnectionInfo(manager: NEVPNManager?) -> VPNConnectionInfo? {
-        guard let manager = manager else { return nil }
-        guard let conf = manager as? NETunnelProviderManager else { return nil }
+        guard let manager = manager,
+              let conf = manager as? NETunnelProviderManager else { return nil }
         if let wgConfig = conf.tunnelConfiguration,
            let hostAndPort = wgConfig.peers.first?.endpoint?.stringRepresentation.splitToArray(separator: ":") {
             #if os(iOS)

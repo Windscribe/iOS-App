@@ -1,5 +1,5 @@
 //
-//  ConfigurationsManager+Connecions.swift
+//  ConfigurationsManager+Connections.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 29/10/2024.
@@ -11,21 +11,6 @@ import NetworkExtension
 import Swinject
 
 extension ConfigurationsManager {
-    func connect() {
-        // UserSettings - allowLane, killSwitch, etc
-        // Credentials
-        // Protocol, Port
-        // LocaionID
-    }
-
-    func getManager(for type: VPNManagerType) -> NEVPNManager? {
-        switch type {
-        case .iKEV2: iKEV2Manager()
-        case .wg: wireguardManager()
-        case .openVPN: openVPNdManager()
-        }
-    }
-
     func connect(with type: VPNManagerType, killSwitch: Bool) async {
         VPNManager.shared.activeVPNManager = type
 
@@ -48,8 +33,8 @@ extension ConfigurationsManager {
             }
             manager.isOnDemandEnabled = DefaultValues.firewallMode
             manager.isEnabled = true
-            await save(manager: manager)
             do {
+                try await saveToPreferences(manager: manager)
                 try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
                 handleVPNManagerNoResponse(for: type, killSwitch: killSwitch)
                 logger.logD(ConfigurationsManager.self, "WireGuard tunnel started.")
@@ -97,7 +82,7 @@ extension ConfigurationsManager {
                     }
                 }
             #endif
-            await save(manager: manager)
+            try? await saveToPreferences(manager: manager)
             manager.connection.stopVPNTunnel()
         }
     }
