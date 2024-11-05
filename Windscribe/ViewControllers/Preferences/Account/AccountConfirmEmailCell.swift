@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class AccountConfirmEmailCell: UITableViewCell {
-
     lazy var wrapperView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.unconfirmedYellow
@@ -39,7 +38,7 @@ class AccountConfirmEmailCell: UITableViewCell {
         return resendEmailButton
     }()
 
-    @objc func resendEmailButtonTapped(_ sender: UIButton) {
+    @objc func resendEmailButtonTapped(_: UIButton) {
         resendEmailAction?()
     }
 
@@ -67,7 +66,8 @@ class AccountConfirmEmailCell: UITableViewCell {
         resendEmailButton.makeTrailingAnchor(constant: 16)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+
 class HelpItem {
     var icon: String
     var title: String
@@ -15,8 +16,9 @@ class HelpItem {
 
     init(icon: String = "",
          title: String,
-         subTitle: String="",
-         hideDivider: Bool = false) {
+         subTitle: String = "",
+         hideDivider: Bool = false)
+    {
         self.icon = icon
         self.title = title
         self.subTitle = subTitle

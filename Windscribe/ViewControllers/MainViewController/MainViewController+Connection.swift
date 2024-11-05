@@ -6,11 +6,11 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreLocation
+import Foundation
 import NetworkExtension
 import RxSwift
+import UIKit
 
 extension MainViewController {
     @objc func trustedNetworkValueLabelTapped() {
@@ -20,7 +20,7 @@ extension MainViewController {
             }
         } else {
             viewModel.markBlurNetworkName(isBlured: !viewModel.isBlurNetworkName)
-            if  viewModel.isBlurNetworkName {
+            if viewModel.isBlurNetworkName {
                 trustedNetworkValueLabel.isBlurring = true
             } else {
                 trustedNetworkValueLabel.isBlurring = false
@@ -38,12 +38,12 @@ extension MainViewController {
     }
 
     func renderBlurSpacedLabel() {
-        if  viewModel.isBlurNetworkName {
+        if viewModel.isBlurNetworkName {
             trustedNetworkValueLabel.isBlurring = true
         } else {
             trustedNetworkValueLabel.isBlurring = false
         }
-        if  viewModel.isBlurStaticIpAddress {
+        if viewModel.isBlurStaticIpAddress {
             yourIPValueLabel.isBlurring = true
         } else {
             yourIPValueLabel.isBlurring = false
@@ -51,7 +51,7 @@ extension MainViewController {
     }
 
     func showSecureIPAddressState(ipAddress: String) {
-        UIView.animate(withDuration: 0.25) {[weak self] in
+        UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
             self.yourIPValueLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
             if self.connectionStateViewModel.vpnManager.isConnected() {
@@ -63,24 +63,20 @@ extension MainViewController {
     }
 
     func setNetworkSsid() {
-        viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { network in
-            let vpnInfo = try? self.connectionStateViewModel.vpnManager.vpnInfo.value()
-            if vpnInfo?.status == NEVPNStatus.connecting {
-                return
-            }
-            if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
-                if network.networkType == .cellular || network.networkType == .wifi {
-                    self.trustedNetworkValueLabel.text = network.name ?? ""
+        Observable.combineLatest(viewModel.appNetwork, connectionStateViewModel.vpnManager.getStatus())
+            .subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] network, status in
+                if status == NEVPNStatus.connecting { return }
+                if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
+                    if network.networkType == .cellular || network.networkType == .wifi {
+                        self.trustedNetworkValueLabel.text = network.name ?? ""
+                    } else {
+                        self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+                    }
                 } else {
-                    self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+                    self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
                 }
-            } else {
-                self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
-            }
-
-        }, onError: { _ in
-            self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
-        })
+            }, onError: { [self] _ in
+                self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+            }).disposed(by: disposeBag)
     }
-
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import StoreKit
+
 struct UncompletedTransactions: CustomStringConvertible {
     private let date: Date?
     let transaction: SKPaymentTransaction
@@ -21,9 +22,9 @@ struct UncompletedTransactions: CustomStringConvertible {
         if let appleData = transaction.appleData, let signature = transaction.signature, let id = transaction.transactionIdentifier {
             self.appleData = appleData
             self.signature = signature
-            self.transactionID = id
-            self.date = transaction.transactionDate
-            self.productID = transaction.payment.productIdentifier
+            transactionID = id
+            date = transaction.transactionDate
+            productID = transaction.payment.productIdentifier
         } else {
             return nil
         }

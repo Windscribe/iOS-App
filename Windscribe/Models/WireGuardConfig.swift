@@ -22,14 +22,13 @@ import RealmSwift
     }
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
-        case config = "config"
+        case data
+        case config
         case privateKey = "PrivateKey"
         case address = "Address"
         case dns = "DNS"
         case presharedKey = "PresharedKey"
         case allowedIPs = "AllowedIPs"
-
     }
 
     required convenience init(from decoder: Decoder) throws {

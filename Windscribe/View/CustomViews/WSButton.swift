@@ -6,18 +6,20 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 enum WSButtonType {
     case hightlight
     case normal
 }
+
 enum WSButtonSize {
     case small
     case medium
     case large
 }
+
 class WSButton: UIButton {
     private(set) var type: WSButtonType
     private(set) var size: WSButtonSize
@@ -32,12 +34,13 @@ class WSButton: UIButton {
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.setup(isDarkMode: $0)
         }).disposed(by: disposeBag)
     }
@@ -58,9 +61,10 @@ class WSButton: UIButton {
         let attributeString = NSAttributedString(
             string: text,
             attributes: [NSAttributedString.Key.foregroundColor: color,
-                         .font: font])
-        self.setAttributedTitle(attributeString, for: .normal)
-        self.makeHeightAnchor(equalTo: getButtonSize())
+                         .font: font]
+        )
+        setAttributedTitle(attributeString, for: .normal)
+        makeHeightAnchor(equalTo: getButtonSize())
         layer.cornerRadius = getButtonSize() / 2
     }
 

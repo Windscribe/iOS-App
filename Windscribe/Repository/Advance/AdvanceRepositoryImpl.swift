@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AdvanceRepositoryImpl.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-04-05.
@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import RxSwift
 import NetworkExtension
+import RxSwift
+
 class AdvanceRepositoryImpl: AdvanceRepository {
     private let preferences: Preferences
     private let vpnManager: VPNManager
@@ -17,6 +18,7 @@ class AdvanceRepositoryImpl: AdvanceRepository {
         self.preferences = preferences
         self.vpnManager = vpnManager
     }
+
     func getCountryOverride() -> String? {
         let countryCode = getValue(key: wsServerOverrride)
         let overriddenCountryCode = preferences.getCountryOverride()
@@ -43,7 +45,7 @@ class AdvanceRepositoryImpl: AdvanceRepository {
             let pair = keyValue.splitToArray(separator: "=")
             return pair.count == 2 && pair[0] == key
         }?.splitToArray(separator: "=")
-          .dropFirst()
-          .joined(separator: "=")
+            .dropFirst()
+            .joined(separator: "=")
     }
 }

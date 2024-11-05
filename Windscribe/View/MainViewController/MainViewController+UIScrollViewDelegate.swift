@@ -10,36 +10,35 @@ import Foundation
 import UIKit
 
 extension MainViewController: UIScrollViewDelegate {
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_: UIScrollView) {
         setHeaderViewSelector()
     }
 
     func disableTableViewScrolls() {
-        self.serverListTableView.isScrollEnabled = false
-        self.favTableView.isScrollEnabled = false
-        self.streamingTableView.isScrollEnabled = false
-        self.staticIpTableView.isScrollEnabled = false
-        self.customConfigTableView.isScrollEnabled = false
+        serverListTableView.isScrollEnabled = false
+        favTableView.isScrollEnabled = false
+        streamingTableView.isScrollEnabled = false
+        staticIpTableView.isScrollEnabled = false
+        customConfigTableView.isScrollEnabled = false
     }
 
     func enableTableViewScrolls() {
-        self.serverListTableView.isScrollEnabled = true
-        self.favTableView.isScrollEnabled = true
-        self.streamingTableView.isScrollEnabled = true
-        self.staticIpTableView.isScrollEnabled = true
-        self.customConfigTableView.isScrollEnabled = true
+        serverListTableView.isScrollEnabled = true
+        favTableView.isScrollEnabled = true
+        streamingTableView.isScrollEnabled = true
+        staticIpTableView.isScrollEnabled = true
+        customConfigTableView.isScrollEnabled = true
     }
 
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        self.disableTableViewScrolls()
+    func scrollViewWillBeginDragging(_: UIScrollView) {
+        disableTableViewScrolls()
     }
 
-    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
-                                   withVelocity velocity: CGPoint,
-                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+    func scrollViewWillEndDragging(_: UIScrollView,
+                                   withVelocity _: CGPoint,
+                                   targetContentOffset _: UnsafeMutablePointer<CGPoint>)
+    {
         HapticFeedbackGenerator.shared.run(level: .medium)
-       enableTableViewScrolls()
+        enableTableViewScrolls()
     }
-
 }

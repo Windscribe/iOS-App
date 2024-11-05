@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 protocol AlertManagerV2 {
     func showSimpleAlert(viewController: UIViewController?, title: String, message: String, buttonText: String)

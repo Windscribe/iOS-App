@@ -20,14 +20,15 @@ extension VPNManager {
             if let randomNode = getRandomNodeInSameGroup(groupId: selectedNode.groupId,
                                                          excludeHostname: selectedNode.hostname),
                 let newHostname = randomNode.hostname,
-                let newIP2 = randomNode.ip2 {
+                let newIP2 = randomNode.ip2
+            {
                 self.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
-                                                              dnsHostname: selectedNode.dnsHostname,
-                                                              hostname: newHostname,
-                                                              serverAddress: newIP2,
-                                                              nickName: selectedNode.nickName,
-                                                              cityName: selectedNode.cityName,
-                                                              groupId: selectedNode.groupId)
+                                                 dnsHostname: selectedNode.dnsHostname,
+                                                 hostname: newHostname,
+                                                 serverAddress: newIP2,
+                                                 nickName: selectedNode.nickName,
+                                                 cityName: selectedNode.cityName,
+                                                 groupId: selectedNode.groupId)
             }
         }
     }
@@ -82,7 +83,8 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async { [self] in
             Task {
                 if (try? await self.configManager.configureIKEV2WithSavedCredentials(with: self.selectedNode,
-                                                                                     userSettings: self.makeUserSettings())) ?? false {
+                                                                                     userSettings: self.makeUserSettings())) ?? false
+                {
                     self.activeVPNManager = .iKEV2
                     await self.configManager.connect(with: .iKEV2, killSwitch: self.killSwitch)
                 }
@@ -96,7 +98,8 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
-                                                                                       userSettings: self.makeUserSettings())) ?? false {
+                                                                                       userSettings: self.makeUserSettings())) ?? false
+                {
                     self.activeVPNManager = .openVPN
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
@@ -112,7 +115,8 @@ extension VPNManager {
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithCustomConfig(with: self.selectedNode,
-                                                                                   userSettings: self.makeUserSettings())) ?? false {
+                                                                                   userSettings: self.makeUserSettings())) ?? false
+                {
                     self.activeVPNManager = .openVPN
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
@@ -166,7 +170,8 @@ extension VPNManager {
                 Task {
                     do {
                         if try await self.configManager.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
-                                                                                          userSettings: self.makeUserSettings()) {
+                                                                                          userSettings: self.makeUserSettings())
+                        {
                             self.preferences.saveConnectingToCustomConfig(value: false)
                             self.activeVPNManager = .wg
                             Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
@@ -201,7 +206,8 @@ extension VPNManager {
         if userTappedToDisconnect { return }
         Task {
             if (try? await configManager.configureWireguard(with: selectedNode,
-                                                            userSettings: makeUserSettings())) ?? false {
+                                                            userSettings: makeUserSettings())) ?? false
+            {
                 self.preferences.saveConnectingToCustomConfig(value: true)
                 self.activeVPNManager = .wg
                 Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }

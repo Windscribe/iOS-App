@@ -78,7 +78,8 @@ extension VPNManager {
         }
         Task {
             if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
-                                                                                userSettings: makeUserSettings())) ?? false {
+                                                                                userSettings: makeUserSettings())) ?? false
+            {
                 self.activeVPNManager = .wg
                 await configManager.connect(with: .wg, killSwitch: killSwitch)
             }

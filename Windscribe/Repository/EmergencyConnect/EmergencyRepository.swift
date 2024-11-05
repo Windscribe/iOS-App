@@ -1,5 +1,5 @@
 //
-//  EmergenceManager.swift
+//  EmergencyRepository.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-23.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol EmergencyRepository {
     func getConfig() -> Single<[OpenVPNConnectionInfo]>
     func connect(configInfo: OpenVPNConnectionInfo) -> Completable

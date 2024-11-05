@@ -6,9 +6,9 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxGesture
 import RxSwift
+import UIKit
 
 class NetworkViewController: WSNavigationViewController {
     var viewModel: NetworkOptionViewModelType!
@@ -16,6 +16,7 @@ class NetworkViewController: WSNavigationViewController {
     private lazy var secureView = createViewSecure()
 
     // MARK: - UI ELEMENTs
+
     lazy var forgetNetworkView: UIView = {
         let vw = UIView()
         vw.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { _ in
@@ -61,7 +62,7 @@ class NetworkViewController: WSNavigationViewController {
                                     currentSwitchOption: viewModel.showPreferredProtocol,
                                     currentProtocol: viewModel.preferredProtocol ?? "",
                                     listProtocolOption: viewModel.getProtocols(),
-                                    currentPort: viewModel.preferredProtocol  ?? "",
+                                    currentPort: viewModel.preferredProtocol ?? "",
                                     listPortOption: viewModel.getDefaultPorts(),
                                     isDarkMode: viewModel.isDarkMode)
         vw.hideShowExpainIcon()
@@ -70,6 +71,7 @@ class NetworkViewController: WSNavigationViewController {
     }()
 
     // MARK: - UI LIFECYCLE
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -88,13 +90,13 @@ class NetworkViewController: WSNavigationViewController {
             self.setupTheme(isDark: isDark)
         }).disposed(by: disposeBag)
         viewModel.networks.subscribe(onNext: { [weak self] networks in
-            let allNetworksValid = networks.filter({$0.isInvalidated}).count == 0
+            let allNetworksValid = networks.filter { $0.isInvalidated }.count == 0
             if allNetworksValid {
                 self?.loadNetwork()
             }
         }).disposed(by: disposeBag)
-
     }
+
     private func setupTheme(isDark: Bool) {
         super.setupViews(isDark: isDark)
     }
@@ -105,13 +107,14 @@ class NetworkViewController: WSNavigationViewController {
         layoutView.stackView.addArrangedSubviews([
             secureView,
             preferredProtocolView,
-            forgetNetworkView
+            forgetNetworkView,
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(inset: 16))
         layoutView.stackView.spacing = 16
     }
 
     // MARK: - actions
+
     private func loadNetwork() {
         viewModel.loadNetwork { [weak self] in
             self?.update()
@@ -131,11 +134,9 @@ class NetworkViewController: WSNavigationViewController {
 // MARK: - extensions
 
 extension NetworkViewController: ConnectionModeViewDelegate {
-    func connectionModeViewExplain() {
-    }
+    func connectionModeViewExplain() {}
 
-    func connectionModeViewDidChangeMode(_ option: ConnectionModeType) {
-    }
+    func connectionModeViewDidChangeMode(_: ConnectionModeType) {}
 
     func connectionModeViewDidChangeProtocol(_ value: String) {
         viewModel.updatePreferredProtocol(value: value)
@@ -147,7 +148,7 @@ extension NetworkViewController: ConnectionModeViewDelegate {
         viewModel.updatePreferredPort(value: value)
     }
 
-    func connectionModeViewDidSwitch(_ view: ConnectionModeView, value: Bool) {
+    func connectionModeViewDidSwitch(_: ConnectionModeView, value: Bool) {
         // switch data
         viewModel.updatePreferredProtocolSwitch(value) { [weak self] in
             self?.update()

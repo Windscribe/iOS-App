@@ -17,7 +17,8 @@ import RealmSwift
 extension VPNManager {
     func isConnectedToVpn() -> Bool {
         if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
-           let scopes = settings["__SCOPED__"] as? [String: Any] {
+           let scopes = settings["__SCOPED__"] as? [String: Any]
+        {
             for (key, _) in scopes {
                 if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
                     return true
@@ -157,7 +158,6 @@ extension VPNManager {
                     triedToConnect = true
                     self.delegate?.saveDataForWidget()
                     self.delegate?.setConnected(ipAddress: "")
-
                 case .disconnecting:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnecting")
                     WSNet.instance().setIsConnectedToVpnState(false)
@@ -224,7 +224,8 @@ extension VPNManager {
             return
         }
         if selectedConnectionMode != Fields.Values.auto ||
-            isCustomConfigSelected() {
+            isCustomConfigSelected()
+        {
             disconnectActiveVPNConnection(setDisconnect: true)
         } else {
             disconnectActiveVPNConnection()
@@ -350,9 +351,9 @@ extension VPNManager {
     }
 
     private func disableOnDemandMode() {
-        configManager.managers.forEach {
-            if $0.protocolConfiguration?.username != nil {
-                configManager.setOnDemandMode(false, for: $0)
+        for manager in configManager.managers {
+            if manager.protocolConfiguration?.username != nil {
+                configManager.setOnDemandMode(false, for: manager)
             }
         }
     }

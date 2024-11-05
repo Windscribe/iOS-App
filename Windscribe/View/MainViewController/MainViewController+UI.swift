@@ -6,11 +6,10 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
+import UIKit
 
 extension MainViewController {
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         gradient.frame = flagView.bounds
@@ -22,19 +21,19 @@ extension MainViewController {
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if scrollView != nil {
-            scrollView.contentSize = CGSize(width: self.view.frame.height*5, height: 0)
-            self.view.setNeedsLayout()
+            scrollView.contentSize = CGSize(width: view.frame.height * 5, height: 0)
+            view.setNeedsLayout()
             cardHeaderWasSelected(with: .all)
         }
     }
 
     func addViews() {
-        self.view.backgroundColor = UIColor.midnight
+        view.backgroundColor = UIColor.midnight
 
         backgroundView = UIView()
         backgroundView.isUserInteractionEnabled = false
         backgroundView.backgroundColor = UIColor.midnight
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         flagView = UIImageView()
         flagView.isUserInteractionEnabled = false
@@ -46,7 +45,7 @@ extension MainViewController {
         gradient.colors = [UIColor.clear.cgColor, UIColor.lightMidnight.cgColor]
         gradient.locations = [0, 0.65]
         flagView.layer.mask = gradient
-        self.view.addSubview(flagView)
+        view.addSubview(flagView)
 
         flagBackgroundView = UIView()
         flagBackgroundView.isUserInteractionEnabled = false
@@ -56,32 +55,32 @@ extension MainViewController {
         backgroundGradient.colors = [UIColor.lightMidnight.cgColor, UIColor.clear.cgColor]
         backgroundGradient.locations = [0.0, 1.0]
         flagBackgroundView.layer.mask = backgroundGradient
-        self.view.addSubview(flagBackgroundView)
+        view.addSubview(flagBackgroundView)
 
         flagBottomGradientView = UIImageView()
         flagBottomGradientView.isUserInteractionEnabled = true
         flagBottomGradientView.contentMode = .scaleAspectFill
         flagBottomGradientView.image = UIImage(named: "flag-bottom-gradient")
-        self.view.addSubview(flagBottomGradientView)
+        view.addSubview(flagBottomGradientView)
 
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedOnScreen))
         tapRecognizer.numberOfTouchesRequired = 1
         tapRecognizer.numberOfTapsRequired = 1
-        self.flagBottomGradientView.addGestureRecognizer(tapRecognizer)
+        flagBottomGradientView.addGestureRecognizer(tapRecognizer)
 
-        self.addConnectionViews()
-        self.addAutoSecureViews()
+        addConnectionViews()
+        addAutoSecureViews()
 
         cardView = UIView()
         cardView.isUserInteractionEnabled = false
         cardView.backgroundColor = UIColor.white
-        self.view.addSubview(cardView)
+        view.addSubview(cardView)
 
         cardTopView = UIView()
         cardTopView.isUserInteractionEnabled = true
         cardTopView.backgroundColor = UIColor.white
         cardTopView.layer.opacity = 0.05
-        self.view.addSubview(cardTopView)
+        view.addSubview(cardTopView)
 
         scrollView = WScrollView()
         scrollView.isPagingEnabled = true
@@ -91,20 +90,20 @@ extension MainViewController {
         scrollView.isDirectionalLockEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
-        scrollView.contentSize = CGSize(width: self.view.frame.width*5, height: 0)
-        self.view.addSubview(scrollView)
+        scrollView.contentSize = CGSize(width: view.frame.width * 5, height: 0)
+        view.addSubview(scrollView)
 
         serverListTableView = PlainExpyTableView()
         serverListTableView.tag = 0
         serverListTableView.register(NodeTableViewCell.self, forCellReuseIdentifier: nodeCellReuseIdentifier)
         serverListTableView.register(ServerSectionCell.self, forCellReuseIdentifier: serverSectionCellReuseIdentifier)
         serverListTableView.register(BestLocationCell.self, forCellReuseIdentifier: bestLocationCellReuseIdentifier)
-        self.scrollView.addSubview(serverListTableView)
+        scrollView.addSubview(serverListTableView)
 
         favTableView = PlainTableView()
         favTableView.tag = 1
         favTableView.register(FavNodeTableViewCell.self, forCellReuseIdentifier: favNodeCellReuseIdentifier)
-        self.scrollView.addSubview(favTableView)
+        scrollView.addSubview(favTableView)
 
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
@@ -114,7 +113,7 @@ extension MainViewController {
         streamingTableView.tag = 2
         streamingTableView.register(NodeTableViewCell.self, forCellReuseIdentifier: nodeCellReuseIdentifier)
         streamingTableView.register(ServerSectionCell.self, forCellReuseIdentifier: serverSectionCellReuseIdentifier)
-        self.scrollView.addSubview(streamingTableView)
+        scrollView.addSubview(streamingTableView)
 
         streamingTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         streamingTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
@@ -123,12 +122,12 @@ extension MainViewController {
         staticIpTableView = PlainTableView()
         staticIpTableView.tag = 3
         staticIPTableViewFooterView = StaticIPListFooterView()
-        staticIPTableViewFooterView.viewModel = self.viewModel
+        staticIPTableViewFooterView.viewModel = viewModel
         staticIpTableView.tableFooterView = staticIPTableViewFooterView
         staticIpTableView.register(StaticIPTableViewCell.self, forCellReuseIdentifier: staticIPCellReuseIdentifier)
-        self.scrollView.addSubview(staticIpTableView)
+        scrollView.addSubview(staticIpTableView)
 
-        self.staticIpTableView.addSubview(staticIPTableViewFooterView)
+        staticIpTableView.addSubview(staticIPTableViewFooterView)
 
         staticIpTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         staticIpTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
@@ -141,23 +140,23 @@ extension MainViewController {
         customConfigTableView.tableFooterView = customConfigTableViewFooterView
         customConfigTableView.register(CustomConfigTableViewCell.self, forCellReuseIdentifier: customConfigCellReuseIdentifier)
         customConfigTableView.allowsMultipleSelectionDuringEditing = false
-        self.scrollView.addSubview(customConfigTableView)
-        self.customConfigTableView.addSubview(customConfigTableViewFooterView)
+        scrollView.addSubview(customConfigTableView)
+        customConfigTableView.addSubview(customConfigTableViewFooterView)
 
         customConfigsTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         customConfigsTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         customConfigsTableViewRefreshControl.backView = RefreshControlViewBack(frame: customConfigsTableViewRefreshControl.bounds)
 
-        self.addRefreshControls()
+        addRefreshControls()
 
-        self.view.bringSubviewToFront(cardView)
-        self.view.bringSubviewToFront(cardTopView)
-        self.view.bringSubviewToFront(scrollView)
+        view.bringSubviewToFront(cardView)
+        view.bringSubviewToFront(cardTopView)
+        view.bringSubviewToFront(scrollView)
 
         serverHeaderView = UIView()
         serverHeaderView.isUserInteractionEnabled = false
         serverHeaderView.backgroundColor = UIColor.clear
-        self.cardView.addSubview(serverHeaderView)
+        cardView.addSubview(serverHeaderView)
 
         headerBottomBorderView = UIView()
         headerBottomBorderView.backgroundColor = UIColor.clear
@@ -167,12 +166,12 @@ extension MainViewController {
         headerGradientView.isUserInteractionEnabled = false
         headerGradientView.isHidden = true
         let gradient = CAGradientLayer()
-        gradient.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 10)
+        gradient.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 10)
         gradient.colors = [UIColor.midnightWithOpacity(opacity: 0.2).cgColor, UIColor.midnightWithOpacity(opacity: 0).cgColor]
         headerGradientView.layer.insertSublayer(gradient, at: 0)
-        self.view.addSubview(headerGradientView)
+        view.addSubview(headerGradientView)
 
-        self.view.bringSubviewToFront(headerGradientView)
+        view.bringSubviewToFront(headerGradientView)
     }
 
     func setTableViewInsets() {
@@ -200,27 +199,27 @@ extension MainViewController {
         switch scrollView.contentOffset.x {
         case 0:
             selectedHeaderViewTab = .all
-            tableViewScrolled(toTop: serverListTableView.contentOffset.y <= 0 )
+            tableViewScrolled(toTop: serverListTableView.contentOffset.y <= 0)
             cardHeaderContainerView.viewModel.setSelectedAction(selectedAction: .all)
             arrangeDataLeftViews()
-        case self.view.frame.width:
+        case view.frame.width:
             selectedHeaderViewTab = .fav
-            tableViewScrolled(toTop: favTableView.contentOffset.y <= 0 )
+            tableViewScrolled(toTop: favTableView.contentOffset.y <= 0)
             cardHeaderContainerView.viewModel.setSelectedAction(selectedAction: .fav)
             arrangeDataLeftViews()
-        case self.view.frame.width * 2:
+        case view.frame.width * 2:
             selectedHeaderViewTab = .flix
-            tableViewScrolled(toTop: streamingTableView.contentOffset.y <= 0 )
+            tableViewScrolled(toTop: streamingTableView.contentOffset.y <= 0)
             cardHeaderContainerView.viewModel.setSelectedAction(selectedAction: .flix)
             arrangeDataLeftViews()
-        case self.view.frame.width * 3:
+        case view.frame.width * 3:
             selectedHeaderViewTab = .staticIP
-            tableViewScrolled(toTop: staticIpTableView.contentOffset.y <= 0 )
+            tableViewScrolled(toTop: staticIpTableView.contentOffset.y <= 0)
             cardHeaderContainerView.viewModel.setSelectedAction(selectedAction: .staticIP)
             arrangeDataLeftViews()
-        case self.view.frame.width * 4:
+        case view.frame.width * 4:
             selectedHeaderViewTab = .config
-            tableViewScrolled(toTop: customConfigTableView.contentOffset.y <= 0 )
+            tableViewScrolled(toTop: customConfigTableView.contentOffset.y <= 0)
             cardHeaderContainerView.viewModel.setSelectedAction(selectedAction: .config)
         default:
             return
@@ -257,23 +256,23 @@ extension MainViewController {
         topNavBarImageView = UIImageView()
         topNavBarImageView.layer.opacity = 0.10
         topNavBarImageView.isUserInteractionEnabled = false
-        self.setTopNavImage(white: false)
+        setTopNavImage(white: false)
 
-        self.view.addSubview(topNavBarImageView)
+        view.addSubview(topNavBarImageView)
 
         logoIcon = ImageButton()
         logoIcon.imageView?.contentMode = .scaleAspectFit
         logoIcon.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
         logoIcon.setImage(UIImage(named: ImagesAsset.logoText), for: .normal)
-        self.view.addSubview(logoIcon)
-        self.view.bringSubviewToFront(logoIcon)
+        view.addSubview(logoIcon)
+        view.bringSubviewToFront(logoIcon)
 
         preferencesTapAreaButton = LargeTapAreaImageButton()
         preferencesTapAreaButton.imageView?.contentMode = .scaleAspectFit
         preferencesTapAreaButton.layer.opacity = 0.4
         preferencesTapAreaButton.addTarget(self, action: #selector(logoButtonTapped), for: .touchUpInside)
         preferencesTapAreaButton.setImage(UIImage(named: ImagesAsset.topNavBarMenu), for: .normal)
-        self.view.addSubview(preferencesTapAreaButton)
+        view.addSubview(preferencesTapAreaButton)
 
         notificationDot = ImageButton()
         notificationDot.backgroundColor = UIColor.seaGreen
@@ -283,33 +282,33 @@ extension MainViewController {
         notificationDot.setTitleColor(UIColor.midnight, for: .normal)
         notificationDot.titleLabel?.font = UIFont.bold(size: 10)
         notificationDot.addTarget(self, action: #selector(notificationsButtonTapped), for: .touchUpInside)
-        self.view.addSubview(notificationDot)
+        view.addSubview(notificationDot)
 
         connectButtonRingView = UIImageView()
         connectButtonRingView.image = UIImage(named: ImagesAsset.connectButtonRing)
         connectButtonRingView.isHidden = true
-        self.view.addSubview(connectButtonRingView)
+        view.addSubview(connectButtonRingView)
 
         connectButton = UIButton()
         connectButton.addTarget(self, action: #selector(connectButtonTapped), for: .touchUpInside)
         connectButton.setImage(UIImage(named: ImagesAsset.disconnectedButton), for: .normal)
-        self.view.addSubview(connectButton)
+        view.addSubview(connectButton)
 
         statusView = UIView()
         statusView.backgroundColor = UIColor.white.withAlphaComponent(0.15)
         statusView.layer.cornerRadius = 10
         statusView.clipsToBounds = true
-        self.view.addSubview(statusView)
+        view.addSubview(statusView)
 
         statusImageView = UIImageView()
         statusImageView.contentMode = .scaleAspectFit
         statusImageView.isHidden = true
-        self.view.addSubview(statusImageView)
+        view.addSubview(statusImageView)
 
         connectivityTestImageView = UIImageView()
         connectivityTestImageView.contentMode = .scaleAspectFit
         connectivityTestImageView.isHidden = true
-        self.view.addSubview(connectivityTestImageView)
+        view.addSubview(connectivityTestImageView)
 
         statusLabel = UILabel()
         statusLabel.textAlignment = .center
@@ -324,7 +323,7 @@ extension MainViewController {
 
         statusDivider = UIView()
         statusDivider.backgroundColor = UIColor.white.withAlphaComponent(0.15)
-        self.view.addSubview(statusDivider)
+        view.addSubview(statusDivider)
 
         portLabel = UILabel()
         addConnectionLabel(label: portLabel,
@@ -335,19 +334,19 @@ extension MainViewController {
         preferredProtocolBadge = UIImageView()
         preferredProtocolBadge.isHidden = false
         preferredProtocolBadge.contentMode = .scaleAspectFit
-        self.view.addSubview(preferredProtocolBadge)
+        view.addSubview(preferredProtocolBadge)
 
         circumventCensorshipBadge = UIImageView()
         circumventCensorshipBadge.isHidden = false
         circumventCensorshipBadge.image = UIImage(named: ImagesAsset.circumventCensorship)?.withRenderingMode(.alwaysTemplate)
         circumventCensorshipBadge.contentMode = .scaleAspectFit
-        self.view.addSubview(circumventCensorshipBadge)
+        view.addSubview(circumventCensorshipBadge)
 
         changeProtocolArrow = UIImageView()
         changeProtocolArrow.isHidden = true
         changeProtocolArrow.contentMode = .scaleAspectFit
-        self.changeProtocolArrow.image = UIImage(named: ImagesAsset.connectedArrow)?.withAlignmentRectInsets(UIEdgeInsets(top: -4, left: -4, bottom: -4, right: -4))
-        self.view.addSubview(changeProtocolArrow)
+        changeProtocolArrow.image = UIImage(named: ImagesAsset.connectedArrow)?.withAlignmentRectInsets(UIEdgeInsets(top: -4, left: -4, bottom: -4, right: -4))
+        view.addSubview(changeProtocolArrow)
         let protocolTapGesture = UITapGestureRecognizer(target: self, action: #selector(protocolPortLableTapped))
         changeProtocolArrow.addGestureRecognizer(protocolTapGesture)
         changeProtocolArrow.isUserInteractionEnabled = true
@@ -373,17 +372,17 @@ extension MainViewController {
         yourIPValueLabel.textAlignment = .left
         yourIPValueLabel.layer.opacity = 0.5
         yourIPValueLabel.setContentHuggingPriority(UILayoutPriority.defaultHigh, for: NSLayoutConstraint.Axis.horizontal)
-        self.view.addSubview(yourIPValueLabel)
+        view.addSubview(yourIPValueLabel)
 
         spacer = UIView()
         spacer.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
-        self.view.addSubview(spacer)
+        view.addSubview(spacer)
 
         yourIPIcon = UIImageView()
         yourIPIcon.contentMode = .scaleAspectFit
         yourIPIcon.layer.opacity = 0.5
         yourIPIcon.image = UIImage(named: ImagesAsset.unsecure)
-        self.view.addSubview(yourIPIcon)
+        view.addSubview(yourIPIcon)
 
         trustedNetworkValueLabel = BlurredLabel()
         trustedNetworkValueLabel.textAlignment = .left
@@ -395,22 +394,22 @@ extension MainViewController {
         let trustedNetworkValueLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(trustedNetworkValueLabelTapped))
         trustedNetworkValueLabelTapGesture.numberOfTapsRequired = 1
         trustedNetworkValueLabel.addGestureRecognizer(trustedNetworkValueLabelTapGesture)
-        self.view.addSubview(trustedNetworkValueLabel)
+        view.addSubview(trustedNetworkValueLabel)
 
         trustedNetworkIcon = UIImageView()
         trustedNetworkIcon.layer.opacity = 0.5
         trustedNetworkIcon.contentMode = .scaleAspectFit
-        trustedNetworkIcon.image =  UIImage(named: ImagesAsset.wifi)
-        self.view.addSubview(trustedNetworkIcon)
+        trustedNetworkIcon.image = UIImage(named: ImagesAsset.wifi)
+        view.addSubview(trustedNetworkIcon)
 
         expandButton = ImageButton()
         expandButton.tag = 0
         expandButton.layer.opacity = 0.5
         expandButton.setImage(UIImage(named: ImagesAsset.expandHome), for: .normal)
         expandButton.addTarget(self, action: #selector(expandButtonTapped), for: .touchUpInside)
-        self.view.addSubview(expandButton)
+        view.addSubview(expandButton)
 
-        self.addAutoLayoutConstraintsForConnectionViews()
+        addAutoLayoutConstraintsForConnectionViews()
     }
 
     func arrangeDataLeftViews() {
@@ -428,7 +427,7 @@ extension MainViewController {
 
     private func isSpaceAvailableForGetMoreDataView() -> Bool {
         switch scrollView.contentOffset.x {
-        case 0, self.view.frame.width, self.view.frame.width * 2:
+        case 0, view.frame.width, view.frame.width * 2:
             return true
         default:
             return false

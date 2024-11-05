@@ -9,38 +9,37 @@
 import UIKit
 
 extension InfoPromptViewController {
-
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         iconView = UIImageView()
         iconView.image = UIImage(named: ImagesAsset.promptInfo)
-        self.view.addSubview(iconView)
+        view.addSubview(iconView)
 
         infoLabel = UILabel()
         infoLabel.font = UIFont.text(size: 16)
         infoLabel.textColor = UIColor.white
         infoLabel.textAlignment = .center
         infoLabel.numberOfLines = 0
-        self.view.addSubview(infoLabel)
+        view.addSubview(infoLabel)
 
         actionButton = UIButton(type: .system)
-        actionButton.setTitle(self.title, for: .normal)
+        actionButton.setTitle(title, for: .normal)
         actionButton.setTitleColor(UIColor.white, for: .normal)
         actionButton.backgroundColor = UIColor.buttonGray
         actionButton.layer.cornerRadius = 28
-        self.view.addSubview(actionButton)
+        view.addSubview(actionButton)
 
         cancelButton = UIButton(type: .system)
         cancelButton.setTitle(TextsAsset.back, for: .normal)
         cancelButton.setTitleColor(UIColor.white, for: .normal)
         cancelButton.backgroundColor = UIColor.buttonGray
         cancelButton.layer.cornerRadius = 28
-        self.view.addSubview(cancelButton)
+        view.addSubview(cancelButton)
     }
 
     func addConstraints() {
@@ -78,7 +77,7 @@ extension InfoPromptViewController {
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24),
-            cancelButton.heightAnchor.constraint(equalToConstant: 55)
+            cancelButton.heightAnchor.constraint(equalToConstant: 55),
         ])
     }
 }

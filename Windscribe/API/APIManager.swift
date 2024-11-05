@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol APIManager {
     // Session
     func getSession(_ appleID: String?) -> Single<Session>

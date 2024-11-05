@@ -1,18 +1,18 @@
 //
-//  BestLocationHeaderView.swift
+//  BestLocationCell.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-02-15.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class BestLocationCell: UITableViewCell {
     var flagIcon = UIImageView()
-    var serverNameLabel =  UILabel()
+    var serverNameLabel = UILabel()
     var cellDivider = UIView()
     var serverHealthView = ServerHealthView()
     var displayingBestLocation: BestLocationModel? {
@@ -20,6 +20,7 @@ class BestLocationCell: UITableViewCell {
             updateUI()
         }
     }
+
     lazy var preferences = Assembler.resolve(Preferences.self)
     var disposeBag = DisposeBag()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -78,8 +79,8 @@ class BestLocationCell: UITableViewCell {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 32)
-            ])
+                               constant: 32),
+        ])
         addConstraints([
             NSLayoutConstraint(item: serverNameLabel,
                                attribute: .centerY,
@@ -94,8 +95,8 @@ class BestLocationCell: UITableViewCell {
                                toItem: flagIcon,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: 16)
-            ])
+                               constant: 16),
+        ])
         addConstraints([
             NSLayoutConstraint(item: cellDivider,
                                attribute: .height,
@@ -124,8 +125,8 @@ class BestLocationCell: UITableViewCell {
                                toItem: self,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: 0)
-            ])
+                               constant: 0),
+        ])
 
         addConstraints([
             NSLayoutConstraint(item: serverHealthView,
@@ -155,8 +156,8 @@ class BestLocationCell: UITableViewCell {
                                toItem: self,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: -32)
-            ])
+                               constant: -32),
+        ])
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -165,7 +166,7 @@ class BestLocationCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.disposeBag = DisposeBag() // Force rx disposal on reuse
+        disposeBag = DisposeBag() // Force rx disposal on reuse
     }
 
     func updateUI() {
@@ -183,10 +184,9 @@ class BestLocationCell: UITableViewCell {
                 } else {
                     self.serverHealthView.health = 0
                 }
-
             }
         }).disposed(by: disposeBag)
-        isDarkMode.subscribe( onNext: { isDark in
+        isDarkMode.subscribe(onNext: { isDark in
             self.backgroundColor = ThemeUtils.backgroundColor(isDarkMode: isDark)
             self.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.serverNameLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol NotificationRepository {
     func getUpdatedNotifications(pcpid: String) -> Single<[Notice]>
 }

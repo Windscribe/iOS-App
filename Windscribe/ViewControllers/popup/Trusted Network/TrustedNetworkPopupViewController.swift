@@ -1,16 +1,15 @@
 //
-//  UntrustedNetworkPopupViewController.swift
+//  TrustedNetworkPopupViewController.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-06-25.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class TrustedNetworkPopupViewController: WSUIViewController {
-
     var logger: FileLogger!, viewModel: TrustedNetworkPopupType!
     var backgroundView: UIView!
     var imageView: UIImageView!
@@ -22,8 +21,8 @@ class TrustedNetworkPopupViewController: WSUIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Trusted Network Popup View")
-        self.addViews()
-        self.addAutoLayoutConstraints()
+        addViews()
+        addAutoLayoutConstraints()
         bindViews()
     }
 

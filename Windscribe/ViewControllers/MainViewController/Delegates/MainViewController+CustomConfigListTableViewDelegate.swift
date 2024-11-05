@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import UIKit
 import MobileCoreServices
+import UIKit
 
 extension MainViewController: CustomConfigListTableViewDelegate {
-
     func addCustomConfigAction() {
         LogManager.shared.log(
             activity: String(describing: MainViewController.self),
@@ -19,36 +18,36 @@ extension MainViewController: CustomConfigListTableViewDelegate {
             type: .debug
         )
         let documentTypes = ["com.windscribe.wireguard.config.quick",
-            String(kUTTypeText)]
+                             String(kUTTypeText)]
         let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes,
-            in: .import)
+                                                        in: .import)
         filePicker.delegate = self
         present(filePicker, animated: true)
     }
 
     func setSelectedCustomConfig(customConfig: CustomConfigModel) {
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
-        if vpnManager.isDisconnecting() { self.displayDisconnectingAlert(); return }
+        if vpnManager.isDisconnecting() { displayDisconnectingAlert(); return }
         if !vpnManagerViewModel.isConnecting() {
             LogManager.shared.log(activity: String(describing: MainViewController.self), text: "Tapped on Custom config from the list.", type: .debug)
 
             guard let name = customConfig.name, let serverAddress = customConfig.serverAddress else { return }
 
-            self.vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                dnsHostname: serverAddress,
-                hostname: serverAddress,
-                serverAddress: serverAddress,
-                nickName: name,
-                cityName: TextsAsset.configuredLocation,
-                customConfig: customConfig,
-                groupId: 0)
+            vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
+                                                   dnsHostname: serverAddress,
+                                                   hostname: serverAddress,
+                                                   serverAddress: serverAddress,
+                                                   nickName: name,
+                                                   cityName: TextsAsset.configuredLocation,
+                                                   customConfig: customConfig,
+                                                   groupId: 0)
             if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
                 popupRouter?.routeTo(to: .enterCredentials(config: customConfig, isUpdating: false), from: self)
             } else {
-                self.configureVPN()
+                configureVPN()
             }
         } else {
-            self.displayConnectingAlert()
+            displayConnectingAlert()
         }
     }
 
@@ -64,34 +63,34 @@ extension MainViewController: CustomConfigListTableViewDelegate {
             }
         }
         AlertManager.shared.showAlert(title: TextsAsset.RemoveCustomConfig.title,
-            message: TextsAsset.RemoveCustomConfig.message,
-            buttonText: TextsAsset.cancel,
-            actions: [yesAction])
+                                      message: TextsAsset.RemoveCustomConfig.message,
+                                      buttonText: TextsAsset.cancel,
+                                      actions: [yesAction])
     }
 
     private func resetConnectionStatus() {
         if vpnManager.isActive {
             LogManager.shared.log(activity: String(describing: MainViewController.self),
-                text: "Disconnecting from selected custom config.",
-                type: .debug)
+                                  text: "Disconnecting from selected custom config.",
+                                  type: .debug)
             vpnManager.disconnectActiveVPNConnection()
         }
-        self.setBestLocation()
+        setBestLocation()
     }
 
     private func setBestLocation() {
         guard let bestLocation = PersistenceManager.shared.retrieve(type: BestLocation.self)?.first else { return }
         if !vpnManagerViewModel.isConnecting() {
             LogManager.shared.log(activity: String(describing: MainViewController.self),
-                text: "Changing selected location to Best location with hostname \(bestLocation.hostname)",
-                type: .debug)
+                                  text: "Changing selected location to Best location with hostname \(bestLocation.hostname)",
+                                  type: .debug)
             vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
-                dnsHostname: bestLocation.dnsHostname,
-                hostname: bestLocation.hostname,
-                serverAddress: bestLocation.ipAddress,
-                nickName: bestLocation.nickName,
-                cityName: bestLocation.cityName,
-                groupId: bestLocation.groupId)
+                                                   dnsHostname: bestLocation.dnsHostname,
+                                                   hostname: bestLocation.hostname,
+                                                   serverAddress: bestLocation.ipAddress,
+                                                   nickName: bestLocation.nickName,
+                                                   cityName: bestLocation.cityName,
+                                                   groupId: bestLocation.groupId)
         }
     }
 
@@ -103,14 +102,14 @@ extension MainViewController: CustomConfigListTableViewDelegate {
         if customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
             customConfigsTableViewRefreshControl.removeFromSuperview()
         }
-        self.customConfigTableViewFooterView.isHidden = true
+        customConfigTableViewFooterView.isHidden = true
     }
 
     func showCustomConifgRefreshControl() {
         if !customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
-            self.customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
+            customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
         }
-        self.customConfigTableViewFooterView.isHidden = false
+        customConfigTableViewFooterView.isHidden = false
     }
 
     func setAutoModeSelectorOverlayFocus(button: UIButton, selectedProtocol: String) {
@@ -122,7 +121,7 @@ extension MainViewController: CustomConfigListTableViewDelegate {
     }
 
     @objc func hideAutoModeSelectorView(connect: Bool = false) {
-        self.showGetMoreDataViews()
+        showGetMoreDataViews()
 
         autoModeSelectorViewTimer?.invalidate()
         UIView.animate(withDuration: 1.0, animations: {
@@ -136,22 +135,22 @@ extension MainViewController: CustomConfigListTableViewDelegate {
     }
 
     @objc func updateAutoModeSelectorCounter() {
-        guard let counter = self.autoModeSelectorCounterLabel.text else { return }
+        guard let counter = autoModeSelectorCounterLabel.text else { return }
         let nextCount = Int(counter)! - 1
-        self.autoModeSelectorCounterLabel.text = "\(nextCount)"
+        autoModeSelectorCounterLabel.text = "\(nextCount)"
         if nextCount == 0 {
-            self.hideAutoModeSelectorView(connect: true)
+            hideAutoModeSelectorView(connect: true)
         }
     }
 
     @objc func autoModeProtocolButtonTapped(sender: UIButton) {
         switch sender {
         case autoModeSelectorIkev2Button:
-            self.setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: iKEv2)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: iKEv2)
         case autoModeSelectorUDPButton:
-            self.setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: udp)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: udp)
         case autoModeSelectorTCPButton:
-            self.setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: tcp)
+            setAutoModeSelectorOverlayFocus(button: sender, selectedProtocol: tcp)
         default:
             return
         }

@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+
 extension UIScreen {
     static var isSmallScreen: Bool {
         return UIScreen.main.bounds.height <= 640
@@ -17,6 +18,7 @@ extension UIScreen {
         return UIApplication.shared.delegate?.window??.safeAreaInsets.top ?? 0 > 24
     }
 }
+
 var topSpace: CGFloat {
     if UIScreen.hasTopNotch {
         return 0

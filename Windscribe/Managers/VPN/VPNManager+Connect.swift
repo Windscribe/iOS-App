@@ -10,6 +10,7 @@ import Combine
 import NetworkExtension
 import RxSwift
 import Swinject
+
 /// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
 extension VPNManager: VPNConnectionAlertDelegate {
     /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
@@ -25,7 +26,8 @@ extension VPNManager: VPNConnectionAlertDelegate {
         if let customId = selectedNode?.customConfig?.id {
             id = "custom_\(customId)"
             if let proto = configManager.getProtoFromConfig(locationId: customId) {
-                selectedProtocol = ProtocolPort(proto, "443")
+                let port = localDB.getPorts(protocolType: proto)?.first ?? "443"
+                selectedProtocol = ProtocolPort(proto, port)
             }
         }
         return (id, selectedProtocol)

@@ -6,9 +6,9 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
     var logger: FileLogger!, viewModel: RobertViewModelType!
@@ -25,7 +25,7 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
         bindData()
     }
 
-    private func  bindData() {
+    private func bindData() {
         viewModel.loadRobertFilters()
         viewModel.robertFilters.bind(onNext: { filters in
             self.robertFilters = filters
@@ -44,7 +44,6 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
             if let error = error {
                 DispatchQueue.main.async { [weak self] in
                     self?.viewModel.alertManager.showSimpleAlert(viewController: self, title: "Error", message: error, buttonText: "Ok")
-
                 }
             }
         }).disposed(by: disposeBag)
@@ -79,7 +78,6 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
 
     @objc func handleCustomRulesTap() {
         viewModel.handleCustomRulesTap()
-
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -90,18 +88,21 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
 }
 
 extension RobertViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView,
+                   numberOfRowsInSection _: Int) -> Int
+    {
         return robertFilters?.count ?? 0
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView,
+                   heightForRowAt _: IndexPath) -> CGFloat
+    {
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         let cell = RobertFilterCell.dequeueReusableCell(in: tableView, for: indexPath)
         cell.setupSubviews(isDarkMode: viewModel.isDarkMode)
         cell.robertFilter = robertFilters?[indexPath.row]
@@ -110,15 +111,15 @@ extension RobertViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
         let view = RobertHeaderView(isDarkMode: viewModel.isDarkMode)
-        view.contentViewAction = {[weak self] in
+        view.contentViewAction = { [weak self] in
             self?.handleLearnMoreTap()
         }
         return view
     }
 
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let view = RobertFooterView(isDarkMode: viewModel.isDarkMode)
         view.contentViewAction = { [weak self] in
             self?.handleCustomRulesTap()

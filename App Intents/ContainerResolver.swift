@@ -15,6 +15,7 @@ class ContainerResolver: ContainerResolvertype {
         container.injectCore()
         return container
     }()
+
     func getPreferences() -> Preferences {
         return container.resolve(Preferences.self)!
     }

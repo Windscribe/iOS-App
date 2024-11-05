@@ -24,14 +24,15 @@ func mapToAPIError(error: String?) -> Error {
     if let error = error,
        let errorData = error.data(using: .utf8),
        let jsonResponse = try? JSONSerialization.jsonObject(with: errorData, options: .allowFragments),
-       let data = jsonResponse as? [String: Any] {
-       let apiData = APIError(data: data)
+       let data = jsonResponse as? [String: Any]
+    {
+        let apiData = APIError(data: data)
         return apiData.resolve() ?? Errors.apiError(apiData)
     }
     return Errors.parsingError
 }
 
-func makeApiCall<T: Decodable>(modalType: T.Type, apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback) -> Single<T> {
+func makeApiCall<T: Decodable>(modalType _: T.Type, apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback) -> Single<T> {
     return Single<T>.create { callback in
         _ = apiCall { statusCode, responseData in
             if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {

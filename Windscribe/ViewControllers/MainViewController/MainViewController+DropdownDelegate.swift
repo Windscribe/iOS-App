@@ -10,13 +10,13 @@ import Foundation
 import UIKit
 
 extension MainViewController: DropdownDelegate {
-    func optionSelected(dropdown: Dropdown, option: String, relatedIndex: Int) {
+    func optionSelected(dropdown: Dropdown, option: String, relatedIndex _: Int) {
         logger.logD(self, "User tapped to change Trusted Networks.")
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         switch dropdown {
         case protocolDropdownButton.dropdown:
             protocolDropdownButton.setTitle(option)
-            if let protocolName = self.protocolDropdownButton.button.titleLabel?.text, let defaultPort = viewModel.getPortList(protocolName: protocolName)?.first {
+            if let protocolName = protocolDropdownButton.button.titleLabel?.text, let defaultPort = viewModel.getPortList(protocolName: protocolName)?.first {
                 portDropdownButton.setTitle(defaultPort)
                 viewModel.updatePreferred(port: defaultPort, and: option, for: network)
             }
@@ -27,7 +27,9 @@ extension MainViewController: DropdownDelegate {
         }
     }
 }
+
 // MARK: - DropdownButtonDelegate
+
 extension MainViewController: DropdownButtonDelegate {
     func dropdownButtonTapped(_ sender: DropdownButton) {
         logger.logD(self, "User tapped to open dropdown.")
@@ -37,7 +39,7 @@ extension MainViewController: DropdownButtonDelegate {
         dropdown.dropDownDelegate = self
         switch sender {
         case portDropdownButton:
-            if let protocolName = self.protocolDropdownButton.button.titleLabel?.text, let supportedPorts = viewModel.getPortList(protocolName: protocolName) {
+            if let protocolName = protocolDropdownButton.button.titleLabel?.text, let supportedPorts = viewModel.getPortList(protocolName: protocolName) {
                 dropdown.options = supportedPorts
             }
         case protocolDropdownButton:

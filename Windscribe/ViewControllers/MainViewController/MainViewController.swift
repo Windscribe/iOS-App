@@ -1,32 +1,33 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-11-29.
 //  Copyright © 2018 Windscribe. All rights reserved.
 //
 
-import UIKit
-import RealmSwift
-import NetworkExtension
-import ExpyTableView
-import SafariServices
-import MobileCoreServices
-import WidgetKit
 import CoreLocation
-import Swinject
+import ExpyTableView
+import MobileCoreServices
+import NetworkExtension
+import RealmSwift
 import RxSwift
+import SafariServices
 import StoreKit
+import Swinject
+import UIKit
+import WidgetKit
 
 class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
-
     // MARK: navbar
+
     var topNavBarImageView: UIImageView!
     var preferencesTapAreaButton: LargeTapAreaImageButton!
     var logoIcon: ImageButton!
     var notificationDot: UIButton!
 
     // MARK: background views
+
     var topView, cardTopView, cardView: UIView!
     var backgroundView, flagBackgroundView: UIView!
     var flagBottomGradientView: UIImageView!
@@ -36,6 +37,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var flagView: UIImageView!
 
     // MARK: table views
+
     var scrollView: WScrollView!
     var serverListTableView, streamingTableView: PlainExpyTableView!
     var favTableViewRefreshControl, streamingTableViewRefreshControl, staticIpTableViewRefreshControl, customConfigsTableViewRefreshControl: WSRefreshControl!
@@ -53,6 +55,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var sortedServerList: [ServerSection]?
 
     // MARK: connection views
+
     var connectButtonRingView: UIImageView!
     var connectButton: UIButton!
     var statusView, statusDivider, spacer: UIView!
@@ -67,6 +70,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var cardViewTopConstraint: NSLayoutConstraint!
 
     // MARK: auto-secure views
+
     var expandButton: UIButton!
     var autoSecureLabel: UILabel!
     var preferredProtocolLabel: UILabel!
@@ -80,6 +84,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var portDropdownButton: DropdownButton!
 
     // MARK: auto-mode selector views
+
     var autoModeSelectorView: UIView!
     var autoModeSelectorInfoIconView: UIImageView!
     var autoModeInfoLabel: UILabel!
@@ -90,6 +95,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var autoModeSelectorOverlayView: UIView!
 
     // MARK: datasources
+
     var serverListTableViewDataSource: ServerListTableViewDataSource?
     var streamingTableViewDataSource: StreamingListTableViewDataSource?
     var favNodesListTableViewDataSource: FavNodesListTableViewDataSource?
@@ -97,12 +103,14 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource?
 
     // MARK: dynamic constraints
+
     var flagViewTopConstraint: NSLayoutConstraint!
     var preferredBadgeConstraints: [NSLayoutConstraint]!
     var circumventCensorshipBadgeConstraints: [NSLayoutConstraint]!
     var changeProtocolArrowConstraints: [NSLayoutConstraint]!
 
     // MARK: properties
+
     var appJustStarted = false
     var userJustLoggedIn = false
     var didShowOutOfDataPopup = false
@@ -116,14 +124,17 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var isServerListLoading: Bool = false
 
     // MARK: Server section
+
     let serverSectionOpacity: Float = 1
 
     // MARK: shake for data trigger
+
     var shakeDetected = 0
     var firstShakeTimestamp = Date().timeIntervalSince1970
     var lastShakeTimestamp = Date().timeIntervalSince1970
 
     // MARK: realm tokens
+
     var serverListNotificationToken: NotificationToken?
     var favListNotificationToken: NotificationToken?
     var staticIPListNotificationToken: NotificationToken?
@@ -133,6 +144,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var notificationToken: NotificationToken?
 
     // MARK: Timers
+
     weak var latencyLoaderObserver: NSObjectProtocol?
     var connectivityTestTimer: Timer?
     var autoModeSelectorViewTimer: Timer?
@@ -147,6 +159,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var pushNotificationManager: PushNotificationManagerV2?
 
     // MARK: View Models
+
     var viewModel: MainViewModelType!
     var locationManagerViewModel: LocationManagingViewModelType!
     var connectionStateViewModel: ConnectionStateViewModelType!
@@ -174,7 +187,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     var customConfigRepository: CustomConfigRepository?
 
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizerShouldBegin(_: UIGestureRecognizer) -> Bool {
         return false
     }
 
@@ -193,28 +206,28 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
-        viewModel.selectedProtocol.subscribe(onNext: {_ in
+        viewModel.selectedProtocol.subscribe(onNext: { _ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
     }
 
     func configureNotificationListeners() {
         if connectionStateViewModel.isDisconnected() {
-            self.loadLatencyWhenReady()
+            loadLatencyWhenReady()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(self.loadLastConnected), name: Notifications.loadLastConnected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.popoverDismissed), name: Notifications.popoverDismissed, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reloadTableViews), name: Notifications.reloadTableViews, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.configureBestLocationDefault), name: Notifications.configureBestLocation, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.reachabilityChanged), name: Notifications.reachabilityChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.appEnteredForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.checkForUnreadNotifications), name: Notifications.checkForNotifications, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.disconnectVPNIntentReceived), name: Notifications.disconnectVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.configureVPN), name: Notifications.configureVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
-        pushNotificationManager?.notification.compactMap {$0}.subscribe(onNext: { notification in
+        NotificationCenter.default.addObserver(self, selector: #selector(loadLastConnected), name: Notifications.loadLastConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(popoverDismissed), name: Notifications.popoverDismissed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableViews), name: Notifications.reloadTableViews, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(configureBestLocationDefault), name: Notifications.configureBestLocation, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: Notifications.reachabilityChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(checkForUnreadNotifications), name: Notifications.checkForNotifications, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(disconnectVPNIntentReceived), name: Notifications.disconnectVPN, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(configureVPN), name: Notifications.configureVPN, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
+        pushNotificationManager?.notification.compactMap { $0 }.subscribe(onNext: { notification in
             self.pushNotificationReceived(payload: notification)
         }).disposed(by: disposeBag)
         if let payload = try? pushNotificationManager?.notification.value() {
@@ -245,8 +258,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
             logger.logE(MainViewController.self, "No internet connection available.")
-            self.internetConnectionLost = true
-            self.connectionStateViewModel.vpnManager.isOnDemandRetry = false
+            internetConnectionLost = true
+            connectionStateViewModel.vpnManager.isOnDemandRetry = false
             connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true)
         }
     }
@@ -257,7 +270,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func showPrivacyConfirmationPopup(willConnectOnAccepting: Bool = false) {
         if !viewModel.isPrivacyPopupAccepted() {
-            self.popupRouter?.routeTo(to: .privacyView(completionHandler: {
+            popupRouter?.routeTo(to: .privacyView(completionHandler: {
                 if willConnectOnAccepting { self.configureVPN() }
             }), from: self)
         }
@@ -282,8 +295,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.bestLocation.filter {$0?.isInvalidated == false}.bind(onNext: { bestLocation in
-            guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
+        viewModel.bestLocation.filter { $0?.isInvalidated == false }.bind(onNext: { bestLocation in
+            guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             if selectBestLocation && self.connectionStateViewModel.isDisconnected() || self.noSelectedNodeToConnect() {
@@ -297,29 +310,28 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = try? self.viewModel.session.value()?.isPremium {
-                if (self.connectionStateViewModel.isConnected() == false) && (self.connectionStateViewModel.vpnManager.isConnecting() == false) && (self.connectionStateViewModel.isDisconnected() == true) && (self.connectionStateViewModel.vpnManager.isDisconnecting() == false) && isGroupProOnly && !isUserPro {
+                if self.connectionStateViewModel.isConnected() == false, self.connectionStateViewModel.vpnManager.isConnecting() == false, self.connectionStateViewModel.isDisconnected() == true, self.connectionStateViewModel.vpnManager.isDisconnecting() == false, isGroupProOnly, !isUserPro {
                     self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
                 }
             }
-        }).disposed(by: disposeBag )
-
+        }).disposed(by: disposeBag)
     }
 
     func noSelectedNodeToConnect() -> Bool {
-        return self.connectionStateViewModel.vpnManager.selectedNode == nil
+        return connectionStateViewModel.vpnManager.selectedNode == nil
     }
 
     func showOutOfDataPopup() {
         if connectionStateViewModel.isConnected() && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
             connectionStateViewModel.disconnect()
         }
-        self.logger.logD(self, "Displaying Out Of Data Popup.")
+        logger.logD(self, "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
     }
 
     func showRateUsPopup() {
-        self.rateViewModel.setDate()
-        self.rateViewModel.setRateUsActionCompleted()
+        rateViewModel.setDate()
+        rateViewModel.setRateUsActionCompleted()
         if #available(iOS 14.0, *) {
             let scenes = UIApplication.shared.connectedScenes
             if let windowScene = scenes.first as? UIWindowScene {
@@ -333,44 +345,45 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         DispatchQueue.main.async {
             self.popupRouter?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
         }
-
     }
 
     func clearScrollHappened() {
-        self.serverListTableViewDataSource?.scrollHappened = false
-        self.streamingTableViewDataSource?.scrollHappened = false
-        self.favNodesListTableViewDataSource?.scrollHappened = false
-        self.customConfigListTableViewDataSource?.scrollHappened = false
-        self.staticIPListTableViewDataSource?.scrollHappened = false
+        serverListTableViewDataSource?.scrollHappened = false
+        streamingTableViewDataSource?.scrollHappened = false
+        favNodesListTableViewDataSource?.scrollHappened = false
+        customConfigListTableViewDataSource?.scrollHappened = false
+        staticIPListTableViewDataSource?.scrollHappened = false
     }
 
     func reloadServerList() {
         let results = (try? viewModel.serverList.value()) ?? []
         if results.count == 0 { return }
 
-        if let oldSession = self.viewModel.oldSession,
-           let newSession = sessionManager.session {
-            let groups = results.flatMap({ $0.groups })
-            let nodes = groups.flatMap({ $0.nodes })
+        if let oldSession = viewModel.oldSession,
+           let newSession = sessionManager.session
+        {
+            let groups = results.flatMap { $0.groups }
+            let nodes = groups.flatMap { $0.nodes }
             if oldSession.isPremium &&
                 !newSession.isPremium &&
-                !nodes.isEmpty {
+                !nodes.isEmpty
+            {
                 logger.logD(self, "Account downgrade detected.")
                 if connectionStateViewModel.isDisconnected() {
-                    self.loadLatencyValues(selectBestLocation: true, connectToBestLocation: false)
+                    loadLatencyValues(selectBestLocation: true, connectToBestLocation: false)
                 } else {
-                    self.connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
-                    self.connectionStateViewModel.vpnManager.resetProperties()
-                 //   self.connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
+                    connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
+                    connectionStateViewModel.vpnManager.resetProperties()
+                    //   self.connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
                 }
             }
         }
 
-        if self.isAnyRefreshControlIsRefreshing() {
-            self.loadLatencyValues(selectBestLocation: self.isBestLocationSelected(), connectToBestLocation: false)
+        if isAnyRefreshControlIsRefreshing() {
+            loadLatencyValues(selectBestLocation: isBestLocationSelected(), connectToBestLocation: false)
         }
 
-        self.connectionStateViewModel.vpnManager.checkForForceDisconnect()
+        connectionStateViewModel.vpnManager.checkForForceDisconnect()
     }
 
     func reloadCustomConfigs() {
@@ -379,36 +392,37 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         for result in results {
             customConfigModels.append(result.getModel())
         }
-        self.customConfigListTableViewDataSource?.customConfigs = customConfigModels
-        self.customConfigTableView.reloadData()
+        customConfigListTableViewDataSource?.customConfigs = customConfigModels
+        customConfigTableView.reloadData()
     }
 
     func sortServerListUsingUserPreferences(serverSections: [ServerSection]) -> [ServerSection] {
         var serverSectionsOrdered = [ServerSection]()
-        guard let orderLocationsBy = try? viewModel.locationOrderBy.value() else { return serverSections}
+        guard let orderLocationsBy = try? viewModel.locationOrderBy.value() else { return serverSections }
         switch orderLocationsBy {
         case Fields.Values.geography:
             serverSectionsOrdered = serverSections
         case Fields.Values.alphabet:
-            serverSectionsOrdered = serverSections.sorted { (serverSection1, serverSection2) -> Bool in
+            serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
                 guard let countryCode1 = serverSection1.server?.name, let countryCode2 = serverSection2.server?.name else { return false }
                 return countryCode1 < countryCode2
             }
         case Fields.Values.latency:
-            serverSectionsOrdered = serverSections.sorted { (serverSection1, serverSection2) -> Bool in
-                guard let hostnamesFirst = serverSection1.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}), let hostnamesSecond = serverSection2.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return false }
-                let firstNodeList = hostnamesFirst.map({viewModel.getLatency(ip: $0 ?? "")}).filter({ $0 != 0 })
-                let secondNodeList = hostnamesSecond.map({viewModel.getLatency(ip: $0 ?? "")}).filter({ $0 != 0 }).filter({ $0 != 0 })
-                let firstLatency = firstNodeList.reduce(0, { (result, value) -> Int in
+            serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
+                guard let hostnamesFirst = serverSection1.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }), let hostnamesSecond = serverSection2.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }) else { return false }
+                let firstNodeList = hostnamesFirst.map { viewModel.getLatency(ip: $0 ?? "") }.filter { $0 != 0 }
+                let secondNodeList = hostnamesSecond.map { viewModel.getLatency(ip: $0 ?? "") }.filter { $0 != 0 }.filter { $0 != 0 }
+                let firstLatency = firstNodeList.reduce(0) { result, value -> Int in
                     return result + value
-                })
-                let secondLatency = secondNodeList.reduce(0, { (result, value) -> Int in
+                }
+                let secondLatency = secondNodeList.reduce(0) { result, value -> Int in
                     return result + value
-                })
+                }
                 if firstNodeList.count == 0 ||
                     secondNodeList.count == 0 ||
                     firstLatency == 0 ||
-                    secondLatency == 0 {
+                    secondLatency == 0
+                {
                     return false
                 }
                 return (firstLatency / (firstNodeList.count)) < (secondLatency / (secondNodeList.count))
@@ -447,7 +461,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 return
             }
             if self.flagView.frame.height != 0 {
-                self.flagViewTopConstraint.constant = self.flagView.frame.height+10
+                self.flagViewTopConstraint.constant = self.flagView.frame.height + 10
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut, animations: {
                     self.view.layoutIfNeeded()
                 }, completion: { _ in

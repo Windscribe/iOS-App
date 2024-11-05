@@ -36,7 +36,7 @@ extension URLRequest {
         return command.joined(separator: " \\\n\t")
     }
 
-    init?(curlString: String) {
+    init?(curlString _: String) {
         return nil
     }
 }

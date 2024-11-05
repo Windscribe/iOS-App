@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class LeaderboardTableViewCell: UITableViewCell {
     var nameLabel = UILabel()
@@ -17,7 +17,7 @@ class LeaderboardTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
 
         nameLabel.font = UIFont.bold(size: 16)
         nameLabel.textAlignment = .left
@@ -38,7 +38,7 @@ class LeaderboardTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.disposeBag = DisposeBag() // Force rx disposal on reuse
+        disposeBag = DisposeBag() // Force rx disposal on reuse
     }
 
     override func layoutSubviews() {
@@ -49,25 +49,25 @@ class LeaderboardTableViewCell: UITableViewCell {
 
         NSLayoutConstraint.activate([
             // nameLabel
-            nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            nameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            nameLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             nameLabel.heightAnchor.constraint(equalToConstant: 16),
 
             // scoreLabel
             scoreLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
-            scoreLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            scoreLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             scoreLabel.heightAnchor.constraint(equalToConstant: 20),
 
             // cellDivider
-            cellDivider.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            cellDivider.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-            cellDivider.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            cellDivider.heightAnchor.constraint(equalToConstant: 2)
+            cellDivider.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cellDivider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            cellDivider.trailingAnchor.constraint(equalTo: trailingAnchor),
+            cellDivider.heightAnchor.constraint(equalToConstant: 2),
         ])
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe( onNext: { isDark in
+        isDarkMode.subscribe(onNext: { isDark in
             self.nameLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.scoreLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)

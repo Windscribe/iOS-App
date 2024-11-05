@@ -13,9 +13,9 @@ protocol SideMenuOptionViewDelegate: AnyObject {
 }
 
 class SideMenuOptions: UIView {
-    @IBOutlet weak var selectionView: UIView!
-    @IBOutlet weak var imgView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet var selectionView: UIView!
+    @IBOutlet var imgView: UIImageView!
+    @IBOutlet var titleLabel: UILabel!
     let gradient = CAGradientLayer()
 
     var sideMenuType: SideMenuType?
@@ -27,19 +27,19 @@ class SideMenuOptions: UIView {
         selectionView.layer.cornerRadius = 2
         titleLabel.text = type.rawValue.localize()
         imgView.image = type.getImage(isSelected: isSelected)
-        titleLabel.font =  UIFont.bold(size: 42)
+        titleLabel.font = UIFont.bold(size: 42)
         updateSelection(with: isSelected)
         addSubview(button)
         button.addTarget(self, action: #selector(selectOption), for: .primaryActionTriggered)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-        button.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        button.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
-        button.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        button.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        button.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        button.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+        button.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
     }
 
-    @IBAction func selectOption(_ sender: Any) {
-        guard let sideMenuType = sideMenuType else {return}
+    @IBAction func selectOption(_: Any) {
+        guard let sideMenuType = sideMenuType else { return }
         delegate?.optionWasSelected(with: sideMenuType)
     }
 
@@ -50,39 +50,38 @@ class SideMenuOptions: UIView {
     }
 
     func setHorizontalGradientBackground() {
-         // Create a gradient layer
+        // Create a gradient layer
         gradient.colors = [
-           UIColor.whiteWithOpacity(opacity: 0.16).cgColor,
-           UIColor.whiteWithOpacity(opacity: 0).cgColor
+            UIColor.whiteWithOpacity(opacity: 0.16).cgColor,
+            UIColor.whiteWithOpacity(opacity: 0).cgColor,
         ]
 
-         // Set the frame of the gradient layer to match the view's bounds
+        // Set the frame of the gradient layer to match the view's bounds
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
         gradient.frame = CGRect(x: 0.0, y: 0.0, width: frame.width, height: frame.height)
-        if self.layer.sublayers?.contains(gradient) ?? false {
+        if layer.sublayers?.contains(gradient) ?? false {
             gradient.colors = [
-               UIColor.clear.cgColor,
-               UIColor.clear.cgColor
+                UIColor.clear.cgColor,
+                UIColor.clear.cgColor,
             ]
         } else {
-            self.layer.insertSublayer(gradient, at: 0)
+            layer.insertSublayer(gradient, at: 0)
         }
 
-         // Define the gradient colors (white to white with slight variations if needed)
-     }
+        // Define the gradient colors (white to white with slight variations if needed)
+    }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
-            self.setHorizontalGradientBackground()
+            setHorizontalGradientBackground()
         } else {
-            self.layer.sublayers?.remove(at: 0)
+            layer.sublayers?.remove(at: 0)
         }
     }
 
     func isType(of type: SideMenuType) -> Bool {
         return type == sideMenuType
     }
-
 }

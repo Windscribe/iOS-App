@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 extension APIManagerImpl {
     func login(username: String, password: String, code2fa: String) -> RxSwift.Single<Session> {
         return makeApiCall(modalType: Session.self) { completion in
@@ -98,5 +99,4 @@ extension APIManagerImpl {
             self.api.claimVoucherCode(sessionAuth, voucherCode: code, callback: completion)
         }
     }
-
 }

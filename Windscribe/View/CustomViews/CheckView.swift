@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class CheckView: UIStackView {
     var isDarkMode: BehaviorSubject<Bool>
@@ -40,11 +40,12 @@ class CheckView: UIStackView {
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    internal func setup() {
+    func setup() {
         addSubview(stepView)
         addArrangedSubview(titleLabel)
         setPadding(UIEdgeInsets(top: 8, left: 24, bottom: 8, right: 0))
@@ -62,8 +63,8 @@ class CheckView: UIStackView {
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.titleLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
     }
 }

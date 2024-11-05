@@ -34,7 +34,8 @@ public class WSFillLayoutView: UIView {
         setup()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -44,7 +45,7 @@ public class WSFillLayoutView: UIView {
 
         rootStackView.addArrangedSubviews([
             scrollView,
-            bottomStackView
+            bottomStackView,
         ])
         scrollView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
 

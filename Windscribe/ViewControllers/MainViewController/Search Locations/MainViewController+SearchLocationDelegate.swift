@@ -17,7 +17,7 @@ extension MainViewController {
         view.addSubview(searchLocationsView)
         searchLocationsView.loadView()
 
-        self.addSearchViewConstraints()
+        addSearchViewConstraints()
     }
 
     private func addSearchViewConstraints() {
@@ -26,7 +26,7 @@ extension MainViewController {
             searchLocationsView.centerYAnchor.constraint(equalTo: cardTopView.centerYAnchor),
             searchLocationsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchLocationsView.heightAnchor.constraint(equalToConstant: 24)
+            searchLocationsView.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
 
@@ -42,15 +42,16 @@ extension MainViewController {
             reloadServerListForSearch()
         }
     }
+
     func reloadServerListForSearch() {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
-        let serverModels = results.compactMap({ $0.getServerModel() })
-        let serverSections: [ServerSection] = serverModels.map({ ServerSection(server: $0, collapsed: true) })
-        let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
-        self.serverListTableViewDataSource?.serverSections = serverSectionsOrdered
-        self.serverListTableViewDataSource?.bestLocation = nil
-        self.serverListTableView.reloadData()
+        let serverModels = results.compactMap { $0.getServerModel() }
+        let serverSections: [ServerSection] = serverModels.map { ServerSection(server: $0, collapsed: true) }
+        let serverSectionsOrdered = sortServerListUsingUserPreferences(serverSections: serverSections)
+        serverListTableViewDataSource?.serverSections = serverSectionsOrdered
+        serverListTableViewDataSource?.bestLocation = nil
+        serverListTableView.reloadData()
     }
 }
 
@@ -78,7 +79,7 @@ extension MainViewController: SearchCountryViewDelegate {
             } else {
                 for group in groups {
                     guard let city = group.city?.lowercased(), let nick = group.nick?.lowercased() else { continue }
-                    lowercasedText.splitToArray(separator: " ").forEach { s in
+                    for s in lowercasedText.splitToArray(separator: " ") {
                         if city.range(of: s) != nil || nick.range(of: s) != nil {
                             let added = resultGroups.contains { $0.id == group.id }
                             if !added {
@@ -106,10 +107,10 @@ extension MainViewController: SearchCountryViewDelegate {
 
     func showSearchLocation() {
         logger.logD(self, "User tapped to search locations.")
-        self.clearScrollHappened()
-        self.hideAutoSecureViews()
-        self.lastSelectedHeaderViewTab = self.selectedHeaderViewTab
-        self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        clearScrollHappened()
+        hideAutoSecureViews()
+        lastSelectedHeaderViewTab = selectedHeaderViewTab
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         toggleSearchViews(to: true)
         serverListTableViewDataSource?.bestLocation = nil
         DispatchQueue.main.async { [weak self] in

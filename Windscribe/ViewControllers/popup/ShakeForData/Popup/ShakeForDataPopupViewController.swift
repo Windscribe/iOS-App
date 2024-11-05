@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ShakeForDataPopupViewController: WSUIViewController {
     var backgroundView: UIView!
@@ -30,9 +30,9 @@ class ShakeForDataPopupViewController: WSUIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-       super.viewWillAppear(animated)
-       navigationController?.isNavigationBarHidden = true
-       navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
     override func setupLocalized() {

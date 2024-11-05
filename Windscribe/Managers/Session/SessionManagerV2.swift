@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol SessionManagerV2 {
     var session: Session? { get }
     func setSessionTimer()

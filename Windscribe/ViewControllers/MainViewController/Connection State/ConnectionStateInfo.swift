@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 import NetworkExtension
+import RxSwift
 
 enum ConnectionState {
     case connecting
@@ -41,21 +41,20 @@ struct ConnectionStateInfo {
     let customConfig: CustomConfigModel?
     let connectedWifi: WifiNetwork?
 
-    static func defaultValue(startState: ConnectionState = .disconnected) -> ConnectionStateInfo {
+    static func defaultValue(startState _: ConnectionState = .disconnected) -> ConnectionStateInfo {
         return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, customConfig: nil, connectedWifi: nil)
     }
 
     var trustedNetworkImage: String {
-            if let status = WifiManager.shared.getConnectedNetwork()?.status {
-                if status == true {
-                    return ImagesAsset.wifiUnsecure
-                } else {
-                   return ImagesAsset.wifi
-                }
+        if let status = WifiManager.shared.getConnectedNetwork()?.status {
+            if status == true {
+                return ImagesAsset.wifiUnsecure
             } else {
                 return ImagesAsset.wifi
-
             }
+        } else {
+            return ImagesAsset.wifi
+        }
     }
 }
 
@@ -68,6 +67,7 @@ extension ConnectionState {
         case .disconnected: .lightMidnight
         }
     }
+
     var backgroundOpacity: Float { [.disconnecting].contains(self) ? 0.10 : 0.25 }
     var statusText: String {
         switch self {
@@ -78,6 +78,7 @@ extension ConnectionState {
         case .automaticFailed: ""
         }
     }
+
     var statusColor: UIColor {
         switch self {
         case .connected, .test: .seaGreen
@@ -86,6 +87,7 @@ extension ConnectionState {
         case .automaticFailed: .failedConnectionYellow
         }
     }
+
     var statusImage: String { self == .automaticFailed ? ImagesAsset.protocolFailed : ImagesAsset.connectionSpinner }
     var statusAlpha: CGFloat { [.connected, .test, .connecting, .automaticFailed].contains(self) ? 1.0 : 0.5 }
     var statusViewColor: UIColor { ([.disconnected, .disconnecting].contains(self) ? UIColor.white : .midnight).withAlphaComponent(0.25) }
@@ -96,6 +98,7 @@ extension ConnectionState {
         case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.preferredProtocolBadgeOff
         }
     }
+
     var connectButtonRing: String {
         switch self {
         case .connected, .test: ImagesAsset.connectButtonRing
@@ -111,6 +114,7 @@ extension ConnectionState {
         case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.TvAsset.disconnectedRing
         }
     }
+
     var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
 
     var connectButtonTV: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOff : ImagesAsset.TvAsset.connectionButtonOn }

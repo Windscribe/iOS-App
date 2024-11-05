@@ -13,13 +13,13 @@ protocol AccountItemViewDelegate: NSObject {
 }
 
 class AccountItemView: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var valueLabel: UILabel!
-    @IBOutlet weak var backgroundView: UIView!
-    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var valueLabel: UILabel!
+    @IBOutlet var backgroundView: UIView!
+    @IBOutlet var stackView: UIStackView!
 
-    @IBOutlet weak var itemHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var maxTitleWidth: NSLayoutConstraint!
+    @IBOutlet var itemHeightConstraint: NSLayoutConstraint!
+    @IBOutlet var maxTitleWidth: NSLayoutConstraint!
 
     let button = UIButton()
 
@@ -47,22 +47,23 @@ class AccountItemView: UIView {
             addSubview(button)
             button.addTarget(self, action: #selector(selectUpgrade), for: .primaryActionTriggered)
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-            button.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            button.widthAnchor.constraint(equalTo: self.widthAnchor).isActive = true
-            button.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+            button.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+            button.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+            button.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+            button.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         }
     }
 
-    @IBAction func selectUpgrade(_ sender: Any) {
+    @IBAction func selectUpgrade(_: Any) {
         guard let item = item, let delegate = delegate else { return }
         delegate.actionSelected(with: item)
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
             UIView.animate(withDuration: 0.5) {
-                self.backgroundView.isHidden = false            }
+                self.backgroundView.isHidden = false
+            }
         } else {
             UIView.animate(withDuration: 0.5) {
                 self.backgroundView.isHidden = true

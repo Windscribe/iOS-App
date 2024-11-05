@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 protocol AccountTableViewCellDelegate: AnyObject {
     func upgradeButtonTapped(indexPath: IndexPath)
@@ -19,9 +19,9 @@ class AccountTableViewCell: UITableViewCell {
     lazy var rightButton = UIButton()
     lazy var cellDivider = UIView()
 
-    var indexPath: IndexPath = IndexPath()
+    var indexPath: IndexPath = .init()
     weak var delegate: AccountTableViewCellDelegate?
-    let configDataTrigger = PublishSubject<()>()
+    let configDataTrigger = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -46,7 +46,7 @@ class AccountTableViewCell: UITableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        Observable.combineLatest(configDataTrigger.asObservable(), isDarkMode.asObservable()).bind { (_, isDarkMode) in
+        Observable.combineLatest(configDataTrigger.asObservable(), isDarkMode.asObservable()).bind { _, isDarkMode in
             self.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
             self.leftLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
             if !self.item.isProUser {
@@ -81,7 +81,6 @@ class AccountTableViewCell: UITableViewCell {
         cellDivider.makeLeadingAnchor(constant: 16)
         cellDivider.makeTrailingAnchor()
         cellDivider.makeBottomAnchor()
-
     }
 
     override func layoutSubviews() {
@@ -126,7 +125,7 @@ class AccountTableViewCell: UITableViewCell {
                 addSubview(rightButton)
                 rightButton.setTitle(TextsAsset.Account.upgrade, for: .normal)
                 rightButton.setTitleColor(.red, for: .normal)
-                rightButton.titleLabel?.font =  UIFont.text(size: 16)
+                rightButton.titleLabel?.font = UIFont.text(size: 16)
                 rightButton.isUserInteractionEnabled = true
                 updateRightButtonPro(false)
             }
@@ -144,7 +143,7 @@ class AccountTableViewCell: UITableViewCell {
 
     @objc func upgradeTap() {
         print("Tapped")
-        delegate?.upgradeButtonTapped(indexPath: self.indexPath)
+        delegate?.upgradeButtonTapped(indexPath: indexPath)
     }
 
     private func makeRoundCorners() {
@@ -173,5 +172,4 @@ class AccountTableViewCell: UITableViewCell {
             cellDivider.isHidden = false
         }
     }
-
 }

@@ -24,10 +24,9 @@ class WSTouchView: UIView {
         configNormal()
     }
 
-    @objc public func configHighlight() {
-    }
-    @objc public func configNormal() {
-    }
+    @objc public func configHighlight() {}
+
+    @objc public func configNormal() {}
 }
 
 class WSTouchStackView: UIStackView {
@@ -46,10 +45,9 @@ class WSTouchStackView: UIStackView {
         configNormal()
     }
 
-    @objc public func configHighlight() {
-    }
-    @objc public func configNormal() {
-    }
+    @objc public func configHighlight() {}
+
+    @objc public func configNormal() {}
 }
 
 class WSTouchTableViewCell: UITableViewCell {
@@ -68,8 +66,7 @@ class WSTouchTableViewCell: UITableViewCell {
         configNormal()
     }
 
-    @objc public func configHighlight() {
-    }
-    @objc public func configNormal() {
-    }
+    @objc public func configHighlight() {}
+
+    @objc public func configNormal() {}
 }

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class CardHeaderContainerView: UIView {
     var stackContainerView = UIStackView()
@@ -25,7 +25,8 @@ class CardHeaderContainerView: UIView {
 
     var disposeBag = DisposeBag()
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -82,9 +83,9 @@ class CardHeaderContainerView: UIView {
 
         NSLayoutConstraint.activate([
             // stackContainerView
-            stackContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            stackContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-            stackContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
+            stackContainerView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            stackContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             stackContainerView.heightAnchor.constraint(equalToConstant: 16),
 
             // headerSelectorView
@@ -109,7 +110,7 @@ class CardHeaderContainerView: UIView {
             configButton.widthAnchor.constraint(equalToConstant: 24),
 
             // startSearchButton
-            startSearchButton.widthAnchor.constraint(equalToConstant: 16)
+            startSearchButton.widthAnchor.constraint(equalToConstant: 16),
         ])
     }
 

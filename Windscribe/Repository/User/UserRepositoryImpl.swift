@@ -10,6 +10,7 @@ import Foundation
 import RxRealm
 import RxSwift
 import Swinject
+
 class UserRepositoryImpl: UserRepository {
     private let preferences: Preferences
     private let apiManager: APIManager
@@ -39,7 +40,6 @@ class UserRepositoryImpl: UserRepository {
         }, onError: { [self] _ in
             self.user.onNext(nil)
         }).disposed(by: disposeBag)
-
     }
 
     func getUpdatedUser() -> Single<User> {

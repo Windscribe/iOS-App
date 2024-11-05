@@ -8,15 +8,18 @@
 
 import Foundation
 import RxSwift
+
 enum EmergencyConnectState {
     case disconnected, disconnecting, connecting, connected
 }
+
 protocol EmergenyConnectViewModal {
     var state: BehaviorSubject<EmergencyConnectState> { get }
     func connectButtonTapped()
 }
+
 class EmergencyConnectModalImpl: EmergenyConnectViewModal {
-    let state =  BehaviorSubject(value: EmergencyConnectState.disconnected)
+    let state = BehaviorSubject(value: EmergencyConnectState.disconnected)
     let vpnManager: VPNManager
     let emergencyRepository: EmergencyRepository
     let logger: FileLogger

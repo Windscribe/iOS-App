@@ -1,30 +1,31 @@
 //
-//  SharedDependencies.swift
+//  CoreModule.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-24.
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import CocoaLumberjack
 import Foundation
 import Swinject
-import CocoaLumberjack
+
 /// Core dependencies used by all targets.
 extension Container {
-    func injectCore(ext: Bool = false) {
+    func injectCore(ext _: Bool = false) {
         register(FileLogger.self) { _ in
             let logger = FileLoggerImpl()
             return logger
         }.inObjectScope(.container)
         register(FileDatabase.self) { r in
-            return FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
+            FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(Preferences.self) { _ in
             SharedSecretDefaults.shared
         }.inObjectScope(.container)
         if WSNet.isValid() {
             register(WSNetServerAPI.self) { _ in
-                return WSNet.instance().serverAPI()
+                WSNet.instance().serverAPI()
             }.inObjectScope(.container)
             return
         }
@@ -35,16 +36,16 @@ extension Container {
                 let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
                 logger?.logD("WSNet", msg.trimmingCharacters(in: .whitespacesAndNewlines))
             }, debugLog: false)
-            var language: String = "en"
+            var language = "en"
             let preferredLanguages = Locale.preferredLanguages
             if let deviceLanguage = preferredLanguages.first {
                 language = String(deviceLanguage.prefix(2))
             }
-        #if STAGING
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
-        #else
-            WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language , persistentSettings: preferences.getServerSettings())
-        #endif
+            #if STAGING
+                WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: true, language: language, persistentSettings: preferences.getServerSettings())
+            #else
+                WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language, persistentSettings: preferences.getServerSettings())
+            #endif
             WSNet.instance().dnsResolver().setDnsServers(["76.76.2.0", "1.1.1.1", "9.9.9.9"])
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
@@ -54,9 +55,10 @@ extension Container {
                 return pair.count == 2 && pair[0] == wsServerOverrride
             })?.splitToArray(separator: "=")
                 .dropFirst()
-                .joined(separator: "=") {
-                    WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
-                }
+                .joined(separator: "=")
+            {
+                WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
+            }
             return WSNet.instance().serverAPI()
         }.inObjectScope(.container)
     }

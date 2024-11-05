@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 extension APIManagerImpl {
     func getSession(_ appleID: String?) -> Single<Session> {
         guard let sessionAuth = userRepository?.sessionAuth else {

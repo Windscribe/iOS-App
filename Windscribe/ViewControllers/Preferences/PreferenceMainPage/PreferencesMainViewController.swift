@@ -7,14 +7,16 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
-class PreferencesMainViewController: WSNavigationViewController {
+import RxSwift
 
+class PreferencesMainViewController: WSNavigationViewController {
     // MARK: - State properties
+
     var router: PreferenceMainRouter!, viewModel: PreferencesMainViewModel!, logger: FileLogger!
 
     // MARK: - UIElements
+
     lazy var shawdowView: UIView = {
         let view = WSView()
         view.layer.cornerRadius = 8
@@ -30,6 +32,7 @@ class PreferencesMainViewController: WSNavigationViewController {
     var actionButtonBottomConstraint, loginButtonBottomConstraint: NSLayoutConstraint!
 
     // MARK: - UI Events
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Preferences View")
@@ -42,7 +45,7 @@ class PreferencesMainViewController: WSNavigationViewController {
         viewModel.getActionButtonDisplay()
     }
 
-    override func setupLocalized() { }
+    override func setupLocalized() {}
 
     deinit {
         tableViewContenSizeObserve?.invalidate()
@@ -91,7 +94,7 @@ class PreferencesMainViewController: WSNavigationViewController {
 
     // MARK: - UI helper functions
 
-   private func updateLocalizedText() {
+    private func updateLocalizedText() {
         titleLabel.text = TextsAsset.Preferences.title
         loginButton.setTitle("\(TextsAsset.login)", for: .normal)
         tableView.reloadData()
@@ -115,9 +118,9 @@ class PreferencesMainViewController: WSNavigationViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.addIcon(icon: ImagesAsset.warningBlack)
         if let actionButton = actionButton {
-            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -24)
+            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24)
         }
-        self.view.setNeedsLayout()
+        view.setNeedsLayout()
     }
 
     func displayLogin() {
@@ -126,7 +129,7 @@ class PreferencesMainViewController: WSNavigationViewController {
         loginButton.backgroundColor = UIColor.backgroundBlue
         loginButton.setTitle("\(TextsAsset.login)", for: .normal)
         loginButton.setTitleColor(UIColor.white, for: .normal)
-        self.view.setNeedsLayout()
+        view.setNeedsLayout()
     }
 
     func displaySetupAccount() {
@@ -154,9 +157,9 @@ class PreferencesMainViewController: WSNavigationViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.addIcon(icon: ImagesAsset.warningBlack)
         if let actionButton = actionButton {
-            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: self.getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
         }
-        self.view.setNeedsLayout()
+        view.setNeedsLayout()
     }
 
     private func actionButtonTapped(tag: Int?) {
@@ -180,12 +183,12 @@ class PreferencesMainViewController: WSNavigationViewController {
         logger.logD(self, "User tapped to sign out.")
         HapticFeedbackGenerator.shared.run(level: .medium)
         viewModel.alertManager.showYesNoAlert(title: TextsAsset.Preferences.logout,
-                                           message: TextsAsset.Preferences.logOutAlert ,
-                                           completion: { result in
-            if result {
-                self.viewModel?.logoutUser()
-            }
-        })
+                                              message: TextsAsset.Preferences.logOutAlert,
+                                              completion: { result in
+                                                  if result {
+                                                      self.viewModel?.logoutUser()
+                                                  }
+                                              })
     }
 
     // helper functions
@@ -201,24 +204,24 @@ class PreferencesMainViewController: WSNavigationViewController {
 }
 
 // MARK: - Extensions
+
 extension PreferencesMainViewController: ConfirmEmailViewControllerDelegate {
     func dismissWith(action: ConfirmEmailAction) {
-        router.dismissPopup(action: action, navigationVC: self.navigationController)
+        router.dismissPopup(action: action, navigationVC: navigationController)
     }
-
 }
 
 extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView,
+                   numberOfRowsInSection _: Int) -> Int
+    {
         if viewModel?.isUserGhost() ?? false {
             return 7
         }
         return 8
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 4 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true) {
             return 0.01
         }
@@ -226,9 +229,11 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: preferencesCellReuseIdentifier, for: indexPath) as?
-                PreferencesTableViewCell else {
+            PreferencesTableViewCell
+        else {
             return UITableViewCell()
         }
         cell.arrowIcon.isHidden = false
@@ -251,7 +256,6 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
         switch indexPath.row {
         case 0:
             router?.routeTo(to: RouteID.general, from: self)
-
         case 1:
             if viewModel?.isUserGhost() ?? false {
                 if viewModel?.isUserPro() == true && sessionManager.session?.hasUserAddedEmail == false {
@@ -272,12 +276,10 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
             router?.routeTo(to: RouteID.help, from: self)
         case 6:
             router?.routeTo(to: RouteID.about, from: self)
-
         case 7:
-            self.signoutButtonTapped()
+            signoutButtonTapped()
         default:
             break
         }
     }
-
 }

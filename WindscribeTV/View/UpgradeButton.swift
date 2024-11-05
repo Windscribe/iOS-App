@@ -6,9 +6,9 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class UpgradeButton: UIButton {
     let dataLeft = UILabel()
@@ -26,31 +26,31 @@ class UpgradeButton: UIButton {
 
     func setupButton() {
         // Make the button round
-        self.layer.cornerRadius = self.frame.height/2
-        self.clipsToBounds = true
+        layer.cornerRadius = frame.height / 2
+        clipsToBounds = true
 
-        self.setTitle(nil, for: .normal)
-        self.isUserInteractionEnabled = true
+        setTitle(nil, for: .normal)
+        isUserInteractionEnabled = true
 
-        self.setBackgroundImage(UIImage.imageWithColor(.whiteWithOpacity(opacity: 0.24)), for: .focused)
-        self.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
+        setBackgroundImage(UIImage.imageWithColor(.whiteWithOpacity(opacity: 0.24)), for: .focused)
+        setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
         let divider = UIView()
         divider.backgroundColor = .whiteWithOpacity(opacity: 0.24)
         divider.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(divider)
+        addSubview(divider)
 
         NSLayoutConstraint.activate([
             divider.widthAnchor.constraint(equalToConstant: 2),
             divider.heightAnchor.constraint(equalToConstant: 50),
-            divider.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            divider.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            divider.centerXAnchor.constraint(equalTo: centerXAnchor),
+            divider.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         dataLeft.text = "10 GB LEFT"
         dataLeft.font = UIFont.bold(size: 24)
         dataLeft.translatesAutoresizingMaskIntoConstraints = false
         dataLeft.textColor = .seaGreen
-        self.addSubview(dataLeft)
+        addSubview(dataLeft)
 
         NSLayoutConstraint.activate([
             dataLeft.heightAnchor.constraint(equalToConstant: 50),
@@ -58,7 +58,7 @@ class UpgradeButton: UIButton {
                                            constant: 35),
             dataLeft.rightAnchor.constraint(equalTo: divider.leftAnchor,
                                             constant: -10),
-            dataLeft.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            dataLeft.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         upgrade.text = TextsAsset.upgrade.uppercased()
@@ -66,7 +66,7 @@ class UpgradeButton: UIButton {
         upgrade.translatesAutoresizingMaskIntoConstraints = false
         upgrade.textColor = .white
         upgrade.textAlignment = .center
-        self.addSubview(upgrade)
+        addSubview(upgrade)
 
         NSLayoutConstraint.activate([
             upgrade.heightAnchor.constraint(equalToConstant: 50),
@@ -74,26 +74,26 @@ class UpgradeButton: UIButton {
                                            constant: -10),
             upgrade.leftAnchor.constraint(equalTo: divider.rightAnchor,
                                           constant: 10),
-            upgrade.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+            upgrade.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         setborder()
     }
 
     func setborder() {
-            self.layer.borderWidth = 2
-            self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+        layer.borderWidth = 2
+        layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
     }
 
     func updateText() {
         upgrade.text = TextsAsset.upgrade
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if context.nextFocusedView == self {
-            self.layer.borderColor = UIColor.clear.cgColor
+            layer.borderColor = UIColor.clear.cgColor
         } else {
-            self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
+            layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.24).cgColor
         }
     }
 }

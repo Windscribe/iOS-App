@@ -7,11 +7,12 @@
 //
 
 import Foundation
-import RxSwift
+import NetworkExtension
 import Realm
 import RxRealm
+import RxSwift
 import Swinject
-import NetworkExtension
+
 class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
     private let database: LocalDatabase
@@ -20,9 +21,10 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var sessionManager: SessionManagerV2 {
         return Assembler.resolve(SessionManagerV2.self)
     }
+
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
-    let bestLocation: BehaviorSubject <BestLocation?> = BehaviorSubject(value: nil)
+    let bestLocation: BehaviorSubject<BestLocation?> = BehaviorSubject(value: nil)
     private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
 
@@ -31,7 +33,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.database = database
         self.vpnManager = vpnManager
         self.logger = logger
-        self.latency.onNext(self.database.getAllPingData())
+        latency.onNext(self.database.getAllPingData())
         observeBestLocation()
         observeFavNodes()
     }
@@ -58,7 +60,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     /// Returns latency data for ip.
     func getPingData(ip: String) -> PingData? {
         let value = try? latency.value()
-        return value?.first { !$0.isInvalidated  && $0.ip == ip }
+        return value?.first { !$0.isInvalidated && $0.ip == ip }
     }
 
     func loadLatency() {
@@ -66,17 +68,17 @@ class LatencyRepositoryImpl: LatencyRepository {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {})
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 
     func loadAllServerLatency() -> Completable {
-        self.logger.logE(self, "Attempting to update latency data.")
-        let pingServers = self.getServerPingAndHosts()
+        logger.logE(self, "Attempting to update latency data.")
+        let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {
-            self.logger.logE(self, "Server list not ready for latency update.")
+            logger.logE(self, "Server list not ready for latency update.")
             return Completable.empty()
         }
-        let latencySingles =  self.createLatencyTask(from: pingServers)
+        let latencySingles = createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
@@ -89,7 +91,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                 self.pickBestLocation(pingData: pingData)
             }
         )
-        .disposed(by: self.disposeBag)
+        .disposed(by: disposeBag)
 
         return latencySingles.do(onSuccess: { _ in
             self.logger.logE(self, "Successfully updated latency data.")
@@ -100,32 +102,32 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadFavouriteLatency() -> Completable {
-        let favourites = try? favNodes.value().map { p in ( p.pingIp, p.pingHost)}
-        return self.createLatencyTask(from: favourites ?? [])
+        let favourites = try? favNodes.value().map { p in (p.pingIp, p.pingHost) }
+        return createLatencyTask(from: favourites ?? [])
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData())})
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
             .asCompletable()
     }
 
     func loadStreamingServerLatency() -> Completable {
         let streamingServersToPing = database.getServers()?
-            .filter { $0.locType == "streaming"}
-            .compactMap { region in region.groups.toArray()}
+            .filter { $0.locType == "streaming" }
+            .compactMap { region in region.groups.toArray() }
             .reduce([], +)
-            .map { city in (city.pingIp, city.pingHost)}
-        return self.createLatencyTask(from: streamingServersToPing ?? [])
+            .map { city in (city.pingIp, city.pingHost) }
+        return createLatencyTask(from: streamingServersToPing ?? [])
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in  self.latency.onNext(self.database.getAllPingData())})
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
             .asCompletable()
     }
 
     func loadStaticIpLatency() -> Single<[PingData]> {
-        self.createLatencyTask(from: self.getStaticPingAndHosts())
+        createLatencyTask(from: getStaticPingAndHosts())
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in  self.latency.onNext(self.database.getAllPingData()) })
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
     }
 
     func loadCustomConfigLatency() -> Completable {
@@ -140,7 +142,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     func getCustomConfigLatency() -> Single<[PingData]> {
         let tasks = database.getCustomConfigs().map { config in
-            return Single<PingData>.create { completion in
+            Single<PingData>.create { completion in
                 let pingData = PingData(ip: config.serverAddress, latency: -1)
                 self.getTCPLatency(pingIp: config.serverAddress) { minTime in
                     if minTime != -1 {
@@ -157,35 +159,35 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
         #if os(iOS)
-        if vpnManager.isConnected() {
-            completion(-1)
-        } else {
-            _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
-                QNNTcpPing.start(pingIp) { (result) in
-                    if let minTime = result?.minTime {
-                        completion(Int(minTime))
-                    } else {
-                        self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
-                        completion(-1)
+            if vpnManager.isConnected() {
+                completion(-1)
+            } else {
+                _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
+                    QNNTcpPing.start(pingIp) { result in
+                        if let minTime = result?.minTime {
+                            completion(Int(minTime))
+                        } else {
+                            self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
+                            completion(-1)
+                        }
                     }
                 }
             }
-        }
         #endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
         let pingIps = database.getServers()?
-        .compactMap { region in region.groups.toArray()}
-        .reduce([], +)
-        .filter {
-            if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
-                return false
-            } else {
-                return true
-            }
-        }.map {$0.pingIp} ?? []
-        let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip)}
+            .compactMap { region in region.groups.toArray() }
+            .reduce([], +)
+            .filter {
+                if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
+                    return false
+                } else {
+                    return true
+                }
+            }.map { $0.pingIp } ?? []
+        let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip) }
         let minLatencyPingData = validPingData.min(by: { $0.latency < $1.latency })
         return minLatencyPingData?.ip
     }
@@ -193,7 +195,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     /// Returns single task built from list of ip and hosts.
     private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
         let tasks = from.map { ip, host in
-            return Single<PingData>.create { completion in
+            Single<PingData>.create { completion in
                 self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
                     let pingData = PingData(ip: ip, latency: -1)
                     if success {
@@ -209,33 +211,34 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getStaticPingAndHosts() -> [(String, String)] {
-        return database.getStaticIPs()?.compactMap {$0}
-            .map { city in return (city.nodes.first?.ip ?? "", city.pingHost)} ?? []
+        return database.getStaticIPs()?.compactMap { $0 }
+            .map { city in (city.nodes.first?.ip ?? "", city.pingHost) } ?? []
     }
 
     /// Returns ping IP and Host array from database.
     private func getServerPingAndHosts() -> [(String, String)] {
         return database.getServers()?
-            .compactMap { region in region.groups.toArray()}
+            .compactMap { region in region.groups.toArray() }
             .reduce([], +)
-            .map { city in return (city.pingIp, city.pingHost) } ?? []
+            .map { city in (city.pingIp, city.pingHost) } ?? []
     }
 
     func pickBestLocation(pingData: [PingData]) {
         let servers = database.getServers()
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
-        outerLoop: for server in servers ?? [] {
-            for group in server.groups {
-                if group.pingIp == lowestPingIp,
-                   let bestNode = group.bestNode?.getNodeModel(),
-                   let serverModel = server.getServerModel() {
-                    let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
-                    database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
-                    self.bestLocation.onNext(bestLocation)
-                    break outerLoop
+            outerLoop: for server in servers ?? [] {
+                for group in server.groups {
+                    if group.pingIp == lowestPingIp,
+                       let bestNode = group.bestNode?.getNodeModel(),
+                       let serverModel = server.getServerModel()
+                    {
+                        let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
+                        database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
+                        self.bestLocation.onNext(bestLocation)
+                        break outerLoop
+                    }
                 }
             }
-        }
         } else {
             return
         }
@@ -275,7 +278,8 @@ class LatencyRepositoryImpl: LatencyRepository {
             }
 
             if let selectedGroup = availableGroups.randomElement(),
-               let selectedNode = selectedGroup.nodes.randomElement() {
+               let selectedNode = selectedGroup.nodes.randomElement()
+            {
                 return buildAndSaveBestLocation(server: server, group: selectedGroup, node: selectedNode)
             }
         }
@@ -302,7 +306,8 @@ class LatencyRepositoryImpl: LatencyRepository {
                     return true
                 }
                 if let selectedGroup = availableGroups.randomElement(),
-                   let selectedNode = selectedGroup.nodes.randomElement() {
+                   let selectedNode = selectedGroup.nodes.randomElement()
+                {
                     bestFallbackServer = server
                     bestFallbackGroup = selectedGroup
                     bestFallbackNode = selectedNode
@@ -311,7 +316,8 @@ class LatencyRepositoryImpl: LatencyRepository {
         }
         if let bestServer = bestFallbackServer,
            let bestGroup = bestFallbackGroup,
-           let bestNode = bestFallbackNode {
+           let bestNode = bestFallbackNode
+        {
             return buildAndSaveBestLocation(server: bestServer, group: bestGroup, node: bestNode)
         }
         return nil
@@ -324,9 +330,9 @@ class LatencyRepositoryImpl: LatencyRepository {
             group: group.getGroupModel(),
             server: server.getServerModel()!
         )
-        self.database.saveBestLocation(location: updatedBestLocation)
+        database.saveBestLocation(location: updatedBestLocation)
             .disposed(by: disposeBag)
-        self.bestLocation.onNext(updatedBestLocation)
+        bestLocation.onNext(updatedBestLocation)
         let lastBestLocation = try? bestLocation.value()
         if !observingBestLocation || lastBestLocation == nil {
             delay(2) {

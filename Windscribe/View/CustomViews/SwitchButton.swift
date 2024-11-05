@@ -6,22 +6,22 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class SwitchButton: UIButton {
     var isDarkMode: BehaviorSubject<Bool>
     let disposeBag = DisposeBag()
     /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+     // Only override draw() if you perform custom drawing.
+     // An empty implementation adversely affects performance during animation.
+     override func draw(_ rect: CGRect) {
+         // Drawing code
+     }
+     */
     var status: Bool = false {
         didSet {
-            self.update()
+            update()
         }
     }
 
@@ -35,7 +35,8 @@ class SwitchButton: UIButton {
         bindViews()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -55,12 +56,12 @@ class SwitchButton: UIButton {
 
     override func updateTheme(isDark: Bool) {
         offImage = ThemeUtils.switchOffImage(isDarkMode: isDark)
-        self.setImage(status ? onImage : offImage, for: .normal)
+        setImage(status ? onImage : offImage, for: .normal)
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.updateTheme(isDark: $0)
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
     }
 }

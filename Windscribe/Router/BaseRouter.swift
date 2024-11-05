@@ -9,6 +9,7 @@
 import Foundation
 import SafariServices
 import Swinject
+
 class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     func goToHome() {
         let vc = Assembler.resolve(MainViewController.self)
@@ -16,7 +17,8 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         vc.appJustStarted = true
         vc.userJustLoggedIn = true
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-           let window = appDelegate.window {
+           let window = appDelegate.window
+        {
             window.rootViewController?.dismiss(animated: false,
                                                completion: nil)
             UIView.transition(with: window,
@@ -46,7 +48,7 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         case .dismiss:
             navigationVC?.popToRootViewController(animated: true)
             return
-        case . enterEmail:
+        case .enterEmail:
             let vc = Assembler.resolve(EnterEmailViewController.self)
             navigationVC?.pushViewController(vc, animated: true)
         }

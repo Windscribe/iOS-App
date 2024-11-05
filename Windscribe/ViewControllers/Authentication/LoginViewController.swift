@@ -6,14 +6,14 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
 import RxCocoa
 import RxSwift
+import UIKit
 
 class LoginViewController: WSNavigationViewController {
-
     // MARK: - UI properties
+
     var scrollView: UIScrollView!
     var usernameLabel, passwordLabel: UILabel!
     var usernameTextfield: LoginTextField!
@@ -24,9 +24,13 @@ class LoginViewController: WSNavigationViewController {
     var loadingView: UIActivityIndicatorView!
     var twoFactorInfoLabel, infoLabel: UILabel!
     var twoFactorCodeTextfieldHeightConstraint, twoFactorInfoLabelHeightConstraint, signInButtonBottomConstraint, forgotPasswordButtonTopConstraint: NSLayoutConstraint!
+
     // MARK: - State properties
+
     var viewModel: LoginViewModel!, router: LoginRouter!, logger: FileLogger!
+
     // MARK: - UI Events
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Login View")
@@ -56,6 +60,7 @@ class LoginViewController: WSNavigationViewController {
     }
 
     // MARK: - Setup and Bind views
+
     private func setupView() {
         addViews()
         addAutoLayoutConstraints()
@@ -91,28 +96,28 @@ class LoginViewController: WSNavigationViewController {
             self.continueButton.setTitleColor(ThemeUtils.primaryTextColorInvert(isDarkMode: isDarkMode), for: .normal)
             self.setupViews(isDark: isDarkMode)
         }.disposed(by: disposeBag)
-        Observable.combineLatest(viewModel.failedState.distinctUntilChanged(), viewModel.isDarkMode.asObservable()).bind { [weak self] (state, isDarkMode) in
+        Observable.combineLatest(viewModel.failedState.distinctUntilChanged(), viewModel.isDarkMode.asObservable()).bind { [weak self] state, isDarkMode in
             switch state {
-            case .username(let error):
+            case let .username(error):
                 self?.usernameTextfield.textColor = UIColor.failRed
                 self?.usernameInfoIconImageView.isHidden = false
                 self?.infoLabel.isHidden = false
                 self?.infoLabel.text = error
-            case .network(let error):
+            case let .network(error):
                 self?.usernameTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
                 self?.passwordTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
                 self?.usernameInfoIconImageView.isHidden = true
                 self?.passwordInfoIconImageView.isHidden = true
                 self?.infoLabel.isHidden = false
                 self?.infoLabel.text = error
-            case .api(let error):
+            case let .api(error):
                 self?.usernameTextfield.textColor = UIColor.failRed
                 self?.usernameInfoIconImageView.isHidden = false
                 self?.passwordTextfield.textColor = UIColor.failRed
                 self?.passwordInfoIconImageView.isHidden = false
                 self?.infoLabel.isHidden = false
                 self?.infoLabel.text = error
-            case .twoFa(let error):
+            case let .twoFa(error):
                 self?.infoLabel.isHidden = false
                 self?.infoLabel.text = error
             case .none:
@@ -124,7 +129,6 @@ class LoginViewController: WSNavigationViewController {
                 self?.infoLabel.text = ""
             default:
                 self?.logger.logD(self, "default case")
-
             }
         }.disposed(by: disposeBag)
         continueButton.rx.tap.bind { [weak self] in
@@ -148,16 +152,17 @@ class LoginViewController: WSNavigationViewController {
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(usernameTextfield.rx.text.asObservable(),
-                                 viewModel.isDarkMode.asObservable()).bind { (_, isDarkMode) in
+                                 viewModel.isDarkMode.asObservable()).bind { _, isDarkMode in
             self.loginTextFieldValueChanged(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
         Observable.combineLatest(passwordTextfield.rx.text.asObservable(),
-                                 viewModel.isDarkMode.asObservable()).bind { (_, isDarkMode) in
+                                 viewModel.isDarkMode.asObservable()).bind { _, isDarkMode in
             self.loginTextFieldValueChanged(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
 
     // MARK: - Helper
+
     private func setTwoFactorCodeVisibility(forceShow: Bool = false) {
         view.removeConstraint(forgotPasswordButtonTopConstraint)
         var viewToAttach = passwordTextfield as Any
@@ -184,13 +189,13 @@ class LoginViewController: WSNavigationViewController {
     private func loginTextFieldValueChanged(isDarkMode: Bool) {
         guard let usernameTextCount = usernameTextfield.text?.count, let passwordTextCount = passwordTextfield.text?.count else { return }
         if usernameTextCount > 2 && passwordTextCount > 2 {
-            self.continueButton.backgroundColor = UIColor.seaGreen
-            self.continueButton.setTitleColor(UIColor.midnight, for: .normal)
-            self.continueButton.isEnabled = true
+            continueButton.backgroundColor = UIColor.seaGreen
+            continueButton.setTitleColor(UIColor.midnight, for: .normal)
+            continueButton.isEnabled = true
         } else {
-            self.continueButton.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
-            self.continueButton.setTitleColor(ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode), for: .normal)
-            self.continueButton.isEnabled = false
+            continueButton.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
+            continueButton.setTitleColor(ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode), for: .normal)
+            continueButton.isEnabled = false
         }
     }
 }

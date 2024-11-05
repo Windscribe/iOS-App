@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 #if canImport(SafariServices)
-import SafariServices
+    import SafariServices
 #endif
 import RxSwift
 
@@ -22,7 +22,7 @@ protocol StaticIPListFooterViewDelegate: AnyObject {
 protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
     var presentLinkTrigger: PublishSubject<URL> { get }
     var presentAlertTrigger: PublishSubject<StaticIPAlertType> { get }
-    var configureVPNTrigger: PublishSubject<()> { get }
+    var configureVPNTrigger: PublishSubject<Void> { get }
 
     func setSelectedStaticIP(staticIP: StaticIPModel)
 }
@@ -30,7 +30,7 @@ protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
 class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
     var presentLinkTrigger = PublishSubject<URL>()
     var presentAlertTrigger = PublishSubject<StaticIPAlertType>()
-    var configureVPNTrigger = PublishSubject<()>()
+    var configureVPNTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
     var vpnManager: VPNManager
@@ -39,7 +39,8 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
-         connectionStateManager: ConnectionStateManagerType, connectivity: Connectivity) {
+         connectionStateManager: ConnectionStateManagerType, connectivity: Connectivity)
+    {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectionStateManager = connectionStateManager
@@ -61,13 +62,13 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
                   let hostname = node.hostname, let serverAddress = node.ip2, let nickName = staticIP.staticIP, let cityName = staticIP.cityName, let credentials = staticIP.credentials else { return }
             logger.logD(self, "Tapped on Static IP \(staticIPN) from the server list.")
             vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                        dnsHostname: dnsHostname,
-                                                        hostname: hostname,
-                                                        serverAddress: serverAddress,
-                                                        nickName: nickName,
-                                                        cityName: cityName,
-                                                        staticIPCredentials: credentials.last,
-                                                        groupId: 0)
+                                                   dnsHostname: dnsHostname,
+                                                   hostname: hostname,
+                                                   serverAddress: serverAddress,
+                                                   nickName: nickName,
+                                                   cityName: cityName,
+                                                   staticIPCredentials: credentials.last,
+                                                   groupId: 0)
 
             configureVPNTrigger.onNext(())
         } else {

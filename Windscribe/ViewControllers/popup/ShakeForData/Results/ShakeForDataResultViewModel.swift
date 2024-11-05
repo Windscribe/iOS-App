@@ -10,9 +10,9 @@ import Foundation
 import RxSwift
 
 protocol ShakeForDataResultViewModelType {
-    var shakeCount: BehaviorSubject<Int> {get}
-    var highestScore: BehaviorSubject<Int> {get}
-    var apiMessage: BehaviorSubject<String?> {get}
+    var shakeCount: BehaviorSubject<Int> { get }
+    var highestScore: BehaviorSubject<Int> { get }
+    var apiMessage: BehaviorSubject<String?> { get }
 
     func wasShown()
     func quit(from: WSUIViewController, completion: @escaping () -> Void)
@@ -41,10 +41,9 @@ class ShakeForDataResultViewModel: ShakeForDataResultViewModelType {
         let highestScore = preferences.getShakeForDataHighestScore() ?? 0
         if shakeCount > highestScore {
             preferences.saveShakeForDataHighestScore(score: shakeCount)
-            self.repository.recordShakeForDataScore(score: shakeCount).subscribe(onSuccess: { message in
+            repository.recordShakeForDataScore(score: shakeCount).subscribe(onSuccess: { message in
                 self.apiMessage.onNext(message)
             }, onFailure: { _ in
-                return
             }).disposed(by: disposeBag)
         }
         self.shakeCount.onNext(shakeCount)
@@ -61,17 +60,18 @@ class ShakeForDataResultViewModel: ShakeForDataResultViewModelType {
             completion()
         } else {
             let unlockAction = UIAlertAction(title: TextsAsset.ShakeForData.leaveAlertUnlock,
-                                             style: .default) { _ in
+                                             style: .default)
+            { _ in
                 self.preferences.saveUnlockShakeForData(bool: true)
                 completion()
             }
             let leaveAction = UIAlertAction(title: TextsAsset.ShakeForData.leaveAlertLeave,
                                             style: .default) { _ in completion() }
 
-            self.alertManager.showAlert(viewController: from,
-                                        title: TextsAsset.ShakeForData.leaveAlertTitle,
-                                        message: TextsAsset.ShakeForData.leaveAlertDescription,
-                                        actions: [unlockAction, leaveAction])
+            alertManager.showAlert(viewController: from,
+                                   title: TextsAsset.ShakeForData.leaveAlertTitle,
+                                   message: TextsAsset.ShakeForData.leaveAlertDescription,
+                                   actions: [unlockAction, leaveAction])
         }
     }
 }

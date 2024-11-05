@@ -91,7 +91,8 @@ extension ConfigurationsManager {
 
     private func getTunnelParams(for type: VPNManagerType) -> [String: NSObject]? {
         if type == .wg,
-           let activationId = wgCredentials.address?.SHA1() as? NSObject {
+           let activationId = wgCredentials.address?.SHA1() as? NSObject
+        {
             return ["activationAttemptId": activationId]
         } else {
             return nil

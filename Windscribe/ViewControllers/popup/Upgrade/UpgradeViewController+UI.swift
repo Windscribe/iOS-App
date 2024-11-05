@@ -6,12 +6,11 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
 import Swinject
+import UIKit
 
 extension UpgradeViewController {
-
     func addPricesViews() {
         firstPlanRadioButton = ImageButton()
         firstPlanRadioButton.addTarget(self, action: #selector(makeFirstPlanSelected), for: .touchUpInside)
@@ -60,26 +59,26 @@ extension UpgradeViewController {
             .init(item: firstPlanRadioButton as Any, attribute: .left, relatedBy: .equal, toItem: pricesView, attribute: .left, multiplier: 1, constant: 0),
             .init(item: firstPlanRadioButton as Any, attribute: .centerY, relatedBy: .equal, toItem: pricesView, attribute: .centerY, multiplier: 1, constant: 0),
             firstPlanRadioButton.widthAnchor.constraint(equalToConstant: 16),
-            firstPlanRadioButton.heightAnchor.constraint(equalToConstant: 16)
+            firstPlanRadioButton.heightAnchor.constraint(equalToConstant: 16),
         ])
 
         pricesView.addConstraints([
             .init(item: firstPlanOptionButton as Any, attribute: .top, relatedBy: .equal, toItem: pricesView, attribute: .top, multiplier: 1, constant: 16),
             .init(item: firstPlanOptionButton as Any, attribute: .bottom, relatedBy: .equal, toItem: pricesView, attribute: .bottom, multiplier: 1, constant: -16),
-            .init(item: firstPlanOptionButton as Any, attribute: .left, relatedBy: .equal, toItem: firstPlanRadioButton, attribute: .right, multiplier: 1, constant: 8)
+            .init(item: firstPlanOptionButton as Any, attribute: .left, relatedBy: .equal, toItem: firstPlanRadioButton, attribute: .right, multiplier: 1, constant: 8),
         ])
 
         pricesView.addConstraints([
             .init(item: secondPlanRadioButtton as Any, attribute: .centerY, relatedBy: .equal, toItem: pricesView, attribute: .centerY, multiplier: 1, constant: 0),
             .init(item: secondPlanRadioButtton as Any, attribute: .right, relatedBy: .equal, toItem: secondPlanOptionButton, attribute: .left, multiplier: 1, constant: -8),
             secondPlanRadioButtton.widthAnchor.constraint(equalToConstant: 16),
-            secondPlanRadioButtton.heightAnchor.constraint(equalToConstant: 16)
+            secondPlanRadioButtton.heightAnchor.constraint(equalToConstant: 16),
         ])
 
         pricesView.addConstraints([
             .init(item: secondPlanOptionButton as Any, attribute: .top, relatedBy: .equal, toItem: pricesView, attribute: .top, multiplier: 1, constant: 16),
             .init(item: secondPlanOptionButton as Any, attribute: .bottom, relatedBy: .equal, toItem: pricesView, attribute: .bottom, multiplier: 1, constant: -16),
-            .init(item: secondPlanOptionButton as Any, attribute: .right, relatedBy: .equal, toItem: pricesView, attribute: .right, multiplier: 1, constant: 0)
+            .init(item: secondPlanOptionButton as Any, attribute: .right, relatedBy: .equal, toItem: pricesView, attribute: .right, multiplier: 1, constant: 0),
         ])
     }
 
@@ -92,20 +91,20 @@ extension UpgradeViewController {
         discountView.addConstraints([
             .init(item: discountLabel as Any, attribute: .top, relatedBy: .equal, toItem: discountView, attribute: .top, multiplier: 1, constant: 16),
             .init(item: discountLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: discountView, attribute: .bottom, multiplier: 1, constant: -16),
-            .init(item: discountLabel as Any, attribute: .right, relatedBy: .equal, toItem: discountSeparateView, attribute: .left, multiplier: 1, constant: -16)
+            .init(item: discountLabel as Any, attribute: .right, relatedBy: .equal, toItem: discountSeparateView, attribute: .left, multiplier: 1, constant: -16),
         ])
 
         discountView.addConstraints([
             discountSeparateView.centerXAnchor.constraint(equalTo: discountView.centerXAnchor),
             discountSeparateView.centerYAnchor.constraint(equalTo: discountView.centerYAnchor),
             discountSeparateView.heightAnchor.constraint(equalToConstant: 20),
-            discountSeparateView.widthAnchor.constraint(equalToConstant: 2)
+            discountSeparateView.widthAnchor.constraint(equalToConstant: 2),
         ])
 
         discountView.addConstraints([
             .init(item: discountPercentLabel as Any, attribute: .left, relatedBy: .equal, toItem: discountSeparateView, attribute: .right, multiplier: 1, constant: 16),
             .init(item: discountPercentLabel as Any, attribute: .top, relatedBy: .equal, toItem: discountView, attribute: .top, multiplier: 1, constant: 16),
-            .init(item: discountPercentLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: discountView, attribute: .bottom, multiplier: 1, constant: -16)
+            .init(item: discountPercentLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: discountView, attribute: .bottom, multiplier: 1, constant: -16),
         ])
     }
 
@@ -116,21 +115,21 @@ extension UpgradeViewController {
 
         scrollView.addConstraints([
             .init(item: promoView as Any, attribute: .top, relatedBy: .equal, toItem: proView, attribute: .top, multiplier: 1, constant: 0),
-            .init(item: promoView as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1, constant: 0)
+            .init(item: promoView as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1, constant: 0),
         ])
 
         scrollView.addConstraints([
             .init(item: promoLabel as Any, attribute: .top, relatedBy: .equal, toItem: promoView, attribute: .top, multiplier: 1, constant: 8),
             .init(item: promoLabel as Any, attribute: .left, relatedBy: .equal, toItem: promoIconImageView, attribute: .right, multiplier: 1, constant: 8),
             .init(item: promoLabel as Any, attribute: .right, relatedBy: .equal, toItem: promoView, attribute: .right, multiplier: 1, constant: -8),
-            .init(item: promoLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: promoView, attribute: .bottom, multiplier: 1, constant: -8)
+            .init(item: promoLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: promoView, attribute: .bottom, multiplier: 1, constant: -8),
         ])
 
         scrollView.addConstraints([
             .init(item: promoIconImageView as Any, attribute: .left, relatedBy: .equal, toItem: promoView, attribute: .left, multiplier: 1, constant: 10),
             .init(item: promoIconImageView as Any, attribute: .centerY, relatedBy: .equal, toItem: promoView, attribute: .centerY, multiplier: 1, constant: 0),
             promoIconImageView.heightAnchor.constraint(equalToConstant: 12),
-            promoIconImageView.widthAnchor.constraint(equalToConstant: 12)
+            promoIconImageView.widthAnchor.constraint(equalToConstant: 12),
         ])
     }
 
@@ -295,7 +294,7 @@ extension UpgradeViewController {
         if let htmlData = htmlString.data(using: .utf8) {
             legalTextView.htmlText(htmlData: htmlData)
         }
-        legalTextView.linkTextAttributes = [ .foregroundColor: UIColor.white, .underlineColor: UIColor.clear]
+        legalTextView.linkTextAttributes = [.foregroundColor: UIColor.white, .underlineColor: UIColor.clear]
         legalTextView.isScrollEnabled = false
         legalTextView.isEditable = false
         legalTextView.font = UIFont.text(size: 8)
@@ -401,168 +400,168 @@ extension UpgradeViewController {
         layoutPromoViews()
 
         view.addConstraints([
-            NSLayoutConstraint(item: scrollView as Any, attribute: .top, relatedBy: .equal, toItem: self.backButton, attribute: .bottom, multiplier: 1.0, constant: 12),
-            NSLayoutConstraint(item: scrollView as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: scrollView as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: scrollView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: scrollView as Any, attribute: .top, relatedBy: .equal, toItem: backButton, attribute: .bottom, multiplier: 1.0, constant: 12),
+            NSLayoutConstraint(item: scrollView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: scrollView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: scrollView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
         ])
         view.addConstraints([
-            NSLayoutConstraint(item: proView as Any, attribute: .top, relatedBy: .equal, toItem: self.scrollView, attribute: .bottom, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: proView as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: proView as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: -16),
-            NSLayoutConstraint(item: proView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.legalTextView, attribute: .bottom, multiplier: 1.0, constant: 24)
+            NSLayoutConstraint(item: proView as Any, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: proView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: proView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: proView as Any, attribute: .bottom, relatedBy: .equal, toItem: legalTextView, attribute: .bottom, multiplier: 1.0, constant: 24),
         ])
         view.addConstraints([
-            NSLayoutConstraint(item: proLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.proView, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: proLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.proView, attribute: .top, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: proLabel as Any, attribute: .left, relatedBy: .equal, toItem: proView, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: proLabel as Any, attribute: .top, relatedBy: .equal, toItem: proView, attribute: .top, multiplier: 1.0, constant: 16),
         ])
         view.addConstraints([
-            NSLayoutConstraint(item: pricingLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.proLabel, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: pricingLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.proLabel, attribute: .bottom, multiplier: 1.0, constant: 8)
+            NSLayoutConstraint(item: pricingLabel as Any, attribute: .left, relatedBy: .equal, toItem: proLabel, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: pricingLabel as Any, attribute: .top, relatedBy: .equal, toItem: proLabel, attribute: .bottom, multiplier: 1.0, constant: 8),
         ])
 
         view.addConstraints([
             .init(item: pricesStackView as Any, attribute: .top, relatedBy: .equal, toItem: pricingLabel, attribute: .bottom, multiplier: 1, constant: 0),
             .init(item: pricesStackView as Any, attribute: .left, relatedBy: .equal, toItem: scrollView, attribute: .left, multiplier: 1, constant: 40),
             .init(item: pricesStackView as Any, attribute: .right, relatedBy: .equal, toItem: scrollView, attribute: .right, multiplier: 1, constant: -40),
-            pricesStackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 80)
+            pricesStackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width - 80),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: benefistsLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.proLabel, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: benefistsLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.pricesStackView, attribute: .bottom, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: benefistsLabel as Any, attribute: .left, relatedBy: .equal, toItem: proLabel, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: benefistsLabel as Any, attribute: .top, relatedBy: .equal, toItem: pricesStackView, attribute: .bottom, multiplier: 1.0, constant: 0),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: firstIcon as Any, attribute: .top, relatedBy: .equal, toItem: self.benefistsLabel, attribute: .bottom, multiplier: 1.0, constant: 17),
-            NSLayoutConstraint(item: firstIcon as Any, attribute: .left, relatedBy: .equal, toItem: self.proLabel, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: firstIcon as Any, attribute: .top, relatedBy: .equal, toItem: benefistsLabel, attribute: .bottom, multiplier: 1.0, constant: 17),
+            NSLayoutConstraint(item: firstIcon as Any, attribute: .left, relatedBy: .equal, toItem: proLabel, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: firstIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: firstIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: firstIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: firstLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.firstIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: firstLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.firstIcon, attribute: .right, multiplier: 1.0, constant: 8)
+            NSLayoutConstraint(item: firstLabel as Any, attribute: .top, relatedBy: .equal, toItem: firstIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: firstLabel as Any, attribute: .left, relatedBy: .equal, toItem: firstIcon, attribute: .right, multiplier: 1.0, constant: 8),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: self.firstIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: firstIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
             NSLayoutConstraint(item: firstInfoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: firstInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: firstSeperator as Any, attribute: .top, relatedBy: .equal, toItem: self.firstIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: firstSeperator as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
-            NSLayoutConstraint(item: firstSeperator as Any, attribute: .left, relatedBy: .equal, toItem: self.proView, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: firstSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
+            NSLayoutConstraint(item: firstSeperator as Any, attribute: .top, relatedBy: .equal, toItem: firstIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
+            NSLayoutConstraint(item: firstSeperator as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: firstSeperator as Any, attribute: .left, relatedBy: .equal, toItem: proView, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: firstSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: secondIcon as Any, attribute: .top, relatedBy: .equal, toItem: self.firstSeperator, attribute: .bottom, multiplier: 1.0, constant: 13),
-            NSLayoutConstraint(item: secondIcon as Any, attribute: .left, relatedBy: .equal, toItem: self.proLabel, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: secondIcon as Any, attribute: .top, relatedBy: .equal, toItem: firstSeperator, attribute: .bottom, multiplier: 1.0, constant: 13),
+            NSLayoutConstraint(item: secondIcon as Any, attribute: .left, relatedBy: .equal, toItem: proLabel, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: secondIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: secondIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: secondIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: secondLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.secondIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: secondLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.secondIcon, attribute: .right, multiplier: 1.0, constant: 8)
+            NSLayoutConstraint(item: secondLabel as Any, attribute: .top, relatedBy: .equal, toItem: secondIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: secondLabel as Any, attribute: .left, relatedBy: .equal, toItem: secondIcon, attribute: .right, multiplier: 1.0, constant: 8),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: self.secondIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: secondIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
             NSLayoutConstraint(item: secondInfoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: secondInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: secondSeperator as Any, attribute: .top, relatedBy: .equal, toItem: self.secondIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: secondSeperator as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
-            NSLayoutConstraint(item: secondSeperator as Any, attribute: .left, relatedBy: .equal, toItem: self.proView, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: secondSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
+            NSLayoutConstraint(item: secondSeperator as Any, attribute: .top, relatedBy: .equal, toItem: secondIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
+            NSLayoutConstraint(item: secondSeperator as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: secondSeperator as Any, attribute: .left, relatedBy: .equal, toItem: proView, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: secondSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: thirdIcon as Any, attribute: .top, relatedBy: .equal, toItem: self.secondSeperator, attribute: .bottom, multiplier: 1.0, constant: 13),
-            NSLayoutConstraint(item: thirdIcon as Any, attribute: .left, relatedBy: .equal, toItem: self.proLabel, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: thirdIcon as Any, attribute: .top, relatedBy: .equal, toItem: secondSeperator, attribute: .bottom, multiplier: 1.0, constant: 13),
+            NSLayoutConstraint(item: thirdIcon as Any, attribute: .left, relatedBy: .equal, toItem: proLabel, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: thirdIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: thirdIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: thirdIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: thirdLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.thirdIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: thirdLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.thirdIcon, attribute: .right, multiplier: 1.0, constant: 8)
+            NSLayoutConstraint(item: thirdLabel as Any, attribute: .top, relatedBy: .equal, toItem: thirdIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: thirdLabel as Any, attribute: .left, relatedBy: .equal, toItem: thirdIcon, attribute: .right, multiplier: 1.0, constant: 8),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: self.thirdIcon, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .top, relatedBy: .equal, toItem: thirdIcon, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
             NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
+            NSLayoutConstraint(item: thirdInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .top, relatedBy: .equal, toItem: self.thirdIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24),
-            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .left, relatedBy: .equal, toItem: self.proView, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
+            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .top, relatedBy: .equal, toItem: thirdIcon, attribute: .bottom, multiplier: 1.0, constant: 14),
+            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .left, relatedBy: .equal, toItem: proView, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: thirdSeperator as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.thirdSeperator, attribute: .bottom, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .left, relatedBy: .equal, toItem: self.proView, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .right, relatedBy: .equal, toItem: self.proView, attribute: .right, multiplier: 1.0, constant: -24)
+            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .top, relatedBy: .equal, toItem: thirdSeperator, attribute: .bottom, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .left, relatedBy: .equal, toItem: proView, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: iapDescriptionLabel as Any, attribute: .right, relatedBy: .equal, toItem: proView, attribute: .right, multiplier: 1.0, constant: -24),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: legalTextView as Any, attribute: .top, relatedBy: .equal, toItem: self.iapDescriptionLabel, attribute: .bottom, multiplier: 1.0, constant: 6),
-            NSLayoutConstraint(item: legalTextView as Any, attribute: .left, relatedBy: .equal, toItem: self.iapDescriptionLabel, attribute: .left, multiplier: 1.0, constant: -6)
+            NSLayoutConstraint(item: legalTextView as Any, attribute: .top, relatedBy: .equal, toItem: iapDescriptionLabel, attribute: .bottom, multiplier: 1.0, constant: 6),
+            NSLayoutConstraint(item: legalTextView as Any, attribute: .left, relatedBy: .equal, toItem: iapDescriptionLabel, attribute: .left, multiplier: 1.0, constant: -6),
         ])
 
         if Assembler.resolve(SessionManagerV2.self).session?.emailStatus == true {
             if UIDevice.current.isIphone5orLess() {
                 view.addConstraints([
-                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .top, relatedBy: .equal, toItem: self.restoreButton, attribute: .bottom, multiplier: 1.0, constant: 24)
+                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .top, relatedBy: .equal, toItem: restoreButton, attribute: .bottom, multiplier: 1.0, constant: 24),
                 ])
             } else {
                 view.addConstraints([
-                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -24)
+                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24),
                 ])
             }
             continueFreeButton.isHidden = true
         } else {
             if UIDevice.current.isIphone5orLess() {
                 view.addConstraints([
-                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .top, relatedBy: .equal, toItem: self.restoreButton, attribute: .bottom, multiplier: 1.0, constant: 24),
-                    NSLayoutConstraint(item: continueFreeButton as Any, attribute: .top, relatedBy: .equal, toItem: self.continuePayButton, attribute: .bottom, multiplier: 1.0, constant: 24)
+                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .top, relatedBy: .equal, toItem: restoreButton, attribute: .bottom, multiplier: 1.0, constant: 24),
+                    NSLayoutConstraint(item: continueFreeButton as Any, attribute: .top, relatedBy: .equal, toItem: continuePayButton, attribute: .bottom, multiplier: 1.0, constant: 24),
                 ])
             } else {
                 view.addConstraints([
-                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .bottom, relatedBy: .equal, toItem: self.continueFreeButton, attribute: .top, multiplier: 1.0, constant: -24),
-                    NSLayoutConstraint(item: continueFreeButton as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -34)
+                    NSLayoutConstraint(item: continuePayButton as Any, attribute: .bottom, relatedBy: .equal, toItem: continueFreeButton, attribute: .top, multiplier: 1.0, constant: -24),
+                    NSLayoutConstraint(item: continueFreeButton as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -34),
                 ])
             }
             view.addConstraints([
-                NSLayoutConstraint(item: continueFreeButton as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
+                NSLayoutConstraint(item: continueFreeButton as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             ])
         }
         view.addConstraints([
             NSLayoutConstraint(item: continuePayButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 48),
-            NSLayoutConstraint(item: continuePayButton as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: continuePayButton as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: -24)
+            NSLayoutConstraint(item: continuePayButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: continuePayButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -24),
         ])
         view.addConstraints([
-            NSLayoutConstraint(item: restoreButton as Any, attribute: .top, relatedBy: .equal, toItem: self.proView, attribute: .bottom, multiplier: 1.0, constant: 8),
-            NSLayoutConstraint(item: restoreButton as Any, attribute: .centerX, relatedBy: .equal, toItem: self.continuePayButton, attribute: .centerX, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: restoreButton as Any, attribute: .top, relatedBy: .equal, toItem: proView, attribute: .bottom, multiplier: 1.0, constant: 8),
+            NSLayoutConstraint(item: restoreButton as Any, attribute: .centerX, relatedBy: .equal, toItem: continuePayButton, attribute: .centerX, multiplier: 1.0, constant: 0),
         ])
     }
 
     @objc func makeFirstPlanSelected() {
         if windscribePlans.count > 0 {
-            if let plan = windscribePlans.first(where: {$0.extId == firstPlanExt}) {
+            if let plan = windscribePlans.first(where: { $0.extId == firstPlanExt }) {
                 setSelectedPlan(plan: plan)
                 logger.logD(self, "Selected Plan: \(plan)")
             }
@@ -580,11 +579,11 @@ extension UpgradeViewController {
 
     @objc func makeSecondPlanSelected() {
         if windscribePlans.count > 1 {
-            if let plan = windscribePlans.first(where: {$0.extId == secondPlanExt }) {
+            if let plan = windscribePlans.first(where: { $0.extId == secondPlanExt }) {
                 setSelectedPlan(plan: plan)
                 logger.logD(self, "Selected Plan: \(plan)")
             }
-            var priceToShow: String = ""
+            var priceToShow = ""
             if promoCode == nil {
                 priceToShow = secondPlanOptionButton.titleLabel?.text ?? ""
             } else {

@@ -1,5 +1,5 @@
 //
-//  Error.swift
+//  APIError.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-12-12.
@@ -9,19 +9,18 @@
 import Foundation
 
 struct APIError: Equatable {
-
     let errorCode: Int?
     let errorDescription: String?
     let errorMessage: String?
 
     init(data: [String: Any]) {
-        self.errorCode = data[APIParameters.Errors.errorCode] as? Int
-        self.errorDescription = data[APIParameters.Errors.errorDescription] as? String
-        self.errorMessage = data[APIParameters.Errors.errorMessage] as? String
+        errorCode = data[APIParameters.Errors.errorCode] as? Int
+        errorDescription = data[APIParameters.Errors.errorDescription] as? String
+        errorMessage = data[APIParameters.Errors.errorMessage] as? String
     }
 
     func resolve() -> Error? {
-        switch self.errorCode {
+        switch errorCode {
         case 501, 502:
             return Errors.validationFailure
         case 503, 600:
@@ -50,7 +49,6 @@ struct APIError: Equatable {
             return nil
         }
     }
-
 }
 
 enum Errors: Error, CustomStringConvertible, Equatable {
@@ -106,7 +104,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "The network appears to be offline."
         case .unknownError:
             return "Unable to reach the server. Please try again."
-        case .apiError(let error):
+        case let .apiError(error):
             return error.errorMessage ?? ""
         case .datanotfound:
             return "no data found."

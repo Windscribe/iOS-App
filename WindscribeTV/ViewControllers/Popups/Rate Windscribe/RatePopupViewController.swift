@@ -6,11 +6,11 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class RatePopupViewController: BasePopUpViewController {
-    @IBOutlet weak var buttonStackView: UIStackView!
+    @IBOutlet var buttonStackView: UIStackView!
 
     var rateButton = WSPillButton()
     var laterButton = WSPillButton()
@@ -19,6 +19,7 @@ class RatePopupViewController: BasePopUpViewController {
     var ruViewModel: RateUsPopupModelType!
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Rate Us popup View")
@@ -26,6 +27,7 @@ class RatePopupViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     override func setup() {
         super.setup()
         view.addBlueGradientBackground()
@@ -33,7 +35,7 @@ class RatePopupViewController: BasePopUpViewController {
         laterButton.setTitle(TextsAsset.RateUs.maybeLater, for: .normal)
         goAwayButton.setTitle(TextsAsset.RateUs.goAway, for: .normal)
 
-        [rateButton, laterButton, goAwayButton].forEach { roundbutton in
+        for roundbutton in [rateButton, laterButton, goAwayButton] {
             roundbutton.setup(withHeight: 96.0)
             buttonStackView.addArrangedSubview(roundbutton)
         }

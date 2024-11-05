@@ -1,5 +1,5 @@
 //
-//  InAppPurchaseManager+SKPaymentTransactionObserver.swift
+//  InAppPurchaseManager+Observer.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-11.
@@ -8,15 +8,17 @@
 
 import Foundation
 import StoreKit
-extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
-                                SKPaymentTransactionObserver {
 
-    func request(_ request: SKRequest, didFailWithError error: Error) {
+extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
+    SKPaymentTransactionObserver
+{
+    func request(_: SKRequest, didFailWithError _: Error) {
         delegate?.failedToLoadProducts()
     }
 
-    func productsRequest(_ request: SKProductsRequest,
-                         didReceive response: SKProductsResponse) {
+    func productsRequest(_: SKProductsRequest,
+                         didReceive response: SKProductsResponse)
+    {
         let products = response.products
         guard products.isEmpty == false else {
             delegate?.failedToLoadProducts()
@@ -27,14 +29,15 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
             return
         }
         let windscribeProducts = products.map { item in
-            WindscribeInAppProduct(product: item,  plans: Array(plans))
+            WindscribeInAppProduct(product: item, plans: Array(plans))
         }
         iapProducts = windscribeProducts
         delegate?.didFetchAvailableProducts(windscribeProducts: iapProducts)
     }
 
     private func formatterCurrency(number: NSNumber,
-                                   locale: Locale) -> String? {
+                                   locale: Locale) -> String?
+    {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale
@@ -77,26 +80,26 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
                 return false
             }
             .forEach { transaction in
-            if let original = transaction.original, let id = original.transactionIdentifier {
-                transactionDic[id] = original
+                if let original = transaction.original, let id = original.transactionIdentifier {
+                    transactionDic[id] = original
+                }
             }
-        }
         return transactionDic.values.compactMap { UncompletedTransactions(transaction: $0) }
     }
 
-    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+    func paymentQueueRestoreCompletedTransactionsFinished(_: SKPaymentQueue) {
         logger.logD(InAppPurchaseManager.self, "Uncompleted transations: \(uncompletedTransactions)")
         verifyUncompletedTransactions(transactions: uncompletedTransactions)
     }
 
-    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+    func paymentQueue(_: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
         delegate?.unableToRestorePurchase(error: error)
     }
 
-    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         if isComingFromRestore {
             uncompletedTransactions = filterUncompletedTransactions(transactions: transactions)
-            uncompletedTransactions.forEach { transaction in
+            for transaction in uncompletedTransactions {
                 SKPaymentQueue.default().finishTransaction(transaction.transaction)
             }
             return
@@ -104,7 +107,7 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
         for transaction in transactions {
             switch transaction.transactionState {
             case .purchased:
-                self.matchInAppPurchaseWithWindscribeData(transaction: transaction)
+                matchInAppPurchaseWithWindscribeData(transaction: transaction)
                 SKPaymentQueue.default().finishTransaction(transaction)
                 logger.logD(InAppPurchaseManager.self, "Apple InApp Purchase successful.")
 
@@ -113,10 +116,10 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
 
                 delegate?.failedToPurchase()
                 SKPaymentQueue.default().finishTransaction(transaction)
+
             default:
                 break
             }
         }
     }
-
 }

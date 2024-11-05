@@ -7,8 +7,8 @@
 //
 
 import UIKit
-extension LocationPermissionDisclosureViewController {
 
+extension LocationPermissionDisclosureViewController {
     func addViews() {
         view.backgroundColor = UIColor.clear
 
@@ -55,7 +55,6 @@ extension LocationPermissionDisclosureViewController {
         cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true
         cancelButton.addTarget(self, action: #selector(cancelButtonTapped), for: .touchUpInside)
         view.addSubview(cancelButton)
-
     }
 
     func addAutoLayoutConstraints() {
@@ -94,7 +93,7 @@ extension LocationPermissionDisclosureViewController {
                 multiplier: 1.0,
                 constant: 0
             ),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
         ])
         let titleLabelConstraints = [
             NSLayoutConstraint(
@@ -123,7 +122,8 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: 0
-            )]
+            ),
+        ]
 
         let infoIconConstraints = [
             NSLayoutConstraint(
@@ -161,7 +161,8 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .height,
                 multiplier: 1.0,
                 constant: 48
-            )]
+            ),
+        ]
 
         let descriptionLabelConstraints = [
             NSLayoutConstraint(
@@ -190,7 +191,8 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            )]
+            ),
+        ]
 
         let cancelButtonConstraints = [
             NSLayoutConstraint(
@@ -219,7 +221,8 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            )]
+            ),
+        ]
 
         let actionButtonConstraints = [
             NSLayoutConstraint(
@@ -257,7 +260,8 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            )]
+            ),
+        ]
 
         NSLayoutConstraint.activate(infoIconConstraints)
         NSLayoutConstraint.activate(titleLabelConstraints)

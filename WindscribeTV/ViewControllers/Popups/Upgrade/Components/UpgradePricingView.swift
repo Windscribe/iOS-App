@@ -7,23 +7,24 @@
 //
 
 import UIKit
+
 protocol UpgradePricingViewDelegate: NSObject {
     func pricingOptionWasSelected(plan: WindscribeInAppProduct?)
 }
 
 class UpgradePricingView: UIView {
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var priceLabel: UILabel!
 
     weak var delegate: UpgradePricingViewDelegate?
     var button = UIButton()
     var plan: WindscribeInAppProduct?
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         guard let nextButton = context.nextFocusedItem as? UIButton else { return }
         UIView.animate(withDuration: 0.2) {
-                if nextButton == self.button { self.selectButton() } else { self.deselectButton()  }
-            }
+            if nextButton == self.button { self.selectButton() } else { self.deselectButton() }
+        }
     }
 
     func selectButton() {
@@ -52,14 +53,14 @@ class UpgradePricingView: UIView {
 
         let buttonHeight: CGFloat = 112.0
         button.layer.cornerRadius = buttonHeight / 2.0
-        self.addSubview(button)
+        addSubview(button)
         button.sendToBack()
         button.addTarget(self, action: #selector(selectOption), for: .primaryActionTriggered)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        button.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        button.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
-        button.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        button.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        button.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        button.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        button.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         button.heightAnchor.constraint(equalToConstant: buttonHeight).isActive = true
     }
 

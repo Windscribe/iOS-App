@@ -10,14 +10,14 @@ import Foundation
 import RxSwift
 
 protocol AboutViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func numberOfRowsInSection() -> Int
     func celldata(at indexPath: IndexPath) -> AboutItemCell
 }
 
 class AboutViewModel: AboutViewModelType {
-
     // MARK: - Dependencies
+
     let preferences: Preferences
     let themeManager: ThemeManager
 
@@ -27,17 +27,17 @@ class AboutViewModel: AboutViewModelType {
 
     init(themeManager: ThemeManager, preference: Preferences) {
         self.themeManager = themeManager
-        self.preferences = preference
+        preferences = preference
         items = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses]
-        self.load()
+        load()
     }
 
     private func load() {
-        preferences.getDarkMode().subscribe {data in
+        preferences.getDarkMode().subscribe { data in
             self.isDarkMode.onNext(data ?? DefaultValues.darkMode)
         }.disposed(by: disposeBag)
-
     }
+
     func numberOfRowsInSection() -> Int {
         return items.count
     }

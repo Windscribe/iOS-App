@@ -1,24 +1,24 @@
 //
-//  c.swift
+//  UpgradePopViewController.swift
 //  WindscribeTV
 //
 //  Created by Andre Fonseca on 13/08/2024.
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class UpgradePopViewController: UIViewController {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var pricingLabel: UILabel!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var pricingLabel: UILabel!
 
-    @IBOutlet weak var plansStackView: UIStackView!
-    @IBOutlet weak var pricingStackView: UIStackView!
+    @IBOutlet var plansStackView: UIStackView!
+    @IBOutlet var pricingStackView: UIStackView!
 
-    @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var loadingView: UIView!
+    @IBOutlet var containerView: UIView!
+    @IBOutlet var loadingView: UIView!
 
     let disposeBag = DisposeBag()
     var viewModel: UpgradeViewModel?
@@ -27,6 +27,7 @@ class UpgradePopViewController: UIViewController {
     var pcpID: String?
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Upgrade View")
@@ -35,12 +36,13 @@ class UpgradePopViewController: UIViewController {
     }
 
     // MARK: Setting up
+
     private func setup() {
         let infoList = [(title: TextsAsset.UpgradeView.unlimitedData, body: TextsAsset.UpgradeView.unlimitedDataMessage),
                         (title: TextsAsset.UpgradeView.allLocations, body: TextsAsset.UpgradeView.allLocationsMessage),
                         (title: TextsAsset.UpgradeView.robert, body: TextsAsset.UpgradeView.robertMessage)]
-        infoList.forEach { (title: String, body: String) in
-            let planView: UpgradePlanDetailView = UpgradePlanDetailView.fromNib()
+        for (title, body) in infoList {
+            let planView = UpgradePlanDetailView.fromNib()
             planView.setup(with: title, and: body)
             plansStackView.addArrangedSubview(planView)
         }
@@ -55,11 +57,11 @@ class UpgradePopViewController: UIViewController {
         titleLabel.font = UIFont.bold(size: 72)
         titleLabel.textColor = .white
         pricingLabel.attributedText = NSAttributedString(string: TextsAsset.UpgradeView.pricing.uppercased(),
-                                              attributes: [
-                                                .font: UIFont.bold(size: 32),
-                                                .foregroundColor: UIColor.white.withAlphaComponent(0.5),
-                                                .kern: 4
-                                              ])
+                                                         attributes: [
+                                                             .font: UIFont.bold(size: 32),
+                                                             .foregroundColor: UIColor.white.withAlphaComponent(0.5),
+                                                             .kern: 4,
+                                                         ])
     }
 
     private func bindViews() {
@@ -70,15 +72,15 @@ class UpgradePopViewController: UIViewController {
                 UIApplication.shared.registerForRemoteNotifications()
                 switch plans {
                 case let .standardPlans(products, appPlans):
-                    products.forEach {
-                        let priceView: UpgradePricingView = UpgradePricingView.fromNib()
-                        priceView.setup(with: $0.tvPlanLabel, and: $0.price, isSelected: $0.tvPlanLabel == products.first?.tvPlanLabel )
+                    for product in products {
+                        let priceView = UpgradePricingView.fromNib()
+                        priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
                         self.pricingStackView.addArrangedSubview(priceView)
                         priceView.delegate = self
-                        priceView.plan = $0
+                        priceView.plan = product
                     }
                 case let .discounted(plan, appPlan):
-                    let priceView: UpgradePricingView = UpgradePricingView.fromNib()
+                    let priceView = UpgradePricingView.fromNib()
                     priceView.setup(with: appPlan.name, and: plan.price)
                     self.pricingStackView.addArrangedSubview(priceView)
                     priceView.delegate = self
@@ -92,7 +94,7 @@ class UpgradePopViewController: UIViewController {
         viewModel.upgradeState.bind(onNext: { state in
             DispatchQueue.main.async {
                 switch state {
-                case .success(let ghostAccount):
+                case let .success(ghostAccount):
                     self.endLoading()
                     if ghostAccount == true {
                         let vc = Assembler.resolve(SignUpViewController.self)
@@ -110,7 +112,7 @@ class UpgradePopViewController: UIViewController {
                     }
                 case .loading:
                     self.showLoading()
-                case .error(let error):
+                case let .error(error):
                     self.endLoading()
                     AlertManager.shared.showSimpleAlert(viewController: self, title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
                 case .none:

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol CredentialsRepository {
     func getUpdatedOpenVPNCrendentials() -> Single<OpenVPNServerCredentials?>
     func getUpdatedIKEv2Crendentials() -> Single<IKEv2ServerCredentials?>

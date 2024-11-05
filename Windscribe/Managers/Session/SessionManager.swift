@@ -8,8 +8,8 @@
 
 import Foundation
 import RealmSwift
-import Swinject
 import RxSwift
+import Swinject
 
 class SessionManager: SessionManagerV2 {
     var session: Session?
@@ -18,7 +18,7 @@ class SessionManager: SessionManagerV2 {
     var sessionFetchInProgress = false
     var lastCheckForServerConfig = Date()
     let wgCredentials = Assembler.resolve(WgCredentials.self)
-    let logger =  Assembler.resolve(FileLogger.self)
+    let logger = Assembler.resolve(FileLogger.self)
     let vpnManager = Assembler.resolve(VPNManager.self)
     let apiManager = Assembler.resolve(APIManager.self)
     var disposeBag = DisposeBag()
@@ -48,10 +48,10 @@ class SessionManager: SessionManagerV2 {
 
     @objc func keepSessionUpdated() {
         if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-            self.sessionFetchInProgress = true
-            self.localDatabase.getSession().first()
+            sessionFetchInProgress = true
+            localDatabase.getSession().first()
                 .flatMap { savedSession in
-                    if  case let savedSession?? = savedSession {
+                    if case let savedSession?? = savedSession {
                         self.logger.logD(self, "Cached session for \(savedSession.username)")
                         self.localDatabase.saveOldSession()
                         return self.apiManager.getSession(nil)
@@ -72,12 +72,12 @@ class SessionManager: SessionManagerV2 {
                     self.sessionFetchInProgress = false
                 }).disposed(by: disposeBag)
         }
-        self.updateServerConfigs()
+        updateServerConfigs()
     }
 
     func getUppdatedSession() -> Single<Session> {
-        return self.apiManager.getSession(nil)
-           .flatMap { session in
+        return apiManager.getSession(nil)
+            .flatMap { session in
                 self.userRepo.update(session: session)
                 return Single.just(session)
             }
@@ -95,9 +95,10 @@ class SessionManager: SessionManagerV2 {
                 NotificationCenter.default.post(Notification(name: Notifications.sessionUpdated))
                 self.checkForStatus()
                 self.checkForSessionChange()
-            },onError: { error in
+            }, onError: { error in
                 self.logger.logD(SessionManager.self, "Realm user preferences notification error \(error.localizedDescription)")
-            }).disposed(by: disposeBag)
+            }
+        ).disposed(by: disposeBag)
     }
 
     func updateServerConfigs() {
@@ -106,9 +107,9 @@ class SessionManager: SessionManagerV2 {
         if let hoursPassed = timePassed.hour {
             if hoursPassed > 23 {
                 lastCheckForServerConfig = timeNow
-                self.logger.logD(SessionManager.self, "Updating server configs.")
+                logger.logD(SessionManager.self, "Updating server configs.")
                 credentialsRepo.getUpdatedOpenVPNCrendentials().flatMap { _ in
-                    return self.credentialsRepo.getUpdatedServerConfig()
+                    self.credentialsRepo.getUpdatedServerConfig()
                 }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
             }
         }
@@ -140,7 +141,7 @@ class SessionManager: SessionManagerV2 {
                 self.latencyRepo.pickBestLocation(pingData: self.localDatabase.getAllPingData())
                 self.vpnManager.checkLocationValidity()
             })
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 
     func checkForSessionChange() {
@@ -150,16 +151,16 @@ class SessionManager: SessionManagerV2 {
             return
         }
         if oldSession.locHash != newSession.locHash {
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
             logger.logD(MainViewController.self, "ALC changes detected. Request to retrieve server list")
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         let sipCount = localDatabase.getStaticIPs()?.count ?? 0
         if sipCount != newSession.getSipCount() {
             logger.logD(MainViewController.self, "SIP changes detected. Request to retrieve static ip list")
-            staticIPRepo.getStaticServers().flatMap { _ in self.latencyRepo.loadStaticIpLatency()}.subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            staticIPRepo.getStaticServers().flatMap { _ in self.latencyRepo.loadStaticIpLatency() }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if !newSession.isPremium && oldSession.isPremium {
             logger.logD(MainViewController.self, "User's pro plan expired.")
@@ -170,24 +171,25 @@ class SessionManager: SessionManagerV2 {
                 }, onFailure: { _ in
                     self.logger.logD(self, "Failed to update server list.")
                     self.loadLatency()
-                }).disposed(by: disposeBag)
-            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
-            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+                }
+            ).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if newSession.isPremium && !oldSession.isPremium {
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
-            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
-            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if (oldSession.status == 3 && newSession.status == 1) || (oldSession.status == 2 && newSession.status == 1) {
-            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
-            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            credentialsRepo.getUpdatedOpenVPNCrendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
-        guard let portMaps = localDatabase.getPortMap()?.filter({$0.heading == wireGuard}) else { return }
+        guard let portMaps = localDatabase.getPortMap()?.filter({ $0.heading == wireGuard }) else { return }
 
         if portMaps.first == nil {
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
-            portmapRepo.getUpdatedPortMap().subscribe(onSuccess: { _ in }, onFailure: { _ in}).disposed(by: disposeBag)
+            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            portmapRepo.getUpdatedPortMap().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
     }
 
@@ -220,12 +222,12 @@ class SessionManager: SessionManagerV2 {
 
     func reloadRootViewController() {
         #if os(iOS)
-        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
-            window.rootViewController?.dismiss(animated: false, completion: nil)
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                window.rootViewController = UINavigationController(rootViewController: GeneralViewController())
-            }, completion: nil)
-        }
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+                window.rootViewController?.dismiss(animated: false, completion: nil)
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    window.rootViewController = UINavigationController(rootViewController: GeneralViewController())
+                }, completion: nil)
+            }
         #elseif os(tvOS)
         #endif
     }

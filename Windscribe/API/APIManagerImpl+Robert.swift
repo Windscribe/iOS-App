@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 extension APIManagerImpl {
     func getRobertFilters() -> Single<RobertFilters> {
         guard let sessionAuth = userRepository?.sessionAuth else {

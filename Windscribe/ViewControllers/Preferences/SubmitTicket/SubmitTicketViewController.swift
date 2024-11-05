@@ -6,10 +6,10 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class SubmitTicketViewController: WSNavigationViewController {
     var descriptionContentView: UIView!
@@ -34,7 +34,7 @@ class SubmitTicketViewController: WSNavigationViewController {
     var loadingView: UIActivityIndicatorView!
 
     var logger: FileLogger!, viewModel: SubmitTicketViewModel!
-    lazy var continueButtonEnabledSubject: BehaviorSubject<Bool> = { BehaviorSubject(value: self.continueButton.isEnabled) }()
+    lazy var continueButtonEnabledSubject: BehaviorSubject<Bool> = BehaviorSubject(value: self.continueButton.isEnabled)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +53,8 @@ class SubmitTicketViewController: WSNavigationViewController {
     }
 
     func showAlertDialog(title: String,
-                         message: String) {
+                         message: String)
+    {
         DispatchQueue.main.async { [weak self] in
             self?.hideProgressView()
             self?.viewModel.alertManager.showSimpleAlert(viewController: self, title: title, message: message, buttonText: "Ok")
@@ -67,7 +68,7 @@ class SubmitTicketViewController: WSNavigationViewController {
         guard let subject = subjectInputView.text else { return }
         guard let message = messageInputView.text else { return }
 
-        self.showProgressView()
+        showProgressView()
         DispatchQueue.main.async { [weak self] in
             self?.subjectInputView.text = ""
             self?.messageInputView.text = ""
@@ -85,7 +86,6 @@ class SubmitTicketViewController: WSNavigationViewController {
             }
         })
         .disposed(by: disposeBag)
-
     }
 
     @objc func tappedOnScreen() {
@@ -93,12 +93,10 @@ class SubmitTicketViewController: WSNavigationViewController {
             catergoryDropDownView.remove()
         }
     }
-
 }
 
 extension SubmitTicketViewController: DropdownDelegate {
-
-    func optionSelected(dropdown: Dropdown, option: String, relatedIndex: Int) {
+    func optionSelected(dropdown: Dropdown, option: String, relatedIndex _: Int) {
         dismissDropdown()
         switch dropdown {
         case catergoryDropDownView.dropdown:

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 extension APIManagerImpl {
     func getStaticIpList() -> Single<StaticIPList> {
         guard let sessionAuth = userRepository?.sessionAuth else {
@@ -27,7 +28,7 @@ extension APIManagerImpl {
         }
     }
 
-    func getOpenVPNServerConfig(openVPNVersion: String) -> Single<String> {
+    func getOpenVPNServerConfig(openVPNVersion _: String) -> Single<String> {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)
         }

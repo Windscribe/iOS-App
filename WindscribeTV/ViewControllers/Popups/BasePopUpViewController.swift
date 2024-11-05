@@ -6,14 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class BasePopUpViewController: UIViewController {
-    @IBOutlet weak var titleLabel: UILabel?
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var bodyLabel: UILabel!
-    @IBOutlet weak var mainStackView: UIStackView!
+    @IBOutlet var titleLabel: UILabel?
+    @IBOutlet var headerLabel: UILabel!
+    @IBOutlet var bodyLabel: UILabel!
+    @IBOutlet var mainStackView: UIStackView!
 
     let disposeBag = DisposeBag()
     var viewModel: BasePopupViewModelType?, logger: FileLogger!

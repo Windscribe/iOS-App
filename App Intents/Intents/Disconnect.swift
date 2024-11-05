@@ -6,14 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
 import AppIntents
-import WidgetKit
+import Foundation
 import NetworkExtension
+import WidgetKit
 
 @available(iOS 16.0, *)
 @available(iOSApplicationExtension, unavailable)
-extension Disconnect: ForegroundContinuableIntent { }
+extension Disconnect: ForegroundContinuableIntent {}
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Disconnect: AppIntent, WidgetConfigurationIntent {
@@ -49,7 +49,7 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             logger.logD(tag, "Taking too long to disconnect.")
             return .result(dialog: .responseFailureDisconnect)
-        } catch let error {
+        } catch {
             logger.logD(tag, "Error disconnecting from VPN: \(error)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailureDisconnect)

@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
+
 class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     let notification: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
     let vpnManager: VPNManager
@@ -28,22 +29,22 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
         }
     }
 
-   func handleSilentPushNotificationActions(payload: PushNotificationPayload) {
+    func handleSilentPushNotificationActions(payload: PushNotificationPayload) {
         guard let type = payload.type else { return }
-                switch type {
-                case "disable_ondemand", "force_disconnect":
-                    vpnManager.disconnectActiveVPNConnection()
-                case "account_downgraded":
-                    session.keepSessionUpdated()
-                case "promo":
-                    notification.onNext(payload)
-                default:
-                    return
-                }
+        switch type {
+        case "disable_ondemand", "force_disconnect":
+            vpnManager.disconnectActiveVPNConnection()
+        case "account_downgraded":
+            session.keepSessionUpdated()
+        case "promo":
+            notification.onNext(payload)
+        default:
+            return
+        }
     }
 
     func askForPushNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted && error == nil {
                 self.logger.logD(self, "Push Notification Permission granted, registering for remote notifications.")
                 DispatchQueue.main.async {
@@ -57,7 +58,7 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     }
 
     func isAuthorizedForPushNotifications(completion: @escaping (_ result: Bool) -> Void) {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
             completion(settings.authorizationStatus == .authorized)
         }
     }

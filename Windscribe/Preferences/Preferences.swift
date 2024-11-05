@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol Preferences {
     func saveAdvanceParams(params: String)
     func getAdvanceParams() -> Observable<String?>

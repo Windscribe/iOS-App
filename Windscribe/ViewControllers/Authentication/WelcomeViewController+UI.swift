@@ -9,7 +9,6 @@
 import UIKit
 
 extension WelcomeViewController {
-
     func configureViews() {
         view.backgroundColor = UIColor.clear
 
@@ -22,7 +21,7 @@ extension WelcomeViewController {
         backgroundImageView.image = UIImage(named: "welcome-background.png")
         view.addSubview(backgroundImageView)
 
-        bottomGradientView = UIImageView(frame: CGRect(x: 0, y: self.view.frame.height/2, width: self.view.frame.width, height: self.view.frame.height/2))
+        bottomGradientView = UIImageView(frame: CGRect(x: 0, y: view.frame.height / 2, width: view.frame.width, height: view.frame.height / 2))
         bottomGradientView.contentMode = .scaleAspectFill
         bottomGradientView.image = UIImage(named: "welcome-gradient.png")
         view.addSubview(bottomGradientView)
@@ -42,7 +41,7 @@ extension WelcomeViewController {
         scrollView.isDirectionalLockEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
-        scrollView.contentSize = CGSize(width: self.view.frame.width*4, height: 0)
+        scrollView.contentSize = CGSize(width: view.frame.width * 4, height: 0)
         view.addSubview(scrollView)
 
         infoLabel1 = UILabel()
@@ -129,17 +128,17 @@ extension WelcomeViewController {
         loadingView.translatesAutoresizingMaskIntoConstraints = false
 
         view.addConstraints([
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
         ])
 
         view.addConstraints([
-            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundImageView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
         ])
 
         pageControl.makeTopAnchor(constant: 48)
@@ -150,65 +149,65 @@ extension WelcomeViewController {
             NSLayoutConstraint(item: scrollView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: scrollView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: scrollView as Any, attribute: .top, relatedBy: .equal, toItem: pageControl, attribute: .bottom, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: scrollView as Any, attribute: .bottom, relatedBy: .equal, toItem: logoButton, attribute: .top, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: scrollView as Any, attribute: .bottom, relatedBy: .equal, toItem: logoButton, attribute: .top, multiplier: 1.0, constant: 0),
         ])
 
-        self.view.addConstraints([
-            NSLayoutConstraint(item: infoLabel1 as Any, attribute: .top, relatedBy: .equal, toItem: self.scrollView, attribute: .top, multiplier: 1.0, constant: 0),
+        view.addConstraints([
+            NSLayoutConstraint(item: infoLabel1 as Any, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel1 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: infoLabel1 as Any, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: infoLabel1 as Any, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1.0, constant: 0),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: infoLabel2 as Any, attribute: .top, relatedBy: .equal, toItem: self.scrollView, attribute: .top, multiplier: 1.0, constant: 0),
+        view.addConstraints([
+            NSLayoutConstraint(item: infoLabel2 as Any, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel2 as Any, attribute: .left, relatedBy: .equal, toItem: infoLabel1, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel2 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: infoLabel2 as Any, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: infoLabel2 as Any, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1.0, constant: 0),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: infoLabel3 as Any, attribute: .top, relatedBy: .equal, toItem: self.scrollView, attribute: .top, multiplier: 1.0, constant: 0),
+        view.addConstraints([
+            NSLayoutConstraint(item: infoLabel3 as Any, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel3 as Any, attribute: .left, relatedBy: .equal, toItem: infoLabel2, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel3 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: infoLabel3 as Any, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: infoLabel3 as Any, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1.0, constant: 0),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: infoLabel4 as Any, attribute: .top, relatedBy: .equal, toItem: self.scrollView, attribute: .top, multiplier: 1.0, constant: 0),
+        view.addConstraints([
+            NSLayoutConstraint(item: infoLabel4 as Any, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel4 as Any, attribute: .left, relatedBy: .equal, toItem: infoLabel3, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel4 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: infoLabel4 as Any, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1.0, constant: 0)
+            NSLayoutConstraint(item: infoLabel4 as Any, attribute: .width, relatedBy: .equal, toItem: view, attribute: .width, multiplier: 1.0, constant: 0),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: logoButton as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
+        view.addConstraints([
+            NSLayoutConstraint(item: logoButton as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: logoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 56),
-            NSLayoutConstraint(item: logoButton as Any, attribute: .centerY, relatedBy: .equal, toItem: self.backgroundView, attribute: .centerY, multiplier: 1.0, constant: -56),
-            NSLayoutConstraint(item: logoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 56)
+            NSLayoutConstraint(item: logoButton as Any, attribute: .centerY, relatedBy: .equal, toItem: backgroundView, attribute: .centerY, multiplier: 1.0, constant: -56),
+            NSLayoutConstraint(item: logoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 56),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: sloganLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: sloganLabel as Any, attribute: .top, relatedBy: .equal, toItem: self.logoButton, attribute: .bottom, multiplier: 1.0, constant: 24),
+        view.addConstraints([
+            NSLayoutConstraint(item: sloganLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: sloganLabel as Any, attribute: .top, relatedBy: .equal, toItem: logoButton, attribute: .bottom, multiplier: 1.0, constant: 24),
             NSLayoutConstraint(item: sloganLabel as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 154),
-            NSLayoutConstraint(item: sloganLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: self.continueButton, attribute: .top, multiplier: 1.0, constant: -24)
+            NSLayoutConstraint(item: sloganLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: continueButton, attribute: .top, multiplier: 1.0, constant: -24),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: continueButton as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: continueButton as Any, attribute: .bottom, relatedBy: .equal, toItem: self.loginButton, attribute: .top, multiplier: 1.0, constant: -24),
+        view.addConstraints([
+            NSLayoutConstraint(item: continueButton as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: continueButton as Any, attribute: .bottom, relatedBy: .equal, toItem: loginButton, attribute: .top, multiplier: 1.0, constant: -24),
             NSLayoutConstraint(item: continueButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 48),
-            NSLayoutConstraint(item: continueButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 279)
+            NSLayoutConstraint(item: continueButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 279),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: loginButton as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loginButton as Any, attribute: .bottom, relatedBy: .equal, toItem: self.emergencyConnect, attribute: .bottom, multiplier: 1.0, constant: -80),
-            NSLayoutConstraint(item: loginButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
+        view.addConstraints([
+            NSLayoutConstraint(item: loginButton as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loginButton as Any, attribute: .bottom, relatedBy: .equal, toItem: emergencyConnect, attribute: .bottom, multiplier: 1.0, constant: -80),
+            NSLayoutConstraint(item: loginButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
         ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1.0, constant: -55),
+        view.addConstraints([
+            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -55),
             NSLayoutConstraint(item: emergencyConnect as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 40),
-            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 40)
+            NSLayoutConstraint(item: emergencyConnect as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 40),
         ])
 
-        self.view.addConstraints([
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: self.continueButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.continueButton, attribute: .centerX, multiplier: 1.0, constant: 0)
+        view.addConstraints([
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: continueButton, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: continueButton, attribute: .centerX, multiplier: 1.0, constant: 0),
         ])
     }
 
@@ -246,11 +245,11 @@ extension WelcomeViewController {
         case 0:
             scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         case 1:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width, y: 0), animated: true)
         case 2:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width*2, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width * 2, y: 0), animated: true)
         case 3:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width*3, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width * 3, y: 0), animated: true)
             scrollOrder = -1
         default:
             scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
@@ -261,7 +260,7 @@ extension WelcomeViewController {
 }
 
 extension WelcomeViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    func scrollViewDidScroll(_: UIScrollView) {
         setHeaderViewSelector()
     }
 }

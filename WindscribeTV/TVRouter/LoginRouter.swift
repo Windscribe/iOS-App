@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 class LoginRouter: RootRouter {
     func routeTo(to: RouteID, from from: UIViewController) {
         switch to {
@@ -17,7 +18,8 @@ class LoginRouter: RootRouter {
             // vc.appJustStarted = true
             // vc.userJustLoggedIn = true
             if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-               let window = appDelegate.window {
+               let window = appDelegate.window
+            {
                 window.rootViewController?.dismiss(animated: false,
                                                    completion: nil)
                 UIView.transition(with: window,

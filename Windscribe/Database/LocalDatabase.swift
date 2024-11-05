@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+
 protocol LocalDatabase {
     func migrate()
     func getSession() -> Observable<Session?>

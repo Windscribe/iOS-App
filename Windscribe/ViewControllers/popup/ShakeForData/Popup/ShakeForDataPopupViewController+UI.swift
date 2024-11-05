@@ -9,24 +9,24 @@ import UIKit
 
 extension ShakeForDataPopupViewController {
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
         backgroundView.layer.opacity = 0.95
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         imageView = UIImageView()
         imageView.image = UIImage(named: ImagesAsset.shakeForDataIcon)
         imageView.contentMode = .scaleAspectFit
-        self.view.addSubview(imageView)
+        view.addSubview(imageView)
 
         titleLabel = UILabel()
         titleLabel.font = UIFont.bold(size: 24)
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.textColor = UIColor.white
         titleLabel.textAlignment = .center
-        self.view.addSubview(titleLabel)
+        view.addSubview(titleLabel)
 
         descriptionLabel = UILabel()
         descriptionLabel.adjustsFontSizeToFitWidth = true
@@ -35,7 +35,7 @@ extension ShakeForDataPopupViewController {
         descriptionLabel.font = UIFont.text(size: 16)
         descriptionLabel.layer.opacity = 0.5
         descriptionLabel.textColor = UIColor.white
-        self.view.addSubview(descriptionLabel)
+        view.addSubview(descriptionLabel)
 
         actionButton = UIButton(type: .system)
         actionButton.titleLabel?.font = UIFont.text(size: 16)
@@ -44,26 +44,26 @@ extension ShakeForDataPopupViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.layer.cornerRadius = 24
         actionButton.clipsToBounds = true
-        self.view.addSubview(actionButton)
+        view.addSubview(actionButton)
 
         cancelButton = UIButton()
         cancelButton.setTitleColor(UIColor.white, for: .normal)
         cancelButton.layer.opacity = 0.5
         cancelButton.titleLabel?.font = UIFont.bold(size: 16)
         cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        self.view.addSubview(cancelButton)
+        view.addSubview(cancelButton)
 
         divider = UIView()
         divider.layer.opacity = 0.15
         divider.backgroundColor = UIColor.white
-        self.view.addSubview(divider)
+        view.addSubview(divider)
 
-        viewLeaderboardButton  = UIButton()
+        viewLeaderboardButton = UIButton()
         viewLeaderboardButton.layer.opacity = 0.5
         viewLeaderboardButton.titleLabel?.font = UIFont.bold(size: 16)
         viewLeaderboardButton.titleLabel?.adjustsFontSizeToFitWidth = true
         viewLeaderboardButton.setTitleColor(UIColor.white, for: .normal)
-        self.view.addSubview(viewLeaderboardButton)
+        view.addSubview(viewLeaderboardButton)
     }
 
     func addAutoLayoutConstraints() {
@@ -77,7 +77,7 @@ extension ShakeForDataPopupViewController {
         viewLeaderboardButton.translatesAutoresizingMaskIntoConstraints = false
 
         let isSmallScreen = UIScreen.main.nativeBounds.height <= 1136
-        let imageViewTopDistance =  UIScreen.hasTopNotch ? 175.0 : ( isSmallScreen ? 50.0 : 100.0)
+        let imageViewTopDistance = UIScreen.hasTopNotch ? 175.0 : (isSmallScreen ? 50.0 : 100.0)
 
         NSLayoutConstraint.activate([
             // backgroundView
@@ -126,7 +126,7 @@ extension ShakeForDataPopupViewController {
             viewLeaderboardButton.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 16),
             viewLeaderboardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
             viewLeaderboardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
-            viewLeaderboardButton.heightAnchor.constraint(equalToConstant: 48)
+            viewLeaderboardButton.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
 }

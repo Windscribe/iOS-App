@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class WSTextField: UITextField, UITextFieldDelegate {
     var bottomBorder: UIView!
@@ -19,10 +19,11 @@ class WSTextField: UITextField, UITextFieldDelegate {
         bottomBorder = UIView(frame: CGRect(x: 0, y: 54, width: UIScreen.main.bounds.width, height: 2))
         bottomBorder.backgroundColor = UIColor.white
         bottomBorder.layer.opacity = 0.05
-        self.addSubview(bottomBorder)
+        addSubview(bottomBorder)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -43,15 +44,16 @@ class LoginTextField: UITextField {
 
     init(isDarkMode: BehaviorSubject<Bool>) {
         super.init(frame: .zero)
-        self.layer.cornerRadius = 3
-        self.clipsToBounds = true
-        self.font = UIFont.text(size: 16)
-        self.autocorrectionType = .no
-        self.autocapitalizationType = .none
-        self.bindViews(isDarkMode: isDarkMode)
+        layer.cornerRadius = 3
+        clipsToBounds = true
+        font = UIFont.text(size: 16)
+        autocorrectionType = .no
+        autocapitalizationType = .none
+        bindViews(isDarkMode: isDarkMode)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -68,10 +70,10 @@ class LoginTextField: UITextField {
     }
 
     fileprivate func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: $0)
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
     }
 }
 
@@ -79,50 +81,52 @@ class PasswordTextField: LoginTextField {
     lazy var showHidePasswordButton = ImageButton()
 
     override var isSecureTextEntry: Bool {
-          didSet {
-              if isFirstResponder {
-                  _ = becomeFirstResponder()
-              }
-          }
-      }
+        didSet {
+            if isFirstResponder {
+                _ = becomeFirstResponder()
+            }
+        }
+    }
 
-      override func becomeFirstResponder() -> Bool {
-          let success = super.becomeFirstResponder()
-          if isSecureTextEntry, let text = self.text {
-              self.text?.removeAll()
-              insertText(text)
-          }
-          return success
-      }
+    override func becomeFirstResponder() -> Bool {
+        let success = super.becomeFirstResponder()
+        if isSecureTextEntry, let text = text {
+            self.text?.removeAll()
+            insertText(text)
+        }
+        return success
+    }
 
     override init(isDarkMode: BehaviorSubject<Bool>) {
         super.init(isDarkMode: isDarkMode)
-        self.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 55)
-        self.isSecureTextEntry = true
-        self.clearsOnBeginEditing = false
-        self.clearsOnInsertion = false
+        padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 55)
+        isSecureTextEntry = true
+        clearsOnBeginEditing = false
+        clearsOnInsertion = false
         showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysTemplate), for: .normal)
         showHidePasswordButton.addTarget(self, action: #selector(showHidePasswordButtonTapped), for: .touchUpInside)
-        self.addSubview(showHidePasswordButton)
+        addSubview(showHidePasswordButton)
     }
+
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.showHidePasswordButton.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
     }
 
     @objc func showHidePasswordButtonTapped() {
-        if self.isSecureTextEntry {
-            self.isSecureTextEntry = false
+        if isSecureTextEntry {
+            isSecureTextEntry = false
             showHidePasswordButton.setImage(UIImage(named: ImagesAsset.hidePassword)?.withRenderingMode(.alwaysTemplate), for: .normal)
         } else {
-            self.isSecureTextEntry = true
+            isSecureTextEntry = true
             showHidePasswordButton.setImage(UIImage(named: ImagesAsset.showPassword)?.withRenderingMode(.alwaysTemplate), for: .normal)
         }
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -158,7 +162,7 @@ class PasswordTextField: LoginTextField {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 24)
-            ])
+                               constant: 24),
+        ])
     }
 }

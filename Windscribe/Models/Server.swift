@@ -27,7 +27,8 @@ struct ServerModel {
          dnsHostname: String,
          groups: [GroupModel],
          locType: String,
-         p2p: Bool) {
+         p2p: Bool)
+    {
         self.id = id
         self.name = name
         self.countryCode = countryCode
@@ -40,15 +41,15 @@ struct ServerModel {
     }
 
     init(name: String) {
-        self.id = nil
+        id = nil
         self.name = name
-        self.countryCode = nil
-        self.status = nil
-        self.premiumOnly = nil
-        self.dnsHostname = nil
-        self.groups = nil
-        self.locType = nil
-        self.p2p = nil
+        countryCode = nil
+        status = nil
+        premiumOnly = nil
+        dnsHostname = nil
+        groups = nil
+        locType = nil
+        p2p = nil
     }
 
     func isForStreaming() -> Bool {
@@ -60,22 +61,21 @@ struct ServerModel {
     /// - Returns: Average health
     func getServerHealth() -> Int {
         if let availableGroups = groups {
-            let totalHealth = availableGroups .filter {
+            let totalHealth = availableGroups.filter {
                 $0.health! > 0
             }.reduce(0) { x, y in
                 x + y.health!
             }
             if totalHealth > 0 {
-                let numberOfGroups = availableGroups.filter {$0.health! > 0}.count
-                return totalHealth/numberOfGroups
+                let numberOfGroups = availableGroups.filter { $0.health! > 0 }.count
+                return totalHealth / numberOfGroups
             }
         }
         return 0
-     }
+    }
 }
 
 @objcMembers class Server: Object, Decodable {
-
     dynamic var id: Int = 0
     dynamic var name: String = ""
     dynamic var countryCode: String = ""
@@ -91,18 +91,18 @@ struct ServerModel {
     dynamic var locType: String = ""
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case name = "name"
+        case id
+        case name
         case countryCode = "country_code"
-        case status = "status"
+        case status
         case premiumOnly = "premium_only"
         case shortname = "short_name"
-        case p2p = "p2p"
+        case p2p
         case timezone = "tz"
         case timezoneOffset = "tz_offset"
         case forceExpand = "force_expand"
         case dnsHostname = "dns_hostname"
-        case groups = "groups"
+        case groups
         case locType = "loc_type"
     }
 
@@ -116,16 +116,16 @@ struct ServerModel {
         id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
         name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
         countryCode = try container.decodeIfPresent(String.self, forKey: .countryCode) ?? ""
-        status = try container.decodeIfPresent(Int.self, forKey: .status)  == 1 ? true : false
-        premiumOnly = try container.decodeIfPresent(Int.self, forKey: .premiumOnly)  == 1 ? true : false
+        status = try container.decodeIfPresent(Int.self, forKey: .status) == 1 ? true : false
+        premiumOnly = try container.decodeIfPresent(Int.self, forKey: .premiumOnly) == 1 ? true : false
         shortName = try container.decodeIfPresent(String.self, forKey: .shortname) ?? ""
-        p2p = try container.decodeIfPresent(Int.self, forKey: .p2p)  == 1 ? true : false
+        p2p = try container.decodeIfPresent(Int.self, forKey: .p2p) == 1 ? true : false
         timezone = try container.decodeIfPresent(String.self, forKey: .timezone) ?? ""
         timezoneOffset = try container.decodeIfPresent(String.self, forKey: .timezoneOffset) ?? ""
-        forceExpand = try container.decodeIfPresent(Int.self, forKey: .forceExpand)  == 1 ? true : false
+        forceExpand = try container.decodeIfPresent(Int.self, forKey: .forceExpand) == 1 ? true : false
         dnsHostname = try container.decodeIfPresent(String.self, forKey: .dnsHostname) ?? ""
         if let groupsArray = try container.decodeIfPresent([Group].self, forKey: .groups) {
-            self.setGroups(array: groupsArray)
+            setGroups(array: groupsArray)
         }
         locType = try container.decodeIfPresent(String.self, forKey: .locType) ?? ""
     }
@@ -136,9 +136,8 @@ struct ServerModel {
     }
 
     func getServerModel() -> ServerModel? {
-        return ServerModel(id: self.id, name: self.name, countryCode: self.countryCode, status: self.status, premiumOnly: self.premiumOnly, dnsHostname: self.dnsHostname, groups: groups.map({$0.getGroupModel()}), locType: self.locType, p2p: self.p2p)
+        return ServerModel(id: id, name: name, countryCode: countryCode, status: status, premiumOnly: premiumOnly, dnsHostname: dnsHostname, groups: groups.map { $0.getGroupModel() }, locType: locType, p2p: p2p)
     }
-
 }
 
 @objcMembers class Info: Object, Decodable {
@@ -151,7 +150,7 @@ struct ServerModel {
         self.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if let country = try container.decodeIfPresent(String.self, forKey: .countryOverride) {
-            self.countryOverride = country
+            countryOverride = country
         }
     }
 }
@@ -168,8 +167,8 @@ struct ServerList: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let serversArray = try container.decode([Server].self, forKey: .data)
-        self.info = try container.decode(Info.self, forKey: .info)
-        self.setServers(array: serversArray)
+        info = try container.decode(Info.self, forKey: .info)
+        setServers(array: serversArray)
     }
 
     func setServers(array: [Server]) {

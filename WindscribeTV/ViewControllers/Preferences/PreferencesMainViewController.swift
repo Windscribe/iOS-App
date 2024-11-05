@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 enum PreferencesType {
     case general
@@ -41,18 +41,18 @@ enum PreferencesType {
 class PreferencesMainViewController: PreferredFocusedViewController {
     var viewModel: PreferencesMainViewModel!, generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, helpViewModel: HelpViewModel!, logger: FileLogger!, router: HomeRouter!
 
-    @IBOutlet weak var optionsStackView: UIStackView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var versionLabel: UILabel!
-    @IBOutlet weak var loadingView: UIView!
-    @IBOutlet weak var loadingActivityView: UIActivityIndicatorView!
+    @IBOutlet var optionsStackView: UIStackView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var contentStackView: UIStackView!
+    @IBOutlet var versionLabel: UILabel!
+    @IBOutlet var loadingView: UIView!
+    @IBOutlet var loadingActivityView: UIActivityIndicatorView!
 
-    let generalView: PreferencesGeneralView = PreferencesGeneralView.fromNib()
-    let accountView: PreferencesAccountView = PreferencesAccountView.fromNib()
-    let connnectionsView: PreferencesConnectionView = PreferencesConnectionView.fromNib()
-    let logView: PreferencesViewLogView = PreferencesViewLogView.fromNib()
-    let privacyView: PreferencePrivacyView = PreferencePrivacyView.fromNib()
+    let generalView: PreferencesGeneralView = .fromNib()
+    let accountView: PreferencesAccountView = .fromNib()
+    let connnectionsView: PreferencesConnectionView = .fromNib()
+    let logView: PreferencesViewLogView = .fromNib()
+    let privacyView: PreferencePrivacyView = .fromNib()
 
     private var options: [PreferencesType] = [.general, .account, .connection, .privacy, .viewLog, .sendLog, .signOut]
     private var selectedRow: Int = 0
@@ -74,15 +74,15 @@ class PreferencesMainViewController: PreferredFocusedViewController {
         accountViewModel.loadSession().subscribe(onFailure: { _ in }).disposed(by: disposeBag)
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) { }
+    override func didUpdateFocus(in _: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {}
 
     private func setup() {
-        options.forEach {
-            let optionView: PreferencesOptionView = PreferencesOptionView.fromNib()
+        for option in options {
+            let optionView = PreferencesOptionView.fromNib()
             optionsStackView.addArrangedSubview(optionView)
             optionView.viewModel = viewModel
             optionView.selectionDelegate = self
-            optionView.setup(with: $0)
+            optionView.setup(with: option)
             optionViews.append(optionView)
         }
         if let firstOption = optionViews.first {
@@ -108,22 +108,21 @@ class PreferencesMainViewController: PreferredFocusedViewController {
             guard let self = self else { return }
             self.logger.logD(self, "Cancel account state: \(state)")
             switch state {
-                case .initial:
-                    self.hideLoading()
-                case .loading:
-                    self.showLoading()
-                case .error(let error):
-                    self.hideLoading()
-                    self.accountViewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: error,
-                        buttonText: TextsAsset.okay
-                    )
-                case .success:
-                    self.hideLoading()
-                    self.accountViewModel.logoutUser()
-
+            case .initial:
+                self.hideLoading()
+            case .loading:
+                self.showLoading()
+            case let .error(error):
+                self.hideLoading()
+                self.accountViewModel.alertManager.showSimpleAlert(
+                    viewController: self,
+                    title: TextsAsset.error,
+                    message: error,
+                    buttonText: TextsAsset.okay
+                )
+            case .success:
+                self.hideLoading()
+                self.accountViewModel.logoutUser()
             }
         }).disposed(by: disposeBag)
 
@@ -164,12 +163,12 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     private func signoutButtonTapped() {
         logger.logD(self, "User tapped to sign out.")
         viewModel.alertManager.showYesNoAlert(viewController: self, title: TextsAsset.Preferences.logout,
-                                           message: TextsAsset.Preferences.logOutAlert ,
-                                           completion: { result in
-            if result {
-                self.viewModel?.logoutUser()
-            }
-        })
+                                              message: TextsAsset.Preferences.logOutAlert,
+                                              completion: { result in
+                                                  if result {
+                                                      self.viewModel?.logoutUser()
+                                                  }
+                                              })
     }
 
     private func sendLogButtonTapped(logView: PreferencesOptionView) {
@@ -180,7 +179,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
             }
         } else {
             logView.updateTitle(with: "\(TextsAsset.Debug.sendingLog)...")
-            helpViewModel.submitDebugLog(username: nil) { (_, error) in
+            helpViewModel.submitDebugLog(username: nil) { _, error in
                 DispatchQueue.main.async {
                     logView.updateTitle()
                     if error == nil {
@@ -217,6 +216,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 }
 
 // MARK: Touches and Keys handling
+
 extension PreferencesMainViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
@@ -239,15 +239,15 @@ extension PreferencesMainViewController {
 
     private func updateBodyButtonFocus() -> Bool {
         let focusedItem = UIScreen.main.focusedView
-        optionViews.forEach { optionView in
+        for optionView in optionViews {
             if optionView.button == focusedItem, let type = optionView.optionType {
                 if !generalView.isHidden {
                     myPreferredFocusedView = generalView.getFocusItem(onTop: [PreferencesType.account, PreferencesType.account].contains(type))
                 } else if !accountView.isHidden {
                     myPreferredFocusedView = accountView
                 }
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
         return false
@@ -255,15 +255,15 @@ extension PreferencesMainViewController {
 }
 
 extension PreferencesMainViewController: PreferencesOptionViewDelegate {
-    func optionWasSelected(_ sender: OptionSelectionView) { }
+    func optionWasSelected(_: OptionSelectionView) {}
 
     func optionWasSelected(with value: PreferencesType, _ sender: PreferencesOptionView) {
-        optionViews.forEach {
-            $0.updateSelection(with: $0 == sender)
+        for optionView in optionViews {
+            optionView.updateSelection(with: optionView == sender)
         }
-        [generalView, accountView, connnectionsView, privacyView, logView].forEach {
+        for item in [generalView, accountView, connnectionsView, privacyView, logView] {
             if ![PreferencesType.sendLog, PreferencesType.signOut].contains(value) {
-                $0.isHidden = true
+                item.isHidden = true
             }
         }
 
@@ -271,7 +271,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
 
         switch value {
         case .general: generalView.isHidden = false
-        case .account:  accountView.isHidden = false
+        case .account: accountView.isHidden = false
         case .connection:
             connnectionsView.isHidden = false
         case .privacy:

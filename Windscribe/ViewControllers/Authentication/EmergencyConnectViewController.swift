@@ -6,23 +6,27 @@
 //  Copyright © 2023 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class EmergencyConnectViewController: UIViewController {
-
     // MARK: - UI properties
-    @IBOutlet weak var closeButton: UIButton!
-    @IBOutlet weak var cancelButton: UIButton!
-    @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var connectButton: UIButton!
-    @IBOutlet weak var connectingLabel: UILabel!
-    @IBOutlet weak var loader: UIActivityIndicatorView!
+
+    @IBOutlet var closeButton: UIButton!
+    @IBOutlet var cancelButton: UIButton!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var connectButton: UIButton!
+    @IBOutlet var connectingLabel: UILabel!
+    @IBOutlet var loader: UIActivityIndicatorView!
+
     // MARK: - State properties
+
     var viewmodal: EmergenyConnectViewModal!, logger: FileLogger!
     let disposeBag = DisposeBag()
+
     // MARK: - UI Events
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -31,14 +35,15 @@ class EmergencyConnectViewController: UIViewController {
 
     private func setupViews() {
         closeButton.setTitle("", for: .normal)
-        let imageSize: CGSize = CGSize(width: 25, height: 25)
+        let imageSize = CGSize(width: 25, height: 25)
         closeButton.layer.cornerRadius = 0.5 * closeButton.bounds.size.width
         closeButton.clipsToBounds = true
         closeButton.imageEdgeInsets = UIEdgeInsets(
             top: (closeButton.frame.size.height - imageSize.height) / 2,
             left: (closeButton.frame.size.width - imageSize.width) / 2,
             bottom: (closeButton.frame.size.height - imageSize.height) / 2,
-            right: (closeButton.frame.size.width - imageSize.width) / 2)
+            right: (closeButton.frame.size.width - imageSize.width) / 2
+        )
         connectButton.layer.cornerRadius = 23
         connectButton.clipsToBounds = true
         connectButton.titleLabel?.font = UIFont.bold(size: 20)
@@ -82,6 +87,7 @@ class EmergencyConnectViewController: UIViewController {
     }
 
     // MARK: - Helper
+
     private func hideLoadingView() {
         DispatchQueue.main.async { [weak self] in
             self?.loader.isHidden = true

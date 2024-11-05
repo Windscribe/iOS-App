@@ -6,15 +6,15 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class NewsFeedViewController: PreferredFocusedViewController {
-    @IBOutlet weak var listStackView: UIStackView!
-    @IBOutlet weak var buttonContainerView: UIStackView!
-    @IBOutlet weak var buttonHiddingView: UIView!
-    @IBOutlet weak var newsBodyText: UITextView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet var listStackView: UIStackView!
+    @IBOutlet var buttonContainerView: UIStackView!
+    @IBOutlet var buttonHiddingView: UIView!
+    @IBOutlet var newsBodyText: UITextView!
+    @IBOutlet var titleLabel: UILabel!
 
     var button = WSPillButton()
 
@@ -25,6 +25,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
     private var newsSections = [NewsSection]()
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Notifications View")
@@ -33,6 +34,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
     }
 
     // MARK: Setting up
+
     private func setup() {
         button.setup(withHeight: 96)
         buttonContainerView.addArrangedSubview(button)
@@ -56,22 +58,22 @@ class NewsFeedViewController: PreferredFocusedViewController {
     private func buildSelectionOptions(newsSections: [NewsSection]) {
         self.newsSections = newsSections
         let firstItem = self.newsSections.first?.items.first
-        newsSections.forEach {
-            let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
-            if let details = $0.items.first {
-                self.listStackView.addArrangedSubview(newsNameView)
+        for newsSection in newsSections {
+            let newsNameView = OptionSelectionView.fromNib()
+            if let details = newsSection.items.first {
+                listStackView.addArrangedSubview(newsNameView)
                 newsNameView.setup(with: details.title ?? "", isSelected: firstItem?.title == details.title)
                 newsNameView.delegate = self
             }
         }
         guard let firstItem = firstItem else { return }
-        self.setupDetailsView(with: firstItem)
+        setupDetailsView(with: firstItem)
     }
 
     private func setupDetailsView(with item: NewsFeedCellViewModel) {
         if let message = item.message, let messageData = message.data(using: .utf8) {
             newsBodyText.htmlText(htmlData: messageData,
-                              font: .regular(size: 42),
+                                  font: .regular(size: 42),
                                   foregroundColor: .white)
         }
         if let action = item.action {
@@ -86,6 +88,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
 }
 
 // MARK: Touches and Keys handling
+
 extension NewsFeedViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
@@ -109,8 +112,8 @@ extension NewsFeedViewController {
     private func updateBodyButtonFocus() -> Bool {
         if button != UIScreen.main.focusedView {
             myPreferredFocusedView = button
-            self.setNeedsFocusUpdate()
-            self.updateFocusIfNeeded()
+            setNeedsFocusUpdate()
+            updateFocusIfNeeded()
             return true
         }
         return false
@@ -121,11 +124,11 @@ extension NewsFeedViewController: OptionSelectionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) {
         guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), newsSections.count >= index
         else { return }
-        guard let details = newsSections[index-1].items.first else { return }
+        guard let details = newsSections[index - 1].items.first else { return }
         logger.logD(self, "Pressed to see details of \(details.title ?? "No title").")
         setupDetailsView(with: details)
-        listStackView.arrangedSubviews.forEach {
-            if let view = $0 as? OptionSelectionView {
+        for arrangedSubview in listStackView.arrangedSubviews {
+            if let view = arrangedSubview as? OptionSelectionView {
                 view.updateSelection(with: view == sender)
             }
         }

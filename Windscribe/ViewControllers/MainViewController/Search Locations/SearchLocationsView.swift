@@ -1,5 +1,5 @@
 //
-//  MainViewController+UISearch.swift
+//  SearchLocationsView.swift
 //  Windscribe
 //
 //  Created by Thomas on 08/11/2021.
@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class SearchLocationsView: UIView {
     var stackContainerView = UIStackView()
@@ -22,7 +22,8 @@ class SearchLocationsView: UIView {
 
     var disposeBag = DisposeBag()
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -83,9 +84,9 @@ class SearchLocationsView: UIView {
 
         NSLayoutConstraint.activate([
             // stackContainerView
-            stackContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            stackContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-            stackContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
+            stackContainerView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            stackContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             stackContainerView.heightAnchor.constraint(equalToConstant: 16),
 
             // searchIcon
@@ -95,7 +96,7 @@ class SearchLocationsView: UIView {
             clearSearchButton.widthAnchor.constraint(equalToConstant: 16),
 
             // exitSearchButton
-            exitSearchButton.widthAnchor.constraint(equalToConstant: 24)
+            exitSearchButton.widthAnchor.constraint(equalToConstant: 24),
         ])
     }
 
@@ -138,7 +139,7 @@ class SearchLocationsView: UIView {
     }
 
     private func clearSearchField() {
-        self.searchTextfield.text = ""
-        self.viewModel.searchTextFieldDidChange(text: "")
+        searchTextfield.text = ""
+        viewModel.searchTextFieldDidChange(text: "")
     }
 }

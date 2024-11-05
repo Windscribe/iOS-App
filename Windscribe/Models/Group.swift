@@ -37,7 +37,8 @@ struct GroupModel {
          pingIp: String?,
          linkSpeed: String?,
          health: Int?,
-         pingHost: String?) {
+         pingHost: String?)
+    {
         self.id = id
         self.city = city
         self.nick = nick
@@ -72,7 +73,6 @@ struct GroupModel {
 }
 
 @objcMembers class Group: Object, Decodable {
-
     dynamic var id: Int = 0
     dynamic var city: String = ""
     dynamic var nick: String = ""
@@ -81,8 +81,9 @@ struct GroupModel {
     dynamic var timezone: String = ""
     var nodes = RealmSwift.List<Node>()
     var bestNode: Node? {
-        return nodes.filter({ $0.hostname == self.bestNodeHostname }).last
+        return nodes.filter { $0.hostname == self.bestNodeHostname }.last
     }
+
     dynamic var bestNodeHostname: String = ""
     dynamic var wgPublicKey: String = ""
     dynamic var ovpnX509: String = ""
@@ -92,18 +93,18 @@ struct GroupModel {
     dynamic var pingHost: String = ""
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case city = "city"
-        case nick = "nick"
+        case id
+        case city
+        case nick
         case premiumOnly = "pro"
-        case gps = "gps"
+        case gps
         case timezone = "tz"
-        case nodes = "nodes"
+        case nodes
         case wgPublicKey = "wg_pubkey"
         case ovpnX509 = "ovpn_x509"
         case pingIp = "ping_ip"
         case linkSpeed = "link_speed"
-        case health = "health"
+        case health
         case pingHost = "ping_host"
     }
 
@@ -117,7 +118,7 @@ struct GroupModel {
         id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
         city = try container.decodeIfPresent(String.self, forKey: .city) ?? ""
         nick = try container.decodeIfPresent(String.self, forKey: .nick) ?? ""
-        premiumOnly = try container.decodeIfPresent(Int.self, forKey: .premiumOnly)  == 1 ? true : false
+        premiumOnly = try container.decodeIfPresent(Int.self, forKey: .premiumOnly) == 1 ? true : false
         gps = try container.decodeIfPresent(String.self, forKey: .gps) ?? ""
         timezone = try container.decodeIfPresent(String.self, forKey: .timezone) ?? ""
         wgPublicKey = try container.decodeIfPresent(String.self, forKey: .wgPublicKey) ?? ""
@@ -133,10 +134,10 @@ struct GroupModel {
         }
         health = try container.decodeIfPresent(Int.self, forKey: .health) ?? 0
         if let nodesArray = try container.decodeIfPresent([Node].self, forKey: .nodes) {
-            self.setNodes(array: nodesArray)
+            setNodes(array: nodesArray)
         }
         pingHost = try container.decodeIfPresent(String.self, forKey: .pingHost) ?? ""
-        self.setBestNode(advanceRepository: Assembler.resolve(AdvanceRepository.self))
+        setBestNode(advanceRepository: Assembler.resolve(AdvanceRepository.self))
     }
 
     func setNodes(array: [Node]) {
@@ -147,24 +148,24 @@ struct GroupModel {
     func setBestNode(advanceRepository: AdvanceRepository) {
         if nodes.count > 0 {
             let forceNode = advanceRepository.getForcedNode()
-            if let forceNode = forceNode, nodes.map({$0.hostname}).contains(forceNode) {
-                self.bestNodeHostname = forceNode
+            if let forceNode = forceNode, nodes.map({ $0.hostname }).contains(forceNode) {
+                bestNodeHostname = forceNode
                 return
             }
-            let filteredNodes = nodes.filter {$0.forceDisconnect == false}
-            var weightCounter = nodes.reduce(0, { $0 + $1.weight })
+            let filteredNodes = nodes.filter { $0.forceDisconnect == false }
+            var weightCounter = nodes.reduce(0) { $0 + $1.weight }
             if weightCounter >= 1 {
                 let randomNumber = arc4random_uniform(UInt32(weightCounter))
                 weightCounter = 0
                 for node in filteredNodes {
                     weightCounter += node.weight
                     if randomNumber < weightCounter {
-                        self.bestNodeHostname = node.hostname
+                        bestNodeHostname = node.hostname
                         return
                     }
                 }
             }
-            self.bestNodeHostname = filteredNodes.last?.hostname ?? ""
+            bestNodeHostname = filteredNodes.last?.hostname ?? ""
             return
         }
     }
@@ -174,7 +175,7 @@ struct GroupModel {
                           city: city,
                           nick: nick,
                           premiumOnly: premiumOnly,
-                          nodes: nodes.map({ $0.getNodeModel() }),
+                          nodes: nodes.map { $0.getNodeModel() },
                           bestNode: bestNode?.getNodeModel(),
                           bestNodeHostname: bestNodeHostname,
                           wgPublicKey: wgPublicKey,

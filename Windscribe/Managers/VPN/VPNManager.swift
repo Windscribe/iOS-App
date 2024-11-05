@@ -277,7 +277,8 @@ class VPNManager: VPNManagerProtocol {
 
     func runConnectivityTest(retry: Bool = true,
                              connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true) {
+                             checkForIPAddressChange: Bool = true)
+    {
         getVPNConnectionInfo { [self] info in
             if info?.status != .connected {
                 return
@@ -306,7 +307,8 @@ class VPNManager: VPNManagerProtocol {
     }
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
-                                              checkForIPAddressChange _: Bool = true) {
+                                              checkForIPAddressChange _: Bool = true)
+    {
         logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
@@ -351,9 +353,9 @@ class VPNManager: VPNManagerProtocol {
         // Refresh and load all VPN Managers from system preferrances.
         let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
         var priorityManagers: [NEVPNManager] = []
-        configManager.managers.forEach {
-            if priorityStates.contains($0.connection.status) {
-                priorityManagers.append($0)
+        for manager in configManager.managers {
+            if priorityStates.contains(manager.connection.status) {
+                priorityManagers.append(manager)
             }
         }
         if priorityManagers.count == 1 {

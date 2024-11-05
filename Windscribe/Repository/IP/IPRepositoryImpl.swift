@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class IPRepositoryImpl: IPRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase

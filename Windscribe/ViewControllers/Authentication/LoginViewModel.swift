@@ -9,20 +9,23 @@
 import Foundation
 import RxSwift
 import Swinject
+
 enum LoginErrorState: Equatable {
     case username(String), network(String), twoFa(String), api(String), loginCode(String)
 }
+
 protocol LoginViewModel {
     var showLoadingView: BehaviorSubject<Bool> { get }
     var failedState: BehaviorSubject<LoginErrorState?> { get }
     var show2faCodeField: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
-    var xpressCode: BehaviorSubject<String?> {get}
+    var xpressCode: BehaviorSubject<String?> { get }
     func keyBoardWillShow()
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?)
     func generateCodeTapped()
 }
+
 class LoginViewModelImpl: LoginViewModel {
     var xpressCode = BehaviorSubject<String?>(value: nil)
     let showLoadingView = BehaviorSubject(value: false)
@@ -77,7 +80,7 @@ class LoginViewModelImpl: LoginViewModel {
                 case Errors.twoFactorRequired:
                     self?.failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
                     self?.show2faCodeField.onNext(true)
-                case Errors.apiError(let e):
+                case let Errors.apiError(e):
                     self?.failedState.onNext(.api(e.errorMessage ?? ""))
                 default:
                     if let error = error as? Errors {
@@ -94,13 +97,13 @@ class LoginViewModelImpl: LoginViewModel {
             .subscribe(onSuccess: { [weak self] xpressResponse in
                 self?.xpressCode.onNext(xpressResponse.xPressLoginCode)
                 self?.startXPressLoginCodeVerifier(response: xpressResponse)
-            }, onFailure: { [ self] _ in
+            }, onFailure: { [self] _ in
                 self.logger.logE(self, "Unable to generate Login code. Check you network connection.")
                 self.failedState.onNext(.loginCode(TvAssets.loginCodeError))
             }).disposed(by: disposeBag)
     }
 
-    func  startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
+    func startXPressLoginCodeVerifier(response: XPressLoginCodeResponse) {
         let startTime = Date()
         let dispose = CompositeDisposable()
 
@@ -108,7 +111,7 @@ class LoginViewModelImpl: LoginViewModel {
             .subscribe(onNext: { _ in
                 self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
                     .timeout(.seconds(20), scheduler: MainScheduler.instance)
-                    .subscribe(onSuccess: { [ self] verifyResponse in
+                    .subscribe(onSuccess: { [self] verifyResponse in
                         if dispose.isDisposed {
                             return
                         }
@@ -123,7 +126,7 @@ class LoginViewModelImpl: LoginViewModel {
                             self?.prepareUserData()
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)
-                    }, onFailure: { [ self] error in
+                    }, onFailure: { [self] error in
                         self.logger.logE(self, error.localizedDescription)
                         invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                     }).disposed(by: self.disposeBag)
@@ -132,14 +135,14 @@ class LoginViewModelImpl: LoginViewModel {
         dispose.insert(d)
     }
 
-   private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse ) {
-       let now = Date()
-       let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
-       if secondsPassed > loginCodeResponse.ttl {
-           logger.logD(self, "Failed to verify XPress login code in ttl .Giving up")
-           self.failedState.onNext(.network(""))
-       }
-   }
+    private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse) {
+        let now = Date()
+        let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
+        if secondsPassed > loginCodeResponse.ttl {
+            logger.logD(self, "Failed to verify XPress login code in ttl .Giving up")
+            failedState.onNext(.network(""))
+        }
+    }
 
     func keyBoardWillShow() {
         failedState.onNext(.none)
@@ -166,7 +169,7 @@ class LoginViewModelImpl: LoginViewModel {
             self?.logger.logE(LoginViewModelImpl.self, "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {
-            case Errors.apiError(let e):
+            case let Errors.apiError(e):
                 self?.failedState.onNext(.api(e.errorMessage ?? ""))
             default:
                 if let error = error as? Errors {
@@ -182,7 +185,7 @@ class LoginViewModelImpl: LoginViewModel {
         connectivity.network.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] appNetwork in
             if let loginError = try? self?.failedState.value() {
                 switch loginError {
-                case LoginErrorState.network(_):
+                case LoginErrorState.network:
                     // reset network error state if network re-connects.
                     if appNetwork.status == NetworkStatus.connected {
                         self?.failedState.onNext(.none)

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case credentialsNotFound(String)
     case customConfigSupportNotAvailable

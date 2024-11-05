@@ -6,23 +6,23 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import CoreLocation
-import RxSwift
 import RxCocoa
 import RxGesture
+import RxSwift
+import UIKit
 
 class ConnectionViewController: WSNavigationViewController {
     // MARK: - State properties
+
     var viewModel: ConnectionsViewModelType!, locationManagerViewModel: LocationManagingViewModelType!, router: ConnectionRouter!, logger: FileLogger!
 
     var currentDropdownView: Dropdown?
     var firstLoadConnectionModeButton: Bool = true
-    lazy var circumventCensorshipView: ConnectionSecureView = {
-        makeConnectionSecureView(type: .circumventCensorship)
-    }()
+    lazy var circumventCensorshipView: ConnectionSecureView = makeConnectionSecureView(type: .circumventCensorship)
 
     // MARK: - UI properties
+
     lazy var networkWhiteListRow: ArrowRowView = {
         let row = ArrowRowView(rowTitle: TextsAsset.Preferences.networkSecurity, isDarkMode: viewModel.isDarkMode)
         return row
@@ -31,7 +31,7 @@ class ConnectionViewController: WSNavigationViewController {
     lazy var connectionModeViewV2: ConnectionModeView = {
         let name = GeneralHelper.getTitle(.connectionMode)
         let asset = GeneralHelper.getAsset(.connectionMode)
-        let description =  GeneralHelper.getDescription(.connectionMode)
+        let description = GeneralHelper.getDescription(.connectionMode)
         let vw = ConnectionModeView(title: name,
                                     description: description,
                                     iconAsset: asset,
@@ -70,20 +70,20 @@ class ConnectionViewController: WSNavigationViewController {
                 makeConnectionSecureView(type: .killSwitch),
                 connectedDNSView,
                 makeConnectionSecureView(type: .allowLan),
-                circumventCensorshipView
+                circumventCensorshipView,
             ])
         } else if #available(iOS 14.0, *) {
             layoutView.stackView.addArrangedSubviews([
                 networkWhiteListRow,
                 connectionModeViewV2,
                 connectedDNSView,
-                circumventCensorshipView
+                circumventCensorshipView,
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
                 networkWhiteListRow,
                 connectionModeViewV2,
-                circumventCensorshipView
+                circumventCensorshipView,
             ])
         }
         bindViews()
@@ -119,6 +119,7 @@ class ConnectionViewController: WSNavigationViewController {
     }
 
     // MARK: - UI Helper
+
     private func makeConnectionSecureView(type: ConnectionSecure) -> ConnectionSecureView {
         let view = ConnectionSecureView(isDarkMode: viewModel.isDarkMode)
         view.titleLabel.text = type.title
@@ -166,12 +167,10 @@ class ConnectionViewController: WSNavigationViewController {
 
     func setupTheme(isDark: Bool) {
         super.setupViews(isDark: isDark)
-
     }
 }
 
 class EmptyCell: UITableViewCell {
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -184,6 +183,7 @@ class EmptyCell: UITableViewCell {
 }
 
 // MARK: - extensions
+
 extension ConnectionViewController: ConnectionModeViewDelegate {
     func connectionModeViewExplain() {
         if let url = URL(string: FeatureExplainer.connectionModes.getUrl()) {
@@ -191,8 +191,7 @@ extension ConnectionViewController: ConnectionModeViewDelegate {
         }
     }
 
-    func connectionModeViewDidSwitch(_ view: ConnectionModeView, value: Bool) {
-    }
+    func connectionModeViewDidSwitch(_: ConnectionModeView, value _: Bool) {}
 
     func connectionModeViewDidChangeMode(_ option: ConnectionModeType) {
         viewModel.updateConnectionMode(value: option)

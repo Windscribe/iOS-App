@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let apiCallManager: WireguardAPIManager
     private let logger: FileLogger
@@ -25,7 +26,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
 
     func getCredentials() -> Completable {
         return wgInit().flatMap { _ in
-            return self.wgConnect()
+            self.wgConnect()
         }.flatMapCompletable { _ in
             if let error = self.templateWgConfig() {
                 self.logger.logE(self, "Templated wg config failed with error \(error)")
@@ -63,12 +64,12 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
         let hostName = wgCrendentials.serverHostName ?? ""
         return apiCallManager.wgConfigConnect(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
             .catch { error in
-                if case Errors.apiError(let code) = error,  code.errorCode == invalidPublicKey {
+                if case let Errors.apiError(code) = error, code.errorCode == invalidPublicKey {
                     self.wgCrendentials.delete()
                     return self.wgInit().flatMap { _ in
                         self.apiCallManager.wgConfigConnect(clientPublicKey: self.wgCrendentials.getPublicKey() ?? "", hostname: hostName, deviceId: deviceID)
                     }
-                } else if case Errors.apiError(let code) = error,  code.errorCode == unableToSelectWgIp {
+                } else if case let Errors.apiError(code) = error, code.errorCode == unableToSelectWgIp {
                     return self.apiCallManager.wgConfigConnect(clientPublicKey: self.wgCrendentials.getPublicKey() ?? "", hostname: hostName, deviceId: deviceID)
                 } else {
                     return Single.error(error)

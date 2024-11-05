@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class RobertFooterView: WSTouchView {
     lazy var contentView = UIView()
@@ -50,14 +50,14 @@ class RobertFooterView: WSTouchView {
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.contentView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
             self.iconView.image = ThemeUtils.iconViewImage(isDarkMode: $0)
             self.titleLabel.textColor = ThemeUtils.getRobertTextColor(isDarkMode: $0)
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(isHighlightedSubject.asObservable(), isDarkMode.asObservable()).bind { (isHighlighted, isDarkMode) in
+        Observable.combineLatest(isHighlightedSubject.asObservable(), isDarkMode.asObservable()).bind { isHighlighted, isDarkMode in
             self.titleLabel.textColor = isHighlighted ? ThemeUtils.primaryTextColor(isDarkMode: isDarkMode) : ThemeUtils.getRobertTextColor(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
@@ -80,6 +80,7 @@ class RobertFooterView: WSTouchView {
         isHighlightedSubject.onNext(false)
         iconView.layer.opacity = 0.25
     }
+
     override func configHighlight() {
         isHighlightedSubject.onNext(true)
         iconView.layer.opacity = 1

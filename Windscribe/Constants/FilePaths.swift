@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct FilePaths {
+enum FilePaths {
     static let openVPN = "config.ovpn"
     static let wireGuard = "config.conf"
 }

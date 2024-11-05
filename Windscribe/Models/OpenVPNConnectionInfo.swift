@@ -24,5 +24,4 @@ class OpenVPNConnectionInfo: NSObject {
         self.password = password
         self.protocolName = protocolName
     }
-
 }

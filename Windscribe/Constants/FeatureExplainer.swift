@@ -15,7 +15,7 @@ enum FeatureExplainer {
     case connectedDNS
 
     func getUrl() -> String {
-        var endpoint: String = ""
+        var endpoint = ""
         switch self {
         case .connectionModes:
             endpoint = "features/flexible-connectivity"

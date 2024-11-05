@@ -9,7 +9,6 @@
 import Foundation
 
 struct APIDebug: Decodable {
-
     let debug: String?
     let success: Bool?
 

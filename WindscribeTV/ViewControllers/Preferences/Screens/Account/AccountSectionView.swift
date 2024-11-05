@@ -13,8 +13,8 @@ protocol AccountSectionViewDelegate: NSObject {
 }
 
 class AccountSectionView: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var stackView: UIStackView!
 
     weak var delegate: AccountSectionViewDelegate?
     private var sectionData: AccountSectionItem?
@@ -23,14 +23,14 @@ class AccountSectionView: UIView {
         self.sectionData = sectionData
         titleLabel.textColor = .white.withAlphaComponent(0.5)
         titleLabel.attributedText = NSAttributedString(string: sectionData.title,
-                                              attributes: [
-                                                .font: UIFont.bold(size: 32),
-                                                .foregroundColor: UIColor.white.withAlphaComponent(0.3),
-                                                .kern: 4
-                                              ])
+                                                       attributes: [
+                                                           .font: UIFont.bold(size: 32),
+                                                           .foregroundColor: UIColor.white.withAlphaComponent(0.3),
+                                                           .kern: 4,
+                                                       ])
 
-        sectionData.items.forEach { item in
-            let itemView: AccountItemView = AccountItemView.fromNib()
+        for item in sectionData.items {
+            let itemView = AccountItemView.fromNib()
             itemView.setup(with: item)
             itemView.delegate = self
             stackView.addArrangedSubview(itemView)

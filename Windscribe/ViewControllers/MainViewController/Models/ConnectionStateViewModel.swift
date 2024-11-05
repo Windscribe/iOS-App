@@ -10,17 +10,17 @@ import Foundation
 import RxSwift
 
 protocol ConnectionStateViewModelType {
-    var selectedNodeSubject: PublishSubject<SelectedNode> {get}
-    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
-    var showAutoModeScreenTrigger: PublishSubject<Void> {get}
-    var openNetworkHateUsDialogTrigger: PublishSubject<Void> {get}
-    var pushNotificationPermissionsTrigger: PublishSubject<Void> {get}
-    var siriShortcutTrigger: PublishSubject<Void> {get}
-    var requestLocationTrigger: PublishSubject<Void> {get}
-    var enableConnectTrigger: PublishSubject<Void> {get}
-    var ipAddressSubject: PublishSubject<String> {get}
-    var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> {get}
-    var connectedState: BehaviorSubject<ConnectionStateInfo> {get}
+    var selectedNodeSubject: PublishSubject<SelectedNode> { get }
+    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> { get }
+    var showAutoModeScreenTrigger: PublishSubject<Void> { get }
+    var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
+    var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
+    var siriShortcutTrigger: PublishSubject<Void> { get }
+    var requestLocationTrigger: PublishSubject<Void> { get }
+    var enableConnectTrigger: PublishSubject<Void> { get }
+    var ipAddressSubject: PublishSubject<String> { get }
+    var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> { get }
+    var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
 
     func disconnect()
     func displayLocalIPAddress()
@@ -58,17 +58,17 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
         self.vpnManager = vpnManager
-        self.connectedState = connectionStateManager.connectedState
-        self.selectedNodeSubject = connectionStateManager.selectedNodeSubject
-        self.loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
-        self.showAutoModeScreenTrigger = connectionStateManager.showAutoModeScreenTrigger
-        self.openNetworkHateUsDialogTrigger = connectionStateManager.openNetworkHateUsDialogTrigger
-        self.pushNotificationPermissionsTrigger = connectionStateManager.pushNotificationPermissionsTrigger
-        self.siriShortcutTrigger = connectionStateManager.siriShortcutTrigger
-        self.requestLocationTrigger = connectionStateManager.requestLocationTrigger
-        self.enableConnectTrigger = connectionStateManager.enableConnectTrigger
-        self.ipAddressSubject = connectionStateManager.ipAddressSubject
-        self.autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
+        connectedState = connectionStateManager.connectedState
+        selectedNodeSubject = connectionStateManager.selectedNodeSubject
+        loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
+        showAutoModeScreenTrigger = connectionStateManager.showAutoModeScreenTrigger
+        openNetworkHateUsDialogTrigger = connectionStateManager.openNetworkHateUsDialogTrigger
+        pushNotificationPermissionsTrigger = connectionStateManager.pushNotificationPermissionsTrigger
+        siriShortcutTrigger = connectionStateManager.siriShortcutTrigger
+        requestLocationTrigger = connectionStateManager.requestLocationTrigger
+        enableConnectTrigger = connectionStateManager.enableConnectTrigger
+        ipAddressSubject = connectionStateManager.ipAddressSubject
+        autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
     }
 
     func disconnect() {
@@ -100,12 +100,13 @@ extension ConnectionStateViewModel {
     func isConnected() -> Bool {
         vpnManager.isConnected()
     }
+
     func isDisconnected() -> Bool {
         vpnManager.isDisconnected()
     }
 
     func setOutOfData() {
-        if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
+        if vpnManager.isConnected(), !vpnManager.isCustomConfigSelected() {
             disconnect()
         }
     }

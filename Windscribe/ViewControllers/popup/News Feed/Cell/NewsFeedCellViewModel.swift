@@ -34,7 +34,7 @@ class NewsFeedCellViewModel: Equatable {
 
     func setCollapsed(collapsed: Bool) {
         self.collapsed = collapsed
-        self.isRead = true
+        isRead = true
     }
 }
 
@@ -42,7 +42,7 @@ extension NewsFeedCellViewModel: IdentifiableType {
     typealias Identity = Int
 
     var identity: Identity {
-        return self.id ?? 0
+        return id ?? 0
     }
 }
 

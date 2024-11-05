@@ -13,8 +13,8 @@ import IntentsUI
 extension MainViewController {
     func setupIntentsForSiri() {
 //        [ShowLocationIntent(), ConnectIntent(), DisconnectIntent()].forEach {
-        [ShowLocationIntent()].forEach {
-            let interaction = INInteraction(intent: $0, response: nil)
+        for item in [ShowLocationIntent()] {
+            let interaction = INInteraction(intent: item, response: nil)
             interaction.donate(completion: nil)
         }
     }
@@ -26,11 +26,10 @@ extension MainViewController {
         vc.delegate = self
         present(vc, animated: true, completion: nil)
     }
-
 }
 
 extension MainViewController: INUIAddVoiceShortcutViewControllerDelegate {
-    func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith voiceShortcut: INVoiceShortcut?, error: Error?) {
+    func addVoiceShortcutViewController(_ controller: INUIAddVoiceShortcutViewController, didFinishWith _: INVoiceShortcut?, error _: Error?) {
         controller.dismiss(animated: true, completion: nil)
     }
 

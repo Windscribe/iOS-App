@@ -1,5 +1,5 @@
 //
-//  UIImageView.swift
+//  UIImageView+Ext.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-11-12.
@@ -9,19 +9,17 @@
 import UIKit
 
 extension UIImageView {
-
     func setImageColor(color: UIColor) {
-        let templateImage = self.image?.withRenderingMode(.alwaysTemplate)
-        self.image = templateImage
-        self.tintColor = color
+        let templateImage = image?.withRenderingMode(.alwaysTemplate)
+        image = templateImage
+        tintColor = color
     }
 
     func rotate(_ degrees: CGFloat) {
         UIView.animate(withDuration: 0.25) {
-           self.transform = CGAffineTransform(rotationAngle: degrees * (.pi / 180))
+            self.transform = CGAffineTransform(rotationAngle: degrees * (.pi / 180))
         }
     }
-
 }
 
 extension UIImageView {

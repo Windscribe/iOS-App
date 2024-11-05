@@ -20,9 +20,9 @@ extension MainViewController {
             case .disconnecting: self.displayDisconnectingAlert()
             }
         }.disposed(by: disposeBag)
-        staticIPListViewModel.configureVPNTrigger.subscribe({ _ in
+        staticIPListViewModel.configureVPNTrigger.subscribe { _ in
             self.configureVPN()
-        }).disposed(by: disposeBag)
+        }.disposed(by: disposeBag)
     }
 }
 

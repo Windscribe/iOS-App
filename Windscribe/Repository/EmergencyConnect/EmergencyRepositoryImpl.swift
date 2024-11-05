@@ -1,5 +1,5 @@
 //
-//  EmergenceManagerImpl.swift
+//  EmergencyRepositoryImpl.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-23.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class EmergencyRepositoryImpl: EmergencyRepository {
     private let wsnetEmergencyConnect: WSNetEmergencyConnect
     private let vpnManager: VPNManager
@@ -113,7 +114,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     /// Loads configuration in OpenVPNManager
-    private func loadConfiguration(name: String,  serverAddress: String, customConfig: CustomConfigModel) -> Completable {
+    private func loadConfiguration(name: String, serverAddress: String, customConfig: CustomConfigModel) -> Completable {
         vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
                                                dnsHostname: serverAddress,
                                                hostname: serverAddress,
@@ -124,26 +125,26 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                                                groupId: 0)
 
         return Completable.create { completion in
-                if let manager = self.vpnManager.configManager.openVPNdManager() {
-                    Task {
-                        do {
-                            _ = try await self.vpnManager.configManager.configureOpenVPN(manager: manager,
-                                                                                           selectedNode: self.vpnManager.selectedNode,
-                                                                                           userSettings: self.vpnManager.makeUserSettings(),
-                                                                                           username: customConfig.username ?? "",
-                                                                                           password: customConfig.password ?? "",
-                                                                                           protocolType: customConfig.protocolType ?? "",
-                                                                                           serverAddress: serverAddress,
-                                                                                           port: customConfig.port ?? "",
-                                                                                           x509Name: nil,
-                                                                                           proxyInfo: nil)
-                            completion(.completed)
+            if let manager = self.vpnManager.configManager.openVPNdManager() {
+                Task {
+                    do {
+                        _ = try await self.vpnManager.configManager.configureOpenVPN(manager: manager,
+                                                                                     selectedNode: self.vpnManager.selectedNode,
+                                                                                     userSettings: self.vpnManager.makeUserSettings(),
+                                                                                     username: customConfig.username ?? "",
+                                                                                     password: customConfig.password ?? "",
+                                                                                     protocolType: customConfig.protocolType ?? "",
+                                                                                     serverAddress: serverAddress,
+                                                                                     port: customConfig.port ?? "",
+                                                                                     x509Name: nil,
+                                                                                     proxyInfo: nil)
+                        completion(.completed)
 
-                        } catch let error {
-                            completion(.error(RepositoryError.failedToLoadConfiguration))
-                        }
+                    } catch {
+                        completion(.error(RepositoryError.failedToLoadConfiguration))
                     }
                 }
+            }
             return Disposables.create()
         }
     }

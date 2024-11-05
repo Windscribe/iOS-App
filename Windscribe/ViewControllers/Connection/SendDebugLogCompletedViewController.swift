@@ -19,6 +19,7 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
     weak var delegate: SendDebugLogCompletedVCDelegate?
 
     // MARK: - UI ELEMENTs
+
     private lazy var topImage: UIImageView = {
         let vw = UIImageView()
         vw.image = UIImage(named: ImagesAsset.checkCircleGreen)
@@ -53,11 +54,13 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
     }()
 
     // MARK: - CONFIGs
+
     init() {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -75,7 +78,7 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
             topImage,
             subHeaderLabel,
             contactSupportButton,
-            cancelButton
+            cancelButton,
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
         layoutView.stackView.setCustomSpacing(32, after: topImage)
@@ -97,6 +100,7 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
     }
 
     // MARK: - Actions
+
     @objc private func cancelAction() {
         dismiss(animated: true) { [weak self] in
             self?.delegate?.sendDebugLogCompletedVCCanceled()

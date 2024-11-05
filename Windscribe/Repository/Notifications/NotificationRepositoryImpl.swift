@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class NotificationRepositoryImpl: NotificationRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -21,11 +22,11 @@ class NotificationRepositoryImpl: NotificationRepository {
 
     func getUpdatedNotifications(pcpid: String) -> Single<[Notice]> {
         logger.logD(self, "Getting notifications from API.")
-        return self.apiManager.getNotifications(pcpid: pcpid).map {
+        return apiManager.getNotifications(pcpid: pcpid).map {
             self.localDatabase.saveNotifications(notifications: $0.notices.toArray())
             return $0.notices.toArray()
         }.flatMap { notifications in
-            return Single.just(notifications)
+            Single.just(notifications)
         }
     }
 }

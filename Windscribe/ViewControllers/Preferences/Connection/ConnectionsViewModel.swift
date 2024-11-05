@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import RxSwift
 import Network
+import RxSwift
 
 protocol ConnectionsViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var isCircumventCensorshipEnabled: BehaviorSubject<Bool> { get }
     var shouldShowCustomDNSOption: BehaviorSubject<Bool> { get }
-    var languageUpdatedTrigger: PublishSubject<()> { get }
+    var languageUpdatedTrigger: PublishSubject<Void> { get }
 
     func updateChangeFirewallStatus()
     func updateChangeKillSwitchStatus()
@@ -52,6 +52,7 @@ protocol ConnectionsViewModelType {
 
 class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
+
     let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
@@ -65,7 +66,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
     let isDarkMode: BehaviorSubject<Bool>
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
-    let languageUpdatedTrigger = PublishSubject<()>()
+    let languageUpdatedTrigger = PublishSubject<Void>()
 
     init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2) {
         self.preferences = preferences
@@ -106,7 +107,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
             self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
-        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { [weak self] (connectionMode, selectedProtocol, network) in
+        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { [weak self] connectionMode, selectedProtocol, network in
             guard let self = self else { return }
             if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
                 self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
@@ -120,7 +121,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             }
             self.shouldShowCustomDNSOption.onNext(true)
         }.disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe {  [weak self] _ in
+        languageManager.activelanguage.subscribe { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
         }.disposed(by: disposeBag)
     }
@@ -192,7 +193,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void) {
-        DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: {dnsValue in
+        DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
             guard let dnsValue = dnsValue else {
                 completion(false)
                 return
@@ -203,12 +204,12 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             }
             self.preferences.saveCustomDNSValue(value: dnsValue)
             completion(true)
-        }, completion: {_ in })
+        }, completion: { _ in })
     }
 
     func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
-        ConnectionManager.shared.loadProtocols(shouldReset: true) { _ in}
+        ConnectionManager.shared.loadProtocols(shouldReset: true) { _ in }
     }
 
     func updateProtocol(value: String) {

@@ -1,5 +1,5 @@
 //
-//  RobertModel.swift
+//  RobertViewModel.swift
 //  Windscribe
 //
 //  Created by Bushra Sagir on 17/04/24.
@@ -10,13 +10,13 @@ import Foundation
 import RxSwift
 
 protocol RobertViewModelType {
-    var alertManager: AlertManagerV2 {get}
+    var alertManager: AlertManagerV2 { get }
     var updadeinProgress: BehaviorSubject<Bool> { get }
-    var robertFilters: BehaviorSubject <[RobertFilter]?> {get}
-    var showProgress: BehaviorSubject<Bool> {get}
-    var showError: BehaviorSubject<String?> {get}
-    var urlToOpen: BehaviorSubject<URL?> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var robertFilters: BehaviorSubject<[RobertFilter]?> { get }
+    var showProgress: BehaviorSubject<Bool> { get }
+    var showError: BehaviorSubject<String?> { get }
+    var urlToOpen: BehaviorSubject<URL?> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func loadRobertFilters()
     func handleCustomRulesTap()
     func handleLearnMoreTap()
@@ -29,7 +29,7 @@ class RobertViewModel: RobertViewModelType {
     var alertManager: AlertManagerV2
     var logger: FileLogger
     var updadeinProgress: BehaviorSubject<Bool> = BehaviorSubject(value: false)
-    var robertFilters: BehaviorSubject <[RobertFilter]?> = BehaviorSubject(value: nil)
+    var robertFilters: BehaviorSubject<[RobertFilter]?> = BehaviorSubject(value: nil)
     let showProgress: BehaviorSubject<Bool> = BehaviorSubject(value: false)
     var showError: BehaviorSubject<String?> = BehaviorSubject(value: nil)
     var urlToOpen: BehaviorSubject<URL?> = BehaviorSubject(value: nil)
@@ -51,14 +51,12 @@ class RobertViewModel: RobertViewModelType {
             showProgress.onNext(false)
             localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
             DispatchQueue.main.async {
-
                 self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
                 self.robertFilters.onNext(robertFilters.getRules())
-
             }
         }, onFailure: { [weak self] _ in
             self?.showProgress.onNext(false)
-            guard let robertFilters =  self?.localDB.getRobertFilters()  else {
+            guard let robertFilters = self?.localDB.getRobertFilters() else {
                 self?.showError.onNext("Unable to load robert rules. Check your network connection.")
                 return
             }
@@ -80,7 +78,7 @@ class RobertViewModel: RobertViewModelType {
                 self?.showProgress.onNext(false)
                 if let error = error as? Errors {
                     switch error {
-                    case .apiError(let e):
+                    case let .apiError(e):
                         self?.showError.onNext(e.errorMessage ?? "Failed to update Robert Setting.")
                     default:
                         self?.showError.onNext("Failed to update Robert Setting. \(error.description)")
@@ -110,17 +108,17 @@ class RobertViewModel: RobertViewModelType {
         } else {
             status = 1
         }
-        apiManager.updateRobertSettings(id: changedFilter.id, status: status).subscribe(onSuccess: { [self] robertFilters in
+        apiManager.updateRobertSettings(id: changedFilter.id, status: status).subscribe(onSuccess: { [self] _ in
             DispatchQueue.main.async {
                 self.showProgress.onNext(false)
                 self.updadeinProgress.onNext(false)
                 self.localDB.toggleRobertRule(id: changedFilter.id)
-                guard let robertFilters =  self.localDB.getRobertFilters()  else {
+                guard let robertFilters = self.localDB.getRobertFilters() else {
                     self.showError.onNext("Unable to load robert rules. Check your network connection.")
                     return
                 }
                 self.robertFilters.onNext(robertFilters.getRules())
-                self.apiManager.syncRobertFilters().subscribe(onSuccess: { _ in}).disposed(by: self.disposeBag)
+                self.apiManager.syncRobertFilters().subscribe(onSuccess: { _ in }).disposed(by: self.disposeBag)
             }
         }, onFailure: { [weak self] error in
             DispatchQueue.main.async {
@@ -128,7 +126,7 @@ class RobertViewModel: RobertViewModelType {
                 self?.updadeinProgress.onNext(false)
                 if let error = error as? Errors {
                     switch error {
-                    case .apiError(let e):
+                    case let .apiError(e):
                         self?.showError.onNext(e.errorMessage ?? "Failed to update Robert Setting.")
                     default:
                         self?.showError.onNext("Failed to update Robert Setting. \(error.description)")
@@ -137,5 +135,4 @@ class RobertViewModel: RobertViewModelType {
             }
         }).disposed(by: disposeBag)
     }
-
 }

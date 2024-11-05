@@ -10,7 +10,7 @@ import UIKit
 
 extension MainViewController {
     func updateLayoutForTheme(isDarkMode: Bool) {
-        if let serverRefreshControl = self.serverListTableView.refreshControl as? WSRefreshControl {
+        if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
             serverRefreshControl.backView.label.backgroundColor = .clear
         }
 

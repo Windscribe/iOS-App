@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 protocol FileDatabase {
     func readFile(path: String) -> Data?
     func saveFile(data: Data, path: String)

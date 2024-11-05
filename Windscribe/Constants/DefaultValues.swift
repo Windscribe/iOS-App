@@ -27,5 +27,4 @@ enum DefaultValues {
     static let hapticFeedback = true
     static let showServerHealth = false
     static let circumventCensorship = false
-
 }

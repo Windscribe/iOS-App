@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 class LoginRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from _: WSNavigationViewController) {
         switch to {

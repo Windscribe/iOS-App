@@ -5,8 +5,8 @@
 //  Created by Ginder Singh on 2021-07-28.
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
-import UIKit
 import RxSwift
+import UIKit
 
 class AboutViewCell: WSTouchTableViewCell {
     lazy var titleLabel = UILabel()
@@ -39,6 +39,7 @@ class AboutViewCell: WSTouchTableViewCell {
         titleLabel.layer.opacity = 0.5
         arrowIcon.layer.opacity = 0.25
     }
+
     override func configHighlight() {
         titleLabel.layer.opacity = 1
         arrowIcon.layer.opacity = 1
@@ -59,7 +60,7 @@ class AboutViewCell: WSTouchTableViewCell {
                                             constant: 16),
             titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor,
                                              constant: 16),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
         ]
 
         let arrowIconConstraints = [
@@ -68,15 +69,15 @@ class AboutViewCell: WSTouchTableViewCell {
             arrowIcon.rightAnchor.constraint(equalTo: rightAnchor,
                                              constant: -12),
             arrowIcon.widthAnchor.constraint(equalToConstant: 16),
-            arrowIcon.heightAnchor.constraint(equalToConstant: 16)
+            arrowIcon.heightAnchor.constraint(equalToConstant: 16),
         ]
 
         let cellDividerContraints = [
             cellDivider.leadingAnchor.constraint(equalTo: contentView.leadingAnchor,
-                                              constant: 16),
+                                                 constant: 16),
             cellDivider.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             cellDivider.heightAnchor.constraint(equalToConstant: 2),
-            cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
         ]
 
         NSLayoutConstraint.activate(titleLabelContraints)
@@ -98,7 +99,7 @@ class AboutViewCell: WSTouchTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe( onNext: { isDarkMode in
+        isDarkMode.subscribe(onNext: { isDarkMode in
             if !isDarkMode {
                 self.cellDivider.backgroundColor = UIColor.midnight
                 self.titleLabel.textColor = UIColor.midnight

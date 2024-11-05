@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum ManagerErrors: Error, CustomStringConvertible, Equatable {
     case nonodeselected
     case norandomnodefound

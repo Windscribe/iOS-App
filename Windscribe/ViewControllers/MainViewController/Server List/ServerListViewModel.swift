@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol ServerListViewModelType {
-    var presentConnectingAlertTrigger: PublishSubject<()> { get }
-    var configureVPNTrigger: PublishSubject<()> { get }
-    var showMaintenanceLocationTrigger: PublishSubject<()> { get }
-    var showUpgradeTrigger: PublishSubject<()> { get }
-    var reloadTrigger: PublishSubject<()> { get }
+    var presentConnectingAlertTrigger: PublishSubject<Void> { get }
+    var configureVPNTrigger: PublishSubject<Void> { get }
+    var showMaintenanceLocationTrigger: PublishSubject<Void> { get }
+    var showUpgradeTrigger: PublishSubject<Void> { get }
+    var reloadTrigger: PublishSubject<Void> { get }
 
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel)
@@ -22,11 +22,11 @@ protocol ServerListViewModelType {
 }
 
 class ServerListViewModel: ServerListViewModelType {
-    var presentConnectingAlertTrigger = PublishSubject<()>()
-    var configureVPNTrigger = PublishSubject<()>()
-    var showMaintenanceLocationTrigger = PublishSubject<()>()
-    var showUpgradeTrigger = PublishSubject<()>()
-    var reloadTrigger = PublishSubject<()>()
+    var presentConnectingAlertTrigger = PublishSubject<Void>()
+    var configureVPNTrigger = PublishSubject<Void>()
+    var showMaintenanceLocationTrigger = PublishSubject<Void>()
+    var showUpgradeTrigger = PublishSubject<Void>()
+    var reloadTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
     var vpnManager: VPNManager
@@ -41,7 +41,8 @@ class ServerListViewModel: ServerListViewModelType {
          vpnManager: VPNManager,
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
-         connectionStateManager: ConnectionStateManagerType, sessionManager: SessionManagerV2) {
+         connectionStateManager: ConnectionStateManagerType, sessionManager: SessionManagerV2)
+    {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
@@ -51,7 +52,8 @@ class ServerListViewModel: ServerListViewModelType {
     }
 
     func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
+                                   group: GroupModel)
+    {
         if !connectivity.internetConnectionAvailable() {
             return
         }
@@ -65,7 +67,8 @@ class ServerListViewModel: ServerListViewModelType {
         }
 
         if !sessionManager.canAccesstoProLocation() &&
-            group.premiumOnly ?? false {
+            group.premiumOnly ?? false
+        {
             showUpgradeTrigger.onNext(())
             return
         } else if !group.canConnect() {
@@ -100,12 +103,12 @@ class ServerListViewModel: ServerListViewModelType {
             if let bestLocation = bestLocation, !self.connectionStateManager.isConnecting() {
                 self.logger.logD(MainViewController.self, "Tapped on Best Location \(bestLocation.hostname) from the server list.")
                 self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
-                                                       dnsHostname: bestLocation.dnsHostname,
-                                                       hostname: bestLocation.hostname,
-                                                       serverAddress: bestLocation.ipAddress,
-                                                       nickName: bestLocation.nickName,
-                                                       cityName: bestLocation.cityName,
-                                                       groupId: bestLocation.groupId)
+                                                            dnsHostname: bestLocation.dnsHostname,
+                                                            hostname: bestLocation.hostname,
+                                                            serverAddress: bestLocation.ipAddress,
+                                                            nickName: bestLocation.nickName,
+                                                            cityName: bestLocation.cityName,
+                                                            groupId: bestLocation.groupId)
                 self.configureVPNTrigger.onNext(())
             } else {
                 self.presentConnectingAlertTrigger.onNext(())

@@ -6,42 +6,43 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
+import NetworkExtension
 import RxSwift
 import Swinject
-import NetworkExtension
+import UIKit
 
 class MainViewController: PreferredFocusedViewController {
-    @IBOutlet weak var settingsButton: SettingButton!
-    @IBOutlet weak var notificationButton: NotificationButton!
-    @IBOutlet weak var helpButton: HelpButton!
-    @IBOutlet weak var flagView: UIImageView!
-    @IBOutlet weak var backgroundView: UIView!
+    @IBOutlet var settingsButton: SettingButton!
+    @IBOutlet var notificationButton: NotificationButton!
+    @IBOutlet var helpButton: HelpButton!
+    @IBOutlet var flagView: UIImageView!
+    @IBOutlet var backgroundView: UIView!
     var flagBackgroundView: UIView!
     var flagBottomGradientView: UIImageView!
     var gradient,
         backgroundGradient,
         flagBottomGradient: CAGradientLayer!
-    @IBOutlet weak var ipLabel: UILabel!
-    @IBOutlet weak var ipIcon: UIImageView!
-    @IBOutlet weak var portLabel: UILabel!
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var protocolLabel: UILabel!
-    @IBOutlet weak var connectedCityLabel: UILabel!
-    @IBOutlet weak var connectedServerLabel: UILabel!
-    @IBOutlet weak var dividerView: UIView!
-    @IBOutlet weak var connectionButton: UIButton!
-    @IBOutlet weak var connectionButtonRing: UIImageView!
+    @IBOutlet var ipLabel: UILabel!
+    @IBOutlet var ipIcon: UIImageView!
+    @IBOutlet var portLabel: UILabel!
+    @IBOutlet var statusLabel: UILabel!
+    @IBOutlet var protocolLabel: UILabel!
+    @IBOutlet var connectedCityLabel: UILabel!
+    @IBOutlet var connectedServerLabel: UILabel!
+    @IBOutlet var dividerView: UIView!
+    @IBOutlet var connectionButton: UIButton!
+    @IBOutlet var connectionButtonRing: UIImageView!
 
-    @IBOutlet weak var upgradeButton: UpgradeButton!
-    @IBOutlet weak var bestLocationImage: UIImageView!
-    @IBOutlet weak var firstServer: UIImageView!
-    @IBOutlet weak var secondServer: UIImageView!
-    @IBOutlet weak var thirdServer: UIImageView!
-    @IBOutlet weak var locationsLabel: UILabel!
-    @IBOutlet weak var nextViewButton: UIButton!
+    @IBOutlet var upgradeButton: UpgradeButton!
+    @IBOutlet var bestLocationImage: UIImageView!
+    @IBOutlet var firstServer: UIImageView!
+    @IBOutlet var secondServer: UIImageView!
+    @IBOutlet var thirdServer: UIImageView!
+    @IBOutlet var locationsLabel: UILabel!
+    @IBOutlet var nextViewButton: UIButton!
 
     // MARK: Properties
+
     var viewModel: MainViewModelType!
     var connectionStateViewModel: ConnectionStateViewModelType!
     var latencyViewModel: LatencyViewModel!
@@ -54,9 +55,8 @@ class MainViewController: PreferredFocusedViewController {
     var isFromServer: Bool = false
     var bestLocation: BestLocationModel?
     lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
-    private lazy var languageManager: LanguageManagerV2 = {
-        return Assembler.resolve(LanguageManagerV2.self)
-    }()
+    private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -66,14 +66,13 @@ class MainViewController: PreferredFocusedViewController {
         loadLastConnected()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
-        self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
+        refreshProtocol(from: try? viewModel.wifiNetwork.value())
         NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         connectionStateViewModel.becameActive()
-
     }
 
     @objc func appEnteredForeground() {
@@ -82,7 +81,7 @@ class MainViewController: PreferredFocusedViewController {
 
     private func setupUI() {
         myPreferredFocusedView = connectionButton
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
 
         flagView.contentMode = .scaleAspectFill
@@ -101,7 +100,7 @@ class MainViewController: PreferredFocusedViewController {
         backgroundGradient.colors = [UIColor.lightMidnight.cgColor, UIColor.clear.cgColor]
         backgroundGradient.locations = [0.0, 1.0]
         flagBackgroundView.layer.mask = backgroundGradient
-        self.view.addSubview(flagBackgroundView)
+        view.addSubview(flagBackgroundView)
 
         settingsButton.bringToFront()
         notificationButton.bringToFront()
@@ -116,14 +115,14 @@ class MainViewController: PreferredFocusedViewController {
         protocolLabel.font = .bold(size: 35)
         portLabel.textColor = .whiteWithOpacity(opacity: 0.50)
         portLabel.font = .bold(size: 35)
-        statusLabel.layer.cornerRadius = statusLabel.frame.height/2
+        statusLabel.layer.cornerRadius = statusLabel.frame.height / 2
         statusLabel.clipsToBounds = true
         statusLabel.backgroundColor = .whiteWithOpacity(opacity: 0.24)
         statusLabel.font = .bold(size: 35)
 
         connectedCityLabel.font = .bold(size: 135)
         connectedServerLabel.font = .text(size: 120)
-        connectionButton.layer.cornerRadius = connectionButton.frame.height/2
+        connectionButton.layer.cornerRadius = connectionButton.frame.height / 2
         connectionButton.clipsToBounds = true
         bestLocationImage.layer.cornerRadius = 10
         bestLocationImage.layer.masksToBounds = true
@@ -154,19 +153,19 @@ class MainViewController: PreferredFocusedViewController {
         locationsLabel.font = .bold(size: 35)
     }
 
-    @IBAction func settingsPressed(_ sender: Any) {
+    @IBAction func settingsPressed(_: Any) {
         router.routeTo(to: RouteID.preferences, from: self)
     }
 
-    @IBAction func notificationsClicked(_ sender: Any) {
+    @IBAction func notificationsClicked(_: Any) {
         router.routeTo(to: RouteID.newsFeed, from: self)
     }
 
-    @IBAction func helpClicked(_ sender: Any) {
+    @IBAction func helpClicked(_: Any) {
         router.routeTo(to: RouteID.support, from: self)
     }
 
-    @IBAction func upgradeButtonPressed(_ sender: Any) {
+    @IBAction func upgradeButtonPressed(_: Any) {
         router.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
     }
 
@@ -176,44 +175,44 @@ class MainViewController: PreferredFocusedViewController {
             if press.type == .downArrow {
                 if nextViewButton.isFocused {
                     myPreferredFocusedView = connectionButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
-                    router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
+                    router.routeTo(to: .serverList(bestLocation: bestLocation), from: self)
                 }
             } else if press.type == .upArrow {
                 if connectionButton.isFocused {
                     myPreferredFocusedView = notificationButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 }
             } else if press.type == .rightArrow {
                 if preferredFocusedView == notificationButton {
                     myPreferredFocusedView = helpButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 } else if preferredFocusedView == settingsButton || UIScreen.main.focusedView == settingsButton {
                     myPreferredFocusedView = notificationButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 } else if preferredFocusedView == helpButton {
                     myPreferredFocusedView = upgradeButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 }
 
             } else if press.type == .leftArrow {
                 if preferredFocusedView == notificationButton {
                     myPreferredFocusedView = settingsButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 } else if preferredFocusedView == helpButton {
                     myPreferredFocusedView = notificationButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 } else if preferredFocusedView == upgradeButton {
                     myPreferredFocusedView = helpButton
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 }
             }
         }
@@ -241,8 +240,8 @@ class MainViewController: PreferredFocusedViewController {
         if sender.state == .ended {
             if connectionButton.isFocused {
                 myPreferredFocusedView = connectionButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
                 DispatchQueue.main.async {
                     self.router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
                 }
@@ -254,8 +253,8 @@ class MainViewController: PreferredFocusedViewController {
         if sender.state == .ended {
             if connectionButton.isFocused {
                 myPreferredFocusedView = notificationButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -264,16 +263,16 @@ class MainViewController: PreferredFocusedViewController {
         if sender.state == .ended {
             if preferredFocusedView == notificationButton {
                 myPreferredFocusedView = helpButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             } else if preferredFocusedView == settingsButton || settingsButton.isFocused {
                 myPreferredFocusedView = notificationButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             } else if preferredFocusedView == helpButton {
                 myPreferredFocusedView = upgradeButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -282,16 +281,16 @@ class MainViewController: PreferredFocusedViewController {
         if sender.state == .ended {
             if preferredFocusedView == notificationButton {
                 myPreferredFocusedView = settingsButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             } else if preferredFocusedView == helpButton {
                 myPreferredFocusedView = notificationButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             } else if preferredFocusedView == upgradeButton {
                 myPreferredFocusedView = helpButton
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -300,7 +299,7 @@ class MainViewController: PreferredFocusedViewController {
         connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
-        self.configureBestLocation(selectBestLocation: true)
+        configureBestLocation(selectBestLocation: true)
         connectionStateViewModel.displayLocalIPAddress(force: true)
         latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: { [self] in
             self.configureBestLocation()
@@ -321,10 +320,10 @@ class MainViewController: PreferredFocusedViewController {
             self.refreshProtocol(from: $0)
         }).disposed(by: disposeBag)
 
-        viewModel.selectedProtocol.subscribe(onNext: {_ in
+        viewModel.selectedProtocol.subscribe(onNext: { _ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
-        viewModel.selectedPort.subscribe(onNext: {_ in
+        viewModel.selectedPort.subscribe(onNext: { _ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
 
@@ -333,15 +332,15 @@ class MainViewController: PreferredFocusedViewController {
         }).disposed(by: disposeBag)
         setFlagImages()
 
-        serverListViewModel.configureVPNTrigger.subscribe(onNext: {_ in
+        serverListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
-        favNodesListViewModel.configureVPNTrigger.subscribe(onNext: {_ in
+        favNodesListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
-        staticIPListViewModel.configureVPNTrigger.subscribe(onNext: {_ in
+        staticIPListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
@@ -351,35 +350,33 @@ class MainViewController: PreferredFocusedViewController {
 
         viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             self.setFlagImages()
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
 
         Observable.combineLatest(viewModel.session, languageManager.activelanguage)
-            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] (session, _) in
+            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] session, _ in
                 self?.setUpgradeButton(session: session)
-        }).disposed(by: self.disposeBag)
-
+            }).disposed(by: disposeBag)
     }
 
     func loadLastConnected() {
         if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
             guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
-            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
-            if (self.connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || self.connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && connectionStateViewModel.vpnManager.isDisconnected() {
-                if self.connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
-                    self.configureBestLocation(selectBestLocation: true)
+            connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
+            if (connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && connectionStateViewModel.vpnManager.isDisconnected() {
+                if connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
+                    configureBestLocation(selectBestLocation: true)
                 } else {
-                    self.connectionStateViewModel.vpnManager.selectAnotherNode()
+                    connectionStateViewModel.vpnManager.selectAnotherNode()
                 }
                 logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
             }
         }
-        if self.connectionStateViewModel.vpnManager.selectedNode == nil {
+        if connectionStateViewModel.vpnManager.selectedNode == nil {
             guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
             let bestLocation = bestLocationValue.getBestLocationModel()
             guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
-            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
+            connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
             logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
-
         }
     }
 
@@ -396,11 +393,11 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.bestLocation.filter {$0?.isInvalidated == false}.bind(onNext: { bestLocation in
-            guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
+        viewModel.bestLocation.filter { $0?.isInvalidated == false }.bind(onNext: { bestLocation in
+            guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation && self.connectionStateViewModel.vpnManager.selectedNode == nil {
+            if selectBestLocation, self.connectionStateViewModel.vpnManager.selectedNode == nil {
                 self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
             }
             if connectToBestLocation {
@@ -410,18 +407,17 @@ class MainViewController: PreferredFocusedViewController {
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = try? self.viewModel.session.value()?.isPremium {
-                if (self.connectionStateViewModel.isConnected() == false) && (self.connectionStateViewModel.vpnManager.isConnecting() == false) && (self.connectionStateViewModel.vpnManager.isDisconnected() == true) && (self.connectionStateViewModel.vpnManager.isDisconnecting() == false) && isGroupProOnly && !isUserPro {
+                if self.connectionStateViewModel.isConnected() == false, self.connectionStateViewModel.vpnManager.isConnecting() == false, self.connectionStateViewModel.vpnManager.isDisconnected() == true, self.connectionStateViewModel.vpnManager.isDisconnecting() == false, isGroupProOnly, !isUserPro {
                     self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
                 }
             }
-        }).disposed(by: disposeBag )
-
+        }).disposed(by: disposeBag)
     }
 
     func setFlagImages() {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
-        self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
+        viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
             self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode?.lowercased() ?? "")-s")
             self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
             self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
@@ -452,7 +448,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func showSecureIPAddressState(ipAddress: String) {
-        UIView.animate(withDuration: 0.25) {[weak self] in
+        UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
             self.ipLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
             if self.connectionStateViewModel.isConnected() {
@@ -464,27 +460,25 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func animateConnectedState(with info: ConnectionStateInfo) {
-
         var status = info.state.statusText
         if status == TextsAsset.Status.connecting || status == TextsAsset.Status.connectivityTest {
             status = TextsAsset.Status.on
         }
-        self.statusLabel.text = status
-        self.statusLabel.textColor = info.state.statusColor
-        self.flagBackgroundView.backgroundColor = info.state.backgroundColor
-        self.protocolLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
-        self.portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
-        self.connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
-        self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
-        self.connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTvFocused), for: .focused)
-        if [.connecting].contains(info.state) { self.connectionButtonRing.rotate() } else { self.connectionButtonRing.stopRotating() }
-        self.refreshProtocol(from: try? viewModel.wifiNetwork.value())
-
+        statusLabel.text = status
+        statusLabel.textColor = info.state.statusColor
+        flagBackgroundView.backgroundColor = info.state.backgroundColor
+        protocolLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
+        portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
+        connectionButtonRing.image = UIImage(named: info.state.connectButtonRingTv)
+        connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTV), for: .normal)
+        connectionButton.setBackgroundImage(UIImage(named: info.state.connectButtonTvFocused), for: .focused)
+        if [.connecting].contains(info.state) { connectionButtonRing.rotate() } else { connectionButtonRing.stopRotating() }
+        refreshProtocol(from: try? viewModel.wifiNetwork.value())
     }
 
-    func refreshProtocol(from network: WifiNetwork?) {
-        self.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
-            if info?.status == .disconnecting ||  info?.status == .invalid {
+    func refreshProtocol(from _: WifiNetwork?) {
+        connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
+            if info?.status == .disconnecting || info?.status == .invalid {
                 return
             }
             if info != nil && [.connected, .connecting].contains(info!.status) {
@@ -502,7 +496,7 @@ class MainViewController: PreferredFocusedViewController {
         }
     }
 
-    @IBAction func connectButtonPressed(_ sender: Any) {
+    @IBAction func connectButtonPressed(_: Any) {
         connectionStateViewModel.vpnManager.resetProperties()
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
@@ -526,7 +520,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     @objc func enableConnectButton() {
-        self.connectionButton.isUserInteractionEnabled = true
+        connectionButton.isUserInteractionEnabled = true
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
@@ -534,11 +528,11 @@ class MainViewController: PreferredFocusedViewController {
             showPrivacyConfirmationPopup()
             return
         } else if connectionStateViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
-            self.displayConnectingAlert()
+            displayConnectingAlert()
             logger.logD(self, "User attempted to connect while in connecting state.")
             return
         } else if (try? viewModel.session.value())?.status == 2 && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
-            self.showOutOfDataPopup()
+            showOutOfDataPopup()
             connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
             logger.logD(self, "User attempted to connect when out of data.")
             return
@@ -566,24 +560,23 @@ class MainViewController: PreferredFocusedViewController {
         } else if session.status == 2 {
             if !viewModel.didShowOutOfDataPopup {
                 logger.logD(self, "User is out of data.")
-                self.showOutOfDataPopup()
-                self.viewModel.didShowOutOfDataPopup = true
+                showOutOfDataPopup()
+                viewModel.didShowOutOfDataPopup = true
             }
             return
         }
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             logger.logD(self, "User Pro plan is expired.")
-            self.showProPlanExpiredPopup()
+            showProPlanExpiredPopup()
             return
         }
     }
 
     private func showOutOfDataPopup() {
         connectionStateViewModel.setOutOfData()
-        self.logger.logD(self, "Displaying Out Of Data Popup.")
+        logger.logD(self, "Displaying Out Of Data Popup.")
         router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
-
     }
 
     private func showProPlanExpiredPopup() {
@@ -591,7 +584,7 @@ class MainViewController: PreferredFocusedViewController {
             DispatchQueue.main.async {
                 self.router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
             }
-            self.viewModel.didShowProPlanExpiredPopup = true
+            viewModel.didShowProPlanExpiredPopup = true
         }
     }
 
@@ -611,13 +604,12 @@ class MainViewController: PreferredFocusedViewController {
             buttonText: TextsAsset.okay
         )
     }
-
 }
 
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
-
+                                   group: GroupModel)
+    {
         if let premiumOnly = group.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
@@ -627,17 +619,20 @@ extension MainViewController: ServerListTableViewDelegate {
             }
         }
     }
+
     func showUpgradeView() {
         router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
     }
+
     func showExpiredAccountView() {
         router?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
     }
 
     func showOutOfDataPopUp() {
-         showOutOfDataPopup()
+        showOutOfDataPopup()
     }
-    func reloadTable(cell: UITableViewCell) { }
+
+    func reloadTable(cell _: UITableViewCell) {}
 }
 
 extension MainViewController: FavNodesListTableViewDelegate {

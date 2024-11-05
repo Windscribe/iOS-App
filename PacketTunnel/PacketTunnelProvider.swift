@@ -10,24 +10,24 @@ import NetworkExtension
 import OpenVPNAdapter
 import Swinject
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
-
     // MARK: Dependencies
+
     private lazy var container: Container = {
         let container = Container()
         container.injectCore()
         return container
     }()
-    private lazy var logger: FileLogger = {
-        return container.resolve(FileLogger.self)!
-    }()
-    private lazy var preferences: Preferences = {
-        return container.resolve(Preferences.self)!
-    }()
+
+    private lazy var logger: FileLogger = container.resolve(FileLogger.self)!
+
+    private lazy var preferences: Preferences = container.resolve(Preferences.self)!
+
     // MARK: Properties
+
     private var startHandler: ((Error?) -> Void)?
     private var stopHandler: (() -> Void)?
     private var vpnReachability = OpenVPNReachability()
@@ -40,7 +40,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         return adapter
     }()
 
-    override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+    override func startTunnel(options _: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         guard
             let protocolConfiguration = protocolConfiguration as? NETunnelProviderProtocol,
             let providerConfiguration = protocolConfiguration.providerConfiguration
@@ -48,7 +48,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             fatalError()
         }
         logger.logD(self, "Started OpenVPNAdapter.")
-        let  properties:OpenVPNConfigurationEvaluation!
+        let properties: OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
         let configuration = OpenVPNConfiguration()
         configuration.tunPersist = true
@@ -84,7 +84,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         if startProxy(ovpnData: ovpnFileContent) {
             // Wait for proxy to start listening for incoming connections..
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5){ [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) { [weak self] in
                 guard let self = self else { return }
                 self.startHandler = completionHandler
                 self.vpnAdapter.connect(using: self.packetFlow)
@@ -122,7 +122,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             DispatchQueue.global(qos: .background).async {
                 let logFilePathCString = (path as NSString).utf8String
                 let listenAddressCString = (Proxy.localEndpoint as NSString).utf8String
-                let remoteAddressCString = ( proxyInfo.remoteEndpoint as NSString).utf8String
+                let remoteAddressCString = (proxyInfo.remoteEndpoint as NSString).utf8String
                 let goLogFilePath = _GoString_(p: logFilePathCString, n: Int(strlen(logFilePathCString!)))
                 let goListenAddress = _GoString_(p: listenAddressCString, n: Int(strlen(listenAddressCString!)))
                 let goRemoteAddress = _GoString_(p: remoteAddressCString, n: Int(strlen(remoteAddressCString!)))
@@ -131,7 +131,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 if self.preferences.isCircumventCensorshipEnabled() {
                     censorship = GoUint8(1)
                 }
-                StartProxy(goListenAddress, goRemoteAddress,  GoInt(proxyInfo.proxyType.rawValue), GoInt(Proxy.mtu), censorship)
+                StartProxy(goListenAddress, goRemoteAddress, GoInt(proxyInfo.proxyType.rawValue), GoInt(Proxy.mtu), censorship)
             }
             return true
         }
@@ -167,13 +167,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         completionHandler()
     }
 
-    override func wake() {
-    }
-
+    override func wake() {}
 }
 
 extension PacketTunnelProvider: OpenVPNAdapterDelegate {
-    func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
+    func openVPNAdapter(_: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
             logger.logD(self, "User DNS configuration: \(customDNSValue.description)")
@@ -185,13 +183,13 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         setTunnelNetworkSettings(networkSettings, completionHandler: completionHandler)
     }
 
-    func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message: String?) {
-    #if os(iOS)
+    func openVPNAdapter(_: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message _: String?) {
+        #if os(iOS)
 
-        if #available(iOSApplicationExtension 14.0, *) {
-            WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-        }
-    #endif
+            if #available(iOSApplicationExtension 14.0, *) {
+                WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+            }
+        #endif
         switch event {
         case .connected:
             if reasserting {
@@ -214,7 +212,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         }
     }
 
-    func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleError error: Error) {
+    func openVPNAdapter(_: OpenVPNAdapter, handleError error: Error) {
         guard let fatal = (error as NSError).userInfo[OpenVPNAdapterErrorFatalKey] as? Bool, fatal == true else {
             return
         }
@@ -230,15 +228,13 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         }
     }
 
-    func openVPNAdapter(_ openVPNAdapter: OpenVPNAdapter, handleLogMessage logMessage: String) {
-       // self.logger.logD(self, "\(logMessage)")
+    func openVPNAdapter(_: OpenVPNAdapter, handleLogMessage logMessage: String) {
+        // self.logger.logD(self, "\(logMessage)")
         logger.logD(self, "OpenVPNAdapter: \(logMessage)")
     }
 }
 
-
 extension PacketTunnelProvider: OpenVPNAdapterPacketFlow {
-
     func readPackets(completionHandler: @escaping ([Data], [NSNumber]) -> Void) {
         packetFlow.readPackets(completionHandler: completionHandler)
     }
@@ -246,7 +242,6 @@ extension PacketTunnelProvider: OpenVPNAdapterPacketFlow {
     func writePackets(_ packets: [Data], withProtocols protocols: [NSNumber]) -> Bool {
         return packetFlow.writePackets(packets, withProtocols: protocols)
     }
-
 }
-extension NEPacketTunnelFlow: OpenVPNAdapterPacketFlow {}
 
+extension NEPacketTunnelFlow: OpenVPNAdapterPacketFlow {}

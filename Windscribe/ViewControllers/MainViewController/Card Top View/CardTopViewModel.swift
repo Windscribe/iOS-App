@@ -19,14 +19,14 @@ enum CardHeaderButtonType {
 }
 
 protocol CardHeaderContainerViewDelegate {
-    func cardHeaderWasSelected (with type: CardHeaderButtonType)
+    func cardHeaderWasSelected(with type: CardHeaderButtonType)
 }
 
 protocol CardTopViewModelType {
-    var delegate: CardHeaderContainerViewDelegate? {get set}
-    var isActive: BehaviorSubject<Bool> {get}
-    var selectedAction: BehaviorSubject<CardHeaderButtonType> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var delegate: CardHeaderContainerViewDelegate? { get set }
+    var isActive: BehaviorSubject<Bool> { get }
+    var selectedAction: BehaviorSubject<CardHeaderButtonType> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
     func setActive()
     func allSelected()
@@ -83,11 +83,11 @@ class CardTopViewModel: CardTopViewModelType {
     }
 
     func setActive() {
-        self.isActive.onNext(true)
+        isActive.onNext(true)
     }
 
     private func load() {
-        themeManager.darkTheme.subscribe {data in
+        themeManager.darkTheme.subscribe { data in
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
     }

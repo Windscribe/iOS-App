@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 protocol ProtocolSwitchVCDelegate: AnyObject {
     func protocolSwitchVCCountdownCompleted()
@@ -21,11 +21,15 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     var router: ProtocolSwitchViewRouter!
     var onSelection: ((Error?) -> Void)?
     var error: VPNConfigurationErrors?
+
     // MARK: - Properties
+
     var type: ProtocolFallbacksType = .change
 
     weak var delegate: ProtocolSwitchVCDelegate?
+
     // MARK: - UI Elements
+
     private lazy var topImage: UIImageView = {
         let vw = UIImageView()
         vw.image = UIImage(named: type.getIconAsset())
@@ -81,7 +85,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             headerLabel,
             subHeaderLabel,
             protocolStack,
-            cancelButton
+            cancelButton,
         ])
         createProtocolView()
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
@@ -158,8 +162,8 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-          //  delegate?.protocolSwitchVCCountdownCompleted()
-            self.onSelection?(nil)
+            //  delegate?.protocolSwitchVCCountdownCompleted()
+            onSelection?(nil)
             backButtonTapped()
         }
     }
@@ -168,8 +172,8 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         protocolView.invalidateTimer()
         if !viewModel.isConnected() {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-          //  delegate?.protocolSwitchVCCountdownCompleted()
-            self.onSelection?(nil)
+            //  delegate?.protocolSwitchVCCountdownCompleted()
+            onSelection?(nil)
         }
         backButtonTapped()
     }

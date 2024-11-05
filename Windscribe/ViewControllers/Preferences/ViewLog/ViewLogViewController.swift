@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class ViewLogViewController: WSNavigationViewController {
     var logView: UITextView!
@@ -27,7 +27,7 @@ class ViewLogViewController: WSNavigationViewController {
 
     override func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
         super.willTransition(to: newCollection, with: coordinator)
-        self.addAutoLayoutConstraints()
+        addAutoLayoutConstraints()
     }
 
     private func bindViews() {
@@ -36,15 +36,15 @@ class ViewLogViewController: WSNavigationViewController {
             self.logView.text = content
             self.logView.scrollToBottom()
         }, onError: { _ in })
-        .disposed(by: disposeBag)
-        viewModel.showProgress.subscribe(onNext: { [weak self]show in
+            .disposed(by: disposeBag)
+        viewModel.showProgress.subscribe(onNext: { [weak self] show in
             if show {
                 self?.showLoading()
             } else {
                 self?.endLoading()
             }
         }, onError: { _ in })
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
         viewModel.isDarkMode.subscribe(onNext: { [self] isDark in
             self.logView.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.setupViews(isDark: isDark)

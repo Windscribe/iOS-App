@@ -13,7 +13,7 @@ extension NWInterface.InterfaceType {
         switch self {
         case .wifi: return ["en0"]
         case .wiredEthernet: return ["en2", "en3", "en4"]
-        case .cellular: return ["pdp_ip0","pdp_ip1","pdp_ip2","pdp_ip3"]
+        case .cellular: return ["pdp_ip0", "pdp_ip1", "pdp_ip2", "pdp_ip3"]
         default: return nil
         }
     }
@@ -58,20 +58,18 @@ extension NWInterface.InterfaceType {
         return address
     }
 
-    var ipv4: String? { self.address(family: AF_INET) }
-    var ipv6: String? { self.address(family: AF_INET6) }
-
+    var ipv4: String? { address(family: AF_INET) }
+    var ipv6: String? { address(family: AF_INET6) }
 }
 
 extension String {
-
     var isRFC1918IPAddress: Bool {
         let rfc1918Ranges: [ClosedRange<UInt32>] = [
-            0x0A000000...0x0AFFFFFF,      // 10.0.0.0 - 10.255.255.255
-            0xAC100000...0xAC1FFFFF,      // 172.16.0.0 - 172.31.255.255
-            0xC0A80000...0xC0A8FFFF       // 192.168.0.0 - 192.168.255.255
+            0x0A00_0000 ... 0x0AFF_FFFF, // 10.0.0.0 - 10.255.255.255
+            0xAC10_0000 ... 0xAC1F_FFFF, // 172.16.0.0 - 172.31.255.255
+            0xC0A8_0000 ... 0xC0A8_FFFF, // 192.168.0.0 - 192.168.255.255
         ]
-        if let ipAddressNumeric = self.ipToInt {
+        if let ipAddressNumeric = ipToInt {
             for range in rfc1918Ranges {
                 if range.contains(UInt32(ipAddressNumeric)) {
                     return true
@@ -82,10 +80,10 @@ extension String {
     }
 
     var ipToInt: Int? {
-        let octets: [Int] = self.split(separator: ".").map({Int($0)!})
-        var numValue: Int = 0
+        let octets: [Int] = split(separator: ".").map { Int($0)! }
+        var numValue = 0
         for (i, n) in octets.enumerated() {
-            let p: Int = NSDecimalNumber(decimal: pow(256, (3-i))).intValue
+            let p: Int = NSDecimalNumber(decimal: pow(256, 3 - i)).intValue
             numValue += n * p
         }
         return numValue

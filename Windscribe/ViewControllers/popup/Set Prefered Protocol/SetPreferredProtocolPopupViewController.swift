@@ -6,12 +6,11 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxCocoa
+import RxSwift
+import UIKit
 
 class SetPreferredProtocolPopupViewController: WSUIViewController {
-
     var backgroundView: UIView!
     var imageView: UIImageView!
     var titleLabel: UILabel!

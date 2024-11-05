@@ -1,5 +1,5 @@
 //
-//  ExtensionAPIManagerImpl.swift
+//  WireguardAPIManagerImpl.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-23.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class WireguardAPIManagerImpl: WireguardAPIManager {
     private let api: WSNetServerAPI
     private let preferences: Preferences
@@ -21,16 +22,16 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: DynamicWireGuardConfig.self) { completion in
-            return self.api.wgConfigsInit(sessionAuth, clientPublicKey: clientPublicKey, deleteOldestKey: deleteOldestKey, callback: completion)
+            self.api.wgConfigsInit(sessionAuth, clientPublicKey: clientPublicKey, deleteOldestKey: deleteOldestKey, callback: completion)
         }
     }
 
     func wgConfigConnect(clientPublicKey: String, hostname: String, deviceId: String) -> RxSwift.Single<DynamicWireGuardConnect> {
-        guard let sessionAuth =  preferences.userSessionAuth() else {
+        guard let sessionAuth = preferences.userSessionAuth() else {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: DynamicWireGuardConnect.self) { completion in
-            return self.api.wgConfigsConnect(sessionAuth, clientPublicKey: clientPublicKey, hostname: hostname, deviceId: deviceId, wgTtl: "3600", callback: completion)
+            self.api.wgConfigsConnect(sessionAuth, clientPublicKey: clientPublicKey, hostname: hostname, deviceId: deviceId, wgTtl: "3600", callback: completion)
         }
     }
 
@@ -39,7 +40,7 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: Session.self) { completion in
-            return self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
+            self.api.session(sessionAuth, appleId: "", gpDeviceId: "", callback: completion)
         }
     }
 }

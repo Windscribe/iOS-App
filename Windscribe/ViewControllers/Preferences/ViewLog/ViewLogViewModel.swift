@@ -1,5 +1,5 @@
 //
-//  ViewLogViewModal.swift
+//  ViewLogViewModel.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-25.
@@ -8,12 +8,14 @@
 
 import Foundation
 import RxSwift
+
 protocol ViewLogViewModel {
     var title: String { get }
     var logContent: BehaviorSubject<String> { get }
     var showProgress: BehaviorSubject<Bool> { get }
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
 }
+
 class ViewLogViewModelImpl: ViewLogViewModel {
     let title = TextsAsset.Debug.viewLog
     let logContent = BehaviorSubject(value: "")

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol Connectivity {
     var network: BehaviorSubject<AppNetwork> { get }
     func getNetwork() -> AppNetwork

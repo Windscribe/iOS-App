@@ -1,5 +1,5 @@
 //
-//  PreferredFocusedViewController.swift
+//  UIViewController+PreferedFocusView.swift
 //  WindscribeTV
 //
 //  Created by Andre Fonseca on 11/09/2024.

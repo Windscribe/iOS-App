@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class CustomConfigRepositoryImpl: CustomConfigRepository {
     private let fileDatabase: FileDatabase
     private let localDatabase: LocalDatabase
@@ -43,7 +44,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 if serverAddress == "" {
                     return RepositoryError.invalidConfigData
                 }
-                guard let configData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return RepositoryError.invalidConfigData  }
+                guard let configData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return RepositoryError.invalidConfigData }
                 data = configData
                 let customConfig = CustomConfig(id: fileId,
                                                 name: serverName,
@@ -53,7 +54,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 fileDatabase.saveFile(data: data, path: path)
                 return nil
             }
-        } catch let error {
+        } catch {
             logger.logE(self, "Error when saving custom config file. \(error.localizedDescription)")
         }
         return RepositoryError.invalidConfigData
@@ -120,7 +121,8 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
 
                 if let configurationFileURL = Bundle.main.url(forResource: "cert", withExtension: "file"),
                    let configurationFileContent = try? Data(contentsOf: configurationFileURL),
-                   !containsCert {
+                   !containsCert
+                {
                     data.append(configurationFileContent)
                 }
 
@@ -132,7 +134,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 fileDatabase.saveFile(data: data, path: path)
                 return nil
             }
-        } catch let error {
+        } catch {
             logger.logE(self, "Error when saving custom OpenVPN config file. \(error.localizedDescription)")
         }
         return RepositoryError.invalidConfigData

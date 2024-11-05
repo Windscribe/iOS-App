@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PrivacyPopUpViewController: BasePopUpViewController {
     var privacyViewModel: PrivacyViewModelType!
@@ -15,6 +15,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     var closeCompletion: (() -> Void)?
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Privacy Popup View")
@@ -22,6 +23,7 @@ class PrivacyPopUpViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     override func setup() {
         super.setup()
         button.setTitle(TextsAsset.PrivacyView.action, for: .normal)

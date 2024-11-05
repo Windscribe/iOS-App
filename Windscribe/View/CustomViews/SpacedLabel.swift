@@ -9,7 +9,6 @@
 import UIKit
 
 class SpacedLabel: UILabel {
-
     var topInset: CGFloat = 5.0
     var bottomInset: CGFloat = 5.0
     var leftInset: CGFloat = 5.0
@@ -25,5 +24,4 @@ class SpacedLabel: UILabel {
         return CGSize(width: size.width + leftInset + rightInset,
                       height: size.height + topInset + bottomInset)
     }
-
 }

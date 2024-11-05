@@ -23,18 +23,18 @@ struct NodeModel {
         ip3: String,
         hostname: String,
         dnsHostname: String,
-        forceDisconnect: Bool) {
-            self.ip1 = ip1
-            self.ip2 = ip2
-            self.ip3 = ip3
-            self.hostname = hostname
-            self.dnsHostname = dnsHostname
-            self.forceDisconnect = forceDisconnect
+        forceDisconnect: Bool
+    ) {
+        self.ip1 = ip1
+        self.ip2 = ip2
+        self.ip3 = ip3
+        self.hostname = hostname
+        self.dnsHostname = dnsHostname
+        self.forceDisconnect = forceDisconnect
     }
 }
 
 @objcMembers class Node: Object, Decodable {
-
     dynamic var ip: String = ""
     dynamic var ip2: String = ""
     dynamic var ip3: String = ""
@@ -46,14 +46,14 @@ struct NodeModel {
     dynamic var forceDisconnect: Bool = false
 
     enum CodingKeys: String, CodingKey {
-        case ip = "ip"
-        case ip2 = "ip2"
-        case ip3 = "ip3"
-        case hostname = "hostname"
+        case ip
+        case ip2
+        case ip3
+        case hostname
         case dnsHostname = "dns_hostname"
-        case weight = "weight"
-        case group = "group"
-        case gps = "gps"
+        case weight
+        case group
+        case gps
         case forceDisconnect = "force_disconnect"
     }
 
@@ -67,8 +67,8 @@ struct NodeModel {
         dnsHostname = try container.decodeIfPresent(String.self, forKey: .dnsHostname) ?? ""
         weight = try container.decodeIfPresent(Int.self, forKey: .weight) ?? 0
         group = try container.decodeIfPresent(String.self, forKey: .group) ?? ""
-        gps = try container.decodeIfPresent(String.self, forKey: .gps)  ?? ""
-        forceDisconnect = try container.decodeIfPresent(Int.self, forKey: .forceDisconnect)  == 1 ? true : false
+        gps = try container.decodeIfPresent(String.self, forKey: .gps) ?? ""
+        forceDisconnect = try container.decodeIfPresent(Int.self, forKey: .forceDisconnect) == 1 ? true : false
     }
 
     func getNodeModel() -> NodeModel {
@@ -79,13 +79,11 @@ struct NodeModel {
                          dnsHostname: dnsHostname,
                          forceDisconnect: forceDisconnect)
     }
-
 }
 
 class StaticIPNode: Node {}
 
 struct FavNodeModel {
-
     let groupId: String?
     let serverName: String?
     let countryCode: String?
@@ -110,7 +108,8 @@ struct FavNodeModel {
          pingIp: String,
          linkSpeed: String,
          health: Int,
-         isPremiumOnly: Bool) {
+         isPremiumOnly: Bool)
+    {
         self.groupId = groupId
         self.serverName = serverName
         self.countryCode = countryCode
@@ -127,29 +126,28 @@ struct FavNodeModel {
 
     init(node: NodeModel,
          group: GroupModel,
-         server: ServerModel) {
+         server: ServerModel)
+    {
         if let groupId = group.id {
             self.groupId = "\(groupId)"
         } else {
-            self.groupId = node.hostname
+            groupId = node.hostname
         }
-        self.serverName = group.city
-        self.countryCode = server.countryCode
-        self.hostname = node.hostname
-        self.cityName = group.city
-        self.nickName = group.nick
-        self.dnsHostname = server.dnsHostname
-        self.ipAddress = node.ip2
-        self.pingIp = group.pingIp
-        self.linkSpeed = group.linkSpeed
-        self.health = group.health
-        self.isPremiumOnly = group.premiumOnly
+        serverName = group.city
+        countryCode = server.countryCode
+        hostname = node.hostname
+        cityName = group.city
+        nickName = group.nick
+        dnsHostname = server.dnsHostname
+        ipAddress = node.ip2
+        pingIp = group.pingIp
+        linkSpeed = group.linkSpeed
+        health = group.health
+        isPremiumOnly = group.premiumOnly
     }
-
 }
 
 @objcMembers class FavNode: Object, Decodable {
-
     dynamic var groupId: String = ""
     dynamic var serverName: String = ""
     dynamic var countryCode: String = ""
@@ -167,41 +165,43 @@ struct FavNodeModel {
 
     convenience init(node: Node,
                      group: Group,
-                     server: Server) {
+                     server: Server)
+    {
         self.init()
-        self.groupId = "\(group.id)"
-        self.serverName = server.name
-        self.countryCode = server.countryCode
-        self.hostname = node.hostname
-        self.cityName = group.city
-        self.nickName = group.nick
-        self.dnsHostname = server.dnsHostname
-        self.ipAddress = node.ip2
-        self.pingIp = group.pingIp
-        self.pingHost = group.pingHost
-        self.linkSpeed = group.linkSpeed
-        self.health = group.health
-        self.isPremiumOnly = group.premiumOnly
+        groupId = "\(group.id)"
+        serverName = server.name
+        countryCode = server.countryCode
+        hostname = node.hostname
+        cityName = group.city
+        nickName = group.nick
+        dnsHostname = server.dnsHostname
+        ipAddress = node.ip2
+        pingIp = group.pingIp
+        pingHost = group.pingHost
+        linkSpeed = group.linkSpeed
+        health = group.health
+        isPremiumOnly = group.premiumOnly
     }
 
     convenience init(node: NodeModel,
                      group: GroupModel,
-                     server: ServerModel) {
+                     server: ServerModel)
+    {
         self.init()
         guard let groupId = group.id else { return }
         self.groupId = "\(groupId)"
-        self.serverName = server.name ?? ""
-        self.countryCode = server.countryCode ?? ""
-        self.hostname = node.hostname ?? ""
-        self.cityName = group.city ?? ""
-        self.nickName = group.nick ?? ""
-        self.dnsHostname = server.dnsHostname ?? ""
-        self.ipAddress = node.ip2 ?? ""
-        self.pingIp = group.pingIp ?? ""
-        self.pingHost = group.pingHost ?? ""
-        self.linkSpeed = group.linkSpeed ?? "1000"
-        self.health = group.health ?? 0
-        self.isPremiumOnly = group.premiumOnly ?? false
+        serverName = server.name ?? ""
+        countryCode = server.countryCode ?? ""
+        hostname = node.hostname ?? ""
+        cityName = group.city ?? ""
+        nickName = group.nick ?? ""
+        dnsHostname = server.dnsHostname ?? ""
+        ipAddress = node.ip2 ?? ""
+        pingIp = group.pingIp ?? ""
+        pingHost = group.pingHost ?? ""
+        linkSpeed = group.linkSpeed ?? "1000"
+        health = group.health ?? 0
+        isPremiumOnly = group.premiumOnly ?? false
     }
 
     override static func primaryKey() -> String? {
@@ -222,37 +222,33 @@ struct FavNodeModel {
                             health: health,
                             isPremiumOnly: isPremiumOnly)
     }
-
 }
 
 class LastConnectedNode: FavNode {
-
     var staticIPCredentials = List<LastConnectedNodeStaticIPCredentials>()
-    dynamic var connectedAt: Date = Date()
+    dynamic var connectedAt: Date = .init()
 
     convenience init(selectedNode: SelectedNode) {
         self.init()
-        self.serverName = selectedNode.cityName
-        self.countryCode = selectedNode.countryCode
-        self.hostname = selectedNode.hostname
-        self.cityName = selectedNode.cityName
-        self.nickName = selectedNode.nickName
-        self.dnsHostname = selectedNode.dnsHostname
-        self.ipAddress = selectedNode.serverAddress
+        serverName = selectedNode.cityName
+        countryCode = selectedNode.countryCode
+        hostname = selectedNode.hostname
+        cityName = selectedNode.cityName
+        nickName = selectedNode.nickName
+        dnsHostname = selectedNode.dnsHostname
+        ipAddress = selectedNode.serverAddress
         staticIPCredentials.removeAll()
         if let staticIPCredential = selectedNode.staticIPCredentials {
             staticIPCredentials.append(LastConnectedNodeStaticIPCredentials(staticIPCredentials: staticIPCredential))
         }
         if let customConfigModel = selectedNode.customConfig {
-            self.customConfigId = customConfigModel.id
+            customConfigId = customConfigModel.id
         }
-        self.groupId = "\(selectedNode.groupId)"
+        groupId = "\(selectedNode.groupId)"
     }
-
 }
 
 struct BestLocationModel {
-
     let serverName: String?
     let countryCode: String?
     let hostname: String?
@@ -273,7 +269,8 @@ struct BestLocationModel {
          ipAddress: String,
          groupId: Int,
          linkSpeed: String,
-         health: Int) {
+         health: Int)
+    {
         self.serverName = serverName
         self.countryCode = countryCode
         self.hostname = hostname
@@ -288,23 +285,22 @@ struct BestLocationModel {
 
     init(node: NodeModel,
          group: GroupModel,
-         server: ServerModel) {
-        self.serverName = group.city
-        self.countryCode = server.countryCode
-        self.hostname = node.hostname
-        self.cityName = group.city
-        self.nickName = group.nick
-        self.dnsHostname = server.dnsHostname
-        self.ipAddress = node.ip2
-        self.groupId = group.id
-        self.linkSpeed = group.linkSpeed
-        self.health = group.health
+         server: ServerModel)
+    {
+        serverName = group.city
+        countryCode = server.countryCode
+        hostname = node.hostname
+        cityName = group.city
+        nickName = group.nick
+        dnsHostname = server.dnsHostname
+        ipAddress = node.ip2
+        groupId = group.id
+        linkSpeed = group.linkSpeed
+        health = group.health
     }
-
 }
 
 @objcMembers class BestLocation: Object, Decodable {
-
     dynamic var serverName: String = ""
     dynamic var countryCode: String = ""
     dynamic var hostname: String = ""
@@ -319,18 +315,19 @@ struct BestLocationModel {
 
     convenience init(node: NodeModel,
                      group: GroupModel,
-                     server: ServerModel) {
+                     server: ServerModel)
+    {
         self.init()
-        self.serverName = group.city ?? ""
-        self.countryCode = server.countryCode ?? ""
-        self.hostname = node.hostname ?? ""
-        self.cityName = group.city ?? ""
-        self.nickName = group.nick ?? ""
-        self.dnsHostname = server.dnsHostname ?? ""
-        self.ipAddress = node.ip2 ?? ""
-        self.groupId = group.id ?? 0
-        self.linkSpeed = group.linkSpeed ?? "1000"
-        self.health = group.health ?? 0
+        serverName = group.city ?? ""
+        countryCode = server.countryCode ?? ""
+        hostname = node.hostname ?? ""
+        cityName = group.city ?? ""
+        nickName = group.nick ?? ""
+        dnsHostname = server.dnsHostname ?? ""
+        ipAddress = node.ip2 ?? ""
+        groupId = group.id ?? 0
+        linkSpeed = group.linkSpeed ?? "1000"
+        health = group.health ?? 0
     }
 
     override static func primaryKey() -> String? {
@@ -349,5 +346,4 @@ struct BestLocationModel {
                                  linkSpeed: linkSpeed,
                                  health: health)
     }
-
 }

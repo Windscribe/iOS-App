@@ -7,20 +7,23 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class ShareWithFriendViewController: WSNavigationViewController {
     // MARK: - Properties
+
     var viewModel: ShareWithFriendViewModelType!
 
     // MARK: - UI Elements
+
     private lazy var imageWind: UIImageView = {
         let imv = UIImageView(image: UIImage(named: ImagesAsset.windscribeHeart))
         imv.setDimensions(height: 86, width: 104)
         imv.contentMode = .scaleAspectFit
         return imv
     }()
+
     private lazy var headerTitle: UILabel = {
         let lbl = UILabel()
         lbl.text = TextsAsset.Refer.shareWindscribeWithFriend
@@ -46,7 +49,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
         let vw = UIStackView(arrangedSubviews: [
             headerTitle,
             referral1View,
-            referral2View
+            referral2View,
         ])
         vw.axis = .vertical
         vw.setCustomSpacing(38, after: headerTitle)
@@ -66,7 +69,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
 
     private lazy var bottomView: UIStackView = {
         let vw = UIStackView(arrangedSubviews: [
-            descriptionLabel
+            descriptionLabel,
         ])
         vw.axis = .vertical
         vw.setCustomSpacing(38, after: headerTitle)
@@ -80,7 +83,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
             let linkString = self?.viewModel.appStoreLink ?? ""
             let message = self?.viewModel.inviteMessage ?? ""
             self?.inviteAction(message: message,
-                         link: linkString)
+                               link: linkString)
         }.disposed(by: disposeBag)
 
         btn.anchor(height: 48)
@@ -93,6 +96,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
     }()
 
     // MARK: - Config
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -132,7 +136,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
             imageWind,
             topView,
             shareButton,
-            bottomView
+            bottomView,
         ])
         layoutView.stackView.spacing = 16
         let paddingTop = UIScreen.hasTopNotch ? 75.0 : 40.0
@@ -142,12 +146,12 @@ class ShareWithFriendViewController: WSNavigationViewController {
     }
 
     private func inviteAction(message: String, link: String) {
-        let objectsToShare = [message,link] as [Any]
+        let objectsToShare = [message, link] as [Any]
         let activityViewController = UIActivityViewController(
             activityItems: objectsToShare,
             applicationActivities: nil
         )
-        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.popoverPresentationController?.sourceView = view
         present(activityViewController, animated: true)
     }
 }

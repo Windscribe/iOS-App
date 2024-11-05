@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class PreferencesTableViewCell: WSTouchTableViewCell {
     var iconView = UIImageView()
@@ -24,26 +24,26 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.clear
+        backgroundColor = UIColor.clear
 
         iconView.contentMode = .scaleAspectFit
 
-        self.addSubview(iconView)
+        addSubview(iconView)
 
         titleLabel.textColor = UIColor.white
         titleLabel.layer.opacity = 0.5
         titleLabel.font = UIFont.bold(size: 16)
         titleLabel.textAlignment = .left
 
-        self.addSubview(titleLabel)
+        addSubview(titleLabel)
         arrowIcon.contentMode = .scaleAspectFit
         arrowIcon.layer.opacity = 0.5
         arrowIcon.image = UIImage(named: ImagesAsset.prefRightIcon)
-        self.addSubview(arrowIcon)
+        addSubview(arrowIcon)
 
         cellDivider.backgroundColor = UIColor.white
         cellDivider.layer.opacity = 0.05
-        self.addSubview(cellDivider)
+        addSubview(cellDivider)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -54,6 +54,7 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
         titleLabel.layer.opacity = 0.5
         arrowIcon.layer.opacity = 0.5
     }
+
     override func configHighlight() {
         titleLabel.layer.opacity = 1
         arrowIcon.layer.opacity = 1
@@ -62,7 +63,7 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        selectedBackgroundView?.frame = CGRect(x: 0, y: -4, width: self.frame.width, height: self.frame.height+4)
+        selectedBackgroundView?.frame = CGRect(x: 0, y: -4, width: frame.width, height: frame.height + 4)
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -73,25 +74,25 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
             NSLayoutConstraint(item: iconView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: iconView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: iconView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
-            ])
+            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+        ])
         addConstraints([
-            NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: self.iconView, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: titleLabel, attribute: .left, relatedBy: .equal, toItem: self.iconView, attribute: .right, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
-            ])
+            NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: iconView, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: titleLabel, attribute: .left, relatedBy: .equal, toItem: iconView, attribute: .right, multiplier: 1.0, constant: 14),
+            NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+        ])
         addConstraints([
-            NSLayoutConstraint(item: arrowIcon, attribute: .centerY, relatedBy: .equal, toItem: self.iconView, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: arrowIcon, attribute: .centerY, relatedBy: .equal, toItem: iconView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: arrowIcon, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: arrowIcon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: arrowIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
-            ])
+            NSLayoutConstraint(item: arrowIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+        ])
         addConstraints([
             NSLayoutConstraint(item: cellDivider, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: cellDivider, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: cellDivider, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: cellDivider, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
-            ])
+            NSLayoutConstraint(item: cellDivider, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
+        ])
     }
 
     func updateUI() {
@@ -101,7 +102,7 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe( onNext: { isDarkMode in
+        isDarkMode.subscribe(onNext: { isDarkMode in
             if !isDarkMode {
                 self.cellDivider.backgroundColor = UIColor.midnight
                 self.titleLabel.textColor = UIColor.midnight

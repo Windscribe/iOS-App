@@ -1,5 +1,5 @@
 //
-//  LocationRepositoryImpl.swift
+//  StaticIpRepositoryImpl.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-02.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 class StaticIpRepositoryImpl: StaticIpRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -34,6 +35,6 @@ class StaticIpRepositoryImpl: StaticIpRepository {
     }
 
     func getStaticIp(id: Int) -> StaticIP? {
-        return localDatabase.getStaticIPs()?.first { $0.id == id}
+        return localDatabase.getStaticIPs()?.first { $0.id == id }
     }
 }

@@ -13,7 +13,8 @@ extension String {
     func localize(comment: String = "") -> String {
         let languageCode = Assembler.resolve(LanguageManagerV2.self).getCurrentLanguage().rawValue
         guard let bundle = Bundle.main.path(forResource: languageCode,
-                                            ofType: "lproj") else {
+                                            ofType: "lproj")
+        else {
             return NSLocalizedString(self, comment: comment)
         }
         let langBundle = Bundle(path: bundle)

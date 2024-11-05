@@ -6,8 +6,8 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 protocol SelectableHeaderViewDelegate: AnyObject {
     func selectableHeaderViewDidSelect(_ option: String)
@@ -50,7 +50,7 @@ class SelectableHeaderView: UIStackView {
 
     private lazy var dropdownView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            optionLabel, iconDropdown
+            optionLabel, iconDropdown,
         ])
         stack.axis = .horizontal
         stack.spacing = 8
@@ -84,7 +84,7 @@ class SelectableHeaderView: UIStackView {
     init(viewToAddDropdown: UIView? = nil, title: String, imageAsset: String?, optionTitle: String, listOption: [String], isDarkMode: BehaviorSubject<Bool>) {
         self.title = title
         self.imageAsset = imageAsset
-        self.currentOption = optionTitle
+        currentOption = optionTitle
         self.listOption = listOption
         self.viewToAddDropdown = viewToAddDropdown
         super.init(frame: .zero)
@@ -92,7 +92,8 @@ class SelectableHeaderView: UIStackView {
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -116,7 +117,7 @@ class SelectableHeaderView: UIStackView {
             iconImage,
             titleLabel,
             UIView(),
-            dropdownView
+            dropdownView,
         ])
         spacing = 16
         axis = .horizontal
@@ -133,25 +134,25 @@ class SelectableHeaderView: UIStackView {
         if !haveCorner {
             wrapperView.makeRoundCorners(corners: [.topLeft, .topRight], radius: 6)
         } else {
-            wrapperView.makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight,.bottomLeft], radius: 6)
+            wrapperView.makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight, .bottomLeft], radius: 6)
         }
-
     }
 
     func disableDropdown() {
         dropdownView.isUserInteractionEnabled = false
     }
+
     func hideDropdownIcon() {
         iconDropdown.isHidden = true
     }
 
     func updateStringData(title: String, optionTitle: String, listOption: [String]) {
         self.title = title
-        self.currentOption = optionTitle
+        currentOption = optionTitle
         self.listOption = listOption
 
-        self.titleLabel.setTextWithOffSet(text: title)
-        self.optionLabel.setTextWithOffSet(text: currentOption)
+        titleLabel.setTextWithOffSet(text: title)
+        optionLabel.setTextWithOffSet(text: currentOption)
     }
 }
 
@@ -162,8 +163,9 @@ extension SelectableHeaderView {
             currentDropdownView = nil
         }
 
-        if let parentView = self.superview,
-           let grandParentView = parentView.superview {
+        if let parentView = superview,
+           let grandParentView = parentView.superview
+        {
             let frameToShowDropDown = parentView.frame
             let displayFrame = CGRect(x: frameToShowDropDown.origin.x - 16,
                                       y: frameToShowDropDown.origin.y + 16,
@@ -183,13 +185,13 @@ extension SelectableHeaderView {
 }
 
 extension SelectableHeaderView: DropdownDelegate {
-    func optionSelected(dropdown: Dropdown, option: String, relatedIndex: Int) {
+    func optionSelected(dropdown _: Dropdown, option: String, relatedIndex _: Int) {
         if currentDropdownView != nil {
             currentDropdownView?.removeWithAnimation()
             currentDropdownView = nil
         }
         dismissDropdown()
-        self.optionLabel.setTextWithOffSet(text: option)
+        optionLabel.setTextWithOffSet(text: option)
         delegate?.selectableHeaderViewDidSelect(option)
     }
 }

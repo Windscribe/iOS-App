@@ -9,7 +9,6 @@
 import UIKit
 
 extension PreferencesMainViewController {
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,26 +28,27 @@ extension PreferencesMainViewController {
         shawdowView.bottomAnchor.constraint(equalTo: tableView.bottomAnchor).isActive = true
 
         guard let actionButton = actionButton,
-           let loginButton = loginButton else {
+              let loginButton = loginButton
+        else {
             return
         }
-        actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: self.getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
-         self.view.addConstraints([
-             actionButtonBottomConstraint,
-             NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
-             NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 28),
-             NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: -28)
+        actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+        view.addConstraints([
+            actionButtonBottomConstraint,
+            NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
+            NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 28),
+            NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28),
         ])
         if actionButton.isHidden == false {
             loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: actionButton, attribute: .top, multiplier: 1.0, constant: -24)
         } else {
-            loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: self.getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+            loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
         }
-         self.view.addConstraints([
+        view.addConstraints([
             loginButtonBottomConstraint,
-             NSLayoutConstraint(item: loginButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
-             NSLayoutConstraint(item: loginButton, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 28),
-             NSLayoutConstraint(item: loginButton, attribute: .right, relatedBy: .equal, toItem: self.view, attribute: .right, multiplier: 1.0, constant: -28)
+            NSLayoutConstraint(item: loginButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
+            NSLayoutConstraint(item: loginButton, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 28),
+            NSLayoutConstraint(item: loginButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28),
         ])
     }
 
@@ -72,7 +72,7 @@ extension PreferencesMainViewController {
         actionButton.tintColor = UIColor.midnight
         actionButton.titleLabel?.font = UIFont.text(size: 16)
         actionButton.layer.cornerRadius = 24
-        actionButton.contentEdgeInsets =  UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        actionButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         actionButton.titleLabel?.lineBreakMode = .byWordWrapping
         actionButton.titleLabel?.textAlignment = .center
         view.addSubview(actionButton)
@@ -87,8 +87,7 @@ extension PreferencesMainViewController {
 
     @objc func displayElementsForPrefferedAppearence() {
         // self.displayForPrefferedAppearence()
-        self.tableView.reloadData()
+        tableView.reloadData()
         shawdowView.backgroundColor = viewModel.isDarkTheme() ? UIColor.whiteWithOpacity(opacity: 0.08) : .midnightWithOpacity(opacity: 0.08)
     }
-
 }

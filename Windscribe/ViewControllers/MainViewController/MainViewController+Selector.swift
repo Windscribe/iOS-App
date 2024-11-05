@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 import RxRealm
 import RxSwift
 
 extension MainViewController {
     @objc func appEnteredForeground() {
-        if connectionStateViewModel.vpnManager.isConnecting() && !internetConnectionLost {
+        if connectionStateViewModel.vpnManager.isConnecting(), !internetConnectionLost {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
-          //  configureVPN(bypassConnectingCheck: true)
+            //  configureVPN(bypassConnectingCheck: true)
         }
         clearScrollHappened()
         connectionStateViewModel.becameActive()
@@ -50,7 +50,7 @@ extension MainViewController {
     }
 
     @objc func checkForUnreadNotifications() {
-        viewModel.checkForUnreadNotifications(completion: { showNotifications,readNoticeDifferentCount in
+        viewModel.checkForUnreadNotifications(completion: { showNotifications, readNoticeDifferentCount in
             if showNotifications {
                 DispatchQueue.main.async {
                     self.showNotificationsViewController()
@@ -77,27 +77,27 @@ extension MainViewController {
     }
 
     @objc func latencyLoadTimeOut(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        if self.isLoadingLatencyValues {
+        if isLoadingLatencyValues {
             print("Loading latency timed out.")
-            self.isLoadingLatencyValues = false
-            self.configureBestLocation(selectBestLocation: selectBestLocation, connectToBestLocation: connectToBestLocation)
-            self.reloadTableViews()
-            self.hideSplashView()
-            self.endRefreshControls()
+            isLoadingLatencyValues = false
+            configureBestLocation(selectBestLocation: selectBestLocation, connectToBestLocation: connectToBestLocation)
+            reloadTableViews()
+            hideSplashView()
+            endRefreshControls()
         }
     }
 
     @objc func latencyLoadTimeOutWithSelectAndConnectBestLocation() {
-        self.latencyLoadTimeOut(selectBestLocation: true, connectToBestLocation: true)
+        latencyLoadTimeOut(selectBestLocation: true, connectToBestLocation: true)
     }
 
     @objc func configureBestLocationDefault() {
-        if self.serverListTableViewDataSource?.bestLocation == nil && self.noSelectedNodeToConnect() {
-            self.configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
-            self.reloadServerList()
+        if serverListTableViewDataSource?.bestLocation == nil, noSelectedNodeToConnect() {
+            configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
+            reloadServerList()
         } else {
-            self.configureBestLocation(selectBestLocation: false, connectToBestLocation: false)
-            self.reloadServerList()
+            configureBestLocation(selectBestLocation: false, connectToBestLocation: false)
+            reloadServerList()
         }
     }
 
@@ -105,8 +105,8 @@ extension MainViewController {
         logger.logD(self, "Looking for account state changes.")
         guard let session = session else { return }
         // check for ghost account and present account completion screen
-        if didCheckForGhostAccount == false && session.isUserPro == true && session.isUserGhost == true {
-            self.didCheckForGhostAccount = true
+        if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
+            didCheckForGhostAccount = true
             router?.routeTo(to: RouteID.signup(claimGhostAccount: true), from: self)
         }
 
@@ -129,25 +129,25 @@ extension MainViewController {
         } else if session.status == 2 {
             logger.logD(self, "User is out of data.")
             if !didShowOutOfDataPopup {
-                self.showOutOfDataPopup()
-                self.didShowOutOfDataPopup = true
+                showOutOfDataPopup()
+                didShowOutOfDataPopup = true
             }
-        } else if session.getDataUsedInMB() >= 1024 && viewModel.daysSinceLogin() >= 2  && viewModel.showRateDialog() {
+        } else if session.getDataUsedInMB() >= 1024, viewModel.daysSinceLogin() >= 2, viewModel.showRateDialog() {
             logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
-            self.showRateUsPopup()
+            showRateUsPopup()
         }
         logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
         guard let oldSession = viewModel.oldSession else { return }
-        if !session.isPremium && oldSession.isPremium {
+        if !session.isPremium, oldSession.isPremium {
             if !didShowProPlanExpiredPopup {
-                self.showProPlanExpiredPopup()
-                self.didShowProPlanExpiredPopup = true
+                showProPlanExpiredPopup()
+                didShowProPlanExpiredPopup = true
             }
         }
     }
 
     func refreshProtocol(from network: WifiNetwork?) {
-        self.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
+        connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
             DispatchQueue.main.async {
                 if info?.status == NEVPNStatus.disconnecting {
                     return
@@ -170,7 +170,7 @@ extension MainViewController {
                     return
                 }
                 if self.connectionStateViewModel.vpnManager.isFromProtocolFailover || self.connectionStateViewModel.vpnManager.isFromProtocolChange {
-                    if WifiManager.shared.selectedPreferredProtocolStatus ?? false && WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text && WifiManager.shared.selectedPreferredPort == self.portLabel.text {
+                    if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text, WifiManager.shared.selectedPreferredPort == self.portLabel.text {
                         self.setPreferredProtocolBadgeVisibility(hidden: false)
                     } else {
                         self.setPreferredProtocolBadgeVisibility(hidden: true)
@@ -236,40 +236,35 @@ extension MainViewController {
         }
     }
 
-    @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        connectionStateViewModel.vpnManager.showConnectPopup()
-        return
-//        if !viewModel.isPrivacyPopupAccepted() {
-//            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
-//            return
-//        } else if connectionStateViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
-//            self.displayConnectingAlert()
-//            logger.logD(self, "User attempted to connect while in connecting state.")
-//
-//            return
-//        } else if sessionManager.session?.status == 2 && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
-//            self.showOutOfDataPopup()
-//            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
-//            logger.logD(self, "User attempted to connect when out of data.")
-//            return
-//        }
-//        connectionStateViewModel.vpnManager.connectIntent = false
-//        connectionStateViewModel.vpnManager.userTappedToDisconnect = false
-//        connectionStateViewModel.vpnManager.isOnDemandRetry = false
-//        if WifiManager.shared.isConnectedWifiTrusted() {
-//            router?.routeTo(to: .trustedNetwork, from: self)
-//        } else {
-//            viewModel.reconnect()
-//        }
+    @objc func configureVPN(bypassConnectingCheck _: Bool = false) {
+//        connectionStateViewModel.vpnManager.showConnectPopup()
+//        return
+        if !viewModel.isPrivacyPopupAccepted() {
+            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
+            return
+        } else if sessionManager.session?.status == 2, !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
+            showOutOfDataPopup()
+            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+            logger.logD(self, "User attempted to connect when out of data.")
+            return
+        }
+        connectionStateViewModel.vpnManager.connectIntent = false
+        connectionStateViewModel.vpnManager.userTappedToDisconnect = false
+        connectionStateViewModel.vpnManager.isOnDemandRetry = false
+        if WifiManager.shared.isConnectedWifiTrusted() {
+            router?.routeTo(to: .trustedNetwork, from: self)
+        } else {
+            viewModel.reconnect()
+        }
     }
 
     @objc func reloadServerListOrder() {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
         DispatchQueue.main.async {
-            let serverModels = results.compactMap({ $0.getServerModel() })
-            let serverSections: [ServerSection] = serverModels.filter({ $0.isForStreaming() == false }).map({ ServerSection(server: $0, collapsed: true) })
-            let streamingSections: [ServerSection] = serverModels.filter({ $0.isForStreaming() == true }).map({ ServerSection(server: $0, collapsed: true) })
+            let serverModels = results.compactMap { $0.getServerModel() }
+            let serverSections: [ServerSection] = serverModels.filter { $0.isForStreaming() == false }.map { ServerSection(server: $0, collapsed: true) }
+            let streamingSections: [ServerSection] = serverModels.filter { $0.isForStreaming() == true }.map { ServerSection(server: $0, collapsed: true) }
             let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
             let streamingSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: streamingSections)
 
@@ -287,47 +282,46 @@ extension MainViewController {
     @objc func loadLastConnected() {
         if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
             guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
-            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
-            if (self.connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || self.connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && connectionStateViewModel.vpnManager.isDisconnected() {
-                if self.connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
-                    self.configureBestLocation()
+            connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
+            if connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil, node.customConfigId == nil, connectionStateViewModel.vpnManager.isDisconnected() {
+                if connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
+                    configureBestLocation()
                 } else {
-                    self.connectionStateViewModel.vpnManager.selectAnotherNode()
+                    connectionStateViewModel.vpnManager.selectAnotherNode()
                 }
                 logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
             }
 
             if let customConfigId = node.customConfigId, let customConfig = try? viewModel.customConfigs.value()?.first(where: { $0.id == customConfigId }) {
-                self.connectionStateViewModel.vpnManager.selectedNode?.customConfig = customConfig.getModel()
+                connectionStateViewModel.vpnManager.selectedNode?.customConfig = customConfig.getModel()
             }
-            logger.logD(self, "Last connected node retrived from disk. \( self.connectionStateViewModel.vpnManager.selectedNode?.hostname ?? "")")
+            logger.logD(self, "Last connected node retrived from disk. \(connectionStateViewModel.vpnManager.selectedNode?.hostname ?? "")")
         }
-        if self.connectionStateViewModel.vpnManager.selectedNode == nil {
+        if connectionStateViewModel.vpnManager.selectedNode == nil {
             guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
             let bestLocation = bestLocationValue.getBestLocationModel()
             guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
-            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
+            connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
             logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
-
         }
     }
 
     @objc func loadServerList() {
-        self.viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
+        viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             DispatchQueue.main.async {
                 self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
             }
-        }).disposed(by: self.disposeBag)
-        self.reloadFavNodeOrder()
-        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] _ in
+        }).disposed(by: disposeBag)
+        reloadFavNodeOrder()
+        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] _ in
             DispatchQueue.main.async {
                 self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
             }
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
     }
 
     func loadServerTable(servers: [Server]) {
-        self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
+        viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
             self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel)
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
@@ -336,7 +330,7 @@ extension MainViewController {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
             }
         }
-        self.viewModel.sortServerListUsingUserPreferences(isForStreaming: true, servers: servers) { streamingSectionsOrdered in
+        viewModel.sortServerListUsingUserPreferences(isForStreaming: true, servers: servers) { streamingSectionsOrdered in
             self.streamingTableViewDataSource = StreamingListTableViewDataSource(streamingSections: streamingSectionsOrdered, viewModel: self.viewModel)
             self.streamingTableViewDataSource?.delegate = self
             self.streamingTableView.dataSource = self.streamingTableViewDataSource
@@ -384,21 +378,21 @@ extension MainViewController {
     }
 
     @objc func enableConnectButton() {
-        self.connectButton.isUserInteractionEnabled = true
+        connectButton.isUserInteractionEnabled = true
     }
 
     @objc func expandButtonTapped() {
-        if self.expandButton.tag == 0 {
+        if expandButton.tag == 0 {
             locationManagerViewModel.requestLocationPermission {
                 self.showAutoSecureViews()
             }
         } else {
-            self.hideAutoSecureViews()
+            hideAutoSecureViews()
             WifiManager.shared.saveCurrentWifiNetworks()
             guard let result = WifiManager.shared.getConnectedNetwork() else { return }
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
             connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
-                if info != nil && info?.status == .connected && (nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort) {
+                if info != nil, info?.status == .connected, nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort {
                     configureVPN(bypassConnectingCheck: true)
                 } else {
                     viewModel.refreshProtocolInfo()
@@ -408,13 +402,13 @@ extension MainViewController {
     }
 
     @objc func loadLatencyWhenReady() {
-        guard let observer = self.latencyLoaderObserver else { return }
+        guard let observer = latencyLoaderObserver else { return }
         if connectionStateViewModel.vpnManager.lastConnectionStatus == .invalid { return }
         NotificationCenter.default.removeObserver(observer)
         sessionManager.keepSessionUpdated()
-        if appJustStarted && connectionStateViewModel.vpnManager.isDisconnected() {
+        if appJustStarted, connectionStateViewModel.vpnManager.isDisconnected() {
             connectionStateViewModel.displayLocalIPAddress()
-            loadLatencyValues(force: false, selectBestLocation: self.isBestLocationSelected(), connectToBestLocation: false)
+            loadLatencyValues(force: false, selectBestLocation: isBestLocationSelected(), connectToBestLocation: false)
         } else {
             reloadTableViews()
             hideSplashView()
@@ -441,13 +435,13 @@ extension MainViewController {
 
     @objc func logoButtonTapped() {
         logger.logD(self, "User tapped to view Preferences view.")
-      //  HapticFeedbackGenerator.shared.run(level: .medium)
+        //  HapticFeedbackGenerator.shared.run(level: .medium)
         router?.routeTo(to: RouteID.mainMenu, from: self)
     }
 
     @objc func notificationsButtonTapped() {
         logger.logD(self, "User tapped to view Notifications view.")
-        self.showNotificationsViewController()
+        showNotificationsViewController()
     }
 
     @objc func upgradeButtonTapped() {

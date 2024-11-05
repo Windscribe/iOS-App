@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 import RealmSwift
+import RxSwift
 
 class CredentialsRepositoryImpl: CredentialsRepository {
     private let apiManager: APIManager
@@ -19,8 +19,8 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private let logger: FileLogger
     private let preferences: Preferences
     private let disposeBag = DisposeBag()
-    let connectionMode: BehaviorSubject<String?>  = BehaviorSubject(value: nil)
-    let selectedProtocol: BehaviorSubject<String?>  = BehaviorSubject(value: nil)
+    let connectionMode: BehaviorSubject<String?> = BehaviorSubject(value: nil)
+    let selectedProtocol: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, fileDatabase: FileDatabase, vpnManager: VPNManager, wifiManager: WifiManager, preferences: Preferences, logger: FileLogger) {
         self.apiManager = apiManager
@@ -30,7 +30,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         self.wifiManager = wifiManager
         self.logger = logger
         self.preferences = preferences
-        self.loadData()
+        loadData()
     }
 
     private func loadData() {
@@ -95,7 +95,8 @@ class CredentialsRepositoryImpl: CredentialsRepository {
             return OpenVPNServerCredentials.self
         } else {
             if let connection = try? connectionMode.value(),
-               let selectedprotocol = try? selectedProtocol.value() {
+               let selectedprotocol = try? selectedProtocol.value()
+            {
                 if connection == Fields.Values.manual {
                     if selectedprotocol == TextsAsset.iKEv2 {
                         return IKEv2ServerCredentials.self
@@ -108,7 +109,6 @@ class CredentialsRepositoryImpl: CredentialsRepository {
                     return OpenVPNServerCredentials.self
                 }
             }
-
         }
         return OpenVPNServerCredentials.self
     }

@@ -6,15 +6,15 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
+import RxSwift
 import StoreKit
 import Swinject
-import RxSwift
+import UIKit
 
 class UpgradeViewController: WSNavigationViewController {
-
     // MARK: - UI Elements
+
     var scrollView: UIScrollView!
     var contentView: UIView!
     var proView: UIView!
@@ -51,13 +51,17 @@ class UpgradeViewController: WSNavigationViewController {
     var continuePayButton,
         continueFreeButton,
         restoreButton: UIButton!
+
     // MARK: - Properties
+
     var viewModel: UpgradeViewModel!, logger: FileLogger!, router: UpgradeRouter!, alertManager: AlertManagerV2!
     var promoCode: String?
     var pcpID: String?
     var windscribePlans: [WindscribeInAppProduct] = []
     var firstPlanExt, secondPlanExt: String?
+
     // MARK: - View controller callbacks
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Upgrade View")
@@ -70,7 +74,9 @@ class UpgradeViewController: WSNavigationViewController {
         super.viewWillTransition(to: size, with: coordinator)
         addAutoLayoutConstraints()
     }
+
     // MARK: - Bind State
+
     private func bindState() {
         titleLabel.text = TextsAsset.UpgradeView.title
         viewModel.loadPlans(promo: promoCode)
@@ -78,11 +84,11 @@ class UpgradeViewController: WSNavigationViewController {
             DispatchQueue.main.async {
                 if let plans = updatedPlans {
                     switch plans {
-                    case .discounted(let applePlan, let appPlan):
-                            self.windscribePlans = [applePlan]
+                    case let .discounted(applePlan, appPlan):
+                        self.windscribePlans = [applePlan]
                         self.renderDiscountViews(applePlan: applePlan, appPlan: appPlan)
-                    case .standardPlans(let applePlans, let appPlans):
-                            self.windscribePlans = applePlans
+                    case let .standardPlans(applePlans, appPlans):
+                        self.windscribePlans = applePlans
                         self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
                     case .unableToLoad:
                         self.alertManager.showSimpleAlert(viewController: self, title: "", message: "Unable to connect to app store services. Please try again.", buttonText: TextsAsset.okay)
@@ -93,7 +99,7 @@ class UpgradeViewController: WSNavigationViewController {
         viewModel.upgradeState.bind(onNext: { state in
             DispatchQueue.main.async {
                 switch state {
-                case .success(let ghostAccount):
+                case let .success(ghostAccount):
                     self.endLoading()
                     if ghostAccount {
                         self.router.goToSignUp(viewController: self, claimGhostAccount: true)
@@ -102,7 +108,7 @@ class UpgradeViewController: WSNavigationViewController {
                     }
                 case .loading:
                     self.showLoading()
-                case .error(let error):
+                case let .error(error):
                     self.endLoading()
                     self.alertManager.showSimpleAlert(viewController: self, title: "", message: error, buttonText: TextsAsset.okay)
                 case .none:
@@ -133,7 +139,9 @@ class UpgradeViewController: WSNavigationViewController {
             self.updateTheme(isDarkMode: $0)
         }).disposed(by: disposeBag)
     }
+
     // MARK: - UI events
+
     @objc func continuePayButtonTapped() {
         viewModel.continuePayButtonTapped()
     }
@@ -164,7 +172,9 @@ class UpgradeViewController: WSNavigationViewController {
         }
         alertManager.showSimpleAlert(viewController: self, title: "", message: message, buttonText: TextsAsset.okay)
     }
+
     // MARK: - Helper
+
     private func renderPriceViews() {
         if promoCode == nil {
             discountView.isHidden = true
@@ -200,16 +210,16 @@ class UpgradeViewController: WSNavigationViewController {
 
         firstPlanOptionButton.setTitleColor(ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode), for: .normal)
 
-        legalTextView.linkTextAttributes = [ .foregroundColor: UIColor.white, .underlineColor: UIColor.clear]
+        legalTextView.linkTextAttributes = [.foregroundColor: UIColor.white, .underlineColor: UIColor.clear]
 
         firstInfoButton.imageView?.setImageColor(color: ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode))
         secondInfoButton.imageView?.setImageColor(color: ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode))
         thirdInfoButton.imageView?.setImageColor(color: ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode))
 
-        legalTextView.linkTextAttributes = [ .foregroundColor: ThemeUtils.primaryTextColor(isDarkMode: isDarkMode), .underlineColor: UIColor.clear]
+        legalTextView.linkTextAttributes = [.foregroundColor: ThemeUtils.primaryTextColor(isDarkMode: isDarkMode), .underlineColor: UIColor.clear]
     }
 
-    private func renderDiscountViews(applePlan: WindscribeInAppProduct, appPlan: MobilePlan) {
+    private func renderDiscountViews(applePlan _: WindscribeInAppProduct, appPlan: MobilePlan) {
         var durationLabel = TextsAsset.UpgradeView.months
         if appPlan.duration == 12 {
             durationLabel = TextsAsset.UpgradeView.year
@@ -232,24 +242,24 @@ class UpgradeViewController: WSNavigationViewController {
 
     private func renderStandardPlans(applePlans: [WindscribeInAppProduct], appPlans: [MobilePlan]) {
         if applePlans.count >= 2 {
-            let firstPlan = applePlans.first {$0.extId == appPlans[0].extId}
-            let secondPlan = applePlans.first {$0.extId == appPlans[1].extId}
+            let firstPlan = applePlans.first { $0.extId == appPlans[0].extId }
+            let secondPlan = applePlans.first { $0.extId == appPlans[1].extId }
             firstPlanExt = appPlans[0].extId
             secondPlanExt = appPlans[1].extId
-            self.firstPlanOptionButton.setTitle(firstPlan?.planLabel,
-                                                for: .normal)
-            self.secondPlanOptionButton.setTitle(secondPlan?.planLabel,
-                                                 for: .normal)
+            firstPlanOptionButton.setTitle(firstPlan?.planLabel,
+                                           for: .normal)
+            secondPlanOptionButton.setTitle(secondPlan?.planLabel,
+                                            for: .normal)
             firstPlanOptionButton.setTitle("\(firstPlan?.price ?? "")/ \(TextsAsset.UpgradeView.month)",
                                            for: .normal)
             secondPlanOptionButton.setTitle("\(secondPlan?.price ?? "")/ \(TextsAsset.UpgradeView.year)",
                                             for: .normal)
-            self.continuePayButton.isEnabled = true
+            continuePayButton.isEnabled = true
             logger.logD(self, "Setting first plan \(firstPlan?.extId ?? "") and Second plan \(secondPlanExt ?? "")")
-            self.makeFirstPlanSelected()
+            makeFirstPlanSelected()
         }
-        self.continuePayButton.isEnabled = true
-        self.renderPriceViews()
-        self.endLoading()
+        continuePayButton.isEnabled = true
+        renderPriceViews()
+        endLoading()
     }
 }

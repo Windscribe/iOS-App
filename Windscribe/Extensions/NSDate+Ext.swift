@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 extension NSDate {
     func currentTimestamp() -> String {
         return NSDate().timeIntervalSince1970.description

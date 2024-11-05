@@ -6,33 +6,33 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class LoginViewController: PreferredFocusedViewController {
-
-    @IBOutlet weak var loginButton: WSRoundButton!
-    @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var passwordTextField: PasswordTextFieldTv!
-    @IBOutlet weak var forgotButton: UIButton!
-    @IBOutlet weak var loginTitle: UILabel!
-    @IBOutlet weak var usernameTextField: WSTextFieldTv!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var description1: UILabel!
-    @IBOutlet weak var orLabel: UILabel!
-    @IBOutlet weak var description2: UILabel!
-    @IBOutlet weak var generateCodeButton: WSRoundButton!
-    @IBOutlet weak var codeDisplayLabel: UILabel!
-    @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var description2FA: UILabel!
-    @IBOutlet weak var textField2FA: WSTextFieldTv!
+    @IBOutlet var loginButton: WSRoundButton!
+    @IBOutlet var backButton: UIButton!
+    @IBOutlet var passwordTextField: PasswordTextFieldTv!
+    @IBOutlet var forgotButton: UIButton!
+    @IBOutlet var loginTitle: UILabel!
+    @IBOutlet var usernameTextField: WSTextFieldTv!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var description1: UILabel!
+    @IBOutlet var orLabel: UILabel!
+    @IBOutlet var description2: UILabel!
+    @IBOutlet var generateCodeButton: WSRoundButton!
+    @IBOutlet var codeDisplayLabel: UILabel!
+    @IBOutlet var welcomeLabel: UILabel!
+    @IBOutlet var description2FA: UILabel!
+    @IBOutlet var textField2FA: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
-    @IBOutlet weak var infoLabel: UILabel!
-    @IBOutlet weak var infoView: UIView!
+    @IBOutlet var infoLabel: UILabel!
+    @IBOutlet var infoView: UIView!
     var is2FA: Bool = false
 
     // MARK: - State properties
+
     var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
 
@@ -41,10 +41,10 @@ class LoginViewController: PreferredFocusedViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if is2FA {
-            self.logger.logD(self, "Displaying Login Screen with 2fa.")
+            logger.logD(self, "Displaying Login Screen with 2fa.")
             setup2FA()
         } else {
-            self.logger.logD(self, "Displaying Login Screen.")
+            logger.logD(self, "Displaying Login Screen.")
             setup()
         }
         setupCommonUI()
@@ -81,7 +81,6 @@ class LoginViewController: PreferredFocusedViewController {
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
-
     }
 
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
@@ -100,18 +99,17 @@ class LoginViewController: PreferredFocusedViewController {
                 myPreferredFocusedView = passwordTextField.showHidePasswordButton
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
-
             }
         }
     }
 
     func setup() {
         loadingView = UIActivityIndicatorView(style: .large)
-        self.view.addSubview(loadingView)
+        view.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints([
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
+        view.addConstraints([
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
         ])
         passwordTextField.isSecureTextEntry = true
         loginTitle.font = UIFont.bold(size: 35)
@@ -149,14 +147,13 @@ class LoginViewController: PreferredFocusedViewController {
 
     func setupCommonUI() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
-            self.view.backgroundColor = UIColor(patternImage: backgroundImage)
+            view.backgroundColor = UIColor(patternImage: backgroundImage)
         } else {
-            self.view.backgroundColor = .blue
+            view.backgroundColor = .blue
         }
         backButton.titleLabel?.font = UIFont.text(size: 35)
         backButton.setTitleColor(.whiteWithOpacity(opacity: 0.50), for: .normal)
         backButton.setTitleColor(.white, for: .focused)
-
     }
 
     func setup2FA() {
@@ -172,10 +169,9 @@ class LoginViewController: PreferredFocusedViewController {
         description2FA.textColor = .whiteWithOpacity(opacity: 0.50)
         description2FA.text = TvAssets.twofaDescription
         description2FA.text = TvAssets.twofaDescription
-
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if context.nextFocusedView == loginButton {
             loginButton.layer.borderColor = UIColor.clear.cgColor
         } else {
@@ -189,11 +185,11 @@ class LoginViewController: PreferredFocusedViewController {
         }
     }
 
-    @IBAction func backButtonAction(_ sender: Any?) {
-        self.navigationController?.popViewController(animated: true)
+    @IBAction func backButtonAction(_: Any?) {
+        navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func loginButtonAction(_ sender: Any?) {
+    @IBAction func loginButtonAction(_: Any?) {
         guard let username = usernameTextField?.text ?? credentials.0,
               let password = passwordTextField?.text ?? credentials.1 else { return }
         viewModel.continueButtonTapped(username: username, password: password, twoFactorCode: textField2FA?.text)
@@ -209,7 +205,7 @@ class LoginViewController: PreferredFocusedViewController {
         loginButton.rx.primaryAction.bind { [weak self] in
             self?.loginButtonAction(nil)
         }.disposed(by: disposeBag)
-        forgotButton.rx.primaryAction.bind { [ self] in
+        forgotButton.rx.primaryAction.bind { [self] in
             router.routeTo(to: .forgotPassword, from: self)
             self.logger.logD(self, "Moving to forgot password screen.")
         }.disposed(by: disposeBag)
@@ -236,15 +232,14 @@ class LoginViewController: PreferredFocusedViewController {
                 }
             }
         }.disposed(by: disposeBag)
-        viewModel.failedState.distinctUntilChanged().bind { [weak self] (state) in
+        viewModel.failedState.distinctUntilChanged().bind { [weak self] state in
             switch state {
-            case .username(let error), .network(let error), .api(let error), .twoFa(let error), .loginCode(let error):
+            case let .username(error), let .network(error), let .api(error), let .twoFa(error), let .loginCode(error):
                 self?.infoView?.isHidden = false
                 self?.infoLabel?.text = error
             case .none:
                 self?.infoView?.isHidden = true
                 self?.infoLabel?.text = ""
-
             }
         }.disposed(by: disposeBag)
         viewModel.show2faCodeField.bind { [self] show in
@@ -255,5 +250,4 @@ class LoginViewController: PreferredFocusedViewController {
             }
         }.disposed(by: disposeBag)
     }
-
 }

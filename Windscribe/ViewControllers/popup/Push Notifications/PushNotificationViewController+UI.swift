@@ -1,5 +1,5 @@
 //
-//  PsuhNotificationViewController.swift
+//  PushNotificationViewController+UI.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-03-08.
@@ -9,19 +9,18 @@
 import UIKit
 
 extension PushNotificationViewController {
-
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
         backgroundView.layer.opacity = 0.95
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         imageView = UIImageView()
         imageView.image = UIImage(named: ImagesAsset.pushNotifications)
         imageView.contentMode = .scaleAspectFit
-        self.view.addSubview(imageView)
+        view.addSubview(imageView)
 
         titleLabel = UILabel()
         titleLabel.text = TextsAsset.PushNotifications.title
@@ -29,7 +28,7 @@ extension PushNotificationViewController {
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.textColor = UIColor.white
         titleLabel.textAlignment = .center
-        self.view.addSubview(titleLabel)
+        view.addSubview(titleLabel)
 
         descriptionLabel = UILabel()
         descriptionLabel.text = TextsAsset.PushNotifications.description
@@ -39,7 +38,7 @@ extension PushNotificationViewController {
         descriptionLabel.font = UIFont.text(size: 16)
         descriptionLabel.layer.opacity = 0.5
         descriptionLabel.textColor = UIColor.white
-        self.view.addSubview(descriptionLabel)
+        view.addSubview(descriptionLabel)
 
         actionButton = UIButton(type: .system)
         actionButton.setTitle(TextsAsset.PushNotifications.action, for: .normal)
@@ -49,7 +48,7 @@ extension PushNotificationViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.layer.cornerRadius = 24
         actionButton.clipsToBounds = true
-        self.view.addSubview(actionButton)
+        view.addSubview(actionButton)
 
         cancelButton = UIButton()
         cancelButton.setTitle(TextsAsset.TrustedNetworkPopup.cancel, for: .normal)
@@ -57,7 +56,7 @@ extension PushNotificationViewController {
         cancelButton.titleLabel?.font = UIFont.bold(size: 16)
         cancelButton.titleLabel?.adjustsFontSizeToFitWidth = true
         cancelButton.setTitleColor(UIColor.white, for: .normal)
-        self.view.addSubview(cancelButton)
+        view.addSubview(cancelButton)
     }
 
     func addAutoLayoutConstraints() {
@@ -68,7 +67,7 @@ extension PushNotificationViewController {
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
 
-        let imageViewTopDistance =  UIScreen.hasTopNotch ? 175.0 : ( UIScreen.main.nativeBounds.height <= 1136 ? 90.0 : 120.0)
+        let imageViewTopDistance = UIScreen.hasTopNotch ? 175.0 : (UIScreen.main.nativeBounds.height <= 1136 ? 90.0 : 120.0)
 
         NSLayoutConstraint.activate([
             // backgroundView
@@ -105,7 +104,7 @@ extension PushNotificationViewController {
             cancelButton.topAnchor.constraint(equalTo: actionButton.bottomAnchor, constant: 32),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
-            cancelButton.heightAnchor.constraint(equalToConstant: 20)
+            cancelButton.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
 }

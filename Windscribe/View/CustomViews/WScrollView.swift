@@ -9,7 +9,6 @@
 import UIKit
 
 class WScrollView: UIScrollView, UIGestureRecognizerDelegate {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
@@ -18,11 +17,10 @@ class WScrollView: UIScrollView, UIGestureRecognizerDelegate {
         super.init(coder: aDecoder)
     }
 
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer) -> Bool {
         if gestureRecognizer.state != .possible {
             return true
         }
         return false
     }
-
 }

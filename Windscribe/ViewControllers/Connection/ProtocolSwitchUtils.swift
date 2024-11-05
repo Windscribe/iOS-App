@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 enum ProtocolFallbacksType {
     case failure
     case change
@@ -47,6 +48,7 @@ class DisplayProtocolPort: CustomStringConvertible {
         self.protocolPort = protocolPort
         self.viewType = viewType
     }
+
     var description: String {
         return "\(protocolPort) \(viewType)"
     }

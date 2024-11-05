@@ -1,5 +1,5 @@
 //
-//  UIButton+Ext.swift
+//  ImageButton.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-22.
@@ -11,8 +11,8 @@ import UIKit
 extension UIButton {
     func extendedArea(by extraSize: CGFloat) -> CGRect {
         return CGRect(
-            x: bounds.origin.x - extraSize/2.0,
-            y: bounds.origin.y - extraSize/2.0,
+            x: bounds.origin.x - extraSize / 2.0,
+            y: bounds.origin.y - extraSize / 2.0,
             width: bounds.size.width + extraSize,
             height: bounds.size.height + extraSize
         )
@@ -20,9 +20,9 @@ extension UIButton {
 }
 
 class ImageButton: UIButton {
-
     override func point(inside point: CGPoint,
-                        with event: UIEvent?) -> Bool {
+                        with _: UIEvent?) -> Bool
+    {
         return extendedArea(by: 10.0).contains(point)
     }
 
@@ -30,15 +30,16 @@ class ImageButton: UIButton {
         super.init(frame: frame)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class LargeTapAreaImageButton: UIButton {
-
     override func point(inside point: CGPoint,
-                        with event: UIEvent?) -> Bool {
+                        with _: UIEvent?) -> Bool
+    {
         return extendedArea(by: 30.0).contains(point)
     }
 
@@ -46,7 +47,8 @@ class LargeTapAreaImageButton: UIButton {
         super.init(frame: frame)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

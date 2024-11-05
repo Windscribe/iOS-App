@@ -9,7 +9,6 @@
 import UIKit
 
 class HelpViewCell: UITableViewCell {
-
     var iconImage = UIImageView()
     var titleLabel = UILabel()
     var subTitleLabel = UILabel()
@@ -56,7 +55,7 @@ class HelpViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.displayForPrefferedAppearence()
+        displayForPrefferedAppearence()
 
         iconImage.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -68,28 +67,28 @@ class HelpViewCell: UITableViewCell {
             arrowIcon.centerYAnchor.constraint(equalTo: iconImage.centerYAnchor, constant: 0),
             arrowIcon.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -12),
             arrowIcon.widthAnchor.constraint(equalToConstant: 16),
-            arrowIcon.heightAnchor.constraint(equalToConstant: 16)
+            arrowIcon.heightAnchor.constraint(equalToConstant: 16),
         ]
         let titleLabelContraints = [
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 40)
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 40),
         ]
         let iconImageContraints = [
             iconImage.centerYAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             iconImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
             iconImage.widthAnchor.constraint(equalToConstant: 16),
-            iconImage.heightAnchor.constraint(equalToConstant: 16)
+            iconImage.heightAnchor.constraint(equalToConstant: 16),
         ]
         let subTitleLabelContraints = [
             subTitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             subTitleLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor),
-            subTitleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -32)
+            subTitleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -32),
         ]
         var cellDividerContraints = [
             cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
             cellDivider.leftAnchor.constraint(equalTo: iconImage.leftAnchor, constant: 8),
-            cellDivider.rightAnchor.constraint(equalTo: self.rightAnchor),
-            cellDivider.heightAnchor.constraint(equalToConstant: 2)
+            cellDivider.rightAnchor.constraint(equalTo: rightAnchor),
+            cellDivider.heightAnchor.constraint(equalToConstant: 2),
         ]
 
         NSLayoutConstraint.activate(titleLabelContraints)
@@ -98,7 +97,7 @@ class HelpViewCell: UITableViewCell {
             if item.subTitle.isEmpty {
                 iconImage.isHidden = true
                 cellDividerContraints[0] = cellDivider.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12)
-                cellDividerContraints[1] = cellDivider.leftAnchor.constraint(equalTo: item.title == Help.discord ? iconImage.centerXAnchor :  titleLabel.leftAnchor)
+                cellDividerContraints[1] = cellDivider.leftAnchor.constraint(equalTo: item.title == Help.discord ? iconImage.centerXAnchor : titleLabel.leftAnchor)
                 arrowIconConstraints[0] = arrowIcon.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
                 NSLayoutConstraint.deactivate(subTitleLabelContraints)
             } else {
@@ -116,6 +115,7 @@ class HelpViewCell: UITableViewCell {
             NSLayoutConstraint.activate(arrowIconConstraints)
         }
     }
+
     var helpItem: HelpItem? {
         didSet {
             updateUI()
@@ -129,7 +129,7 @@ class HelpViewCell: UITableViewCell {
             if item.subTitle.isEmpty {
                 titleLabel.font = UIFont.text(size: 16)
             }
-           titleLabel.setTextWithOffSet(text: item.title)
+            titleLabel.setTextWithOffSet(text: item.title)
         }
     }
 

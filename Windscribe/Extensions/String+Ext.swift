@@ -1,30 +1,29 @@
 //
-//  MD5Manager.swift
+//  String+Ext.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-11-29.
 //  Copyright © 2018 Windscribe. All rights reserved.
 //
 
-import UIKit
 import CommonCrypto
+import UIKit
 
 extension String {
-
     var messageData: Data? {
-        return self.data(using: .utf8)
+        return data(using: .utf8)
     }
 
     func base64Encoded() -> String {
-        if let data = self.data(using: .utf8) {
+        if let data = data(using: .utf8) {
             return data.base64EncodedString()
         }
         return ""
     }
 
     func base64Decoded() -> String {
-        if let data = Data(base64Encoded: self), let value = String.init(data: data, encoding: .utf8) {
-            return  value
+        if let data = Data(base64Encoded: self), let value = String(data: data, encoding: .utf8) {
+            return value
         }
         return ""
     }
@@ -36,7 +35,7 @@ extension String {
                 CC_SHA1(messageBytes, CC_LONG(messageData!.count), digestBytes)
             }
         }
-        let hex = digestData.map { String(format: "%02hhx", $0)}.joined()
+        let hex = digestData.map { String(format: "%02hhx", $0) }.joined()
         return hex
     }
 
@@ -47,7 +46,7 @@ extension String {
                 CC_MD5(messageBytes, CC_LONG(messageData!.count), digestBytes)
             }
         }
-        let hex = digestData.map { String(format: "%02hhx", $0)}.joined()
+        let hex = digestData.map { String(format: "%02hhx", $0) }.joined()
         return hex
     }
 
@@ -60,12 +59,12 @@ extension String {
         imageAttachment.bounds = bounds
         let attachmentString = NSAttributedString(attachment: imageAttachment)
         completeText.append(attachmentString)
-        completeText.addAttribute(kCTForegroundColorAttributeName as NSAttributedString.Key, value: textColor, range: NSRange(location: 0, length: self.count))
+        completeText.addAttribute(kCTForegroundColorAttributeName as NSAttributedString.Key, value: textColor, range: NSRange(location: 0, length: count))
         return completeText
     }
 
     func encodeForURL() -> String {
-        return self.replacingOccurrences(of: "+", with: "%2B")
+        return replacingOccurrences(of: "+", with: "%2B")
     }
 
     func maxLength(length: Int) -> String {
@@ -74,11 +73,12 @@ extension String {
         if nsString.length >= length {
             str = nsString.substring(with:
                 NSRange(
-                 location: 0,
-                 length: nsString.length > length ? length : nsString.length)
+                    location: 0,
+                    length: nsString.length > length ? length : nsString.length
+                )
             )
         }
-        return  str
+        return str
     }
 
     func isValidEmail() -> Bool {
@@ -113,11 +113,11 @@ extension String {
         do {
             let regex = try NSRegularExpression(pattern: ipRegex)
             let results = regex.matches(in: self,
-                                        range: NSRange(self.startIndex..., in: self))
+                                        range: NSRange(startIndex..., in: self))
             return results.map {
                 String(self[Range($0.range, in: self)!])
             }
-        } catch let error {
+        } catch {
             print("invalid regex: \(error.localizedDescription)")
             return []
         }
@@ -128,21 +128,25 @@ extension StringProtocol {
     func index<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
         range(of: string, options: options)?.lowerBound
     }
+
     func endIndex<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> Index? {
         range(of: string, options: options)?.upperBound
     }
+
     func indices<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Index] {
         ranges(of: string, options: options).map(\.lowerBound)
     }
+
     func ranges<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Range<Index>] {
         var result: [Range<Index>] = []
         var startIndex = self.startIndex
         while startIndex < endIndex,
-            let range = self[startIndex...]
-                .range(of: string, options: options) {
-                result.append(range)
-                startIndex = range.lowerBound < range.upperBound ? range.upperBound :
-                    index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
+              let range = self[startIndex...]
+              .range(of: string, options: options)
+        {
+            result.append(range)
+            startIndex = range.lowerBound < range.upperBound ? range.upperBound :
+                index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex
         }
         return result
     }

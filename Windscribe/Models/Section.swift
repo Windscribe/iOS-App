@@ -14,7 +14,8 @@ struct ServerSection {
     var collapsed: Bool
 
     init(server: ServerModel,
-         collapsed: Bool) {
+         collapsed: Bool)
+    {
         self.server = server
         self.collapsed = collapsed
     }
@@ -27,7 +28,8 @@ struct IAPInfoSection {
 
     init(title: String,
          message: String,
-         collapsed: Bool) {
+         collapsed: Bool)
+    {
         self.title = title
         self.message = message
         self.collapsed = collapsed

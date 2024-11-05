@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol AdvanceParamsViewModel {
     var titleText: BehaviorSubject<String> { get }
     var advanceParams: BehaviorSubject<String?> { get }
@@ -17,23 +18,29 @@ protocol AdvanceParamsViewModel {
     func saveButtonTap()
     func onAdvanceParamsTextChange(text: String?)
 }
+
 class AdvanceParamsViewModelImpl: AdvanceParamsViewModel {
     // MARK: - Dependencies
+
     private var preferences: Preferences
     private var apiManager: APIManager
+
     // MARK: - State
+
     private let disposeBag = DisposeBag()
     let titleText = BehaviorSubject<String>(value: TextsAsset.Preferences.advanceParameters)
     let advanceParams = BehaviorSubject<String?>(value: nil)
     let showProgressBar = BehaviorSubject(value: false)
     let showError = BehaviorSubject<Bool>(value: false)
     let isDarkMode: BehaviorSubject<Bool>
+
     // MARK: - Data
+
     init(preferences: Preferences, apiManager: APIManager, themeManager: ThemeManager) {
         self.preferences = preferences
         self.apiManager = apiManager
         isDarkMode = themeManager.darkTheme
-        self.load()
+        load()
     }
 
     private func load() {
@@ -43,26 +50,27 @@ class AdvanceParamsViewModelImpl: AdvanceParamsViewModel {
     }
 
     // MARK: - Actions
+
     func saveButtonTap() {
         showProgressBar.onNext(true)
         parseAdvanceParams()
             .delaySubscription(RxTimeInterval.milliseconds(500), scheduler: MainScheduler.instance)
-            .map { self.preferences.saveAdvanceParams(params: $0)}
+            .map { self.preferences.saveAdvanceParams(params: $0) }
             .subscribe(onSuccess: {
                 self.showProgressBar.onNext(false)
-        }, onFailure: { error in
-            self.showProgressBar.onNext(false)
-            if let error = error as? AdvanceParamsErrors {
-                switch error {
-                case .invalidKeyValuePair:
-                    self.showError.onNext(true)
+            }, onFailure: { error in
+                self.showProgressBar.onNext(false)
+                if let error = error as? AdvanceParamsErrors {
+                    switch error {
+                    case .invalidKeyValuePair:
+                        self.showError.onNext(true)
+                    }
                 }
-            }
-        }).disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
     }
 
     func onAdvanceParamsTextChange(text: String?) {
-        self.showError.onNext(false)
+        showError.onNext(false)
         advanceParams.onNext(text)
     }
 
@@ -78,7 +86,7 @@ class AdvanceParamsViewModelImpl: AdvanceParamsViewModel {
                 return Single.just(text)
             }
             return Single.just("")
-        } catch let error {
+        } catch {
             return Single.error(error)
         }
     }

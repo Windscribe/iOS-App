@@ -6,9 +6,9 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class RobertFilterCell: UITableViewCell {
     lazy var wrapperView: UIView = {
@@ -17,6 +17,7 @@ class RobertFilterCell: UITableViewCell {
         view.layer.cornerRadius = 8
         return view
     }()
+
     var centerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -24,10 +25,11 @@ class RobertFilterCell: UITableViewCell {
         view.makeHeightAnchor(equalTo: 4)
         return view
     }()
+
     lazy var titleLabel = UILabel()
     lazy var statusLabel = UILabel()
     var filterSwitchTapArea = UIButton()
-    lazy var filterSwitch: SwitchButton = SwitchButton(isDarkMode: isDarkMode)
+    lazy var filterSwitch: SwitchButton = .init(isDarkMode: isDarkMode)
     lazy var icon = UIImageView()
 
     var robertFilter: RobertFilter? {
@@ -139,7 +141,7 @@ class RobertFilterCell: UITableViewCell {
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        Observable.combineLatest(isEnabledTrigger.asObservable(), isDarkMode.asObservable()).bind { (isEnabled, isDarkMode) in
+        Observable.combineLatest(isEnabledTrigger.asObservable(), isDarkMode.asObservable()).bind { isEnabled, isDarkMode in
             if isDarkMode {
                 self.titleLabel.textColor = UIColor.white
                 if let item = self.robertFilter, self.robertFilter?.isInvalidated == false {

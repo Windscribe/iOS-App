@@ -1,5 +1,5 @@
 //
-//  RobertSettings.swift
+//  RobertFilters.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2021-12-17.
@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 
 @objcMembers class RobertFilters: Object, Decodable {
-
     dynamic var filters: List<RobertFilter> = List()
     dynamic var id: String = "1"
 
@@ -32,7 +31,7 @@ import RealmSwift
 
     func getRules() -> [RobertFilter] {
         var filterArray = [RobertFilter]()
-        filters.forEach {  filter in
+        for filter in filters {
             filterArray.append(filter)
         }
         return filterArray
@@ -40,7 +39,6 @@ import RealmSwift
 }
 
 @objcMembers class RobertFilter: Object, Decodable {
-
     dynamic var title: String = ""
     dynamic var filterDescription: String = ""
     dynamic var id: String = ""
@@ -48,10 +46,10 @@ import RealmSwift
     dynamic var enabled: Bool = false
 
     enum CodingKeys: String, CodingKey {
-        case title = "title"
+        case title
         case filterDescription = "description"
-        case id = "id"
-        case status = "status"
+        case id
+        case status
     }
 
     required convenience init(from decoder: Decoder) throws {

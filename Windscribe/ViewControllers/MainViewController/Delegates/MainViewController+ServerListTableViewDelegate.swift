@@ -11,7 +11,8 @@ import UIKit
 
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
+                                   group: GroupModel)
+    {
         searchLocationsView.viewModel.dismiss()
         if !ReachabilityManager.shared.internetConnectionAvailable() {
             return
@@ -26,7 +27,8 @@ extension MainViewController: ServerListTableViewDelegate {
         }
 
         if !canAccesstoProLocation() &&
-            group.premiumOnly ?? false {
+            group.premiumOnly ?? false
+        {
             showUpgradeView()
             return
         } else if !group.canConnect() {
@@ -85,7 +87,7 @@ extension MainViewController: ServerListTableViewDelegate {
         searchLocationsView.viewModel.dismiss()
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
         guard let bestLocation = try? viewModel.bestLocation.value() else { return }
-               // PersistenceManager.shared.retrieve(type: BestLocation.self)?.first else { return }
+        // PersistenceManager.shared.retrieve(type: BestLocation.self)?.first else { return }
         if !vpnManagerViewModel.isConnecting() {
             LogManager.shared.log(activity: String(describing: MainViewController.self),
                                   text: "Tapped on Best Location \(bestLocation.hostname) from the server list.",

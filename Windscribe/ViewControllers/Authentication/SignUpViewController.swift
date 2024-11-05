@@ -6,18 +6,21 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
-import RxSwift
 import RxGesture
+import RxSwift
+import UIKit
 
 class SignUpViewController: WSNavigationViewController {
     // MARK: - UI properties
+
     var scrollView: UIScrollView!
     var headingLabel: UILabel!
     var loadingView: UIActivityIndicatorView!
     var continueButtonBottomConstraint: NSLayoutConstraint!
+
     // MARK: - username
+
     lazy var usernameLabel: UILabel = {
         let usernameLabel = UILabel()
         usernameLabel.font = UIFont.bold(size: 16)
@@ -69,7 +72,7 @@ class SignUpViewController: WSNavigationViewController {
                                          right: vw.rightAnchor,
                                          paddingTop: 8,
                                          paddingRight: 0,
-                                         width: 16 ,height: 16)
+                                         width: 16, height: 16)
         usernameInfoLabel.anchor(top: usernameTextfield.bottomAnchor,
                                  left: vw.leftAnchor,
                                  right: vw.rightAnchor,
@@ -80,6 +83,7 @@ class SignUpViewController: WSNavigationViewController {
     }()
 
     // MARK: - password view
+
     lazy var passwordLabel: UILabel = {
         let passwordLabel = UILabel()
         passwordLabel.font = UIFont.bold(size: 16)
@@ -131,7 +135,7 @@ class SignUpViewController: WSNavigationViewController {
                                          right: vw.rightAnchor,
                                          paddingTop: 8,
                                          paddingRight: 0,
-                                         width: 16 ,height: 16)
+                                         width: 16, height: 16)
         passwordInfoLabel.anchor(top: passwordTextfield.bottomAnchor,
                                  left: vw.leftAnchor,
                                  right: vw.rightAnchor,
@@ -142,6 +146,7 @@ class SignUpViewController: WSNavigationViewController {
     }()
 
     // MARK: - Email view
+
     lazy var emailLabel: UILabel = {
         let emailLabel = UILabel()
         emailLabel.font = UIFont.bold(size: 16)
@@ -216,7 +221,7 @@ class SignUpViewController: WSNavigationViewController {
                                       right: vw.rightAnchor,
                                       paddingTop: 8,
                                       paddingRight: 0,
-                                      width: 16 ,height: 16)
+                                      width: 16, height: 16)
         emailInfoLabel.anchor(right: emailTextfield.rightAnchor,
                               paddingRight: 16)
         emailInfoLabel.makeCenterYAnchor(with: emailTextfield)
@@ -230,6 +235,7 @@ class SignUpViewController: WSNavigationViewController {
     }()
 
     // MARK: - Voucher view
+
     lazy var voucherLabel: UILabel = {
         let voucherLabel = UILabel()
         voucherLabel.font = UIFont.bold(size: 16)
@@ -260,23 +266,24 @@ class SignUpViewController: WSNavigationViewController {
         vw.addSubview(voucherTextfield)
         vw.addSubview(voucherOptionalLabel)
         voucherLabel.anchor(top: vw.topAnchor,
-                          left: vw.leftAnchor,
-                          paddingTop: 30,
-                          paddingLeft: 16)
+                            left: vw.leftAnchor,
+                            paddingTop: 30,
+                            paddingLeft: 16)
         voucherOptionalLabel.makeCenterYAnchor(with: voucherLabel)
         voucherOptionalLabel.anchor(left: voucherLabel.rightAnchor,
-                                  paddingLeft: 5)
+                                    paddingLeft: 5)
         voucherTextfield.anchor(top: voucherLabel.bottomAnchor,
-                              left: vw.leftAnchor,
-                              bottom: vw.bottomAnchor,
-                              right: vw.rightAnchor,
-                              paddingTop: 8,
-                              paddingBottom: 24,
-                              height: 48)
+                                left: vw.leftAnchor,
+                                bottom: vw.bottomAnchor,
+                                right: vw.rightAnchor,
+                                paddingTop: 8,
+                                paddingBottom: 24,
+                                height: 48)
         return vw
     }()
 
     // MARK: - Referred section
+
     lazy var referralTitle: UILabel = {
         let referralTitle = UILabel()
         referralTitle.font = UIFont.bold(size: 16)
@@ -330,7 +337,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referralTitle,
             referralArrowIcon,
-            UIView()
+            UIView(),
         ])
         stack.isUserInteractionEnabled = true
         stack.spacing = 8
@@ -342,7 +349,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referralTitleWithIcon,
             referral1View,
-            referral2View
+            referral2View,
         ])
         stack.spacing = 4
         stack.axis = .vertical
@@ -352,7 +359,7 @@ class SignUpViewController: WSNavigationViewController {
 
     lazy var referralInfoView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            referralInfoLabel
+            referralInfoLabel,
         ])
         stack.isHidden = true
         stack.axis = .vertical
@@ -364,7 +371,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referredIntroView,
             referralUsernameTextfield,
-            referralInfoView
+            referralInfoView,
         ])
         stack.axis = .vertical
         stack.spacing = 12
@@ -372,7 +379,9 @@ class SignUpViewController: WSNavigationViewController {
         stack.setPadding(UIEdgeInsets(horizontalInset: 0, verticalInset: 24))
         return stack
     }()
+
     // MARK: - Action button
+
     lazy var continueButton: UIButton = {
         let continueButton = UIButton(type: .system)
         continueButton.anchor(height: 48)
@@ -391,10 +400,14 @@ class SignUpViewController: WSNavigationViewController {
         setupLaterButton.layer.opacity = 0.5
         return setupLaterButton
     }()
+
     // MARK: - State properties
+
     var viewModel: SignUpViewModel!, router: SignupRouter!, popupRouter: PopupRouter!, logger: FileLogger!
     var claimGhostAccount = false
+
     // MARK: - UI Events
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Sign Up View")
@@ -429,13 +442,14 @@ class SignUpViewController: WSNavigationViewController {
     }
 
     // MARK: - Setup and Bind views
+
     private func setupViews() {
-        self.addPromptBackgroundView()
-        self.titleLabel.text = TextsAsset.createAccount
+        addPromptBackgroundView()
+        titleLabel.text = TextsAsset.createAccount
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(tappedOnScreen))
         tapRecognizer.numberOfTouchesRequired = 1
         tapRecognizer.numberOfTapsRequired = 1
-        self.view.addGestureRecognizer(tapRecognizer)
+        view.addGestureRecognizer(tapRecognizer)
         passwordTextfield.delegate = self
         setupFillLayoutView()
         layoutView.stackView.addArrangedSubviews([
@@ -443,12 +457,12 @@ class SignUpViewController: WSNavigationViewController {
             passwordView,
             emailView,
             voucherView,
-            viewReferral
+            viewReferral,
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(top: 24, left: 16, bottom: 0, right: 16))
         layoutView.bottomStackView.addArrangedSubviews([
             continueButton,
-            setupLaterButton
+            setupLaterButton,
         ])
         layoutView.bottomStackView.spacing = 24
         layoutView.bottomStackView.setPadding(UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16))
@@ -488,31 +502,31 @@ class SignUpViewController: WSNavigationViewController {
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(usernameTextfield.rx.text.asObservable(),
-                                 viewModel.isDarkMode.asObservable()).bind { (_, isDarkMode) in
+                                 viewModel.isDarkMode.asObservable()).bind { _, isDarkMode in
             self.signUpTextFieldValueChanged(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(passwordTextfield.rx.text.asObservable(),
-                                 viewModel.isDarkMode.asObservable()).bind { (_, isDarkMode) in
+                                 viewModel.isDarkMode.asObservable()).bind { _, isDarkMode in
             self.signUpTextFieldValueChanged(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(emailTextfield.rx.text.asObservable(),
                                  viewModel.referralViewStatus.asObservable(),
-                                 viewModel.isDarkMode.asObservable()).bind { (_, expanded, isDarkMode) in
+                                 viewModel.isDarkMode.asObservable()).bind { _, expanded, isDarkMode in
             self.checkReferralEmail(expanded: expanded, isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.failedState.asObservable(), viewModel.isDarkMode.asObservable()).bind { (state, isDarkMode) in
+        Observable.combineLatest(viewModel.failedState.asObservable(), viewModel.isDarkMode.asObservable()).bind { state, isDarkMode in
             self.setFailureState(state: state, isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.referralViewStatus.asObservable(), viewModel.isDarkMode.asObservable()).bind { (show, isDarkMode) in
+        Observable.combineLatest(viewModel.referralViewStatus.asObservable(), viewModel.isDarkMode.asObservable()).bind { show, isDarkMode in
             self.setReferralViewVisibility(show: show, isDarkMode: isDarkMode)
             self.checkReferralEmail(expanded: show, isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
 
-        viewModel.isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        viewModel.isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.usernameLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
             self.passwordLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
             self.emailLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
@@ -523,7 +537,7 @@ class SignUpViewController: WSNavigationViewController {
             self.voucherLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
             self.voucherOptionalLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
 
-            self.referralArrowIcon.updateTheme( isDark: $0)
+            self.referralArrowIcon.updateTheme(isDark: $0)
             super.setupViews(isDark: $0)
         }).disposed(by: disposeBag)
         NotificationCenter.default.rx.notification(UIResponder.keyboardWillShowNotification)
@@ -533,41 +547,42 @@ class SignUpViewController: WSNavigationViewController {
     }
 
     // MARK: - Helper
+
     private func clearError(isDarkMode: Bool) {
-        self.usernameTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        self.usernameInfoIconImageView.isHidden = true
-        self.usernameInfoLabel.isHidden = true
-        self.passwordTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        self.passwordInfoIconImageView.isHidden = true
-        self.passwordInfoLabel.isHidden = true
-        self.emailTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        self.emailInfoIconImageView.isHidden = true
-        self.infoLabel.text = TextsAsset.emailInfoLabel
-        self.infoLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
+        usernameTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+        usernameInfoIconImageView.isHidden = true
+        usernameInfoLabel.isHidden = true
+        passwordTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+        passwordInfoIconImageView.isHidden = true
+        passwordInfoLabel.isHidden = true
+        emailTextfield.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+        emailInfoIconImageView.isHidden = true
+        infoLabel.text = TextsAsset.emailInfoLabel
+        infoLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
     }
 
     private func setFailureState(state: SignUpErrorState, isDarkMode: Bool) {
         switch state {
-        case .username(let error):
-            self.usernameTextfield.textColor = UIColor.failRed
-            self.usernameInfoIconImageView.isHidden = false
-            self.usernameInfoLabel.text = error
-            self.usernameInfoLabel.isHidden = false
-        case .password(let error):
-            self.passwordTextfield.textColor = UIColor.failRed
-            self.passwordInfoIconImageView.isHidden = false
-            self.passwordInfoLabel.text = error
-            self.passwordInfoLabel.isHidden = false
-        case .email(let error):
-            self.emailInfoIconImageView.isHidden = false
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
-        case .api(let error):
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
-        case .network(let error):
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
+        case let .username(error):
+            usernameTextfield.textColor = UIColor.failRed
+            usernameInfoIconImageView.isHidden = false
+            usernameInfoLabel.text = error
+            usernameInfoLabel.isHidden = false
+        case let .password(error):
+            passwordTextfield.textColor = UIColor.failRed
+            passwordInfoIconImageView.isHidden = false
+            passwordInfoLabel.text = error
+            passwordInfoLabel.isHidden = false
+        case let .email(error):
+            emailInfoIconImageView.isHidden = false
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
+        case let .api(error):
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
+        case let .network(error):
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
         case .none:
             clearError(isDarkMode: isDarkMode)
         }
@@ -618,7 +633,7 @@ class SignUpViewController: WSNavigationViewController {
     }
 
     private func showNoEmailPrompt() {
-        self.showPromptBackgroundView()
+        showPromptBackgroundView()
         let isPro = (try? viewModel.isPremiumUser.value()) ?? false
         popupRouter.routeTo(to: .infoPrompt(title: isPro ? TextsAsset.NoEmailPrompt.titlePro : TextsAsset.NoEmailPrompt.title,
                                             actionValue: TextsAsset.NoEmailPrompt.action,
@@ -628,8 +643,8 @@ class SignUpViewController: WSNavigationViewController {
     }
 
     private func showSetupLaterPrompt() {
-        self.view.endEditing(true)
-        self.showPromptBackgroundView()
+        view.endEditing(true)
+        showPromptBackgroundView()
         popupRouter.routeTo(to: .infoPrompt(title: TextsAsset.SetupLaterPrompt.title,
                                             actionValue: TextsAsset.SetupLaterPrompt.action,
                                             justDismissOnAction: claimGhostAccount,
@@ -638,11 +653,11 @@ class SignUpViewController: WSNavigationViewController {
     }
 
     private func setClaimAccountView() {
-        self.titleLabel.text = TextsAsset.accountSetupTitle
-        self.infoLabel.text = TextsAsset.accountSetupMessage
-        self.setupLaterButton.isHidden = false
-        self.emailInfoLabel.isHidden = true
-        self.viewReferral.isHidden = true
+        titleLabel.text = TextsAsset.accountSetupTitle
+        infoLabel.text = TextsAsset.accountSetupMessage
+        setupLaterButton.isHidden = false
+        emailInfoLabel.isHidden = true
+        viewReferral.isHidden = true
     }
 
     private func handleRoute(route: SignupRoutes) {
@@ -664,13 +679,13 @@ class SignUpViewController: WSNavigationViewController {
     @objc func signUpTextFieldValueChanged(isDarkMode: Bool) {
         guard let usernameTextCount = usernameTextfield.text?.count, let passwordTextCount = passwordTextfield.text?.count else { return }
         if usernameTextCount > 2 && passwordTextCount > 2 {
-            self.continueButton.backgroundColor = UIColor.seaGreen
-            self.continueButton.setTitleColor(UIColor.midnight, for: .normal)
-            self.continueButton.isEnabled = true
+            continueButton.backgroundColor = UIColor.seaGreen
+            continueButton.setTitleColor(UIColor.midnight, for: .normal)
+            continueButton.isEnabled = true
         } else {
-            self.continueButton.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
-            self.continueButton.setTitleColor(ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode), for: .normal)
-            self.continueButton.isEnabled = false
+            continueButton.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
+            continueButton.setTitleColor(ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode), for: .normal)
+            continueButton.isEnabled = false
         }
     }
 }
@@ -692,12 +707,12 @@ extension SignUpViewController: InfoPromptViewDelegate {
 
 extension SignUpViewController: ConfirmEmailViewControllerDelegate {
     func dismissWith(action: ConfirmEmailAction) {
-        router.dismissPopup(action: action, navigationVC: self.navigationController)
+        router.dismissPopup(action: action, navigationVC: navigationController)
     }
 }
 
 extension SignUpViewController: UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    func textField(_: UITextField, shouldChangeCharactersIn _: NSRange, replacementString string: String) -> Bool {
         return string.rangeOfCharacter(from: .whitespacesAndNewlines) == nil
     }
 }

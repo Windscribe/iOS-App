@@ -7,15 +7,15 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
-class LanguageManager: LanguageManagerV2 {
+import UIKit
 
+class LanguageManager: LanguageManagerV2 {
     private let preference: Preferences
     private let disposeBag = DisposeBag()
     var activelanguage = BehaviorSubject(value: Languages.english)
     private var language = Languages.english
-    var currentLanguage: Languages = Languages.english
+    var currentLanguage: Languages = .english
     init(preference: Preferences) {
         self.preference = preference
         currentLanguage = getCurrentLanguage()
@@ -25,19 +25,19 @@ class LanguageManager: LanguageManagerV2 {
     private func bindData() {
         preference.getLanguageManagerSelectedLanguage()
             .flatMap { languageName in
-                return Single.just( Languages.allCases.first {$0.name == languageName}?.rawValue ?? Languages.english.rawValue)
+                Single.just(Languages.allCases.first { $0.name == languageName }?.rawValue ?? Languages.english.rawValue)
             }.subscribe(onNext: { languageCode in
                 self.language = Languages(rawValue: languageCode) ?? Languages.english
                 self.activelanguage.onNext(self.language)
                 self.currentLanguage = self.getCurrentLanguage()
-            },onError: { _ in
+            }, onError: { _ in
                 self.language = Languages.english
                 self.activelanguage.onNext(Languages.english)
             }).disposed(by: disposeBag)
     }
 
     func getCurrentLanguage() -> Languages {
-        currentLanguage = self.language
+        currentLanguage = language
         return currentLanguage
     }
 
@@ -48,9 +48,8 @@ class LanguageManager: LanguageManagerV2 {
         return Languages(rawValue: currentLang) ?? .english
     }
 
-    lazy var supportedLanguages: [String] = {
-        return Languages.allCases.map({ $0.rawValue })
-    }()
+    lazy var supportedLanguages: [String] = Languages.allCases.map { $0.rawValue }
+
     var defaultLanguage: Languages {
         get {
             guard let defaultLanguage = preference.getDefaultLanguage() else {
@@ -99,15 +98,16 @@ class LanguageManager: LanguageManagerV2 {
             return
         }
         if let language = preference.getAppleLanguage(),
-           language.uppercased() == systemLanguage.uppercased() {
+           language.uppercased() == systemLanguage.uppercased()
+        {
             if let language = Languages(rawValue: language.lowercased()) {
-                self.setLanguage(language: language)
+                setLanguage(language: language)
             }
         } else {
             preference.saveLanguage(language: systemLanguage.uppercased())
             preference.saveAppleLanguage(languge: systemLanguage.uppercased())
             if let language = Languages(rawValue: systemLanguage.lowercased()) {
-               setLanguage(language: language)
+                setLanguage(language: language)
             }
         }
         defaultLanguage = .english

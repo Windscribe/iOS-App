@@ -8,9 +8,10 @@
 
 import Foundation
 import NetworkExtension
+
 protocol ConnectionManagerV2 {
-    var goodProtocol: ProtocolPort? {get set}
-    var resetGoodProtocolTime: Date? {get set}
+    var goodProtocol: ProtocolPort? { get set }
+    var resetGoodProtocolTime: Date? { get set }
     func loadProtocols(shouldReset: Bool, comletion: @escaping ([DisplayProtocolPort]) -> Void)
     func onProtocolFail(completion: @escaping (Bool) -> Void)
     func onUserSelectProtocol(proto: ProtocolPort)

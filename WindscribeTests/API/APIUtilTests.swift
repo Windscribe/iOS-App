@@ -18,9 +18,9 @@ class APIUtilTests: XCTestCase {
         } else {
             XCTFail()
         }
-        if let error = mapToAPIError(error: myIPAPIError) as? Errors{
+        if let error = mapToAPIError(error: myIPAPIError) as? Errors {
             switch error {
-            case .apiError(let apiError):
+            case let .apiError(apiError):
                 XCTAssertTrue(apiError.errorCode == 7001)
             default:
                 XCTFail()

@@ -13,6 +13,7 @@ enum NetworkStatus {
     case disconnected
     case requiresVPN
 }
+
 enum NetworkType {
     case cellular
     case wifi
@@ -30,6 +31,7 @@ struct AppNetwork: CustomStringConvertible, Equatable {
         self.name = name
         self.isVPN = isVPN
     }
+
     var description: String {
         return "Internet Connection [Status:\(status) NetworkType:\(networkType) Name:\(name ?? "Unknown") isVPN:\(isVPN)]"
     }

@@ -9,9 +9,8 @@
 import UIKit
 
 class NewsFeedCell: UITableViewCell {
-
     private lazy var wrapperView = UIView()
-    private lazy var titleLabel =  UILabel()
+    private lazy var titleLabel = UILabel()
     private lazy var iconView = UIImageView()
     private lazy var readStatusDot = UIView()
 
@@ -48,6 +47,7 @@ class NewsFeedCell: UITableViewCell {
         backgroundShowView.layer.opacity = 0.05
 
         // MARK: - Header
+
         titleLabel.font = UIFont.bold(size: 12)
         titleLabel.numberOfLines = 2
         iconView.image = UIImage(named: ImagesAsset.whiteExpand)
@@ -61,6 +61,7 @@ class NewsFeedCell: UITableViewCell {
         wrapperView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(headerDidTap)))
 
         // MARK: - Body
+
         bodyStackView.axis = .vertical
         bodyStackView.addArrangedSubview(textStackView)
         bodyStackView.addArrangedSubview(actionView)
@@ -112,16 +113,17 @@ class NewsFeedCell: UITableViewCell {
         super.layoutSubviews()
 
         // MARK: - Header
+
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor, constant: 0),
             titleLabel.leftAnchor.constraint(equalTo: wrapperView.leftAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: iconView.leftAnchor, constant: -16)
+            titleLabel.rightAnchor.constraint(equalTo: iconView.leftAnchor, constant: -16),
         ])
 
         wrapperView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            wrapperView.heightAnchor.constraint(equalToConstant: 48)
+            wrapperView.heightAnchor.constraint(equalToConstant: 48),
         ])
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -129,7 +131,7 @@ class NewsFeedCell: UITableViewCell {
             iconView.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor),
             iconView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -16),
             iconView.widthAnchor.constraint(equalToConstant: 16),
-            iconView.heightAnchor.constraint(equalToConstant: 16)
+            iconView.heightAnchor.constraint(equalToConstant: 16),
         ])
 
         readStatusDot.translatesAutoresizingMaskIntoConstraints = false
@@ -137,10 +139,11 @@ class NewsFeedCell: UITableViewCell {
             readStatusDot.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor),
             readStatusDot.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16 - readStatusDot.frame.width / 2),
             readStatusDot.widthAnchor.constraint(equalToConstant: 8),
-            readStatusDot.heightAnchor.constraint(equalToConstant: 8)
+            readStatusDot.heightAnchor.constraint(equalToConstant: 8),
         ])
 
         // MARK: - Body
+
         mainStackView.fitToSuperView(top: 0, leading: 12, bottom: 0, trailing: 16)
         backgroundShowView.roundCorners(corners: [.topLeft, .topRight, .bottomLeft, .bottomRight], radius: 6)
 
@@ -149,7 +152,7 @@ class NewsFeedCell: UITableViewCell {
             backgroundShowView.topAnchor.constraint(equalTo: mainStackView.topAnchor),
             backgroundShowView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 4),
             backgroundShowView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
-            backgroundShowView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor)
+            backgroundShowView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor),
         ])
 
         actionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -157,7 +160,7 @@ class NewsFeedCell: UITableViewCell {
             actionLabel.topAnchor.constraint(equalTo: actionView.topAnchor),
             actionLabel.leadingAnchor.constraint(equalTo: actionView.leadingAnchor, constant: 16),
             actionLabel.bottomAnchor.constraint(equalTo: actionView.bottomAnchor, constant: -10),
-            actionLabel.heightAnchor.constraint(equalToConstant: 20)
+            actionLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
 
         actionIconView.translatesAutoresizingMaskIntoConstraints = false
@@ -167,12 +170,11 @@ class NewsFeedCell: UITableViewCell {
             actionIconView.centerYAnchor.constraint(equalTo: actionLabel.centerYAnchor),
             actionIconView.widthAnchor.constraint(equalToConstant: 16),
             actionIconView.heightAnchor.constraint(equalToConstant: 16),
-            actionView.heightAnchor.constraint(equalToConstant: 30)
+            actionView.heightAnchor.constraint(equalToConstant: 30),
         ])
 
-        self.textStackView.layoutIfNeeded()
-        self.actionView.layoutIfNeeded()
-
+        textStackView.layoutIfNeeded()
+        actionView.layoutIfNeeded()
     }
 
     func updateUI(width: CGFloat) {
@@ -201,7 +203,7 @@ class NewsFeedCell: UITableViewCell {
                 textView.htmlText(htmlData: messageData,
                                   font: .text(size: 14),
                                   foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5))
-                var frame = self.textView.frame
+                var frame = textView.frame
                 frame.size.width = width - 20
                 textView.frame = frame
                 textView.sizeToFit()
@@ -219,7 +221,8 @@ class NewsFeedCell: UITableViewCell {
               let action = cellViewModel.action,
               let promoCode = action.promoCode,
               let type = action.type,
-              type == "promo" else {
+              type == "promo"
+        else {
             return
         }
 
@@ -240,13 +243,13 @@ class NewsFeedCell: UITableViewCell {
     func showForExpand() {
         titleLabel.textColor = UIColor.white
         iconView.layer.opacity = 1.0
-        iconView.transform = CGAffineTransform(rotationAngle: .pi/4)
+        iconView.transform = CGAffineTransform(rotationAngle: .pi / 4)
     }
 
     func showForCollapse() {
         titleLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
         iconView.layer.opacity = 0.4
-        iconView.transform = CGAffineTransform(rotationAngle: .pi*4)
+        iconView.transform = CGAffineTransform(rotationAngle: .pi * 4)
     }
 }
 
@@ -256,13 +259,14 @@ extension NewsFeedCell {
     private func checkHideLinkIfNeed() -> Bool {
         let isFreeUser = !(cellViewModel?.isUserPro ?? false)
         guard isFreeUser,
-              cellViewModel?.action?.type?.lowercased() == "promo" else {
+              cellViewModel?.action?.type?.lowercased() == "promo"
+        else {
             return false
         }
         return true
     }
 
-    private func removeRefLink(`in` message: String) -> String {
+    private func removeRefLink(in message: String) -> String {
         var returnMessage = message
         let bodyEndIndex = message.indices(of: "<p").last
         if let bodyEndIndex = bodyEndIndex {

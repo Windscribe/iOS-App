@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol ProtocolSwitchViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func isConnected() -> Bool
     func updateIsFromProtocol()
 }

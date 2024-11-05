@@ -6,27 +6,22 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PreferencesConnectionView: UIView {
     var viewModel: ConnectionsViewModelType!
     private let disposeBag = DisposeBag()
 
-    lazy var connectionModeView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
-    lazy var protocolsView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
-    lazy var portsView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
-    lazy var circumventCensorshipView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
+    lazy var connectionModeView: SettingsSection = .fromNib()
 
-    @IBOutlet weak var contentStackView: UIStackView!
+    lazy var protocolsView: SettingsSection = .fromNib()
+
+    lazy var portsView: SettingsSection = .fromNib()
+
+    lazy var circumventCensorshipView: SettingsSection = .fromNib()
+
+    @IBOutlet var contentStackView: UIStackView!
 
     func setup() {
         updateProtocols()
@@ -44,10 +39,9 @@ class PreferencesConnectionView: UIView {
         connectionModeView.delegate = self
         circumventCensorshipView.delegate = self
 
-        [connectionModeView, protocolsView, portsView, circumventCensorshipView]
-            .forEach {
-                contentStackView.addArrangedSubview($0)
-            }
+        for item in [connectionModeView, protocolsView, portsView, circumventCensorshipView] {
+            contentStackView.addArrangedSubview(item)
+        }
         contentStackView.addArrangedSubview(UIView())
 
         bindViews()
@@ -101,20 +95,20 @@ extension PreferencesConnectionView: SettingsSectionDelegate {
                 protocolsView.isHidden = true
                 portsView.isHidden = true
             }
-          return
+            return
         }
         if view == protocolsView {
             viewModel.updateProtocol(value: value)
             updatePorts()
-          return
+            return
         }
         if view == portsView {
             viewModel.updatePort(value: value)
-          return
+            return
         }
         if view == circumventCensorshipView {
             viewModel.updateCircumventCensorshipStatus(status: value == TextsAsset.General.enabled)
-          return
+            return
         }
     }
 }

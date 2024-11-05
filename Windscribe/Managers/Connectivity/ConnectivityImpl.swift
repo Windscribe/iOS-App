@@ -6,10 +6,10 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import Network
 import RxSwift
-import Combine
 
 /// Manages network connectivity state using reachability and network path monitor.
 class ConnectivityImpl: Connectivity {
@@ -53,9 +53,9 @@ class ConnectivityImpl: Connectivity {
     }
 
     private func refreshNetworkPathMonitor(path: NWPath) {
-        WSNet.instance().setIsConnectedToVpnState(self.isVPN(path: path))
+        WSNet.instance().setIsConnectedToVpnState(isVPN(path: path))
         WSNet.instance().setConnectivityState(path.status == .satisfied)
-        let networkType = self.getNetworkType(path: path)
+        let networkType = getNetworkType(path: path)
         getNetworkName(networkType: networkType) { ssid in
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
             self.logger.logI(self, "\(appNetwork.description)")
@@ -82,7 +82,7 @@ class ConnectivityImpl: Connectivity {
             return .connected
         case .unsatisfied:
             return .disconnected
-            // Changes to .satisfied once VPN connection is restored or kill switch is turned off.
+        // Changes to .satisfied once VPN connection is restored or kill switch is turned off.
         case .requiresConnection:
             return .requiresVPN
         @unknown default:
@@ -136,6 +136,6 @@ class ConnectivityImpl: Connectivity {
     }
 
     func internetConnectionAvailable() -> Bool {
-        return ((try? network.value().status == .connected) != nil)
+        return (try? network.value().status == .connected) != nil
     }
 }

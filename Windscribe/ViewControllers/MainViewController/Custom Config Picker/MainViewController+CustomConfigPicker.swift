@@ -39,13 +39,13 @@ extension MainViewController: CustomConfigListViewDelegate {
         if customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
             customConfigsTableViewRefreshControl.removeFromSuperview()
         }
-        self.customConfigTableViewFooterView.isHidden = true
+        customConfigTableViewFooterView.isHidden = true
     }
 
     func showCustomConfigRefreshControl() {
         if !customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
-            self.customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
+            customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
         }
-        self.customConfigTableViewFooterView.isHidden = false
+        customConfigTableViewFooterView.isHidden = false
     }
 }

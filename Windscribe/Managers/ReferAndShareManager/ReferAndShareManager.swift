@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Swinject
+
 class ReferAndShareManager: ReferAndShareManagerV2 {
     private let disposeBag = DisposeBag()
 
@@ -19,7 +20,7 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
     static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self))
 
     init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager) {
-        self.preference = preferences
+        preference = preferences
         self.sessionManager = sessionManager
         self.vpnManager = vpnManager
     }
@@ -36,7 +37,8 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
                 let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
                 if !(session?.isUserPro ?? false)
                     && !(session?.isUserGhost ?? false)
-                    && daysRegisteredSince > 30 {
+                    && daysRegisteredSince > 30
+                {
                     self.setShowedShareDialog()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         completion()

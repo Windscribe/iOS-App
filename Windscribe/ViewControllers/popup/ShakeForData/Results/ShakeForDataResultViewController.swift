@@ -6,11 +6,10 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ShakeForDataResultViewController: WSUIViewController {
-
     var backgroundView: UIView!
     var highScoreLabel: UILabel!
     var shakeCounterLabel: UILabel!
@@ -67,6 +66,5 @@ class ShakeForDataResultViewController: WSUIViewController {
         } else {
             messageLabel.text = TextsAsset.ShakeForData.lowerThanHighScoreMessage
         }
-
     }
 }

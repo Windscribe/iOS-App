@@ -8,6 +8,7 @@
 import NetworkExtension
 import UIKit
 import WireGuardKit
+
 enum LocationType {
     case server
     case staticIP

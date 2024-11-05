@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 enum AccountItemCell {
-    private var  localDatabase: LocalDatabase {
+    private var localDatabase: LocalDatabase {
         return Assembler.resolve(LocalDatabase.self)
     }
 
@@ -119,8 +119,8 @@ enum AccountItemCell {
             if session.isUserPro {
                 if UIDevice.current.isTV, #available(iOS 13.0, *) {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGrey)!.withTintColor(.whiteWithOpacity(opacity: 0.5), renderingMode: .alwaysTemplate),
-                                                                         bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
-                                                                         textColor: UIColor.seaGreen)
+                                                   bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
+                                                   textColor: UIColor.seaGreen)
                 } else if themeManager.getIsDarkTheme() {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
                                                    bounds: CGRect(x: 0, y: 0, width: 16, height: 16),
@@ -183,7 +183,7 @@ enum AccountItemCell {
 }
 
 enum AccountSectionItem {
-    private var  localDatabase: LocalDatabase {
+    private var localDatabase: LocalDatabase {
         return Assembler.resolve(LocalDatabase.self)
     }
 
@@ -232,7 +232,8 @@ enum AccountSectionItem {
             return [.username, .emailEmpty]
         }
         if session.email.isEmpty == false,
-           session.emailStatus == false {
+           session.emailStatus == false
+        {
             return [.username, .confirmEmail]
         }
         if session.isUserPro {
@@ -249,6 +250,6 @@ enum AccountSectionItem {
     }
 
     private func makeOtherItems() -> [AccountItemCell] {
-        return [.voucherCode,.lazyLogin]
+        return [.voucherCode, .lazyLogin]
     }
 }

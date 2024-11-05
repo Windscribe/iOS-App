@@ -9,14 +9,13 @@
 import UIKit
 
 extension MainViewController {
-
     func setConnectionState() {
         if statusLabel.text?.contains(TextsAsset.Status.connecting) ?? false {
-            self.setConnectingState()
+            setConnectingState()
             return
         }
         if VPNManager.shared.connectivityTestTimer?.isValid ?? false {
-            return self.setConnectivityTest()
+            return setConnectivityTest()
         }
         switch VPNManager.shared.connectionStatus() {
         case .connected:
@@ -58,14 +57,12 @@ extension MainViewController {
                 self.connectButtonRingView.image = UIImage(named: ImagesAsset.connectButtonRing)
                 self.connectButton.setImage(UIImage(named: ImagesAsset.connectButton), for: .normal)
                 self.connectButtonRingView.stopRotating()
-
             }
         }
-
     }
 
     func setConnectedState() {
-        if self.statusLabel.text == TextsAsset.Status.connectivityTest {
+        if statusLabel.text == TextsAsset.Status.connectivityTest {
             HapticFeedbackGenerator.shared.run(level: .medium)
         }
         DispatchQueue.main.async {
@@ -99,10 +96,10 @@ extension MainViewController {
 
     func setProtocolAndPortLabels() {
         if let customConfig = VPNManager.shared.selectedNode?.customConfig, let protocolType = customConfig.protocolType, let port = customConfig.port {
-            self.protocolLabel.text = protocolType
-            self.portLabel.text = port
+            protocolLabel.text = protocolType
+            portLabel.text = port
         } else {
-            self.protocolSelectionChanged(force: true)
+            protocolSelectionChanged(force: true)
         }
     }
 
@@ -128,7 +125,7 @@ extension MainViewController {
                 self.statusView.backgroundColor = UIColor.white.withAlphaComponent(0.25)
                 self.statusLabel.textColor = UIColor.white
                 self.protocolLabel.textColor = UIColor.white.withAlphaComponent(0.5)
-                self.portLabel.textColor =  UIColor.white.withAlphaComponent(0.5)
+                self.portLabel.textColor = UIColor.white.withAlphaComponent(0.5)
                 self.preferredProtocolBadge.image = UIImage(named: ImagesAsset.preferredProtocolBadgeOff)
                 self.setCircumventCensorshipBadge(color: .white.withAlphaComponent(0.5))
                 self.connectButtonRingView.isHidden = true
@@ -138,7 +135,7 @@ extension MainViewController {
                     self.showNoInternetConnection()
                 }
                 if VPNManager.shared.selectedNode?.customConfig != nil {
-                   self.disableAutoSecureViews()
+                    self.disableAutoSecureViews()
                 } else {
                     self.enableAutoSecureViews()
                 }
@@ -204,7 +201,7 @@ extension MainViewController {
                 self.statusView.backgroundColor = UIColor.midnight.withAlphaComponent(0.25)
                 self.statusLabel.textColor = UIColor.white
                 self.protocolLabel.textColor = UIColor.lowGreen
-                self.portLabel.textColor =  UIColor.lowGreen
+                self.portLabel.textColor = UIColor.lowGreen
                 self.preferredProtocolBadge.image = UIImage(named: ImagesAsset.preferredProtocolBadgeConnecting)
                 self.setCircumventCensorshipBadge(color: .lowGreen)
                 self.connectButtonRingView.isHidden = false
@@ -220,8 +217,8 @@ extension MainViewController {
     }
 
     func setAutomaticModeFailedState() {
-        if self.flagBackgroundView.backgroundColor != UIColor.connectingStartBlue {
-            UIView.transition(with: self.topNavBarImageView, duration: 0.25, options: .transitionCrossDissolve, animations: {
+        if flagBackgroundView.backgroundColor != UIColor.connectingStartBlue {
+            UIView.transition(with: topNavBarImageView, duration: 0.25, options: .transitionCrossDissolve, animations: {
                 self.setTopNavImage(white: false)
             }, completion: nil)
             UIView.animate(withDuration: 0.25) {
@@ -230,29 +227,29 @@ extension MainViewController {
         }
         guard let connectedWifi = WifiManager.shared.connectedWifi else { return }
         topNavBarImageView.layer.opacity = 0.25
-        self.protocolLabel.text = "\(connectedWifi.protocolType.uppercased()) \(TextsAsset.Status.failed)"
-        self.portLabel.text = ""
-        self.statusLabel.isHidden = true
-        self.statusImageView.stopRotating()
-        self.statusDivider.isHidden = true
-        self.statusImageView.image = UIImage(named: ImagesAsset.protocolFailed)
-        self.statusImageView.isHidden = false
-        self.connectivityTestImageView.isHidden = true
-        self.statusView.backgroundColor = UIColor.midnight.withAlphaComponent(0.25)
-        self.statusLabel.textColor = UIColor.failedConnectionYellow
-        self.protocolLabel.textColor = UIColor.failedConnectionYellow
-        self.portLabel.textColor =  UIColor.failedConnectionYellow
-        self.preferredProtocolBadge.image = UIImage(named: ImagesAsset.preferredProtocolBadgeOff)
-        self.setCircumventCensorshipBadge()
-        self.connectButtonRingView.isHidden = false
-        self.connectButton.setImage(UIImage(named: ImagesAsset.connectButton), for: .normal)
-        self.connectButtonRingView.image = UIImage(named: ImagesAsset.failedConnectionButtonRing)
-        self.connectButtonRingView.rotate()
+        protocolLabel.text = "\(connectedWifi.protocolType.uppercased()) \(TextsAsset.Status.failed)"
+        portLabel.text = ""
+        statusLabel.isHidden = true
+        statusImageView.stopRotating()
+        statusDivider.isHidden = true
+        statusImageView.image = UIImage(named: ImagesAsset.protocolFailed)
+        statusImageView.isHidden = false
+        connectivityTestImageView.isHidden = true
+        statusView.backgroundColor = UIColor.midnight.withAlphaComponent(0.25)
+        statusLabel.textColor = UIColor.failedConnectionYellow
+        protocolLabel.textColor = UIColor.failedConnectionYellow
+        portLabel.textColor = UIColor.failedConnectionYellow
+        preferredProtocolBadge.image = UIImage(named: ImagesAsset.preferredProtocolBadgeOff)
+        setCircumventCensorshipBadge()
+        connectButtonRingView.isHidden = false
+        connectButton.setImage(UIImage(named: ImagesAsset.connectButton), for: .normal)
+        connectButtonRingView.image = UIImage(named: ImagesAsset.failedConnectionButtonRing)
+        connectButtonRingView.rotate()
     }
 
     func setDisconnectingState() {
-        if self.statusLabel.text == "\(TextsAsset.Status.disconnecting)..." { return }
-        UIView.transition(with: self.topNavBarImageView, duration: 0.25, options: .transitionCrossDissolve, animations: {
+        if statusLabel.text == "\(TextsAsset.Status.disconnecting)..." { return }
+        UIView.transition(with: topNavBarImageView, duration: 0.25, options: .transitionCrossDissolve, animations: {
             self.setTopNavImage(white: true)
         }, completion: nil)
         UIView.animate(withDuration: 0.25) {
@@ -267,7 +264,7 @@ extension MainViewController {
             self.statusView.backgroundColor = UIColor.white.withAlphaComponent(0.25)
             self.statusLabel.textColor = UIColor.white
             self.protocolLabel.textColor = UIColor.white.withAlphaComponent(0.5)
-            self.portLabel.textColor =  UIColor.white.withAlphaComponent(0.5)
+            self.portLabel.textColor = UIColor.white.withAlphaComponent(0.5)
             self.preferredProtocolBadge.image = UIImage(named: ImagesAsset.preferredProtocolBadgeOff)
             self.setCircumventCensorshipBadge(color: .white.withAlphaComponent(0.5))
             self.connectButtonRingView.isHidden = true
@@ -278,6 +275,6 @@ extension MainViewController {
     }
 
     func continueAnimations() {
-        self.setConnectionState()
+        setConnectionState()
     }
 }

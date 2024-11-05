@@ -10,8 +10,8 @@ import Foundation
 import RealmSwift
 
 @objcMembers class MobilePlan: Object,
-                               Decodable {
-
+    Decodable
+{
     dynamic var active: Bool = false
     dynamic var extId: String = ""
     dynamic var name: String = ""
@@ -46,15 +46,14 @@ import RealmSwift
     override class func primaryKey() -> String? {
         return "extId"
     }
-
 }
 
 struct MobilePlanList: Decodable {
-
     let mobilePlans = List<MobilePlan>()
 
     enum CodingKeys: String,
-                     CodingKey {
+        CodingKey
+    {
         case data
         case plans
     }
@@ -71,5 +70,4 @@ struct MobilePlanList: Decodable {
         mobilePlans.removeAll()
         mobilePlans.append(objectsIn: array)
     }
-
 }

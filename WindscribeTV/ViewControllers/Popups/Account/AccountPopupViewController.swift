@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class AccountPopupViewController: BasePopUpViewController {
     var accountPopupViewModel: AccountPopupModelType!
@@ -15,9 +15,10 @@ class AccountPopupViewController: BasePopUpViewController {
     var actionButton = WSPillButton()
     var cancelButton = WSPillButton()
 
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet var imageView: UIImageView!
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger?.logD(self, "Displaying Account Popup View")
@@ -25,13 +26,14 @@ class AccountPopupViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     override func setup() {
         super.setup()
         titleLabel?.text = ""
         headerLabel.isHidden = false
-        [actionButton, cancelButton].forEach {
-            $0.setup(withHeight: 96.0)
-            mainStackView.addArrangedSubview($0)
+        for item in [actionButton, cancelButton] {
+            item.setup(withHeight: 96.0)
+            mainStackView.addArrangedSubview(item)
         }
         mainStackView.addArrangedSubview(UIView())
     }

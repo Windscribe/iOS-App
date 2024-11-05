@@ -6,11 +6,10 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ConfirmEmailViewController: WSUIViewController {
-
     var viewModel: ConfirmEmailViewModel!, logger: FileLogger!
 
     var backgroundView: UIView!
@@ -40,14 +39,14 @@ class ConfirmEmailViewController: WSUIViewController {
             guard let session = session else { return }
             DispatchQueue.main.async {
                 if session.emailStatus == true {
-                  self.dismissDelegate?.dismissWith(action: .dismiss)
+                    self.dismissDelegate?.dismissWith(action: .dismiss)
                     self.dismiss(animated: true, completion: nil)
                 }
             }
         }, onError: { _ in }).disposed(by: disposeBag)
 
         changeButton.rx.tap.bind {
-            self.dismissDelegate?.dismissWith( action: .enterEmail)
+            self.dismissDelegate?.dismissWith(action: .enterEmail)
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
 
@@ -72,9 +71,9 @@ class ConfirmEmailViewController: WSUIViewController {
         resendButton.layer.opacity = 0.35
         viewModel.apiManager.confirmEmail().subscribe(onSuccess: { _ in
             self.viewModel.alertManager.showSimpleAlert(viewController: self,
-                                                title: TextsAsset.ConfirmationEmailSentAlert.title, message: TextsAsset.ConfirmationEmailSentAlert.message,
-                                                buttonText: TextsAsset.okay)
+                                                        title: TextsAsset.ConfirmationEmailSentAlert.title, message: TextsAsset.ConfirmationEmailSentAlert.message,
+                                                        buttonText: TextsAsset.okay)
 
-        }, onFailure: { _ in}).disposed(by: disposeBag)
+        }, onFailure: { _ in }).disposed(by: disposeBag)
     }
 }

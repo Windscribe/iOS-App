@@ -6,16 +6,16 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
-import CoreMotion
 import AudioToolbox
+import CoreMotion
+import Foundation
 import RxSwift
 
 protocol ShakeForDataViewModelType {
-    var shakeCount: BehaviorSubject<Int> {get}
-    var timerCount: BehaviorSubject<Int> {get}
-    var showResults: PublishSubject<Int> {get}
-    var startTimerCount: Int {get}
+    var shakeCount: BehaviorSubject<Int> { get }
+    var timerCount: BehaviorSubject<Int> { get }
+    var showResults: PublishSubject<Int> { get }
+    var startTimerCount: Int { get }
     func wasShown()
     func quit()
 }
@@ -43,8 +43,8 @@ class ShakeForDataViewModel: ShakeForDataViewModelType {
     }
 
     func quit() {
-        self.stopAccelerometers()
-        self.countdownTimer?.invalidate()
+        stopAccelerometers()
+        countdownTimer?.invalidate()
     }
 }
 
@@ -60,26 +60,27 @@ extension ShakeForDataViewModel {
         var xInNegativeDirection = 0.0
         motionManager.deviceMotionUpdateInterval = 0.01
         motionManager.startDeviceMotionUpdates(to: OperationQueue.main,
-                                               withHandler: { [weak self] (data,_) in
-            if data!.userAcceleration.y > 3.0 || data!.userAcceleration.y < -3.0 {
-                if data!.userAcceleration.y > 3.0 {
-                    xInNegativeDirection = 0.0
-                    xInPositiveDirection = data!.userAcceleration.y
-                }
+                                               withHandler: { [weak self] data, _ in
+                                                   if data!.userAcceleration.y > 3.0 || data!.userAcceleration.y < -3.0 {
+                                                       if data!.userAcceleration.y > 3.0 {
+                                                           xInNegativeDirection = 0.0
+                                                           xInPositiveDirection = data!.userAcceleration.y
+                                                       }
 
-                if data!.userAcceleration.y < -3.0 {
-                    xInNegativeDirection = data!.userAcceleration.y
-                }
+                                                       if data!.userAcceleration.y < -3.0 {
+                                                           xInNegativeDirection = data!.userAcceleration.y
+                                                       }
 
-                if xInPositiveDirection != 0.0 && xInNegativeDirection != 0.0,
-                   let prevValue = try? self?.shakeCount.value() {
-                    self?.shakeCount.onNext(prevValue + 1)
-                    impactFeedbackgenerator.impactOccurred()
-                    xInPositiveDirection = 0.0
-                    xInNegativeDirection = 0.0
-                }
-            }
-        })
+                                                       if xInPositiveDirection != 0.0, xInNegativeDirection != 0.0,
+                                                          let prevValue = try? self?.shakeCount.value()
+                                                       {
+                                                           self?.shakeCount.onNext(prevValue + 1)
+                                                           impactFeedbackgenerator.impactOccurred()
+                                                           xInPositiveDirection = 0.0
+                                                           xInNegativeDirection = 0.0
+                                                       }
+                                                   }
+                                               })
     }
 
     private func start() {
@@ -97,11 +98,11 @@ extension ShakeForDataViewModel {
         guard let currentCount = try? timerCount.value() else { return }
         if currentCount == 0 {
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            self.countdownTimer?.invalidate()
-            self.stopAccelerometers()
+            countdownTimer?.invalidate()
+            stopAccelerometers()
 
             let shakeCount = (try? shakeCount.value()) ?? 0
-            self.showResults.onNext(shakeCount)
+            showResults.onNext(shakeCount)
             return
         }
         timerCount.onNext(currentCount - 1)

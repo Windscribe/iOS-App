@@ -20,7 +20,9 @@ class ConnectionManager: ConnectionManagerV2 {
     private var preferences: Preferences
     private var vpnManager: VPNManager
     static var shared = Assembler.resolve(ConnectionManagerV2.self)
+
     // MARK: - Properties
+
     /// Default protocol
     let defaultProtocol = ProtocolPort(wireGuard, DefaultValues.port)
     /// Provides concurrent access to protocol list.
@@ -34,7 +36,7 @@ class ConnectionManager: ConnectionManagerV2 {
     /// Last successful protocol
     var goodProtocol: ProtocolPort?
     var resetGoodProtocolTime: Date?
-    var failoverNetworkName: NetworkType = NetworkType.none
+    var failoverNetworkName: NetworkType = .none
     var manualProtocol: String = DefaultValues.protocol
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
@@ -53,17 +55,19 @@ class ConnectionManager: ConnectionManagerV2 {
     }
 
     func bindData() {
-        preferences.getConnectionMode().subscribe( onNext: { [weak self] mode in
+        preferences.getConnectionMode().subscribe(onNext: { [weak self] mode in
             self?.connectionMode = mode ?? DefaultValues.connectionMode
         }).disposed(by: disposeBag)
-        preferences.getSelectedProtocol().subscribe( onNext: { [weak self] proto in
+        preferences.getSelectedProtocol().subscribe(onNext: { [weak self] proto in
             self?.manualProtocol = proto ?? DefaultValues.protocol
         }).disposed(by: disposeBag)
-        preferences.getSelectedPort().subscribe( onNext: { [weak self] port in
+        preferences.getSelectedPort().subscribe(onNext: { [weak self] port in
             self?.manualPort = port ?? DefaultValues.port
         }).disposed(by: disposeBag)
     }
+
     // MARK: - Actions
+
     /// Load protocols
     /// change their priority based on user settings.
     /// append port
@@ -91,7 +95,7 @@ class ConnectionManager: ConnectionManagerV2 {
         }
 
         if connectionMode == Fields.Values.manual {
-            logger.logD(self,  "Manual protocol : \(manualProtocol)")
+            logger.logD(self, "Manual protocol : \(manualProtocol)")
             appendPort(proto: manualProtocol, port: manualPort)
             setPriority(proto: manualProtocol, type: .normal)
         }
@@ -108,7 +112,7 @@ class ConnectionManager: ConnectionManagerV2 {
             setPriority(proto: userSelected.protocolName, type: .normal)
         }
 
-        failedProtocols.forEach { displayProtocol in
+        for displayProtocol in failedProtocols {
             logger.logD(self, "Failed: \(displayProtocol.protocolPort.protocolName)")
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
@@ -120,7 +124,7 @@ class ConnectionManager: ConnectionManagerV2 {
             } else {
                 protocolsToConnectList.first?.viewType = .nextUp
             }
-            let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
+            let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)" }.joined(separator: ", ")
             logger.logI(self, log)
             comletion(protocolsToConnectList)
         }
@@ -146,7 +150,7 @@ class ConnectionManager: ConnectionManagerV2 {
     /// Next protocol to connect.
     func getNextProtocol() -> ProtocolPort {
         accessQueue.sync {
-            return protocolsToConnectList.first.map { displayPort in
+            protocolsToConnectList.first.map { displayPort in
                 displayPort.protocolPort
             } ?? defaultProtocol
         }
@@ -160,10 +164,10 @@ class ConnectionManager: ConnectionManagerV2 {
             if state == .connected {
                 protocolsToConnectList.first { $0.viewType == .nextUp
                 }?.viewType = .connected
-                protocolsToConnectList.filter {$0.viewType == .nextUp}.forEach { $0.viewType = .normal }
+                protocolsToConnectList.filter { $0.viewType == .nextUp }.forEach { $0.viewType = .normal }
             }
             if state == .disconnected {
-                protocolsToConnectList.filter {$0.viewType == .nextUp }.forEach {$0.viewType = .normal}
+                protocolsToConnectList.filter { $0.viewType == .nextUp }.forEach { $0.viewType = .normal }
                 protocolsToConnectList.first { $0.viewType == .connected
                 }?.viewType = .normal
             }
@@ -197,7 +201,7 @@ class ConnectionManager: ConnectionManagerV2 {
             let failedProtocol = getNextProtocol()
             logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
             setPriority(proto: failedProtocol.protocolName, type: .fail)
-            if protocolsToConnectList.filter({ $0.viewType == .normal}).count <= 0 {
+            if protocolsToConnectList.filter({ $0.viewType == .normal }).count <= 0 {
                 logger.logI(self, "No more protocol left to connect.")
                 reset(completion: completion)
             } else {
@@ -215,6 +219,7 @@ class ConnectionManager: ConnectionManagerV2 {
     }
 
     // MARK: - Helper
+
     private func getAppSupportedProtocol() -> [String] {
         return TextsAsset.General.protocols
     }
@@ -223,7 +228,7 @@ class ConnectionManager: ConnectionManagerV2 {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
-        loadProtocols(shouldReset: true) {  _ in
+        loadProtocols(shouldReset: true) { _ in
             completion(true)
         }
     }
@@ -257,7 +262,8 @@ class ConnectionManager: ConnectionManagerV2 {
         var lstConnection: [ProtocolPort] = []
         for protocolName in listProtocol {
             if let lstPort = localDatabase.getPorts(protocolType: protocolName),
-               let firstPort = lstPort.first {
+               let firstPort = lstPort.first
+            {
                 lstConnection.append((protocolName, firstPort))
             }
         }

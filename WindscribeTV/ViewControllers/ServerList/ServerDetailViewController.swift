@@ -6,15 +6,15 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class ServerDetailViewController: UIViewController {
-    @IBOutlet weak var flagView: UIImageView!
-    @IBOutlet weak var serverTitle: PageTitleLabel!
-    @IBOutlet weak var countLabel: PageTitleLabel!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet var flagView: UIImageView!
+    @IBOutlet var serverTitle: PageTitleLabel!
+    @IBOutlet var countLabel: PageTitleLabel!
+    @IBOutlet var tableView: UITableView!
     private var focusServerDetailCellPath: IndexPath?
 
     let disposeBag = DisposeBag()
@@ -59,7 +59,7 @@ class ServerDetailViewController: UIViewController {
         backgroundGradient.colors = [UIColor.lightMidnight.withAlphaComponent(0.75).cgColor, UIColor.clear.cgColor]
         backgroundGradient.locations = [0.0, 1.0]
         flagBackgroundView.layer.mask = backgroundGradient
-        self.view.addSubview(flagBackgroundView)
+        view.addSubview(flagBackgroundView)
         flagBackgroundView.sendToBack()
         if let server = server {
             flagView.image = UIImage(named: "\(server.countryCode?.lowercased() ?? "")-l")
@@ -72,13 +72,13 @@ class ServerDetailViewController: UIViewController {
 
     func bindData() {
         viewModel?.favNode.bind(onNext: { favNodes in
-            self.favNodes = favNodes?.compactMap({ $0.getFavNodeModel() })
+            self.favNodes = favNodes?.compactMap { $0.getFavNodeModel() }
         }).disposed(by: disposeBag)
     }
 }
 
 extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return server?.groups?.count ?? 0
     }
 
@@ -94,27 +94,27 @@ extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource
         return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 125
     }
 }
 
 extension ServerDetailViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
-        self.navigationController?.popToRootViewController(animated: true)
-        self.delegate?.setSelectedServerAndGroup(server: server, group: group)
+        navigationController?.popToRootViewController(animated: true)
+        delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
 
     func showUpgradeView() {
-        self.delegate?.showUpgradeView()
+        delegate?.showUpgradeView()
     }
 
     func showExpiredAccountView() {
-        self.delegate?.showExpiredAccountView()
+        delegate?.showExpiredAccountView()
     }
 
     func showOutOfDataPopUp() {
-        self.delegate?.showOutOfDataPopUp()
+        delegate?.showOutOfDataPopUp()
     }
 
     /// Save last cell with focus.
@@ -124,12 +124,12 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
         if let indexPath = tableView.indexPath(for: cell) {
             focusServerDetailCellPath = indexPath
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
         if let indexPath = focusServerDetailCellPath {
-            self.tableView.scrollToRow(at: indexPath, at: .none, animated: false)
-            if let _ = self.tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+            tableView.scrollToRow(at: indexPath, at: .none, animated: false)
+            if let _ = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -137,7 +137,8 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
     /// Bring focus back to last focused cell if required
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         if let indexPath = focusServerDetailCellPath,
-            let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+           let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell
+        {
             return [cell.favButton]
         }
         return super.preferredFocusEnvironments

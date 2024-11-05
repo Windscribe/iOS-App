@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
+import UIKit
 
 protocol WTableViewDataSourceDelegate: AnyObject {
     func handleRefresh()
@@ -15,7 +15,6 @@ protocol WTableViewDataSourceDelegate: AnyObject {
 }
 
 class WTableViewDataSource: NSObject, UITableViewDelegate {
-
     var canRefresh: Bool = true
     weak var scrollViewDelegate: WTableViewDataSourceDelegate?
     var beginDragging: CGFloat = 0.0
@@ -23,15 +22,17 @@ class WTableViewDataSource: NSObject, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if UIDevice.isIphone6orLess() {
             if canRefresh &&
-                (scrollView.contentOffset.y < -scrollView.frame.height/3.5) &&
+                (scrollView.contentOffset.y < -scrollView.frame.height / 3.5) &&
                 scrollView.isDecelerating &&
-                beginDragging == 0.0 {
+                beginDragging == 0.0
+            {
                 canRefresh = false
                 scrollViewDelegate?.handleRefresh()
             }
 
             if !canRefresh &&
-                (scrollView.contentOffset.y >= 0) {
+                (scrollView.contentOffset.y >= 0)
+            {
                 canRefresh = true
             }
         }
@@ -41,7 +42,6 @@ class WTableViewDataSource: NSObject, UITableViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         beginDragging = scrollView.contentOffset.y
     }
-
 }
 
 protocol WExpyTableViewDataSourceDelegate: AnyObject {
@@ -51,12 +51,12 @@ protocol WExpyTableViewDataSourceDelegate: AnyObject {
 }
 
 class WExpyTableViewDataSource: WTableViewDataSource, ExpyTableViewDelegate {
-
     weak var expyDelegate: WExpyTableViewDataSourceDelegate?
 
     func tableView(_ tableView: ExpyTableView,
                    expyState state: ExpyState,
-                   changeForSection section: Int) {
-        self.expyDelegate?.changeForSection(tableView: tableView, state: state, section: section)
+                   changeForSection section: Int)
+    {
+        expyDelegate?.changeForSection(tableView: tableView, state: state, section: section)
     }
 }

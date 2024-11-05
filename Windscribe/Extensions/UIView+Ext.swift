@@ -6,23 +6,22 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import Swinject
+import UIKit
 
 extension UIView {
-
     private static let kRotationAnimationKey = "rotationanimationkey"
     private static let kFlashAnimationKey = "flashanimationkey"
     private static let kPulseAnimationKey = "pulseanimationkey"
     private static let themeManager = Assembler.resolve(ThemeManager.self)
 
     func rotate() {
-        let rotation: CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotation.toValue = NSNumber(value: Double.pi * 2)
         rotation.duration = 2
         rotation.isCumulative = true
         rotation.repeatCount = Float.greatestFiniteMagnitude
-        self.layer.add(rotation, forKey: UIView.kRotationAnimationKey)
+        layer.add(rotation, forKey: UIView.kRotationAnimationKey)
     }
 
     func stopRotating() {
@@ -34,9 +33,9 @@ extension UIView {
     func makeRoundCorners(corners: UIRectCorner, radius: CGFloat) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            let bezierPath = UIBezierPath.init(roundedRect: self.bounds,
-                                               byRoundingCorners: corners,
-                                               cornerRadii: CGSize(width: radius, height: radius))
+            let bezierPath = UIBezierPath(roundedRect: self.bounds,
+                                          byRoundingCorners: corners,
+                                          cornerRadii: CGSize(width: radius, height: radius))
             let mask = CAShapeLayer()
             mask.path = bezierPath.cgPath
             self.layer.mask = mask
@@ -51,26 +50,26 @@ extension UIView {
     }
 
     func flash() {
-        let rotation: CABasicAnimation = CABasicAnimation(keyPath: "opacity")
+        let rotation = CABasicAnimation(keyPath: "opacity")
         rotation.fromValue = 1.0
         rotation.toValue = 0.1
-        rotation.duration = Double.random(in: (0.3)...(0.7))
+        rotation.duration = Double.random(in: 0.3 ... 0.7)
         rotation.isCumulative = true
         rotation.autoreverses = true
         rotation.repeatCount = 1
-        self.layer.removeAllAnimations()
-        self.layer.add(rotation, forKey: UIView.kFlashAnimationKey)
+        layer.removeAllAnimations()
+        layer.add(rotation, forKey: UIView.kFlashAnimationKey)
     }
 
     func pulse() {
-        let rotation: CABasicAnimation = CABasicAnimation(keyPath: "opacity")
+        let rotation = CABasicAnimation(keyPath: "opacity")
         rotation.fromValue = 1.0
         rotation.toValue = 0.1
         rotation.duration = 0.5
         rotation.isCumulative = false
         rotation.autoreverses = true
         rotation.repeatCount = Float.greatestFiniteMagnitude
-        self.layer.add(rotation, forKey: UIView.kPulseAnimationKey)
+        layer.add(rotation, forKey: UIView.kPulseAnimationKey)
     }
 
     func stopPulse() {
@@ -89,8 +88,9 @@ extension UIView {
     func fitToSuperView(top: CGFloat = 0.0,
                         leading: CGFloat = 0.0,
                         bottom: CGFloat = 0.0,
-                        trailing: CGFloat = 0.0) {
-        guard let parentView = self.superview else {
+                        trailing: CGFloat = 0.0)
+    {
+        guard let parentView = superview else {
             return
         }
         translatesAutoresizingMaskIntoConstraints = false
@@ -149,7 +149,8 @@ extension UIView {
     }
 
     func makeTrailingAnchor(with view: UIView,
-                            constant: CGFloat = 0) {
+                            constant: CGFloat = 0)
+    {
         trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: -constant).isActive = true
     }
 
@@ -194,7 +195,8 @@ extension UIView {
     }
 
     func makeCenter(xConstant: CGFloat = 0,
-                    yConstant: CGFloat = 0) {
+                    yConstant: CGFloat = 0)
+    {
         guard let superview = superview else {
             return
         }
@@ -210,7 +212,8 @@ extension UIView {
     }
 
     func makeCenterYAnchor(with view: UIView,
-                           constant: CGFloat = 0) {
+                           constant: CGFloat = 0)
+    {
         centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant).isActive = true
     }
 
@@ -250,12 +253,12 @@ extension UIView {
 }
 
 extension UIView {
-    @objc func updateTheme(isDark: Bool) {}
+    @objc func updateTheme(isDark _: Bool) {}
 }
 
 extension UIView {
     func makeCorner(_ cornerRadius: CGFloat) {
-        self.clipsToBounds = true
-        self.layer.cornerRadius = cornerRadius
+        clipsToBounds = true
+        layer.cornerRadius = cornerRadius
     }
 }

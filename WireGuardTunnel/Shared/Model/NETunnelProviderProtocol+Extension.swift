@@ -23,7 +23,7 @@ extension NETunnelProviderProtocol {
             return nil
         }
         #if os(macOS)
-        providerConfiguration = ["UID": getuid()]
+            providerConfiguration = ["UID": getuid()]
         #endif
 
         let endpoints = tunnelConfiguration.peers.compactMap { $0.endpoint }
@@ -38,7 +38,8 @@ extension NETunnelProviderProtocol {
 
     func asTunnelConfiguration(called name: String? = nil) -> TunnelConfiguration? {
         if let passwordReference = passwordReference,
-            let config = Keychain.openReference(called: passwordReference) {
+           let config = Keychain.openReference(called: passwordReference)
+        {
             return try? TunnelConfiguration(fromWgQuickConfig: config, called: name)
         }
         if let oldConfig = providerConfiguration?["WgQuickConfig"] as? String {
@@ -65,39 +66,39 @@ extension NETunnelProviderProtocol {
          */
         if let oldConfig = providerConfiguration?["WgQuickConfig"] as? String {
             #if os(macOS)
-            providerConfiguration = ["UID": getuid()]
+                providerConfiguration = ["UID": getuid()]
             #elseif os(iOS) || os(tvOS)
-            providerConfiguration = nil
+                providerConfiguration = nil
             #else
-            #error("Unimplemented")
+                #error("Unimplemented")
             #endif
             guard passwordReference == nil else { return true }
             passwordReference = Keychain.makeReference(containing: oldConfig, called: name)
             return true
         }
         #if os(macOS)
-        if passwordReference != nil && providerConfiguration?["UID"] == nil && verifyConfigurationReference() {
-            providerConfiguration = ["UID": getuid()]
-            return true
-        }
-        #elseif os(iOS)
-        /* Update the stored reference from the old iOS 14 one to the canonical iOS 15 one.
-         * The iOS 14 ones are 96 bits, while the iOS 15 ones are 160 bits. We do this so
-         * that we can have fast set exclusion in deleteReferences safely. */
-        if passwordReference != nil && passwordReference!.count == 12 {
-            var result: CFTypeRef?
-            let ret = SecItemCopyMatching([kSecValuePersistentRef: passwordReference!,
-                                           kSecReturnPersistentRef: true] as CFDictionary,
-                                           &result)
-            if ret != errSecSuccess || result == nil {
-                return false
-            }
-            guard let newReference = result as? Data else { return false }
-            if !newReference.elementsEqual(passwordReference!) {
-                passwordReference = newReference
+            if passwordReference != nil, providerConfiguration?["UID"] == nil, verifyConfigurationReference() {
+                providerConfiguration = ["UID": getuid()]
                 return true
             }
-        }
+        #elseif os(iOS)
+            /* Update the stored reference from the old iOS 14 one to the canonical iOS 15 one.
+             * The iOS 14 ones are 96 bits, while the iOS 15 ones are 160 bits. We do this so
+             * that we can have fast set exclusion in deleteReferences safely. */
+            if passwordReference != nil, passwordReference!.count == 12 {
+                var result: CFTypeRef?
+                let ret = SecItemCopyMatching([kSecValuePersistentRef: passwordReference!,
+                                               kSecReturnPersistentRef: true] as CFDictionary,
+                                              &result)
+                if ret != errSecSuccess || result == nil {
+                    return false
+                }
+                guard let newReference = result as? Data else { return false }
+                if !newReference.elementsEqual(passwordReference!) {
+                    passwordReference = newReference
+                    return true
+                }
+            }
         #endif
         return false
     }

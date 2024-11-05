@@ -7,13 +7,16 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
-class AdvanceParamsViewController: WSNavigationViewController {
+import RxSwift
 
+class AdvanceParamsViewController: WSNavigationViewController {
     // MARK: - Properties
+
     var viewModel: AdvanceParamsViewModel?
+
     // MARK: - UI elements
+
     private lazy var inputBox: UITextView = {
         let textfield = UITextView()
         textfield.constrainHeight(200)
@@ -22,11 +25,11 @@ class AdvanceParamsViewController: WSNavigationViewController {
         textfield.textAlignment = .justified
         textfield.isEditable = true
         textfield.spellCheckingType = .no
-        textfield.contentInset = UIEdgeInsets.init(horizontalInset: 12.0, verticalInset: 8.0)
+        textfield.contentInset = UIEdgeInsets(horizontalInset: 12.0, verticalInset: 8.0)
         return textfield
     }()
 
-    private lazy var saveButton: UIButton =  {
+    private lazy var saveButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.addTarget(self, action: #selector(saveButtonTap), for: .touchUpInside)
         btn.anchor(height: 48)
@@ -39,6 +42,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
     }()
 
     // MARK: - View setup and Binding
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -49,7 +53,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
         setupFillLayoutView()
         layoutView.stackView.addArrangedSubviews([
             inputBox,
-            saveButton
+            saveButton,
         ])
         layoutView.stackView.spacing = 16
         let paddingTop = UIScreen.hasTopNotch ? 48.0 : 16.0
@@ -89,7 +93,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
             }
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.showError.distinctUntilChanged().asObservable(), viewModel.isDarkMode.asObservable()).bind { (show, isDarkMode) in
+        Observable.combineLatest(viewModel.showError.distinctUntilChanged().asObservable(), viewModel.isDarkMode.asObservable()).bind { show, isDarkMode in
             DispatchQueue.main.async {
                 if show {
                     self.inputBox.textColor = UIColor.red
@@ -101,6 +105,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
     }
 
     // MARK: - Actions
+
     @objc func saveButtonTap() {
         inputBox.endEditing(true)
         viewModel?.saveButtonTap()

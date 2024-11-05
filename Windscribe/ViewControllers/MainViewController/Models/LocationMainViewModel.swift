@@ -6,14 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreLocation
+import Foundation
 import NetworkExtension
 import RxSwift
+import UIKit
 
 protocol LocationManagingViewModelType: DisclosureAlertDelegate {
-    var shouldPresentLocationPopUp: PublishSubject<Bool> {get}
+    var shouldPresentLocationPopUp: PublishSubject<Bool> { get }
     func requestLocationPermission(callback: @escaping () -> Void)
     func logStatus()
     func getStatus() -> CLAuthorizationStatus
@@ -54,7 +54,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
         logger.logI(self, "\(getStatus())")
     }
 
-     func getStatus() -> CLAuthorizationStatus {
+    func getStatus() -> CLAuthorizationStatus {
         if #available(iOS 15.0, *) {
             return locationManager.authorizationStatus
         } else {
@@ -64,9 +64,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
 }
 
 extension LocationManagingViewModel: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-
-    }
+    func locationManager(_: CLLocationManager, didFailWithError _: Error) {}
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         connectivity.refreshNetwork()
@@ -92,7 +90,7 @@ extension LocationManagingViewModel: DisclosureAlertDelegate {
     }
 
     func openLocationSettingsClicked() {
-        UIApplication.shared.open(URL.init(string: "App-prefs:Privacy&path=LOCATION")!,
+        UIApplication.shared.open(URL(string: "App-prefs:Privacy&path=LOCATION")!,
                                   options: [:], completionHandler: nil)
     }
 }

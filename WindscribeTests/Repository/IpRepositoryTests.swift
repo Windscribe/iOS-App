@@ -11,6 +11,7 @@ import Mockingbird
 import RxSwift
 @testable import Windscribe
 import XCTest
+
 class IpRepositoryTests: XCTestCase {
     let disposeBag = DisposeBag()
 

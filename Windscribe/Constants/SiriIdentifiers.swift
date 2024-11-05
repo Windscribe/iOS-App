@@ -7,7 +7,8 @@
 //
 
 import Foundation
-struct SiriIdentifiers {
+
+enum SiriIdentifiers {
     static let connect = "com.Windscribe.connect"
     static let disconnect = "com.Windscribe.disconnect"
     static let showLocation = "com.Windscribe.showlocation"

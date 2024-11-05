@@ -15,6 +15,7 @@ class WSRoundButton: UIButton {
             setborder()
         }
     }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -26,33 +27,32 @@ class WSRoundButton: UIButton {
     }
 
     func setup() {
-        self.layer.cornerRadius = self.frame.height/2
-        self.clipsToBounds = true
-        self.setTitleColor(.whiteWithOpacity(opacity: 0.50), for: .normal)
-        self.setTitleColor(.white, for: .focused)
-        self.setBackgroundImage(UIImage.imageWithColor(.whiteWithOpacity(opacity: 0.25)), for: .focused)
-        self.setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
-        self.titleLabel?.font = UIFont.bold(size: 35)
+        layer.cornerRadius = frame.height / 2
+        clipsToBounds = true
+        setTitleColor(.whiteWithOpacity(opacity: 0.50), for: .normal)
+        setTitleColor(.white, for: .focused)
+        setBackgroundImage(UIImage.imageWithColor(.whiteWithOpacity(opacity: 0.25)), for: .focused)
+        setBackgroundImage(UIImage.imageWithColor(.clear), for: .normal)
+        titleLabel?.font = UIFont.bold(size: 35)
     }
 
     func setborder() {
         if hasBorder {
-            self.layer.borderWidth = 2
-            self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
+            layer.borderWidth = 2
+            layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
     }
 
     func updateCorners(radius: CGFloat) {
-        self.layer.cornerRadius = radius
+        layer.cornerRadius = radius
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if hasBorder {
             if context.nextFocusedView == self {
-                self.layer.borderColor = UIColor.clear.cgColor
+                layer.borderColor = UIColor.clear.cgColor
             } else {
-                self.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
-
+                layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
             }
         }
     }
@@ -68,15 +68,15 @@ class WSPillButton: UIButton {
     }
 
     func setup(withHeight: CGFloat) {
-        self.layer.cornerRadius = withHeight / 2.0
-        self.clipsToBounds = true
+        layer.cornerRadius = withHeight / 2.0
+        clipsToBounds = true
         updateDeselected()
         heightAnchor.constraint(equalToConstant: withHeight).isActive = true
         layoutIfNeeded()
     }
 
     func updateCorners(radius: CGFloat) {
-        self.layer.cornerRadius = radius
+        layer.cornerRadius = radius
     }
 
     private func updateSelected() {
@@ -92,11 +92,11 @@ class WSPillButton: UIButton {
         setTitleColor(.whiteWithOpacity(opacity: 0.5), for: .normal)
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if context.nextFocusedView == self {
-            self.updateSelected()
+            updateSelected()
         } else {
-            self.updateDeselected()
+            updateDeselected()
         }
     }
 }

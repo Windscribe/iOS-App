@@ -11,8 +11,8 @@ import RxSwift
 
 protocol EnterEmailViewModel {
     var alertManager: AlertManagerV2 { get }
-    var sessionManager: SessionManagerV2 {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var sessionManager: SessionManagerV2 { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     var currentEmail: String? { get }
     func changeEmailAddress(email: String) -> Single<APIMessage>
 }
@@ -27,7 +27,7 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
         sessionManager.session?.email
     }
 
-    init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2,themeManager: ThemeManager, apiManager: APIManager) {
+    init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2, themeManager: ThemeManager, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.apiManager = apiManager
@@ -36,9 +36,9 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
 
     func changeEmailAddress(email: String) -> Single<APIMessage> {
         return apiManager.addEmail(email: email).map { apimessage in
-            return apimessage
+            apimessage
         }.catch { error in
-            return Single.error(error)
+            Single.error(error)
         }
     }
 }

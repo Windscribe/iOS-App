@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum CredentialType: String {
     case iKEv2 = "ikev2"
     case openVPN = "openvpn"

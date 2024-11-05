@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol UserRepository {
     var sessionAuth: String? { get }
     var user: BehaviorSubject<User?> { get }

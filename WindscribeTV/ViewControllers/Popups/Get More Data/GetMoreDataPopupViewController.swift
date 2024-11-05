@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class GetMoreDataPopupViewController: BasePopUpViewController {
     var router: HomeRouter!
@@ -17,6 +17,7 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
     var getProButton = WSPillButton()
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Get More Data View")
@@ -24,12 +25,13 @@ class GetMoreDataPopupViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     override func setup() {
         super.setup()
         signUpButton.setTitle(TextsAsset.signUp, for: .normal)
         getProButton.setTitle("Get Pro - Unlimited".uppercased(), for: .normal)
 
-        [signUpButton, getProButton].forEach { roundbutton in
+        for roundbutton in [signUpButton, getProButton] {
             roundbutton.setup(withHeight: 96.0)
             mainStackView.addArrangedSubview(roundbutton)
         }

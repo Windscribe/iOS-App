@@ -7,20 +7,22 @@
 //
 
 import Foundation
+import Realm
 import RealmSwift
 import RxRealm
 import RxSwift
-import Realm
+
 class LocalDatabaseImpl: LocalDatabase {
     private let logger: FileLogger
     let disposeBag = DisposeBag()
-    let cleanTrigger = PublishSubject<()>()
+    let cleanTrigger = PublishSubject<Void>()
     let preferences: Preferences
 
     init(logger: FileLogger, preferences: Preferences) {
         self.logger = logger
         self.preferences = preferences
     }
+
     func saveSession(session: Session) -> RxSwift.Disposable {
         return updateRealmObject(object: session)
     }
@@ -75,7 +77,7 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func deleteStaticIps(ignore: [String]) {
         if let objects = getRealmObjects(type: StaticIP.self) {
-            objects.forEach { stat in
+            for stat in objects {
                 if stat.isInvalidated == false && !ignore.contains(stat.staticIP) {
                     deleteRealmObject(object: stat)
                 }
@@ -220,8 +222,8 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func getLastConnection() -> Observable<VPNConnection?> {
         return getSafeRealmObservable(type: VPNConnection.self)
-
     }
+
     func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable {
         return updateRealmObject(object: vpnConnection)
     }
@@ -248,7 +250,7 @@ class LocalDatabaseImpl: LocalDatabase {
         let realm = try? Realm()
         if let session = realm?.objects(Session.self).first {
             let oldSession = OldSession(session: session)
-            self.updateRealmObject(object: oldSession).disposed(by: self.disposeBag)
+            updateRealmObject(object: oldSession).disposed(by: disposeBag)
         }
     }
 
@@ -278,7 +280,7 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func getPorts(protocolType: String) -> [String]? {
         guard let ports = getPortMap() else { return nil }
-        let selectedProtocolPorts = ports.filter({$0.heading == protocolType})
+        let selectedProtocolPorts = ports.filter { $0.heading == protocolType }
         var portsArray = [String]()
         guard let portsList = selectedProtocolPorts.first?.ports else { return nil }
         portsArray.append(contentsOf: portsList)
@@ -306,6 +308,7 @@ class LocalDatabaseImpl: LocalDatabase {
             fatalError("")
         }
     }
+
     func updateNetworkWithPreferredProtocolSwitch(network: WifiNetwork, status: Bool) {
         let updated = network
         do {
@@ -337,7 +340,7 @@ class LocalDatabaseImpl: LocalDatabase {
         do {
             let realm = try Realm()
             try realm.safeWrite {
-                properties.forEach { (property: String, value: Any) in
+                for (property, value) in properties {
                     switch property {
                     case Fields.WifiNetwork.trustStatus:
                         updatedNetwork.status = (value as? Bool) ?? false
@@ -354,7 +357,7 @@ class LocalDatabaseImpl: LocalDatabase {
                     case Fields.port:
                         updatedNetwork.port = (value as? String) ?? ""
                     default:
-                            return
+                        continue
                     }
                 }
             }
@@ -435,7 +438,7 @@ class LocalDatabaseImpl: LocalDatabase {
         guard let servers = getServers() else { return nil }
         var serverResult: ServerModel?
         var groupResult: GroupModel?
-        for server in servers.map({$0.getServerModel()}) {
+        for server in servers.map({ $0.getServerModel() }) {
             for group in server?.groups ?? [] where group.bestNodeHostname == bestNodeHostname {
                 serverResult = server
                 groupResult = group

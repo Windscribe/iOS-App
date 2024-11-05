@@ -13,18 +13,19 @@ protocol OptionSelectionViewDelegate: AnyObject {
 }
 
 class OptionSelectionView: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var selectedView: UIView!
-    @IBOutlet weak var focusView: UIView!
-    @IBOutlet weak var buttonHolder: UIStackView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var selectedView: UIView!
+    @IBOutlet var focusView: UIView!
+    @IBOutlet var buttonHolder: UIStackView!
     var button = UIButton()
 
     weak var delegate: OptionSelectionViewDelegate?
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {
             UIView.animate(withDuration: 0.5) {
-                self.focusView.isHidden = false            }
+                self.focusView.isHidden = false
+            }
         } else {
             UIView.animate(withDuration: 0.5) {
                 self.focusView.isHidden = true
@@ -46,7 +47,7 @@ class OptionSelectionView: UIView {
         focusView.clipsToBounds = true
     }
 
-    @IBAction func selectOption(_ sender: Any) {
+    @IBAction func selectOption(_: Any) {
         delegate?.optionWasSelected(self)
     }
 

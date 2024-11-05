@@ -56,7 +56,8 @@ class BlurredLabel: UILabel {
         contentMode = .redraw
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -75,7 +76,8 @@ class BlurredLabel: UILabel {
                 blurFilter?.setValue(CIImage(cgImage: cgImage), forKey: kCIInputImageKey)
                 let ciContext = CIContext(cgContext: ctx, options: nil)
                 if let blurOutputImage = blurFilter?.outputImage,
-                   let cgImage = ciContext.createCGImage(blurOutputImage, from: blurOutputImage.extent) {
+                   let cgImage = ciContext.createCGImage(blurOutputImage, from: blurOutputImage.extent)
+                {
                     image = cgImage
                 }
             }

@@ -1,28 +1,30 @@
 //
-//  UITextView.swift
+//  UITextView+Ext.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-02-28.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import Swinject
+import UIKit
 
 extension UITextView {
-    private  var logger: FileLogger {
-        return  Assembler.resolve(FileLogger.self)
+    private var logger: FileLogger {
+        return Assembler.resolve(FileLogger.self)
     }
 
     func htmlText(htmlData: Data,
                   font: UIFont = UIFont.text(size: 16),
-                  foregroundColor: UIColor = .white) {
+                  foregroundColor: UIColor = .white)
+    {
         do {
             let attrString = try NSAttributedString(
                 data: htmlData,
                 options: [
                     NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html,
-                    .characterEncoding: String.Encoding.utf8.rawValue],
+                    .characterEncoding: String.Encoding.utf8.rawValue,
+                ],
                 documentAttributes: nil
             )
             let htmlString = NSMutableAttributedString(attributedString: attrString)
@@ -35,17 +37,17 @@ extension UITextView {
                                     range: NSRange(location: 0,
                                                    length: attrString.length))
             attributedText = htmlString
-        } catch let error {
+        } catch {
             logger.logE("HTMLTextView", "Error occured when converting notifications HTML string. \(error.localizedDescription)")
             return
         }
     }
 
     func scrollToBottom() {
-        if self.text.count > 0 {
-            let location = self.text.count - 1
+        if text.count > 0 {
+            let location = text.count - 1
             let bottom = NSMakeRange(location, 1)
-            self.scrollRangeToVisible(bottom)
+            scrollRangeToVisible(bottom)
         }
     }
 }

@@ -9,15 +9,15 @@
 import UIKit
 
 class ForgotPasswordViewController: UIViewController {
-    @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet var infoLabel: UILabel!
 
-    @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet var welcomeLabel: UILabel!
+    @IBOutlet var backButton: UIButton!
 
     var logger: FileLogger!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.logger.logD(self, "Displaying Forgotten Password Screen.")
+        logger.logD(self, "Displaying Forgotten Password Screen.")
         setupUI()
         setupLocalized()
         // Do any additional setup after loading the view.
@@ -25,20 +25,19 @@ class ForgotPasswordViewController: UIViewController {
 
     private func setupUI() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
-            self.view.backgroundColor = UIColor(patternImage: backgroundImage)
+            view.backgroundColor = UIColor(patternImage: backgroundImage)
         } else {
-            self.view.backgroundColor = .blue
+            view.backgroundColor = .blue
         }
         welcomeLabel.font = UIFont.bold(size: 60)
         infoLabel.font = UIFont.text(size: 30)
         backButton.titleLabel?.font = UIFont.text(size: 35)
 
         backButton.setBackgroundImage(UIImage.imageWithColor(.clear), for: .focused)
-
     }
 
-    @IBAction func backAction(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+    @IBAction func backAction(_: Any) {
+        navigationController?.popViewController(animated: true)
     }
 
     func setupLocalized() {

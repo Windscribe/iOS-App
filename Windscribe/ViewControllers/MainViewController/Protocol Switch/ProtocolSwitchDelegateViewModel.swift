@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol ProtocolSwitchDelegateViewModelType: ProtocolSwitchVCDelegate {
-    var configureVPNTrigger: PublishSubject<()> {get}
+    var configureVPNTrigger: PublishSubject<Void> { get }
 }
 
 class ProtocolSwitchDelegateViewModel: ProtocolSwitchDelegateViewModelType {
-    var configureVPNTrigger = PublishSubject<()>()
+    var configureVPNTrigger = PublishSubject<Void>()
 
     var vpnManager: VPNManager
     var connectionStateManager: ConnectionStateManagerType
@@ -34,7 +34,7 @@ extension ProtocolSwitchDelegateViewModel: ProtocolSwitchVCDelegate {
         if vpnManager.isConnected() && vpnManager.isFromProtocolChange {
             configureVPNTrigger.onNext(())
         } else {
-            self.vpnManager.connectUsingAutomaticMode()
+            vpnManager.connectUsingAutomaticMode()
             connectionStateManager.setConnecting()
         }
     }

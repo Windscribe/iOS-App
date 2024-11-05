@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol ShakeDataRepository {
     func getLeaderboardScores() -> Single<[Score]>
     func recordShakeForDataScore(score: Int) -> Single<String>

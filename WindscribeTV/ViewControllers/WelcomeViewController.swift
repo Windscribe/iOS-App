@@ -6,25 +6,26 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class WelcomeViewController: UIViewController {
-    @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var getStartedButton: WSRoundButton!
-    @IBOutlet weak var loginButton: WSRoundButton!
-    @IBOutlet weak var loginDescription: UILabel!
-    @IBOutlet weak var containerView: UIView!
+    @IBOutlet var welcomeLabel: UILabel!
+    @IBOutlet var getStartedButton: WSRoundButton!
+    @IBOutlet var loginButton: WSRoundButton!
+    @IBOutlet var loginDescription: UILabel!
+    @IBOutlet var containerView: UIView!
     var loadingView: UIActivityIndicatorView!
 
     // MARK: - State properties
+
     var router: WelcomeRouter!, viewmodal: WelcomeViewModal!, logger: FileLogger!
     let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.logger.logD(self, "Displaying Welcome Screen.")
+        logger.logD(self, "Displaying Welcome Screen.")
         setup()
         bindViews()
         setupLocalized()
@@ -33,9 +34,9 @@ class WelcomeViewController: UIViewController {
 
     func setup() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
-            self.view.backgroundColor = UIColor(patternImage: backgroundImage)
+            view.backgroundColor = UIColor(patternImage: backgroundImage)
         } else {
-            self.view.backgroundColor = .blue
+            view.backgroundColor = .blue
         }
         welcomeLabel.font = UIFont.bold(size: 60)
         loginDescription.font = UIFont.text(size: 30)
@@ -48,11 +49,10 @@ class WelcomeViewController: UIViewController {
         view.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints([
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
+        view.addConstraints([
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
         ])
-
     }
 
     func setupLocalized() {
@@ -88,7 +88,6 @@ class WelcomeViewController: UIViewController {
 
     func hideLoadingView() {
         loadingView.isHidden = true
-
     }
 
     func showLoadingView() {
@@ -96,12 +95,11 @@ class WelcomeViewController: UIViewController {
         loadingView.isHidden = false
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if context.nextFocusedView === loginButton {
             loginDescription.isHidden = false
         } else {
             loginDescription.isHidden = true
         }
     }
-
 }

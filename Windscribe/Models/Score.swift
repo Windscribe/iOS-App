@@ -43,9 +43,7 @@ struct ScoreSection: SectionModelType {
     var items: [Score]
 }
 
-struct ScoreList {
-
-}
+struct ScoreList {}
 
 class Leaderboard: Decodable {
     var scores = [Score]()
@@ -59,7 +57,7 @@ class Leaderboard: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
         if let scoreArray = try data.decodeIfPresent([Score].self, forKey: .leaderboard) {
-            self.setScores(array: scoreArray)
+            setScores(array: scoreArray)
         }
     }
 

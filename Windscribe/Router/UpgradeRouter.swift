@@ -19,7 +19,7 @@ class UpgradeRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(ConfirmEmailViewController.self)
             vc.dismissDelegate = delegate
             from.present(vc, animated: true)
-        case RouteID.signup(let claimGhostAccount):
+        case let RouteID.signup(claimGhostAccount):
             goToSignUp(viewController: from, claimGhostAccount: claimGhostAccount)
         default: ()
         }

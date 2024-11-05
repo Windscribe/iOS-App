@@ -5,8 +5,9 @@
 //  Created by iOSDevCenters on 11/12/15.
 //  Copyright © 2016 iOSDevCenters. All rights reserved.
 //
-import UIKit
 import ImageIO
+import UIKit
+
 // Comparison operators with optionals were removed from the Swift Standard Libary.
 // Consider refactoring the code to use the non-optional operators.
 private func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
@@ -32,9 +33,9 @@ extension UIImage {
 
     public class func gifImageWithURL(_ gifUrl: String) -> UIImage? {
         guard let bundleURL = URL(string: gifUrl)
-            else {
-                print("image named \"\(gifUrl)\" doesn't exist")
-                return nil
+        else {
+            print("image named \"\(gifUrl)\" doesn't exist")
+            return nil
         }
         guard let imageData = try? Data(contentsOf: bundleURL) else {
             print("image named \"\(gifUrl)\" into NSData")
@@ -45,9 +46,10 @@ extension UIImage {
 
     public class func gifImageWithName(_ name: String) -> UIImage? {
         guard let bundleURL = Bundle.main
-            .url(forResource: name, withExtension: "gif") else {
-                print("SwiftGif: This image named \"\(name)\" does not exist")
-                return nil
+            .url(forResource: name, withExtension: "gif")
+        else {
+            print("SwiftGif: This image named \"\(name)\" does not exist")
+            return nil
         }
         guard let imageData = try? Data(contentsOf: bundleURL) else {
             print("SwiftGif: Cannot turn image named \"\(name)\" into NSData")
@@ -62,16 +64,18 @@ extension UIImage {
         let cfProperties = CGImageSourceCopyPropertiesAtIndex(source, index, nil)
         let gifProperties: CFDictionary = unsafeBitCast(
             CFDictionaryGetValue(cfProperties,
-                Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
-            to: CFDictionary.self)
+                                 Unmanaged.passUnretained(kCGImagePropertyGIFDictionary).toOpaque()),
+            to: CFDictionary.self
+        )
 
         var delayObject: AnyObject = unsafeBitCast(
             CFDictionaryGetValue(gifProperties,
-                Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
-            to: AnyObject.self)
+                                 Unmanaged.passUnretained(kCGImagePropertyGIFUnclampedDelayTime).toOpaque()),
+            to: AnyObject.self
+        )
         if delayObject.doubleValue == 0 {
             delayObject = unsafeBitCast(CFDictionaryGetValue(gifProperties,
-                Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
+                                                             Unmanaged.passUnretained(kCGImagePropertyGIFDelayTime).toOpaque()), to: AnyObject.self)
         }
 
         delay = (delayObject as? Double) ?? 0.0
@@ -134,13 +138,13 @@ extension UIImage {
         var images = [CGImage]()
         var delays = [Int]()
 
-        for i in 0..<count {
+        for i in 0 ..< count {
             if let image = CGImageSourceCreateImageAtIndex(source, i, nil) {
                 images.append(image)
             }
 
             let delaySeconds = UIImage.delayForImageAtIndex(Int(i),
-                source: source)
+                                                            source: source)
             delays.append(Int(delaySeconds * 1000.0)) // Seconds to ms
         }
 
@@ -159,17 +163,17 @@ extension UIImage {
 
         var frame: UIImage
         var frameCount: Int
-        for i in 0..<count {
+        for i in 0 ..< count {
             frame = UIImage(cgImage: images[Int(i)])
             frameCount = Int(delays[Int(i)] / gcd)
 
-            for _ in 0..<frameCount {
+            for _ in 0 ..< frameCount {
                 frames.append(frame)
             }
         }
 
         let animation = UIImage.animatedImage(with: frames,
-            duration: Double(duration) / 1000.0)
+                                              duration: Double(duration) / 1000.0)
 
         return animation
     }

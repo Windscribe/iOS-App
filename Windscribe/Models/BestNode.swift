@@ -10,19 +10,18 @@ import Foundation
 import RealmSwift
 
 struct BestNodeModel {
-
     let hostname: String?
     let minTime: Int?
     let pingIp: String?
 
     init(hostname: String,
          minTime: Int,
-         pingIp: String) {
+         pingIp: String)
+    {
         self.hostname = hostname
         self.minTime = minTime
         self.pingIp = pingIp
     }
-
 }
 
 @objcMembers class BestNode: Object {
@@ -32,7 +31,8 @@ struct BestNodeModel {
 
     convenience init(hostname: String,
                      minTime: Int,
-                     pingIp: String) {
+                     pingIp: String)
+    {
         self.init()
         if hostname == "" {
             self.hostname = pingIp

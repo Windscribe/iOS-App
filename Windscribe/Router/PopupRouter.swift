@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Swinject
 import SwiftUI
+import Swinject
 
 class PopupRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
@@ -52,9 +52,9 @@ class PopupRouter: BaseRouter, RootRouter {
         case let .infoPrompt(title, actionValue, justDismissOnAction, delegate):
             let infoPromptVC = Assembler.resolve(InfoPromptViewController.self)
             infoPromptVC.viewModel.setInfo(title: title,
-                                 actionValue: actionValue,
-                                 justDismissOnAction: justDismissOnAction,
-                                 delegate: delegate)
+                                           actionValue: actionValue,
+                                           justDismissOnAction: justDismissOnAction,
+                                           delegate: delegate)
             vc = infoPromptVC
         case .maintenanceLocation:
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
@@ -63,7 +63,6 @@ class PopupRouter: BaseRouter, RootRouter {
             upgradeVC.promoCode = promoCode
             upgradeVC.pcpID = pcpID
             vc = upgradeVC
-
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
@@ -78,8 +77,8 @@ class PopupRouter: BaseRouter, RootRouter {
             case .maintenanceLocation:
                 vc.modalPresentationStyle = .overFullScreen
             case .infoPrompt,
-                    .shakeForDataView,
-                    .shakeForDataResult:
+                 .shakeForDataView,
+                 .shakeForDataResult:
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = .coverVertical
             default:
@@ -92,16 +91,16 @@ class PopupRouter: BaseRouter, RootRouter {
                 case let .bannedAccountPopup(pushAnimated):
                     from.navigationController?.pushViewController(vc, animated: pushAnimated)
                 case .setPreferredProtocolPopup,
-                        .newsFeedPopup,
-                        .privacyView,
-                        .infoPrompt,
-                        .enterCredentials,
-                        .pushNotifications,
-                        .shakeForDataPopUp,
-                        .maintenanceLocation:
+                     .newsFeedPopup,
+                     .privacyView,
+                     .infoPrompt,
+                     .enterCredentials,
+                     .pushNotifications,
+                     .shakeForDataPopUp,
+                     .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
                 case .shakeForDataView,
-                        .shakeForDataResult:
+                     .shakeForDataResult:
                     from.navigationController?.pushViewController(vc, animated: true)
                     from.navigationController?.viewControllers = [vc]
                 default:

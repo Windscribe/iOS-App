@@ -6,18 +6,19 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class CheckMarkButton: SwitchButton {
     override init(isDarkMode: BehaviorSubject<Bool>) {
         super.init(isDarkMode: isDarkMode)
-        self.onImage =  UIImage(named: ImagesAsset.CheckMarkButton.on)!
-        self.offImage = UIImage(named: ImagesAsset.CheckMarkButton.off)!
-        self.setStatus(false)
+        onImage = UIImage(named: ImagesAsset.CheckMarkButton.on)!
+        offImage = UIImage(named: ImagesAsset.CheckMarkButton.off)!
+        setStatus(false)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

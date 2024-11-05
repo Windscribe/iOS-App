@@ -9,7 +9,6 @@
 import UIKit
 
 class PageTitleLabel: UILabel {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -21,8 +20,7 @@ class PageTitleLabel: UILabel {
     }
 
     func setup() {
-        self.font = UIFont.bold(size: 92)
-        self.textColor = .whiteWithOpacity(opacity: 0.24)
+        font = UIFont.bold(size: 92)
+        textColor = .whiteWithOpacity(opacity: 0.24)
     }
-
 }

@@ -1,5 +1,5 @@
 //
-//  TrustedNetwork.swift
+//  WifiNetwork.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-02-05.
@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 
 @objcMembers class WifiNetwork: Object, Decodable {
     dynamic var SSID: String = ""
@@ -31,7 +31,8 @@ import Realm
                      port: String,
                      preferredProtocol: String,
                      preferredPort: String,
-                     preferredProtocolStatus: Bool = false) {
+                     preferredProtocolStatus: Bool = false)
+    {
         self.init()
         self.SSID = SSID
         self.status = status

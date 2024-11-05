@@ -9,16 +9,17 @@
 import CocoaLumberjack
 import Foundation
 import RxSwift
+
 class FileLoggerImpl: FileLogger {
-    private let maxLogLength = 120000
+    private let maxLogLength = 120_000
     var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
-    #if os(tvOS)
-        return containerUrl?.appendingPathComponent("Library/Caches")
-    #else
-        return containerUrl?.appendingPathComponent("AppExtensionLogs")
-    #endif
-      }()
+        #if os(tvOS)
+            return containerUrl?.appendingPathComponent("Library/Caches")
+        #else
+            return containerUrl?.appendingPathComponent("AppExtensionLogs")
+        #endif
+    }()
 
     init() {
         setupLogger()
@@ -98,21 +99,21 @@ class FileLoggerImpl: FileLogger {
             "[Release]: \(Bundle.main.buildVersionNumber ?? "")",
             "[App Release Version]: \(Bundle.main.releaseVersionNumber ?? "")",
             "[Start of log]:",
-            "------------------------------------------------------"
+            "------------------------------------------------------",
         ]
         logD(self, deviceInfo.joined(separator: "\n"))
     }
 
     private func setupLogger() {
         let logFileManager = DDLogFileManagerDefault(logsDirectory: logDirectory?.path)
-        let fileLogger = DDFileLogger.init(logFileManager: logFileManager)
-        fileLogger .rollingFrequency = 0
-        fileLogger .maximumFileSize = 2000000
-        fileLogger .logFileManager.maximumNumberOfLogFiles = 1
-        fileLogger .logFormatter = FileLogFormater()
+        let fileLogger = DDFileLogger(logFileManager: logFileManager)
+        fileLogger.rollingFrequency = 0
+        fileLogger.maximumFileSize = 2_000_000
+        fileLogger.logFileManager.maximumNumberOfLogFiles = 1
+        fileLogger.logFormatter = FileLogFormater()
         if DDLog.allLoggers.count == 0 {
             DDLog.add(fileLogger)
-            let osLogger = DDOSLogger.init(subsystem: "com.windscribe.vpn", category: "Windscribe-VPN")
+            let osLogger = DDOSLogger(subsystem: "com.windscribe.vpn", category: "Windscribe-VPN")
             osLogger.logFormatter = FileLogFormater()
             DDLog.add(osLogger)
         }
@@ -122,7 +123,7 @@ class FileLoggerImpl: FileLogger {
         do {
             let fileNames = try FileManager.default.contentsOfDirectory(atPath: logDirectory!.path).map { fileName in
                 logDirectory?.appendingPathComponent(fileName)
-            }.compactMap {$0}
+            }.compactMap { $0 }
             return fileNames
         } catch {
             return []

@@ -19,12 +19,12 @@ extension MainViewController {
             case .disconnecting: self.displayDisconnectingAlert()
             }
         }.disposed(by: disposeBag)
-        favNodesListViewModel.configureVPNTrigger.subscribe({ _ in
+        favNodesListViewModel.configureVPNTrigger.subscribe { _ in
             self.configureVPN()
-        }).disposed(by: disposeBag)
-        favNodesListViewModel.showUpgradeTrigger.subscribe({_ in
+        }.disposed(by: disposeBag)
+        favNodesListViewModel.showUpgradeTrigger.subscribe { _ in
             self.showUpgradeView()
-        }).disposed(by: disposeBag)
+        }.disposed(by: disposeBag)
     }
 }
 
@@ -41,7 +41,7 @@ extension MainViewController: FavNodesListTableViewDelegate {
 
     func showFavNodeRefreshControl() {
         if !favTableView.subviews.contains(favTableViewRefreshControl) {
-            self.favTableView.addSubview(favTableViewRefreshControl)
+            favTableView.addSubview(favTableViewRefreshControl)
         }
     }
 }

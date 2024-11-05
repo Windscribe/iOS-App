@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 enum SelectableViewType {
     case selection
@@ -72,12 +72,13 @@ class SelectableView: UIStackView {
          icon: String?,
          isDarkMode: BehaviorSubject<Bool>,
          subTitle: String? = nil,
-         delegate: SelectableViewDelegate? = nil) {
+         delegate: SelectableViewDelegate? = nil)
+    {
         self.header = header
         self.currentOption = currentOption
         self.listOption = listOption
         self.subTitle = subTitle
-        self.iconAsset = icon
+        iconAsset = icon
         self.type = type
         self.delegate = delegate
         self.isDarkMode = isDarkMode
@@ -86,7 +87,8 @@ class SelectableView: UIStackView {
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -99,7 +101,7 @@ class SelectableView: UIStackView {
     private func setup() {
         addArrangedSubviews([
             headerView,
-            footer
+            footer,
         ])
         setPadding(UIEdgeInsets(inset: 2))
         axis = .vertical
@@ -109,15 +111,14 @@ class SelectableView: UIStackView {
         footer.content = subTitle ?? "Explain me!".localize()
     }
 
-    private func update() {
-    }
+    private func update() {}
 
     func hideShowExplainIcon(_ isHidden: Bool = true) {
         footer.hideShowExplainIcon(isHidden)
     }
 
     @objc private func headerTapAction() {
-        self.delegate?.selectableViewDirection(self)
+        delegate?.selectableViewDirection(self)
     }
 
     override func updateTheme(isDark: Bool) {

@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 class HomeRouter: RootRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {

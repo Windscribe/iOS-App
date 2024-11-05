@@ -1,5 +1,5 @@
 //
-//  InAppPurchaseManager.swift
+//  InAppPurchaseManagerImpl.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-02-27.
@@ -7,11 +7,12 @@
 //
 
 import Foundation
-import StoreKit
 import RxSwift
+import StoreKit
 
 class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
     // MARK: properties
+
     weak var delegate: InAppPurchaseManagerDelegate?
     fileprivate var productsRequest = SKProductsRequest()
     var iapProducts = [WindscribeInAppProduct]()
@@ -19,7 +20,9 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
     var hasAddObserver: Bool = false
     var uncompletedTransactions: [UncompletedTransactions] = []
     let dispose = DisposeBag()
+
     // MARK: dependecies
+
     let apiManager: APIManager
     let preferences: Preferences
     let logger: FileLogger
@@ -31,7 +34,9 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
         self.localDatabase = localDatabase
         self.logger = logger
     }
-   // MARK: Utility functions
+
+    // MARK: Utility functions
+
     func canMakePurchases() -> Bool {
         return SKPaymentQueue.canMakePayments()
     }
@@ -69,22 +74,24 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
 
     func matchInAppPurchaseWithWindscribeData(transaction: SKPaymentTransaction) {
         if let appleData = transaction.appleData,
-            let transactionID = transaction.transactionIdentifier,
-            let signature = transaction.signature {
-                delegate?.purchasedSuccessfully(transaction: transaction,
-                                                appleID: transactionID,
-                                                appleData: appleData,
-                                                appleSIG: signature)
-            }
+           let transactionID = transaction.transactionIdentifier,
+           let signature = transaction.signature
+        {
+            delegate?.purchasedSuccessfully(transaction: transaction,
+                                            appleID: transactionID,
+                                            appleData: appleData,
+                                            appleSIG: signature)
+        }
     }
 
     func verifyPendingTransaction() {
         // replace below code with SharedUserDefaults methods
         if let appleID = preferences.getActiveAppleID(),
            let appleData = preferences.getActiveAppleData(),
-           let appleSIG = preferences.getActiveAppleSig() {
+           let appleSIG = preferences.getActiveAppleSig()
+        {
             apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
-                self.apiManager.getSession(nil).subscribe(onSuccess: {_ in }, onFailure: { _ in }).disposed(by: self.dispose)
+                self.apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: self.dispose)
                 self.logger.logD(self, "Sending Apple purchase data successful.")
                 // setting nil for successfull validation
                 self.preferences.saveActiveAppleID(id: nil)
@@ -97,5 +104,4 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
             }).disposed(by: dispose)
         }
     }
-
 }

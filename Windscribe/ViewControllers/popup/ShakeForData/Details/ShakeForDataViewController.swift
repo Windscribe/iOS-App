@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import CoreMotion
 import RxSwift
+import UIKit
 
 class ShakeForDataViewController: WSUIViewController {
     var backgroundView: UIView!
@@ -61,20 +61,19 @@ class ShakeForDataViewController: WSUIViewController {
 
     private func updateUI(timerCount: Int) {
         UIView.animate(withDuration: 0.1, animations: {
-            self.fillViewTopConstraint.constant = (1.0 - CGFloat(timerCount)/CGFloat(self.viewModel.startTimerCount))*self.view.frame.height
+            self.fillViewTopConstraint.constant = (1.0 - CGFloat(timerCount) / CGFloat(self.viewModel.startTimerCount)) * self.view.frame.height
             self.view.layoutIfNeeded()
         })
-        self.view.layoutIfNeeded()
+        view.layoutIfNeeded()
         if timerCount <= 25 {
-            self.timerLabel.textColor = UIColor.backgroundOrange
-            self.fillView.backgroundColor = UIColor.backgroundOrange
-            self.timerIcon.setImageColor(color: UIColor.backgroundOrange)
+            timerLabel.textColor = UIColor.backgroundOrange
+            fillView.backgroundColor = UIColor.backgroundOrange
+            timerIcon.setImageColor(color: UIColor.backgroundOrange)
         }
         if timerCount <= 5 {
-            self.timerLabel.textColor = UIColor.backgroundRed
-            self.fillView.backgroundColor = UIColor.backgroundRed
-            self.timerIcon.setImageColor(color: UIColor.backgroundRed)
+            timerLabel.textColor = UIColor.backgroundRed
+            fillView.backgroundColor = UIColor.backgroundRed
+            timerIcon.setImageColor(color: UIColor.backgroundRed)
         }
     }
-
 }

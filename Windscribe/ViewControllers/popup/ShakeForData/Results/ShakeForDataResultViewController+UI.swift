@@ -8,13 +8,12 @@
 import UIKit
 
 extension ShakeForDataResultViewController {
-
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         highScoreLabel = UILabel()
         highScoreLabel.text = "\(TextsAsset.ShakeForData.highScore) 0"
@@ -22,14 +21,14 @@ extension ShakeForDataResultViewController {
         highScoreLabel.adjustsFontSizeToFitWidth = true
         highScoreLabel.textColor = UIColor.white
         highScoreLabel.textAlignment = .center
-        self.view.addSubview(highScoreLabel)
+        view.addSubview(highScoreLabel)
 
         shakeCounterLabel = UILabel()
         shakeCounterLabel.font = UIFont.text(size: 128)
         shakeCounterLabel.adjustsFontSizeToFitWidth = true
         shakeCounterLabel.textColor = UIColor.white
         shakeCounterLabel.textAlignment = .center
-        self.view.addSubview(shakeCounterLabel)
+        view.addSubview(shakeCounterLabel)
 
         messageLabel = UILabel()
         messageLabel.adjustsFontSizeToFitWidth = true
@@ -38,7 +37,7 @@ extension ShakeForDataResultViewController {
         messageLabel.font = UIFont.text(size: 24)
         messageLabel.layer.opacity = 0.9
         messageLabel.textColor = UIColor.white
-        self.view.addSubview(messageLabel)
+        view.addSubview(messageLabel)
 
         tryAgainButton = UIButton()
         tryAgainButton.backgroundColor = UIColor.clear
@@ -51,7 +50,7 @@ extension ShakeForDataResultViewController {
         tryAgainButton.setTitle(TextsAsset.ShakeForData.tryAgain, for: .normal)
         tryAgainButton.titleLabel?.font = UIFont.text(size: 16)
         tryAgainButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        self.view.addSubview(tryAgainButton)
+        view.addSubview(tryAgainButton)
 
         viewLeaderboardButton = UIButton(type: .system)
         viewLeaderboardButton.layer.opacity = 0.5
@@ -59,12 +58,12 @@ extension ShakeForDataResultViewController {
         viewLeaderboardButton.titleLabel?.font = UIFont.bold(size: 16)
         viewLeaderboardButton.titleLabel?.adjustsFontSizeToFitWidth = true
         viewLeaderboardButton.setTitleColor(UIColor.white, for: .normal)
-        self.view.addSubview(viewLeaderboardButton)
+        view.addSubview(viewLeaderboardButton)
 
         divider = UIView()
         divider.layer.opacity = 0.15
         divider.backgroundColor = UIColor.white
-        self.view.addSubview(divider)
+        view.addSubview(divider)
 
         quitButton = UIButton(type: .system)
         quitButton.setTitle(TextsAsset.ShakeForData.leave, for: .normal)
@@ -72,7 +71,7 @@ extension ShakeForDataResultViewController {
         quitButton.titleLabel?.font = UIFont.bold(size: 16)
         quitButton.titleLabel?.adjustsFontSizeToFitWidth = true
         quitButton.layer.opacity = 0.5
-        self.view.addSubview(quitButton)
+        view.addSubview(quitButton)
     }
 
     func addAutoLayoutConstraints() {
@@ -133,7 +132,7 @@ extension ShakeForDataResultViewController {
             // quitButton
             quitButton.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 24),
             quitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quitButton.heightAnchor.constraint(equalToConstant: 20)
+            quitButton.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
 }

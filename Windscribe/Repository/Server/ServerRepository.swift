@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol ServerRepository {
- func getUpdatedServers() -> Single<[Server]>
+    func getUpdatedServers() -> Single<[Server]>
 }

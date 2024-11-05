@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 class HomeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
@@ -17,7 +18,7 @@ class HomeRouter: BaseRouter, RootRouter {
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)
         case let RouteID.protocolSetPreferred(type, delegate, protocolName):
-            let  vc = Assembler.resolve(ProtocolSetPreferredViewController.self)
+            let vc = Assembler.resolve(ProtocolSetPreferredViewController.self)
             vc.delegate = delegate
             vc.type = type
             vc.protocolName = protocolName
@@ -27,8 +28,8 @@ class HomeRouter: BaseRouter, RootRouter {
                 vc.modalPresentationStyle = .fullScreen
                 from.present(vc, animated: true)
             }
-        case let  RouteID.protocolSwitchVC(delegate, type):
-            let  vc = Assembler.resolve(ProtocolSwitchViewController.self)
+        case let RouteID.protocolSwitchVC(delegate, type):
+            let vc = Assembler.resolve(ProtocolSwitchViewController.self)
             vc.delegate = delegate
             vc.type = type
             from.navigationController?.pushViewController(vc, animated: true)

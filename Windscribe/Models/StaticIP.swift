@@ -38,7 +38,8 @@ struct StaticIPModel {
          wgPublicKey: String,
          ovpnX509: String,
          wgIp: String,
-         pingHost: String) {
+         pingHost: String)
+    {
         self.id = id
         self.staticIP = staticIP
         self.connectIP = connectIP
@@ -76,9 +77,9 @@ struct StaticIPModel {
     var ports = List<PortDetails>()
     var credentials = List<StaticIPCredentials>()
     var bestNode: Node? {
-        var weightCounter = nodes.reduce(0, { $0 + $1.weight })
+        var weightCounter = nodes.reduce(0) { $0 + $1.weight }
         if weightCounter >= 1 {
-            let randomNumber = Int.random(in: 1...weightCounter)
+            let randomNumber = Int.random(in: 1 ... weightCounter)
             weightCounter = 0
             for node in nodes {
                 weightCounter += node.weight
@@ -91,20 +92,20 @@ struct StaticIPModel {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id = "id"
+        case id
         case ipId = "ip_id"
         case staticIP = "static_ip"
         case connectIP = "connect_ip"
-        case type = "type"
-        case name = "name"
+        case type
+        case name
         case countryCode = "country_code"
         case deviceName = "device_name"
         case shortName = "short_name"
         case cityName = "city_name"
         case serverId = "server_id"
-        case node = "node"
-        case ports = "ports"
-        case credentials = "credentials"
+        case node
+        case ports
+        case credentials
         case wgPublicKey = "wg_pubkey"
         case ovpnX509 = "ovpn_x509"
         case wgIp = "wg_ip"
@@ -134,13 +135,13 @@ struct StaticIPModel {
         wgIp = try data.decodeIfPresent(String.self, forKey: .wgIp) ?? ""
         pingHost = try data.decodeIfPresent(String.self, forKey: .pingHost) ?? ""
         if let staticIPNode = try data.decodeIfPresent(StaticIPNode.self, forKey: .node) {
-            self.setStaticIPNodes(object: staticIPNode)
+            setStaticIPNodes(object: staticIPNode)
         }
         if let portDetails = try data.decodeIfPresent([PortDetails].self, forKey: .ports) {
-            self.setPortDetails(array: portDetails)
+            setPortDetails(array: portDetails)
         }
         if let staticIPCredentials = try data.decodeIfPresent(StaticIPCredentials.self, forKey: .credentials) {
-            self.setStaticIPCredentials(object: staticIPCredentials)
+            setStaticIPCredentials(object: staticIPCredentials)
         }
     }
 
@@ -162,7 +163,7 @@ struct StaticIPModel {
     func getStaticIPModel() -> StaticIPModel? {
         guard let username = credentials.first?.username,
               let password = credentials.first?.password,
-                let bestNodeModel = bestNode?.getNodeModel() else { return nil}
+              let bestNodeModel = bestNode?.getNodeModel() else { return nil }
         let credentialsModel = StaticIPCredentialsModel(username: username, password: password)
         return StaticIPModel(id: id,
                              staticIP: staticIP,
@@ -179,7 +180,6 @@ struct StaticIPModel {
                              wgIp: wgIp,
                              pingHost: pingHost)
     }
-
 }
 
 @objcMembers class PortDetails: Object, Decodable {
@@ -197,15 +197,13 @@ struct StaticIPModel {
         extPort = try container.decodeIfPresent(Int.self, forKey: .extPort) ?? 0
         intPort = try container.decodeIfPresent(Int.self, forKey: .intPort) ?? 0
     }
-
 }
 
 struct StaticIPList: Decodable {
-
     let staticIPs = List<StaticIP>()
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case staticIps = "static_ips"
     }
 
@@ -213,7 +211,7 @@ struct StaticIPList: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
         if let staticIPsArray = try data.decodeIfPresent([StaticIP].self, forKey: .staticIps) {
-            self.setStaticIPs(array: staticIPsArray)
+            setStaticIPs(array: staticIPsArray)
         }
     }
 
@@ -221,5 +219,4 @@ struct StaticIPList: Decodable {
         staticIPs.removeAll()
         staticIPs.append(objectsIn: array)
     }
-
 }

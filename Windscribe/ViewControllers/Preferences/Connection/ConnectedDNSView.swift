@@ -8,10 +8,11 @@
 
 import Foundation
 
-import UIKit
 import RxSwift
+import UIKit
 
 // MARK: - ConnectionModeView
+
 protocol ConnectedDNSViewDelegate: AnyObject {
     func connectedDNSViewDidChangeType(_ option: ConnectedDNSType)
     func connectedDNSViewSaveValue(_ value: String)
@@ -56,17 +57,19 @@ class ConnectedDNSView: UIStackView {
     private let mainWrapperView = UIView()
     private let editWrapperView = UIView()
 
-    private lazy var editContainerView: UIView = { makeContainerView(containing: editButton) }()
-    private lazy var cancelContainerView: UIView = { makeContainerView(containing: cancelButton, size: 14) }()
-    private lazy var acceptContainerView: UIView = { makeContainerView(containing: acceptButton) }()
+    private lazy var editContainerView: UIView = makeContainerView(containing: editButton)
+    private lazy var cancelContainerView: UIView = makeContainerView(containing: cancelButton, size: 14)
+    private lazy var acceptContainerView: UIView = makeContainerView(containing: acceptButton)
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     init(optionType: ConnectedDNSType,
          dnsValue: String,
-         isDarkMode: BehaviorSubject<Bool>) {
+         isDarkMode: BehaviorSubject<Bool>)
+    {
         self.optionType = optionType
         self.dnsValue = dnsValue
         self.isDarkMode = isDarkMode
@@ -113,7 +116,7 @@ class ConnectedDNSView: UIStackView {
         dnsValueView.isLayoutMarginsRelativeArrangement = true
         dnsValueView.addArrangedSubviews([
             valueLabel, editContainerView,
-            valueTextField, cancelContainerView, acceptContainerView
+            valueTextField, cancelContainerView, acceptContainerView,
         ])
         dnsValueView.addSubview(editWrapperView)
         dnsValueView.makeHeightAnchor(equalTo: 48)

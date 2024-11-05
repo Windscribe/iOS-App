@@ -6,31 +6,31 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class SignUpViewController: PreferredFocusedViewController {
-
-    @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var signUpButton: WSRoundButton!
-    @IBOutlet weak var infoLabel: UILabel!
-    @IBOutlet weak var infoView: UIView!
-    @IBOutlet weak var backButton: UIButton!
-    @IBOutlet weak var passwordTextField: PasswordTextFieldTv!
-    @IBOutlet weak var forgotButton: UIButton!
-    @IBOutlet weak var signUpTitle: UILabel!
-    @IBOutlet weak var usernameTextField: WSTextFieldTv!
+    @IBOutlet var welcomeLabel: UILabel!
+    @IBOutlet var signUpButton: WSRoundButton!
+    @IBOutlet var infoLabel: UILabel!
+    @IBOutlet var infoView: UIView!
+    @IBOutlet var backButton: UIButton!
+    @IBOutlet var passwordTextField: PasswordTextFieldTv!
+    @IBOutlet var forgotButton: UIButton!
+    @IBOutlet var signUpTitle: UILabel!
+    @IBOutlet var usernameTextField: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
 
     // MARK: - State properties
+
     var viewModel: SignUpViewModel!, router: SignupRouter!, logger: FileLogger!
     var claimGhostAccount = false
     let disposeBag = DisposeBag()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.logger.logD(self, "Displaying Signup Screen.")
+        logger.logD(self, "Displaying Signup Screen.")
         setup()
         setupLocalized()
         // Do any additional setup after loading the view.
@@ -51,9 +51,9 @@ class SignUpViewController: PreferredFocusedViewController {
 
     func setup() {
         if let backgroundImage = UIImage(named: "WelcomeBackground.png") {
-            self.view.backgroundColor = UIColor(patternImage: backgroundImage)
+            view.backgroundColor = UIColor(patternImage: backgroundImage)
         } else {
-            self.view.backgroundColor = .blue
+            view.backgroundColor = .blue
         }
         welcomeLabel.font = UIFont.bold(size: 60)
         passwordTextField.isSecureTextEntry = true
@@ -71,9 +71,9 @@ class SignUpViewController: PreferredFocusedViewController {
         view.addSubview(loadingView)
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         loadingView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints([
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
+        view.addConstraints([
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
         ])
         usernameTextField.delegate = self
         passwordTextField.delegate = self
@@ -102,7 +102,7 @@ class SignUpViewController: PreferredFocusedViewController {
         signUpButton.rx.primaryAction.bind { [self] in
             viewModel.continueButtonTapped(userName: usernameTextField.text, password: passwordTextField.text, email: "", referrelUsername: "", ignoreEmailCheck: true, claimAccount: claimGhostAccount, voucherCode: "")
         }.disposed(by: disposeBag)
-        viewModel.failedState.bind { [weak self] (state) in
+        viewModel.failedState.bind { [weak self] state in
             self?.setFailureState(state: state)
         }.disposed(by: disposeBag)
         viewModel.routeTo.bind { [self] _ in
@@ -116,33 +116,33 @@ class SignUpViewController: PreferredFocusedViewController {
 
     private func setFailureState(state: SignUpErrorState) {
         switch state {
-        case .username(let error):
-            self.usernameTextField.textColor = UIColor.failRed
-            self.infoLabel.text = error
-            self.infoView.isHidden = false
-        case .password(let error):
-            self.passwordTextField.textColor = UIColor.failRed
-            self.infoLabel.text = error
-            self.infoView.isHidden = false
-        case .email(let error):
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
-            self.infoView.isHidden = false
-        case .api(let error):
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
-            self.infoView.isHidden = false
-        case .network(let error):
-            self.infoLabel.text = error
-            self.infoLabel.textColor = UIColor.failRed
-            self.infoView.isHidden = false
+        case let .username(error):
+            usernameTextField.textColor = UIColor.failRed
+            infoLabel.text = error
+            infoView.isHidden = false
+        case let .password(error):
+            passwordTextField.textColor = UIColor.failRed
+            infoLabel.text = error
+            infoView.isHidden = false
+        case let .email(error):
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
+            infoView.isHidden = false
+        case let .api(error):
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
+            infoView.isHidden = false
+        case let .network(error):
+            infoLabel.text = error
+            infoLabel.textColor = UIColor.failRed
+            infoView.isHidden = false
         case .none:
-            self.infoView.isHidden = true
+            infoView.isHidden = true
             infoLabel.text = ""
         }
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         if context.nextFocusedView == usernameTextField {
             usernameTextField.layer.backgroundColor = UIColor.whiteWithOpacity(opacity: 0.15).cgColor
             passwordTextField.layer.backgroundColor = UIColor.clear.cgColor
@@ -155,19 +155,20 @@ class SignUpViewController: PreferredFocusedViewController {
 
     func hideLoading() {
         loadingView.isHidden = true
-
     }
+
     func showLoading() {
         loadingView.startAnimating()
         loadingView.isHidden = false
     }
-    @IBAction func backButtonAction(_ sender: Any) {
-        self.navigationController?.popViewController(animated: true)
+
+    @IBAction func backButtonAction(_: Any) {
+        navigationController?.popViewController(animated: true)
     }
 }
 
 extension SignUpViewController: UITextFieldDelegate {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.viewModel.keyBoardWillShow()
+    func textFieldDidBeginEditing(_: UITextField) {
+        viewModel.keyBoardWillShow()
     }
 }

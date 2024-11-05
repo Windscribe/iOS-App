@@ -8,16 +8,17 @@
 
 import Foundation
 
-import RxSwift
 import RxCocoa
+import RxSwift
 
 protocol NewsFeedModelType {
-    var newsSections: BehaviorRelay<[NewsSection]> {get}
+    var newsSections: BehaviorRelay<[NewsSection]> { get }
     func didTapNotice(at index: Int)
 }
 
 class NewsFeedModel: NewsFeedModelType {
     // MARK: - Dependencies
+
     let notificationRepository: NotificationRepository
     let localDatabase: LocalDatabase
     let sessionManager: SessionManagerV2
@@ -29,27 +30,27 @@ class NewsFeedModel: NewsFeedModelType {
         self.notificationRepository = notificationRepository
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
-        self.load()
+        load()
     }
 
     private func load() {
         Observable.combineLatest(localDatabase.getNotificationsObservable(), localDatabase.getReadNoticesObservable().take(1))
-            .filter { $0.0.filter {$0.isInvalidated}.count == 0 && $0.1.filter {$0.isInvalidated}.count == 0 }
-        .bind { (notifications, readNotifications) in
-            if notifications.isEmpty { return }
-            let setReadNotificationIDs = Set(readNotifications.map { $0.id })
-            let firstUnreadNotificationID = notifications.first { !setReadNotificationIDs.contains($0.id) }?.id ?? -1
-            let sections = notifications.sorted { $0.date > $1.date }
-                .map { notice in
-                let isFirstUnread = notice.id == firstUnreadNotificationID
-                if isFirstUnread { self.updateReadNotice(for: notice.id) }
-                return NewsSection(items: [NewsFeedCellViewModel(notice: notice,
-                                                          collapsed: !isFirstUnread,
-                                                          isRead: setReadNotificationIDs.contains(notice.id),
-                                                          isUserPro: self.sessionManager.session?.isUserPro ?? false)])
-            }
-            self.newsSections.accept(sections)
-        }.disposed(by: disposeBag)
+            .filter { $0.0.filter { $0.isInvalidated }.count == 0 && $0.1.filter { $0.isInvalidated }.count == 0 }
+            .bind { notifications, readNotifications in
+                if notifications.isEmpty { return }
+                let setReadNotificationIDs = Set(readNotifications.map { $0.id })
+                let firstUnreadNotificationID = notifications.first { !setReadNotificationIDs.contains($0.id) }?.id ?? -1
+                let sections = notifications.sorted { $0.date > $1.date }
+                    .map { notice in
+                        let isFirstUnread = notice.id == firstUnreadNotificationID
+                        if isFirstUnread { self.updateReadNotice(for: notice.id) }
+                        return NewsSection(items: [NewsFeedCellViewModel(notice: notice,
+                                                                         collapsed: !isFirstUnread,
+                                                                         isRead: setReadNotificationIDs.contains(notice.id),
+                                                                         isUserPro: self.sessionManager.session?.isUserPro ?? false)])
+                    }
+                self.newsSections.accept(sections)
+            }.disposed(by: disposeBag)
     }
 
     private func updateReadNotice(for noticeID: Int) {
@@ -72,7 +73,7 @@ class NewsFeedModel: NewsFeedModelType {
             notice.setCollapsed(collapsed: !notice.collapsed)
             section.items[0] = notice
             sections[index] = section
-            self.newsSections.accept(sections)
+            newsSections.accept(sections)
             if let noticeID = notice.id {
                 updateReadNotice(for: noticeID)
             }

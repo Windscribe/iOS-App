@@ -1,15 +1,15 @@
 //
-//  UIViewController+Ext.swift
+//  WSUIViewController.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-02-27.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
+import RxSwift
 import SafariServices
 import Swinject
-import RxSwift
+import UIKit
 
 class WSUIViewController: UIViewController {
     var splashView: LoadingSplashView?
@@ -42,9 +42,7 @@ class WSUIViewController: UIViewController {
         }
     }
 
-    func setupLocalized() {
-
-    }
+    func setupLocalized() {}
 
     @objc func displayLeftDataInformation() {
         if getMoreDataLabel == nil { return }
@@ -66,13 +64,13 @@ class WSUIViewController: UIViewController {
 
     func showSplashView() {
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(hideSplashView), userInfo: nil, repeats: false)
-        self.splashView = LoadingSplashView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
-        self.view.addSubview(splashView!)
-        self.view.bringSubviewToFront(splashView!)
+        splashView = LoadingSplashView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
+        view.addSubview(splashView!)
+        view.bringSubviewToFront(splashView!)
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        self.splashView?.updateSize(size: size)
+    override func viewWillTransition(to size: CGSize, with _: UIViewControllerTransitionCoordinator) {
+        splashView?.updateSize(size: size)
     }
 
     @objc func hideSplashView() {
@@ -87,15 +85,15 @@ class WSUIViewController: UIViewController {
     }
 
     func openLink(url: String) {
-        guard let urlValue =  URL(string: url) else { return }
+        guard let urlValue = URL(string: url) else { return }
         openLink(url: urlValue)
     }
 
     func openLink(url: URL) {
-       let safariVC = SFSafariViewController(url: url)
-       safariVC.preferredBarTintColor = UIColor.black
-       self.present(safariVC, animated: true, completion: nil)
-       safariVC.delegate = self
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.preferredBarTintColor = UIColor.black
+        present(safariVC, animated: true, completion: nil)
+        safariVC.delegate = self
     }
 
     func showLoading() {
@@ -110,19 +108,19 @@ class WSUIViewController: UIViewController {
 
             self.backgroundLoadingIndicator = UIActivityIndicatorView(style: .whiteLarge)
             self.backgroundLoadingIndicator.startAnimating()
-            self.backgroundLoadingIndicator.frame = CGRect(x: UIScreen.main.bounds.width/2-25, y: UIScreen.main.bounds.height/2-25, width: 50, height: 50)
+            self.backgroundLoadingIndicator.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 25, y: UIScreen.main.bounds.height / 2 - 25, width: 50, height: 50)
 
             UIView.transition(with: self.view,
                               duration: 0.25,
                               options: [.transitionCrossDissolve],
                               animations: { [weak self] in
-                guard let self = self else {
-                    return
-                }
+                                  guard let self = self else {
+                                      return
+                                  }
 
-                self.view.addSubview(self.loadingBackgroundView)
-                self.view.addSubview(self.backgroundLoadingIndicator)
-            }, completion: nil)
+                                  self.view.addSubview(self.loadingBackgroundView)
+                                  self.view.addSubview(self.backgroundLoadingIndicator)
+                              }, completion: nil)
         }
     }
 
@@ -135,23 +133,23 @@ class WSUIViewController: UIViewController {
                               duration: 0.25,
                               options: [.transitionCrossDissolve],
                               animations: { [weak self] in
-                if self?.backgroundLoadingIndicator != nil && self?.loadingBackgroundView != nil {
-                    self?.backgroundLoadingIndicator.removeFromSuperview()
-                    self?.loadingBackgroundView.removeFromSuperview()
-                }
-            }, completion: nil)
+                                  if self?.backgroundLoadingIndicator != nil, self?.loadingBackgroundView != nil {
+                                      self?.backgroundLoadingIndicator.removeFromSuperview()
+                                      self?.loadingBackgroundView.removeFromSuperview()
+                                  }
+                              }, completion: nil)
         }
     }
 
     @objc func getMoreDataButtonTapped() {
         let vc = Assembler.resolve(UpgradeViewController.self)
-        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func addPromptBackgroundView() {
-        promptBackgroundView = PromptBackgroundView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        promptBackgroundView = PromptBackgroundView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         promptBackgroundView.layer.opacity = 0.0
-        self.view.addSubview(promptBackgroundView)
+        view.addSubview(promptBackgroundView)
     }
 
     func showPromptBackgroundView() {
@@ -173,16 +171,13 @@ class WSUIViewController: UIViewController {
 }
 
 extension WSUIViewController: SFSafariViewControllerDelegate {
-
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
         apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
     }
-
 }
 
 class WSNavigationViewController: WSUIViewController {
-
     override func setupFillLayoutView() {
         view.addSubview(layoutView)
         layoutView.anchor(top: titleLabel.bottomAnchor,
@@ -225,8 +220,8 @@ class WSNavigationViewController: WSUIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.isNavigationBarHidden = true
-        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        navigationController?.isNavigationBarHidden = true
+        navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
     override func viewDidLayoutSubviews() {
@@ -234,30 +229,30 @@ class WSNavigationViewController: WSUIViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         if UIScreen.hasTopNotch {
-            self.view.addConstraints([
-                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 70)
-                ])
+            view.addConstraints([
+                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 70),
+            ])
         } else {
-            self.view.addConstraints([
-                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .top, multiplier: 1.0, constant: 32)
-                ])
+            view.addConstraints([
+                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 32),
+            ])
         }
-        self.view.addConstraints([
-            NSLayoutConstraint(item: backButton as Any, attribute: .left, relatedBy: .equal, toItem: self.view, attribute: .left, multiplier: 1.0, constant: 16),
+        view.addConstraints([
+            NSLayoutConstraint(item: backButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: backButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32),
-            NSLayoutConstraint(item: backButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32)
-            ])
-        self.view.addConstraints([
-            NSLayoutConstraint(item: titleLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: self.backButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: titleLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32)
-            ])
+            NSLayoutConstraint(item: backButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32),
+        ])
+        view.addConstraints([
+            NSLayoutConstraint(item: titleLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: backButton, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: titleLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32),
+        ])
     }
 
     @objc func backButtonTapped() {
         let viewControllerStack = navigationController?.viewControllers.count
         if viewControllerStack != nil {
-            self.navigationController?.popViewController(animated: true)
+            navigationController?.popViewController(animated: true)
         } else {
             dismiss(animated: true) {}
         }
@@ -271,7 +266,7 @@ class WSNavigationViewController: WSUIViewController {
         closeButton?.setImage(UIImage(named: ThemeUtils.closeButtonAsset(isDarkMode: isDark)), for: .normal)
 
         if #available(iOS 13.0, *) {
-            UIApplication.shared.windows.forEach { window in
+            for window in UIApplication.shared.windows {
                 window.overrideUserInterfaceStyle = ThemeUtils.interfaceStyle(isDarkMode: isDark)
             }
         }

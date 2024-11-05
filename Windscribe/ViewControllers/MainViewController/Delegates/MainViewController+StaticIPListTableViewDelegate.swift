@@ -13,7 +13,7 @@ extension MainViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
         if vpnManager.isDisconnecting() {
-            self.displayDisconnectingAlert()
+            displayDisconnectingAlert()
             return
         }
         if !vpnManagerViewModel.isConnecting() {
@@ -24,17 +24,17 @@ extension MainViewController: StaticIPListTableViewDelegate {
                   let hostname = node.hostname, let serverAddress = node.ip2, let nickName = staticIP.staticIP, let cityName = staticIP.cityName, let credentials = staticIP.credentials else { return }
             LogManager.shared.log(activity: String(describing: MainViewController.self),
                                   text: "Tapped on Static IP \(staticIPN) from the server list.", type: .debug)
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                        dnsHostname: dnsHostname,
-                                                        hostname: hostname,
-                                                        serverAddress: serverAddress,
-                                                        nickName: nickName,
-                                                        cityName: cityName,
-                                                        staticIPCredentials: credentials.last,
-                                                        groupId: 0)
-            self.configureVPN()
+            vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
+                                                   dnsHostname: dnsHostname,
+                                                   hostname: hostname,
+                                                   serverAddress: serverAddress,
+                                                   nickName: nickName,
+                                                   cityName: cityName,
+                                                   staticIPCredentials: credentials.last,
+                                                   groupId: 0)
+            configureVPN()
         } else {
-            self.displayConnectingAlert()
+            displayConnectingAlert()
         }
     }
 

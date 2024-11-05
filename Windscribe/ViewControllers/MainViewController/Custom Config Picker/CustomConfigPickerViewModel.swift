@@ -7,17 +7,16 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
 import MobileCoreServices
+import RxSwift
+import UIKit
 
 enum ConfigAlertType {
     case connecting
     case disconnecting
 }
 
-protocol CustomConfigPickerDelegate: AnyObject {
-}
+protocol CustomConfigPickerDelegate: AnyObject {}
 
 protocol AddCustomConfigDelegate: AnyObject {
     func addCustomConfig()
@@ -52,8 +51,8 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
          connectionStateManager: ConnectionStateManagerType,
-         connectivity: Connectivity
-    ) {
+         connectivity: Connectivity)
+    {
         self.logger = logger
         self.alertManager = alertManager
         self.customConfigRepository = customConfigRepository
@@ -65,19 +64,19 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
 }
 
 extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let url = urls.first else { return }
         logger.logD(self, "Importing WireGuard/OpenVPN .conf file")
         let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
         localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            let config = $0.first { return $0.name == fileName }
+            let config = $0.first { $0.name == fileName }
             if config != nil {
                 self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
                 return
             }
-            if url.isFileURL && url.pathExtension == "ovpn" {
+            if url.isFileURL, url.pathExtension == "ovpn" {
                 _ = self.customConfigRepository.saveOpenVPNConfig(url: url)
-            } else if url.isFileURL && url.pathExtension == "conf" {
+            } else if url.isFileURL, url.pathExtension == "conf" {
                 _ = self.customConfigRepository.saveWgConfig(url: url)
             }
         }).disposed(by: disposeBag)
@@ -89,7 +88,7 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
         logger.logD(self, "User tapped to Add Custom Config")
 
         let documentTypes = ["com.windscribe.wireguard.config.quick", "org.openvpn.config", "public.data", String(kUTTypeText)]
-        let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes,in: .import)
+        let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
         filePicker.delegate = self
         presentDocumentPickerTrigger.onNext(filePicker)
     }
@@ -102,7 +101,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             displayAllertTrigger.onNext(.disconnecting)
             return
         }
-        self.continueSetSelected(with: customConfig, and: connectionStateManager.isConnecting())
+        continueSetSelected(with: customConfig, and: connectionStateManager.isConnecting())
     }
 
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
@@ -128,7 +127,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
 
     private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) {
         if isConnecting {
-            self.displayAllertTrigger.onNext(.connecting)
+            displayAllertTrigger.onNext(.connecting)
             return
         }
 
@@ -158,7 +157,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
                 vpnManager.disconnectActiveVPNConnection()
             }
         }
-        self.setBestLocation()
+        setBestLocation()
     }
 
     private func setBestLocation() {

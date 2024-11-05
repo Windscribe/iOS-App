@@ -23,8 +23,8 @@ protocol VPNManagerType: AnyObject {
     func isConnected() -> Bool
     func isDisconnected() -> Bool
     func removeProfile(completion: @escaping (_ result: Bool, _ error: String?) -> Void)
-    func connect(otherProviders: [VPNManagerType], completion: @escaping(_ result: Bool) -> Void)
-    func disconnect(completion: @escaping(_ result: Bool) -> Void)
+    func connect(otherProviders: [VPNManagerType], completion: @escaping (_ result: Bool) -> Void)
+    func disconnect(completion: @escaping (_ result: Bool) -> Void)
 
     func getProviderManager() -> NEVPNManager?
 }
@@ -47,7 +47,7 @@ extension VPNManagerType {
         providerManager?.loadFromPreferences(completionHandler: { [weak self] _ in
             guard let self = self else { return }
             if self.isConfigured() {
-                self.disconnect() { _ in }
+                self.disconnect { _ in }
                 providerManager?.removeFromPreferences { _ in
                     providerManager?.loadFromPreferences(completionHandler: { _ in
                         self.setupCompleted = false
@@ -62,17 +62,17 @@ extension VPNManagerType {
         })
     }
 
-    func connect(otherProviders: [VPNManagerType], completion: @escaping(_ result: Bool) -> Void) {
+    func connect(otherProviders: [VPNManagerType], completion: @escaping (_ result: Bool) -> Void) {
         let providerManager = getProviderManager()
-        otherProviders.forEach {
-            if $0.isConnected() {
-                $0.disconnect() { _ in }
+        for otherProvider in otherProviders {
+            if otherProvider.isConnected() {
+                otherProvider.disconnect { _ in }
                 completion(false)
-                return
+                continue
             }
         }
-        if !isConnected() && !isConnecting() {
-            removeOtherProfiles(otherProviders: otherProviders) { [weak self] (result, error) in
+        if !isConnected(), !isConnecting() {
+            removeOtherProfiles(otherProviders: otherProviders) { [weak self] result, error in
                 guard let self = self else { return }
                 if let error = error {
                     logger.logE(self, "Error removing profile: \(error)")
@@ -88,13 +88,13 @@ extension VPNManagerType {
                     if result {
                         providerManager?.isOnDemandEnabled = DefaultValues.firewallMode
                         providerManager?.isEnabled = true
-                        providerManager?.saveToPreferences { (error) in
+                        providerManager?.saveToPreferences { error in
                             if let error = error {
                                 self.logger.logE(self, "Error saving profile: \(error)")
                                 completion(false)
                                 return
                             }
-                            providerManager?.loadFromPreferences(completionHandler: { (error) in
+                            providerManager?.loadFromPreferences(completionHandler: { error in
                                 if let error = error {
                                     self.logger.logE(self, "Error loading profile: \(error)")
                                     completion(false)
@@ -117,10 +117,10 @@ extension VPNManagerType {
         } else { completion(false) }
     }
 
-    func disconnect(completion: @escaping(_ result: Bool) -> Void) {
+    func disconnect(completion: @escaping (_ result: Bool) -> Void) {
         let providerManager = getProviderManager()
         if isDisconnected() { completion(false); return }
-        providerManager?.loadFromPreferences { [weak self] (error) in
+        providerManager?.loadFromPreferences { [weak self] error in
             guard let self = self else { return }
             if error == nil, self.isConfigured() {
                 providerManager?.isOnDemandEnabled = false
@@ -135,13 +135,12 @@ extension VPNManagerType {
         }
     }
 
-    private func removeOtherProfiles(otherProviders: [VPNManagerType], _ result: Bool = true, _ error: String? = nil, completion: @escaping(_ result: Bool, _ error: String?) -> Void) {
-        guard !otherProviders.isEmpty else { completion(result, error); return}
+    private func removeOtherProfiles(otherProviders: [VPNManagerType], _ result: Bool = true, _ error: String? = nil, completion: @escaping (_ result: Bool, _ error: String?) -> Void) {
+        guard !otherProviders.isEmpty else { completion(result, error); return }
         var providers = otherProviders
-        providers.removeFirst().removeProfile { [weak self] (result, error) in
-            guard result, error == nil, let self = self else { completion(result, error); return}
+        providers.removeFirst().removeProfile { [weak self] result, error in
+            guard result, error == nil, let self = self else { completion(result, error); return }
             self.removeOtherProfiles(otherProviders: providers, result, error, completion: completion)
         }
     }
 }
-

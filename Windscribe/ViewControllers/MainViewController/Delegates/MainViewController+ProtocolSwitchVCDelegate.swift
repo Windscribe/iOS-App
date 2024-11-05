@@ -10,15 +10,15 @@ import UIKit
 
 extension MainViewController: ProtocolSwitchVCDelegate {
     func disconnectFromFailOver() {
-        self.connectionStateViewModel.disconnect()
+        connectionStateViewModel.disconnect()
     }
 
     func protocolSwitchVCCountdownCompleted() {
         if vpnManager.isConnected() && vpnManager.isFromProtocolChange {
             configureVPN()
         } else {
-            self.vpnManager.connectUsingAutomaticMode()
-            self.connectionStateViewModel.startConnecting()
+            vpnManager.connectUsingAutomaticMode()
+            connectionStateViewModel.startConnecting()
         }
     }
 }

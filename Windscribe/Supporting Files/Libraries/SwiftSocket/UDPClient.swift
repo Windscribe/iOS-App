@@ -29,21 +29,22 @@
 //
 
 import Foundation
+
 // swiftlint:disable all
-@_silgen_name("yudpsocket_server") func c_yudpsocket_server(_ host:UnsafePointer<Int8>,port:Int32) -> Int32
-@_silgen_name("yudpsocket_recive") func c_yudpsocket_recive(_ fd:Int32,buff:UnsafePointer<Byte>,len:Int32,ip:UnsafePointer<Int8>,port:UnsafePointer<Int32>) -> Int32
-@_silgen_name("yudpsocket_close") func c_yudpsocket_close(_ fd:Int32) -> Int32
+@_silgen_name("yudpsocket_server") func c_yudpsocket_server(_ host: UnsafePointer<Int8>, port: Int32) -> Int32
+@_silgen_name("yudpsocket_recive") func c_yudpsocket_recive(_ fd: Int32, buff: UnsafePointer<Byte>, len: Int32, ip: UnsafePointer<Int8>, port: UnsafePointer<Int32>) -> Int32
+@_silgen_name("yudpsocket_close") func c_yudpsocket_close(_ fd: Int32) -> Int32
 @_silgen_name("yudpsocket_client") func c_yudpsocket_client() -> Int32
-@_silgen_name("yudpsocket_get_server_ip") func c_yudpsocket_get_server_ip(_ host:UnsafePointer<Int8>,ip:UnsafePointer<Int8>) -> Int32
-@_silgen_name("yudpsocket_sentto") func c_yudpsocket_sentto(_ fd:Int32,buff:UnsafePointer<Byte>,len:Int32,ip:UnsafePointer<Int8>,port:Int32) -> Int32
-@_silgen_name("enable_broadcast") func c_enable_broadcast(_ fd:Int32)
+@_silgen_name("yudpsocket_get_server_ip") func c_yudpsocket_get_server_ip(_ host: UnsafePointer<Int8>, ip: UnsafePointer<Int8>) -> Int32
+@_silgen_name("yudpsocket_sentto") func c_yudpsocket_sentto(_ fd: Int32, buff: UnsafePointer<Byte>, len: Int32, ip: UnsafePointer<Int8>, port: Int32) -> Int32
+@_silgen_name("enable_broadcast") func c_enable_broadcast(_ fd: Int32)
 
 open class UDPClient: Socket {
-    public override init(address: String, port: Int32) {
-        let remoteipbuff: [Int8] = [Int8](repeating: 0x0,count: 16)
+    override public init(address: String, port: Int32) {
+        let remoteipbuff = [Int8](repeating: 0x0, count: 16)
         let ret = c_yudpsocket_get_server_ip(address, ip: remoteipbuff)
         guard let ip = String(cString: remoteipbuff, encoding: String.Encoding.utf8), ret == 0 else {
-            super.init(address: "", port: 0) //TODO: change to init?
+            super.init(address: "", port: 0) // TODO: change to init?
             return
         }
 
@@ -56,9 +57,9 @@ open class UDPClient: Socket {
     }
 
     /*
-    * send data
-    * return success or fail with message
-    */
+     * send data
+     * return success or fail with message
+     */
     open func send(data: [Byte]) -> Result {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
@@ -71,9 +72,9 @@ open class UDPClient: Socket {
     }
 
     /*
-    * send string
-    * return success or fail with message
-    */
+     * send string
+     * return success or fail with message
+     */
     open func send(string: String) -> Result {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
@@ -86,8 +87,8 @@ open class UDPClient: Socket {
     }
 
     /*
-    * enableBroadcast
-    */
+     * enableBroadcast
+     */
     open func enableBroadcast() {
         guard let fd: Int32 = self.fd else { return }
 
@@ -95,13 +96,13 @@ open class UDPClient: Socket {
     }
 
     /*
-    *
-    * send nsdata
-    */
+     *
+     * send nsdata
+     */
     open func send(data: Data) -> Result {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
-        var buff = [Byte](repeating: 0x0,count: data.count)
+        var buff = [Byte](repeating: 0x0, count: data.count)
         (data as NSData).getBytes(&buff, length: data.count)
         let sendsize = c_yudpsocket_sentto(fd, buff: buff, len: Int32(data.count), ip: address, port: port)
         if sendsize == Int32(data.count) {
@@ -111,24 +112,24 @@ open class UDPClient: Socket {
         }
     }
 
-    //TODO add multycast and boardcast
+    // TODO: add multycast and boardcast
     open func recv(_ expectlen: Int) -> ([Byte]?, String, Int) {
         guard let fd = self.fd else {
             return (nil, "no ip", 0)
         }
-        let buff: [Byte] = [Byte](repeating: 0x0,
-                                  count: expectlen)
-        var remoteipbuff: [Int8] = [Int8](repeating: 0x0, count: 16)
+        let buff = [Byte](repeating: 0x0,
+                          count: expectlen)
+        var remoteipbuff = [Int8](repeating: 0x0, count: 16)
         var remoteport: Int32 = 0
         let readLen: Int32 = c_yudpsocket_recive(fd, buff: buff, len: Int32(expectlen), ip: &remoteipbuff, port: &remoteport)
-        let port: Int = Int(remoteport)
+        let port = Int(remoteport)
         let address = String(cString: remoteipbuff, encoding: String.Encoding.utf8) ?? ""
 
         if readLen <= 0 {
             return (nil, address, port)
         }
 
-        let data: [Byte] = Array(buff[0..<Int(readLen)])
+        let data: [Byte] = Array(buff[0 ..< Int(readLen)])
         return (data, address, port)
     }
 
@@ -138,12 +139,11 @@ open class UDPClient: Socket {
         _ = c_yudpsocket_close(fd)
         self.fd = nil
     }
-    //TODO add multycast and boardcast
+    // TODO: add multycast and boardcast
 }
 
 open class UDPServer: Socket {
-
-    public override init(address: String, port: Int32) {
+    override public init(address: String, port: Int32) {
         super.init(address: address, port: port)
 
         let fd = c_yudpsocket_server(address, port: port)
@@ -152,14 +152,14 @@ open class UDPServer: Socket {
         }
     }
 
-    //TODO add multycast and boardcast
+    // TODO: add multycast and boardcast
     open func recv(_ expectlen: Int) -> ([Byte]?, String, Int) {
         if let fd = self.fd {
-            let buff: [Byte] = [Byte](repeating: 0x0,count: expectlen)
-            var remoteipbuff: [Int8] = [Int8](repeating: 0x0,count: 16)
+            let buff = [Byte](repeating: 0x0, count: expectlen)
+            var remoteipbuff = [Int8](repeating: 0x0, count: 16)
             var remoteport: Int32 = 0
             let readLen: Int32 = c_yudpsocket_recive(fd, buff: buff, len: Int32(expectlen), ip: &remoteipbuff, port: &remoteport)
-            let port: Int = Int(remoteport)
+            let port = Int(remoteport)
             var address = ""
             if let ip = String(cString: remoteipbuff, encoding: String.Encoding.utf8) {
                 address = ip
@@ -169,7 +169,7 @@ open class UDPServer: Socket {
                 return (nil, address, port)
             }
 
-            let rs = buff[0...Int(readLen-1)]
+            let rs = buff[0 ... Int(readLen - 1)]
             let data: [Byte] = Array(rs)
             return (data, address, port)
         }

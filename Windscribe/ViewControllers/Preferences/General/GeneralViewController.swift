@@ -1,5 +1,5 @@
 //
-//	GeneralViewControllerV2.swift
+//	GeneralViewController.swift
 //	Windscribe
 //
 //	Created by Thomas on 17/05/2022.
@@ -7,16 +7,18 @@
 //
 
 import Foundation
-import UIKit
-import RxSwift
 import RxGesture
+import RxSwift
 import StoreKit
+import UIKit
 
 class GeneralViewController: WSNavigationViewController {
     // MARK: - State properties
+
     var viewModel: GeneralViewModelType!, router: GeneralRouter!, popupRouter: PopupRouter!, logger: FileLogger!
 
     // MARK: - UI Elements
+
     private lazy var locationOrderRow: SelectableView = {
         let view = SelectableView(
             header: GeneralHelper.getTitle(.locationOrder),
@@ -25,7 +27,8 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.locationOrder),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.locationOrder),
-            delegate: self)
+            delegate: self
+        )
         view.hideShowExplainIcon()
         return view
     }()
@@ -38,7 +41,8 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.latencyDisplay),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.latencyDisplay),
-            delegate: self)
+            delegate: self
+        )
         view.hideShowExplainIcon()
         return view
     }()
@@ -51,7 +55,8 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.appearance),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.appearance),
-            delegate: self)
+            delegate: self
+        )
         view.hideShowExplainIcon()
         return view
     }()
@@ -65,7 +70,8 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.language),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.language),
-            delegate: self)
+            delegate: self
+        )
         view.hideShowExplainIcon()
         return view
     }()
@@ -79,7 +85,8 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.notification),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.notification),
-            delegate: self)
+            delegate: self
+        )
         view.hideShowExplainIcon()
         return view
     }()
@@ -104,7 +111,7 @@ class GeneralViewController: WSNavigationViewController {
 
     private lazy var versionRow: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            versionLabel, UIView() ,currentVersionLabel
+            versionLabel, UIView(), currentVersionLabel,
         ])
         stack.setPadding(UIEdgeInsets(inset: 16))
         stack.axis = .horizontal
@@ -125,6 +132,7 @@ class GeneralViewController: WSNavigationViewController {
     }()
 
     // MARK: - LIFE CYCLE
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -154,7 +162,6 @@ class GeneralViewController: WSNavigationViewController {
             }
         })
         .disposed(by: disposeBag)
-
     }
 
     override func viewWillLayoutSubviews() {
@@ -172,7 +179,7 @@ class GeneralViewController: WSNavigationViewController {
                 appearanceRow,
                 locationLoadRow,
                 notificationRow,
-                versionRow
+                versionRow,
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
@@ -183,7 +190,7 @@ class GeneralViewController: WSNavigationViewController {
                 locationLoadRow,
                 hapticFeedbackRow,
                 notificationRow,
-                versionRow
+                versionRow,
             ])
         }
 
@@ -218,8 +225,9 @@ class GeneralViewController: WSNavigationViewController {
     }
 
     // MARK: - Actions
+
     @objc func pushNotificationSettingsButtonTapped() {
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .authorized, .denied:
                 if let appSettings = URL(string: UIApplication.openSettingsURLString) {
@@ -256,6 +264,7 @@ class GeneralViewController: WSNavigationViewController {
 }
 
 // MARK: - extensions
+
 extension GeneralViewController: SelectableViewDelegate {
     func selectableViewSelect(_ sender: SelectableView, option: String) {
         switch sender {

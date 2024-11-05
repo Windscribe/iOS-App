@@ -8,6 +8,7 @@
 
 import Foundation
 import RealmSwift
+
 @objcMembers class PingData: Object {
     dynamic var ip: String = ""
     dynamic var latency = -1
@@ -21,6 +22,7 @@ import RealmSwift
     override static func primaryKey() -> String? {
         return "ip"
     }
+
     override var description: String {
         return "IP: \(ip) Latency: \(latency)"
     }

@@ -6,11 +6,11 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreLocation
+import Foundation
 import RxSwift
 import Swinject
+import UIKit
 
 extension MainViewController {
     override func viewDidLoad() {
@@ -42,7 +42,7 @@ extension MainViewController {
         setupIntentsForSiri()
         configureNotificationListeners()
         // self.configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
-        self.loadLatencyWhenReady()
+        loadLatencyWhenReady()
         checkForNewNotifications()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
@@ -52,7 +52,7 @@ extension MainViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         locationManagerViewModel.shouldPresentLocationPopUp.subscribe {
             self.router?.routeTo(to: RouteID.locationPermission(delegate: self.locationManagerViewModel, denied: $0),
-                                from: self)
+                                 from: self)
         }.disposed(by: disposeBag)
     }
 
@@ -89,7 +89,7 @@ extension MainViewController {
 
     private func bindViewModels() {
         bindMainViewModel()
- 		bindCustomConfigPickerModel()
+        bindCustomConfigPickerModel()
         bindConnectionStateViewModel()
         bindFavNodesListViewModel()
         bindStaticIPListViewModel()

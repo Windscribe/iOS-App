@@ -1,5 +1,5 @@
 //
-//  LatencyViewModal.swift
+//  LatencyViewModel.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-06-11.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol LatencyViewModel {
     func loadAllServerLatency() -> Completable
 }
@@ -32,7 +33,7 @@ class LatencyViewModelImpl: LatencyViewModel {
 
     private func updateServerList() -> Completable {
         return serverRepository.getUpdatedServers().flatMap { _ in
-            return self.staticIpRepository.getStaticServers()
+            self.staticIpRepository.getStaticServers()
         }.asCompletable()
     }
 }

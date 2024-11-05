@@ -5,7 +5,6 @@ import Foundation
 import WireGuardKit
 
 extension TunnelConfiguration {
-
     enum ParserState {
         case inInterfaceSection
         case inPeerSection
@@ -83,7 +82,7 @@ extension TunnelConfiguration {
                             throw ParseError.peerHasUnrecognizedKey(keyWithCase)
                         }
                     }
-                } else if lowercasedLine != "[interface]" && lowercasedLine != "[peer]" {
+                } else if lowercasedLine != "[interface]", lowercasedLine != "[peer]" {
                     throw ParseError.invalidLine(line)
                 }
             }
@@ -255,5 +254,4 @@ extension TunnelConfiguration {
         }
         return peer
     }
-
 }

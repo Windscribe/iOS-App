@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 enum SubmitLogState {
     case initial
     case sending
@@ -16,15 +17,15 @@ enum SubmitLogState {
 }
 
 protocol ProtocolSetPreferredViewModelV2 {
-    var alertManager: AlertManagerV2 {get}
-    var securedNetwork: SecuredNetworkRepository {get}
-    var localDatabase: LocalDatabase {get}
-    var changeMessage: String {get}
-    var failMessage: String {get}
-    var failHeaderString: String {get}
-    var type: ProtocolViewType {get set}
+    var alertManager: AlertManagerV2 { get }
+    var securedNetwork: SecuredNetworkRepository { get }
+    var localDatabase: LocalDatabase { get }
+    var changeMessage: String { get }
+    var failMessage: String { get }
+    var failHeaderString: String { get }
+    var type: ProtocolViewType { get set }
     var submitLogState: BehaviorSubject<SubmitLogState> { get }
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
     func submitLog()
     func getSubHeader() -> String
@@ -69,7 +70,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
                 if let session = self.sessionManager.session {
                     debugUsername = session.username
                 }
-                if let session =  self.sessionManager.session, session.isUserGhost == true {
+                if let session = self.sessionManager.session, session.isUserGhost == true {
                     debugUsername = "ghost_\(session.userId)"
                 }
                 return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)

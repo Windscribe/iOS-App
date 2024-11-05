@@ -84,6 +84,7 @@ extension ConfigurationsManager {
             let publickey = location.1.wgPublicKey
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
             return try wgConfigurationFromPath(path: FilePaths.wireGuard)
+
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
             guard let node = location.nodes.toArray().randomElement() else {

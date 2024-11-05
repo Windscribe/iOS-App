@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 /// Holds proxy informations.
 /// learn more at https://gitlab.int.windscribe.com/ws/client/wstunnel
 struct ProxyInfo {

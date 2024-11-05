@@ -6,12 +6,11 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import IQKeyboardManagerSwift
 import RxSwift
+import UIKit
 
 class EnterCredentialsViewController: WSUIViewController {
-
     var backgroundView: UIView!
     var headlineLabel: UILabel!
     var iconView: UIImageView!
@@ -81,7 +80,8 @@ class EnterCredentialsViewController: WSUIViewController {
 
         Observable.combineLatest(
             usernameTextField.rx.controlEvent([.editingChanged]).withLatestFrom(usernameTextField.rx.text.orEmpty).asObservable(),
-            passwordTextField.rx.controlEvent([.editingChanged]).withLatestFrom(passwordTextField.rx.text.orEmpty).asObservable())
+            passwordTextField.rx.controlEvent([.editingChanged]).withLatestFrom(passwordTextField.rx.text.orEmpty).asObservable()
+        )
         .subscribe(onNext: { username, password in
             (!username.isEmpty && !password.isEmpty) ? self.submitButton.enable() : self.submitButton.disable()
         }).disposed(by: disposeBag)

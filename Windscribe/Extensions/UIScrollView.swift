@@ -8,9 +8,9 @@
 import UIKit
 
 extension UIScrollView {
-
     func scrollToView(view: UIView,
-                      animated: Bool) {
+                      animated: Bool)
+    {
         if let origin = view.superview {
             let childStartPoint = origin.convert(view.frame.origin, to: self)
             scrollRectToVisible(CGRect(x: 0,

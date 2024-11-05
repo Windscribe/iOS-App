@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 protocol PreferencesOptionViewDelegate: OptionSelectionViewDelegate {
     func optionWasSelected(with value: PreferencesType, _ sender: PreferencesOptionView)
@@ -46,8 +46,8 @@ class PreferencesOptionView: OptionSelectionView {
         }).disposed(by: disposeBag)
     }
 
-    @IBAction override func selectOption(_ sender: Any) {
-        guard let optionType = optionType else {return}
+    @IBAction override func selectOption(_: Any) {
+        guard let optionType = optionType else { return }
         selectionDelegate?.optionWasSelected(with: optionType, self)
     }
 }

@@ -1,16 +1,15 @@
 //
-//  PushNotificationPermissionViewController.swift
+//  PushNotificationViewController.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-03-08.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PushNotificationViewController: WSUIViewController {
-
     var backgroundView: UIView!
     var imageView: UIImageView!
     var titleLabel: UILabel!
@@ -22,8 +21,8 @@ class PushNotificationViewController: WSUIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addViews()
-        self.addAutoLayoutConstraints()
+        addViews()
+        addAutoLayoutConstraints()
         bindViews()
     }
 

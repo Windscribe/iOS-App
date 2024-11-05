@@ -22,6 +22,7 @@ class LanguageViewModel: LanguageViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
 
     // MARK: - Dependencies
+
     let languageManager: LanguageManagerV2, preferences: Preferences, disposeBag = DisposeBag()
 
     var language = Languages.english
@@ -31,7 +32,6 @@ class LanguageViewModel: LanguageViewModelType {
         self.preferences = preferences
         isDarkMode = themeManager.darkTheme
         load()
-
     }
 
     private func load() {
@@ -40,12 +40,9 @@ class LanguageViewModel: LanguageViewModelType {
                 self.language = Languages.allCases.first { $0.name == language } ?? Languages.english
                 self.didUpdateLanguage?()
             }).disposed(by: disposeBag)
-
     }
 
-    lazy var dataCells: [LanguageDataCell] = {
-        return Languages.allCases.map({ LanguageDataCell(language: $0 )})
-    }()
+    lazy var dataCells: [LanguageDataCell] = Languages.allCases.map { LanguageDataCell(language: $0) }
 
     func selectedLanguage(at indexPath: IndexPath) {
         let selectedlLanguage = dataCells[indexPath.row].language

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 
 @objcMembers class ServerCredentials: Object, Decodable {
     dynamic var username: String = ""
@@ -29,12 +29,12 @@ import Realm
     }
 
     convenience init(username: String,
-                     password: String) {
+                     password: String)
+    {
         self.init()
         self.username = username
         self.password = password
     }
-
 }
 
 struct StaticIPCredentialsModel {
@@ -42,19 +42,20 @@ struct StaticIPCredentialsModel {
     let password: String?
 
     init(username: String,
-         password: String) {
+         password: String)
+    {
         self.username = username
         self.password = password
     }
 }
 
 @objcMembers class StaticIPCredentials: Object, Decodable {
-
     dynamic var username: String = ""
     dynamic var password: String = ""
 
     convenience init(username: String,
-                     password: String) {
+                     password: String)
+    {
         self.init()
         self.username = username
         self.password = password
@@ -67,11 +68,10 @@ struct StaticIPCredentialsModel {
 }
 
 class LastConnectedNodeStaticIPCredentials: StaticIPCredentials {
-
     convenience init(staticIPCredentials: StaticIPCredentialsModel) {
         self.init()
-        self.username = staticIPCredentials.username ?? ""
-        self.password = staticIPCredentials.password ?? ""
+        username = staticIPCredentials.username ?? ""
+        password = staticIPCredentials.password ?? ""
     }
 }
 
@@ -81,6 +81,7 @@ class OpenVPNServerCredentials: ServerCredentials {
         return "id"
     }
 }
+
 class IKEv2ServerCredentials: ServerCredentials {
     dynamic var id: String = "IKEv2ServerCredentials"
     override class func primaryKey() -> String? {

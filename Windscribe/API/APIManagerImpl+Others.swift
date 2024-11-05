@@ -31,13 +31,13 @@ extension APIManagerImpl {
         }
     }
 
-    func recordInstall(platform: String) -> Single<APIMessage> {
+    func recordInstall(platform _: String) -> Single<APIMessage> {
         return makeApiCall(modalType: APIMessage.self) { completion in
             self.api.recordInstall(false, callback: completion)
         }
     }
 
-    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) -> Single<APIMessage> {
+    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform _: String) -> Single<APIMessage> {
         return makeApiCall(modalType: APIMessage.self) { completion in
             self.api.sendSupportTicket(email, supportName: name, supportSubject: subject, supportMessage: message, supportCategory: category, type: type, channel: channel, callback: completion)
         }

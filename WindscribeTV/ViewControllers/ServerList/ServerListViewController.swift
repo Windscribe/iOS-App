@@ -6,9 +6,9 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 protocol BestLocationConnectionDelegate: AnyObject {
     func connectToBestLocation()
@@ -33,30 +33,29 @@ enum SideMenuType: String {
             return isSelected ? img?.withTintColor(.white) : img
         case .staticIp:
             let img = UIImage(named: ImagesAsset.TvAsset.staticIp)
-            return isSelected ? img?.withTintColor(.white): img
+            return isSelected ? img?.withTintColor(.white) : img
         }
     }
-
 }
 
 class ServerListViewController: PreferredFocusedViewController, SideMenuOptionViewDelegate {
     var viewModel: MainViewModelType!, logger: FileLogger!, router: ServerListRouter!, serverListViewModel: ServerListViewModelType!
     let disposeBag = DisposeBag()
 
-    @IBOutlet weak var sideMenu: UIStackView!
+    @IBOutlet var sideMenu: UIStackView!
     @IBOutlet var sideMenuContainerView: UIView!
     @IBOutlet var serverListCollectionView: UICollectionView!
     @IBOutlet var favTableView: UITableView!
-    @IBOutlet weak var sideMenuWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var nothingToSeeLabel: UILabel!
-    @IBOutlet weak var emptyFavView: UIView!
+    @IBOutlet var sideMenuWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var nothingToSeeLabel: UILabel!
+    @IBOutlet var emptyFavView: UIView!
 
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
     weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
-    private var sideOptions: [SideMenuType] = [.all,.fav,.windflix,.staticIp]
+    private var sideOptions: [SideMenuType] = [.all, .fav, .windflix, .staticIp]
     private var selectedRow: Int = 0
     private var optionViews = [SideMenuOptions]()
     private var selectionOption = SideMenuType.all
@@ -73,14 +72,14 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         serverListCollectionView.dataSource = self
 
         sideMenuWidthConstraint.constant = 90
-        self.serverListCollectionView.register(UINib(nibName: "ServerListCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ServerListCollectionViewCell")
+        serverListCollectionView.register(UINib(nibName: "ServerListCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "ServerListCollectionViewCell")
         favTableView.delegate = self
         favTableView.dataSource = self
         favTableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
         setup()
         bindData(isStreaming: false)
         toggleView(viewToToggle: favTableView, isViewVisible: true)
-        self.serverListCollectionView.contentInsetAdjustmentBehavior = .never
+        serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
         hideEmptyFavView()
     }
@@ -113,13 +112,13 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     if indexPath.row == 0 && selectedRow == 0 {
                         if press.type == .leftArrow {
                             myPreferredFocusedView = optionViews.first?.button
-                            self.setNeedsFocusUpdate()
-                            self.updateFocusIfNeeded()
+                            setNeedsFocusUpdate()
+                            updateFocusIfNeeded()
                             break
                         }
                     }
-                    if (0...3).contains(indexPath.row), (0...3).contains(selectedRow), press.type == .upArrow {
-                        self.navigationController?.popToRootViewController(animated: true)
+                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow), press.type == .upArrow {
+                        navigationController?.popToRootViewController(animated: true)
                     }
                     selectedRow = indexPath.row
                 }
@@ -127,8 +126,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             if UIScreen.main.focusedView is UIButton {
                 if press.type == .leftArrow && preferredFocusedView?.accessibilityIdentifier == AccessibilityIdentifier.connectButton {
                     myPreferredFocusedView = optionViews.first?.button
-                    self.setNeedsFocusUpdate()
-                    self.updateFocusIfNeeded()
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
                 }
             }
         }
@@ -151,8 +150,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     print("IndexPath is \(indexPath)")
                     if indexPath.row == 0 && selectedRow == 0 {
                         myPreferredFocusedView = optionViews.first?.button
-                        self.setNeedsFocusUpdate()
-                        self.updateFocusIfNeeded()
+                        setNeedsFocusUpdate()
+                        updateFocusIfNeeded()
                         return
                     }
                     selectedRow = indexPath.row
@@ -160,8 +159,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             if UIScreen.main.focusedView is UIButton {
                 myPreferredFocusedView = optionViews.first?.button
-                self.setNeedsFocusUpdate()
-                self.updateFocusIfNeeded()
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -169,12 +168,12 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             if UIScreen.main.focusedView is UIButton {
-                self.navigationController?.popToRootViewController(animated: true)
+                navigationController?.popToRootViewController(animated: true)
             }
             if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                    if (0...3).contains(indexPath.row), (0...3).contains(selectedRow) {
-                        self.navigationController?.popToRootViewController(animated: true)
+                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow) {
+                        navigationController?.popToRootViewController(animated: true)
                     }
                     selectedRow = indexPath.row
                 }
@@ -182,7 +181,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         // myPreferredFocusedView = context.nextFocusedView
         if context.nextFocusedItem is UIButton {
             let view = context.nextFocusedView as? UIButton
@@ -209,14 +208,13 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 self.view.layoutIfNeeded()
             }
         }
-
     }
 
     private func setup() {
         sideMenu.distribution = .fillEqually
-        sideOptions.forEach {
-            let optionView: SideMenuOptions = SideMenuOptions.fromNib()
-            optionView.setup(with: $0)
+        for sideOption in sideOptions {
+            let optionView = SideMenuOptions.fromNib()
+            optionView.setup(with: sideOption)
             optionView.delegate = self
             sideMenu.addArrangedSubview(optionView)
             optionViews.append(optionView)
@@ -230,7 +228,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
             self.serverSectionsOrdered = serverSectionsOrdered
 
-           if  self.bestLocation != nil {
+            if self.bestLocation != nil {
                 let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
                 if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
                     self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
@@ -238,7 +236,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             self.serverListCollectionView.reloadData()
         }
-        self.viewModel.staticIPs.subscribe(onNext: { [self] staticips in
+        viewModel.staticIPs.subscribe(onNext: { [self] _ in
             let staticips = self.viewModel.getStaticIp()
             staticIPModels.removeAll()
             for result in staticips {
@@ -268,15 +266,15 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }).disposed(by: disposeBag)
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        if let vc = self.presentingViewController as? MainViewController {
+    override func viewWillDisappear(_: Bool) {
+        if let vc = presentingViewController as? MainViewController {
             vc.isFromServer = true
         }
     }
 
     func optionWasSelected(with value: SideMenuType) {
-        optionViews.forEach {
-            $0.updateSelection(with: $0.isType(of: value))
+        for optionView in optionViews {
+            optionView.updateSelection(with: optionView.isType(of: value))
         }
         switch value {
         case .all:
@@ -305,15 +303,14 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             hideEmptyFavView()
             favTableView.reloadData()
             toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
-
         }
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = 90
             self.view.layoutIfNeeded()
         }
-        optionViews.forEach {
-            if $0.sideMenuType == self.selectionOption {
-                $0.setHorizontalGradientBackground()
+        for optionView in optionViews {
+            if optionView.sideMenuType == selectionOption {
+                optionView.setHorizontalGradientBackground()
             }
         }
     }
@@ -362,7 +359,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
             serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
+            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100),
         ])
 
         favTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -371,52 +368,50 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: -130),
             favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
+            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130),
         ])
     }
 }
 
 extension ServerListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         return serverSectionsOrdered.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let serverSection = serverSectionsOrdered[indexPath.item]
-        if indexPath.item == 0 && self.bestLocation != nil {
-            cell.flagImage.image =  UIImage(named: "bestLocation_cell")
+        if indexPath.item == 0 && bestLocation != nil {
+            cell.flagImage.image = UIImage(named: "bestLocation_cell")
             cell.setup(isShadow: false)
         } else {
             if let countrycode = serverSection.server?.countryCode {
-                cell.flagImage.image =  UIImage(named: "\(countrycode.lowercased())-s")
+                cell.flagImage.image = UIImage(named: "\(countrycode.lowercased())-s")
             }
             cell.setup(isShadow: true)
         }
         cell.countryCode.text = serverSection.server?.name?.localize()
         return cell
-
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == 0 && self.bestLocation != nil {
-            self.navigationController?.popToRootViewController(animated: true)
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row == 0 && bestLocation != nil {
+            navigationController?.popToRootViewController(animated: true)
             bestLocDelegate?.connectToBestLocation()
             return
         }
-        if let selectedServer = self.serverSectionsOrdered[indexPath.row].server {
-            router.routeTo(to: .serverListDetail(server: selectedServer, delegate: self.delegate), from: self)
+        if let selectedServer = serverSectionsOrdered[indexPath.row].server {
+            router.routeTo(to: .serverListDetail(server: selectedServer, delegate: delegate), from: self)
         }
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-
+    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
         return CGSize(width: 421, height: 273)
     }
 }
 
 extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
         // Create a container view for the header
         let headerView = UIView()
         headerView.backgroundColor = .clear
@@ -436,7 +431,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             label.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 0),
-            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
+            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
         ])
 
         // Set a fixed height for the header view
@@ -446,7 +441,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
         return headerView
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         if staticIpSelected {
             return staticIPModels.count
         } else {
@@ -466,38 +461,41 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             cell.displayingStaticIP = staticIP
             cell.staticIpDelegate = self
             cell.focusStyle = UITableViewCell.FocusStyle.custom
-
         }
         return cell
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         return 100
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 125
     }
 }
 
 extension ServerListViewController: FavNodesListTableViewDelegate {
     func setSelectedFavNode(favNode: FavNodeModel) {
-        self.navigationController?.popToRootViewController(animated: true)
-        self.favDelegate?.setSelectedFavNode(favNode: favNode)
+        navigationController?.popToRootViewController(animated: true)
+        favDelegate?.setSelectedFavNode(favNode: favNode)
     }
+
     func showUpgradeView() {
-        self.delegate?.showUpgradeView()
+        delegate?.showUpgradeView()
     }
+
     func showExpiredAccountView() {
-        self.delegate?.showExpiredAccountView()
+        delegate?.showExpiredAccountView()
     }
+
     func showOutOfDataPopUp() {
-        self.delegate?.showOutOfDataPopUp()
+        delegate?.showOutOfDataPopUp()
     }
 }
 
 extension ServerListViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {
-        self.navigationController?.popToRootViewController(animated: true)
-        self.staticIpDelegate?.setSelectedStaticIP(staticIP: staticIP)
+        navigationController?.popToRootViewController(animated: true)
+        staticIpDelegate?.setSelectedStaticIP(staticIP: staticIP)
     }
 }

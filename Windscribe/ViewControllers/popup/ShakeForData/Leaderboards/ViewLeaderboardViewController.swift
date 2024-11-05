@@ -6,12 +6,11 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import RxDataSources
+import RxSwift
+import UIKit
 
 class ViewLeaderboardViewController: WSNavigationViewController {
-
     var tableView: UITableView!
     var viewModel: ViewLeaderboardViewModelType!
 
@@ -32,18 +31,18 @@ class ViewLeaderboardViewController: WSNavigationViewController {
         let dataSource = RxTableViewSectionedReloadDataSource<ScoreSection>(
             configureCell: { _, tableView, indexPath, item in
                 let cell = tableView.dequeueReusableCell(withIdentifier: leaderboardCellReuseIdentifier, for: indexPath)
-                as? LeaderboardTableViewCell
-                ?? LeaderboardTableViewCell(style: .default, reuseIdentifier: leaderboardCellReuseIdentifier)
+                    as? LeaderboardTableViewCell
+                    ?? LeaderboardTableViewCell(style: .default, reuseIdentifier: leaderboardCellReuseIdentifier)
                 cell.bindViews(isDarkMode: self.viewModel.isDarkMode)
                 cell.setScore(with: item)
                 return cell
             },
             titleForHeaderInSection: { _, _ in
-                return ""
+                ""
             }
         )
-        self.tableView.rx.setDelegate(self).disposed(by: self.disposeBag)
-        viewModel.scoresSection.bind(to: self.tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
+        tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        viewModel.scoresSection.bind(to: tableView.rx.items(dataSource: dataSource)).disposed(by: disposeBag)
         viewModel.load()
 
         viewModel.isDarkMode.subscribe(onNext: { [self] in
@@ -54,7 +53,8 @@ class ViewLeaderboardViewController: WSNavigationViewController {
 
 extension ViewLeaderboardViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
+                   didSelectRowAt indexPath: IndexPath)
+    {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }

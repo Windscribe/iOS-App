@@ -8,6 +8,7 @@
 
 import Foundation
 import SimpleKeychain
+
 class KeyChainDatabaseImpl: KeyChainDatabase {
     private let logger: FileLogger
     private let simpleKeychain = SimpleKeychain(accessGroup: SharedKeys.sharedKeychainGroup)
@@ -57,11 +58,10 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
             return isGhostAccountCreated
         }
         return false
-
     }
 
     func setGhostAccountCreated() {
         try? simpleKeychain.set(true.data, forKey: KeyChainkeys.ghostAccountCreated)
-       // JNKeychain.saveValue(true, forKey: KeyChainkeys.ghostAccountCreated)
+        // JNKeychain.saveValue(true, forKey: KeyChainkeys.ghostAccountCreated)
     }
 }

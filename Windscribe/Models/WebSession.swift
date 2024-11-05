@@ -12,7 +12,7 @@ import Foundation
     var tempSession: String = ""
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case tempSession = "temp_session"
     }
 

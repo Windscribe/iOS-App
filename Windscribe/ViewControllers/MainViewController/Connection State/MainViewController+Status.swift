@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import NetworkExtension
+import RxSwift
+import UIKit
 
 extension MainViewController {
     func bindConnectionStateViewModel() {
@@ -110,7 +110,7 @@ extension MainViewController {
                         self.showNoInternetConnection()
                     }
                     if info.customConfig != nil {
-                       self.disableAutoSecureViews()
+                        self.disableAutoSecureViews()
                     } else {
                         self.enableAutoSecureViews()
                     }
@@ -151,6 +151,6 @@ extension MainViewController {
     }
 
     private func nonAnimationConnectionState() {
-        self.preferredProtocolBadge.isUserInteractionEnabled = false
+        preferredProtocolBadge.isUserInteractionEnabled = false
     }
 }

@@ -6,19 +6,20 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class AddEmailPopupViewController: BasePopUpViewController {
     var router: HomeRouter!, aeViewModel: EnterEmailViewModel!
-    @IBOutlet weak var fieldStackView: UIStackView!
-    @IBOutlet weak var loadingView: UIView!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet var fieldStackView: UIStackView!
+    @IBOutlet var loadingView: UIView!
+    @IBOutlet var activityIndicator: UIActivityIndicatorView!
 
     var addEmailButton = WSPillButton()
     var emailTextField = WSTextFieldTv()
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Add Email Popup Shown.")
@@ -40,6 +41,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     private func bindViews() {
         addEmailButton.rx.primaryAction.bind { [self] in
             continueButtonTapped()
@@ -47,6 +49,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
     }
 
     // MARK: Actions
+
     private func showLoading() {
         loadingView.isHidden = false
         activityIndicator.startAnimating()
@@ -60,10 +63,10 @@ class AddEmailPopupViewController: BasePopUpViewController {
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
         logger.logD(self, "User tapped to submit email.")
-        self.showLoading()
-        self.addEmailButton.isEnabled = false
+        showLoading()
+        addEmailButton.isEnabled = false
         aeViewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            DispatchQueue.main.async { [ self] in
+            DispatchQueue.main.async { [self] in
                 self.endLoading()
                 self.addEmailButton.isEnabled = true
                 self.router.routeTo(to: .confirmEmail(delegate: nil), from: self)

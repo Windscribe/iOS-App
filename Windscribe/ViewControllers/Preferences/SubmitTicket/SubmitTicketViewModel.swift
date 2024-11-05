@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 protocol SubmitTicketViewModel {
-    var themeManager: ThemeManager {get}
-    var alertManager: AlertManagerV2 {get}
-    var sessionManager: SessionManagerV2 {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var themeManager: ThemeManager { get }
+    var alertManager: AlertManagerV2 { get }
+    var sessionManager: SessionManagerV2 { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
     func sendTicket(email: String, subject: String, message: String, category: Int) -> Single<APIMessage>
 }
@@ -34,11 +34,10 @@ class SubmitTicketViewModelImpl: SubmitTicketViewModel {
     }
 
     func sendTicket(email: String, subject: String, message: String, category: Int) -> Single<APIMessage> {
-        let categoryLabel = SubmitTicket.categories[category-1]
+        let categoryLabel = SubmitTicket.categories[category - 1]
         let currentDevice = UIDevice.current
         let deviceInfo = "Brand: Apple | Os: \(currentDevice.systemVersion) | Model: \(UIDevice.modelName)"
         let name = sessionManager.session?.userId ?? ""
-        return apiManager.sendTicket(email: email, name: name, subject: subject, message: message, category: "\(category)" , type: categoryLabel, channel: "app_ios", platform: deviceInfo)
-
+        return apiManager.sendTicket(email: email, name: name, subject: subject, message: message, category: "\(category)", type: categoryLabel, channel: "app_ios", platform: deviceInfo)
     }
 }
