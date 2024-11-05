@@ -12,8 +12,6 @@ import Swinject
 
 extension ConfigurationsManager {
     func connect(with type: VPNManagerType, killSwitch: Bool) async {
-        VPNManager.shared.activeVPNManager = type
-
         guard let manager = getManager(for: type) else { return }
         let otherManagers = Array(Set(managers).subtracting([manager]))
 

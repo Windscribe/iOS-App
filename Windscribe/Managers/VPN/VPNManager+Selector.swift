@@ -79,6 +79,7 @@ extension VPNManager {
         Task {
             if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
                                                                                 userSettings: makeUserSettings())) ?? false {
+                self.activeVPNManager = .wg
                 await configManager.connect(with: .wg, killSwitch: killSwitch)
             }
         }
@@ -101,15 +102,24 @@ extension VPNManager {
     }
 
     @objc func retryIKEv2Connection() {
-        Task { await configManager.connect(with: .iKEV2, killSwitch: killSwitch) }
+        Task {
+            self.activeVPNManager = .iKEV2
+            await configManager.connect(with: .iKEV2, killSwitch: killSwitch)
+        }
     }
 
     @objc func retryOpenVPNConnection() {
-        Task { await configManager.connect(with: .openVPN, killSwitch: killSwitch) }
+        Task {
+            self.activeVPNManager = .openVPN
+            await configManager.connect(with: .openVPN, killSwitch: killSwitch)
+        }
     }
 
     @objc func retryWireGuardVPNConnection() {
-        Task { await configManager.connect(with: .wg, killSwitch: killSwitch) }
+        Task {
+            self.activeVPNManager = .wg
+            await configManager.connect(with: .wg, killSwitch: killSwitch)
+        }
     }
 
     @objc func retryConnectionWithNewServerCredentials() {

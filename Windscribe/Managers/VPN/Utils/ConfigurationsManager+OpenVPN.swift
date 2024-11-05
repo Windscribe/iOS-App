@@ -27,7 +27,7 @@ extension ConfigurationsManager {
         var port = ConnectionManager.shared.getNextProtocol().portName
         logger.logD(self, "\(protocolType) \(port)")
 
-        guard VPNManager.shared.selectedNode?.customConfig?.authRequired ?? false else {
+        guard selectedNode.customConfig?.authRequired ?? false else {
             return try await configureOpenVPN(manager: manager,
                                               selectedNode: selectedNode,
                                               userSettings: userSettings,

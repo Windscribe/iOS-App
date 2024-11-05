@@ -116,8 +116,8 @@ class Managers: Assembly {
         container.register(AlertManagerV2.self) { _ in
             AlertManager()
         }.inObjectScope(.userScope)
-        container.register(VPNManager.self) { _ in
-            VPNManager.shared
+        container.register(VPNManager.self) { r in
+            VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, api: r.resolve(APIManager.self)!, logger: r.resolve(FileLogger.self)!, localDB: r.resolve(LocalDatabase.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, configManager: r.resolve(ConfigurationsManager.self)!, connectionManager: r.resolve(ConnectionManagerV2.self)!, changeProtocol: r.resolve(ProtocolSwitchViewController.self)!, alertManager: r.resolve(AlertManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)

@@ -25,37 +25,9 @@ enum ConfigurationState {
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
-    static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-    lazy var wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
-
-    lazy var wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
-
-    lazy var api: APIManager = Assembler.resolve(APIManager.self)
-
-    lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
-
-    lazy var localDB: LocalDatabase = Assembler.resolve(LocalDatabase.self)
-
-    lazy var serverRepository: ServerRepository = Assembler.resolve(ServerRepository.self)
-
-    lazy var staticIpRepository: StaticIpRepository = Assembler.resolve(StaticIpRepository.self)
-
-    lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
-
-    lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
-
-    lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
-
-    lazy var configManager: ConfigurationsManager = Assembler.resolve(ConfigurationsManager.self)
-
-    lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
-
-    lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
-
-    lazy var alertManager = Assembler.resolve(AlertManagerV2.self)
-
+    
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()
@@ -118,6 +90,68 @@ class VPNManager: VPNManagerProtocol {
     /// A lock used to synchronize access to the configuration state.
     private let configureStateLock = NSLock()
 
+//    let wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
+//    let wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
+//    let api: APIManager = Assembler.resolve(APIManager.self)
+//    let logger: FileLogger = Assembler.resolve(FileLogger.self)
+//    let localDB: LocalDatabase = Assembler.resolve(LocalDatabase.self)
+//    let serverRepository: ServerRepository = Assembler.resolve(ServerRepository.self)
+//    let staticIpRepository: StaticIpRepository = Assembler.resolve(StaticIpRepository.self)
+//    let preferences: Preferences = Assembler.resolve(Preferences.self)
+//    let connectivity: Connectivity = Assembler.resolve(Connectivity.self)
+//    let sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+//    let configManager: ConfigurationsManager = Assembler.resolve(ConfigurationsManager.self)
+//    let connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
+//    let changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
+//    let alertManager = Assembler.resolve(AlertManagerV2.self)
+    
+    let wgCrendentials: WgCredentials
+    let wgRepository: WireguardConfigRepository
+    let api: APIManager
+    let logger: FileLogger
+    let localDB: LocalDatabase
+    let serverRepository: ServerRepository
+    let staticIpRepository: StaticIpRepository
+    let preferences: Preferences
+    let connectivity: Connectivity
+    let sessionManager: SessionManagerV2
+    let configManager: ConfigurationsManager
+    let connectionManager: ConnectionManagerV2
+    let changeProtocol: ProtocolSwitchViewController
+    let alertManager: AlertManagerV2
+
+    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, sessionManager: SessionManagerV2, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, changeProtocol: ProtocolSwitchViewController, alertManager: AlertManagerV2) {
+        self.wgCrendentials = wgCrendentials
+        self.wgRepository = wgRepository
+        self.api = api
+        self.logger = logger
+        self.localDB = localDB
+        self.serverRepository = serverRepository
+        self.staticIpRepository = staticIpRepository
+        self.preferences = preferences
+        self.connectivity = connectivity
+        self.sessionManager = sessionManager
+        self.configManager = configManager
+        self.connectionManager = connectionManager
+        self.changeProtocol = changeProtocol
+        self.alertManager = alertManager
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(connectionStatusChanged(_:)),
+                                               name: NSNotification.Name.NEVPNStatusDidChange,
+                                               object: nil)
+        preferences.getFirewallMode().subscribe { data in
+            self.selectedFirewallMode = data ?? DefaultValues.firewallMode
+        }.disposed(by: disposeBag)
+        preferences.getConnectionMode().subscribe { data in
+            if data == nil {
+                self.selectedConnectionMode = DefaultValues.connectionMode
+            } else {
+                self.selectedConnectionMode = data
+            }
+        }.disposed(by: disposeBag)
+    }
+    
     /// The current configuration state of the VPN, with thread-safe access.
     var configurationState: ConfigurationState {
         get {
@@ -131,26 +165,7 @@ class VPNManager: VPNManagerProtocol {
             configureStateLock.unlock()
         }
     }
-
-    init(withStatusObserver: Bool = false) {
-        if withStatusObserver {
-            NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(connectionStatusChanged(_:)),
-                                                   name: NSNotification.Name.NEVPNStatusDidChange,
-                                                   object: nil)
-        }
-        preferences.getFirewallMode().subscribe { data in
-            self.selectedFirewallMode = data ?? DefaultValues.firewallMode
-        }.disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe { data in
-            if data == nil {
-                self.selectedConnectionMode = DefaultValues.connectionMode
-            } else {
-                self.selectedConnectionMode = data
-            }
-        }.disposed(by: disposeBag)
-    }
-
+    
     func resetProperties() {
         retryWithNewCredentials = false
         restartOnDisconnect = false

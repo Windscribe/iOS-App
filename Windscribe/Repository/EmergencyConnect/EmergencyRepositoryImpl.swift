@@ -96,6 +96,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             return loadConfiguration(name: configuationName, serverAddress: configInfo.ip, customConfig: customConfig.getModel())
         }.do(onCompleted: {
             Task {
+                self.vpnManager.activeVPNManager = .openVPN
                 await self.vpnManager.configManager.connect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
             }
         })

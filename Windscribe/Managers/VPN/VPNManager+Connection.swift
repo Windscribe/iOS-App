@@ -16,12 +16,12 @@ import RxSwift
 
 extension VPNManager {
     func selectAnotherNode() {
-        if let selectedNode = VPNManager.shared.selectedNode {
+        if let selectedNode = selectedNode {
             if let randomNode = getRandomNodeInSameGroup(groupId: selectedNode.groupId,
                                                          excludeHostname: selectedNode.hostname),
                 let newHostname = randomNode.hostname,
                 let newIP2 = randomNode.ip2 {
-                VPNManager.shared.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
+                selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
                                                               dnsHostname: selectedNode.dnsHostname,
                                                               hostname: newHostname,
                                                               serverAddress: newIP2,
@@ -61,14 +61,14 @@ extension VPNManager {
             selectedPort = preferences.getSelectedPortSync()
         }
         if let connectedWifi = WifiManager.shared.getConnectedNetwork() {
-            if connectedWifi.preferredProtocolStatus == true, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange {
+            if connectedWifi.preferredProtocolStatus == true, !isFromProtocolFailover, !isFromProtocolChange {
                 selectedProtocol = connectedWifi.preferredProtocol
                 selectedPort = connectedWifi.port
             }
         }
-        guard let hostname = VPNManager.shared.selectedNode?.hostname,
-              let serverAddress = VPNManager.shared.selectedNode?.serverAddress else { return }
-        let vpnConnection = VPNConnection(id: VPNManager.shared.uniqueConnectionId,
+        guard let hostname = selectedNode?.hostname,
+              let serverAddress = selectedNode?.serverAddress else { return }
+        let vpnConnection = VPNConnection(id: uniqueConnectionId,
                                           hostname: hostname,
                                           serverAddress: serverAddress,
                                           protocolType: selectedProtocol,
@@ -77,12 +77,13 @@ extension VPNManager {
     }
 
     func connectUsingIKEv2(forceProtocol: String? = nil) {
-        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange { return }
+        if userTappedToDisconnect, !isFromProtocolFailover, !isFromProtocolChange { return }
         setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async { [self] in
             Task {
                 if (try? await self.configManager.configureIKEV2WithSavedCredentials(with: self.selectedNode,
                                                                                      userSettings: self.makeUserSettings())) ?? false {
+                    self.activeVPNManager = .iKEV2
                     await self.configManager.connect(with: .iKEV2, killSwitch: self.killSwitch)
                 }
             }
@@ -90,12 +91,13 @@ extension VPNManager {
     }
 
     func connectUsingOpenVPN(forceProtocol: String? = nil) {
-        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange { return }
+        if userTappedToDisconnect, !isFromProtocolFailover, !isFromProtocolChange { return }
         setNewVPNConnection(forceProtocol: forceProtocol)
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithSavedCredentials(with: self.selectedNode,
                                                                                        userSettings: self.makeUserSettings())) ?? false {
+                    self.activeVPNManager = .openVPN
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
@@ -106,11 +108,12 @@ extension VPNManager {
     }
 
     func connectUsingCustomConfigOpenVPN() {
-        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover { return }
+        if userTappedToDisconnect, !isFromProtocolFailover { return }
         DispatchQueue.global(qos: .background).async {
             Task {
                 if (try? await self.configManager.configureOpenVPNWithCustomConfig(with: self.selectedNode,
                                                                                    userSettings: self.makeUserSettings())) ?? false {
+                    self.activeVPNManager = .openVPN
                     await self.configManager.connect(with: .openVPN, killSwitch: self.killSwitch)
                 } else {
                     self.disconnectOrFail()
@@ -121,10 +124,10 @@ extension VPNManager {
     }
 
     func connectUsingWireGuard(forceProtocol: String? = nil, completion: @escaping (_ error: String?) -> Void) {
-        if VPNManager.shared.userTappedToDisconnect, !VPNManager.shared.isFromProtocolFailover, !VPNManager.shared.isFromProtocolChange {
+        if userTappedToDisconnect, !isFromProtocolFailover, !isFromProtocolChange {
             return
         }
-        VPNManager.shared.retryWithNewCredentials = false
+        retryWithNewCredentials = false
         api.getSession(nil).observe(on: MainScheduler.instance).subscribe(onSuccess: { session in
             if session.status == 1 {
                 self.setNewVPNConnection(forceProtocol: forceProtocol)
@@ -139,7 +142,7 @@ extension VPNManager {
                 completion(error.localizedDescription)
             } else {
                 DispatchQueue.main.async {
-                    VPNManager.shared.delegate?.setDisconnected()
+                    delegate?.setDisconnected()
                     AlertManager.shared.showSimpleAlert(title: "Error", message: "Unable to connect. Check your network connection.", buttonText: "Ok")
                 }
             }
@@ -147,12 +150,12 @@ extension VPNManager {
     }
 
     private func connectUsingDynamicWireGuard() {
-        guard let hostname = VPNManager.shared.selectedNode?.hostname,
-              let endpoint = VPNManager.shared.selectedNode?.ip3,
-              let serverPublicKey = VPNManager.shared.selectedNode?.wgPublicKey
+        guard let hostname = selectedNode?.hostname,
+              let endpoint = selectedNode?.ip3,
+              let serverPublicKey = selectedNode?.wgPublicKey
         else {
-            logger.logE(VPNManager.self, "Missing WireGuard Info - Public Key: \(VPNManager.shared.selectedNode?.wgPublicKey ?? "nil") - WG IP \(VPNManager.shared.selectedNode?.ip3 ?? "nil")")
-            VPNManager.shared.selectAnotherNode()
+            logger.logE(VPNManager.self, "Missing WireGuard Info - Public Key: \(selectedNode?.wgPublicKey ?? "nil") - WG IP \(selectedNode?.ip3 ?? "nil")")
+            selectAnotherNode()
             serverRepository.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
             return
         }
@@ -165,6 +168,7 @@ extension VPNManager {
                         if try await self.configManager.configureWireguardWithSavedConfig(selectedNode: self.selectedNode,
                                                                                           userSettings: self.makeUserSettings()) {
                             self.preferences.saveConnectingToCustomConfig(value: false)
+                            self.activeVPNManager = .wg
                             Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
                         }
                     } catch {
@@ -194,20 +198,21 @@ extension VPNManager {
     }
 
     func connectUsingCustomConfigWireGuard() {
-        if VPNManager.shared.userTappedToDisconnect { return }
+        if userTappedToDisconnect { return }
         Task {
             if (try? await configManager.configureWireguard(with: selectedNode,
                                                             userSettings: makeUserSettings())) ?? false {
                 self.preferences.saveConnectingToCustomConfig(value: true)
+                self.activeVPNManager = .wg
                 Task { await self.configManager.connect(with: .wg, killSwitch: self.killSwitch) }
             }
         }
     }
 
     func connectUsingPreferredProtocol() {
-        guard let selectedNode = VPNManager.shared.selectedNode else { return }
+        guard let selectedNode = selectedNode else { return }
         guard let connectedWifiNetwork = WifiManager.shared.getConnectedNetwork() else { return }
-        logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Preferred Protocol: Establishing VPN connection to  \(selectedNode.hostname) using \(connectedWifiNetwork.preferredProtocol) \(connectedWifiNetwork.preferredPort)")
+        logger.logD(VPNManager.self, "[\(uniqueConnectionId)] Preferred Protocol: Establishing VPN connection to  \(selectedNode.hostname) using \(connectedWifiNetwork.preferredProtocol) \(connectedWifiNetwork.preferredPort)")
         switch connectedWifiNetwork.preferredProtocol {
         case iKEv2:
             connectUsingIKEv2()
@@ -238,7 +243,7 @@ extension VPNManager {
         delegate?.setConnecting()
         keepConnectingState = true
         let nextProtocol = ConnectionManager.shared.getNextProtocol().protocolName
-        logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Engaging Automatic Mode: Establishing VPN connection to  \(selectedNode.hostname) using \(nextProtocol)")
+        logger.logD(VPNManager.self, "[\(uniqueConnectionId)] Engaging Automatic Mode: Establishing VPN connection to  \(selectedNode.hostname) using \(nextProtocol)")
         switch nextProtocol {
         case iKEv2:
             connectUsingIKEv2()
@@ -326,7 +331,7 @@ extension VPNManager {
     }
 
     private func connect() {
-        if VPNManager.shared.isConnected() {
+        if isConnected() {
             connectIntent = false
             resetProfiles {
                 self.connectIntent = true
