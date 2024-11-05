@@ -365,7 +365,7 @@ extension MainViewController {
     }
 
     @objc func connectButtonTapped() {
-        connectionStateViewModel.connectionStateViewModel.vpnManager.resetProperties()
+        connectionStateViewModel.vpnManager.resetProperties()
         disableConnectButton()
         HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
@@ -397,7 +397,7 @@ extension MainViewController {
             WifiManager.shared.saveCurrentWifiNetworks()
             guard let result = WifiManager.shared.getConnectedNetwork() else { return }
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
-            connectionStateViewModel.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
+            connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
                 if info != nil && info?.status == .connected && (nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort) {
                     configureVPN(bypassConnectingCheck: true)
                 } else {

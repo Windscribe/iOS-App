@@ -28,13 +28,13 @@ protocol ConnectionStateViewModelType {
     func becameActive()
     func startConnecting()
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
-    
+
     var vpnManager: VPNManager { get }
-    
+
     // Check State
     func isConnected() -> Bool
     func isDisconnected() -> Bool
-    
+
     // Actions
     func setOutOfData()
 }
@@ -103,7 +103,7 @@ extension ConnectionStateViewModel {
     func isDisconnected() -> Bool {
         vpnManager.isDisconnected()
     }
-    
+
     func setOutOfData() {
         if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
             disconnect()

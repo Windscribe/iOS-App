@@ -120,7 +120,7 @@ class Managers: Assembly {
             VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, api: r.resolve(APIManager.self)!, logger: r.resolve(FileLogger.self)!, localDB: r.resolve(LocalDatabase.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, configManager: r.resolve(ConfigurationsManager.self)!, connectionManager: r.resolve(ConnectionManagerV2.self)!, changeProtocol: r.resolve(ProtocolSwitchViewController.self)!, alertManager: r.resolve(AlertManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
-            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.userScope)
         container.register(ThemeManager.self) { r in
             ThemeManagerImpl(preference: r.resolve(Preferences.self)!)
@@ -132,7 +132,7 @@ class Managers: Assembly {
             PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ConnectionManagerV2.self) { r in
-            ConnectionManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
+            ConnectionManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.userScope)
         container.register(ConnectionStateManagerType.self) {  r in
             ConnectionStateManager(apiManager: r.resolve(APIManager.self)!, vpnManager: r.resolve(VPNManager.self)!,

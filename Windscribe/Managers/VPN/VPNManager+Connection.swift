@@ -21,7 +21,7 @@ extension VPNManager {
                                                          excludeHostname: selectedNode.hostname),
                 let newHostname = randomNode.hostname,
                 let newIP2 = randomNode.ip2 {
-                selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
+                self.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
                                                               dnsHostname: selectedNode.dnsHostname,
                                                               hostname: newHostname,
                                                               serverAddress: newIP2,
@@ -142,7 +142,7 @@ extension VPNManager {
                 completion(error.localizedDescription)
             } else {
                 DispatchQueue.main.async {
-                    delegate?.setDisconnected()
+                    self.delegate?.setDisconnected()
                     AlertManager.shared.showSimpleAlert(title: "Error", message: "Unable to connect. Check your network connection.", buttonText: "Ok")
                 }
             }

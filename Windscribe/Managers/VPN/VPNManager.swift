@@ -27,7 +27,7 @@ protocol VPNManagerProtocol {}
 class VPNManager: VPNManagerProtocol {
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-    
+
     var selectedNode: SelectedNode? {
         didSet {
             delegate?.selectedNodeChanged()
@@ -89,7 +89,9 @@ class VPNManager: VPNManagerProtocol {
 
     /// A lock used to synchronize access to the configuration state.
     private let configureStateLock = NSLock()
-    
+
+    var changeProtocol: ProtocolSwitchViewController
+
     let wgCrendentials: WgCredentials
     let wgRepository: WireguardConfigRepository
     let api: APIManager
@@ -102,7 +104,6 @@ class VPNManager: VPNManagerProtocol {
     let sessionManager: SessionManagerV2
     let configManager: ConfigurationsManager
     let connectionManager: ConnectionManagerV2
-    let changeProtocol: ProtocolSwitchViewController
     let alertManager: AlertManagerV2
 
     init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, sessionManager: SessionManagerV2, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, changeProtocol: ProtocolSwitchViewController, alertManager: AlertManagerV2) {
@@ -120,7 +121,7 @@ class VPNManager: VPNManagerProtocol {
         self.connectionManager = connectionManager
         self.changeProtocol = changeProtocol
         self.alertManager = alertManager
-        
+
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
                                                name: NSNotification.Name.NEVPNStatusDidChange,
@@ -136,7 +137,7 @@ class VPNManager: VPNManagerProtocol {
             }
         }.disposed(by: disposeBag)
     }
-    
+
     /// The current configuration state of the VPN, with thread-safe access.
     var configurationState: ConfigurationState {
         get {
@@ -150,7 +151,7 @@ class VPNManager: VPNManagerProtocol {
             configureStateLock.unlock()
         }
     }
-    
+
     func resetProperties() {
         retryWithNewCredentials = false
         restartOnDisconnect = false

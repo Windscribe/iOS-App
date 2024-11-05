@@ -23,11 +23,11 @@ class ProtocolSwitchViewModel: ProtocolSwitchViewModelType {
         self.vpnManager = vpnManager
         isDarkMode = themeManager.darkTheme
     }
-    
+
     func isConnected() -> Bool {
         return vpnManager.isConnected()
     }
-    
+
     func updateIsFromProtocol() {
         let isConnected = vpnManager.isConnected()
         vpnManager.isFromProtocolFailover = !isConnected

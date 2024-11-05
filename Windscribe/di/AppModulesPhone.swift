@@ -58,7 +58,7 @@ class ViewModels: Assembly {
             return NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(NetworkOptionViewModelType.self) { r in
-            return NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
+            return NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(GhostAccountViewModelType.self) { r in
             return GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!)
@@ -155,13 +155,13 @@ class ViewModels: Assembly {
             return LocationManagingViewModel(connectivityManager: r.resolve(ConnectionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.transient)
         container.register(ConnectionStateViewModelType.self) { r in
-            return ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!)
+            return ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             return CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchViewModelType.self) { r in
-            return ProtocolSwitchViewModel(themeManager: r.resolve(ThemeManager.self)!)
+            return ProtocolSwitchViewModel(themeManager: r.resolve(ThemeManager.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(SendDebugLogCompletedViewModelType.self) { r in
             return SendDebugLogCompletedViewModel(themeManager: r.resolve(ThemeManager.self)!)
