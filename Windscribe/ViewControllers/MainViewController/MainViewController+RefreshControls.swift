@@ -11,13 +11,13 @@ import RxSwift
 
 extension MainViewController {
     @objc func handleRefresh() {
-        if VPNManager.shared.isConnected() || VPNManager.shared.isConnecting() {
+        if connectionStateViewModel.vpnManager.isConnected() || connectionStateViewModel.vpnManager.isConnecting() {
             self.endRefreshControls(update: false)
             return
         }
         if isRefreshing == false && isLoadingLatencyValues == false {
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
-            if vpnManager.isDisconnectedAndNotConfigured() || isOnline {
+            if connectionStateViewModel.vpnManager.isDisconnectedAndNotConfigured() || isOnline {
                 self.beginRefreshControls()
                 self.isRefreshing = true
                 self.isLoadingLatencyValues = true
@@ -74,7 +74,7 @@ extension MainViewController {
     }
 
     @objc func updateRefreshControls() {
-        if vpnManager.isDisconnectedAndNotConfigured() {
+        if connectionStateViewModel.vpnManager.isDisconnectedAndNotConfigured() {
             if let serverRefreshControl = self.serverListTableView.refreshControl as? WSRefreshControl {
                 self.showRefreshControlDisconnectedState(serverRefreshControl)
             }

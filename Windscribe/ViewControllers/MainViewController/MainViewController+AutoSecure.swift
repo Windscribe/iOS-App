@@ -91,8 +91,8 @@ extension MainViewController {
         guard let network = self.displayingNetwork else { return }
         viewModel.updateTrustNetworkSwitch(network: network, status: !trustNetworkSwitch.status)
         viewModel.updatePreferredProtocolSwitch(network: network, preferredProtocolStatus: false)
-        VPNManager.shared.connectIntent = !trustNetworkSwitch.status
-        VPNManager.shared.updateOnDemandRules()
+        connectionStateViewModel.vpnManager.connectIntent = !trustNetworkSwitch.status
+        connectionStateViewModel.vpnManager.updateOnDemandRules()
         self.updateNetworkOptions()
     }
 

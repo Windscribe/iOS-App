@@ -39,7 +39,7 @@ extension MainViewController {
         flagView = UIImageView()
         flagView.isUserInteractionEnabled = false
         flagView.contentMode = .scaleAspectFill
-        flagView.image = UIImage(named: VPNManager.shared.selectedNode?.countryCode ?? "")
+        flagView.image = UIImage(named: connectionStateViewModel.vpnManager.selectedNode?.countryCode ?? "")
         flagView.layer.opacity = 0.25
         gradient = CAGradientLayer()
         gradient.frame = flagView.bounds

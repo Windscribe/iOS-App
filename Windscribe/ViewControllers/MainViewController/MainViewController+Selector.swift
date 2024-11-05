@@ -14,7 +14,7 @@ import RxSwift
 
 extension MainViewController {
     @objc func appEnteredForeground() {
-        if VPNManager.shared.isConnecting() && !internetConnectionLost {
+        if connectionStateViewModel.vpnManager.isConnecting() && !internetConnectionLost {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
           //  configureVPN(bypassConnectingCheck: true)
         }
@@ -44,8 +44,8 @@ extension MainViewController {
     }
 
     @objc func runConnectivityTestWithNewNodeOnFail() {
-        if vpnManager.isConnected() {
-            vpnManager.runConnectivityTest(connectToAnotherNode: true, checkForIPAddressChange: false)
+        if connectionStateViewModel.vpnManager.isConnected() {
+            connectionStateViewModel.vpnManager.runConnectivityTest(connectToAnotherNode: true, checkForIPAddressChange: false)
         }
     }
 
@@ -147,7 +147,7 @@ extension MainViewController {
     }
 
     func refreshProtocol(from network: WifiNetwork?) {
-        self.vpnManager.getVPNConnectionInfo { [self] info in
+        self.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
             DispatchQueue.main.async {
                 if info?.status == NEVPNStatus.disconnecting {
                     return
@@ -162,14 +162,14 @@ extension MainViewController {
                     }
                     return
                 }
-                if self.vpnManager.isCustomConfigSelected() {
-                    guard let customConfig = self.vpnManager.selectedNode?.customConfig else { return }
+                if self.connectionStateViewModel.vpnManager.isCustomConfigSelected() {
+                    guard let customConfig = self.connectionStateViewModel.vpnManager.selectedNode?.customConfig else { return }
                     self.protocolLabel.text = customConfig.protocolType
                     self.portLabel.text = customConfig.port
                     self.setPreferredProtocolBadgeVisibility(hidden: true)
                     return
                 }
-                if self.vpnManager.isFromProtocolFailover || self.vpnManager.isFromProtocolChange {
+                if self.connectionStateViewModel.vpnManager.isFromProtocolFailover || self.connectionStateViewModel.vpnManager.isFromProtocolChange {
                     if WifiManager.shared.selectedPreferredProtocolStatus ?? false && WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text && WifiManager.shared.selectedPreferredPort == self.portLabel.text {
                         self.setPreferredProtocolBadgeVisibility(hidden: false)
                     } else {
@@ -218,7 +218,7 @@ extension MainViewController {
     }
 
     @objc func showConnectionFailed() {
-        if vpnManager.isDisconnected() {
+        if connectionStateViewModel.vpnManager.isDisconnected() {
             AlertManager.shared.showSimpleAlert(viewController: self,
                                                 title: TextsAsset.UnableToConnect.title,
                                                 message: TextsAsset.UnableToConnect.message,
@@ -237,25 +237,25 @@ extension MainViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        vpnManager.showConnectPopup()
+        connectionStateViewModel.vpnManager.showConnectPopup()
         return
 //        if !viewModel.isPrivacyPopupAccepted() {
 //            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
 //            return
-//        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
+//        } else if connectionStateViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
 //            self.displayConnectingAlert()
 //            logger.logD(self, "User attempted to connect while in connecting state.")
 //
 //            return
-//        } else if sessionManager.session?.status == 2 && !vpnManager.isCustomConfigSelected() {
+//        } else if sessionManager.session?.status == 2 && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
 //            self.showOutOfDataPopup()
-//            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+//            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
 //            logger.logD(self, "User attempted to connect when out of data.")
 //            return
 //        }
-//        vpnManager.connectIntent = false
-//        vpnManager.userTappedToDisconnect = false
-//        vpnManager.isOnDemandRetry = false
+//        connectionStateViewModel.vpnManager.connectIntent = false
+//        connectionStateViewModel.vpnManager.userTappedToDisconnect = false
+//        connectionStateViewModel.vpnManager.isOnDemandRetry = false
 //        if WifiManager.shared.isConnectedWifiTrusted() {
 //            router?.routeTo(to: .trustedNetwork, from: self)
 //        } else {
@@ -287,26 +287,26 @@ extension MainViewController {
     @objc func loadLastConnected() {
         if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
             guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
-            if (self.vpnManager.selectedNode?.wgPublicKey == nil || self.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && vpnManager.isDisconnected() {
-                if self.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
+            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
+            if (self.connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || self.connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && connectionStateViewModel.vpnManager.isDisconnected() {
+                if self.connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
                     self.configureBestLocation()
                 } else {
-                    self.vpnManager.selectAnotherNode()
+                    self.connectionStateViewModel.vpnManager.selectAnotherNode()
                 }
                 logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
             }
 
             if let customConfigId = node.customConfigId, let customConfig = try? viewModel.customConfigs.value()?.first(where: { $0.id == customConfigId }) {
-                self.vpnManager.selectedNode?.customConfig = customConfig.getModel()
+                self.connectionStateViewModel.vpnManager.selectedNode?.customConfig = customConfig.getModel()
             }
-            logger.logD(self, "Last connected node retrived from disk. \( self.vpnManager.selectedNode?.hostname ?? "")")
+            logger.logD(self, "Last connected node retrived from disk. \( self.connectionStateViewModel.vpnManager.selectedNode?.hostname ?? "")")
         }
-        if self.vpnManager.selectedNode == nil {
+        if self.connectionStateViewModel.vpnManager.selectedNode == nil {
             guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
             let bestLocation = bestLocationValue.getBestLocationModel()
             guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
+            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
             logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
 
         }
@@ -352,34 +352,34 @@ extension MainViewController {
     @objc func disconnectVPNIntentReceived() {
         logger.logD(self, "Disconnect intent received from outside of the app.")
 
-        if vpnManager.isConnected() {
+        if connectionStateViewModel.vpnManager.isConnected() {
             disconnectVPN()
         }
     }
 
     @objc func connectVPNIntentReceived() {
         logger.logD(self, "Connect intent received from outside of the app.")
-        if vpnManager.isDisconnected() {
+        if connectionStateViewModel.vpnManager.isDisconnected() {
             configureVPN()
         }
     }
 
     @objc func connectButtonTapped() {
-        VPNManager.shared.resetProperties()
+        connectionStateViewModel.connectionStateViewModel.vpnManager.resetProperties()
         disableConnectButton()
         HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logE(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                vpnManager.showConnectPopup()
+                connectionStateViewModel.vpnManager.showConnectPopup()
             } else {
                 enableConnectButton()
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
-            vpnManager.showDisconnectPopup()
+            connectionStateViewModel.vpnManager.showDisconnectPopup()
         }
     }
 
@@ -397,7 +397,7 @@ extension MainViewController {
             WifiManager.shared.saveCurrentWifiNetworks()
             guard let result = WifiManager.shared.getConnectedNetwork() else { return }
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
-            VPNManager.shared.getVPNConnectionInfo { [self] info in
+            connectionStateViewModel.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
                 if info != nil && info?.status == .connected && (nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort) {
                     configureVPN(bypassConnectingCheck: true)
                 } else {
@@ -409,10 +409,10 @@ extension MainViewController {
 
     @objc func loadLatencyWhenReady() {
         guard let observer = self.latencyLoaderObserver else { return }
-        if vpnManager.lastConnectionStatus == .invalid { return }
+        if connectionStateViewModel.vpnManager.lastConnectionStatus == .invalid { return }
         NotificationCenter.default.removeObserver(observer)
         sessionManager.keepSessionUpdated()
-        if appJustStarted && vpnManager.isDisconnected() {
+        if appJustStarted && connectionStateViewModel.vpnManager.isDisconnected() {
             connectionStateViewModel.displayLocalIPAddress()
             loadLatencyValues(force: false, selectBestLocation: self.isBestLocationSelected(), connectToBestLocation: false)
         } else {
@@ -425,7 +425,7 @@ extension MainViewController {
 
     @objc func reachabilityChanged() {
         checkForInternetConnection()
-        if !vpnManager.isConnected() {
+        if !connectionStateViewModel.vpnManager.isConnected() {
             connectionStateViewModel.displayLocalIPAddress()
         }
         WifiManager.shared.saveCurrentWifiNetworks()

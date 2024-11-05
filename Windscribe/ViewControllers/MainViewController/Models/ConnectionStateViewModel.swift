@@ -1,5 +1,5 @@
 //
-//  VPNManagerViewModel.swift
+//  ConnectionStateViewModel.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 09/05/2024.
@@ -28,6 +28,15 @@ protocol ConnectionStateViewModelType {
     func becameActive()
     func startConnecting()
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
+    
+    var vpnManager: VPNManager { get }
+    
+    // Check State
+    func isConnected() -> Bool
+    func isDisconnected() -> Bool
+    
+    // Actions
+    func setOutOfData()
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
@@ -43,10 +52,12 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     let ipAddressSubject: PublishSubject<String>
     let autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void>
 
-    var connectionStateManager: ConnectionStateManagerType
+    private let connectionStateManager: ConnectionStateManagerType
+    let vpnManager: VPNManager
 
-    init(connectionStateManager: ConnectionStateManagerType) {
+    init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
+        self.vpnManager = vpnManager
         self.connectedState = connectionStateManager.connectedState
         self.selectedNodeSubject = connectionStateManager.selectedNodeSubject
         self.loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
@@ -82,5 +93,20 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
 
     func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
         connectionStateManager.updateLoadLatencyValuesOnDisconnect(with: value)
+    }
+}
+
+extension ConnectionStateViewModel {
+    func isConnected() -> Bool {
+        vpnManager.isConnected()
+    }
+    func isDisconnected() -> Bool {
+        vpnManager.isDisconnected()
+    }
+    
+    func setOutOfData() {
+        if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
+            disconnect()
+        }
     }
 }

@@ -89,21 +89,6 @@ class VPNManager: VPNManagerProtocol {
 
     /// A lock used to synchronize access to the configuration state.
     private let configureStateLock = NSLock()
-
-//    let wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
-//    let wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
-//    let api: APIManager = Assembler.resolve(APIManager.self)
-//    let logger: FileLogger = Assembler.resolve(FileLogger.self)
-//    let localDB: LocalDatabase = Assembler.resolve(LocalDatabase.self)
-//    let serverRepository: ServerRepository = Assembler.resolve(ServerRepository.self)
-//    let staticIpRepository: StaticIpRepository = Assembler.resolve(StaticIpRepository.self)
-//    let preferences: Preferences = Assembler.resolve(Preferences.self)
-//    let connectivity: Connectivity = Assembler.resolve(Connectivity.self)
-//    let sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
-//    let configManager: ConfigurationsManager = Assembler.resolve(ConfigurationsManager.self)
-//    let connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
-//    let changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
-//    let alertManager = Assembler.resolve(AlertManagerV2.self)
     
     let wgCrendentials: WgCredentials
     let wgRepository: WireguardConfigRepository

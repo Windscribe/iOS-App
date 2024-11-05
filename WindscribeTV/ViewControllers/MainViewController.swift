@@ -50,7 +50,6 @@ class MainViewController: PreferredFocusedViewController {
     var staticIPListViewModel: StaticIPListViewModelType!
     var router: HomeRouter!
     let disposeBag = DisposeBag()
-    let vpnManager = VPNManager.shared
     var logger: FileLogger!
     var isFromServer: Bool = false
     var bestLocation: BestLocationModel?
@@ -364,21 +363,21 @@ class MainViewController: PreferredFocusedViewController {
     func loadLastConnected() {
         if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
             guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
-            if (self.vpnManager.selectedNode?.wgPublicKey == nil || self.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && vpnManager.isDisconnected() {
-                if self.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
+            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, staticIPCredentials: node.staticIPCredentials.first?.getModel(), customConfig: viewModel.getCustomConfig(customConfigID: node.customConfigId), groupId: groupId)
+            if (self.connectionStateViewModel.vpnManager.selectedNode?.wgPublicKey == nil || self.connectionStateViewModel.vpnManager.selectedNode?.ip3 == nil) && node.customConfigId == nil && connectionStateViewModel.vpnManager.isDisconnected() {
+                if self.connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation {
                     self.configureBestLocation(selectBestLocation: true)
                 } else {
-                    self.vpnManager.selectAnotherNode()
+                    self.connectionStateViewModel.vpnManager.selectAnotherNode()
                 }
                 logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
             }
         }
-        if self.vpnManager.selectedNode == nil {
+        if self.connectionStateViewModel.vpnManager.selectedNode == nil {
             guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
             let bestLocation = bestLocationValue.getBestLocationModel()
             guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
+            self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
             logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
 
         }
@@ -401,8 +400,8 @@ class MainViewController: PreferredFocusedViewController {
             guard let bestLocation = bestLocation , bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation && self.vpnManager.selectedNode == nil {
-                self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+            if selectBestLocation && self.connectionStateViewModel.vpnManager.selectedNode == nil {
+                self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
@@ -411,8 +410,8 @@ class MainViewController: PreferredFocusedViewController {
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = try? self.viewModel.session.value()?.isPremium {
-                if (self.vpnManager.isConnected() == false) && (self.vpnManager.isConnecting() == false) && (self.vpnManager.isDisconnected() == true) && (self.vpnManager.isDisconnecting() == false) && isGroupProOnly && !isUserPro {
-                    self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+                if (self.connectionStateViewModel.isConnected() == false) && (self.connectionStateViewModel.vpnManager.isConnecting() == false) && (self.connectionStateViewModel.vpnManager.isDisconnected() == true) && (self.connectionStateViewModel.vpnManager.isDisconnecting() == false) && isGroupProOnly && !isUserPro {
+                    self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
                 }
             }
         }).disposed(by: disposeBag )
@@ -456,7 +455,7 @@ class MainViewController: PreferredFocusedViewController {
         UIView.animate(withDuration: 0.25) {[weak self] in
             guard let self = self else { return }
             self.ipLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
-            if self.vpnManager.isConnected() {
+            if self.connectionStateViewModel.isConnected() {
                 self.ipIcon.image = UIImage(named: ImagesAsset.secure)
             } else {
                 self.ipIcon.image = UIImage(named: ImagesAsset.unsecure)
@@ -484,7 +483,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func refreshProtocol(from network: WifiNetwork?) {
-        self.vpnManager.getVPNConnectionInfo { [self] info in
+        self.connectionStateViewModel.vpnManager.getVPNConnectionInfo { [self] info in
             if info?.status == .disconnecting ||  info?.status == .invalid {
                 return
             }
@@ -504,7 +503,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     @IBAction func connectButtonPressed(_ sender: Any) {
-        VPNManager.shared.resetProperties()
+        connectionStateViewModel.vpnManager.resetProperties()
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logE(MainViewController.self, "User tapped to connect.")
@@ -534,19 +533,19 @@ class MainViewController: PreferredFocusedViewController {
         if !viewModel.isPrivacyPopupAccepted() {
             showPrivacyConfirmationPopup()
             return
-        } else if vpnManager.isConnecting() && bypassConnectingCheck == false {
+        } else if connectionStateViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
             self.displayConnectingAlert()
             logger.logD(self, "User attempted to connect while in connecting state.")
             return
-        } else if (try? viewModel.session.value())?.status == 2 && !vpnManager.isCustomConfigSelected() {
+        } else if (try? viewModel.session.value())?.status == 2 && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
             self.showOutOfDataPopup()
-            vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
             logger.logD(self, "User attempted to connect when out of data.")
             return
         }
-        vpnManager.connectIntent = false
-        vpnManager.userTappedToDisconnect = false
-        vpnManager.isOnDemandRetry = false
+        connectionStateViewModel.vpnManager.connectIntent = false
+        connectionStateViewModel.vpnManager.userTappedToDisconnect = false
+        connectionStateViewModel.vpnManager.isOnDemandRetry = false
         // viewModel.reconnect()
 
         if WifiManager.shared.isConnectedWifiTrusted() {
@@ -581,9 +580,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func showOutOfDataPopup() {
-        if vpnManager.isConnected() && !vpnManager.isCustomConfigSelected() {
-            connectionStateViewModel.disconnect()
-        }
+        connectionStateViewModel.setOutOfData()
         self.logger.logD(self, "Displaying Out Of Data Popup.")
         router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
 
