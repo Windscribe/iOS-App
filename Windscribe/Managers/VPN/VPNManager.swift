@@ -22,12 +22,6 @@ class VPNManager: VPNManagerProtocol {
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-    var cancellable: AnyCancellable?
-    var connectionTask: Task<Void, Never>?
-    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
-    let connectionAlert = VPNConnectionAlert()
-    let disconnectAlert = VPNConnectionAlert()
-    let tag = "VPNConfiguration"
     lazy var wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
 
     lazy var wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
@@ -104,19 +98,41 @@ class VPNManager: VPNManagerProtocol {
     var killSwitch: Bool = DefaultValues.killSwitch
     var allowLane: Bool = DefaultValues.allowLaneMode
 
+    var connectionTaskPublisher: AnyCancellable?
+    var connectionTask: Task<Void, Never>?
+    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
+    let connectionAlert = VPNConnectionAlert()
+    let disconnectAlert = VPNConnectionAlert()
+
     private var _isConfiguring: Bool = false
-    private let stateLock = NSLock()
+    private let connectStateLock = NSLock()
 
     var isConfiguring: Bool {
         get {
-            stateLock.lock()
-            defer { stateLock.unlock() }
+            connectStateLock.lock()
+            defer { connectStateLock.unlock() }
             return _isConfiguring
         }
         set {
-            stateLock.lock()
+            connectStateLock.lock()
             _isConfiguring = newValue
-            stateLock.unlock()
+            connectStateLock.unlock()
+        }
+    }
+
+    private var _isDisabling: Bool = false
+    private let disconnectStateLock = NSLock()
+
+    var isDisabling: Bool {
+        get {
+            disconnectStateLock.lock()
+            defer { disconnectStateLock.unlock() }
+            return _isDisabling
+        }
+        set {
+            disconnectStateLock.lock()
+            _isDisabling = newValue
+            disconnectStateLock.unlock()
         }
     }
 
