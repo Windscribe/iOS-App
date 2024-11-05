@@ -36,7 +36,6 @@ extension ConfigurationsManager {
         var nextManager: NEVPNManager?
         let task = Task { [weak self] in
             do {
-                progressPublisher.send(.vpn(NEVPNStatus.connecting))
                 let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
 

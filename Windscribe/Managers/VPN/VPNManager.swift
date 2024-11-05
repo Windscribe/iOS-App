@@ -16,6 +16,12 @@ import Combine
 import RxSwift
 import Swinject
 
+enum ConfigurationState {
+    case configuring
+    case disabling
+    case initial
+}
+
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
@@ -104,35 +110,19 @@ class VPNManager: VPNManagerProtocol {
     let connectionAlert = VPNConnectionAlert()
     let disconnectAlert = VPNConnectionAlert()
 
-    private var _isConfiguring: Bool = false
-    private let connectStateLock = NSLock()
+    private var _configurationState = ConfigurationState.initial
+    private let configureStateLock = NSLock()
 
-    var isConfiguring: Bool {
+    var configurationState: ConfigurationState {
         get {
-            connectStateLock.lock()
-            defer { connectStateLock.unlock() }
-            return _isConfiguring
+            configureStateLock.lock()
+            defer { configureStateLock.unlock() }
+            return _configurationState
         }
         set {
-            connectStateLock.lock()
-            _isConfiguring = newValue
-            connectStateLock.unlock()
-        }
-    }
-
-    private var _isDisabling: Bool = false
-    private let disconnectStateLock = NSLock()
-
-    var isDisabling: Bool {
-        get {
-            disconnectStateLock.lock()
-            defer { disconnectStateLock.unlock() }
-            return _isDisabling
-        }
-        set {
-            disconnectStateLock.lock()
-            _isDisabling = newValue
-            disconnectStateLock.unlock()
+            configureStateLock.lock()
+            _configurationState = newValue
+            configureStateLock.unlock()
         }
     }
 
@@ -175,9 +165,18 @@ class VPNManager: VPNManagerProtocol {
 
     func getStatus() -> Observable<NEVPNStatus> {
         return vpnInfo.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-            .filter { $0 != nil }
-            .map { $0!.status }
-            .distinctUntilChanged()
+            .compactMap { $0 }
+            .map { $0.status }
+            .map {
+                switch self.configurationState {
+                case .configuring:
+                    return NEVPNStatus.connecting
+                case .disabling:
+                    return NEVPNStatus.disconnecting
+                case .initial:
+                    return $0
+                }
+            }.distinctUntilChanged()
     }
 
     func setup() async {

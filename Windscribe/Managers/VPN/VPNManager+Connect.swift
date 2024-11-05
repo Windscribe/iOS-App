@@ -35,7 +35,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     ///
     /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
     private func connectTask() {
-        if isConfiguring {
+        if configurationState == .configuring {
             logger.logD("VPNConfiguration", "Connection in progress.")
             DispatchQueue.main.async {
                 self.connectionAlert.dismissAlert()
@@ -52,11 +52,11 @@ extension VPNManager: VPNConnectionAlertDelegate {
             let data = prepareConnectionPreferences()
             connectionTaskPublisher = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
                 .handleEvents(receiveSubscription: { _ in
-                    self.isConfiguring = true
+                    self.configurationState = .configuring
                 }, receiveCompletion: { _ in
-                    self.isConfiguring = false
+                    self.configurationState = .initial
                 }, receiveCancel: {
-                    self.isConfiguring = false
+                    self.configurationState = .initial
                 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
@@ -256,11 +256,11 @@ extension VPNManager: VPNConnectionAlertDelegate {
         delegate?.setDisconnecting()
         connectionTaskPublisher = configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
-                self.isDisabling = true
+                self.configurationState = .disabling
             }, receiveCompletion: { _ in
-                self.isDisabling = false
+                self.configurationState = .initial
             }, receiveCancel: {
-                self.isDisabling = false
+                self.configurationState = .initial
             })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -317,7 +317,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     }
 
     func didTapDisconnect() {
-        if isDisabling {
+        if configurationState == .disabling {
             return
         }
         showDisconnectPopup()
