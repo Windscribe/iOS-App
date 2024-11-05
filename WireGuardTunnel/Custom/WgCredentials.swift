@@ -22,6 +22,7 @@ class WgCredentials {
     var serverHostName: String?
     var serverPublicKey: String?
     var port: String?
+    var deleteOldestKey = true
     private let logger: FileLogger
     private let preferences: Preferences
     private let simpleKeychain = SimpleKeychain(service: "WireguardService", accessGroup: SharedKeys.sharedKeychainGroup)

@@ -35,9 +35,29 @@ extension VPNManager: VPNConnectionAlertDelegate {
     ///
     /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
     private func connectTask() {
-        Task { @MainActor in
+        if configurationState == .configuring {
+            logger.logD("VPNConfiguration", "Connection in progress.")
+            DispatchQueue.main.async {
+                self.connectionAlert.dismissAlert()
+                self.disconnectAlert.delegate = self
+                self.disconnectAlert.configure(for: .cancel)
+                self.disconnectAlert.updateProgress(message: "")
+                self.showPopup(popup: self.disconnectAlert)
+            }
+            return
+        }
+        connectionTask?.cancel()
+        connectionTaskPublisher?.cancel()
+        connectionTask = Task(priority: TaskPriority.userInitiated) { @MainActor in
             let data = prepareConnectionPreferences()
-            cancellable = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
+            connectionTaskPublisher = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
+                .handleEvents(receiveSubscription: { _ in
+                    self.configurationState = .configuring
+                }, receiveCompletion: { _ in
+                    self.configurationState = .initial
+                }, receiveCancel: {
+                    self.configurationState = .initial
+                })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     self.connectionAlert.dismissAlert()
@@ -45,11 +65,14 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
                     case let .failure(e):
+                        self.logger.logD("VPNConfiguration", "Connection process failure: \(e)")
                         self.delegate?.setDisconnected()
                         if let e = e as? VPNConfigurationErrors {
                             self.showError(error: e)
                         }
                     }
+                    self.connectionTaskPublisher?.cancel()
+                    self.connectionTask?.cancel()
                 }, receiveValue: { state in
                     switch state {
                     case let .update(message):
@@ -105,8 +128,21 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
+                // Handle wg api errors.
+                if let e = error as? Errors {
+                    switch e {
+                    case let .apiError(apiError) where apiError.errorCode == wgLimitExceeded:
+                        return self.showDeleteWgKeyPopup(for: error, message: apiError.errorMessage ?? "")
+                            .flatMap {
+                                var settings = self.makeUserSettings()
+                                settings.deleteOldestKey = true
+                                return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: settings)
+                            }.eraseToAnyPublisher()
+                    default: ()
+                    }
+                }
                 // Show options for other protocols.
-                self.showProtocolSelectionPopup(for: error)
+                return self.showProtocolSelectionPopup(for: error)
                     .flatMap { userSelection in
                         self.connectWithUserSelection(id: id, userSelection: userSelection)
                     }
@@ -155,6 +191,25 @@ extension VPNManager: VPNConnectionAlertDelegate {
                         }
                     }
                 )
+            }
+        }
+    }
+
+    /// Shows a confirmation popup to ask if user wish to delete last wg key.
+    ///
+    /// - Parameter error: The error that triggered the delete key alert.
+    /// - Returns: A `Future` containing success or an `Error` if user cancel.
+    private func showDeleteWgKeyPopup(for error: Error, message: String) -> Future<Void, Error> {
+        return Future { promise in
+            Task {
+                self.logger.logD("VPNConfiguration", "Showing delete oldest key popup.")
+                await self.connectionAlert.dismissAlert()
+                let accept = try await self.alertManager.askUser(message: message).value
+                if accept {
+                    promise(.success(()))
+                } else {
+                    promise(.failure(error))
+                }
             }
         }
     }
@@ -231,7 +286,14 @@ extension VPNManager: VPNConnectionAlertDelegate {
     /// Initiates the VPN disconnection process, updating the user on progress and handling completion and errors.
     private func disconnectTask() {
         delegate?.setDisconnecting()
-        cancellable = configManager.disconnectAsync()
+        connectionTaskPublisher = configManager.disconnectAsync()
+            .handleEvents(receiveSubscription: { _ in
+                self.configurationState = .disabling
+            }, receiveCompletion: { _ in
+                self.configurationState = .initial
+            }, receiveCancel: {
+                self.configurationState = .initial
+            })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 self.disconnectAlert.dismissAlert()
@@ -287,6 +349,15 @@ extension VPNManager: VPNConnectionAlertDelegate {
     }
 
     func didTapDisconnect() {
+        if configurationState == .disabling {
+            return
+        }
         showDisconnectPopup()
+    }
+
+    func tapToCancel() {
+        logger.logD("VPNConfiguration", "Tapped to cancel conenction task.")
+        connectionTaskPublisher?.cancel()
+        disconnectAlert.dismissAlert()
     }
 }

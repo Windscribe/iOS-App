@@ -16,17 +16,18 @@ import Combine
 import RxSwift
 import Swinject
 
+enum ConfigurationState {
+    case configuring
+    case disabling
+    case initial
+}
+
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
     static let shared = VPNManager(withStatusObserver: true)
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-    var cancellable: AnyCancellable?
-    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
-    let connectionAlert = VPNConnectionAlert()
-    let disconnectAlert = VPNConnectionAlert()
-    let tag = "VPNConfiguration"
     lazy var wgCrendentials: WgCredentials = Assembler.resolve(WgCredentials.self)
 
     lazy var wgRepository: WireguardConfigRepository = Assembler.resolve(WireguardConfigRepository.self)
@@ -52,6 +53,8 @@ class VPNManager: VPNManagerProtocol {
     lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
 
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
+
+    lazy var alertManager = Assembler.resolve(AlertManagerV2.self)
 
     var selectedNode: SelectedNode? {
         didSet {
@@ -103,6 +106,32 @@ class VPNManager: VPNManagerProtocol {
     var killSwitch: Bool = DefaultValues.killSwitch
     var allowLane: Bool = DefaultValues.allowLaneMode
 
+    var connectionTaskPublisher: AnyCancellable?
+    var connectionTask: Task<Void, Never>?
+    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
+    let connectionAlert = VPNConnectionAlert()
+    let disconnectAlert = VPNConnectionAlert()
+
+    /// Represents the configuration state of the VPN.
+    private var _configurationState = ConfigurationState.initial
+
+    /// A lock used to synchronize access to the configuration state.
+    private let configureStateLock = NSLock()
+
+    /// The current configuration state of the VPN, with thread-safe access.
+    var configurationState: ConfigurationState {
+        get {
+            configureStateLock.lock()
+            defer { configureStateLock.unlock() }
+            return _configurationState
+        }
+        set {
+            configureStateLock.lock()
+            _configurationState = newValue
+            configureStateLock.unlock()
+        }
+    }
+
     init(withStatusObserver: Bool = false) {
         if withStatusObserver {
             NotificationCenter.default.addObserver(self,
@@ -140,10 +169,25 @@ class VPNManager: VPNManagerProtocol {
         return true
     }
 
+    /// Returns an observable that emits the VPN status with a debounce and custom mapping logic.
+    /// This function observes changes in the `vpnInfo` and applies a debounce to avoid rapid updates.
+    ///
+    /// - Returns: An `Observable` that emits the VPN status as an `NEVPNStatus` value.
     func getStatus() -> Observable<NEVPNStatus> {
-        return vpnInfo.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-            .filter { $0 != nil }
-            .map { $0!.status }
+        return vpnInfo
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .compactMap { $0 }
+            .map { [weak self] info in
+                guard let self = self else { return NEVPNStatus.invalid }
+                switch self.configurationState {
+                case .configuring:
+                    return NEVPNStatus.connecting
+                case .disabling:
+                    return NEVPNStatus.disconnecting
+                case .initial:
+                    return info.status
+                }
+            }
             .distinctUntilChanged()
     }
 

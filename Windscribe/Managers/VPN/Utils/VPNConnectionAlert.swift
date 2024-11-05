@@ -11,11 +11,13 @@ import UIKit
 protocol VPNConnectionAlertDelegate: AnyObject {
     func didSelectProtocol(protocolPort: ProtocolPort)
     func didTapDisconnect()
+    func tapToCancel()
 }
 
 enum VPNActionType {
     case connect
     case disconnect
+    case cancel
     case error(String)
 }
 
@@ -120,6 +122,12 @@ class VPNConnectionAlert: UIViewController {
             protocolPicker.isHidden = true
             actionButton.isEnabled = true
             actionButton.alpha = 1.0
+        case .cancel:
+            titleLabel.text = "Connection is in porgress"
+            actionButton.setTitle("Cancel", for: .normal)
+            protocolPicker.isHidden = true
+            actionButton.isEnabled = true
+            actionButton.alpha = 1.0
         }
     }
 
@@ -133,6 +141,9 @@ class VPNConnectionAlert: UIViewController {
             progressLabel.text = "Disconnecting..."
         case .error:
             dismissAlert()
+        case .cancel:
+            progressLabel.text = "Cancelling"
+            delegate?.tapToCancel()
         }
     }
 
