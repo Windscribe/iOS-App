@@ -23,6 +23,7 @@ class VPNManager: VPNManagerProtocol {
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
     var cancellable: AnyCancellable?
+    var connectionTask: Task<Void, Never>?
     var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
     let connectionAlert = VPNConnectionAlert()
     let disconnectAlert = VPNConnectionAlert()
@@ -102,6 +103,22 @@ class VPNManager: VPNManagerProtocol {
 
     var killSwitch: Bool = DefaultValues.killSwitch
     var allowLane: Bool = DefaultValues.allowLaneMode
+
+    private var _isConfiguring: Bool = false
+    private let stateLock = NSLock()
+
+    var isConfiguring: Bool {
+        get {
+            stateLock.lock()
+            defer { stateLock.unlock() }
+            return _isConfiguring
+        }
+        set {
+            stateLock.lock()
+            _isConfiguring = newValue
+            stateLock.unlock()
+        }
+    }
 
     init(withStatusObserver: Bool = false) {
         if withStatusObserver {

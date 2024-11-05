@@ -34,7 +34,7 @@ struct IKEv2VPNConfiguration: VPNConfiguration {
         return "IKEv2: [username: \(username) ip: \(ip) hostname: \(hostname)] auth: \(auth)"
     }
 
-    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) {
         let ikeV2Protocol = NEVPNProtocolIKEv2()
         ikeV2Protocol.disconnectOnSleep = false
         ikeV2Protocol.authenticationMethod = .none
@@ -79,7 +79,6 @@ struct IKEv2VPNConfiguration: VPNConfiguration {
         ikeV2Protocol.childSecurityAssociationParameters.integrityAlgorithm = NEVPNIKEv2IntegrityAlgorithm.SHA256
         ikeV2Protocol.childSecurityAssociationParameters.lifetimeMinutes = 1440
         manager.protocolConfiguration = ikeV2Protocol
-        return manager
     }
 }
 
@@ -94,7 +93,7 @@ struct OpenVPNConfiguration: VPNConfiguration {
         return "OpenVPN: [proto: \(proto) ip: \(ip)  username: \(username ?? "N/A") password: \(password ?? "N/A") path: \(path) data: \(data)]"
     }
 
-    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws {
         let tunnelProtocol = NETunnelProviderProtocol()
         tunnelProtocol.username = TextsAsset.openVPN
         tunnelProtocol.serverAddress = ip
@@ -111,7 +110,6 @@ struct OpenVPNConfiguration: VPNConfiguration {
 
         tunnelProtocol.disconnectOnSleep = false
         manager.protocolConfiguration = tunnelProtocol
-        return manager
     }
 }
 
@@ -121,21 +119,20 @@ struct WireguardVPNConfiguration: VPNConfiguration {
         return "Wireguard: [content: \(content.asWgQuickConfig())"
     }
 
-    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager {
+    func buildProtocol(settings _: VPNUserSettings, manager: NEVPNManager) throws {
         guard let manager = manager as? NETunnelProviderManager else {
             throw VPNConfigurationErrors.incorrectVPNManager
         }
         manager.setTunnelConfiguration(content, username: TextsAsset.wireGuard, description: Constants.appName)
-        return manager
     }
 }
 
 protocol VPNConfiguration: CustomStringConvertible {
-    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) throws -> NEVPNManager
+    func buildProtocol(settings: VPNUserSettings, manager: NEVPNManager) throws
 }
 
 extension VPNConfiguration {
-    func applySettings(settings: VPNUserSettings, manager: NEVPNManager) -> NEVPNManager {
+    func applySettings(settings: VPNUserSettings, manager: NEVPNManager) {
         #if os(iOS)
             // For Non RFC address. set [includeallnetworks​ =  True & excludeLocalNetworks​ = False]
             // For RFC address follow user settings.
@@ -153,6 +150,5 @@ extension VPNConfiguration {
         manager.isEnabled = true
         manager.isOnDemandEnabled = true
         manager.localizedDescription = Constants.appName
-        return manager
     }
 }

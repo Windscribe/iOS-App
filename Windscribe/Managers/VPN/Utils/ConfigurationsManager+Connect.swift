@@ -33,59 +33,80 @@ extension ConfigurationsManager {
     ///   publisher terminates with an `VPNConnectionErrors`.
     func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings) -> AnyPublisher<State, Error> {
         let progressPublisher = PassthroughSubject<State, Error>()
-
-        Task {
+        var nextManager: NEVPNManager?
+        let task = Task { [weak self] in
             do {
                 progressPublisher.send(.vpn(NEVPNStatus.connecting))
                 let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
-                try await disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
-                var nextManager = try await prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
+
+                guard !Task.isCancelled else { return }
+                try await self?.disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
+
+                guard !Task.isCancelled else { return }
+                nextManager = try await self?.prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
+
                 try await Task.sleep(nanoseconds: 1_000_000_000)
                 progressPublisher.send(.update("Building configuration."))
-                let config = try await buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
-                progressPublisher.send(.update("Configuration built successfully \(config.description)"))
+
+                guard !Task.isCancelled else { return }
+                let config = try await self?.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+                progressPublisher.send(.update("Configuration built successfully \(config?.description ?? "")"))
 
                 progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
-                nextManager = try config.buildProtocol(settings: vpnSettings, manager: nextManager)
+                guard let nextManager = nextManager else { return }
+                try config?.buildProtocol(settings: vpnSettings, manager: nextManager)
 
                 progressPublisher.send(.update("Applying user settings."))
-                nextManager = config.applySettings(settings: vpnSettings, manager: nextManager)
+                config?.applySettings(settings: vpnSettings, manager: nextManager)
 
                 progressPublisher.send(.update("Saving configuration."))
-                try await saveThrowing(manager: nextManager)
+                try await self?.saveThrowing(manager: nextManager)
 
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()
 
+                // Connection status and timeout logic
                 progressPublisher.send(.update("Awaiting connection update."))
                 let startTime = Date()
                 let timerPublisher = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
                 var cancellable: AnyCancellable?
-                let maxTimeout = getMaxTimeout(proto: wrapperProtocol)
+                let maxTimeout = self?.getMaxTimeout(proto: wrapperProtocol)
+
                 cancellable = timerPublisher.sink { _ in
+                    guard !Task.isCancelled else {
+                        progressPublisher.send(completion: .failure(CancellationError()))
+                        cancellable?.cancel()
+                        return
+                    }
+
                     let elapsedTime = Date().timeIntervalSince(startTime)
                     progressPublisher.send(.vpn(nextManager.connection.status))
 
                     if nextManager.connection.status == .connected {
                         progressPublisher.send(.update("Testing connectivity."))
                         progressPublisher.send(.validating)
+
                         Task {
                             do {
-                                let userIp = try await self.testConnectivityWithRetries()
-                                progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
-                                progressPublisher.send(.validated(userIp))
+                                let userIp = try await self?.testConnectivityWithRetries()
+                                if Task.isCancelled {
+                                    progressPublisher.send(.update("Task cancelled"))
+                                }
+                                progressPublisher.send(.update("Connectivity test successful, IP: \(userIp ?? "")"))
+                                progressPublisher.send(.validated(userIp ?? ""))
                                 progressPublisher.send(completion: .finished)
                             } catch {
                                 progressPublisher.send(completion: .failure(error))
                             }
                         }
+
                         cancellable?.cancel()
-                    } else if elapsedTime >= maxTimeout {
-                        progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
+                    } else if elapsedTime >= maxTimeout ?? 0 {
+                        progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout ?? 0)) seconds"))
                         Task {
-                            try await self.disableProfile(nextManager)
-                            self.getConnectError(manager: nextManager) { error in
+                            try await self?.disableProfile(nextManager)
+                            self?.getConnectError(manager: nextManager) { error in
                                 progressPublisher.send(completion: .failure(error))
                             }
                             cancellable?.cancel()
@@ -98,8 +119,15 @@ extension ConfigurationsManager {
                 progressPublisher.send(completion: .failure(error))
             }
         }
-
-        return progressPublisher.eraseToAnyPublisher()
+        return progressPublisher
+            .handleEvents(receiveCancel: {
+                self.logger.logD("VPNConfiguration", "Cancelling connection task.")
+                task.cancel()
+                Task {
+                    try await self.disableProfile(self.getNextManager(proto: proto))
+                }
+            })
+            .eraseToAnyPublisher()
     }
 
     private func getConnectError(manager: NEVPNManager, completion: @escaping (Error) -> Void) {

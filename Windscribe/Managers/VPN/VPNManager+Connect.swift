@@ -35,9 +35,29 @@ extension VPNManager: VPNConnectionAlertDelegate {
     ///
     /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
     private func connectTask() {
-        Task { @MainActor in
+        if isConfiguring {
+            logger.logD("VPNConfiguration", "Connection in progress.")
+            DispatchQueue.main.async {
+                self.connectionAlert.dismissAlert()
+                self.disconnectAlert.delegate = self
+                self.disconnectAlert.configure(for: .cancel)
+                self.disconnectAlert.updateProgress(message: "")
+                self.showPopup(popup: self.disconnectAlert)
+            }
+            return
+        }
+        connectionTask?.cancel()
+        cancellable?.cancel()
+        connectionTask = Task { @MainActor in
             let data = prepareConnectionPreferences()
             cancellable = connectWithInitialRetry(id: data.0, proto: data.1.protocolName, port: data.1.portName)
+                .handleEvents(receiveSubscription: { _ in
+                    self.isConfiguring = true
+                }, receiveCompletion: { _ in
+                    self.isConfiguring = false
+                }, receiveCancel: {
+                    self.isConfiguring = false
+                })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     self.connectionAlert.dismissAlert()
@@ -45,11 +65,14 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     case .finished:
                         self.logger.logD("VPNConfiguration", "Connection process completed.")
                     case let .failure(e):
+                        self.logger.logD("VPNConfiguration", "Connection process failure: \(e)")
                         self.delegate?.setDisconnected()
                         if let e = e as? VPNConfigurationErrors {
                             self.showError(error: e)
                         }
                     }
+                    self.cancellable?.cancel()
+                    self.connectionTask?.cancel()
                 }, receiveValue: { state in
                     switch state {
                     case let .update(message):
@@ -232,6 +255,13 @@ extension VPNManager: VPNConnectionAlertDelegate {
     private func disconnectTask() {
         delegate?.setDisconnecting()
         cancellable = configManager.disconnectAsync()
+            .handleEvents(receiveSubscription: { _ in
+                self.isConfiguring = true
+            }, receiveCompletion: { _ in
+                self.isConfiguring = false
+            }, receiveCancel: {
+                self.isConfiguring = false
+            })
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 self.disconnectAlert.dismissAlert()
@@ -288,5 +318,11 @@ extension VPNManager: VPNConnectionAlertDelegate {
 
     func didTapDisconnect() {
         showDisconnectPopup()
+    }
+
+    func tapToCancel() {
+        logger.logD("VPNConfiguration", "Tapped to cancel conenction task.")
+        cancellable?.cancel()
+        disconnectAlert.dismissAlert()
     }
 }
