@@ -99,13 +99,7 @@ extension VPNManager {
     }
 
     func connectionStatus() -> NEVPNStatus {
-        var status = NEVPNStatus.disconnected
-        configManager.managers.forEach {
-            if $0.protocolConfiguration?.username != nil {
-                status = $0.connection.status
-            }
-        }
-        return status
+        return (try? vpnInfo.value()?.status) ?? NEVPNStatus.disconnected
     }
 
     func checkForForceDisconnect() {

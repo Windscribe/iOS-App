@@ -128,6 +128,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
                 }
                 return Fail(error: error).eraseToAnyPublisher()
             }.catch { error in
+                // Handle wg api errors.
                 if let e = error as? Errors {
                     switch e {
                     case let .apiError(apiError) where apiError.errorCode == wgLimitExceeded:
