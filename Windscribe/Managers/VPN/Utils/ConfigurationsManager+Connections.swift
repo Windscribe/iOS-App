@@ -66,11 +66,11 @@ extension ConfigurationsManager {
         }
     }
 
-    func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool, manager: NEVPNManager) async {
+    func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool, manager: NEVPNManager, connectIntent: Bool = false) async {
         if manager.connection.status == .disconnected, !force { return }
         guard (try? await manager.loadFromPreferences()) != nil else { return }
         if manager.protocolConfiguration?.username != nil {
-            manager.isOnDemandEnabled = VPNManager.shared.connectIntent
+            manager.isOnDemandEnabled = connectIntent
             #if os(iOS)
                 if #available(iOS 15.1, *) {
                     if restartOnDisconnect {
@@ -102,7 +102,7 @@ extension ConfigurationsManager {
     private func handleVPNManagerNoResponse(for type: VPNManagerType, killSwitch: Bool) {
         if type == .iKEV2, killSwitch {
             noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-                VPNManager.shared.disconnectOrFail()
+                self.delegate?.disconnectOrFail()
             }
         }
     }

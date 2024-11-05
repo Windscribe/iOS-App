@@ -18,6 +18,7 @@ class ConnectionManager: ConnectionManagerV2 {
     private var localDatabase: LocalDatabase
     private var securedNetwork: SecuredNetworkRepository
     private var preferences: Preferences
+    private var vpnManager: VPNManager
     static var shared = Assembler.resolve(ConnectionManagerV2.self)
     // MARK: - Properties
     /// Default protocol
@@ -37,12 +38,13 @@ class ConnectionManager: ConnectionManagerV2 {
     var manualProtocol: String = DefaultValues.protocol
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
-    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase) {
+    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, vpnManager: VPNManager) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
+        self.vpnManager = vpnManager
         logger.logI(self, "Starting connection manager.")
         loadProtocols(shouldReset: true) { [weak self] list in
             self?.protocolsToConnectList = list
@@ -111,7 +113,7 @@ class ConnectionManager: ConnectionManagerV2 {
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
-        VPNManager.shared.getVPNConnectionInfo { [self] info in
+        vpnManager.getVPNConnectionInfo { [self] info in
             if let info = info, info.status == NEVPNStatus.connected {
                 appendPort(proto: info.selectedProtocol, port: info.selectedPort)
                 setPriority(proto: info.selectedProtocol, type: .connected)
@@ -170,7 +172,7 @@ class ConnectionManager: ConnectionManagerV2 {
 
     /// User/App selected this protocol to connect.
     func onUserSelectProtocol(proto: ProtocolPort) {
-        VPNManager.shared.successfullProtocolChange = true
+        vpnManager.successfullProtocolChange = true
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.portName)

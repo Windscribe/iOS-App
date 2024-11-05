@@ -51,13 +51,15 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
 
     private let localDatabase: LocalDatabase
     private let connectivity: Connectivity
+    private let vpnManager: VPNManager
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity) {
+    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity, vpnManager: VPNManager) {
         self.localDatabase = localDatabase
         self.themeManager = themeManager
         self.connectivity = connectivity
+        self.vpnManager = vpnManager
         loadData()
     }
 
@@ -147,7 +149,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     func updateTrustNetwork(_ status: Bool, completion: CompletionHandler) {
         guard let network = self.displayingNetwork else { return }
         localDatabase.updateTrustNetwork(network: network, status: status)
-        VPNManager.shared.updateOnDemandRules()
+        vpnManager.updateOnDemandRules()
         loadNetwork(completion: completion)
     }
 

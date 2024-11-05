@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import RealmSwift
+
 class CredentialsRepositoryImpl: CredentialsRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -87,7 +88,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         guard let result = wifiManager.getConnectedNetwork() else {
             return OpenVPNServerCredentials.self
         }
-        if result.preferredProtocolStatus == true && !VPNManager.shared.isFromProtocolFailover && !vpnManager.isFromProtocolChange {
+        if result.preferredProtocolStatus == true && !vpnManager.isFromProtocolFailover && !vpnManager.isFromProtocolChange {
             if result.preferredProtocol == TextsAsset.iKEv2 {
                 return IKEv2ServerCredentials.self
             }

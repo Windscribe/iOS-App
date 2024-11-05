@@ -69,7 +69,7 @@ class Repository: Assembly {
             ServerRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, userRepository: r.resolve(UserRepository.self)!, preferences: r.resolve(Preferences.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(CredentialsRepository.self) { r in
-            CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, vpnManager: VPNManager.shared, wifiManager: WifiManager.shared, preferences: r.resolve(Preferences.self)!, logger: logger)
+            CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, wifiManager: WifiManager.shared, preferences: r.resolve(Preferences.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(PortMapRepository.self) { r in
             PortMapRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
@@ -78,7 +78,7 @@ class Repository: Assembly {
             SecuredNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!, localdatabase: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
-            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: VPNManager.shared, logger: logger)
+            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: logger)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             return EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!,fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!)

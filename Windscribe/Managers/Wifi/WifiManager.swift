@@ -14,7 +14,6 @@ import Swinject
 import RxSwift
 
 class WifiManager {
-
     static let shared = WifiManager()
     lazy var preferences: Preferences = {
         return Assembler.resolve(Preferences.self)
@@ -24,6 +23,7 @@ class WifiManager {
     }()
     private lazy var localDb = Assembler.resolve(LocalDatabase.self)
     private lazy var logger = Assembler.resolve(FileLogger.self)
+    private lazy var vpnManager = Assembler.resolve(VPNManager.self)
 
     private let disposeBag = DisposeBag()
     var selectedProtocol: String?
@@ -87,7 +87,7 @@ class WifiManager {
             let SSIDs = savedNetworks.map({ $0.SSID })
             if !SSIDs.contains(wifiNetwork.SSID) {
                 if "Unknown" != wifiNetwork.SSID {
-                    VPNManager.shared.updateOnDemandRules()
+                    self.vpnManager.updateOnDemandRules()
                 }
                 self.setSelectedNetworkSettings(wifiNetwork, existingNetwork: false, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
 

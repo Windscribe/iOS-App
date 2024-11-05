@@ -18,13 +18,13 @@ import Swinject
 
 extension VPNManager {
     @objc func configureAndConnectVPN() {
-        guard let selectedNode = VPNManager.shared.selectedNode else {
+        guard let selectedNode = selectedNode else {
             return
         }
-        VPNManager.shared.uniqueConnectionId = UUID().uuidString
+        uniqueConnectionId = UUID().uuidString
         showConnectPopup()
-        //        if let customConfig = VPNManager.shared.selectedNode?.customConfig {
-//            logger.logD( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
+        //        if let customConfig = selectedNode?.customConfig {
+//            logger.logD( VPNManager.self, "[\(uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
 //            if customConfig.protocolType == TextsAsset.wireGuard {
 //                connectUsingCustomConfigWireGuard()
 //            } else {
@@ -56,7 +56,7 @@ extension VPNManager {
 
     @objc func retryConnection() {
         logger.logD(VPNManager.self, "Retrying connection")
-        if VPNManager.shared.userTappedToDisconnect { return }
+        if userTappedToDisconnect { return }
         if isCustomConfigSelected() {
             if selectedNode?.customConfig?.protocolType == TextsAsset.wireGuard { restartCustomWireGuardConnection() } else { restartCustomOpenVPNConnection() }
         } else {
@@ -73,7 +73,7 @@ extension VPNManager {
     }
 
     @objc func restartWireGuardConnection() {
-        if VPNManager.shared.userTappedToDisconnect || VPNManager.shared.isFromProtocolFailover || VPNManager.shared.isFromProtocolChange {
+        if userTappedToDisconnect || isFromProtocolFailover || isFromProtocolChange {
             return
         }
         Task {
@@ -215,7 +215,7 @@ extension VPNManager {
             resetProperties()
         }
         if setDisconnect { delegate?.setDisconnected() }
-        if disableConnectIntent { VPNManager.shared.connectIntent = false }
+        if disableConnectIntent { connectIntent = false }
 
         Task {
             for manager in configManager.managers {

@@ -13,6 +13,8 @@ import Swinject
 
 protocol ConfigurationsManagerDelegate: AnyObject {
     func setRestartOnDisconnect(with value: Bool)
+    func configureForConnectionState()
+    func disconnectOrFail()
 }
 
 class ConfigurationsManager {
@@ -72,7 +74,7 @@ class ConfigurationsManager {
     private func reloadManagers() {
         Task {
             managers = (try? await getAllManagers()) ?? []
-            VPNManager.shared.configureForConnectionState()
+            delegate?.configureForConnectionState()
         }
     }
 

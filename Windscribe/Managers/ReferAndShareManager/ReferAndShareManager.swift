@@ -10,15 +10,18 @@ import Foundation
 import RxSwift
 import Swinject
 class ReferAndShareManager: ReferAndShareManagerV2 {
-    private let preference: Preferences
     private let disposeBag = DisposeBag()
-
+    
     private let sessionManager: SessionManagerV2
-    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self))
+    private let preference: Preferences
+    private let vpnManager: VPNManager
+    
+    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self))
 
-    init(preferences: Preferences, sessionManager: SessionManagerV2) {
+    init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager) {
         self.preference = preferences
         self.sessionManager = sessionManager
+        self.vpnManager = vpnManager
     }
 
     func checkAndShowDialogFirstTime(completion: @escaping () -> Void) {
@@ -26,7 +29,7 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
             return
         }
         Task {
-            guard await VPNManager.shared.isActive() else { return }
+            guard await vpnManager.isActive() else { return }
             safeSession { session in
                 guard let regDate = session?.regDate else { return }
                 let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))

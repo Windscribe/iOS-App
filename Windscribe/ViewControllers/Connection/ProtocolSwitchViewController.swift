@@ -73,13 +73,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     }
 
     private func setup() {
-        if !VPNManager.shared.isConnected() {
-            VPNManager.shared.isFromProtocolFailover = true
-            VPNManager.shared.isFromProtocolChange = false
-        } else {
-            VPNManager.shared.isFromProtocolChange = true
-            VPNManager.shared.isFromProtocolFailover = false
-        }
+        viewModel.updateIsFromProtocol()
         setupFillLayoutView()
         layoutView.stackView.spacing = 16
         layoutView.stackView.addArrangedSubviews([
@@ -112,7 +106,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
         }).disposed(by: disposeBag)
 
         cancelButton.rx.tap.bind {
-            if VPNManager.shared.isConnected() {
+            if self.viewModel.isConnected() {
                 self.backButtonTapped()
             } else {
                 AutomaticMode.shared.resetFailCounts()
@@ -172,7 +166,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
 
     func protocolViewNextUpCompleteCoundown(_ protocolView: ProtocolView) {
         protocolView.invalidateTimer()
-        if !VPNManager.shared.isConnected() {
+        if !viewModel.isConnected() {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
           //  delegate?.protocolSwitchVCCountdownCompleted()
             self.onSelection?(nil)
