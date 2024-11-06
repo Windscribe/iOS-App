@@ -526,8 +526,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }, completion: { _ in
             self.autoModeSelectorView.isHidden = true
             if connect {
-                self.connectionStateViewModel.vpnManager.connectUsingAutomaticMode()
-                self.connectionStateViewModel.startConnecting()
+                self.connectionStateViewModel.enableConnection()
             }
         })
     }

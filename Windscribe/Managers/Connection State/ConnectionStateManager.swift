@@ -133,19 +133,18 @@ class ConnectionStateManager: ConnectionStateManagerType {
             updateStateInfo(to: .test)
             return
         }
-        if let state = ConnectionState.state(from: vpnManager.connectionStatus()) {
-            if state == .connecting, !connectivity.internetConnectionAvailable() {
-                if connectivity.getNetwork().isVPN {
-                    logger.logD(self, "Ignoring no internet state during connection \(connectivity.getNetwork()) ")
-                    return
-                }
-                logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
-                updateStateInfo(to: .disconnected)
+        let state = ConnectionState.state(from: vpnManager.connectionStatus())
+        if state == .connecting, !connectivity.internetConnectionAvailable() {
+            if connectivity.getNetwork().isVPN {
+                logger.logD(self, "Ignoring no internet state during connection \(connectivity.getNetwork()) ")
                 return
             }
-            logger.logD(self, "Displaying connection state \(state.statusText)")
-            updateStateInfo(to: state)
+            logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
+            updateStateInfo(to: .disconnected)
+            return
         }
+        logger.logD(self, "Displaying connection state \(state.statusText)")
+        updateStateInfo(to: state)
     }
 
     func isConnecting() -> Bool {
