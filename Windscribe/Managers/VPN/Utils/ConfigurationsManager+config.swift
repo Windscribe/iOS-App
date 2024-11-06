@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import Swinject
 import WireGuardKit
@@ -413,5 +414,26 @@ extension ConfigurationsManager {
         }
 
         return nil
+    }
+
+    func validateAccessToLocation(locationID: String) -> Future<Void, Error> {
+        return Future { promise in
+            do {
+                switch try self.getLocationType(id: locationID) {
+                case .server:
+                    let location = try self.getLocation(id: locationID)
+                    let isFreeUser = self.localDatabase.getSessionSync()?.isPremium == false
+                    if isFreeUser, location.1.premiumOnly {
+                        promise(.failure(VPNConfigurationErrors.upgradeRequired))
+                    } else {
+                        promise(.success(()))
+                    }
+                default:
+                    promise(.success(()))
+                }
+            } catch {
+                promise(.failure(error))
+            }
+        }
     }
 }
