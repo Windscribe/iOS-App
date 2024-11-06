@@ -52,6 +52,7 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     let ipAddressSubject: PublishSubject<String>
     let autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void>
 
+    private let disposeBag = DisposeBag()
     private let connectionStateManager: ConnectionStateManagerType
     let vpnManager: VPNManager
 
@@ -69,6 +70,13 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
         enableConnectTrigger = connectionStateManager.enableConnectTrigger
         ipAddressSubject = connectionStateManager.ipAddressSubject
         autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
+        
+        
+        vpnManager.vpnInfo.subscribe {
+            if let error = $0.error {
+                return
+            }
+        }.disposed(by: disposeBag)
     }
 
     func disconnect() {
@@ -109,5 +117,54 @@ extension ConnectionStateViewModel {
         if vpnManager.isConnected(), !vpnManager.isCustomConfigSelected() {
             disconnect()
         }
+    }
+    
+    func enableConnection() {
+        Task {
+            let protocolPort = await vpnManager.getProtocolPort()
+            let locationID = 
+            _ = vpnManager.connectFromViewModel(locationId: <#T##String#>, proto: <#T##ProtocolPort#>)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        print("Connection process completed.")
+                    case let .failure(error):
+                        print(error.localizedDescription)
+                    }
+                }, receiveValue: { state in
+                    switch state {
+                    case let .update(message):
+                        print(message)
+                    case let .validated(ip):
+                        print(ip)
+                    case let .vpn(status):
+                        print(status)
+                    default:
+                        break
+                    }
+                })
+        }
+    }
+    
+    func disableConnection() {
+        _ = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    print("disconnect finished")
+                case let .failure(error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { state in
+                switch state {
+                case let .update(message):
+                    print(message)
+                case let .vpn(status):
+                    print(status)
+                default: ()
+                }
+            }
+
     }
 }
