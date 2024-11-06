@@ -18,7 +18,7 @@ This document outlines the steps to follow when releasing the iOS app, including
 - [ ] Prepare External Testflight changelog.
 - [ ] Release app to External Testflight
 - [ ] Fix Users feedback, update release and repeat.
-- [ ] Prepare final changelog. Always follow same changelog format as Android/Desktop.
+- [ ] Prepare final changelog. 
 - [ ] Send app for apple review.
 - [ ] Distribute app to app store users.
 - [ ] Merge release branch in to main
@@ -28,7 +28,7 @@ This document outlines the steps to follow when releasing the iOS app, including
   git push origin vX.X.X
 ```
 - [ ] Sync code to github and create a tagged release.
-- [ ] Create admin panel release in staging and verify changes on https://www-staging.windscribe.com/
+- [ ] Create admin panel release in staging and verify changes on staging.
 - [ ] Let team lead know to copy release to production admin.
 - [ ] For hotfix Create new branch from tag, make fix, test changes, merge in to main branch and create tag for hotfix.
 ```bash
