@@ -153,10 +153,6 @@ class NodeTableViewCell: BaseNodeTableViewCell {
         }).disposed(by: disposeBag)
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     func addAutoLayoutConstraints() {
         favButton.translatesAutoresizingMaskIntoConstraints = false
         cityNameLabel.translatesAutoresizingMaskIntoConstraints = false
