@@ -211,9 +211,6 @@ extension MainViewController {
             }
             self.preferredProtocolBadge.layoutIfNeeded()
             self.changeProtocolArrow.layoutIfNeeded()
-            if let info = try? self.connectionStateViewModel.connectedState.value() {
-                self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
-            }
         }
     }
 
@@ -237,25 +234,7 @@ extension MainViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck _: Bool = false) {
-//        connectionStateViewModel.vpnManager.showConnectPopup()
-//        return
-        if !viewModel.isPrivacyPopupAccepted() {
-            showPrivacyConfirmationPopup(willConnectOnAccepting: true)
-            return
-        } else if sessionManager.session?.status == 2, !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
-            showOutOfDataPopup()
-            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
-            logger.logD(self, "User attempted to connect when out of data.")
-            return
-        }
-        connectionStateViewModel.vpnManager.connectIntent = false
-        connectionStateViewModel.vpnManager.userTappedToDisconnect = false
-        connectionStateViewModel.vpnManager.isOnDemandRetry = false
-        if WifiManager.shared.isConnectedWifiTrusted() {
-            router?.routeTo(to: .trustedNetwork, from: self)
-        } else {
-            viewModel.reconnect()
-        }
+        connectionStateViewModel.enableConnection()
     }
 
     @objc func reloadServerListOrder() {

@@ -18,7 +18,7 @@ enum ConnectionState {
     case test
     case automaticFailed
 
-    static func state(from: NEVPNStatus) -> ConnectionState? {
+    static func state(from: NEVPNStatus) -> ConnectionState {
         switch from {
         case .connected:
             return .connected
@@ -29,7 +29,7 @@ enum ConnectionState {
         case .disconnecting:
             return .disconnecting
         default:
-            return nil
+            return .disconnected
         }
     }
 }
@@ -38,11 +38,10 @@ struct ConnectionStateInfo {
     let state: ConnectionState
     let isCustomConfigSelected: Bool
     let internetConnectionAvailable: Bool
-    let customConfig: CustomConfigModel?
     let connectedWifi: WifiNetwork?
 
     static func defaultValue(startState _: ConnectionState = .disconnected) -> ConnectionStateInfo {
-        return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, customConfig: nil, connectedWifi: nil)
+        return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, connectedWifi: nil)
     }
 
     var trustedNetworkImage: String {

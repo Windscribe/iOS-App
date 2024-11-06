@@ -304,7 +304,6 @@ extension ConnectionStateManager {
             let info = ConnectionStateInfo(state: state,
                                            isCustomConfigSelected: self.vpnManager.isCustomConfigSelected(),
                                            internetConnectionAvailable: !self.connectivity.internetConnectionAvailable(),
-                                           customConfig: self.vpnManager.selectedNode?.customConfig,
                                            connectedWifi: self.securedNetwork.getCurrentNetwork())
             self.logger.logD(self, "Updated connection state to  \(info.state.statusText)")
 

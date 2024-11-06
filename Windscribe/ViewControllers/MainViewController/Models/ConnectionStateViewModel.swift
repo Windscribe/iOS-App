@@ -26,7 +26,7 @@ protocol ConnectionStateViewModelType {
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
     func becameActive()
-    func startConnecting()
+//    func startConnecting()
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 
     var vpnManager: VPNManager { get }
@@ -37,10 +37,11 @@ protocol ConnectionStateViewModelType {
 
     // Actions
     func setOutOfData()
+    func enableConnection()
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
-    let connectedState: BehaviorSubject<ConnectionStateInfo>
+    let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let selectedNodeSubject: PublishSubject<SelectedNode>
     let loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo>
     let showAutoModeScreenTrigger: PublishSubject<Void>
@@ -59,7 +60,7 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
         self.vpnManager = vpnManager
-        connectedState = connectionStateManager.connectedState
+//        connectedState = connectionStateManager.connectedState
         selectedNodeSubject = connectionStateManager.selectedNodeSubject
         loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
         showAutoModeScreenTrigger = connectionStateManager.showAutoModeScreenTrigger
@@ -71,12 +72,14 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
         ipAddressSubject = connectionStateManager.ipAddressSubject
         autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
         
-        
-        vpnManager.vpnInfo.subscribe {
-            if let error = $0.error {
-                return
-            }
-        }.disposed(by: disposeBag)
+        vpnManager.vpnInfo.subscribe(onNext: { vpnInfo in
+            guard let vpnInfo = vpnInfo else { return }
+            self.connectedState.onNext(
+                ConnectionStateInfo(state: ConnectionState.state(from: vpnInfo.status),
+                                    isCustomConfigSelected: false,
+                                    internetConnectionAvailable: false,
+                                    connectedWifi: nil))
+        }).disposed(by: disposeBag)
     }
 
     func disconnect() {
@@ -95,9 +98,9 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
         connectionStateManager.checkConnectedState()
     }
 
-    func startConnecting() {
-        connectionStateManager.setConnecting()
-    }
+//    func startConnecting() {
+//        connectionStateManager.setConnecting()
+//    }
 
     func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
         connectionStateManager.updateLoadLatencyValuesOnDisconnect(with: value)
@@ -122,8 +125,8 @@ extension ConnectionStateViewModel {
     func enableConnection() {
         Task {
             let protocolPort = await vpnManager.getProtocolPort()
-            let locationID = 
-            _ = vpnManager.connectFromViewModel(locationId: <#T##String#>, proto: <#T##ProtocolPort#>)
+            let locationID = vpnManager.getLocationId()
+            _ = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {
