@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol ConnectionStateViewModelType {
     var selectedNodeSubject: PublishSubject<SelectedNode> { get }
@@ -38,6 +39,7 @@ protocol ConnectionStateViewModelType {
     // Actions
     func setOutOfData()
     func enableConnection()
+    func disableConnection()
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
@@ -56,6 +58,8 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     private let disposeBag = DisposeBag()
     private let connectionStateManager: ConnectionStateManagerType
     let vpnManager: VPNManager
+
+    private var connectionTaskPublisher: AnyCancellable?
 
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
@@ -126,7 +130,8 @@ extension ConnectionStateViewModel {
         Task {
             let protocolPort = await vpnManager.getProtocolPort()
             let locationID = vpnManager.getLocationId()
-            _ = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
+            connectionTaskPublisher?.cancel()
+            connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {
@@ -151,7 +156,8 @@ extension ConnectionStateViewModel {
     }
 
     func disableConnection() {
-        _ = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
+        connectionTaskPublisher?.cancel()
+        connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .finished:
@@ -168,6 +174,5 @@ extension ConnectionStateViewModel {
                 default: ()
                 }
             }
-
     }
 }

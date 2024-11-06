@@ -345,14 +345,14 @@ extension MainViewController {
             logger.logE(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                connectionStateViewModel.vpnManager.showConnectPopup()
+                connectionStateViewModel.enableConnection()
             } else {
                 enableConnectButton()
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
-            connectionStateViewModel.vpnManager.showDisconnectPopup()
+            connectionStateViewModel.disableConnection()
         }
     }
 

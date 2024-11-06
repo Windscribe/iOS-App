@@ -41,6 +41,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
     func connectFromViewModel(locationId: String, proto: ProtocolPort) -> AnyPublisher<State, Error> {
+        self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
         return configManager.validateAccessToLocation(locationID: locationId).flatMap { () in
             let status = self.connectivity.getNetwork().status
             if [NetworkStatus.disconnected].contains(status) {
@@ -48,10 +49,13 @@ extension VPNManager: VPNConnectionAlertDelegate {
             }
             return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName)
         }.handleEvents(receiveSubscription: { _ in
+            self.logger.logD("VPNConfiguration", "configurationState set to configuring")
             self.configurationState = .configuring
         }, receiveCompletion: { _ in
+            self.logger.logD("VPNConfiguration", "configurationState set to initial")
             self.configurationState = .initial
         }, receiveCancel: {
+            self.logger.logD("VPNConfiguration", "configurationState set to initial from cancel")
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }
@@ -167,6 +171,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     private func connectWithInitialRetry(id: String, proto: String, port: String) -> AnyPublisher<State, Error> {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings())
             .catch { error in
+                self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
                     case .authFailure:

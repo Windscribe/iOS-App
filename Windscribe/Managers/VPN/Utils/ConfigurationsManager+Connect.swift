@@ -37,35 +37,44 @@ extension ConfigurationsManager {
         let task = Task { [weak self] in
             do {
                 let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
+                self?.logger.logD("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)")
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
-
                 guard !Task.isCancelled else { return }
+                self?.logger.logD("VPNConfiguration", "disconnectExistingConnections")
                 try await self?.disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
 
                 guard !Task.isCancelled else { return }
+                self?.logger.logD("VPNConfiguration", "prepareNextManager")
                 nextManager = try await self?.prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
 
                 try await Task.sleep(nanoseconds: 1_000_000_000)
+                self?.logger.logD("VPNConfiguration", "Building configuration.")
                 progressPublisher.send(.update("Building configuration."))
 
                 guard !Task.isCancelled else { return }
                 let config = try await self?.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+                self?.logger.logD("VPNConfiguration", "Configuration built successfully \(config?.description ?? "")")
                 progressPublisher.send(.update("Configuration built successfully \(config?.description ?? "")"))
 
+                self?.logger.logD("VPNConfiguration", "Building NEVPNTunnelProtocol.")
                 progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
                 guard let nextManager = nextManager else { return }
                 try config?.buildProtocol(settings: vpnSettings, manager: nextManager)
 
+                self?.logger.logD("VPNConfiguration", "Applying user settings.")
                 progressPublisher.send(.update("Applying user settings."))
                 config?.applySettings(settings: vpnSettings, manager: nextManager)
 
+                self?.logger.logD("VPNConfiguration", "Saving configuration.")
                 progressPublisher.send(.update("Saving configuration."))
                 try await saveToPreferences(manager: nextManager)
 
+                self?.logger.logD("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()
 
                 // Connection status and timeout logic
+                progressPublisher.send(.update("Awaiting connection update."))
                 progressPublisher.send(.update("Awaiting connection update."))
                 let startTime = Date()
                 let timerPublisher = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
@@ -115,6 +124,7 @@ extension ConfigurationsManager {
                     }
                 }
             } catch {
+                self?.logger.logD("VPNConfiguration", "Failed connection with error: \(error).")
                 progressPublisher.send(completion: .failure(error))
             }
         }
