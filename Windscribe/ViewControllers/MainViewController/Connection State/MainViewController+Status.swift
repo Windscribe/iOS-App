@@ -63,7 +63,7 @@ extension MainViewController {
 
         connectionStateViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
-            
+
             if let info = try? self.connectionStateViewModel.connectedState.value() {
                 self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
             }

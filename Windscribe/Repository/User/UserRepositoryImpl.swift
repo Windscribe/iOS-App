@@ -15,7 +15,6 @@ class UserRepositoryImpl: UserRepository {
     private let preferences: Preferences
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
-    private let vpnmanager: VPNManager
     private let wgCredentials: WgCredentials
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
@@ -24,11 +23,10 @@ class UserRepositoryImpl: UserRepository {
         return preferences.userSessionAuth()
     }
 
-    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase, vpnmanager: VPNManager, wgCredentials: WgCredentials, logger: FileLogger) {
+    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase,  wgCredentials: WgCredentials, logger: FileLogger) {
         self.preferences = preferences
         self.apiManager = apiManager
         self.localDatabase = localDatabase
-        self.vpnmanager = vpnmanager
         self.wgCredentials = wgCredentials
         self.logger = logger
         localDatabase.getSession().subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] session in

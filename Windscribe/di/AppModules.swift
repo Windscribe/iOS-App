@@ -51,7 +51,7 @@ class Repository: Assembly {
     func assemble(container: Container) {
         let logger = container.resolve(FileLogger.self)!
         container.register(UserRepository.self) { r in
-            UserRepositoryImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, vpnmanager: r.resolve(VPNManager.self)!, wgCredentials: r.resolve(WgCredentials.self)!, logger: logger)
+            UserRepositoryImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, wgCredentials: r.resolve(WgCredentials.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(UserDataRepository.self) { r in
             UserDataRepositoryImpl(serverRepository: r.resolve(ServerRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, portMapRepository: r.resolve(PortMapRepository.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, notificationsRepository: r.resolve(NotificationRepository.self)!, logger: r.resolve(FileLogger.self)!)
@@ -90,7 +90,7 @@ class Repository: Assembly {
             CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(AdvanceRepository.self) { r in
-            AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!)
+            AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
         container.register(ShakeDataRepository.self) { r in
             ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
@@ -121,7 +121,18 @@ class Managers: Assembly {
             AlertManager()
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
-            VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, api: r.resolve(APIManager.self)!, logger: r.resolve(FileLogger.self)!, localDB: r.resolve(LocalDatabase.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, configManager: r.resolve(ConfigurationsManager.self)!, connectionManager: r.resolve(ConnectionManagerV2.self)!, changeProtocol: r.resolve(ProtocolSwitchViewController.self)!, alertManager: r.resolve(AlertManagerV2.self)!)
+            VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!,
+                       wgRepository: r.resolve(WireguardConfigRepository.self)!,
+                       api: r.resolve(APIManager.self)!,
+                       logger: r.resolve(FileLogger.self)!,
+                       localDB: r.resolve(LocalDatabase.self)!,
+                       serverRepository: r.resolve(ServerRepository.self)!,
+                       staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                       preferences: r.resolve(Preferences.self)!,
+                       connectivity: r.resolve(Connectivity.self)!,
+                       configManager: r.resolve(ConfigurationsManager.self)!,
+                       connectionManager: r.resolve(ConnectionManagerV2.self)!,
+                       alertManager: r.resolve(AlertManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, vpnManager: r.resolve(VPNManager.self)!)
@@ -136,7 +147,7 @@ class Managers: Assembly {
             PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ConnectionManagerV2.self) { r in
-            ConnectionManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!)
+            ConnectionManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
         container.register(ConnectionStateManagerType.self) { r in
             ConnectionStateManager(apiManager: r.resolve(APIManager.self)!, vpnManager: r.resolve(VPNManager.self)!,

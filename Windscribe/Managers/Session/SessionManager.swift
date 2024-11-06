@@ -19,7 +19,6 @@ class SessionManager: SessionManagerV2 {
     var lastCheckForServerConfig = Date()
     let wgCredentials = Assembler.resolve(WgCredentials.self)
     let logger = Assembler.resolve(FileLogger.self)
-    let vpnManager = Assembler.resolve(VPNManager.self)
     let apiManager = Assembler.resolve(APIManager.self)
     var disposeBag = DisposeBag()
     let localDatabase = Assembler.resolve(LocalDatabase.self)
@@ -30,6 +29,8 @@ class SessionManager: SessionManagerV2 {
     let preferences = Assembler.resolve(Preferences.self)
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
     let userRepo = Assembler.resolve(UserRepository.self)
+
+    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
     func setSessionTimer() {
 //        logger.logD(MainViewController.self, "60 seconds fetch session timer scheduled.")

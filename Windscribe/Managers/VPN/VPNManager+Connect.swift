@@ -55,7 +55,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }
-    
+
     func getProtocolPort() async -> ProtocolPort {
         if let info = try? vpnInfo.value() {
             return ProtocolPort( info.selectedProtocol, info.selectedPort)

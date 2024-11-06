@@ -9,14 +9,15 @@
 import Foundation
 import NetworkExtension
 import RxSwift
+import Swinject
 
 class AdvanceRepositoryImpl: AdvanceRepository {
     private let preferences: Preferences
-    private let vpnManager: VPNManager
     private let disposeBag = DisposeBag()
-    init(preferences: Preferences, vpnManager: VPNManager) {
+    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+
+    init(preferences: Preferences) {
         self.preferences = preferences
-        self.vpnManager = vpnManager
     }
 
     func getCountryOverride() -> String? {

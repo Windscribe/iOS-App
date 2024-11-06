@@ -71,7 +71,7 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
         enableConnectTrigger = connectionStateManager.enableConnectTrigger
         ipAddressSubject = connectionStateManager.ipAddressSubject
         autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
-        
+
         vpnManager.vpnInfo.subscribe(onNext: { vpnInfo in
             guard let vpnInfo = vpnInfo else { return }
             self.connectedState.onNext(
@@ -121,7 +121,7 @@ extension ConnectionStateViewModel {
             disconnect()
         }
     }
-    
+
     func enableConnection() {
         Task {
             let protocolPort = await vpnManager.getProtocolPort()
@@ -149,7 +149,7 @@ extension ConnectionStateViewModel {
                 })
         }
     }
-    
+
     func disableConnection() {
         _ = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
             .sink { completion in

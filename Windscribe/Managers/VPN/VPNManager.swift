@@ -90,8 +90,6 @@ class VPNManager: VPNManagerProtocol {
     /// A lock used to synchronize access to the configuration state.
     private let configureStateLock = NSLock()
 
-    var changeProtocol: ProtocolSwitchViewController
-
     let wgCrendentials: WgCredentials
     let wgRepository: WireguardConfigRepository
     let api: APIManager
@@ -101,12 +99,14 @@ class VPNManager: VPNManagerProtocol {
     let staticIpRepository: StaticIpRepository
     let preferences: Preferences
     let connectivity: Connectivity
-    let sessionManager: SessionManagerV2
     let configManager: ConfigurationsManager
     let connectionManager: ConnectionManagerV2
     let alertManager: AlertManagerV2
 
-    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, sessionManager: SessionManagerV2, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, changeProtocol: ProtocolSwitchViewController, alertManager: AlertManagerV2) {
+    lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+    lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
+
+    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, alertManager: AlertManagerV2) {
         self.wgCrendentials = wgCrendentials
         self.wgRepository = wgRepository
         self.api = api
@@ -116,10 +116,8 @@ class VPNManager: VPNManagerProtocol {
         self.staticIpRepository = staticIpRepository
         self.preferences = preferences
         self.connectivity = connectivity
-        self.sessionManager = sessionManager
         self.configManager = configManager
         self.connectionManager = connectionManager
-        self.changeProtocol = changeProtocol
         self.alertManager = alertManager
 
         NotificationCenter.default.addObserver(self,
