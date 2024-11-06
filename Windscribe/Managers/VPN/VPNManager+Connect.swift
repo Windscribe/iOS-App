@@ -55,6 +55,18 @@ extension VPNManager: VPNConnectionAlertDelegate {
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }
+    
+    func getProtocolPort() async -> ProtocolPort {
+        if let info = try? vpnInfo.value() {
+            return ProtocolPort( info.selectedProtocol, info.selectedPort)
+        } else {
+            return await withCheckedContinuation { continuation in
+                connectionManager.loadProtocols(shouldReset: true) { messages in
+                    continuation.resume(returning: self.connectionManager.getNextProtocol())
+                }
+            }
+        }
+    }
 
     /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
     ///
