@@ -14,32 +14,36 @@ protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
-    
+
     var vpnManager: VPNManager { get }
-    
+
     // Check State
     func isConnected() -> Bool
     func isConnecting() -> Bool
     func isDisconnected() -> Bool
     func isDisconnecting() -> Bool
-    
+
     // Actions
     func setOutOfData()
     func enableConnection()
     func disableConnection()
+
+    //Info
+    func getSelectedCountryCode() -> String
+    func isBestLocationSelected() -> Bool
 }
 
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
-    
+
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
     let logger: FileLogger
-    
+
     private var connectionTaskPublisher: AnyCancellable?
-    
+
     init(logger: FileLogger, vpnManager: VPNManager) {
         self.logger = logger
         self.vpnManager = vpnManager
@@ -58,25 +62,33 @@ extension ConnectionViewModel {
     func isConnected() -> Bool {
         (try? connectedState.value())?.state == .connected
     }
-    
+
     func isConnecting() -> Bool {
         (try? connectedState.value())?.state == .connecting
     }
-    
+
     func isDisconnected() -> Bool {
         (try? connectedState.value())?.state == .disconnected
     }
-    
+
     func isDisconnecting() -> Bool {
         (try? connectedState.value())?.state == .disconnecting
     }
-    
+
     func setOutOfData() {
         if isConnected(), !vpnManager.isCustomConfigSelected() {
             disableConnection()
         }
     }
-    
+
+    func getSelectedCountryCode() -> String {
+        vpnManager.getLocationNode()?.countryCode ?? ""
+    }
+
+    func isBestLocationSelected() -> Bool {
+        return vpnManager.getLocationNode()?.cityName == Fields.Values.bestLocation
+    }
+
     func enableConnection() {
         Task {
             let protocolPort = await vpnManager.getProtocolPort()
@@ -110,7 +122,7 @@ extension ConnectionViewModel {
                 })
         }
     }
-    
+
     func disableConnection() {
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)

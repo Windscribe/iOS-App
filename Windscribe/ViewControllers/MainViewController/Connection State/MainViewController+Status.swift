@@ -19,7 +19,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         connectionStateViewModel.loadLatencyValuesSubject.subscribe(onNext: {
-            self.loadLatencyValues(force: $0.force, selectBestLocation: $0.selectBestLocation, connectToBestLocation: $0.connectToBestLocation)
+            self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
 
         connectionStateViewModel.showAutoModeScreenTrigger.subscribe(onNext: {

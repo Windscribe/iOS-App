@@ -33,6 +33,9 @@ protocol ConnectionStateManagerType {
     func setConnecting()
     func isConnecting() -> Bool
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
+
+    // NEW
+    func updateBestLocation(bestLocation: BestLocation)
 }
 
 class ConnectionStateManager: ConnectionStateManagerType {
@@ -266,8 +269,15 @@ extension ConnectionStateManager: VPNManagerDelegate {
     }
 }
 
-// MARK: - Private Methods
+// MARK: - NEW
+extension ConnectionStateManager {
+    func updateBestLocation(bestLocation: BestLocation) {
+        let lastConnectedNode = LastConnectedNode(selectedNode: SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId))
+        localDatabase.saveLastConnectedNode(node: lastConnectedNode).disposed(by: disposeBag)
+    }
+}
 
+// MARK: - Private Methods
 extension ConnectionStateManager {
     private func isOnDemandRetry() -> Bool {
         if vpnManager.isOnDemandRetry == true {

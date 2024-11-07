@@ -250,18 +250,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
     }
 
-    func isBestLocationSelected() -> Bool {
-        return vpnConnectionViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation
-    }
-
     func checkForInternetConnection() {
         guard vpnConnectionViewModel.isConnected() else { return }
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
             logger.logE(MainViewController.self, "No internet connection available.")
             internetConnectionLost = true
-            vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
-            vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true)
+            vpnConnectionViewModel.disableConnection()
         }
     }
 
@@ -299,9 +294,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation && self.vpnConnectionViewModel.isDisconnected() || self.noSelectedNodeToConnect() {
-                self.vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
-                self.vpnConnectionViewModel.connectedState.onNext(ConnectionStateInfo.defaultValue())
+            if selectBestLocation || self.noSelectedNodeToConnect() {
+                self.connectionStateViewModel.updateBestLocation(bestLocation: bestLocation)
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
@@ -309,16 +303,16 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
-            if let isUserPro = try? self.viewModel.session.value()?.isPremium {
-                if self.vpnConnectionViewModel.isConnected() == false, self.vpnConnectionViewModel.vpnManager.isConnecting() == false, self.vpnConnectionViewModel.isDisconnected() == true, self.vpnConnectionViewModel.vpnManager.isDisconnecting() == false, isGroupProOnly, !isUserPro {
-                    self.vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
-                }
+            if let isUserPro = try? self.viewModel.session.value()?.isPremium,
+               isGroupProOnly,
+               !isUserPro {
+                self.connectionStateViewModel.updateBestLocation(bestLocation: bestLocation)
             }
         }).disposed(by: disposeBag)
     }
 
     func noSelectedNodeToConnect() -> Bool {
-        return vpnConnectionViewModel.vpnManager.selectedNode == nil
+        return vpnConnectionViewModel.getSelectedCountryCode() == ""
     }
 
     func showOutOfDataPopup() {
@@ -367,17 +361,17 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             {
                 logger.logD(self, "Account downgrade detected.")
                 if vpnConnectionViewModel.isDisconnected() {
-                    loadLatencyValues(selectBestLocation: true, connectToBestLocation: false)
+                    loadLatencyValues(connectToBestLocation: false)
                 } else {
                     connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
-                    vpnConnectionViewModel.vpnManager.resetProperties()
-                    //   self.vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
+                    // vpnConnectionViewModel.vpnManager.resetProperties()
+                    // self.vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
                 }
             }
         }
 
         if isAnyRefreshControlIsRefreshing() {
-            loadLatencyValues(selectBestLocation: isBestLocationSelected(), connectToBestLocation: false)
+            loadLatencyValues()
         }
 
         vpnConnectionViewModel.vpnManager.checkForForceDisconnect()

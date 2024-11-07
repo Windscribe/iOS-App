@@ -132,7 +132,7 @@ extension MainViewController {
         }
     }
 
-    func loadLatencyValues(force: Bool = false, selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
+    func loadLatencyValues(force: Bool = false, connectToBestLocation: Bool = false) {
         viewModel.latencies.subscribe(onNext: { _ in
             if self.vpnConnectionViewModel.vpnManager.isDisconnected() || force ||
                 self.isAnyRefreshControlIsRefreshing()
@@ -140,7 +140,7 @@ extension MainViewController {
                 if let observer = self.latencyLoaderObserver {
                     NotificationCenter.default.removeObserver(observer)
                 }
-                if selectBestLocation, connectToBestLocation {
+                if self.vpnConnectionViewModel.isBestLocationSelected(), connectToBestLocation {
                     Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOutWithSelectAndConnectBestLocation), userInfo: nil, repeats: false)
                 } else {
                     Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOut), userInfo: nil, repeats: false)

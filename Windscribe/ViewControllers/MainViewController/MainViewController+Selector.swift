@@ -387,11 +387,11 @@ extension MainViewController {
         sessionManager.keepSessionUpdated()
         if appJustStarted, vpnConnectionViewModel.vpnManager.isDisconnected() {
             connectionStateViewModel.displayLocalIPAddress()
-            loadLatencyValues(force: false, selectBestLocation: isBestLocationSelected(), connectToBestLocation: false)
+            loadLatencyValues()
         } else {
             reloadTableViews()
             hideSplashView()
-            configureBestLocation(selectBestLocation: false, connectToBestLocation: false)
+            configureBestLocation()
         }
         checkForOutsideIntent()
     }
