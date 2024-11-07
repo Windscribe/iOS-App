@@ -161,7 +161,8 @@ class ViewModels: Assembly {
             ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
-            ConnectionViewModel(vpnManager: r.resolve(VPNManager.self)!)
+            ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
+                                vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
