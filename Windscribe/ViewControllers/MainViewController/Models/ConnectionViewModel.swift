@@ -12,8 +12,10 @@ import Combine
 
 protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
+    var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
+    var showConnectionFailedTrigger: PublishSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -22,6 +24,7 @@ protocol ConnectionViewModelType {
     func isConnecting() -> Bool
     func isDisconnected() -> Bool
     func isDisconnecting() -> Bool
+    func isInvalid() -> Bool
 
     // Actions
     func setOutOfData()
@@ -35,8 +38,10 @@ protocol ConnectionViewModelType {
 
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
+    let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
+    let showConnectionFailedTrigger = PublishSubject<Void>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -74,6 +79,10 @@ extension ConnectionViewModel {
     func isDisconnecting() -> Bool {
         (try? connectedState.value())?.state == .disconnecting
     }
+    
+    func isInvalid() -> Bool {
+        (try? connectedState.value())?.state == .invalid
+    }
 
     func setOutOfData() {
         if isConnected(), !vpnManager.isCustomConfigSelected() {
@@ -103,8 +112,9 @@ extension ConnectionViewModel {
                     case let .failure(error):
                         if let error = error as? VPNConfigurationErrors {
                             self.logger.logD(self, "Enable connection had a VPNConfigurationErrors:")
-                            self.handleErrors(error: error)
+                            self.handleErrors(error: error, fromEnable: true)
                         } else {
+                            self.showConnectionFailedTrigger.onNext(())
                             self.logger.logE(self, "Enable Connection with unknown error: \(error.localizedDescription)")
                         }
                     }
@@ -151,7 +161,7 @@ extension ConnectionViewModel {
 }
 
 extension ConnectionViewModel {
-    func handleErrors(error: VPNConfigurationErrors) {
+    func handleErrors(error: VPNConfigurationErrors, fromEnable: Bool = false) {
         switch error {
         case .credentialsNotFound,
                 .invalidLocationType,
@@ -166,6 +176,7 @@ extension ConnectionViewModel {
                 .allProtocolFailed,
                 .authFailure,
                 .networkIsOffline:
+            if fromEnable {showConnectionFailedTrigger.onNext(()) }
             logger.logE(self, error.description)
         case .upgradeRequired:
             showUpgradeRequiredTrigger.onNext(())

@@ -351,8 +351,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if results.count == 0 { return }
 
         if let oldSession = viewModel.oldSession,
-           let newSession = sessionManager.session
-        {
+           let newSession = sessionManager.session {
             let groups = results.flatMap { $0.groups }
             let nodes = groups.flatMap { $0.nodes }
             if oldSession.isPremium &&
@@ -361,7 +360,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             {
                 logger.logD(self, "Account downgrade detected.")
                 if vpnConnectionViewModel.isDisconnected() {
-                    loadLatencyValues(connectToBestLocation: false)
+                    loadLatencyValues()
                 } else {
                     connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
                     // vpnConnectionViewModel.vpnManager.resetProperties()
@@ -373,8 +372,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if isAnyRefreshControlIsRefreshing() {
             loadLatencyValues()
         }
-
-        vpnConnectionViewModel.vpnManager.checkForForceDisconnect()
+        if vpnConnectionViewModel.isConnected() {
+            vpnConnectionViewModel.enableConnection()
+        }
     }
 
     func reloadCustomConfigs() {
@@ -464,27 +464,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 })
             }
         }
-    }
-
-    func checkForOutsideIntent() {
-        if vpnConnectionViewModel.vpnManager.connectWhenReady {
-            vpnConnectionViewModel.vpnManager.connectWhenReady = false
-            connectVPNIntentReceived()
-            return
-        }
-        if vpnConnectionViewModel.vpnManager.disconnectWhenReady {
-            vpnConnectionViewModel.vpnManager.disconnectWhenReady = false
-            disconnectVPNIntentReceived()
-            return
-        }
-    }
-
-    func disconnectVPN(force: Bool = false) {
-        vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
-        vpnConnectionViewModel.vpnManager.connectIntent = false
-        vpnConnectionViewModel.vpnManager.userTappedToDisconnect = true
-        hideAutoModeSelectorView(connect: false)
-        vpnConnectionViewModel.vpnManager.disconnectAllVPNConnections(setDisconnect: true, force: force)
     }
 
     func disableConnectButton() {

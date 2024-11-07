@@ -17,6 +17,7 @@ enum ConnectionState {
     case disconnected
     case test
     case automaticFailed
+    case invalid
 
     static func state(from: NEVPNStatus) -> ConnectionState {
         switch from {
@@ -28,6 +29,8 @@ enum ConnectionState {
             return .connecting
         case .disconnecting:
             return .disconnecting
+        case .invalid:
+            return .invalid
         default:
             return .disconnected
         }

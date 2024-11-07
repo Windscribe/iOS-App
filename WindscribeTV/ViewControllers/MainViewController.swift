@@ -397,8 +397,7 @@ class MainViewController: PreferredFocusedViewController {
             guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation, self.vpnConnectionViewModel.vpnManager.selectedNode == nil {
-                self.vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+            if selectBestLocation, self.vpnConnectionViewModel.getSelectedCountryCode() == nil {
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")

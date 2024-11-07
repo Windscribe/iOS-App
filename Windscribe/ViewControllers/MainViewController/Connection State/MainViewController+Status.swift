@@ -75,6 +75,10 @@ extension MainViewController {
         vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
+        
+        vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showConnectionFailed()
+        }).disposed(by: disposeBag)
     }
 
     func animateConnectedState(with info: ConnectionStateInfo) {

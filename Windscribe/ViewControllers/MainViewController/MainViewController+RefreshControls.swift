@@ -11,13 +11,13 @@ import UIKit
 
 extension MainViewController {
     @objc func handleRefresh() {
-        if vpnConnectionViewModel.vpnManager.isConnected() || vpnConnectionViewModel.vpnManager.isConnecting() {
+        if vpnConnectionViewModel.isConnected() || vpnConnectionViewModel.isConnecting() {
             endRefreshControls(update: false)
             return
         }
         if isRefreshing == false, isLoadingLatencyValues == false {
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
-            if vpnConnectionViewModel.vpnManager.isDisconnectedAndNotConfigured() || isOnline {
+            if vpnConnectionViewModel.isDisconnected() || isOnline {
                 beginRefreshControls()
                 isRefreshing = true
                 isLoadingLatencyValues = true
@@ -74,7 +74,7 @@ extension MainViewController {
     }
 
     @objc func updateRefreshControls() {
-        if vpnConnectionViewModel.vpnManager.isDisconnectedAndNotConfigured() {
+        if vpnConnectionViewModel.isDisconnected() {
             if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
                 showRefreshControlDisconnectedState(serverRefreshControl)
             }

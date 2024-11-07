@@ -54,7 +54,7 @@ extension MainViewController {
         UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
             self.yourIPValueLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
-            if self.vpnConnectionViewModel.vpnManager.isConnected() {
+            if self.vpnConnectionViewModel.isConnected() {
                 self.yourIPIcon.image = UIImage(named: ImagesAsset.secure)
             } else {
                 self.yourIPIcon.image = UIImage(named: ImagesAsset.unsecure)
@@ -63,9 +63,8 @@ extension MainViewController {
     }
 
     func setNetworkSsid() {
-        Observable.combineLatest(viewModel.appNetwork, vpnConnectionViewModel.vpnManager.getStatus())
-            .subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] network, status in
-                if status == NEVPNStatus.connecting { return }
+        viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] network in
+            if self.vpnConnectionViewModel.isConnecting() { return }
                 if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
                     if network.networkType == .cellular || network.networkType == .wifi {
                         self.trustedNetworkValueLabel.text = network.name ?? ""
