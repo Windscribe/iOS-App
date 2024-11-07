@@ -62,7 +62,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func bindVPNConnectionsViewModel () {
+    func bindVPNConnectionsViewModel() {
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
             self.setCircumventCensorshipBadge(color: $0.state.statusColor.withAlphaComponent($0.state.statusAlpha))

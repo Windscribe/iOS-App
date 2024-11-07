@@ -91,6 +91,7 @@ extension MainViewController {
         bindMainViewModel()
         bindCustomConfigPickerModel()
         bindConnectionStateViewModel()
+        bindVPNConnectionsViewModel()
         bindFavNodesListViewModel()
         bindStaticIPListViewModel()
         bindServerListViewModel()
