@@ -52,10 +52,9 @@ class ConnectionViewModel: ConnectionViewModelType {
     init(logger: FileLogger, vpnManager: VPNManager) {
         self.logger = logger
         self.vpnManager = vpnManager
-        vpnManager.vpnInfo.subscribe(onNext: { vpnInfo in
-            guard let vpnInfo = vpnInfo else { return }
+        vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
-                ConnectionStateInfo(state: ConnectionState.state(from: vpnInfo.status),
+                ConnectionStateInfo(state: ConnectionState.state(from: state),
                                     isCustomConfigSelected: false,
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
