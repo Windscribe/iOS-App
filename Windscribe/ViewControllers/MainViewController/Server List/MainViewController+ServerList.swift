@@ -16,7 +16,7 @@ extension MainViewController {
             self.displayConnectingAlert()
         }.disposed(by: disposeBag)
         serverListViewModel.configureVPNTrigger.subscribe { _ in
-            self.configureVPN()
+            self.enableVPNConnection()
         }.disposed(by: disposeBag)
         serverListViewModel.showMaintenanceLocationTrigger.subscribe { _ in
             self.showMaintenanceLocationView()

@@ -16,7 +16,7 @@ extension MainViewController {
     @objc func appEnteredForeground() {
         if vpnConnectionViewModel.vpnManager.isConnecting(), !internetConnectionLost {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
-            //  configureVPN(bypassConnectingCheck: true)
+            //  enableVPNConnection()
         }
         clearScrollHappened()
         connectionStateViewModel.becameActive()
@@ -233,7 +233,7 @@ extension MainViewController {
         }
     }
 
-    @objc func configureVPN(bypassConnectingCheck _: Bool = false) {
+    @objc func enableVPNConnection() {
         vpnConnectionViewModel.enableConnection()
     }
 
@@ -333,7 +333,7 @@ extension MainViewController {
     @objc func connectVPNIntentReceived() {
         logger.logD(self, "Connect intent received from outside of the app.")
         if vpnConnectionViewModel.vpnManager.isDisconnected() {
-            configureVPN()
+            enableVPNConnection()
         }
     }
 
@@ -372,7 +372,7 @@ extension MainViewController {
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
             vpnConnectionViewModel.vpnManager.getVPNConnectionInfo { [self] info in
                 if info != nil, info?.status == .connected, nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort {
-                    configureVPN(bypassConnectingCheck: true)
+                    enableVPNConnection()
                 } else {
                     viewModel.refreshProtocolInfo()
                 }

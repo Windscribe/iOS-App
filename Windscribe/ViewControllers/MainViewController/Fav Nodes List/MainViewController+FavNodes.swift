@@ -20,7 +20,7 @@ extension MainViewController {
             }
         }.disposed(by: disposeBag)
         favNodesListViewModel.configureVPNTrigger.subscribe { _ in
-            self.configureVPN()
+            self.enableVPNConnection()
         }.disposed(by: disposeBag)
         favNodesListViewModel.showUpgradeTrigger.subscribe { _ in
             self.showUpgradeView()

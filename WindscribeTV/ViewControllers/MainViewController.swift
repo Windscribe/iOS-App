@@ -524,30 +524,32 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     @objc func configureVPN(bypassConnectingCheck: Bool = false) {
-        if !viewModel.isPrivacyPopupAccepted() {
-            showPrivacyConfirmationPopup()
-            return
-        } else if vpnConnectionViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
-            displayConnectingAlert()
-            logger.logD(self, "User attempted to connect while in connecting state.")
-            return
-        } else if (try? viewModel.session.value())?.status == 2 && !vpnConnectionViewModel.vpnManager.isCustomConfigSelected() {
-            showOutOfDataPopup()
-            vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
-            logger.logD(self, "User attempted to connect when out of data.")
-            return
-        }
-        vpnConnectionViewModel.vpnManager.connectIntent = false
-        vpnConnectionViewModel.vpnManager.userTappedToDisconnect = false
-        vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
-        // viewModel.reconnect()
 
-        if WifiManager.shared.isConnectedWifiTrusted() {
-            // Add trusted network popup
-            //  router?.routeTo(to: .trustedNetwork, from: self)
-        } else {
-            viewModel.reconnect()
-        }
+        // TODO: refactor vpn configs
+//        if !viewModel.isPrivacyPopupAccepted() {
+//            showPrivacyConfirmationPopup()
+//            return
+//        } else if vpnConnectionViewModel.vpnManager.isConnecting() && bypassConnectingCheck == false {
+//            displayConnectingAlert()
+//            logger.logD(self, "User attempted to connect while in connecting state.")
+//            return
+//        } else if (try? viewModel.session.value())?.status == 2 && !vpnConnectionViewModel.vpnManager.isCustomConfigSelected() {
+//            showOutOfDataPopup()
+//            vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true, disableConnectIntent: true)
+//            logger.logD(self, "User attempted to connect when out of data.")
+//            return
+//        }
+//        vpnConnectionViewModel.vpnManager.connectIntent = false
+//        vpnConnectionViewModel.vpnManager.userTappedToDisconnect = false
+//        vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
+//        // viewModel.reconnect()
+//
+//        if WifiManager.shared.isConnectedWifiTrusted() {
+//            // Add trusted network popup
+//            //  router?.routeTo(to: .trustedNetwork, from: self)
+//        } else {
+//            viewModel.reconnect()
+//        }
     }
 
     private func checkSessionChanges(session: Session?) {

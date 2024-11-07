@@ -12,7 +12,7 @@ import UIKit
 extension MainViewController {
     func bindProtocolSwitchViewModel() {
         protocolSwitchViewModel.configureVPNTrigger.subscribe { _ in
-            self.configureVPN()
+            self.enableVPNConnection()
         }.disposed(by: disposeBag)
     }
 }

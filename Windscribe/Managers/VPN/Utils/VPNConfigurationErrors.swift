@@ -23,6 +23,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case authFailure
     case upgradeRequired
     case networkIsOffline
+    case privacyNotAccepted
 
     var description: String {
         switch self {
@@ -54,6 +55,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "Upgrade required to access location."
         case .networkIsOffline:
             return "Network seems offline."
+        case .privacyNotAccepted:
+            return "Privacy has not been accepted yet."
         }
     }
 }

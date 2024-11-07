@@ -12,7 +12,7 @@ import UIKit
 extension MainViewController {
     func bindCustomConfigPickerModel() {
         customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: {
-            self.configureVPN()
+            self.enableVPNConnection()
         }).disposed(by: disposeBag)
 
         customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: {

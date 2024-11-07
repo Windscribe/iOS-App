@@ -60,10 +60,20 @@ extension MainViewController {
         connectionStateViewModel.autoModeSelectorHiddenChecker.subscribe(onNext: {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
+    }
 
+    func bindVPNConnectionsViewModel () {
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
             self.setCircumventCensorshipBadge(color: $0.state.statusColor.withAlphaComponent($0.state.statusAlpha))
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showOutOfDataPopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
     }
 

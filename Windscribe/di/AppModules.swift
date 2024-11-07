@@ -97,7 +97,7 @@ class Repository: Assembly {
                                     sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(ConfigurationsManager.self) { r in
-            ConfigurationsManager(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, wgCredentials: r.resolve(WgCredentials.self)!)
+            ConfigurationsManager(logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!, keychainDb: r.resolve(KeyChainDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, wgRepository: r.resolve(WireguardConfigRepository.self)!, wgCredentials: r.resolve(WgCredentials.self)!, preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
     }
 }

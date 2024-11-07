@@ -12,14 +12,17 @@ import Combine
 
 protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
+    var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
+    var showPrivacyTrigger: PublishSubject<Void> { get }
+    
     var vpnManager: VPNManager { get }
-
+    
     // Check State
     func isConnected() -> Bool
     func isConnecting() -> Bool
     func isDisconnected() -> Bool
     func isDisconnecting() -> Bool
-
+    
     // Actions
     func setOutOfData()
     func enableConnection()
@@ -28,13 +31,17 @@ protocol ConnectionViewModelType {
 
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
-
+    let showUpgradeRequiredTrigger = PublishSubject<Void>()
+    let showPrivacyTrigger = PublishSubject<Void>()
+    
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
-
+    let logger: FileLogger
+    
     private var connectionTaskPublisher: AnyCancellable?
-
-    init(vpnManager: VPNManager) {
+    
+    init(logger: FileLogger, vpnManager: VPNManager) {
+        self.logger = logger
         self.vpnManager = vpnManager
         vpnManager.vpnInfo.subscribe(onNext: { vpnInfo in
             guard let vpnInfo = vpnInfo else { return }
@@ -51,25 +58,25 @@ extension ConnectionViewModel {
     func isConnected() -> Bool {
         (try? connectedState.value())?.state == .connected
     }
-
+    
     func isConnecting() -> Bool {
         (try? connectedState.value())?.state == .connecting
     }
-
+    
     func isDisconnected() -> Bool {
         (try? connectedState.value())?.state == .disconnected
     }
-
+    
     func isDisconnecting() -> Bool {
         (try? connectedState.value())?.state == .disconnecting
     }
-
+    
     func setOutOfData() {
         if isConnected(), !vpnManager.isCustomConfigSelected() {
             disableConnection()
         }
     }
-
+    
     func enableConnection() {
         Task {
             let protocolPort = await vpnManager.getProtocolPort()
@@ -80,44 +87,78 @@ extension ConnectionViewModel {
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        print("Connection process completed.")
+                        self.logger.logD(self, "Finished enabling connection.")
                     case let .failure(error):
-                        print(error.localizedDescription)
+                        if let error = error as? VPNConfigurationErrors {
+                            self.logger.logD(self, "Enable connection had a VPNConfigurationErrors:")
+                            self.handleErrors(error: error)
+                        } else {
+                            self.logger.logE(self, "Enable Connection with unknown error: \(error.localizedDescription)")
+                        }
                     }
                 }, receiveValue: { state in
                     switch state {
                     case let .update(message):
-                        print(message)
+                        self.logger.logD(self, "Enable connection had an update: \(message)")
                     case let .validated(ip):
-                        print(ip)
+                        self.logger.logD(self, "Enable connection validate IP: \(ip)")
                     case let .vpn(status):
-                        print(status)
+                        self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
                     default:
                         break
                     }
                 })
         }
     }
-
+    
     func disableConnection() {
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .finished:
-                    print("disconnect finished")
+                    self.logger.logD(self, "Finished disabling connection.")
                 case let .failure(error):
-                    print(error.localizedDescription)
+                    if let error = error as? VPNConfigurationErrors {
+                        self.logger.logD(self, "Disable connection had a VPNConfigurationErrors:")
+                        self.handleErrors(error: error)
+                    } else {
+                        self.logger.logE(self, "Disable Connection with unknown error: \(error.localizedDescription)")
+                    }
                 }
             } receiveValue: { state in
                 switch state {
                 case let .update(message):
-                    print(message)
+                    self.logger.logD(self, "Disable connection had an update: \(message)")
                 case let .vpn(status):
-                    print(status)
+                    self.logger.logD(self, "Disable connection new status: \(status.rawValue)")
                 default: ()
                 }
             }
     }
 }
 
+extension ConnectionViewModel {
+    func handleErrors(error: VPNConfigurationErrors) {
+        switch error {
+        case .credentialsNotFound,
+                .invalidLocationType,
+                .customConfigSupportNotAvailable,
+                .locationNotFound,
+                .noValidNodeFound,
+                .invalidServerConfig,
+                .configNotFound,
+                .incorrectVPNManager,
+                .connectionTimeout,
+                .connectivityTestFailed,
+                .allProtocolFailed,
+                .authFailure,
+                .networkIsOffline:
+            logger.logE(self, error.description)
+        case .upgradeRequired:
+            showUpgradeRequiredTrigger.onNext(())
+        case .privacyNotAccepted:
+            showPrivacyTrigger.onNext(())
+        }
+    }
+}

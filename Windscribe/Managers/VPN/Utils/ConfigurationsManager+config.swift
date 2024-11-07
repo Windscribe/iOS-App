@@ -419,6 +419,10 @@ extension ConfigurationsManager {
     func validateAccessToLocation(locationID: String) -> Future<Void, Error> {
         return Future { promise in
             do {
+                if !(self.preferences.getPrivacyPopupAccepted() ?? false) {
+                    promise(.failure(VPNConfigurationErrors.privacyNotAccepted))
+                    return
+                }
                 switch try self.getLocationType(id: locationID) {
                 case .server:
                     let location = try self.getLocation(id: locationID)

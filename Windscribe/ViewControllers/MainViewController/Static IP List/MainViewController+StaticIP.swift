@@ -21,7 +21,7 @@ extension MainViewController {
             }
         }.disposed(by: disposeBag)
         staticIPListViewModel.configureVPNTrigger.subscribe { _ in
-            self.configureVPN()
+            self.enableVPNConnection()
         }.disposed(by: disposeBag)
     }
 }

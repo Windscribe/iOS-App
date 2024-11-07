@@ -226,7 +226,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(checkForUnreadNotifications), name: Notifications.checkForNotifications, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(disconnectVPNIntentReceived), name: Notifications.disconnectVPN, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(configureVPN), name: Notifications.configureVPN, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(enableVPNConnection), name: Notifications.configureVPN, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
         pushNotificationManager?.notification.compactMap { $0 }.subscribe(onNext: { notification in
             self.pushNotificationReceived(payload: notification)
@@ -270,11 +270,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showPrivacyConfirmationPopup(willConnectOnAccepting: Bool = false) {
-        if !viewModel.isPrivacyPopupAccepted() {
-            popupRouter?.routeTo(to: .privacyView(completionHandler: {
-                if willConnectOnAccepting { self.configureVPN() }
-            }), from: self)
-        }
+        popupRouter?.routeTo(to: .privacyView(completionHandler: {
+            if willConnectOnAccepting { self.enableVPNConnection() }
+        }), from: self)
     }
 
     func showUpgradeView() {
@@ -307,7 +305,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
-                self.configureVPN()
+                self.enableVPNConnection()
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
@@ -324,9 +322,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showOutOfDataPopup() {
-        if vpnConnectionViewModel.isConnected() && !vpnConnectionViewModel.vpnManager.isCustomConfigSelected() {
-            vpnConnectionViewModel.disableConnection()
-        }
         logger.logD(self, "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
     }
