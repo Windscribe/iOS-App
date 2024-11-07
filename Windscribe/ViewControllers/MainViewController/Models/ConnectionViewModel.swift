@@ -16,6 +16,7 @@ protocol ConnectionViewModelType {
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
+    var ipAddressSubject: PublishSubject<String> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -42,15 +43,19 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
+    let ipAddressSubject = PublishSubject<String>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
     let logger: FileLogger
+    let apiManager: APIManager
 
     private var connectionTaskPublisher: AnyCancellable?
+    private var gettingIpAddress = false
 
-    init(logger: FileLogger, vpnManager: VPNManager) {
+    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager) {
         self.logger = logger
+        self.apiManager = apiManager
         self.vpnManager = vpnManager
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
@@ -123,6 +128,7 @@ extension ConnectionViewModel {
                         self.logger.logD(self, "Enable connection had an update: \(message)")
                     case let .validated(ip):
                         self.logger.logD(self, "Enable connection validate IP: \(ip)")
+                        self.ipAddressSubject.onNext(ip)
                     case let .vpn(status):
                         self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
                     default:
@@ -139,6 +145,7 @@ extension ConnectionViewModel {
                 switch completion {
                 case .finished:
                     self.logger.logD(self, "Finished disabling connection.")
+                    self.updateLocalIPAddress()
                 case let .failure(error):
                     if let error = error as? VPNConfigurationErrors {
                         self.logger.logD(self, "Disable connection had a VPNConfigurationErrors:")
@@ -156,6 +163,19 @@ extension ConnectionViewModel {
                 default: ()
                 }
             }
+    }
+    
+    private func updateLocalIPAddress() {
+        logger.logD(self, "Displaying local IP Address.")
+        gettingIpAddress = true
+        apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+            self.gettingIpAddress = false
+            if self.isDisconnected() {
+                self.ipAddressSubject.onNext(myIp.userIp)
+            }
+        }, onFailure: { _ in
+            self.gettingIpAddress = false
+        }).disposed(by: disposeBag)
     }
 }
 

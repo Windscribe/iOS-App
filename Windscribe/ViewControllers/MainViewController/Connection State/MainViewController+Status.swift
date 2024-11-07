@@ -53,10 +53,6 @@ extension MainViewController {
             self.enableConnectButton()
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.ipAddressSubject.subscribe(onNext: {
-            self.showSecureIPAddressState(ipAddress: $0)
-        }).disposed(by: disposeBag)
-
         connectionStateViewModel.autoModeSelectorHiddenChecker.subscribe(onNext: {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
@@ -78,6 +74,10 @@ extension MainViewController {
 
         vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showConnectionFailed()
+        }).disposed(by: disposeBag)
+        
+        vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
+            self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
     }
 
