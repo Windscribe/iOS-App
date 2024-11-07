@@ -51,6 +51,7 @@ protocol MainViewModelType {
     func getLatency(ip: String?) -> Int
     func daysSinceLogin() -> Int
     func showRateDialog() -> Bool
+    func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
     func getLastConnectedNode() -> LastConnectedNode?
@@ -450,6 +451,10 @@ class MainViewModel: MainViewModelType {
         } else {
             return true
         }
+    }
+
+    func isPrivacyPopupAccepted() -> Bool {
+        return preferences.getPrivacyPopupAccepted() ?? false
     }
 
     func isAntiCensorshipEnabled() -> Bool {

@@ -27,7 +27,7 @@ extension MainViewController {
         addCardHeaderView()
         displayLeftDataInformation()
         showSplashView()
-        showPrivacyConfirmationPopup()
+        checkPrivacyConfirmation()
         // UserPreferencesManager.shared.listenForUserPreferencesChange()
         WifiManager.shared.saveCurrentWifiNetworks()
         loadPortMap()
