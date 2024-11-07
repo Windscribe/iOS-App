@@ -66,7 +66,7 @@ extension ConnectionState {
         case .connected, .test: .connectedStartBlue
         case .connecting, .automaticFailed: .connectingStartBlue
         case .disconnecting: .disconnectedStartBlack
-        case .disconnected: .lightMidnight
+        case .disconnected, .invalid: .lightMidnight
         }
     }
 
@@ -76,7 +76,7 @@ extension ConnectionState {
         case .test: TextsAsset.Status.connectivityTest
         case .connected: TextsAsset.Status.on
         case .connecting: TextsAsset.Status.connecting
-        case .disconnected, .disconnecting: TextsAsset.Status.off
+        case .disconnected, .disconnecting, .invalid: TextsAsset.Status.off
         case .automaticFailed: ""
         }
     }
@@ -85,7 +85,7 @@ extension ConnectionState {
         switch self {
         case .connected, .test: .seaGreen
         case .connecting: .lowGreen
-        case .disconnecting, .disconnected: .white
+        case .disconnecting, .disconnected, .invalid: .white
         case .automaticFailed: .failedConnectionYellow
         }
     }
@@ -97,7 +97,7 @@ extension ConnectionState {
         switch self {
         case .connected, .test: ImagesAsset.preferredProtocolBadgeOn
         case .connecting: ImagesAsset.preferredProtocolBadgeConnecting
-        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.preferredProtocolBadgeOff
+        case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.preferredProtocolBadgeOff
         }
     }
 
@@ -105,7 +105,7 @@ extension ConnectionState {
         switch self {
         case .connected, .test: ImagesAsset.connectButtonRing
         case .connecting: ImagesAsset.connectingButtonRing
-        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.failedConnectionButtonRing
+        case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.failedConnectionButtonRing
         }
     }
 
@@ -113,13 +113,13 @@ extension ConnectionState {
         switch self {
         case .connected, .test: ImagesAsset.TvAsset.connectedRing
         case .connecting: ImagesAsset.TvAsset.connectingRing
-        case .disconnecting, .disconnected, .automaticFailed: ImagesAsset.TvAsset.disconnectedRing
+        case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.TvAsset.disconnectedRing
         }
     }
 
-    var connectButton: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
+    var connectButton: String { [.disconnected, .disconnecting, .invalid].contains(self) ? ImagesAsset.disconnectedButton : ImagesAsset.connectButton }
 
-    var connectButtonTV: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOff : ImagesAsset.TvAsset.connectionButtonOn }
+    var connectButtonTV: String { [.disconnected, .disconnecting, .invalid].contains(self) ? ImagesAsset.TvAsset.connectionButtonOff : ImagesAsset.TvAsset.connectionButtonOn }
 
-    var connectButtonTvFocused: String { [.disconnected, .disconnecting].contains(self) ? ImagesAsset.TvAsset.connectionButtonOffFocused : ImagesAsset.TvAsset.connectionButtonOnFocused }
+    var connectButtonTvFocused: String { [.disconnected, .disconnecting, .invalid].contains(self) ? ImagesAsset.TvAsset.connectionButtonOffFocused : ImagesAsset.TvAsset.connectionButtonOnFocused }
 }

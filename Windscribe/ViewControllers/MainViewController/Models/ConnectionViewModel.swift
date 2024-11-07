@@ -79,7 +79,7 @@ extension ConnectionViewModel {
     func isDisconnecting() -> Bool {
         (try? connectedState.value())?.state == .disconnecting
     }
-    
+
     func isInvalid() -> Bool {
         (try? connectedState.value())?.state == .invalid
     }
