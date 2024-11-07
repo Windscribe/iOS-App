@@ -164,7 +164,7 @@ extension ConnectionViewModel {
                 }
             }
     }
-    
+
     private func updateLocalIPAddress() {
         logger.logD(self, "Displaying local IP Address.")
         gettingIpAddress = true

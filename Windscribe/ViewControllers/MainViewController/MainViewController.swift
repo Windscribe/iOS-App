@@ -207,7 +207,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
-        
+
         // TODO: CHANGE this to getNextProtocol from vpnConnection
         viewModel.selectedProtocol.subscribe(onNext: { _ in
             self.refreshProtocol(from: nil)
@@ -265,13 +265,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     func showNotificationsViewController() {
         popupRouter?.routeTo(to: RouteID.newsFeedPopup, from: self)
     }
-    
+
     func checkPrivacyConfirmation() {
         if !viewModel.isPrivacyPopupAccepted() {
             showPrivacyConfirmationPopup()
         }
     }
-    
+
     func showPrivacyConfirmationPopup(willConnectOnAccepting: Bool = false) {
         popupRouter?.routeTo(to: .privacyView(completionHandler: {
             if willConnectOnAccepting { self.enableVPNConnection() }

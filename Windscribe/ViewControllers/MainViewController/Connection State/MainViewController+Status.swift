@@ -75,7 +75,7 @@ extension MainViewController {
         vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showConnectionFailed()
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
