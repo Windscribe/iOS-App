@@ -45,7 +45,10 @@ class TVViewModels: Assembly {
             UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!, billingRepository: r.resolve(BillingRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionStateViewModelType.self) { r in
-            ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!)
+            ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
+        }.inObjectScope(.transient)
+        container.register(ConnectionViewModelType.self) { r in
+            ConnectionViewModel(vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
             MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, themeManager: r.resolve(ThemeManager.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!)

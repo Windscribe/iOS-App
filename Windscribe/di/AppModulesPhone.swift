@@ -160,6 +160,9 @@ class ViewModels: Assembly {
         container.register(ConnectionStateViewModelType.self) { r in
             ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
+        container.register(ConnectionViewModelType.self) { r in
+            ConnectionViewModel(vpnManager: r.resolve(VPNManager.self)!)
+        }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
@@ -226,6 +229,7 @@ class ViewControllerModule: Assembly {
             vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.connectionStateViewModel = r.resolve(ConnectionStateViewModelType.self)
+            vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.customConfigPickerViewModel = r.resolve(CustomConfigPickerViewModelType.self)
             vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)

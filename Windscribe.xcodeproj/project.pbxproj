@@ -99,6 +99,8 @@
 		1E60E0262CAD69DC00623CD5 /* Data+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */; };
 		1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF72CAB061800623CD5 /* Disconnect.swift */; };
 		1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
+		1E7918BF2CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */; };
+		1E7918C02CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */; };
 		1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57BDE4129B93FBB00337E63 /* LinkProvider.swift */; };
 		1E79CA5B2C63D2BB006D4DE7 /* AccountViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE6D2B72837D33800276C7D /* AccountViewData.swift */; };
 		1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AE6D2BC2837E46100276C7D /* AccountViewModel.swift */; };
@@ -1313,6 +1315,7 @@
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
 		1E6A7FA2FA7061898B36ABB7 /* Pods-PacketTunnel.development.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PacketTunnel.development.xcconfig"; path = "Target Support Files/Pods-PacketTunnel/Pods-PacketTunnel.development.xcconfig"; sourceTree = "<group>"; };
+		1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewModel.swift; sourceTree = "<group>"; };
 		1E79CA5D2C63D7A3006D4DE7 /* AccountSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSectionView.swift; sourceTree = "<group>"; };
 		1E79CA5F2C63D917006D4DE7 /* AccountSectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountSectionView.xib; sourceTree = "<group>"; };
 		1E79CA612C63D942006D4DE7 /* AccountItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountItemView.swift; sourceTree = "<group>"; };
@@ -2605,6 +2608,7 @@
 		1EC6C7862BE28B7D0036248B /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */,
 				1EA91DDD2BECFE4100496DF8 /* ConnectionStateViewModel.swift */,
 				59E63A2D2BD145F1002E566F /* MainViewModel.swift */,
 				1EC6C7892BE293690036248B /* LocationMainViewModel.swift */,
@@ -4952,6 +4956,7 @@
 				59FC74412C515BC000021CD1 /* WifiManager.swift in Sources */,
 				59FC742D2C51568A00021CD1 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				59FC73ED2C51510100021CD1 /* APIMessage.swift in Sources */,
+				1E7918C02CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */,
 				59FC744D2C515E3800021CD1 /* UIView+Constraint.swift in Sources */,
 				59FC74322C515A3700021CD1 /* LocalDatabase.swift in Sources */,
 				59FC745C2C5161DD00021CD1 /* UIImageView+Ext.swift in Sources */,
@@ -5350,6 +5355,7 @@
 				E96FEB26276CE78700D0BC54 /* ErrorPopupViewController.swift in Sources */,
 				1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */,
 				E9425B9927437024008B8786 /* APIParameters.swift in Sources */,
+				1E7918BF2CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */,
 				59A2186E2C3C9D7D000D89FA /* AppModulesPhone.swift in Sources */,
 				C56FCC0A2B2CF3DF008DE7D4 /* UpgradeRouter.swift in Sources */,
 				AF36A1AB237C7E3600BDDCDB /* LeaderboardTableViewCell.swift in Sources */,

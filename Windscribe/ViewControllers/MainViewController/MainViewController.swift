@@ -163,6 +163,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var viewModel: MainViewModelType!
     var locationManagerViewModel: LocationManagingViewModelType!
     var connectionStateViewModel: ConnectionStateViewModelType!
+    var vpnConnectionViewModel: ConnectionViewModelType!
     var customConfigPickerViewModel: CustomConfigPickerViewModelType!
     var favNodesListViewModel: FavNodesListViewModelType!
     var staticIPListViewModel: StaticIPListViewModelType!
@@ -212,7 +213,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureNotificationListeners() {
-        if connectionStateViewModel.isDisconnected() {
+        if vpnConnectionViewModel.isDisconnected() {
             loadLatencyWhenReady()
         }
         NotificationCenter.default.addObserver(self, selector: #selector(loadLastConnected), name: Notifications.loadLastConnected, object: nil)
@@ -250,17 +251,17 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func isBestLocationSelected() -> Bool {
-        return connectionStateViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation
+        return vpnConnectionViewModel.vpnManager.selectedNode?.cityName == Fields.Values.bestLocation
     }
 
     func checkForInternetConnection() {
-        guard connectionStateViewModel.isConnected() else { return }
+        guard vpnConnectionViewModel.isConnected() else { return }
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
             logger.logE(MainViewController.self, "No internet connection available.")
             internetConnectionLost = true
-            connectionStateViewModel.vpnManager.isOnDemandRetry = false
-            connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true)
+            vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
+            vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(setDisconnect: true)
         }
     }
 
@@ -294,14 +295,15 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         viewModel.updateServerConfig()
     }
 
+    // TODO: refactor vpn configs
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         viewModel.bestLocation.filter { $0?.isInvalidated == false }.bind(onNext: { bestLocation in
             guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
             self.logger.logD(self, "Configuring best location.")
             self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
-            if selectBestLocation && self.connectionStateViewModel.isDisconnected() || self.noSelectedNodeToConnect() {
-                self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
-                self.connectionStateViewModel.connectedState.onNext(ConnectionStateInfo.defaultValue())
+            if selectBestLocation && self.vpnConnectionViewModel.isDisconnected() || self.noSelectedNodeToConnect() {
+                self.vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+                self.vpnConnectionViewModel.connectedState.onNext(ConnectionStateInfo.defaultValue())
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
@@ -310,20 +312,20 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = try? self.viewModel.session.value()?.isPremium {
-                if self.connectionStateViewModel.isConnected() == false, self.connectionStateViewModel.vpnManager.isConnecting() == false, self.connectionStateViewModel.isDisconnected() == true, self.connectionStateViewModel.vpnManager.isDisconnecting() == false, isGroupProOnly, !isUserPro {
-                    self.connectionStateViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
+                if self.vpnConnectionViewModel.isConnected() == false, self.vpnConnectionViewModel.vpnManager.isConnecting() == false, self.vpnConnectionViewModel.isDisconnected() == true, self.vpnConnectionViewModel.vpnManager.isDisconnecting() == false, isGroupProOnly, !isUserPro {
+                    self.vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId)
                 }
             }
         }).disposed(by: disposeBag)
     }
 
     func noSelectedNodeToConnect() -> Bool {
-        return connectionStateViewModel.vpnManager.selectedNode == nil
+        return vpnConnectionViewModel.vpnManager.selectedNode == nil
     }
 
     func showOutOfDataPopup() {
-        if connectionStateViewModel.isConnected() && !connectionStateViewModel.vpnManager.isCustomConfigSelected() {
-            connectionStateViewModel.disconnect()
+        if vpnConnectionViewModel.isConnected() && !vpnConnectionViewModel.vpnManager.isCustomConfigSelected() {
+            vpnConnectionViewModel.disableConnection()
         }
         logger.logD(self, "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
@@ -369,12 +371,12 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 !nodes.isEmpty
             {
                 logger.logD(self, "Account downgrade detected.")
-                if connectionStateViewModel.isDisconnected() {
+                if vpnConnectionViewModel.isDisconnected() {
                     loadLatencyValues(selectBestLocation: true, connectToBestLocation: false)
                 } else {
                     connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
-                    connectionStateViewModel.vpnManager.resetProperties()
-                    //   self.connectionStateViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
+                    vpnConnectionViewModel.vpnManager.resetProperties()
+                    //   self.vpnConnectionViewModel.vpnManager.disconnectActiveVPNConnection(disableConnectIntent: true)
                 }
             }
         }
@@ -383,7 +385,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             loadLatencyValues(selectBestLocation: isBestLocationSelected(), connectToBestLocation: false)
         }
 
-        connectionStateViewModel.vpnManager.checkForForceDisconnect()
+        vpnConnectionViewModel.vpnManager.checkForForceDisconnect()
     }
 
     func reloadCustomConfigs() {
@@ -476,24 +478,24 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func checkForOutsideIntent() {
-        if connectionStateViewModel.vpnManager.connectWhenReady {
-            connectionStateViewModel.vpnManager.connectWhenReady = false
+        if vpnConnectionViewModel.vpnManager.connectWhenReady {
+            vpnConnectionViewModel.vpnManager.connectWhenReady = false
             connectVPNIntentReceived()
             return
         }
-        if connectionStateViewModel.vpnManager.disconnectWhenReady {
-            connectionStateViewModel.vpnManager.disconnectWhenReady = false
+        if vpnConnectionViewModel.vpnManager.disconnectWhenReady {
+            vpnConnectionViewModel.vpnManager.disconnectWhenReady = false
             disconnectVPNIntentReceived()
             return
         }
     }
 
     func disconnectVPN(force: Bool = false) {
-        connectionStateViewModel.vpnManager.isOnDemandRetry = false
-        connectionStateViewModel.vpnManager.connectIntent = false
-        connectionStateViewModel.vpnManager.userTappedToDisconnect = true
+        vpnConnectionViewModel.vpnManager.isOnDemandRetry = false
+        vpnConnectionViewModel.vpnManager.connectIntent = false
+        vpnConnectionViewModel.vpnManager.userTappedToDisconnect = true
         hideAutoModeSelectorView(connect: false)
-        connectionStateViewModel.vpnManager.disconnectAllVPNConnections(setDisconnect: true, force: force)
+        vpnConnectionViewModel.vpnManager.disconnectAllVPNConnections(setDisconnect: true, force: force)
     }
 
     func disableConnectButton() {
@@ -526,7 +528,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }, completion: { _ in
             self.autoModeSelectorView.isHidden = true
             if connect {
-                self.connectionStateViewModel.enableConnection()
+                self.vpnConnectionViewModel.enableConnection()
             }
         })
     }

@@ -61,12 +61,9 @@ extension MainViewController {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
-
-            if let info = try? self.connectionStateViewModel.connectedState.value() {
-                self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
-            }
+            self.setCircumventCensorshipBadge(color: $0.state.statusColor.withAlphaComponent($0.state.statusAlpha))
         }).disposed(by: disposeBag)
     }
 
