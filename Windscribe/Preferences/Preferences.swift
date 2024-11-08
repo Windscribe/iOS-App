@@ -146,4 +146,10 @@ protocol Preferences {
     // Widget Info
     func saveConnectionRequested(value: Bool)
     func getConnectionRequested() -> Bool
+    
+    // Locations
+    func saveLasteSelectedLocation(with locationID: String)
+    func getLastSelectedLocation() -> String
+    func saveBestLocation(with locationID: String)
+    func getBestLocation() -> String
 }

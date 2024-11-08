@@ -282,8 +282,9 @@ class VPNManager: VPNManagerProtocol {
                 return
             }
             logger.logD(self, "[\(uniqueConnectionId)] Running connectivity Test")
-            api.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
-                self.executeForConnectivityTestSuccessful(ipAddress: myIp.userIp, checkForIPAddressChange: checkForIPAddressChange)
+        
+            ipRepository.getIp().subscribe(onSuccess: { myIp in
+                
             }, onFailure: { _ in
                 if retry {
                     self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test.")
@@ -301,29 +302,6 @@ class VPNManager: VPNManagerProtocol {
                     self.disconnectOrFail()
                 }
             }).disposed(by: disposeBag)
-    }
-
-    func executeForConnectivityTestSuccessful(ipAddress: String,
-                                              checkForIPAddressChange _: Bool = true)
-    {
-        logger.logE(VPNManager.self, "[\(uniqueConnectionId)] Connectivity Test successful.")
-
-        AutomaticMode.shared.resetFailCounts()
-        ConnectionManager.shared.goodProtocol = ConnectionManager.shared.getNextProtocol()
-        delegate?.displaySetPrefferedProtocol()
-        ConnectionManager.shared.onConnectStateChange(state: NEVPNStatus.connected)
-        DispatchQueue.main.async {
-            if self.isConnected() {
-                self.isOnDemandRetry = false
-                self.preferences.saveConnectionCount(count: (self.preferences.getConnectionCount() ?? 0) + 1)
-                self.delegate?.setConnected(ipAddress: ipAddress)
-                self.resetProperties()
-                self.connectIntent = true
-                if self.selectedFirewallMode == true {
-                    self.isOnDemandRetry = true
-                }
-            }
-        }
     }
 
     private let activeManagerKey = "activeManager"

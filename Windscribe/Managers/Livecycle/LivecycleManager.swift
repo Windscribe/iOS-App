@@ -168,6 +168,7 @@ class LivecycleManager: LivecycleManagerType {
     }
 
     private func handleShortcutLaunch() {
+        LivecycleManager.self 
         let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
         (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
         if shortcut == .networkSecurity {

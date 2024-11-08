@@ -28,5 +28,4 @@ enum Notifications {
     static let reloadTableViews = Notification.Name(rawValue: "reload-table-views")
     static let configureVPN = Notification.Name(rawValue: "configure-vpn")
     static let sessionUpdated = Notification.Name(rawValue: "session-updated")
-    static let loadLastConnected = Notification.Name(rawValue: "load-last-connected")
 }

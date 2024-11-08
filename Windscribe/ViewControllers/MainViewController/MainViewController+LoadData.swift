@@ -19,6 +19,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
+    //TODO: need to check for protocols
     func loadPortMap() {
         let appProtocols = TextsAsset.General.protocols.sorted()
         viewModel.portMap.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { portMaps in
@@ -27,7 +28,6 @@ extension MainViewController {
                 self.logger.logD(self, "Updating Portmap to include missing protocols.")
                 self.viewModel.loadServerList()
                 self.viewModel.loadPortMap()
-                self.loadLastConnected()
             } else {
                 self.logger.logD(self, "Updated Portmap is avaialble.")
             }

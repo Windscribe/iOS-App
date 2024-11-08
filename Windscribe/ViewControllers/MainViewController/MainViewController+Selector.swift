@@ -211,35 +211,6 @@ extension MainViewController {
         }
     }
 
-    @objc func loadLastConnected() {
-        if let node = viewModel.getLastConnectedNode(), let nodeModel = node.getFavNodeModel() {
-            guard let countryCode = nodeModel.countryCode, let dnsHostname = nodeModel.dnsHostname, let hostname = nodeModel.hostname, let serverAddress = nodeModel.ipAddress, let nickName = nodeModel.nickName, let cityName = nodeModel.cityName, let groupId = Int(nodeModel.groupId ?? "1") else { return }
-
-
-
-            if vpnConnectionViewModel.vpnManager.selectedNode?.wgPublicKey == nil || vpnConnectionViewModel.vpnManager.selectedNode?.ip3 == nil, node.customConfigId == nil, vpnConnectionViewModel.isDisconnected() {
-                if vpnConnectionViewModel.isBestLocationSelected() {
-                    configureBestLocation()
-                } else {
-                    vpnConnectionViewModel.vpnManager.selectAnotherNode()
-                }
-                logger.logD(self, "Last connected node couldn't be found on disk. Loading another node in same group.")
-            }
-
-            if let customConfigId = node.customConfigId, let customConfig = try? viewModel.customConfigs.value()?.first(where: { $0.id == customConfigId }) {
-                vpnConnectionViewModel.vpnManager.selectedNode?.customConfig = customConfig.getModel()
-            }
-            logger.logD(self, "Last connected node retrived from disk. \(vpnConnectionViewModel.vpnManager.selectedNode?.hostname ?? "")")
-        }
-        if vpnConnectionViewModel.vpnManager.selectedNode == nil {
-            guard let bestLocationValue = try? viewModel.bestLocation.value(), bestLocationValue.isInvalidated == false else { return }
-            let bestLocation = bestLocationValue.getBestLocationModel()
-            guard let countryCode = bestLocation.countryCode, let dnsHostname = bestLocation.dnsHostname, let hostname = bestLocation.hostname, let serverAddress = bestLocation.ipAddress, let nickName = bestLocation.nickName, let cityName = bestLocation.cityName, let groupId = bestLocation.groupId else { return }
-            vpnConnectionViewModel.vpnManager.selectedNode = SelectedNode(countryCode: countryCode, dnsHostname: dnsHostname, hostname: hostname, serverAddress: serverAddress, nickName: nickName, cityName: cityName, groupId: groupId)
-            logger.logD(self, "Last connected node couldn't be found on disk. Best location node is set as selected.")
-        }
-    }
-
     @objc func loadServerList() {
         viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             DispatchQueue.main.async {

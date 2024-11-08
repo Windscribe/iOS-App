@@ -31,8 +31,10 @@ protocol ConnectionViewModelType {
     func setOutOfData()
     func enableConnection()
     func disableConnection()
+    func saveLastSelectedLocation(with locationID: String)
+    func saveBestLocation(with locationID: String)
 
-    //Info
+    // Info
     func getSelectedCountryCode() -> String
     func isBestLocationSelected() -> Bool
 }
@@ -49,14 +51,16 @@ class ConnectionViewModel: ConnectionViewModelType {
     let vpnManager: VPNManager
     let logger: FileLogger
     let apiManager: APIManager
+    let preferences: Preferences
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
 
-    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager) {
+    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, preferences: Preferences) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
+        self.preferences = preferences
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
                 ConnectionStateInfo(state: ConnectionState.state(from: state),
@@ -100,6 +104,14 @@ extension ConnectionViewModel {
 
     func isBestLocationSelected() -> Bool {
         return vpnManager.getLocationNode()?.cityName == Fields.Values.bestLocation
+    }
+    
+    func saveLastSelectedLocation(with locationID: String) {
+        preferences.saveLasteSelectedLocation(with: locationID)
+    }
+    
+    func saveBestLocation(with locationID: String) {
+        preferences.saveBestLocation(with: locationID)
     }
 
     func enableConnection() {

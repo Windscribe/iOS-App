@@ -192,32 +192,12 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObject(object: filters)
     }
 
-    func removeLastConnectedNode() {
-        if let object = getLastConnectedNode() {
-            deleteRealmObject(object: object)
-        }
-    }
-
-    func saveLastConnectedNode(node: LastConnectedNode) -> Disposable {
-        return updateRealmObject(object: node)
-    }
-
     func getLastConnectedNode() -> LastConnectedNode? {
         return getRealmObjects(type: LastConnectedNode.self)?.sorted { $0.connectedAt < $1.connectedAt }.last
     }
 
     func getBestLocation() -> Observable<BestLocation?> {
         return getSafeRealmObservable(type: BestLocation.self)
-    }
-
-    func saveBestLocation(location: BestLocation) -> Disposable {
-        return updateRealmObject(object: location)
-    }
-
-    func removeBestLocation(cityName: String) {
-        if let object = getRealmObject(type: BestLocation.self, primaryKey: cityName) {
-            deleteRealmObject(object: object)
-        }
     }
 
     func getLastConnection() -> Observable<VPNConnection?> {
