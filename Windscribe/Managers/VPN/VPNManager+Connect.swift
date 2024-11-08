@@ -64,11 +64,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
         if let info = try? vpnInfo.value() {
             return ProtocolPort( info.selectedProtocol, info.selectedPort)
         } else {
-            return await withCheckedContinuation { continuation in
-                connectionManager.loadProtocols(shouldReset: true) { messages in
-                    continuation.resume(returning: self.connectionManager.getNextProtocol())
-                }
-            }
+            return connectionManager.getNextProtocol()
         }
     }
 

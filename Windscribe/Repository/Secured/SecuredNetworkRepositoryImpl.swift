@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import RealmSwift
 
 /// Manages Auto secure networks  data
 class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {

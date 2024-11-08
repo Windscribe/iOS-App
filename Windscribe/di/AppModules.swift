@@ -157,7 +157,7 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
-            LivecycleManager(logger: r.resolve(FileLogger.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, credentialsRepo: r.resolve(CredentialsRepository.self)!, notificationRepo: r.resolve(NotificationRepository.self)!)
+            LivecycleManager(logger: r.resolve(FileLogger.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, credentialsRepo: r.resolve(CredentialsRepository.self)!, notificationRepo: r.resolve(NotificationRepository.self)!, ipRepository: r.resolve(IPRepository.self)!, configManager: r.resolve(ConfigurationsManager.self)!, conenctivityManager: r.resolve(ConnectionManagerV2.self)!)
         }.inObjectScope(.userScope)
     }
 }

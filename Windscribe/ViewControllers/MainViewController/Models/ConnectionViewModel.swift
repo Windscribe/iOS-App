@@ -103,7 +103,7 @@ extension ConnectionViewModel {
     }
 
     func enableConnection() {
-        Task {
+        Task { @MainActor in
             let protocolPort = await vpnManager.getProtocolPort()
             let locationID = vpnManager.getLocationId()
             connectionTaskPublisher?.cancel()
