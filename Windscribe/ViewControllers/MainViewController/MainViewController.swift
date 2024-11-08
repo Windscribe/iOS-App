@@ -238,7 +238,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if vpnConnectionViewModel.isDisconnected() {
             loadLatencyWhenReady()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(loadLastConnected), name: Notifications.loadLastConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(popoverDismissed), name: Notifications.popoverDismissed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableViews), name: Notifications.reloadTableViews, object: nil)

@@ -16,7 +16,6 @@ extension MainViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Main view loaded. Preparing layout.")
-        loadLastConnected()
         addViews()
         renderBlurSpacedLabel()
         addGetMoreDataViews()
