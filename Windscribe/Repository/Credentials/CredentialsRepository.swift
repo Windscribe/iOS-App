@@ -14,4 +14,5 @@ protocol CredentialsRepository {
     func getUpdatedIKEv2Crendentials() -> Single<IKEv2ServerCredentials?>
     func getUpdatedServerConfig() -> Single<String>
     func selectedServerCredentialsType() -> ServerCredentials.Type
+    func updateServerConfig()
 }

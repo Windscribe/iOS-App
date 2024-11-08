@@ -151,12 +151,4 @@ extension MainViewController {
             }
         }).disposed(by: disposeBag)
     }
-
-    func loadNotifications() {
-        viewModel.notices.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { _ in
-            self.checkForUnreadNotifications()
-        }, onError: { error in
-            self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
-    }
 }

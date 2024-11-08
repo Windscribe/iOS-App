@@ -29,12 +29,16 @@ protocol MainViewModelType {
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
     var session: BehaviorSubject<Session?> { get }
     var favouriteGroups: BehaviorSubject<[Group]> { get }
+
+    var showNetworkSecurityTrigger: PublishSubject<Void> { get }
+    var showNotificationsTrigger: PublishSubject<Void> { get }
+    var becameActiveTrigger: PublishSubject<Void> { get }
+
     var isBlurStaticIpAddress: Bool { get }
     var isBlurNetworkName: Bool { get }
     var didShowProPlanExpiredPopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
     var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
-    func loadNotifications()
     func loadServerList()
     func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void)
     func loadPortMap()
@@ -46,7 +50,6 @@ protocol MainViewModelType {
     func getConnectionCount() -> Int?
     func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
     func getPortList(protocolName: String) -> [String]?
-    func updateServerConfig()
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func daysSinceLogin() -> Int
@@ -66,21 +69,23 @@ protocol MainViewModelType {
 }
 
 class MainViewModel: MainViewModelType {
-    var themeManager: ThemeManager
-    var localDatabase: LocalDatabase
-    var vpnManager: VPNManager
-    var logger: FileLogger
-    var serverRepository: ServerRepository
-    var portMapRepo: PortMapRepository
-    var staticIpRepository: StaticIpRepository
-    var preferences: Preferences
-    var latencyRepo: LatencyRepository
-    var connectivity: Connectivity
-    var pushNotificationsManager: PushNotificationManagerV2!
-    var notificationsRepo: NotificationRepository!
-    var credentialsRepository: CredentialsRepository
-    var serverList = BehaviorSubject<[Server]>(value: [])
-    var bestLocation = BehaviorSubject<BestLocation?>(value: nil)
+    let themeManager: ThemeManager
+    let localDatabase: LocalDatabase
+    let vpnManager: VPNManager
+    let logger: FileLogger
+    let serverRepository: ServerRepository
+    let portMapRepo: PortMapRepository
+    let staticIpRepository: StaticIpRepository
+    let preferences: Preferences
+    let latencyRepo: LatencyRepository
+    let connectivity: Connectivity
+    let pushNotificationsManager: PushNotificationManagerV2!
+    let notificationsRepo: NotificationRepository!
+    let credentialsRepository: CredentialsRepository
+    let livecycleManager: LivecycleManagerType
+
+    let serverList = BehaviorSubject<[Server]>(value: [])
+    let bestLocation = BehaviorSubject<BestLocation?>(value: nil)
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMap = BehaviorSubject<[PortMap]?>(value: nil)
     var favNode = BehaviorSubject<[FavNode]?>(value: nil)
@@ -98,6 +103,10 @@ class MainViewModel: MainViewModelType {
     var favouriteGroups = BehaviorSubject<[Group]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
+    let showNetworkSecurityTrigger: PublishSubject<Void>
+    let showNotificationsTrigger: PublishSubject<Void>
+    let becameActiveTrigger: PublishSubject<Void>
+
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
     var didShowProPlanExpiredPopup = false
@@ -106,7 +115,7 @@ class MainViewModel: MainViewModelType {
     let refreshProtocolTrigger = PublishSubject<Void>()
 
     let disposeBag = DisposeBag()
-    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, themeManager: ThemeManager, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity) {
+    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, themeManager: ThemeManager, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType) {
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
@@ -120,6 +129,12 @@ class MainViewModel: MainViewModelType {
         self.notificationsRepo = notificationsRepo
         self.credentialsRepository = credentialsRepository
         self.connectivity = connectivity
+        self.livecycleManager = livecycleManager
+
+        showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
+        showNotificationsTrigger = livecycleManager.showNotificationsTrigger
+        becameActiveTrigger = livecycleManager.becameActiveTrigger
+
         isDarkMode = themeManager.darkTheme
         getBestLocation()
         loadNotifications()
@@ -379,18 +394,10 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadNotifications() {
-        let pcpId = (try? pushNotificationsManager.notification.value()?.pcpid) ?? nil
-        if pcpId != nil {
-            logger.logD(self, "Adding pcpid ID: \(pcpId ?? "") to notifications request.")
-        }
-        notificationsRepo.getUpdatedNotifications(pcpid: pcpId ?? "").subscribe(onSuccess: { notices in
-            self.notices.onNext(notices)
-        }).disposed(by: disposeBag)
-
-        pushNotificationsManager.notification.subscribe(onNext: { payload in
-            guard let payload = payload else { return }
-            self.promoPayload.onNext(payload)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        pushNotificationsManager.notification.compactMap { $0 }
+            .subscribe(onNext: { self.promoPayload.onNext($0) })
+            .disposed(by: disposeBag)
+        notices = notificationsRepo.notices
     }
 
     func getConnectionCount() -> Int? {
@@ -420,16 +427,6 @@ class MainViewModel: MainViewModelType {
 
     func loadServerList() {
         serverRepository.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
-    }
-
-    func updateServerConfig() {
-        logger.logD(self, "Updating open vpn credentials.")
-        credentialsRepository.getUpdatedOpenVPNCrendentials().flatMap { _ in
-            self.logger.logD(self, "Updating open vpn server config.")
-            return self.credentialsRepository.getUpdatedServerConfig()
-        }.subscribe(onSuccess: { _ in
-            self.logger.logD(self, "Server config updated.")
-        }, onFailure: { _ in self.logger.logD(self, "Failed to update server config.") }).disposed(by: disposeBag)
     }
 
     func getStaticIp() -> [StaticIP] {

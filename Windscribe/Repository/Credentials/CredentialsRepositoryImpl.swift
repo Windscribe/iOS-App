@@ -112,4 +112,14 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         }
         return OpenVPNServerCredentials.self
     }
+
+    func updateServerConfig() {
+        logger.logD(self, "Updating open vpn credentials.")
+        getUpdatedOpenVPNCrendentials().flatMap { _ in
+            self.logger.logD(self, "Updating open vpn server config.")
+            return self.getUpdatedServerConfig()
+        }.subscribe(onSuccess: { _ in
+            self.logger.logD(self, "Server config updated.")
+        }, onFailure: { _ in self.logger.logD(self, "Failed to update server config.") }).disposed(by: disposeBag)
+    }
 }

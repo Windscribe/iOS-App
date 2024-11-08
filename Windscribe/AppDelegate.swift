@@ -41,6 +41,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 
+    private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
+
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
 
     func application(_: UIApplication,
@@ -51,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
         Task {
+            livecycleManager.onAppStart()
             await vpnManager.setup()
             recordInstallIfFirstLoad()
             registerForPushNotifications()
@@ -203,6 +206,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func applicationDidBecomeActive(_: UIApplication) {
         logger.logD(self, "App state changed to Active.")
         AutomaticMode.shared.resetFailCounts()
+        livecycleManager.appEnteredForeground()
     }
 
     func applicationWillTerminate(_: UIApplication) {

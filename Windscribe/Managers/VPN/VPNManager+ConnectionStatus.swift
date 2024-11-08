@@ -29,47 +29,23 @@ extension VPNManager {
     }
 
     func isConnected() -> Bool {
-        for manager in configManager.managers {
-            if manager.connection.status == .connected && manager.protocolConfiguration?.username != nil {
-                return true
-            }
-        }
-        return false
+        (try? vpnInfo.value())?.status == .connected
     }
 
     func isConnecting() -> Bool {
-        for manager in configManager.managers {
-            if manager.connection.status == .connecting && manager.protocolConfiguration?.username != nil {
-                return true
-            }
-        }
-        return false
+        (try? vpnInfo.value())?.status == .connecting
     }
 
     func isDisconnected() -> Bool {
-        for manager in configManager.managers {
-            if manager.connection.status == .disconnected && manager.protocolConfiguration?.username != nil {
-                return true
-            }
-        }
-        return false
+        (try? vpnInfo.value())?.status == .disconnected
     }
 
     func isDisconnecting() -> Bool {
-        for manager in configManager.managers where manager.connection.status == .disconnecting {
-            return true
-        }
-        return false
+        (try? vpnInfo.value())?.status == .disconnecting
     }
 
     func isInvalid() -> Bool {
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && configManager.iKEV2Manager()?.connection.status != .invalid {
-            return false
-        }
-        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNServerCredentials.self && configManager.openVPNdManager()?.connection.status != .invalid {
-            return false
-        }
-        return true
+        (try? vpnInfo.value())?.status == .invalid
     }
 
     func isDisconnectedAndNotConfigured() -> Bool {

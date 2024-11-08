@@ -12,7 +12,6 @@ import UIKit
 
 extension MainViewController {
     func bindConnectionStateViewModel() {
-
         connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
@@ -46,10 +45,6 @@ extension MainViewController {
             self.locationManagerViewModel.requestLocationPermission {
                 self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil, protocolName: ConnectionManager.shared.getNextProtocol().protocolName), from: self)
             }
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.enableConnectTrigger.subscribe(onNext: {
-            self.enableConnectButton()
         }).disposed(by: disposeBag)
 
         connectionStateViewModel.autoModeSelectorHiddenChecker.subscribe(onNext: {

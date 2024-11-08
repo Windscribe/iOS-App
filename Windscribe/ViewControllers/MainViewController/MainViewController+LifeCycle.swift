@@ -36,18 +36,15 @@ extension MainViewController {
         loadStaticIPs()
         loadCustomConfigs()
         loadLastConnection()
-        loadNotifications()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         setupIntentsForSiri()
         configureNotificationListeners()
         // self.configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
         loadLatencyWhenReady()
-        checkForNewNotifications()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        updateServerConfigs()
         bindViewModels()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         locationManagerViewModel.shouldPresentLocationPopUp.subscribe {
@@ -75,18 +72,6 @@ extension MainViewController {
         searchLocationsView.viewModel.dismiss()
     }
 
-    func handleShortcutLaunch() {
-        let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
-        (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
-        if shortcut == .networkSecurity {
-            locationManagerViewModel.requestLocationPermission {
-                self.openNetworkSecurity()
-            }
-        } else if shortcut == .notifications {
-            showNotificationsViewController()
-        }
-    }
-
     private func bindViewModels() {
         bindMainViewModel()
         bindCustomConfigPickerModel()
@@ -96,11 +81,5 @@ extension MainViewController {
         bindStaticIPListViewModel()
         bindServerListViewModel()
         bindProtocolSwitchViewModel()
-    }
-
-    private func openNetworkSecurity() {
-        let vc = Assembler.resolve(NetworkViewController.self)
-        vc.modalTransitionStyle = .coverVertical
-        navigationController?.pushViewController(vc, animated: true)
     }
 }

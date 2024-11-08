@@ -66,12 +66,16 @@ class PopupRouter: BaseRouter, RootRouter {
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
+        case .networkSecurity:
+            vc = Assembler.resolve(NetworkViewController.self)
         default: return
         }
 
         if let vc = vc {
             // Presentation Style
             switch to {
+            case .networkSecurity:
+                vc.modalTransitionStyle = .coverVertical
             case .errorPopup:
                 vc.modalPresentationStyle = .fullScreen
             case .maintenanceLocation:

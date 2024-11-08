@@ -63,7 +63,7 @@ class Repository: Assembly {
             BillingRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(NotificationRepository.self) { r in
-            NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
+            NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(StaticIpRepository.self) { r in
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
@@ -154,6 +154,10 @@ class Managers: Assembly {
                                    securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!,
                                    latencyRepository: r.resolve(LatencyRepository.self)!,
                                    logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+
+        container.register(LivecycleManagerType.self) { r in
+            LivecycleManager(logger: r.resolve(FileLogger.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, credentialsRepo: r.resolve(CredentialsRepository.self)!, notificationRepo: r.resolve(NotificationRepository.self)!)
         }.inObjectScope(.userScope)
     }
 }

@@ -13,37 +13,6 @@ import RxRealm
 import RxSwift
 
 extension MainViewController {
-    @objc func appEnteredForeground() {
-        if vpnConnectionViewModel.isConnecting(), !internetConnectionLost {
-            logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
-            //  enableVPNConnection()
-        }
-        clearScrollHappened()
-        connectionStateViewModel.becameActive()
-        let connectionCount = viewModel.getConnectionCount() ?? 0
-        if connectionCount >= 1 {
-            connectivityTestTimer?.invalidate()
-            connectivityTestTimer = Timer.scheduledTimer(timeInterval: 1.0,
-                                                         target: self,
-                                                         selector: #selector(runConnectivityTestWithNewNodeOnFail),
-                                                         userInfo: nil,
-                                                         repeats: false)
-        }
-        sessionManager.keepSessionUpdated()
-        guard let lastNotificationTimestamp = viewModel.getLastNotificationTimestamp() else {
-            viewModel.saveLastNotificationTimestamp()
-            return
-        }
-        if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 {
-            viewModel.saveLastNotificationTimestamp()
-            checkForNewNotifications()
-        }
-        updateServerConfigs()
-        checkAndShowShareDialogIfNeed()
-        handleShortcutLaunch()
-    }
-
-
     // TODO: VPN MANAGER
     @objc func runConnectivityTestWithNewNodeOnFail() {
         if vpnConnectionViewModel.isConnected() {
@@ -53,29 +22,20 @@ extension MainViewController {
 
     @objc func checkForUnreadNotifications() {
         viewModel.checkForUnreadNotifications(completion: { showNotifications, readNoticeDifferentCount in
-            if showNotifications {
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                if showNotifications {
                     self.showNotificationsViewController()
                 }
-            }
-            if readNoticeDifferentCount != 0 {
-                DispatchQueue.main.async {
+                if readNoticeDifferentCount != 0 {
                     self.notificationDot.setTitle("\(readNoticeDifferentCount)", for: .normal)
                     if self.notificationDot.titleLabel?.text != nil {
                         self.notificationDot.isHidden = false
                     }
-                }
-            } else {
-                DispatchQueue.main.async {
+                } else {
                     self.notificationDot.isHidden = true
                 }
             }
         })
-    }
-
-    @objc func checkForNewNotifications() {
-        logger.logD(self, "Checking for new notifications.")
-        viewModel.loadNotifications()
     }
 
     @objc func latencyLoadTimeOut(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
@@ -335,7 +295,6 @@ extension MainViewController {
     }
 
     @objc func connectButtonTapped() {
-        disableConnectButton()
         HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logE(MainViewController.self, "User tapped to connect.")
@@ -343,17 +302,12 @@ extension MainViewController {
             if isOnline {
                 vpnConnectionViewModel.enableConnection()
             } else {
-                enableConnectButton()
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
             vpnConnectionViewModel.disableConnection()
         }
-    }
-
-    @objc func enableConnectButton() {
-        connectButton.isUserInteractionEnabled = true
     }
 
     @objc func expandButtonTapped() {

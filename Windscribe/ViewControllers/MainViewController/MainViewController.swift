@@ -208,6 +208,27 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
 
+        viewModel.notices.subscribe(onNext: { _ in
+            self.checkForUnreadNotifications()
+        }, onError: { error in
+            self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
+        }).disposed(by: disposeBag)
+
+        viewModel.showNetworkSecurityTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.locationManagerViewModel.requestLocationPermission {
+                self.popupRouter?.routeTo(to: .networkSecurity, from: self)
+            }
+        }).disposed(by: disposeBag)
+
+        viewModel.showNotificationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showNotificationsViewController()
+        }).disposed(by: disposeBag)
+
+        viewModel.becameActiveTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.clearScrollHappened()
+            self.checkAndShowShareDialogIfNeed()
+        }).disposed(by: disposeBag)
+
         // TODO: CHANGE this to getNextProtocol from vpnConnection
         viewModel.selectedProtocol.subscribe(onNext: { _ in
             self.refreshProtocol(from: nil)
@@ -224,7 +245,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableViews), name: Notifications.reloadTableViews, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(configureBestLocationDefault), name: Notifications.configureBestLocation, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reachabilityChanged), name: Notifications.reachabilityChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(checkForUnreadNotifications), name: Notifications.checkForNotifications, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(disconnectVPNIntentReceived), name: Notifications.disconnectVPN, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
@@ -290,10 +310,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if WifiManager.shared.getConnectedNetwork()?.preferredProtocolStatus == false && WifiManager.shared.getConnectedNetwork()?.status == false && WifiManager.shared.getConnectedNetwork()?.dontAskAgainForPreferredProtocol == false {
             popupRouter?.routeTo(to: .setPreferredProtocolPopup, from: self)
         }
-    }
-
-    func updateServerConfigs() {
-        viewModel.updateServerConfig()
     }
 
     // TODO: refactor vpn configs
@@ -469,11 +485,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 })
             }
         }
-    }
-
-    func disableConnectButton() {
-        connectButton.isUserInteractionEnabled = false
-        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
     }
 
     func tableViewScrolled(toTop: Bool) {

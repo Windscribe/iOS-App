@@ -10,5 +10,7 @@ import Foundation
 import RxSwift
 
 protocol NotificationRepository {
+    var notices: BehaviorSubject<[Notice]> { get }
     func getUpdatedNotifications(pcpid: String) -> Single<[Notice]>
+    func loadNotifications()
 }
