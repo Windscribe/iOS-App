@@ -13,13 +13,6 @@ import RxRealm
 import RxSwift
 
 extension MainViewController {
-    // TODO: VPN MANAGER
-    @objc func runConnectivityTestWithNewNodeOnFail() {
-        if vpnConnectionViewModel.isConnected() {
-            vpnConnectionViewModel.vpnManager.runConnectivityTest(connectToAnotherNode: true, checkForIPAddressChange: false)
-        }
-    }
-
     @objc func checkForUnreadNotifications() {
         viewModel.checkForUnreadNotifications(completion: { showNotifications, readNoticeDifferentCount in
             DispatchQueue.main.async {

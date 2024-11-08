@@ -276,10 +276,9 @@ class VPNManager: VPNManagerProtocol {
 
     func runConnectivityTest(retry: Bool = true,
                              connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true)
-    {
-        getVPNConnectionInfo { [self] info in
-            if info?.status != .connected {
+                             checkForIPAddressChange: Bool = true) {
+        guard let info = try? vpnInfo.value() else { return }
+        if info.status != .connected {
                 return
             }
             logger.logD(self, "[\(uniqueConnectionId)] Running connectivity Test")
@@ -302,7 +301,6 @@ class VPNManager: VPNManagerProtocol {
                     self.disconnectOrFail()
                 }
             }).disposed(by: disposeBag)
-        }
     }
 
     func executeForConnectivityTestSuccessful(ipAddress: String,

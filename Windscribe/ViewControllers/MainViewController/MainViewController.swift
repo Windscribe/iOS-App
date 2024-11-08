@@ -146,7 +146,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     // MARK: Timers
 
     weak var latencyLoaderObserver: NSObjectProtocol?
-    var connectivityTestTimer: Timer?
     var autoModeSelectorViewTimer: Timer?
     var notificationTimer: Timer?
     var expandedSections: [Int: Bool]?

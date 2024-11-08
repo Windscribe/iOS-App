@@ -47,7 +47,6 @@ protocol MainViewModelType {
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void)
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
-    func getConnectionCount() -> Int?
     func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
     func getPortList(protocolName: String) -> [String]?
     func getStaticIp() -> [StaticIP]
@@ -398,10 +397,6 @@ class MainViewModel: MainViewModelType {
             .subscribe(onNext: { self.promoPayload.onNext($0) })
             .disposed(by: disposeBag)
         notices = notificationsRepo.notices
-    }
-
-    func getConnectionCount() -> Int? {
-        preferences.getConnectionCount()
     }
 
     func getPortList(protocolName: String) -> [String]? {

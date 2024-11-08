@@ -30,6 +30,8 @@ class LivecycleManager: LivecycleManagerType {
     let showNetworkSecurityTrigger = PublishSubject<Void>()
     let showNotificationsTrigger = PublishSubject<Void>()
     let becameActiveTrigger = PublishSubject<Void>()
+    
+    private var connectivityTestTimer: Timer?
 
     init(logger: FileLogger,
          sessionManager: SessionManagerV2,
@@ -55,9 +57,16 @@ class LivecycleManager: LivecycleManagerType {
         becameActiveTrigger.onNext(())
         if vpnManager.isConnecting(), connectivity.internetConnectionAvailable() {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
-            //  enableVPNConnection()
+            enableVPNConnection()
         }
-
+        if (preferences.getConnectionCount() ?? 0) >= 1 {
+            connectivityTestTimer?.invalidate()
+            connectivityTestTimer = Timer.scheduledTimer(timeInterval: 1.0,
+                                                         target: self,
+                                                         selector: #selector(runConnectivityTest),
+                                                         userInfo: nil,
+                                                         repeats: false)
+        }
         sessionManager.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
@@ -71,13 +80,24 @@ class LivecycleManager: LivecycleManagerType {
         handleShortcutLaunch()
     }
 
-    func handleShortcutLaunch() {
+    private func handleShortcutLaunch() {
         let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
         (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
         if shortcut == .networkSecurity {
             showNetworkSecurityTrigger.onNext(())
         } else if shortcut == .notifications {
             showNotificationsTrigger.onNext(())
+        }
+    }
+    
+    private func enableVPNConnection() {
+        
+    }
+    
+    // TODO: VPN MANAGER
+    @objc private func runConnectivityTest() {
+        if vpnManager.isConnected() {
+            vpnManager.runConnectivityTest(connectToAnotherNode: true, checkForIPAddressChange: false)
         }
     }
 }
