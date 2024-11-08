@@ -12,7 +12,6 @@ import UIKit
 
 extension MainViewController {
     func bindConnectionStateViewModel() {
-        connectionStateViewModel.displayLocalIPAddress(force: true)
 
         connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
