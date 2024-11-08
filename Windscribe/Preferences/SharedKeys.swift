@@ -87,6 +87,10 @@ enum SharedKeys {
     // ReferAndShareManager
     static let referAndShareUserDefautsKeys = "referAndShareUserDefautsKeys"
     static let tvFavourites = "tvfavourites"
+    
+    // Locations
+    static let savedLastLocation = "savedLastLocation"
+    static let savedBestLocation = "savedBestLocation"
 }
 
 /// Read value from plist file or not found returns empty string.

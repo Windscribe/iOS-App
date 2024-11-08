@@ -55,6 +55,7 @@ class LivecycleManager: LivecycleManagerType {
 
     func appEnteredForeground() {
         becameActiveTrigger.onNext(())
+        //TODO:  I Don't think this is necessary as Ginder mentioned the process will just continue from where it was
         if vpnManager.isConnecting(), connectivity.internetConnectionAvailable() {
             logger.logD(self, "Recovery: App entered foreground while connecting. Will restart connection.")
             enableVPNConnection()
@@ -81,6 +82,7 @@ class LivecycleManager: LivecycleManagerType {
     }
 
     private func handleShortcutLaunch() {
+        LivecycleManager.self 
         let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
         (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
         if shortcut == .networkSecurity {
