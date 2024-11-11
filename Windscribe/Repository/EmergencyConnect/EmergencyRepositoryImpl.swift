@@ -57,7 +57,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     func removeProfile() -> Completable {
         Completable.create { [self] completion in
             vpnManager.resetProfiles { [self] in
-                vpnManager.selectedNode = nil
                 vpnManager.resetProperties()
                 Task {
                     await self.vpnManager.configManager.removeProfile(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
@@ -69,38 +68,18 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     func cleansEmergencyConfigs() {
-        vpnManager.selectedNode = nil
-        localDatabase.removeLastConnectedNode()
-        if localDatabase.getLastConnectedNode()?.nickName == configuationName {
-            localDatabase.removeLastConnectedNode()
-        }
-        localDatabase.getCustomConfigs().filter { config in
-            config.name == configuationName && config.isInvalidated == false
-        }.forEach {
-            localDatabase.removeCustomConfig(fileId: $0.id)
-        }
+        // TODO: VPNManager cleansEmergencyConfigs
     }
 
     // Stops tunnel
     func disconnect() {
-        vpnManager.connectIntent = false
-        Task {
-            await self.vpnManager.configManager.disconnect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
-            vpnManager.selectedNode = nil
-        }
+       // TODO: VPNManager Disconnect
     }
 
     /// Configures OpenVPN and attempts a connection.
     func connect(configInfo: OpenVPNConnectionInfo) -> Completable {
-        return buildConfiguration(configInfo: configInfo).flatMapCompletable { [self] data in
-            let customConfig = saveConfiguration(data: data, configInfo: configInfo)
-            return loadConfiguration(name: configuationName, serverAddress: configInfo.ip, customConfig: customConfig.getModel())
-        }.do(onCompleted: {
-            Task {
-                self.vpnManager.activeVPNManager = .openVPN
-                await self.vpnManager.configManager.connect(with: .openVPN, killSwitch: self.vpnManager.killSwitch)
-            }
-        })
+        // TODO: VPNManager connect
+        return Completable.empty()
     }
 
     /// Saves configuration as file and custom config model
@@ -115,38 +94,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     /// Loads configuration in OpenVPNManager
     private func loadConfiguration(name: String, serverAddress: String, customConfig: CustomConfigModel) -> Completable {
-        vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                                               dnsHostname: serverAddress,
-                                               hostname: serverAddress,
-                                               serverAddress: serverAddress,
-                                               nickName: name,
-                                               cityName: TextsAsset.configuredLocation,
-                                               customConfig: customConfig,
-                                               groupId: 0)
-
-        return Completable.create { completion in
-            if let manager = self.vpnManager.configManager.openVPNdManager() {
-                Task {
-                    do {
-                        _ = try await self.vpnManager.configManager.configureOpenVPN(manager: manager,
-                                                                                     selectedNode: self.vpnManager.selectedNode,
-                                                                                     userSettings: self.vpnManager.makeUserSettings(),
-                                                                                     username: customConfig.username ?? "",
-                                                                                     password: customConfig.password ?? "",
-                                                                                     protocolType: customConfig.protocolType ?? "",
-                                                                                     serverAddress: serverAddress,
-                                                                                     port: customConfig.port ?? "",
-                                                                                     x509Name: nil,
-                                                                                     proxyInfo: nil)
-                        completion(.completed)
-
-                    } catch {
-                        completion(.error(RepositoryError.failedToLoadConfiguration))
-                    }
-                }
-            }
-            return Disposables.create()
-        }
+        // TODO: VPNManager loadConfiguration
+        return Completable.empty()
     }
 
     /// Builds OpenVPN Configuration from OpenVPNConnectionInfo

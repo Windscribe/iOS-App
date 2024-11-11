@@ -247,7 +247,7 @@ extension LocalDatabaseImpl {
                     migration.deleteData(forType: BestLocation.className())
                 } else if oldSchemaVersion < 52 {
                     let location = self.getLastConnectedNode()
-                    self.preferences.saveLasteSelectedLocation(with: location?.groupId ?? "0")
+                    self.preferences.saveLastSelectedLocation(with: location?.groupId ?? "0")
                     migration.deleteData(forType: LastConnectedNode.className())
                     
                     self.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in

@@ -36,7 +36,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     var vpnManager: VPNManager
     var localDataBase: LocalDatabase
     var connectivity: Connectivity
-    var connectionStateManager: ConnectionStateManagerType
+    let preferences: Preferences
 
     var displayAllertTrigger = PublishSubject<ConfigAlertType>()
     var configureVPNTrigger = PublishSubject<Void>()
@@ -50,16 +50,16 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          customConfigRepository: CustomConfigRepository,
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
-         connectionStateManager: ConnectionStateManagerType,
-         connectivity: Connectivity)
+         connectivity: Connectivity,
+         preferences: Preferences)
     {
         self.logger = logger
         self.alertManager = alertManager
         self.customConfigRepository = customConfigRepository
         self.vpnManager = vpnManager
         self.localDataBase = localDataBase
-        self.connectionStateManager = connectionStateManager
         self.connectivity = connectivity
+        self.preferences = preferences
     }
 }
 
@@ -101,7 +101,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             displayAllertTrigger.onNext(.disconnecting)
             return
         }
-        continueSetSelected(with: customConfig, and: connectionStateManager.isConnecting())
+        continueSetSelected(with: customConfig, and: vpnManager.isConnecting())
     }
 
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
@@ -110,9 +110,6 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
                 self.customConfigRepository.removeWgConfig(fileId: id)
             } else {
                 self.customConfigRepository.removeOpenVPNConfig(fileId: id)
-            }
-            if self.vpnManager.selectedNode?.customConfig?.id == id {
-                self.resetConnectionStatus()
             }
         }
         AlertManager.shared.showAlert(title: TextsAsset.RemoveCustomConfig.title,
@@ -134,14 +131,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         logger.logD(self, "Tapped on Custom config from the list.")
         guard let name = customConfig.name, let serverAddress = customConfig.serverAddress else { return }
 
-        vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                                               dnsHostname: serverAddress,
-                                               hostname: serverAddress,
-                                               serverAddress: serverAddress,
-                                               nickName: name,
-                                               cityName: TextsAsset.configuredLocation,
-                                               customConfig: customConfig,
-                                               groupId: 0)
+        preferences.saveLastSelectedLocation(with: "0")
         if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
             showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))
             return
@@ -162,16 +152,10 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
 
     private func setBestLocation() {
         localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if let bestLocation = bestLocation, self.connectionStateManager.isConnecting() { self.logger.logD(self, "Changing selected location to Best location with hostname \(bestLocation.hostname)")
-                self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
-                                                            dnsHostname: bestLocation.dnsHostname,
-                                                            hostname: bestLocation.hostname,
-                                                            serverAddress: bestLocation.ipAddress,
-                                                            nickName: bestLocation.nickName,
-                                                            cityName: bestLocation.cityName,
-                                                            groupId: bestLocation.groupId)
+            if let bestLocation = bestLocation, self.vpnManager.isConnecting() { self.logger.logD(self, "Changing selected location to Best location with hostname \(bestLocation.hostname)")
+                self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
             } else {
-                self.vpnManager.selectedNode = nil
+                self.preferences.saveBestLocation(with: "")
             }
         }).disposed(by: disposeBag)
     }

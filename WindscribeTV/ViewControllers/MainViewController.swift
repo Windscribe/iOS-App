@@ -305,9 +305,6 @@ class MainViewController: PreferredFocusedViewController {
             self.configureBestLocation()
         }, onError: { _ in
         }).disposed(by: disposeBag)
-        connectionStateViewModel.connectedState.subscribe(onNext: {
-            self.animateConnectedState(with: $0)
-        }).disposed(by: disposeBag)
 
         connectionStateViewModel.ipAddressSubject.subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)

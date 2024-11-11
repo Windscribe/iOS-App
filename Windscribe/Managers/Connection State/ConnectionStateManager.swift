@@ -26,12 +26,9 @@ protocol ConnectionStateManagerType {
     var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> { get }
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
 
-    func disconnect()
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
     func checkConnectedState()
-    func setConnecting()
-    func isConnecting() -> Bool
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 
     // NEW
@@ -84,25 +81,6 @@ class ConnectionStateManager: ConnectionStateManagerType {
         self.latencyRepository = latencyRepository
         self.logger = logger
         self.vpnManager.delegate = self
-    }
-
-    func disconnect() {
-        ConnectionManager.shared.onConnectStateChange(state: .disconnected)
-        vpnManager.successfullProtocolChange = false
-        if ConnectionManager.shared.goodProtocol != nil {
-            // saving timestamp to reset good Protocol after 12 hours
-            ConnectionManager.shared.resetGoodProtocolTime = Date()
-            ConnectionManager.shared.scheduleTimer()
-        }
-        vpnManager.userTappedToDisconnect = true
-        vpnManager.connectIntent = false
-        vpnManager.resetProfiles {
-            self.setDisconnected()
-            self.vpnManager.resetProperties()
-            self.vpnManager.isFromProtocolFailover = false
-            self.vpnManager.isFromProtocolChange = false
-            self.enableConnectTrigger.onNext(())
-        }
     }
 
     @objc func displayLocalIPAddress() {
@@ -160,90 +138,12 @@ class ConnectionStateManager: ConnectionStateManagerType {
 }
 
 extension ConnectionStateManager: VPNManagerDelegate {
-    func selectedNodeChanged() {
-        setLastConnected()
-        setConnectionLabelValuesForSelectedNode()
-    }
-
-    func setDisconnected() {
-        saveDataForWidget()
-        if vpnManager.connectionStatus() == .connected {
-            logger.logD(self, "Ignoring disconnection if vpn is connected \(vpnManager.connectionStatus())")
-            return
-        }
-        logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
-        if loadLatencyValuesOnDisconnect {
-            updateStateInfo(to: .disconnected)
-            setConnectionLabelValuesForSelectedNode()
-            loadLatencyValuesOnDisconnect = false
-            Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(loadLatencyValues), userInfo: nil, repeats: false)
-            return
-        } else {
-            updateStateInfo(to: .disconnected)
-            ipAddressTimer?.invalidate()
-            ipAddressTimer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(displayLocalIPAddress), userInfo: nil, repeats: false)
-        }
-    }
-
-    func setDisconnecting() {
-        updateStateInfo(to: .disconnecting)
-        if vpnManager.userTappedToDisconnect { return }
-        disconnectingStateTimer?.invalidate()
-        disconnectingStateTimer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(setDisconnectingStateIfStillDisconnecting), userInfo: nil, repeats: false)
-    }
-
-    func setConnectivityTest() {
-        guard !isOnDemandRetry(), !vpnManager.userTappedToDisconnect else { return }
-        updateStateInfo(to: .test)
-    }
-
-    func setConnected(ipAddress: String) {
-        guard !isOnDemandRetry(), !vpnManager.userTappedToDisconnect else { return }
-        updateStateInfo(to: .connected)
-        ipAddressSubject.onNext(ipAddress)
-        if preferences.getConnectionCount() == 1 {
-            logger.logD(self, "Displaying push notifications permission popup to user.")
-            pushNotificationPermissionsTrigger.onNext(())
-        }
-        if preferences.getConnectionCount() == 5 {
-            logger.logD(self, "Displaying Siri shortcut popup.")
-            siriShortcutTrigger.onNext(())
-        }
-        saveDataForWidget()
-    }
-
-    func setConnecting() {
-        guard !isOnDemandRetry() else { return }
-        #if os(tvOS)
-            updateStateInfo(to: .connecting)
-        #endif
-        autoModeSelectorHiddenChecker.onNext {
-            if $0 { self.updateStateInfo(to: .connecting) }
-        }
-    }
-
-    func setAutomaticModeFailed() {
-        updateStateInfo(to: .automaticFailed)
-        showAutoModeScreenTrigger.onNext(())
-    }
-
-    func showAutomaticModeFailedToConnectPopup() {
-        logger.logD(self, "Auto Mode couldn't find any protocol/port working.")
-        openNetworkHateUsDialogTrigger.onNext(())
-    }
-
     func saveDataForWidget() {
         DispatchQueue.main.async {
-            if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
-                self.preferences.saveServerNameKey(key: cityName)
-                self.preferences.saveNickNameKey(key: nickName)
-                self.preferences.saveCountryCodeKey(key: countryCode)
-
-                if self.credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
-                    self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
-                } else {
-                    self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
-                }
+            if self.credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
+                self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
+            } else {
+                self.preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
             }
             #if os(iOS)
                 if #available(iOS 14.0, *) {
@@ -254,26 +154,12 @@ extension ConnectionStateManager: VPNManagerDelegate {
             #endif
         }
     }
-
-    func displaySetPrefferedProtocol() {
-        if let connectedWifi = WifiManager.shared.getConnectedNetwork() {
-            if vpnManager.successfullProtocolChange == true && connectedWifi.preferredProtocolStatus == false {
-                vpnManager.successfullProtocolChange = false
-                requestLocationTrigger.onNext(())
-            }
-        }
-    }
-
-    func disconnectVpn() {
-        disconnect()
-    }
 }
 
 // MARK: - NEW
 extension ConnectionStateManager {
     func updateBestLocation(bestLocation: BestLocation) {
-        let lastConnectedNode = LastConnectedNode(selectedNode: SelectedNode(countryCode: bestLocation.countryCode, dnsHostname: bestLocation.dnsHostname, hostname: bestLocation.hostname, serverAddress: bestLocation.ipAddress, nickName: bestLocation.nickName, cityName: bestLocation.cityName, autoPicked: true, groupId: bestLocation.groupId))
-        localDatabase.saveLastConnectedNode(node: lastConnectedNode).disposed(by: disposeBag)
+        preferences.saveBestLocation(with: "\(bestLocation.groupId)")
     }
 }
 
@@ -287,25 +173,8 @@ extension ConnectionStateManager {
         return false
     }
 
-    private func setLastConnected() {
-        guard let selectedNode = vpnManager.selectedNode else { return }
-        let lastConnectedNode = LastConnectedNode(selectedNode: selectedNode)
-        localDatabase.saveLastConnectedNode(node: lastConnectedNode).disposed(by: disposeBag)
-    }
-
-    private func setConnectionLabelValuesForSelectedNode() {
-        guard let selectedNode = vpnManager.selectedNode else { return }
-        selectedNodeSubject.onNext(selectedNode)
-    }
-
     @objc private func loadLatencyValues() {
         loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, selectBestLocation: true, connectToBestLocation: true))
-    }
-
-    @objc private func setDisconnectingStateIfStillDisconnecting() {
-        if vpnManager.isDisconnecting() {
-            checkConnectedState()
-        }
     }
 
     private func updateStateInfo(to state: ConnectionState) {

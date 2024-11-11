@@ -9,15 +9,5 @@
 import Foundation
 
 protocol VPNManagerDelegate: AnyObject {
-    func selectedNodeChanged()
-    func setDisconnected()
-    func setDisconnecting()
-    func setConnectivityTest()
-    func setConnected(ipAddress: String)
-    func setAutomaticModeFailed()
-    func setConnecting()
-    func showAutomaticModeFailedToConnectPopup()
     func saveDataForWidget()
-    func displaySetPrefferedProtocol()
-    func disconnectVpn()
 }

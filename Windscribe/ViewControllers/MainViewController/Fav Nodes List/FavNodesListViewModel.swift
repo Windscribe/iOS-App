@@ -26,19 +26,19 @@ class FavNodesListViewModel: FavNodesListViewModelType {
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
-    var connectionStateManager: ConnectionStateManagerType
+    var preferences: Preferences
     var sessionManager: SessionManagerV2
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
-         connectionStateManager: ConnectionStateManagerType,
+         preferences: Preferences,
          sessionManager: SessionManagerV2)
     {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
-        self.connectionStateManager = connectionStateManager
+        self.preferences = preferences
         self.sessionManager = sessionManager
     }
 
@@ -53,22 +53,13 @@ class FavNodesListViewModel: FavNodesListViewModelType {
         {
             showUpgradeTrigger.onNext(())
             return
-        } else if !connectionStateManager.isConnecting() {
-            guard let countryCode = favNode.countryCode,
-                  let dnsHostname = favNode.dnsHostname,
-                  let hostname = favNode.hostname,
-                  let nickName = favNode.nickName,
+        } else if !vpnManager.isConnecting() {
+            guard let hostname = favNode.hostname,
                   let cityName = favNode.cityName,
-                  let ipAddress = favNode.ipAddress,
                   let groupId = Int(favNode.groupId ?? "1") else { return }
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
-            vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                   dnsHostname: dnsHostname,
-                                                   hostname: hostname,
-                                                   serverAddress: ipAddress,
-                                                   nickName: nickName,
-                                                   cityName: cityName,
-                                                   groupId: groupId)
+            preferences.saveLastSelectedLocation(with: "\(groupId)")
+            
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)

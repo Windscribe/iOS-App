@@ -148,7 +148,7 @@ protocol Preferences {
     func getConnectionRequested() -> Bool
     
     // Locations
-    func saveLasteSelectedLocation(with locationID: String)
+    func saveLastSelectedLocation(with locationID: String)
     func getLastSelectedLocation() -> String
     func saveBestLocation(with locationID: String)
     func getBestLocation() -> String

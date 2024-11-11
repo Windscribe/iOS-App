@@ -336,18 +336,6 @@ extension VPNManager {
         }
     }
 
-    @objc func runConnectivityTestWithNoRetry() {
-        runConnectivityTest(retry: false,
-                            connectToAnotherNode: false)
-    }
-
-    @objc func runConnectivityTestWithRetry() {
-        runConnectivityTest(retry: true,
-                            connectToAnotherNode: false)
-    }
-
-    @objc func increaseFailCountsOrRetry() {}
-
     // function to check if local ip belongs to RFC 1918 ips
     func checkLocalIPIsRFC() -> Bool {
         if let localIPAddress = NWInterface.InterfaceType.wifi.ipv4 {

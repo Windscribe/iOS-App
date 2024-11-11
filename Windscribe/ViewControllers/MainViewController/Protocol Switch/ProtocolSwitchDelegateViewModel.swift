@@ -27,15 +27,17 @@ class ProtocolSwitchDelegateViewModel: ProtocolSwitchDelegateViewModelType {
 
 extension ProtocolSwitchDelegateViewModel: ProtocolSwitchVCDelegate {
     func disconnectFromFailOver() {
-        connectionStateManager.disconnect()
+        // TODO: vpnManager.disconnect()
+//        connectionStateManager.disconnect()
     }
 
     func protocolSwitchVCCountdownCompleted() {
         if vpnManager.isConnected() && vpnManager.isFromProtocolChange {
             configureVPNTrigger.onNext(())
         } else {
-            vpnManager.connectUsingAutomaticMode()
-            connectionStateManager.setConnecting()
+            // TODO: vpnManager.connect()
+//            vpnManager.connectUsingAutomaticMode()
+//            connectionStateManager.setConnecting()
         }
     }
 }

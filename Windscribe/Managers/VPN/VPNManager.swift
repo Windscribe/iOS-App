@@ -28,12 +28,6 @@ class VPNManager: VPNManagerProtocol {
     weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
 
-    var selectedNode: SelectedNode? {
-        didSet {
-            delegate?.selectedNodeChanged()
-        }
-    }
-
     lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
 
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
@@ -259,49 +253,9 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    private func onFailToGetCredentials(error: String?) -> Bool {
-        if error != nil {
-            logger.logE(VPNManager.self, "Failed to load vpn credentials.")
-            DispatchQueue.main.async {
-                self.delegate?.setDisconnected()
-            }
-        }
-        return error != nil
-    }
-
     func setTimeoutForDisconnectingState() {
         disconnectingTimer?.invalidate()
         disconnectingTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(removeVPNProfileIfStillDisconnecting), userInfo: nil, repeats: false)
-    }
-
-    func runConnectivityTest(retry: Bool = true,
-                             connectToAnotherNode: Bool = false,
-                             checkForIPAddressChange: Bool = true) {
-        guard let info = try? vpnInfo.value() else { return }
-        if info.status != .connected {
-                return
-            }
-            logger.logD(self, "[\(uniqueConnectionId)] Running connectivity Test")
-        
-            ipRepository.getIp().subscribe(onSuccess: { myIp in
-                
-            }, onFailure: { _ in
-                if retry {
-                    self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test.")
-                    self.connectivityTestTimer = Timer.scheduledTimer(timeInterval: 3.0,
-                                                                      target: self,
-                                                                      selector: #selector(self.runConnectivityTestWithNoRetry),
-                                                                      userInfo: nil,
-                                                                      repeats: false)
-                } else if connectToAnotherNode {
-                    self.logger.logD(self, "[\(self.uniqueConnectionId)] Retrying connectivity test with different node.")
-                    self.connectToAnotherNode()
-                } else {
-                    self.logger.logD(self, "Connectivity failed.")
-                    self.isOnDemandRetry = false
-                    self.disconnectOrFail()
-                }
-            }).disposed(by: disposeBag)
     }
 
     private let activeManagerKey = "activeManager"

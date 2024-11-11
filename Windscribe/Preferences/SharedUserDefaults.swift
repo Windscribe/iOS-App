@@ -495,7 +495,7 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
     }
     
-    func saveLasteSelectedLocation(with locationID: String) {
+    func saveLastSelectedLocation(with locationID: String) {
         sharedDefault?.set(locationID, forKey: SharedKeys.savedLastLocation)
     }
     

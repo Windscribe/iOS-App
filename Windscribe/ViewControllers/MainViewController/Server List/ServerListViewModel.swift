@@ -32,8 +32,8 @@ class ServerListViewModel: ServerListViewModelType {
     var vpnManager: VPNManager
     var connectivity: Connectivity
     var localDataBase: LocalDatabase
+    var preferences: Preferences
     var sessionManager: SessionManagerV2
-    var connectionStateManager: ConnectionStateManagerType
 
     let disposeBag = DisposeBag()
 
@@ -41,13 +41,13 @@ class ServerListViewModel: ServerListViewModelType {
          vpnManager: VPNManager,
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
-         connectionStateManager: ConnectionStateManagerType, sessionManager: SessionManagerV2)
+         preferences: Preferences, sessionManager: SessionManagerV2)
     {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.localDataBase = localDataBase
-        self.connectionStateManager = connectionStateManager
+        self.preferences = preferences
         self.sessionManager = sessionManager
     }
 
@@ -57,10 +57,7 @@ class ServerListViewModel: ServerListViewModelType {
         if !connectivity.internetConnectionAvailable() {
             return
         }
-
-        if vpnManager.isDisconnecting() {
-            connectionStateManager.checkConnectedState()
-        }
+        
         if checkMaintenanceLocation(server: server, group: group) {
             showMaintenanceLocationTrigger.onNext(())
             return
@@ -73,25 +70,12 @@ class ServerListViewModel: ServerListViewModelType {
             return
         } else if !group.canConnect() {
             reloadTrigger.onNext(())
-        } else if !connectionStateManager.isConnecting() {
+        } else if !vpnManager.isConnecting() {
             guard let bestNode = group.bestNode,
                   let bestNodeHostname = bestNode.hostname,
-                  let serverName = server.name,
-                  let countryCode = server.countryCode,
-                  let dnsHostname = server.dnsHostname,
-                  let hostname = bestNode.hostname,
-                  let serverAddress = bestNode.ip2,
-                  let nickName = group.nick,
-                  let cityName = group.city,
                   let groupId = group.id else { return }
-            logger.logD(self, "Tapped on a node \(serverName) \(bestNodeHostname) from the server list.")
-            vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                   dnsHostname: dnsHostname,
-                                                   hostname: hostname,
-                                                   serverAddress: serverAddress,
-                                                   nickName: nickName,
-                                                   cityName: cityName,
-                                                   groupId: groupId)
+            logger.logD(self, "Tapped on a node with groupID: \(groupId) \(bestNodeHostname) from the server list.")
+            preferences.saveLastSelectedLocation(with: "\(groupId)")
             configureVPNTrigger.onNext(())
         } else {
             presentConnectingAlertTrigger.onNext(())
@@ -100,15 +84,9 @@ class ServerListViewModel: ServerListViewModelType {
 
     func connectToBestLocation() {
         localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if let bestLocation = bestLocation, !self.connectionStateManager.isConnecting() {
+            if let bestLocation = bestLocation, !self.vpnManager.isConnecting() {
                 self.logger.logD(MainViewController.self, "Tapped on Best Location \(bestLocation.hostname) from the server list.")
-                self.vpnManager.selectedNode = SelectedNode(countryCode: bestLocation.countryCode,
-                                                            dnsHostname: bestLocation.dnsHostname,
-                                                            hostname: bestLocation.hostname,
-                                                            serverAddress: bestLocation.ipAddress,
-                                                            nickName: bestLocation.nickName,
-                                                            cityName: bestLocation.cityName,
-                                                            groupId: bestLocation.groupId)
+                self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
                 self.configureVPNTrigger.onNext(())
             } else {
                 self.presentConnectingAlertTrigger.onNext(())

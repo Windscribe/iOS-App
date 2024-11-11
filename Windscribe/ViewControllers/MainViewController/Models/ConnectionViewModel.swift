@@ -107,7 +107,7 @@ extension ConnectionViewModel {
     }
     
     func saveLastSelectedLocation(with locationID: String) {
-        preferences.saveLasteSelectedLocation(with: locationID)
+        preferences.saveLastSelectedLocation(with: locationID)
     }
     
     func saveBestLocation(with locationID: String) {

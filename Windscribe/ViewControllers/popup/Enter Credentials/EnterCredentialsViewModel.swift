@@ -48,35 +48,18 @@ class EnterCredentialsViewModel: EnterCredentialsViewModelType {
     func submit(title: String?, username: String?, password: String?) {
         guard let username = username?.base64Encoded(),
               let password = password?.base64Encoded(),
-              let customConfigId = displayingCustomConfig?.id,
-              let name = displayingCustomConfig?.name,
-              let serverAddress = displayingCustomConfig?.serverAddress
+              let customConfigId = displayingCustomConfig?.id
         else { return }
 
         if let configTitle = title {
             localDatabase.updateCustomConfigName(customConfigId: customConfigId, name: configTitle)
         }
 
-        vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                                               dnsHostname: serverAddress,
-                                               hostname: serverAddress,
-                                               serverAddress: serverAddress,
-                                               nickName: name,
-                                               cityName: TextsAsset.configuredLocation,
-                                               customConfig: displayingCustomConfig,
-                                               groupId: 0)
         guard let id = displayingCustomConfig?.id,
               let protocolType = displayingCustomConfig?.protocolType,
               let port = displayingCustomConfig?.port
         else { return }
 
-        vpnManager.selectedNode?.customConfig = CustomConfigModel(id: id,
-                                                                  name: name,
-                                                                  serverAddress: serverAddress,
-                                                                  protocolType: protocolType,
-                                                                  port: port,
-                                                                  username: username,
-                                                                  password: password)
         if !username.isEmpty {
             localDatabase.updateCustomConfigCredentials(customConfigId: customConfigId,
                                                         username: username,
