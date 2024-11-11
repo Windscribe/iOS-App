@@ -240,19 +240,6 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    private func onCredentialsUpdated(isIKEv2: Bool) {
-        delay(3) {
-            if isIKEv2 {
-                self.logger.logD(VPNManager.self, "Restarting ikev2 connection.")
-                self.restartIKEv2Connection()
-            } else {
-                self.logger.logD(VPNManager.self, "Restarting OpenVPN connection.")
-
-                self.restartOpenVPNConnection()
-            }
-        }
-    }
-
     func setTimeoutForDisconnectingState() {
         disconnectingTimer?.invalidate()
         disconnectingTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(removeVPNProfileIfStillDisconnecting), userInfo: nil, repeats: false)
@@ -355,6 +342,10 @@ struct VPNConnectionInfo: CustomStringConvertible {
 }
 
 extension VPNManager: ConfigurationsManagerDelegate {
+    func disconnectOrFail() {
+
+    }
+
     func setRestartOnDisconnect(with value: Bool) {
         restartOnDisconnect = value
     }

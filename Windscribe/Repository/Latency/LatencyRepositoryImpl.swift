@@ -18,6 +18,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnManager: VPNManager
+    private let preferences: Preferences
     private var sessionManager: SessionManagerV2 {
         return Assembler.resolve(SessionManagerV2.self)
     }
@@ -28,11 +29,12 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
 
-    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger) {
+    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, preferences: Preferences) {
         self.pingManager = pingManager
         self.database = database
         self.vpnManager = vpnManager
         self.logger = logger
+        self.preferences = preferences
         latency.onNext(self.database.getAllPingData())
         observeBestLocation()
         observeFavNodes()
@@ -224,30 +226,31 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func pickBestLocation(pingData: [PingData]) {
-        let servers = database.getServers()
-        if let lowestPingIp = findLowestLatencyIP(from: pingData) {
-            outerLoop: for server in servers ?? [] {
-                for group in server.groups {
-                    if group.pingIp == lowestPingIp,
-                       let bestNode = group.bestNode?.getNodeModel(),
-                       let serverModel = server.getServerModel()
-                    {
-                        let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
-                        database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
-                        self.bestLocation.onNext(bestLocation)
-                        break outerLoop
-                    }
-                }
-            }
-        } else {
-            return
-        }
-        let lastBestLocation = try? bestLocation.value()
-        if !observingBestLocation || lastBestLocation == nil {
-            delay(2) {
-                self.observeBestLocation()
-            }
-        }
+        // TODO: VPNManager pickBestLocation
+//        let servers = database.getServers()
+//        if let lowestPingIp = findLowestLatencyIP(from: pingData) {
+//            outerLoop: for server in servers ?? [] {
+//                for group in server.groups {
+//                    if group.pingIp == lowestPingIp,
+//                       let bestNode = group.bestNode?.getNodeModel(),
+//                       let serverModel = server.getServerModel()
+//                    {
+//                        let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
+//                        database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
+//                        self.bestLocation.onNext(bestLocation)
+//                        break outerLoop
+//                    }
+//                }
+//            }
+//        } else {
+//            return
+//        }
+//        let lastBestLocation = try? bestLocation.value()
+//        if !observingBestLocation || lastBestLocation == nil {
+//            delay(2) {
+//                self.observeBestLocation()
+//            }
+//        }
     }
 
     /// Picks up Initial best location bast on user's region, status & availability..
@@ -330,8 +333,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             group: group.getGroupModel(),
             server: server.getServerModel()!
         )
-        database.saveBestLocation(location: updatedBestLocation)
-            .disposed(by: disposeBag)
+        preferences.saveBestLocation(with: "\(group.id)")
         bestLocation.onNext(updatedBestLocation)
         let lastBestLocation = try? bestLocation.value()
         if !observingBestLocation || lastBestLocation == nil {

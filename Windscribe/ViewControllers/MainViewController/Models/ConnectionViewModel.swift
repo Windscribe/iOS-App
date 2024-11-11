@@ -105,11 +105,11 @@ extension ConnectionViewModel {
     func isBestLocationSelected() -> Bool {
         return vpnManager.getLocationNode()?.cityName == Fields.Values.bestLocation
     }
-    
+
     func saveLastSelectedLocation(with locationID: String) {
         preferences.saveLastSelectedLocation(with: locationID)
     }
-    
+
     func saveBestLocation(with locationID: String) {
         preferences.saveBestLocation(with: locationID)
     }

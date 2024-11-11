@@ -163,7 +163,8 @@ class ViewModels: Assembly {
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
                                 apiManager: r.resolve(APIManager.self)!,
-                                vpnManager: r.resolve(VPNManager.self)!)
+                                vpnManager: r.resolve(VPNManager.self)!,
+                                preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
@@ -180,20 +181,23 @@ class ViewModels: Assembly {
                                         customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                         vpnManager: r.resolve(VPNManager.self)!,
                                         localDataBase: r.resolve(LocalDatabase.self)!,
-                                        connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, connectivity: r.resolve(Connectivity.self)!)
+                                        connectivity: r.resolve(Connectivity.self)!,
+                                        preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
         container.register(FavNodesListViewModelType.self) { r in
             FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
-                                  connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+                                  preferences: r.resolve(Preferences.self)!,
+                                  sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
                                 connectivity: r.resolve(Connectivity.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
-                                connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+                                preferences: r.resolve(Preferences.self)!,
+                                sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,

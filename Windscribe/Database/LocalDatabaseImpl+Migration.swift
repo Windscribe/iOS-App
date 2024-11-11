@@ -249,11 +249,11 @@ extension LocalDatabaseImpl {
                     let location = self.getLastConnectedNode()
                     self.preferences.saveLastSelectedLocation(with: location?.groupId ?? "0")
                     migration.deleteData(forType: LastConnectedNode.className())
-                    
+
                     self.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
                         guard let bestLocation = bestLocation else { return }
                         self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
-                        
+
                         migration.deleteData(forType: LastConnectedNode.className())
                     }).disposed(by: self.disposeBag)
                 }

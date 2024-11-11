@@ -18,88 +18,15 @@ import Swinject
 
 extension VPNManager {
     @objc func configureAndConnectVPN() {
-        guard let selectedNode = selectedNode else {
-            return
-        }
-        uniqueConnectionId = UUID().uuidString
-        showConnectPopup()
-        //        if let customConfig = selectedNode?.customConfig {
-//            logger.logD( VPNManager.self, "[\(uniqueConnectionId)] Custom Config Mode: Establishing VPN connection to  \(selectedNode.hostname) \(selectedNode.serverAddress) using \(customConfig.protocolType ?? "") \(customConfig.port ?? "")")
-//            if customConfig.protocolType == TextsAsset.wireGuard {
-//                connectUsingCustomConfigWireGuard()
-//            } else {
-//                connectUsingCustomConfigOpenVPN()
-//            }
-//        } else {
-//            ConnectionManager.shared.loadProtocols(shouldReset: true) { [self] _ in
-//                switch ConnectionManager.shared.getNextProtocol().protocolName {
-//                case iKEv2:
-//                    connectUsingIKEv2()
-//                case wireGuard:
-//                    connectUsingWireGuard { _ in }
-//                default:
-//                    connectUsingOpenVPN()
-//                }
-//            }
-//        }
+      // TODO: VPNManager configureAndConnectVPN
     }
 
     @objc func hideAskToRetryPopup() {
         displayingAskToRetryPopup?.dismiss(animated: true, completion: nil)
-        connectUsingAutomaticMode()
     }
 
     @objc func retryWithAutomaticMode(protocolType _: String?) {
         retryInProgress = false
-        connectUsingAutomaticMode()
-    }
-
-    @objc func retryConnection() {
-        logger.logD(VPNManager.self, "Retrying connection")
-        if userTappedToDisconnect { return }
-        if isCustomConfigSelected() {
-            if selectedNode?.customConfig?.protocolType == TextsAsset.wireGuard { restartCustomWireGuardConnection() } else { restartCustomOpenVPNConnection() }
-        } else {
-            let proto = ConnectionManager.shared.getNextProtocol()
-            switch proto.protocolName {
-            case iKEv2:
-                restartIKEv2Connection()
-            case wireGuard:
-                restartWireGuardConnection()
-            default:
-                restartOpenVPNConnection()
-            }
-        }
-    }
-
-    @objc func restartWireGuardConnection() {
-        if userTappedToDisconnect || isFromProtocolFailover || isFromProtocolChange {
-            return
-        }
-        Task {
-            if (try? await self.configManager.configureWireguardWithSavedConfig(selectedNode: selectedNode,
-                                                                                userSettings: makeUserSettings())) ?? false
-            {
-                self.activeVPNManager = .wg
-                await configManager.connect(with: .wg, killSwitch: killSwitch)
-            }
-        }
-    }
-
-    @objc func restartIKEv2Connection() {
-        connectUsingIKEv2()
-    }
-
-    @objc func restartOpenVPNConnection() {
-        connectUsingOpenVPN()
-    }
-
-    @objc func restartCustomOpenVPNConnection() {
-        connectUsingCustomConfigOpenVPN()
-    }
-
-    @objc func restartCustomWireGuardConnection() {
-        connectUsingCustomConfigWireGuard()
     }
 
     @objc func retryIKEv2Connection() {
@@ -123,78 +50,6 @@ extension VPNManager {
         }
     }
 
-    @objc func retryConnectionWithNewServerCredentials() {
-        if userTappedToDisconnect || isCustomConfigSelected() { return }
-        logger.logD(self, "Disconnecting from VPN after first attempt.")
-        let protocolType = ConnectionManager.shared.getNextProtocol().protocolName
-        let isStatic = selectedNode?.staticIPCredentials != nil
-        retryWithNewCredentials = false
-        resetProfiles()
-            .andThen(selectAnotherNode())
-            .andThen(updateCredentials(protocolType: protocolType, isStatic: isStatic))
-            .subscribe(on: MainScheduler.instance)
-            .subscribe(onCompleted: {
-                switch protocolType {
-                case iKEv2:
-                    self.restartIKEv2Connection()
-                case udp, tcp, stealth, wsTunnel:
-                    self.restartOpenVPNConnection()
-                default:
-                    self.connectUsingWireGuard { [weak self] error in
-                        if error != nil {
-                            self?.disconnectOrFail()
-                        }
-                    }
-                }
-            }, onError: { _ in
-                self.delegate?.setDisconnected()
-                self.disconnectOrFail()
-            }).disposed(by: disposeBag)
-    }
-
-    private func updateCredentials(protocolType: String, isStatic: Bool) -> Completable {
-        Single.just(protocolType).flatMap { (proto: String) -> Single<Bool> in
-            if isStatic {
-                return self.staticIpRepository.getStaticServers().flatMap { newStaticIPCredentials in
-                    self.selectedNode?.staticIPCredentials = newStaticIPCredentials.first?.credentials.first?.getModel()
-                    return Single.just(true)
-                }
-            } else if proto == iKEv2 {
-                return self.credentialsRepository.getUpdatedIKEv2Crendentials().flatMap { _ in Single.just(true) }
-            } else if proto == udp || proto == tcp || proto == stealth || proto == wsTunnel {
-                return self.credentialsRepository.getUpdatedOpenVPNCrendentials().flatMap { _ in Single.just(true) }
-            } else {
-                return Single.just(true)
-            }
-        }.asCompletable()
-    }
-
-    private func selectAnotherNode() -> Completable {
-        return Completable.create { completion in
-            guard let selectedNode = self.selectedNode else {
-                completion(.error(ManagerErrors.nonodeselected))
-                return Disposables.create {}
-            }
-            guard let randomNode = self.getRandomNodeInSameGroup(groupId: selectedNode.groupId, excludeHostname: selectedNode.hostname) else {
-                completion(.error(ManagerErrors.norandomnodefound))
-                return Disposables.create {}
-            }
-            if let newHostname = randomNode.hostname, let newIP2 = randomNode.ip2 {
-                self.selectedNode = SelectedNode(countryCode: selectedNode.countryCode,
-                                                 dnsHostname: selectedNode.dnsHostname,
-                                                 hostname: newHostname,
-                                                 serverAddress: newIP2,
-                                                 nickName: selectedNode.nickName,
-                                                 cityName: selectedNode.cityName,
-                                                 groupId: selectedNode.groupId)
-                completion(.completed)
-            } else {
-                completion(.error(ManagerErrors.missingipinnode))
-            }
-            return Disposables.create {}
-        }
-    }
-
     private func resetProfiles() -> Completable {
         return Completable.create { completable in
             self.resetWireguard {
@@ -215,7 +70,6 @@ extension VPNManager {
         if selectedConnectionMode == Fields.Values.auto {
             resetProperties()
         }
-        if setDisconnect { delegate?.setDisconnected() }
         if disableConnectIntent { connectIntent = false }
 
         Task {
@@ -234,7 +88,6 @@ extension VPNManager {
         if isConnected() || isConnecting() {
             logger.logD(VPNManager.self, "Reconnecting...")
             keepConnectingState = true
-            delegate?.setConnecting()
 
             Task {
                 for manager in configManager.managers {
@@ -253,7 +106,6 @@ extension VPNManager {
     @objc func disconnectAllVPNConnections(setDisconnect: Bool = false, force _: Bool = false) {
         resetProfiles {
             if setDisconnect {
-                self.delegate?.setDisconnected()
             }
         }
     }

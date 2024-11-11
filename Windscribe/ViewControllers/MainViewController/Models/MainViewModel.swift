@@ -63,7 +63,6 @@ protocol MainViewModelType {
     func refreshProtocolInfo()
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
-    func reconnect()
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
 }
 
@@ -476,17 +475,5 @@ class MainViewModel: MainViewModelType {
 
     func refreshProtocolInfo() {
         refreshProtocolTrigger.onNext(())
-    }
-
-    func reconnect() {
-        vpnManager.keepConnectingState = vpnManager.isConnected() || vpnManager.isConnecting()
-        vpnManager.resetProfiles {
-            let isOnline: Bool = ((try? self.appNetwork.value().status == .connected) != nil)
-            if isOnline {
-                self.vpnManager.delegate?.setConnecting()
-                self.vpnManager.retryWithNewCredentials = true
-                self.vpnManager.configureAndConnectVPN()
-            }
-        }
     }
 }

@@ -79,21 +79,10 @@ extension VPNManager {
         return (try? vpnInfo.value()?.status) ?? NEVPNStatus.disconnected
     }
 
-    func checkForForceDisconnect() {
-        if let hostname = selectedNode?.hostname {
-            let group = localDB.getServers()?.flatMap { $0.groups }.filter { $0.bestNodeHostname == hostname }.first
-            if group?.bestNode?.forceDisconnect ?? false {
-                logger.logD(VPNManager.self, "[\(uniqueConnectionId)] force_disconnect found on \(hostname)")
-                selectAnotherNode()
-                if isConnected() {
-                    configureAndConnectVPN()
-                }
-            }
-        }
-    }
-
     func isCustomConfigSelected() -> Bool {
-        return selectedNode?.customConfig != nil
+        // TODO: VPNManager Check if custom Config is used
+//        return selectedNode?.customConfig != nil
+        return false
     }
 
     @objc func connectionStatusChanged(_: Notification?) {
@@ -120,32 +109,25 @@ extension VPNManager {
                 if self.lastConnectionStatus == connectionStatus { return }
                 self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
                 self.lastConnectionStatus = connectionStatus
+                self.delegate?.saveDataForWidget()
                 switch connectionStatus {
                 case .connecting:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
                     WSNet.instance().setIsConnectedToVpnState(false)
-                    self.delegate?.saveDataForWidget()
-                    self.delegate?.setConnecting()
                     self.checkIfUserIsOutOfData()
                 case .connected:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Connected")
                     WSNet.instance().setIsConnectedToVpnState(true)
                     untrustedOneTimeOnlySSID = ""
                     triedToConnect = true
-                    self.delegate?.saveDataForWidget()
-                    self.delegate?.setConnected(ipAddress: "")
                 case .disconnecting:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnecting")
                     WSNet.instance().setIsConnectedToVpnState(false)
-                    self.delegate?.setDisconnecting()
                 case .disconnected:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnected")
                     handleConnectError()
                     WSNet.instance().setIsConnectedToVpnState(false)
-                    self.delegate?.saveDataForWidget()
-                    self.delegate?.setDisconnected()
                 case .invalid:
-                    self.delegate?.setDisconnected()
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Invalid")
                     WSNet.instance().setIsConnectedToVpnState(false)
                 case .reasserting:
@@ -159,64 +141,6 @@ extension VPNManager {
 
     func forceToKeepConnectingState() -> Bool {
         return (keepConnectingState || connectIntent || retryWithNewCredentials) && connectivity.internetConnectionAvailable()
-    }
-
-    func checkForRetry() {
-        if !triedToConnect || userTappedToDisconnect || !connectivity.internetConnectionAvailable() {
-            return
-        }
-        disconnectCounter += 1
-        if disconnectCounter > 3, !isFromProtocolFailover, !isFromProtocolChange {
-            disconnectCounter = 0
-            logger.logE(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
-            userTappedToDisconnect = true
-            resetProfiles {
-                self.userTappedToDisconnect = false
-            }
-            disconnectOrFail()
-            return
-        }
-        if restartOnDisconnect {
-            logger.logI(ConnectionManager.self, "Reconnecting..")
-            restartOnDisconnect = false
-            retryTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(retryConnection), userInfo: nil, repeats: false)
-            return
-        } else if retryWithNewCredentials, selectedNode?.customConfig == nil, !isFromProtocolFailover, !isFromProtocolChange {
-            logger.logI(ConnectionManager.self, "Trying with server credentials.")
-            retryWithNewCredentials = false
-            retryConnectionWithNewServerCredentials()
-            return
-        } else if disableOrFailOnDisconnect {
-            disconnectOrFail()
-            return
-        }
-    }
-
-    func disconnectOrFail() {
-        delegate?.setConnecting()
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if selectedConnectionMode != Fields.Values.auto ||
-            isCustomConfigSelected()
-        {
-            disconnectActiveVPNConnection(setDisconnect: true)
-        } else {
-            disconnectActiveVPNConnection()
-            retryInProgress = true
-            retryTimer?.invalidate()
-            delay(3) { [self] in
-                ConnectionManager.shared.onProtocolFail { [self] allProtocolsFailed in
-                    if allProtocolsFailed {
-                        delegate?.showAutomaticModeFailedToConnectPopup()
-                    } else {
-                        delegate?.setAutomaticModeFailed()
-                    }
-                }
-            }
-        }
     }
 
     @objc func checkForConnectIntent() {

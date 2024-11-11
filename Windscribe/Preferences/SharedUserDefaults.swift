@@ -494,19 +494,23 @@ class SharedSecretDefaults: Preferences {
     func getConnectionRequested() -> Bool {
         return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
     }
-    
+
+    func clearSelectedLocations() {
+        sharedDefault?.set("", forKey: SharedKeys.savedLastLocation)
+    }
+
     func saveLastSelectedLocation(with locationID: String) {
         sharedDefault?.set(locationID, forKey: SharedKeys.savedLastLocation)
     }
-    
+
     func getLastSelectedLocation() -> String {
         return sharedDefault?.string(forKey: SharedKeys.savedLastLocation) ?? "0"
     }
-    
+
     func saveBestLocation(with locationID: String) {
         sharedDefault?.set(locationID, forKey: SharedKeys.savedBestLocation)
     }
-    
+
     func getBestLocation() -> String {
         return sharedDefault?.string(forKey: SharedKeys.savedBestLocation) ?? "0"
     }

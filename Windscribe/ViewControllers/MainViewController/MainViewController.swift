@@ -198,12 +198,12 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         viewModel.session.subscribe(onNext: {
             self.updateUIForSession(session: $0)
         }).disposed(by: disposeBag)
-        
+
         viewModel.wifiNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             let protoPort =  try? self.vpnConnectionViewModel.selectedProtoPort.value()
             self.refreshProtocol(from: $0, with: protoPort)
         }).disposed(by: disposeBag)
-        
+
         viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { payload in
             guard let payload = payload else { return }
             self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")

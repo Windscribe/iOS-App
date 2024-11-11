@@ -73,7 +73,7 @@ extension MainViewController {
         vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.selectedProtoPort.subscribe(onNext: {
             self.refreshProtocol(from: nil, with: $0)
         }).disposed(by: disposeBag)

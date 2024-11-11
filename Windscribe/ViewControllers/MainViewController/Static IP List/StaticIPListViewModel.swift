@@ -54,22 +54,13 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
             return
         }
-        if !connectionStateManager.isConnecting() {
+        if !vpnManager.isConnecting() {
             guard let node = staticIP.bestNode else { return }
             guard let staticIPN = staticIP.staticIP,
                   let countryCode = staticIP.countryCode,
                   let dnsHostname = node.dnsHostname,
                   let hostname = node.hostname, let serverAddress = node.ip2, let nickName = staticIP.staticIP, let cityName = staticIP.cityName, let credentials = staticIP.credentials else { return }
             logger.logD(self, "Tapped on Static IP \(staticIPN) from the server list.")
-            vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                   dnsHostname: dnsHostname,
-                                                   hostname: hostname,
-                                                   serverAddress: serverAddress,
-                                                   nickName: nickName,
-                                                   cityName: cityName,
-                                                   staticIPCredentials: credentials.last,
-                                                   groupId: 0)
-
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)

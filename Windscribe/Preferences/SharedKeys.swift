@@ -87,7 +87,7 @@ enum SharedKeys {
     // ReferAndShareManager
     static let referAndShareUserDefautsKeys = "referAndShareUserDefautsKeys"
     static let tvFavourites = "tvfavourites"
-    
+
     // Locations
     static let savedLastLocation = "savedLastLocation"
     static let savedBestLocation = "savedBestLocation"

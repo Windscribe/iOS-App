@@ -206,7 +206,7 @@ class SessionManager: SessionManagerV2 {
                 self.localDatabase.clean()
                 self.preferences.clearFavourites()
                 self.preferences.saveUserSessionAuth(sessionAuth: nil)
-                self.vpnManager.selectedNode = nil
+                self.preferences.clearSelectedLocations()
                 Assembler.container.resetObjectScope(.userScope)
                 if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
                     window.rootViewController?.dismiss(animated: false, completion: nil)

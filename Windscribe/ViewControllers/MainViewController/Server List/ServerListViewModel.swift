@@ -57,7 +57,7 @@ class ServerListViewModel: ServerListViewModelType {
         if !connectivity.internetConnectionAvailable() {
             return
         }
-        
+
         if checkMaintenanceLocation(server: server, group: group) {
             showMaintenanceLocationTrigger.onNext(())
             return
