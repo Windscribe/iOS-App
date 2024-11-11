@@ -246,16 +246,18 @@ extension LocalDatabaseImpl {
                     }
                     migration.deleteData(forType: BestLocation.className())
                 } else if oldSchemaVersion < 52 {
-                    let location = self.getLastConnectedNode()
-                    self.preferences.saveLastSelectedLocation(with: location?.groupId ?? "0")
-                    migration.deleteData(forType: LastConnectedNode.className())
-
-                    self.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-                        guard let bestLocation = bestLocation else { return }
-                        self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
-
-                        migration.deleteData(forType: LastConnectedNode.className())
-                    }).disposed(by: self.disposeBag)
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { oldObject, _ in
+                        if let groupId = oldObject?["groupId"] as? String {
+                            self.preferences.saveLastSelectedLocation(with: groupId)
+                            migration.deleteData(forType: LastConnectedNode.className())
+                        }
+                    }
+                    migration.enumerateObjects(ofType: BestLocation.className()) { oldObject, _ in
+                        if let groupId = oldObject?["groupId"] as? String {
+                            self.preferences.saveBestLocation(with: groupId)
+                            migration.deleteData(forType: BestLocation.className())
+                        }
+                    }
                 }
             }, deleteRealmIfMigrationNeeded: false
         )
