@@ -101,53 +101,25 @@ extension MainViewController {
         }
     }
 
-    func refreshProtocol(from network: WifiNetwork?) {
+    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
         DispatchQueue.main.async {
-            guard !self.vpnConnectionViewModel.isDisconnecting(),
-            let protoPort = try? self.vpnConnectionViewModel.selectedProtoPort.value() else {
+            guard !self.vpnConnectionViewModel.isDisconnecting() else { return }
+            guard let protoPort = protoPort else {
+                self.setPreferredProtocolBadgeVisibility(hidden: true)
                 return
             }
             self.protocolLabel.text = protoPort.protocolName
             self.portLabel.text = protoPort.portName
+            
             if self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
-                if let network = network, network.preferredProtocolStatus {
-                    self.setPreferredProtocolBadgeVisibility(hidden: false)
-                } else {
-                    self.setPreferredProtocolBadgeVisibility(hidden: true)
-                }
+                self.setPreferredProtocolBadgeVisibility(hidden: !(network?.preferredProtocolStatus ?? false))
                 return
             }
-            if self.vpnConnectionViewModel.vpnManager.isCustomConfigSelected() {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-                return
-            }
-            if self.vpnConnectionViewModel.vpnManager.isFromProtocolFailover || self.vpnConnectionViewModel.vpnManager.isFromProtocolChange {
-                if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == self.protocolLabel.text, WifiManager.shared.selectedPreferredPort == self.portLabel.text {
-                    self.setPreferredProtocolBadgeVisibility(hidden: false)
-                } else {
-                    self.setPreferredProtocolBadgeVisibility(hidden: true)
-                }
-                let nextProtocolToConnect = ConnectionManager.shared.getNextProtocol()
-                self.protocolLabel.text = nextProtocolToConnect.protocolName
-                self.portLabel.text = nextProtocolToConnect.portName
-                return
-            }
-            if let network = network, network.preferredProtocolStatus {
+            if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == protoPort.protocolName, WifiManager.shared.selectedPreferredPort == protoPort.portName {
                 self.setPreferredProtocolBadgeVisibility(hidden: false)
-                self.protocolLabel.text = network.preferredProtocol
-                self.portLabel.text = network.preferredPort
-                return
             } else {
                 self.setPreferredProtocolBadgeVisibility(hidden: true)
             }
-            if ((try? self.viewModel.connectionMode.value()) ?? DefaultValues.connectionMode) == Fields.Values.manual {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-                self.protocolLabel.text = try? self.viewModel.selectedProtocol.value()
-                self.portLabel.text = try? self.viewModel.selectedPort.value()
-                return
-            }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? self.protocolLabel.text
-            self.portLabel.text = WifiManager.shared.selectedPort ?? self.portLabel.text
         }
     }
 
