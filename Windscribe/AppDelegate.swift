@@ -251,8 +251,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication,
                      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("", { $0 + String(format: "%02.2hhX", $1) })
-        logger.logD(self, "Registered for remote notifications with token: \(token).")
-        apiManager.getSession(token).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
+        logger.logD(self, "Sending notifcation token to server.")
+        apiManager.getSession(token)
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             logger.logD(self, "Remote notification token registered with server. \(token)")
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)

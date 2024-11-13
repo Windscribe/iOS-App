@@ -133,10 +133,10 @@ extension MainViewController {
                 self.didShowOutOfDataPopup = true
             }
         } else if session.getDataUsedInMB() >= 1024 && viewModel.daysSinceLogin() >= 2  && viewModel.showRateDialog() {
-            logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
+            logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Is time elapsed since last rate dialog shown more than 30 days?: \(viewModel.showRateDialog())")
             self.showRateUsPopup()
         }
-        logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
+        logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin())  Is time elapsed since last rate dialog shown more than 30 days?: \(viewModel.showRateDialog())")
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             if !didShowProPlanExpiredPopup {
@@ -193,8 +193,8 @@ extension MainViewController {
                 self.portLabel.text = try? self.viewModel.selectedPort.value()
                 return
             }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? protocolLabel.text
-            self.portLabel.text = WifiManager.shared.selectedPort ?? portLabel.text
+            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? (try? self.viewModel.selectedProtocol.value() ?? protocolLabel.text)
+            self.portLabel.text = WifiManager.shared.selectedPort ?? (try? self.viewModel.selectedPort.value() ?? portLabel.text)
         }
     }
 

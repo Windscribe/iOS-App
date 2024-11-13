@@ -64,35 +64,10 @@ extension MainViewController: SearchCountryViewDelegate {
             }
             return
         }
-
         var resultServerSections = [ServerSection]()
-        for serverSection in serverSections {
-            let lowercasedText = text.lowercased()
-            guard let server = serverSection.server, let serverId = server.id, let serverName = serverSection.server?.name, let serverNameLowerCased = serverSection.server?.name?.lowercased(), let serverStatus = server.status, let groups = serverSection.server?.groups, let serverCountryCode = server.countryCode, let serverPremiumOnly = server.premiumOnly, let serverDnsHostname = server.dnsHostname, let serverLocType = server.locType, let p2p = server.p2p else { continue }
-            if serverNameLowerCased.contains(lowercasedText) {
-                resultServerSections.append(ServerSection(server: server, collapsed: true))
-            }
-            var resultGroups = [GroupModel]()
-            if lowercasedText == " " {
-                resultGroups.append(contentsOf: groups)
-            } else {
-                for group in groups {
-                    guard let city = group.city?.lowercased(), let nick = group.nick?.lowercased() else { continue }
-                    lowercasedText.splitToArray(separator: " ").forEach { s in
-                        if city.range(of: s) != nil || nick.range(of: s) != nil {
-                            let added = resultGroups.contains { $0.id == group.id }
-                            if !added {
-                                resultGroups.append(group)
-                            }
-                        }
-                    }
-                }
-            }
-            let serverModel = ServerModel(id: serverId, name: serverName, countryCode: serverCountryCode, status: serverStatus, premiumOnly: serverPremiumOnly, dnsHostname: serverDnsHostname, groups: resultGroups, locType: serverLocType, p2p: p2p)
-            if !resultServerSections.contains(where: { $0.server?.name == serverSection.server?.name }) && serverModel.groups?.count != 0 {
-                resultServerSections.append(ServerSection(server: serverModel, collapsed: false))
-            }
-        }
+        let serverModels = serverSections.map {$0.server!}
+        let sortedModels = find(groupList: serverModels, keyword: text)
+        resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
         serverListTableViewDataSource?.serverSections = resultServerSections
         serverListTableView.reloadData()
         for (index, serverSection) in resultServerSections.enumerated() {
@@ -102,6 +77,88 @@ extension MainViewController: SearchCountryViewDelegate {
                 serverListTableView.collapse(index)
             }
         }
+    }
+
+    private func find(groupList: [ServerModel], keyword: String) -> [ServerModel] {
+        // Sort server list by keyword
+        let sortedGroupList = groupList.sorted { o1, o2 in
+                let containsFirst = self.filterIfStartsWith(group: o1, keyword: keyword)
+                let containsSecond = self.filterIfStartsWith(group: o2, keyword: keyword)
+
+                if containsFirst && !containsSecond {
+                    return true // o1 should come before o2
+                }
+                if !containsFirst && containsSecond {
+                    return false// o2 should come before o1
+                }
+
+                return false // Maintain original order
+
+        }
+
+        // Filter servers containing the keyword
+        var updatedList: [ServerModel] = []
+        for group in sortedGroupList {
+            if let filteredGroup = filterIfContains(group: group, keyword: keyword) {
+                updatedList.append(filteredGroup)
+            }
+        }
+        return updatedList
+    }
+
+    private func filterIfContains(group: ServerModel, keyword: String) -> ServerModel? {
+        var cities: [GroupModel] = []
+        // Filter server by keyword
+        if let items = group.groups {
+            for group in items {
+                if let nick = group.nick?.lowercased(), let city = group.city?.lowercased() {
+                    let lowerCaseKeyword = keyword.lowercased()
+                    if nick.contains(lowerCaseKeyword) ||
+                        city.contains(lowerCaseKeyword) {
+                        cities.append(group)
+                    }
+                }
+            }
+        }
+
+        // Return new server if cities match or title matches
+        if !cities.isEmpty {
+            return ServerModel(id: group.id, name: group.name, countryCode: group.countryCode, status: group.status, premiumOnly: group.premiumOnly, dnsHostname: group.dnsHostname, groups: cities, locType: group.locType, p2p: group.p2p)
+        }
+
+        if let name = group.name {
+            if name.lowercased().contains(keyword.lowercased()) {
+                return group
+            }
+        }
+        return nil
+    }
+
+    private func filterIfStartsWith(group: ServerModel, keyword: String) -> Bool {
+        let lowerCaseKeyword = keyword.lowercased()
+
+        // Check if server title starts with keyword
+
+        if let name = group.name {
+            if name.lowercased().hasPrefix(lowerCaseKeyword) {
+                return true
+            }
+        }
+
+        // Check if any group starts with keyword
+
+        if let items = group.groups {
+            for group in items {
+                if let nick = group.nick?.lowercased(), let city = group.city?.lowercased() {
+                    let lowerCaseKeyword = keyword.lowercased()
+                    if nick.lowercased().hasPrefix(lowerCaseKeyword) ||
+                        city.lowercased().hasPrefix(lowerCaseKeyword) {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
 
     func showSearchLocation() {

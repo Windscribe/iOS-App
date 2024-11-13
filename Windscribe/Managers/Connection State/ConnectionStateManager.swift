@@ -202,7 +202,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
         guard !isOnDemandRetry(), !vpnManager.userTappedToDisconnect else { return }
         updateStateInfo(to: .connected)
         ipAddressSubject.onNext(ipAddress)
-        if preferences.getConnectionCount() == 1 {
+        if preferences.getConnectionCount() == 2 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
             pushNotificationPermissionsTrigger.onNext(())
         }

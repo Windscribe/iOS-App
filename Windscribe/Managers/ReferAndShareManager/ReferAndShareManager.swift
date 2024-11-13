@@ -13,12 +13,13 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
     private let preference: Preferences
     private let disposeBag = DisposeBag()
 
-    private let sessionManager: SessionManagerV2
-    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self))
+    private let sessionManager: SessionManagerV2, logger: FileLogger
+    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), logger: Assembler.resolve(FileLogger.self))
 
-    init(preferences: Preferences, sessionManager: SessionManagerV2) {
+    init(preferences: Preferences, sessionManager: SessionManagerV2, logger: FileLogger) {
         self.preference = preferences
         self.sessionManager = sessionManager
+        self.logger = logger
     }
 
     func checkAndShowDialogFirstTime(completion: @escaping () -> Void) {
@@ -28,14 +29,15 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
         guard VPNManager.shared.isActive else {
             return
         }
-        guard let regDate = sessionManager.session?.regDate else {
+
+        guard let connectionCount = preference.getConnectionCount() else {
             return
         }
-        let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
-        let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
+
         if !(sessionManager.session?.isUserPro ?? false)
             && !(sessionManager.session?.isUserGhost ?? false)
-            && daysRegisteredSince > 30 {
+            && connectionCount > 15 {
+            logger.logD(self, "Share with friends dialog shown for free user as connectionCount is more than 15")
             setShowedShareDialog()
             DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                 completion()

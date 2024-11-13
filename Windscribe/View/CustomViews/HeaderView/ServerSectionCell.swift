@@ -214,7 +214,7 @@ class ServerSectionCell: UITableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        preferences.getShowServerHealth().subscribe(onNext: { serverHealth in
+        preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
             if let serverHealth = serverHealth {
                 if serverHealth {
                     self.serverHealthView.health = self.displayingServer?.getServerHealth()

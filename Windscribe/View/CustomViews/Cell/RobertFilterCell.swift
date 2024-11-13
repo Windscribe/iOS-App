@@ -151,7 +151,7 @@ class RobertFilterCell: UITableViewCell {
                     self.icon.image = UIImage(named: ImagesAsset.Robert.filterIcons[item.id] ?? "unknown_robert_category")
                 }
             }
-            self.statusLabel.textColor = isEnabled ? UIColor.green : ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+            self.statusLabel.textColor = isEnabled ? ThemeUtils.selectedTextColor(isDarkMode: isDarkMode) : ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
             self.wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
