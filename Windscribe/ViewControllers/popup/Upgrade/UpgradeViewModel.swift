@@ -108,7 +108,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             promoCode = pushNotificationPayload?.promoCode
             pcpID = pushNotificationPayload?.pcpid
         }
-        logger.logD(self, "Loading billing plans. \(promoCode)")
+        logger.logD(self, "Loading billing plans.")
         showProgress.onNext(true)
         billingRepository.getMobilePlans(promo: promoCode)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
@@ -163,7 +163,11 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct]) {
         DispatchQueue.main.async { [self] in
             showProgress.onNext(false)
-            if mobilePlans?.count == 1, let discountedWindscribePlan = mobilePlans?.first, let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
+            let discountedWindscribePlan = mobilePlans?.first {
+                $0.discount != 0
+            }
+            if let discountedWindscribePlan = discountedWindscribePlan,
+               let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
                 plans.onNext(.discounted(discountedApplePlan, discountedWindscribePlan))
             } else if windscribeProducts.count > 0 && windscribeProducts.count == mobilePlans?.count {
                 plans.onNext(.standardPlans(windscribeProducts, mobilePlans ?? []))

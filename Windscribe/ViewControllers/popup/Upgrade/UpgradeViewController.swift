@@ -64,7 +64,6 @@ class UpgradeViewController: WSNavigationViewController {
         addViews()
         addAutoLayoutConstraints()
         bindState()
-        updateTheme()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -80,10 +79,10 @@ class UpgradeViewController: WSNavigationViewController {
                 if let plans = updatedPlans {
                     switch plans {
                     case .discounted(let applePlan, let appPlan):
-                        self.windscribePlans = [applePlan]
+                            self.windscribePlans = [applePlan]
                         self.renderDiscountViews(applePlan: applePlan, appPlan: appPlan)
                     case .standardPlans(let applePlans, let appPlans):
-                        self.windscribePlans = applePlans
+                            self.windscribePlans = applePlans
                         self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
                     case .unableToLoad:
                         self.alertManager.showSimpleAlert(viewController: self, title: "", message: "Unable to connect to app store services. Please try again.", buttonText: TextsAsset.okay)
@@ -130,6 +129,9 @@ class UpgradeViewController: WSNavigationViewController {
                 self.continueFreeButton.isHidden = !show
             }
         }).disposed(by: disposeBag)
+        viewModel.isDarkMode.bind(onNext: {
+            self.updateTheme(isDarkMode: $0)
+        }).disposed(by: disposeBag)
     }
     // MARK: - UI events
     @objc func continuePayButtonTapped() {
@@ -163,8 +165,8 @@ class UpgradeViewController: WSNavigationViewController {
         alertManager.showSimpleAlert(viewController: self, title: "", message: message, buttonText: TextsAsset.okay)
     }
     // MARK: - Helper
-    private func renderPriceViews(isPromo: Bool) {
-        if !isPromo {
+    private func renderPriceViews() {
+        if promoCode == nil {
             discountView.isHidden = true
             pricesView.isHidden = false
         } else {
@@ -176,7 +178,7 @@ class UpgradeViewController: WSNavigationViewController {
         view.layoutIfNeeded()
     }
 
-    private func updateTheme(isDarkMode: Bool = true) {
+    private func updateTheme(isDarkMode: Bool) {
         setupViews(isDark: isDarkMode)
         proView.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
 
@@ -220,7 +222,7 @@ class UpgradeViewController: WSNavigationViewController {
         discountPercentLabel.text = "Save \(appPlan.discount)%"
         promoLabel.text = "\(appPlan.name)"
         makeFirstPlanSelected()
-        renderPriceViews(isPromo: true)
+        renderPriceViews()
 
         view.layoutIfNeeded()
         promoView.roundCorners(corners: [.bottomLeft], radius: 16)
@@ -247,7 +249,7 @@ class UpgradeViewController: WSNavigationViewController {
             self.makeFirstPlanSelected()
         }
         self.continuePayButton.isEnabled = true
-        self.renderPriceViews(isPromo: false)
+        self.renderPriceViews()
         self.endLoading()
     }
 }

@@ -346,18 +346,11 @@ extension MainViewController {
         changeProtocolArrow = UIImageView()
         changeProtocolArrow.isHidden = true
         changeProtocolArrow.contentMode = .scaleAspectFit
-        self.changeProtocolArrow.image = UIImage(named: ImagesAsset.connectedArrow)?.withAlignmentRectInsets(UIEdgeInsets(top: -10, left: -10, bottom: -10, right: -10))
+        self.changeProtocolArrow.image = UIImage(named: ImagesAsset.connectedArrow)?.withAlignmentRectInsets(UIEdgeInsets(top: -4, left: -4, bottom: -4, right: -4))
         self.view.addSubview(changeProtocolArrow)
         let protocolTapGesture = UITapGestureRecognizer(target: self, action: #selector(protocolPortLableTapped))
-        let protocolLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(protocolPortLableTapped))
-        let portTapGesture = UITapGestureRecognizer(target: self, action: #selector(protocolPortLableTapped))
-
         changeProtocolArrow.addGestureRecognizer(protocolTapGesture)
         changeProtocolArrow.isUserInteractionEnabled = true
-        protocolLabel.addGestureRecognizer(protocolLabelTapGesture)
-        protocolLabel.isUserInteractionEnabled = false
-        portLabel.addGestureRecognizer(portTapGesture)
-        portLabel.isUserInteractionEnabled = false
 
         connectedCityLabel = UILabel()
         connectedCityLabel.adjustsFontSizeToFitWidth = true

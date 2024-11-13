@@ -57,9 +57,6 @@ struct ThemeUtils {
     static func closeButtonAsset(isDarkMode: Bool) -> String {
         isDarkMode ? ImagesAsset.closeIcon : ImagesAsset.closeIconMidnight
     }
-    static func selectedTextColor(isDarkMode: Bool) -> UIColor {
-        isDarkMode ? .seaGreen : .navyBlue
-    }
 
     // MARK: - PART 1
     static func getVersionBorderColor(isDarkMode: Bool) -> UIColor {

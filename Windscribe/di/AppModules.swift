@@ -120,7 +120,7 @@ class Managers: Assembly {
             IKEv2VPNManager.shared
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
-            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
+            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(ThemeManager.self) { r in
             ThemeManagerImpl(preference: r.resolve(Preferences.self)!)

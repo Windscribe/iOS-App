@@ -128,7 +128,7 @@ class NodeTableViewCell: BaseNodeTableViewCell {
                 self.linkSpeedIcon.image =  self.tenGigIcon
             }
         }).disposed(by: disposeBag)
-        preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
+        preferences.getShowServerHealth().subscribe(onNext: { serverHealth in
             if let serverHealth = serverHealth {
                 if serverHealth {
                     self.serverHealthView.health = self.displayingGroup?.health
@@ -405,7 +405,7 @@ class FavNodeTableViewCell: NodeTableViewCell {
         guard let pingIp = displayingFavNode?.pingIp else { return }
         self.displayLatencyValues(pingIp: pingIp)
         linkSpeedIcon.isHidden = displayingFavNode?.linkSpeed != "10000"
-        preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
+        preferences.getShowServerHealth().subscribe(onNext: { serverHealth in
             if let serverHealth = serverHealth {
                 if serverHealth {
                     self.serverHealthView.health = self.displayingFavNode?.health

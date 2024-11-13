@@ -87,13 +87,11 @@ extension LocationManagingViewModel: CLLocationManagerDelegate {
 
 extension LocationManagingViewModel: DisclosureAlertDelegate {
     func grantPermissionClicked() {
-        logger.logD(self, "Location Permission granted")
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
     }
 
     func openLocationSettingsClicked() {
-        logger.logD(self, "Opening settings for location permission")
         UIApplication.shared.open(URL.init(string: "App-prefs:Privacy&path=LOCATION")!,
                                   options: [:], completionHandler: nil)
     }
