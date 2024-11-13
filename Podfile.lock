@@ -33,6 +33,7 @@ PODS:
     - RxSwift (= 6.6.0)
   - RxSwift (6.6.0)
   - SimpleKeychain (1.0.1)
+  - SwiftSoup (1.7.4)
   - Swinject (2.8.3)
   - SwipeCellKit (2.5.4)
 
@@ -51,6 +52,7 @@ DEPENDENCIES:
   - RxRealm
   - RxSwift (= 6.6.0)
   - SimpleKeychain (~> 1.0)
+  - SwiftSoup (= 1.7.4)
   - Swinject
   - SwipeCellKit (= 2.5.4)
 
@@ -72,6 +74,7 @@ SPEC REPOS:
     - RxRelay
     - RxSwift
     - SimpleKeychain
+    - SwiftSoup
     - Swinject
     - SwipeCellKit
 
@@ -92,9 +95,10 @@ SPEC CHECKSUMS:
   RxRelay: 45eaa5db8ee4fb50e5ebd57deec0159e97fa51e6
   RxSwift: a4b44f7d24599f674deebd1818eab82e58410632
   SimpleKeychain: 130211269f88f038d7dc5254cf0b1b9ce978c398
+  SwiftSoup: 92f5b348c131aed8af04f4326db1579ab19fa08c
   Swinject: 893c9a543000ac2f10ee4cbaf0933c6992c935d5
   SwipeCellKit: 4eada3884ab1bbae5e8d2fb9030c242aa23d7f42
 
-PODFILE CHECKSUM: 761713249934d0c7a7409e819fddae626c337c30
+PODFILE CHECKSUM: 2cfd212d35d52f81f01dfea3c867bd29a64eba5b
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

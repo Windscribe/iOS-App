@@ -82,8 +82,10 @@ extension MainViewController {
                 self.topNavBarImageView.layer.opacity = info.state.backgroundOpacity
                 if [.connected, .connecting].contains(info.state) {
                     self.changeProtocolArrow.isHidden = info.isCustomConfigSelected
+                    self.addOrRemoveTapOnProtocolLabel(!info.isCustomConfigSelected)
                 } else {
                     self.changeProtocolArrow.isHidden = [.disconnected, .disconnecting].contains(info.state)
+                    self.addOrRemoveTapOnProtocolLabel(![.disconnected, .disconnecting].contains(info.state))
                 }
                 self.connectivityTestImageView.isHidden = [.connecting, .automaticFailed, .connected, .disconnected, .disconnecting].contains(info.state)
                 if case .test = info.state {
@@ -125,6 +127,16 @@ extension MainViewController {
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()
             self.viewModel.refreshProtocolInfo()
+        }
+    }
+
+    func addOrRemoveTapOnProtocolLabel(_ add: Bool) {
+        if add {
+            protocolLabel.isUserInteractionEnabled = true
+            portLabel.isUserInteractionEnabled = true
+        } else {
+            protocolLabel.isUserInteractionEnabled = false
+            portLabel.isUserInteractionEnabled = false
         }
     }
 

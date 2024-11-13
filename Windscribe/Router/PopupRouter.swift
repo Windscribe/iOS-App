@@ -96,8 +96,8 @@ class PopupRouter: BaseRouter, RootRouter {
                         .privacyView,
                         .infoPrompt,
                         .enterCredentials,
-                        .pushNotifications,
                         .shakeForDataPopUp,
+                        .pushNotifications,
                         .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
                 case .shakeForDataView,
