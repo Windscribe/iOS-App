@@ -121,14 +121,14 @@ enum AccountItemCell {
                     return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGrey)!.withTintColor(.whiteWithOpacity(opacity: 0.5), renderingMode: .alwaysTemplate),
                                                                          bounds: CGRect(x: 0, y: -2.5, width: 42, height: 42),
                                                                          textColor: UIColor.seaGreen)
+                } else if themeManager.getIsDarkTheme() {
+                    return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconGreen)!,
+                                                   bounds: CGRect(x: 0, y: 0, width: 16, height: 16),
+                                                   textColor: UIColor.seaGreen)
                 } else {
-                    if self.billingPlanId == -9 {
-                        return NSAttributedString(string: TextsAsset.unlimited,
-                                                  attributes: getDeviceFontAttributes(isFullColor: false))
-                    } else {
-                        return NSAttributedString(string: TextsAsset.pro,
-                                                  attributes: getDeviceFontAttributes(isFullColor: false))
-                    }
+                    return TextsAsset.pro.withIcon(icon: UIImage(named: ImagesAsset.prefProIconBlue)!,
+                                                   bounds: CGRect(x: 0, y: -2.5, width: 16, height: 16),
+                                                   textColor: UIColor.brightBlue)
                 }
             } else {
                 return NSAttributedString(string: TextsAsset.Account.upgrade,

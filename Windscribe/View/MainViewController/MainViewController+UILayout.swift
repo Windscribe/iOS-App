@@ -341,8 +341,8 @@ extension MainViewController {
         changeProtocolArrowConstraints = [
             NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .centerY, relatedBy: .equal, toItem: self.portLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .left, relatedBy: .equal, toItem: self.circumventCensorshipBadge, attribute: .right, multiplier: 1.0, constant: 6),
-            NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 40),
-            NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 40)
+            NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 25),
+            NSLayoutConstraint(item: changeProtocolArrow as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 25)
         ]
         self.view.addConstraints(changeProtocolArrowConstraints)
         self.view.addConstraints([
