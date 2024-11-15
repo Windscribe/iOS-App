@@ -20,13 +20,13 @@ extension MainViewController {
     }
 
     func displaySiriShortcutPopup() {
-        guard let userActivity = view.userActivity else { return }
-        let shortcut = INShortcut(userActivity: userActivity)
-        let vc = INUIAddVoiceShortcutViewController(shortcut: shortcut)
-        vc.delegate = self
-        present(vc, animated: true, completion: nil)
+        [ShowLocationIntent()].forEach { intent in
+            guard let shortcut = INShortcut(intent: intent)  else { return }
+            let vc = INUIAddVoiceShortcutViewController(shortcut: shortcut)
+            vc.delegate = self
+            present(vc, animated: true, completion: nil)
+        }
     }
-
 }
 
 extension MainViewController: INUIAddVoiceShortcutViewControllerDelegate {

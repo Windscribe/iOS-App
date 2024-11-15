@@ -63,7 +63,6 @@ class PopupRouter: BaseRouter, RootRouter {
             upgradeVC.promoCode = promoCode
             upgradeVC.pcpID = pcpID
             vc = upgradeVC
-
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
@@ -96,8 +95,8 @@ class PopupRouter: BaseRouter, RootRouter {
                         .privacyView,
                         .infoPrompt,
                         .enterCredentials,
-                        .pushNotifications,
                         .shakeForDataPopUp,
+                        .pushNotifications,
                         .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
                 case .shakeForDataView,

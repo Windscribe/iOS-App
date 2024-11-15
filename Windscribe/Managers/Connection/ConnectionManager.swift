@@ -71,6 +71,7 @@ class ConnectionManager: ConnectionManagerV2 {
             goodProtocol = nil
             userSelected = nil
             protocolsToConnectList.removeAll()
+            getProtocolList()
         }
         failoverNetworkName = connectivity.getNetwork().networkType
         if shouldReset {

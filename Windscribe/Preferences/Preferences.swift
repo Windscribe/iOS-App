@@ -47,10 +47,12 @@ protocol Preferences {
     func saveConnectionCount(count: Int)
     func getLastConnectedNetworkName() -> String?
     func saveLastConnectedNetworkName(network: String)
-    func getRateUsActionCompleted() -> Bool?
+    func getRateUsActionCompleted() -> Bool
     func saveRateUsActionCompleted(bool: Bool)
     func getWhenRateUsPopupDisplayed() -> Date?
     func saveWhenRateUsPopupDisplayed(date: Date)
+    func getWhenRateUsPopupWasAttempted() -> Date?
+    func saveWhenRateUsPopupWasAttempted(date: Date)
     func getNativeRateUsPopupDisplayCount() -> Int?
     func saveNativeRateUsPopupDisplayCount(count: Int)
     func getPrivacyPopupAccepted() -> Bool?

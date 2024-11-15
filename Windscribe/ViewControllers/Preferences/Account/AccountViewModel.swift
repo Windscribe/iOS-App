@@ -119,12 +119,12 @@ class AccountViewModel: AccountViewModelType {
         }, onFailure: { [weak self] error in
             guard let self = self else { return }
             switch error {
-                case Errors.validationFailure:
-                    self.cancelAccountState.onNext(.error("Password is incorrect."))
-                case Errors.apiError(let e):
-                    self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
-                default:
-                    self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
+            case Errors.validationFailure:
+                self.cancelAccountState.onNext(.error("Password is incorrect."))
+            case Errors.apiError(let e):
+                self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
+            default:
+                self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
             }
             self.logger.logE(self, error.localizedDescription)
         }).disposed(by: disposeBag)

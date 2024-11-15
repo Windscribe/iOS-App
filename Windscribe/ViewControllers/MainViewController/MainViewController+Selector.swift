@@ -104,6 +104,10 @@ extension MainViewController {
     func updateUIForSession(session: Session?) {
         logger.logD(self, "Looking for account state changes.")
         guard let session = session else { return }
+
+        // Check and shows Rate dialog if it is possible
+        viewModel.checkRateDialogStatus()
+
         // check for ghost account and present account completion screen
         if didCheckForGhostAccount == false && session.isUserPro == true && session.isUserGhost == true {
             self.didCheckForGhostAccount = true
@@ -132,11 +136,8 @@ extension MainViewController {
                 self.showOutOfDataPopup()
                 self.didShowOutOfDataPopup = true
             }
-        } else if session.getDataUsedInMB() >= 1024 && viewModel.daysSinceLogin() >= 2  && viewModel.showRateDialog() {
-            logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
-            self.showRateUsPopup()
         }
-        logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
+
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
             if !didShowProPlanExpiredPopup {
@@ -193,8 +194,8 @@ extension MainViewController {
                 self.portLabel.text = try? self.viewModel.selectedPort.value()
                 return
             }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? protocolLabel.text
-            self.portLabel.text = WifiManager.shared.selectedPort ?? portLabel.text
+            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? (try? self.viewModel.selectedProtocol.value() ?? protocolLabel.text)
+            self.portLabel.text = WifiManager.shared.selectedPort ?? (try? self.viewModel.selectedPort.value() ?? portLabel.text)
         }
     }
 
@@ -363,7 +364,7 @@ extension MainViewController {
         disableConnectButton()
         HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
-            logger.logE(MainViewController.self, "User tapped to connect.")
+            logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 configureVPN()

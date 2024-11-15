@@ -399,20 +399,20 @@ extension VPNManager {
             self.disableOrFailOnDisconnect = true
             VPNManager.shared.isOnDemandRetry = false
             IKEv2VPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for IKEv2 connection.")
+            logger.logI( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for IKEv2 connection.")
         }
         if OpenVPNManager.shared.providerManager?.connection.status == .connecting && OpenVPNManager.shared.providerManager?.connection.status != .disconnected {
             self.disableOrFailOnDisconnect = true
             VPNManager.shared.isOnDemandRetry = false
             OpenVPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for OpenVPN connection.")
+            logger.logI( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for OpenVPN connection.")
 
         }
         if WireGuardVPNManager.shared.providerManager?.connection.status == .connecting && WireGuardVPNManager.shared.providerManager?.connection.status != .disconnected {
             self.disableOrFailOnDisconnect = true
             VPNManager.shared.isOnDemandRetry = false
             WireGuardVPNManager.shared.disconnect()
-            logger.logE( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for WireGuard connection.")
+            logger.logI( VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connecting timeout for WireGuard connection.")
         }
     }
 
@@ -428,17 +428,17 @@ extension VPNManager {
             if IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnecting {
                 VPNManager.shared.isOnDemandRetry = false
                 IKEv2VPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing IKEv2 VPN profile.")
+                self.logger.logI( VPNManager.self, "Disconnecting timeout. Removing IKEv2 VPN profile.")
             }
             if OpenVPNManager.shared.providerManager?.connection.status == .disconnecting {
                 VPNManager.shared.isOnDemandRetry = false
                 OpenVPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing OpenVPN VPN profile.")
+                self.logger.logI( VPNManager.self, "Disconnecting timeout. Removing OpenVPN VPN profile.")
             }
             if WireGuardVPNManager.shared.providerManager?.connection.status == .disconnecting {
                 VPNManager.shared.isOnDemandRetry = false
                 WireGuardVPNManager.shared.removeProfile { _,_ in }
-                self.logger.logE( VPNManager.self, "Disconnecting timeout. Removing WireGuard VPN profile.")
+                self.logger.logI( VPNManager.self, "Disconnecting timeout. Removing WireGuard VPN profile.")
             }
 
         })

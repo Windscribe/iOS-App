@@ -172,7 +172,6 @@ extension ConnectionStateManager: VPNManagerDelegate {
             logger.logD(self, "Ignoring disconnection if vpn is connected \(vpnManager.connectionStatus())")
             return
         }
-        logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
         if loadLatencyValuesOnDisconnect {
             updateStateInfo(to: .disconnected)
             setConnectionLabelValuesForSelectedNode()
@@ -202,7 +201,7 @@ extension ConnectionStateManager: VPNManagerDelegate {
         guard !isOnDemandRetry(), !vpnManager.userTappedToDisconnect else { return }
         updateStateInfo(to: .connected)
         ipAddressSubject.onNext(ipAddress)
-        if preferences.getConnectionCount() == 1 {
+        if preferences.getConnectionCount() == 2 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
             pushNotificationPermissionsTrigger.onNext(())
         }
@@ -305,8 +304,6 @@ extension ConnectionStateManager {
                                        internetConnectionAvailable: !connectivity.internetConnectionAvailable(),
                                        customConfig: vpnManager.selectedNode?.customConfig,
                                        connectedWifi: securedNetwork.getCurrentNetwork())
-        logger.logD(self, "Updated connection state to  \(info.state.statusText)")
-
         connectedState.onNext(info)
     }
 

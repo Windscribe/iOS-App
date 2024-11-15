@@ -511,7 +511,7 @@ class MainViewController: PreferredFocusedViewController {
         VPNManager.shared.resetProperties()
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
-            logger.logE(MainViewController.self, "User tapped to connect.")
+            logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 configureVPN()

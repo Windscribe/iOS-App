@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import StoreKit
 
 protocol MainViewModelType {
     var serverList: BehaviorSubject<[Server]> {get}
@@ -50,7 +51,7 @@ protocol MainViewModelType {
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func daysSinceLogin() -> Int
-    func showRateDialog() -> Bool
+    func checkRateDialogStatus()
     func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
@@ -363,7 +364,6 @@ class MainViewModel: MainViewModelType {
             } else {
                 self.pushNotificationsManager.setNotificationCount(count: 0)
             }
-            self.logger.logD(self, "Read Notices differences count is \(readNoticeDifferentCount)")
             completion(false, readNoticeDifferentCount)
         }
     }
@@ -446,14 +446,84 @@ class MainViewModel: MainViewModelType {
         return today.interval(ofComponent: .day, fromDate: dateLoggedIn)
     }
 
-    func showRateDialog() -> Bool {
-        if let dateLastShown = preferences.getWhenRateUsPopupDisplayed() {
-            logger.logD(self, "Date last rate dialog shown is : \(dateLastShown)")
-            let today = Date()
-            logger.logD(self, "Time elapsed since last rate dialog shown is \(today.interval(ofComponent: .day, fromDate: dateLastShown))")
-            return today.interval(ofComponent: .day, fromDate: dateLastShown) > 30
-        } else {
-            return true
+    func checkRateDialogStatus() {
+        guard let session = try? session.value() else {
+            logger.logD(self, "Rate Dialog: Do not show, no session available")
+            return
+        }
+        guard session.status == 1 else {
+            let statusDescription = session.status == 2 ? "Out of Data" : (session.status == 3 ? "Banned" : "Unknown: \(session.status)")
+            logger.logD(self, "Rate Dialog: Do not show! Session not in valid state: \(statusDescription)")
+            return
+        }
+        guard daysSinceLogin() >= 2 else {
+            logger.logD(self, "Rate Dialog: Do not show! It has been less than 2 days since login")
+            return
+        }
+        guard session.getDataUsedInMB() >= 1024 else {
+            logger.logD(self, "Rate Dialog: Do not show! User has not spent 1Gb yet")
+            return
+        }
+
+        // Let's check if we have shown the dialog more than 30 days ago.
+        if preferences.getRateUsActionCompleted() {
+            logger.logD(self, "Rate Dialog: The dialog has been shown before, lets check if it was more than 30 days ago.")
+            guard let dateLastShown = preferences.getWhenRateUsPopupDisplayed() else {
+                logger.logD(self, "Rate Dialog: Show Dialog! Oops, we don't have a date for last show, but we have the information that is was shown, let's try showing again.")
+                showRateSystemDialog()
+                return
+            }
+            let timeSinceLastTime = Date().interval(ofComponent: .day, fromDate: dateLastShown)
+            logger.logD(self, "Rate Dialog: Rate Dialog last shown at: \(dateLastShown), it was shown \(timeSinceLastTime) days ago.")
+            guard timeSinceLastTime > 30 else {
+                logger.logD(self, "Rate Dialog: Do not show! Rate dialog was shown less than 30 days ago.")
+                return
+            }
+
+            logger.logD(self, "Rate Dialog: Show Dialog! User has seen the dialog, but more than 30 days ago, lets try again.")
+            showRateSystemDialog()
+            return
+        }
+
+        guard let dateLastAttempted = preferences.getWhenRateUsPopupWasAttempted() else {
+            logger.logD(self, "Rate Dialog: Show Dialog! User has never seen the dialog, lets try showing it.")
+            showRateSystemDialog()
+            return
+        }
+        let timeSinceLastAttempt = Date().interval(ofComponent: .day, fromDate: dateLastAttempted)
+        guard timeSinceLastAttempt >= 1 else {
+            logger.logD(self, "Rate Dialog: Do not show! Showing Rate dialog was tried less than 1 day ago.")
+            return
+        }
+
+        logger.logD(self, "Rate Dialog: Show Dialog! We tried more than 1 day ago, lets try again.")
+        showRateSystemDialog()
+    }
+
+    private func showRateSystemDialog() {
+        guard #available(iOS 14.0, *) else {
+            logger.logD(self, "Rate Dialog: Do not show! Does not work for iOS under 14.")
+            return
+        }
+        let scenes = UIApplication.shared.connectedScenes
+        guard let windowScene = scenes.first as? UIWindowScene else {
+            logger.logD(self, "Rate Dialog: Do not show! UIWindowScene did not exist.")
+            return
+        }
+
+        NotificationCenter.default.addObserver(forName: UIWindow.didBecomeVisibleNotification, object: nil, queue: nil) { notification in
+            print(notification)
+            guard notification.object.debugDescription.contains("SKStoreReviewPresentationWindow") else { return }
+            self.preferences.saveWhenRateUsPopupDisplayed(date: Date())
+            self.preferences.saveRateUsActionCompleted(bool: true)
+            self.logger.logD(self, "Rate Dialog: Was Shown Rate Dialog! - SKStoreReviewPresentationWindow")
+        }
+
+        self.preferences.saveWhenRateUsPopupWasAttempted(date: Date())
+        preferences.saveRateUsActionCompleted(bool: false)
+        logger.logD(self, "Rate Dialog: Will Attempt now to show rate dialog!")
+        DispatchQueue.main.async {
+            SKStoreReviewController.requestReview(in: windowScene)
         }
     }
 

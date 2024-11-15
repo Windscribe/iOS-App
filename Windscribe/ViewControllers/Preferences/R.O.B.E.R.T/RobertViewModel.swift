@@ -67,7 +67,7 @@ class RobertViewModel: RobertViewModelType {
     }
 
     func handleCustomRulesTap() {
-        logger.logE(self, "User tapped custom rules button.")
+        logger.logI(self, "User tapped custom rules button.")
         showProgress.onNext(true)
         apiManager.getWebSession().observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] webSession in

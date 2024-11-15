@@ -8,48 +8,121 @@
 
 import Foundation
 
-import RxSwift
 import RxCocoa
+import RxSwift
+import SafariServices
+import SwiftSoup
+enum NewsFeedViewToLaunch {
+    case safari(URL)
+    case payment(String, String?)
+    case unknown
+}
 
 protocol NewsFeedModelType {
-    var newsSections: BehaviorRelay<[NewsSection]> {get}
-    func didTapNotice(at index: Int)
+    var newsfeedData: BehaviorSubject<[NewsFeedData]> { get }
+    var viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> { get }
+    func didTapToExpand(id: Int)
+    func didTapAction(action: ActionLink)
 }
 
 class NewsFeedModel: NewsFeedModelType {
-    // MARK: - Dependencies
-    let notificationRepository: NotificationRepository
     let localDatabase: LocalDatabase
     let sessionManager: SessionManagerV2
-
+    let logger: FileLogger
     let disposeBag = DisposeBag()
-    let newsSections = BehaviorRelay<[NewsSection]>(value: [])
+    let newsfeedData: BehaviorSubject<[NewsFeedData]> = BehaviorSubject(value: [])
+    let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
+    let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
 
-    init(notificationRepository: NotificationRepository, localDatabase: LocalDatabase, sessionManager: SessionManagerV2) {
-        self.notificationRepository = notificationRepository
+    init(localDatabase: LocalDatabase, sessionManager: SessionManagerV2, fileLogger: FileLogger) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
-        self.load()
+        logger = fileLogger
+        loadReadStatus()
+        loadNewsFeedData()
     }
 
-    private func load() {
-        Observable.combineLatest(localDatabase.getNotificationsObservable(), localDatabase.getReadNoticesObservable().take(1))
-            .filter { $0.0.filter {$0.isInvalidated}.count == 0 && $0.1.filter {$0.isInvalidated}.count == 0 }
-        .bind { (notifications, readNotifications) in
-            if notifications.isEmpty { return }
-            let setReadNotificationIDs = Set(readNotifications.map { $0.id })
-            let firstUnreadNotificationID = notifications.first { !setReadNotificationIDs.contains($0.id) }?.id ?? -1
-            let sections = notifications.sorted { $0.date > $1.date }
-                .map { notice in
-                let isFirstUnread = notice.id == firstUnreadNotificationID
-                if isFirstUnread { self.updateReadNotice(for: notice.id) }
-                return NewsSection(items: [NewsFeedCellViewModel(notice: notice,
-                                                          collapsed: !isFirstUnread,
-                                                          isRead: setReadNotificationIDs.contains(notice.id),
-                                                          isUserPro: self.sessionManager.session?.isUserPro ?? false)])
+    private func loadNewsFeedData() {
+        localDatabase.getNotificationsObservable()
+            .take(1)
+            .filter { notifications in
+                notifications.map { notification in
+                    notification.isInvalidated == true
+                }.count > 0
             }
-            self.newsSections.accept(sections)
-        }.disposed(by: disposeBag)
+            .map { notifications in
+                let limitedNotifications = notifications.reversed().sorted(by: { $0.id > $1.id }).prefix(5)
+                let openByDefault: Int? = limitedNotifications.first(where: {
+                    !self.isRead(id: $0.id)
+                })?.id
+                if let id = openByDefault {
+                    self.updateReadNotice(for: id)
+                }
+                return limitedNotifications.map { notification in
+                    let message = self.getMessage(description: notification.message)
+                    var status = self.isRead(id: notification.id)
+                    if openByDefault == notification.id {
+                        status = true
+                    }
+                    return NewsFeedData(id: notification.id, title: notification.title, description: message.0, expanded: notification.id == openByDefault ? true : false, readStatus: status, actionLink: message.1)
+                }
+            }
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { newsfeedData in
+                self.newsfeedData.onNext(newsfeedData)
+            }, onError: { _ in }).disposed(by: disposeBag)
+    }
+
+    private func isRead(id: Int) -> Bool {
+        return (try? readStatus.value().contains(id)) ?? false
+    }
+
+    private func loadReadStatus() {
+        let ids = localDatabase.getReadNotices()?.compactMap { $0.id } ?? []
+        readStatus.onNext(ids)
+        localDatabase.getReadNoticesObservable()
+            .filter { readNotificationIds in
+                readNotificationIds.map { id in
+                    id.isInvalidated == true
+                }.count > 0
+            }
+            .map {
+                $0.map { notice in
+                    notice.id
+                }
+            }.compactMap { $0 }
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { readNotificationIds in
+                self.readStatus.onNext(readNotificationIds)
+            }, onError: { _ in }).disposed(by: disposeBag)
+    }
+
+    private func getMessage(description: String) -> (String, ActionLink?) {
+        do {
+            let document = try SwiftSoup.parse(description)
+            let messageArray = try document.select("p")
+                .filter { try $0.select(".ncta").isEmpty() }
+                .map { try $0.text() }
+            if messageArray.count > 0 {
+                let message = messageArray.joined(separator: "\n")
+                if let link = try document.select("a.ncta").first(),
+                   let url = try? link.attr("href") {
+                    let linkText = try link.text()
+                    let actionLink = ActionLink(title: linkText, link: url)
+                    return (message, actionLink)
+                }
+                return (message, nil)
+            } else {
+                return (description, nil)
+            }
+        } catch {
+            logger.logE("Newsfeed", "Error parsing newsfeed message html: \(error)")
+            return (description, nil)
+        }
     }
 
     private func updateReadNotice(for noticeID: Int) {
@@ -63,19 +136,52 @@ class NewsFeedModel: NewsFeedModelType {
         localDatabase.saveReadNotices(readNotices: readNotifications)
     }
 
-    func didTapNotice(at index: Int) {
-        var sections = newsSections.value
-        if sections.count >= index - 1, !sections[index].items.isEmpty {
-            var section = sections[index]
-            let notice = section.items[0]
+    func didTapToExpand(id: Int) {
+        updateReadNotice(for: id)
+        let newsFeeds = (try? newsfeedData.value()) ?? []
+        let updatedFeeds = newsFeeds.map { feed -> NewsFeedData in
+            var updatedFeed = feed
+            if updatedFeed.id == id {
+                updatedFeed.expanded.toggle()
+                updatedFeed.animate = true
+                updatedFeed.readStatus = true
+            } else {
+                let status = (try? self.readStatus.value().contains(feed.id)) ?? false
+                updatedFeed.readStatus = status
+                updatedFeed.animate = false
+                updatedFeed.expanded = false
+            }
+            return updatedFeed
+        }
+        newsfeedData.onNext(updatedFeeds)
+    }
 
-            notice.setCollapsed(collapsed: !notice.collapsed)
-            section.items[0] = notice
-            sections[index] = section
-            self.newsSections.accept(sections)
-            if let noticeID = notice.id {
-                updateReadNotice(for: noticeID)
+    func didTapAction(action: ActionLink) {
+        logger.logI("Newsfeed", "User tapped on newsfeed action: \(action)")
+        let queryParams = getQueryParameters(from: action.link)
+        if queryParams.keys.contains("promo") {
+            viewToLaunch.onNext(.payment(queryParams["promo"] ?? "", queryParams["pcpid"]))
+        } else {
+            if let url = URL(string: action.link) {
+                viewToLaunch.onNext(.safari(url))
+            } else {
+                logger.logE(self, "Unable to create url from: \(action.link)")
             }
         }
+    }
+
+    private func getQueryParameters(from urlString: String) -> [String: String] {
+        guard let url = URL(string: urlString),
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              let queryItems = components.queryItems
+        else {
+            return [:]
+        }
+        var parameters: [String: String] = [:]
+
+        for item in queryItems {
+            parameters[item.name] = item.value
+        }
+        return parameters
     }
 }

@@ -74,7 +74,7 @@ class EnterEmailViewController: WSNavigationViewController {
 
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
-        logger.logE(self, "User tapped to submit email.")
+        logger.logI(self, "User tapped to submit email.")
         self.showLoading()
         self.continueButton.isEnabled = false
         viewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in

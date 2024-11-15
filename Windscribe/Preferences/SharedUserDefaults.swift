@@ -236,7 +236,7 @@ class SharedSecretDefaults: Preferences {
         setString(network, forKey: SharedKeys.lastConnectedNetworkName)
     }
 
-    func getRateUsActionCompleted() -> Bool? {
+    func getRateUsActionCompleted() -> Bool {
         return getBool(key: SharedKeys.rateUsActionCompleted)
     }
 
@@ -250,6 +250,14 @@ class SharedSecretDefaults: Preferences {
 
     func saveWhenRateUsPopupDisplayed(date: Date) {
         setDate(date, forKey: SharedKeys.rateUsPopupDisplayed)
+    }
+
+    func getWhenRateUsPopupWasAttempted() -> Date? {
+        return getDate(forKey: SharedKeys.rateUsPopupWasAttempted)
+    }
+
+    func saveWhenRateUsPopupWasAttempted(date: Date) {
+        setDate(date, forKey: SharedKeys.rateUsPopupWasAttempted)
     }
 
     func getLoginDate() -> Date? {
