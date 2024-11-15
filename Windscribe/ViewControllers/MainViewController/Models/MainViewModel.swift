@@ -224,8 +224,8 @@ class MainViewModel: MainViewModelType {
             case Fields.Values.latency:
                 serverSectionsOrdered = serverSections.sorted { (serverSection1, serverSection2) -> Bool in
                     guard let hostnamesFirst = serverSection1.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}), let hostnamesSecond = serverSection2.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return false }
-                    let firstNodeList = hostnamesFirst.map({self.latencyRepo.getPingData(ip: $0 ?? "")?.latency}).filter({ $0 != 0 })
-                    let secondNodeList = hostnamesSecond.map({self.latencyRepo.getPingData(ip: $0 ?? "")?.latency}).filter({ $0 != 0 })
+                    let firstNodeList = hostnamesFirst.map({self.latencyRepo.getPingData(ip: $0 ?? "")?.latency}).filter({ $0 != -1 })
+                    let secondNodeList = hostnamesSecond.map({self.latencyRepo.getPingData(ip: $0 ?? "")?.latency}).filter({ $0 != -1 })
                     let firstLatency = firstNodeList.reduce(0, { (result, value) -> Int in
                         return result + (value ?? -1)
                     })
