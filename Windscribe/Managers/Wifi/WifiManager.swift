@@ -106,7 +106,7 @@ class WifiManager {
         Observable.combineLatest(
             localDb.getNetworks(),
             connectivity.network.asObservable()
-        ).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
+        ).subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
             self.securedNetworks.onNext(networks)
             guard !networks.isEmpty else {
                 self.connectedSecuredNetwork = nil
