@@ -74,6 +74,9 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
 
     func becameActive() {
         connectionStateManager.checkConnectedState()
+        if connectionStateManager.isConnected() || connectionStateManager.isDisconnected() {
+            connectionStateManager.displayLocalIPAddress(force: true)
+        }
     }
 
     func startConnecting() {
