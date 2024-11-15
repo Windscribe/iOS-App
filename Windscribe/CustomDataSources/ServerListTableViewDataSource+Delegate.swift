@@ -113,8 +113,10 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
                 serverSections[section].collapsed = !expanded
             }
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.setCollapsed(collapsed: serverSections[section].collapsed)
-            cell.displayingServer = serverSections[section].server
+            if serverSections.count > 0 {
+                cell.setCollapsed(collapsed: serverSections[section].collapsed)
+                cell.displayingServer = serverSections[section].server
+            }
             return cell
         }
     }

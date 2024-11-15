@@ -94,8 +94,7 @@ class ViewModels: Assembly {
             return ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: .connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(NewsFeedModelType.self) { r in
-            return NewsFeedModel(notificationRepository: r.resolve(NotificationRepository.self)!,
-                                 localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+            return NewsFeedModel(localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, fileLogger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(PrivacyViewModelType.self) { r in
             return PrivacyViewModel(

@@ -199,7 +199,7 @@ extension VPNManager {
         disconnectCounter += 1
         if disconnectCounter > 3 && !isFromProtocolFailover && !isFromProtocolChange {
             disconnectCounter = 0
-            self.logger.logE(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
+            self.logger.logI(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
             VPNManager.shared.userTappedToDisconnect = true
             self.resetProfiles {
                 VPNManager.shared.userTappedToDisconnect = false
@@ -256,7 +256,7 @@ extension VPNManager {
             return
         }
         if VPNManager.shared.connectIntent && !WifiManager.shared.isConnectedWifiTrusted() && connectivity.internetConnectionAvailable() && VPNManager.shared.isDisconnected() && self.selectedFirewallMode == true {
-            logger.logE(VPNManager.self, "Connect Intent is true. Retrying to connect.")
+            logger.logI(VPNManager.self, "Connect Intent is true. Retrying to connect.")
             self.retryWithNewCredentials = true
             self.configureAndConnectVPN()
         }
@@ -278,11 +278,11 @@ extension VPNManager {
                 self.logger.logD(self, "VPN disconnected due to credential failure")
                 self.connectIntent = false
                 self.resetProfiles {
-                    self.logger.logE(self, "Disabling VPN Profiles to get access api access.")
+                    self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
                     delay(2) {
-                        self.logger.logE(self, "Getting new session.")
+                        self.logger.logI(self, "Getting new session.")
                         self.api.getSession(nil).subscribe(onSuccess: { session in
-                            self.logger.logE(self, "Saving updated session.")
+                            self.logger.logI(self, "Saving updated session.")
                             DispatchQueue.main.async {
                                 self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
                             }

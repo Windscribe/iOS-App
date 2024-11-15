@@ -259,7 +259,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             self.hideEmptyFavView()
         }, onError: { error in
-            self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
+            self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
 
         serverListViewModel.configureVPNTrigger.subscribe(onNext: {

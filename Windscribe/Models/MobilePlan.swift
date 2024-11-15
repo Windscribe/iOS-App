@@ -40,7 +40,7 @@ import RealmSwift
         price = try container.decodeIfPresent(String.self, forKey: .price) ?? ""
         type = try container.decodeIfPresent(String.self, forKey: .type) ?? ""
         duration = try container.decodeIfPresent(Int.self, forKey: .duration) ?? 0
-        discount = try container.decodeIfPresent(Int.self, forKey: .discount) ?? 0
+        discount = try container.decodeIfPresent(Int.self, forKey: .discount) ?? -1
     }
 
     override class func primaryKey() -> String? {

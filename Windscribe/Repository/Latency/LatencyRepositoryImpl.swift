@@ -92,7 +92,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         .disposed(by: self.disposeBag)
 
         return latencySingles.do(onSuccess: { _ in
-            self.logger.logE(self, "Successfully updated latency data.")
+            self.logger.logI(self, "Successfully updated latency data.")
             let pingData = self.database.getAllPingData()
             self.latency.onNext(pingData)
             self.pickBestLocation(pingData: pingData)

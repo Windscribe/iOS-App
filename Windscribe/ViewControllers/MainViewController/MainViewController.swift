@@ -247,7 +247,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
-            logger.logE(MainViewController.self, "No internet connection available.")
+            logger.logI(MainViewController.self, "No internet connection available.")
             self.internetConnectionLost = true
             self.vpnManager.isOnDemandRetry = false
             vpnManager.disconnectActiveVPNConnection(setDisconnect: true)
@@ -318,18 +318,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
         self.logger.logD(self, "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
-    }
-
-    func showRateUsPopup() {
-        self.rateViewModel.setDate()
-        self.rateViewModel.setRateUsActionCompleted()
-        if #available(iOS 14.0, *) {
-            let scenes = UIApplication.shared.connectedScenes
-            if let windowScene = scenes.first as? UIWindowScene {
-                logger.logD(self, "Attempting show rate popup.")
-                SKStoreReviewController.requestReview(in: windowScene)
-            }
-        }
     }
 
     func showProPlanExpiredPopup() {

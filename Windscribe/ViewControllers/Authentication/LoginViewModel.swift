@@ -66,7 +66,7 @@ class LoginViewModelImpl: LoginViewModel {
                 self?.preferences.saveLoginDate(date: Date())
                 WifiManager.shared.saveCurrentWifiNetworks()
                 self?.userRepository.login(session: session)
-                self?.logger.logE(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
+                self?.logger.logI(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
             }, onFailure: { [weak self] error in
                 self?.logger.logE(LoginViewModelImpl.self, "Failed to login: \(error)")
@@ -119,7 +119,7 @@ class LoginViewModelImpl: LoginViewModel {
                             WifiManager.shared.saveCurrentWifiNetworks()
                             self?.preferences.saveLoginDate(date: Date())
                             self?.userRepository.login(session: session)
-                            self?.logger.logE(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
+                            self?.logger.logI(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
                             self?.prepareUserData()
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)

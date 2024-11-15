@@ -14,15 +14,15 @@ extension MainViewController {
     func bindConnectionStateViewModel() {
         connectionStateViewModel.displayLocalIPAddress(force: true)
 
-        connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
+        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance) .subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.loadLatencyValuesSubject.subscribe(onNext: {
+        connectionStateViewModel.loadLatencyValuesSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, selectBestLocation: $0.selectBestLocation, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.showAutoModeScreenTrigger.subscribe(onNext: {
+        connectionStateViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             guard let viewControllers = self.navigationController?.viewControllers,
                   !viewControllers.contains(where: { $0 is ProtocolSetPreferredViewController }),
                   !viewControllers.contains(where: { $0 is ProtocolSwitchViewController })
@@ -31,37 +31,37 @@ extension MainViewController {
             self.router?.routeTo(to: RouteID.protocolSwitchVC(delegate: self.protocolSwitchViewModel, type: .failure), from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.openNetworkHateUsDialogTrigger.subscribe(onNext: {
+        connectionStateViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel, protocolName: ""), from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.pushNotificationPermissionsTrigger.subscribe(onNext: {
+        connectionStateViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.popupRouter?.routeTo(to: .pushNotifications, from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.siriShortcutTrigger.subscribe(onNext: {
+        connectionStateViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.displaySiriShortcutPopup()
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.requestLocationTrigger.subscribe(onNext: {
+        connectionStateViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.locationManagerViewModel.requestLocationPermission {
                 self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil, protocolName: ConnectionManager.shared.getNextProtocol().protocolName), from: self)
             }
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.enableConnectTrigger.subscribe(onNext: {
+        connectionStateViewModel.enableConnectTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.enableConnectButton()
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.ipAddressSubject.subscribe(onNext: {
+        connectionStateViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.autoModeSelectorHiddenChecker.subscribe(onNext: {
+        connectionStateViewModel.autoModeSelectorHiddenChecker.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.connectedState.subscribe(onNext: {
+        connectionStateViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
     }
@@ -82,8 +82,10 @@ extension MainViewController {
                 self.topNavBarImageView.layer.opacity = info.state.backgroundOpacity
                 if [.connected, .connecting].contains(info.state) {
                     self.changeProtocolArrow.isHidden = info.isCustomConfigSelected
+                    self.addOrRemoveTapOnProtocolLabel(!info.isCustomConfigSelected)
                 } else {
                     self.changeProtocolArrow.isHidden = [.disconnected, .disconnecting].contains(info.state)
+                    self.addOrRemoveTapOnProtocolLabel(![.disconnected, .disconnecting].contains(info.state))
                 }
                 self.connectivityTestImageView.isHidden = [.connecting, .automaticFailed, .connected, .disconnected, .disconnecting].contains(info.state)
                 if case .test = info.state {
@@ -125,6 +127,16 @@ extension MainViewController {
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()
             self.viewModel.refreshProtocolInfo()
+        }
+    }
+
+    func addOrRemoveTapOnProtocolLabel(_ add: Bool) {
+        if add {
+            protocolLabel.isUserInteractionEnabled = true
+            portLabel.isUserInteractionEnabled = true
+        } else {
+            protocolLabel.isUserInteractionEnabled = false
+            portLabel.isUserInteractionEnabled = false
         }
     }
 

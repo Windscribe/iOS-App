@@ -70,7 +70,11 @@ extension MainViewController {
             }
             if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
                 if network.networkType == .cellular || network.networkType == .wifi {
-                    self.trustedNetworkValueLabel.text = network.name ?? ""
+                    if let name = network.name {
+                        self.trustedNetworkValueLabel.text = name
+                    } else {
+                        self.logger.logD(self, "no network name detected.")
+                    }
                 } else {
                     self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
                 }

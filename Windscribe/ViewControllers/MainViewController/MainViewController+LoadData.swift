@@ -29,8 +29,6 @@ extension MainViewController {
                 self.viewModel.loadServerList()
                 self.viewModel.loadPortMap()
                 self.loadLastConnected()
-            } else {
-                self.logger.logD(self, "Updated Portmap is avaialble.")
             }
         }).disposed(by: disposeBag)
     }

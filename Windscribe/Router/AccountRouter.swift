@@ -40,8 +40,26 @@ class AccountRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(UpgradeViewController.self)
             vc.promoCode = promoCode
             vc.pcpID = pcpID
-            from.navigationController?.pushViewController(vc, animated: true)
+            if let navigationVC = from.navigationController {
+                navigationVC.pushViewController(vc, animated: true)
+            } else {
+                from.present(vc, animated: true)
+            }
         default: ()
         }
+    }
+
+    func routeToPayments(to: RouteID, from: WSNavigationViewController) {
+        switch to {
+        case let .upgrade(promoCode, pcpID):
+            let vc = Assembler.resolve(UpgradeViewController.self)
+            vc.promoCode = promoCode
+            vc.pcpID = pcpID
+            DispatchQueue.main.async {
+             vc.modalPresentationStyle = .fullScreen
+                from.present(vc, animated: true, completion: nil)
+            }
+        default: ()
+      }
     }
 }

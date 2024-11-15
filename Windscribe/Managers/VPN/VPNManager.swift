@@ -277,7 +277,7 @@ class VPNManager {
 
     func executeForConnectivityTestSuccessful(ipAddress: String,
                                               checkForIPAddressChange: Bool = true) {
-        self.logger.logE(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connectivity Test successful.")
+        self.logger.logI(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] Connectivity Test successful.")
 
         AutomaticMode.shared.resetFailCounts()
         ConnectionManager.shared.goodProtocol = ConnectionManager.shared.getNextProtocol()
@@ -307,7 +307,7 @@ class VPNManager {
         }
         set(value) {
             if value != activeVPNManager {
-                self.logger.logE(VPNManager.self, "Active VPN Manager changed to \(value)")
+                self.logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
                 preferences.saveActiveManagerKey(key: value.rawValue)
                 UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
             }

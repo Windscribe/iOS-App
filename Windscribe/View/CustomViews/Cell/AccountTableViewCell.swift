@@ -46,17 +46,24 @@ class AccountTableViewCell: UITableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        Observable.combineLatest(configDataTrigger.asObservable(), isDarkMode.asObservable()).bind { (_, isDarkMode) in
-            self.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-            self.leftLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-            if !self.item.isProUser {
-                if self.item.billingPlanId != -9 {
-                    self.rightButton.titleLabel?.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
+        Observable.combineLatest(configDataTrigger.asObservable(), isDarkMode.asObservable()).bind { [weak self] (_, isDarkMode) in
+            self?.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+            self?.leftLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+            if self?.item == .planType {
+                if self?.item.isProUser ?? false {
+                    if self?.item.billingPlanId == -9 {
+                        self?.rightButton.titleLabel?.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
+                    } else {
+                        self?.rightButton.titleLabel?.textColor =  isDarkMode ? UIColor.seaGreen : UIColor.connectingStartBlue
+                    }
                 } else {
-                    self.rightButton.titleLabel?.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+                    self?.rightButton.titleLabel?.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
                 }
+            } else {
+                self?.rightButton.titleLabel?.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
             }
-            self.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode)
+
+            self?.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
 
@@ -97,49 +104,22 @@ class AccountTableViewCell: UITableViewCell {
         configDataTrigger.onNext(())
     }
 
-    private func updateRightButtonPro(_ isPro: Bool) {
-        if isPro {
-            rightButton.setTitleColor(UIColor.seaGreen, for: .normal)
-            rightButton.titleLabel?.font = UIFont.text(size: 16)
-            rightButton.titleLabel?.layer.opacity = 1
-        } else {
-            rightButton.setTitleColor(UIColor.white, for: .normal)
-            rightButton.titleLabel?.font = UIFont.text(size: 16)
-            rightButton.titleLabel?.layer.opacity = 0.5
-        }
-    }
-
     private func didSetData() {
-        leftLabel.text = item.title
-        if item == .planType {
-            if item.isProUser {
-                if item.billingPlanId == -9 {
-                    rightButton.setTitle(TextsAsset.unlimited, for: .normal)
-                } else {
-                    rightButton.setTitle(TextsAsset.pro, for: .normal)
+        DispatchQueue.main.async {
+            self.leftLabel.text = self.item.title
+            self.addSubview(self.rightButton)
+            self.rightButton.setAttributedTitle(self.item.value, for: .normal)
+            self.rightButton.isUserInteractionEnabled = false
+            self.rightButton.titleLabel?.font = UIFont.text(size: 16)
+            if self.item == .planType {
+                if !self.item.isProUser {
+                    self.rightButton.addTarget(self, action: #selector(self.upgradeTap), for: .touchUpInside)
+                    self.rightButton.isUserInteractionEnabled = true
                 }
-                rightButton.titleLabel?.text = TextsAsset.pro
-                rightButton.isUserInteractionEnabled = false
-                updateRightButtonPro(true)
-            } else {
-                rightButton.addTarget(self, action: #selector(upgradeTap), for: .touchUpInside)
-                addSubview(rightButton)
-                rightButton.setTitle(TextsAsset.Account.upgrade, for: .normal)
-                rightButton.setTitleColor(.red, for: .normal)
-                rightButton.titleLabel?.font =  UIFont.text(size: 16)
-                rightButton.isUserInteractionEnabled = true
-                updateRightButtonPro(false)
             }
-        } else {
-            rightButton.addTarget(self, action: #selector(upgradeTap), for: .touchUpInside)
-            addSubview(rightButton)
-            rightButton.setAttributedTitle(item.value, for: .normal)
-            rightButton.isUserInteractionEnabled = true
-            updateRightButtonPro(false)
+            self.showHideCellDividerView()
+            self.makeRoundCorners()
         }
-
-        showHideCellDividerView()
-        makeRoundCorners()
     }
 
     @objc func upgradeTap() {

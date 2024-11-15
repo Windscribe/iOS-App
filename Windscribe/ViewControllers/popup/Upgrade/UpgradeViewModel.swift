@@ -41,7 +41,7 @@ protocol UpgradeViewModel {
     var showFreeDataOption: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
 
-    func loadPlans(promo: String?)
+    func loadPlans(promo: String?, id: String?)
     func continuePayButtonTapped()
     func continueFreeButtonTapped()
     func restoreButtonTapped()
@@ -102,13 +102,14 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         }
     }
 
-    func loadPlans(promo: String?) {
+    func loadPlans(promo: String?, id: String?) {
         var promoCode = promo
+        pcpID = id
         if pushNotificationPayload?.type == "promo" {
             promoCode = pushNotificationPayload?.promoCode
             pcpID = pushNotificationPayload?.pcpid
         }
-        logger.logD(self, "Loading billing plans.")
+        logger.logD(self, "Loading billing plans. Promo: \(promoCode ?? "N/A")")
         showProgress.onNext(true)
         billingRepository.getMobilePlans(promo: promoCode)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
@@ -116,7 +117,8 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             .subscribe(onSuccess: { [weak self] mobilePlans in
                 guard let self = self else { return }
                 mobilePlans.forEach { p in
-                    self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(p.discount)%")
+                    let discount = p.discount >= 0 ? "\(p.discount)%" : "N/A"
+                    self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
                 }
                 self.mobilePlans = mobilePlans
                 self.showProgress.onNext(false)
@@ -163,11 +165,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct]) {
         DispatchQueue.main.async { [self] in
             showProgress.onNext(false)
-            let discountedWindscribePlan = mobilePlans?.first {
-                $0.discount != 0
-            }
-            if let discountedWindscribePlan = discountedWindscribePlan,
-               let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
+            if let discountedWindscribePlan = mobilePlans?.first(where: { $0.discount >= 0}), let discountedApplePlan = windscribeProducts.first(where: {$0.extId == discountedWindscribePlan.extId}) {
                 plans.onNext(.discounted(discountedApplePlan, discountedWindscribePlan))
             } else if windscribeProducts.count > 0 && windscribeProducts.count == mobilePlans?.count {
                 plans.onNext(.standardPlans(windscribeProducts, mobilePlans ?? []))
@@ -198,9 +196,9 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func upgrade() {
-        self.logger.logE(self, "Getting new session.")
+        self.logger.logI(self, "Getting new session.")
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { session in
-            self.logger.logE(self, "Received updated session: \(session).")
+            self.logger.logI(self, "Received updated session.")
             self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             self.upgradeState.onNext(.success(session.isUserGhost))
         },onFailure: { _ in
