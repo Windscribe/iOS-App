@@ -522,9 +522,11 @@ class MainViewModel: MainViewModelType {
         self.preferences.saveWhenRateUsPopupWasAttempted(date: Date())
         preferences.saveRateUsActionCompleted(bool: false)
         logger.logD(self, "Rate Dialog: Will Attempt now to show rate dialog!")
+#if os(iOS)
         DispatchQueue.main.async {
             SKStoreReviewController.requestReview(in: windowScene)
         }
+#endif
     }
 
     func isPrivacyPopupAccepted() -> Bool {

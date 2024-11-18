@@ -850,6 +850,9 @@
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
+		C56A4BB02CE7F4560097ACDB /* NewsFeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA72CE319E200281B01 /* NewsFeedData.swift */; };
+		C56A4BB12CE7F45E0097ACDB /* NewsfeedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA52CE3192E00281B01 /* NewsfeedDataSource.swift */; };
+		C56A4BB22CE7FB5A0097ACDB /* NewsFeedDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA92CE31C5D00281B01 /* NewsFeedDataCell.swift */; };
 		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
 		C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AF42C4DFF300069DB6E /* WireGuardKit */; };
 		C56F5DAE2953739C008CD223 /* ConcurrentDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */; };
@@ -4824,6 +4827,7 @@
 				59C96D692C69C55F00546C72 /* ServerListViewController.swift in Sources */,
 				59FC73DC2C514BC600021CD1 /* Connectivity.swift in Sources */,
 				59FC74682C5167D300021CD1 /* BillingRepositoryImpl.swift in Sources */,
+				C56A4BB02CE7F4560097ACDB /* NewsFeedData.swift in Sources */,
 				59FC74332C515A3B00021CD1 /* LocalDatabaseImpl.swift in Sources */,
 				59FC747A2C51741F00021CD1 /* Date+Ext.swift in Sources */,
 				59FC743D2C515B9B00021CD1 /* SessionManagerV2.swift in Sources */,
@@ -4884,6 +4888,7 @@
 				59A2187A2C3CA0F8000D89FA /* FileLogger.swift in Sources */,
 				59FC74422C515D8E00021CD1 /* PortMapRepository.swift in Sources */,
 				599BA2B82C65453F00F0D1E4 /* UpgradeButton.swift in Sources */,
+				C56A4BB12CE7F45E0097ACDB /* NewsfeedDataSource.swift in Sources */,
 				59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */,
 				59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */,
 				59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */,
@@ -5087,6 +5092,7 @@
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
+				C56A4BB22CE7FB5A0097ACDB /* NewsFeedDataCell.swift in Sources */,
 				1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */,
 				1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */,
 				C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */,

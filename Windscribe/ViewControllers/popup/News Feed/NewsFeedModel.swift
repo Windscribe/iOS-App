@@ -10,7 +10,6 @@ import Foundation
 
 import RxCocoa
 import RxSwift
-import SafariServices
 import SwiftSoup
 enum NewsFeedViewToLaunch {
     case safari(URL)
