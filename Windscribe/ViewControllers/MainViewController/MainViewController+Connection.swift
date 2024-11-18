@@ -14,7 +14,7 @@ import RxSwift
 
 extension MainViewController {
     @objc func trustedNetworkValueLabelTapped() {
-        if trustedNetworkValueLabel.text == TextsAsset.unknownNetworkName {
+        if trustedNetworkValueLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
             locationManagerViewModel.requestLocationPermission {
                 self.setNetworkSsid()
             }
@@ -68,7 +68,7 @@ extension MainViewController {
             if vpnInfo?.status == NEVPNStatus.connecting {
                 return
             }
-            if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
+            if (self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways) && !self.locationManagerViewModel.getAccuracyIsOff() {
                 if network.networkType == .cellular || network.networkType == .wifi {
                     if let name = network.name {
                         self.trustedNetworkValueLabel.text = name
