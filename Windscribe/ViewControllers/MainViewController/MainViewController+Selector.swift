@@ -393,7 +393,7 @@ extension MainViewController {
             guard let result = WifiManager.shared.getConnectedNetwork() else { return }
             let nextProtocol = ConnectionManager.shared.getNextProtocol()
             VPNManager.shared.getVPNConnectionInfo { [self] info in
-                if info != nil && info?.status == .connected && (nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort) {
+                if info != nil && info?.status == .connected && (nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort) && result.preferredProtocolStatus {
                     configureVPN(bypassConnectingCheck: true)
                 } else {
                     viewModel.refreshProtocolInfo()
