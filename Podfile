@@ -1,4 +1,4 @@
-is_tvos = false
+is_tvos = true
 target_platform = is_tvos ? :tvos : :ios
 platform_version = is_tvos ? '17.0' : '12.0'
 # Core app dependecies.
@@ -75,6 +75,7 @@ target 'WindscribeTV' do
   platform :tvos, '17.0'
   use_modular_headers!
   use_frameworks!
+  pod 'SwiftSoup', '1.7.4'
   core
   realm
   pod 'SimpleKeychain', '~> 1.0'

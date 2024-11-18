@@ -18,11 +18,9 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
     var button = WSPillButton()
 
-    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!
+    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManagerV2!
     let disposeBag = DisposeBag()
-    var currentAction: NoticeAction?
-
-    private var newsSections = [NewsSection]()
+    var selectedActionLink: ActionLink?
 
     // MARK: Overrides
     override func viewDidLoad() {
@@ -43,45 +41,32 @@ class NewsFeedViewController: PreferredFocusedViewController {
     }
 
     private func bindViews() {
-        viewModel.newsSections.subscribe { [weak self] newsSections in
-            guard let self = self else { return }
-            buildSelectionOptions(newsSections: newsSections)
-        }.disposed(by: disposeBag)
-        button.rx.primaryAction.bind { _ in
-            guard let action = self.currentAction else { return }
-            self.router.routeTo(to: .upgrade(promoCode: action.promoCode, pcpID: action.pcpid), from: self)
-        }.disposed(by: disposeBag)
-    }
-
-    private func buildSelectionOptions(newsSections: [NewsSection]) {
-        self.newsSections = newsSections
-        let firstItem = self.newsSections.first?.items.first
-        newsSections.forEach {
-            let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
-            if let details = $0.items.first {
-                self.listStackView.addArrangedSubview(newsNameView)
-                newsNameView.setup(with: details.title ?? "", isSelected: firstItem?.title == details.title)
-                newsNameView.delegate = self
+        viewModel.newsfeedData.bind { data in
+            self.newsBodyText.isHidden = true
+            self.buttonHiddingView.isHidden = true
+            if let firstItem = data.first {
+                self.newsBodyText.isHidden = false
+                data.forEach { feed in
+                    let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
+                    newsNameView.setup(with: feed.title, isSelected: firstItem.title == feed.title)
+                    newsNameView.delegate = self
+                    self.listStackView.addArrangedSubview(newsNameView)
+                }
+                self.setupDetailsView(with: firstItem)
             }
-        }
-        guard let firstItem = firstItem else { return }
-        self.setupDetailsView(with: firstItem)
-    }
-
-    private func setupDetailsView(with item: NewsFeedCellViewModel) {
-        if let message = item.message, let messageData = message.data(using: .utf8) {
-            newsBodyText.htmlText(htmlData: messageData,
-                              font: .regular(size: 42),
-                                  foregroundColor: .white)
-        }
-        if let action = item.action {
-            button.setTitle(action.label, for: .normal)
-            buttonHiddingView.isHidden = false
-            currentAction = action
-        } else {
-            currentAction = nil
-            buttonHiddingView.isHidden = true
-        }
+        }.disposed(by: disposeBag)
+        
+        viewModel.viewToLaunch.bind(onNext: { view in
+            switch view {
+                case let .safari(url):
+                    self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
+                    self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
+                case let .payment(promo, pcpid):
+                    self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
+                    self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
+                default: ()
+            }
+        }).disposed(by: disposeBag)
     }
 }
 
@@ -115,14 +100,35 @@ extension NewsFeedViewController {
         }
         return false
     }
+    
+    
+    private func setupDetailsView(with item: NewsFeedData) {
+        newsBodyText.text = item.description
+        if let action = item.actionLink {
+            button.setTitle(action.title, for: .normal)
+            buttonHiddingView.isHidden = false
+            selectedActionLink = action
+            button.addTapGesture(tapNumber: 1, target: self, action: #selector(onActionClick))
+        } else {
+            selectedActionLink = nil
+            buttonHiddingView.isHidden = true
+        }
+    }
+    
+    @objc private func onActionClick() {
+        if let action = selectedActionLink {
+            viewModel.didTapAction(action: action)
+        }
+    }
 }
 
 extension NewsFeedViewController: OptionSelectionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) {
-        guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), newsSections.count >= index
+        let sections = (try? viewModel.newsfeedData.value()) ?? []
+        guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), sections.count >= index
         else { return }
-        guard let details = newsSections[index-1].items.first else { return }
-        logger.logD(self, "Pressed to see details of \(details.title ?? "No title").")
+        let details = sections[index-1]
+        logger.logD(self, "Pressed to see details of \(details.title).")
         setupDetailsView(with: details)
         listStackView.arrangedSubviews.forEach {
             if let view = $0 as? OptionSelectionView {
