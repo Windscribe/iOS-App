@@ -17,6 +17,7 @@ protocol LocationManagingViewModelType: DisclosureAlertDelegate {
     func requestLocationPermission(callback: @escaping () -> Void)
     func logStatus()
     func getStatus() -> CLAuthorizationStatus
+    func getAccuracyIsOff() -> Bool
 }
 
 class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
@@ -38,7 +39,18 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
 
     func requestLocationPermission(callback: @escaping () -> Void) {
         locationCallback = callback
-        switch getStatus() {
+
+        let status = getStatus()
+        if getAccuracyIsOff() {
+            if status == .notDetermined {
+                showPermissionDisclousar()
+            } else {
+                showPermissionDisclousar(denied: true)
+            }
+            return
+        }
+
+        switch status {
         case .authorizedWhenInUse:
             callback()
         case .notDetermined:
@@ -60,6 +72,13 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
         } else {
             return CLLocationManager.authorizationStatus()
         }
+    }
+
+    func getAccuracyIsOff() -> Bool {
+        if #available(iOS 14.0, *) {
+            return locationManager.accuracyAuthorization == .reducedAccuracy
+        }
+        return true
     }
 }
 
