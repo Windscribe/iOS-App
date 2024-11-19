@@ -179,7 +179,7 @@ class ConnectionManager: ConnectionManagerV2 {
             let failedProtocol = getNextProtocol()
             logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
             setPriority(proto: failedProtocol.protocolName, type: .fail)
-            if protocolsToConnectList.filter({ $0.viewType == .normal}).count <= 0 {
+            if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
                 logger.logI(self, "No more protocol left to connect.")
                 reset(completion: completion)
             } else {

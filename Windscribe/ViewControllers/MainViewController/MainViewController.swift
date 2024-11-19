@@ -274,12 +274,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         popupRouter?.routeTo(to: .maintenanceLocation, from: self)
     }
 
-    func showSetPreferredProtocolPopup() {
-        if WifiManager.shared.getConnectedNetwork()?.preferredProtocolStatus == false && WifiManager.shared.getConnectedNetwork()?.status == false && WifiManager.shared.getConnectedNetwork()?.dontAskAgainForPreferredProtocol == false {
-            popupRouter?.routeTo(to: .setPreferredProtocolPopup, from: self)
-        }
-    }
-
     func updateServerConfigs() {
         viewModel.updateServerConfig()
     }
