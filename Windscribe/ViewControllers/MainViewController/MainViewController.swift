@@ -469,7 +469,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func disableConnectButton() {
         connectButton.isUserInteractionEnabled = false
-        Timer.scheduledTimer(timeInterval: 0.5, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
+        Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(enableConnectButton), userInfo: nil, repeats: false)
     }
 
     func tableViewScrolled(toTop: Bool) {
