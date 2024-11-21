@@ -262,18 +262,7 @@ extension MainViewController {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
         DispatchQueue.main.async {
-            let serverModels = results.compactMap({ $0.getServerModel() })
-            let serverSections: [ServerSection] = serverModels.filter({ $0.isForStreaming() == false }).map({ ServerSection(server: $0, collapsed: true) })
-            let streamingSections: [ServerSection] = serverModels.filter({ $0.isForStreaming() == true }).map({ ServerSection(server: $0, collapsed: true) })
-            let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
-            let streamingSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: streamingSections)
-
-            self.serverListTableViewDataSource?.serverSections = serverSectionsOrdered
-            self.sortedServerList = serverSectionsOrdered
-            self.streamingTableViewDataSource?.streamingSections = streamingSectionsOrdered
-
-            self.serverListTableView.reloadData()
-            self.streamingTableView.reloadData()
+            self.loadServerTable(servers: results)
             self.reloadFavNodeOrder()
             self.configureBestLocation()
         }
@@ -321,7 +310,7 @@ extension MainViewController {
         }).disposed(by: self.disposeBag)
     }
 
-    func loadServerTable(servers: [Server]) {
+    func loadServerTable(servers: [Server], reloadFinishedCompletion: (() -> Void)? = nil) {
         self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
             self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel)
             self.serverListTableViewDataSource?.delegate = self
@@ -329,6 +318,11 @@ extension MainViewController {
             self.serverListTableView.delegate = self.serverListTableViewDataSource
             if let bestLocation = try? self.viewModel.bestLocation.value(), bestLocation.isInvalidated == false {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
+            }
+            reloadFinishedCompletion?()
+            DispatchQueue.main.async {
+                self.serverListTableView.reloadData()
+                self.reloadServerList()
             }
         }
         self.viewModel.sortServerListUsingUserPreferences(isForStreaming: true, servers: servers) { streamingSectionsOrdered in
@@ -338,7 +332,6 @@ extension MainViewController {
             self.streamingTableView.delegate = self.streamingTableViewDataSource
             DispatchQueue.main.async {
                 self.streamingTableView.reloadData()
-                self.serverListTableView.reloadData()
                 self.reloadServerList()
             }
         }

@@ -42,39 +42,40 @@ extension MainViewController {
             reloadServerListForSearch()
         }
     }
-    func reloadServerListForSearch() {
+
+    func reloadServerListForSearch(reloadFinishedCompletion: (() -> Void)? = nil) {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
-        let serverModels = results.compactMap({ $0.getServerModel() })
-        let serverSections: [ServerSection] = serverModels.map({ ServerSection(server: $0, collapsed: true) })
-        let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
-        self.serverListTableViewDataSource?.serverSections = serverSectionsOrdered
-        self.serverListTableViewDataSource?.bestLocation = nil
-        self.serverListTableView.reloadData()
+        loadServerTable(servers: results, reloadFinishedCompletion: reloadFinishedCompletion)
     }
 }
 
 extension MainViewController: SearchCountryViewDelegate {
     func searchLocationUpdated(with text: String) {
-        reloadServerListForSearch()
-        guard let serverSections = serverListTableViewDataSource?.serverSections else { return }
-        if text.isEmpty {
-            for (index, _) in serverSections.enumerated() {
-                serverListTableView.collapse(index)
-            }
-            return
-        }
-        var resultServerSections = [ServerSection]()
-        let serverModels = serverSections.map {$0.server!}
-        let sortedModels = find(groupList: serverModels, keyword: text)
-        resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
-        serverListTableViewDataSource?.serverSections = resultServerSections
-        serverListTableView.reloadData()
-        for (index, serverSection) in resultServerSections.enumerated() {
-            if serverSection.collapsed == false {
-                serverListTableView.expand(index)
-            } else {
-                serverListTableView.collapse(index)
+        reloadServerListForSearch { [weak self] in
+            DispatchQueue.main.async {
+                guard let self = self,
+                      let serverSections = self.serverListTableViewDataSource?.serverSections
+                else { return }
+                if text.isEmpty {
+                    for (index, _) in serverSections.enumerated() {
+                        self.serverListTableView.collapse(index)
+                    }
+                    return
+                }
+                var resultServerSections = [ServerSection]()
+                let serverModels = serverSections.map {$0.server!}
+                let sortedModels = self.find(groupList: serverModels, keyword: text)
+                resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
+                self.serverListTableViewDataSource?.serverSections = resultServerSections
+                self.serverListTableView.reloadData()
+                for (index, serverSection) in resultServerSections.enumerated() {
+                    if serverSection.collapsed == false {
+                        self.serverListTableView.expand(index)
+                    } else {
+                        self.serverListTableView.collapse(index)
+                    }
+                }
             }
         }
     }

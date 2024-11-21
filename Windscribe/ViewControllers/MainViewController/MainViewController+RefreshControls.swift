@@ -25,20 +25,22 @@ extension MainViewController {
                 self.isRefreshing = true
                 self.isLoadingLatencyValues = true
                 self.hideTextOnRefreshControls()
-                latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-                    self.serverListTableView.reloadData()
-                    self.favTableView.reloadData()
-                    self.streamingTableView.reloadData()
-                    self.staticIpTableView.reloadData()
-                    self.customConfigTableView.reloadData()
-                    self.isRefreshing = false
-                    self.isLoadingLatencyValues = false
-                    self.endRefreshControls(update: false)
-                }, onError: { _ in
-                    self.isRefreshing = false
-                    self.isLoadingLatencyValues = false
-                    self.endRefreshControls(update: false)
-                }).disposed(by: disposeBag)
+
+                latencyViewModel.loadAllServerLatency(
+                    onAllServerCompletion: {
+                        self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
+                        self.favTableView.reloadData()
+                    }, onStaticCompletion: {
+                        self.staticIpTableView.reloadData()
+                    }, onCustomConfigCompletion: {
+                        self.customConfigTableView.reloadData()
+                    },
+                    onExitCompletion: {
+                        guard self.isRefreshing else { return }
+                        self.isRefreshing = false
+                        self.isLoadingLatencyValues = false
+                        self.endRefreshControls(update: false)
+                    })
             } else {
                 self.endRefreshControls(update: false)
             }
