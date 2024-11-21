@@ -157,7 +157,7 @@ class MainViewModel: MainViewModelType {
     }
 
     private func observeWifiNetwork() {
-        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network, refreshProtocolTrigger.asObservable() ).subscribe(onNext: { [self] (networks, appNetwork, _) in
+        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network, refreshProtocolTrigger.asObservable() ).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork, _) in
             guard let matchingNetwork = networks.first(where: {
                 $0.SSID == appNetwork.name
             }) else { return }

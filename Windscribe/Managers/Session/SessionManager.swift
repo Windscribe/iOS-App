@@ -67,7 +67,7 @@ class SessionManager: SessionManagerV2 {
                     if case Errors.sessionIsInvalid = error {
                         self.logoutUser()
                     } else {
-                        self.logger.logE(self, "Failed to update error: \(error)")
+                        self.logger.logD(self, "Failed to update error")
                     }
                     self.sessionFetchInProgress = false
                 }).disposed(by: disposeBag)
