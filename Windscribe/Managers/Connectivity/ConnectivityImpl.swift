@@ -59,7 +59,8 @@ class ConnectivityImpl: Connectivity {
         WSNet.instance().setIsConnectedToVpnState(self.isVPN(path: path))
         WSNet.instance().setConnectivityState(path.status == .satisfied)
         let networkType = self.getNetworkType(path: path)
-        getNetworkName(networkType: networkType) { ssid in
+        getNetworkName(networkType: networkType) { [weak self] ssid in
+            guard let self = self else { return }
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
             self.logger.logI(self, "\(appNetwork.description)")
             self.network.onNext(appNetwork)
