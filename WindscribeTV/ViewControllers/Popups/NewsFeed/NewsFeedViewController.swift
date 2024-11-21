@@ -55,7 +55,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
                 self.setupDetailsView(with: firstItem)
             }
         }.disposed(by: disposeBag)
-        
+
         viewModel.viewToLaunch.bind(onNext: { view in
             switch view {
                 case let .safari(url):
@@ -100,8 +100,7 @@ extension NewsFeedViewController {
         }
         return false
     }
-    
-    
+
     private func setupDetailsView(with item: NewsFeedData) {
         newsBodyText.text = item.description
         if let action = item.actionLink {
@@ -114,7 +113,7 @@ extension NewsFeedViewController {
             buttonHiddingView.isHidden = true
         }
     }
-    
+
     @objc private func onActionClick() {
         if let action = selectedActionLink {
             viewModel.didTapAction(action: action)

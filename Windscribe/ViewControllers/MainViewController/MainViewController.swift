@@ -368,42 +368,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         self.customConfigTableView.reloadData()
     }
 
-    func sortServerListUsingUserPreferences(serverSections: [ServerSection]) -> [ServerSection] {
-        var serverSectionsOrdered = [ServerSection]()
-        guard let orderLocationsBy = try? viewModel.locationOrderBy.value() else { return serverSections}
-        switch orderLocationsBy {
-        case Fields.Values.geography:
-            serverSectionsOrdered = serverSections
-        case Fields.Values.alphabet:
-            serverSectionsOrdered = serverSections.sorted { (serverSection1, serverSection2) -> Bool in
-                guard let countryCode1 = serverSection1.server?.name, let countryCode2 = serverSection2.server?.name else { return false }
-                return countryCode1 < countryCode2
-            }
-        case Fields.Values.latency:
-            serverSectionsOrdered = serverSections.sorted { (serverSection1, serverSection2) -> Bool in
-                guard let hostnamesFirst = serverSection1.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}), let hostnamesSecond = serverSection2.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return false }
-                let firstNodeList = hostnamesFirst.map({viewModel.getLatency(ip: $0 ?? "")}).filter({ $0 != 0 })
-                let secondNodeList = hostnamesSecond.map({viewModel.getLatency(ip: $0 ?? "")}).filter({ $0 != 0 }).filter({ $0 != 0 })
-                let firstLatency = firstNodeList.reduce(0, { (result, value) -> Int in
-                    return result + value
-                })
-                let secondLatency = secondNodeList.reduce(0, { (result, value) -> Int in
-                    return result + value
-                })
-                if firstNodeList.count == 0 ||
-                    secondNodeList.count == 0 ||
-                    firstLatency == 0 ||
-                    secondLatency == 0 {
-                    return false
-                }
-                return (firstLatency / (firstNodeList.count)) < (secondLatency / (secondNodeList.count))
-            }
-        default:
-            return serverSections
-        }
-        return serverSectionsOrdered
-    }
-
     func showNoInternetConnection() {
         statusLabel.isHidden = true
         statusImageView.image = UIImage(named: ImagesAsset.noInternet)

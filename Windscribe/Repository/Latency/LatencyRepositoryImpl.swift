@@ -80,23 +80,22 @@ class LatencyRepositoryImpl: LatencyRepository {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
-
         latencySingles.subscribe(
-            onFailure: { _ in
-                self.logger.logE(self, "Failure to update latency data.")
-                let pingData = self.database.getAllPingData()
-                self.latency.onNext(pingData)
-                self.pickBestLocation(pingData: pingData)
-            }
-        )
-        .disposed(by: self.disposeBag)
+                onSuccess: { _ in
+                    self.logger.logI(self, "Successfully updated latency data.")
+                    let pingData = self.database.getAllPingData()
+                    self.latency.onNext(pingData)
+                    self.pickBestLocation(pingData: pingData)
+                },
+                onFailure: { _ in
+                    self.logger.logE(self, "Failure to update latency data.")
+                    let pingData = self.database.getAllPingData()
+                    self.latency.onNext(pingData)
+                    self.pickBestLocation(pingData: pingData)
+                })
+            .disposed(by: self.disposeBag)
 
-        return latencySingles.do(onSuccess: { _ in
-            self.logger.logI(self, "Successfully updated latency data.")
-            let pingData = self.database.getAllPingData()
-            self.latency.onNext(pingData)
-            self.pickBestLocation(pingData: pingData)
-        }).asCompletable()
+        return latencySingles.asCompletable()
     }
 
     func loadFavouriteLatency() -> Completable {
@@ -156,7 +155,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
-        #if os(iOS)
+#if os(iOS)
         if vpnManager.isConnected() {
             completion(-1)
         } else {
@@ -171,20 +170,20 @@ class LatencyRepositoryImpl: LatencyRepository {
                 }
             }
         }
-        #endif
+#endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
         let pingIps = database.getServers()?
-        .compactMap { region in region.groups.toArray()}
-        .reduce([], +)
-        .filter {
-            if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
-                return false
-            } else {
-                return true
-            }
-        }.map {$0.pingIp} ?? []
+            .compactMap { region in region.groups.toArray()}
+            .reduce([], +)
+            .filter {
+                if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
+                    return false
+                } else {
+                    return true
+                }
+            }.map {$0.pingIp} ?? []
         let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip)}
         let minLatencyPingData = validPingData.min(by: { $0.latency < $1.latency })
         return minLatencyPingData?.ip
@@ -224,18 +223,18 @@ class LatencyRepositoryImpl: LatencyRepository {
     func pickBestLocation(pingData: [PingData]) {
         let servers = database.getServers()
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
-        outerLoop: for server in servers ?? [] {
-            for group in server.groups {
-                if group.pingIp == lowestPingIp,
-                   let bestNode = group.bestNode?.getNodeModel(),
-                   let serverModel = server.getServerModel() {
-                    let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
-                    database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
-                    self.bestLocation.onNext(bestLocation)
-                    break outerLoop
+            outerLoop: for server in servers ?? [] {
+                for group in server.groups {
+                    if group.pingIp == lowestPingIp,
+                       let bestNode = group.bestNode?.getNodeModel(),
+                       let serverModel = server.getServerModel() {
+                        let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
+                        database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
+                        self.bestLocation.onNext(bestLocation)
+                        break outerLoop
+                    }
                 }
             }
-        }
         } else {
             return
         }
