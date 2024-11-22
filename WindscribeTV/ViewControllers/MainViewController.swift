@@ -303,10 +303,11 @@ class MainViewController: PreferredFocusedViewController {
         }).disposed(by: disposeBag)
         self.configureBestLocation(selectBestLocation: true)
         connectionStateViewModel.displayLocalIPAddress(force: true)
-        latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: { [self] in
-            self.configureBestLocation()
-        }, onError: { _ in
-        }).disposed(by: disposeBag)
+        latencyViewModel.loadAllServerLatency( onAllServerCompletion: {
+            DispatchQueue.main.async {
+                self.configureBestLocation()
+            }
+        }, onStaticCompletion: {}, onCustomConfigCompletion: {}, onExitCompletion: {})
         connectionStateViewModel.connectedState.subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
