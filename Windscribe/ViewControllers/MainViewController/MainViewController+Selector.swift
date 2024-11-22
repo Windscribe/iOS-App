@@ -310,9 +310,9 @@ extension MainViewController {
         }).disposed(by: self.disposeBag)
     }
 
-    func loadServerTable(servers: [Server], reloadFinishedCompletion: (() -> Void)? = nil) {
+    func loadServerTable(servers: [Server], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
         self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
-            self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel)
+            self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel, shouldColapse: shouldColapse)
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
             self.serverListTableView.delegate = self.serverListTableViewDataSource

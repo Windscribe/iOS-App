@@ -46,7 +46,7 @@ extension MainViewController {
     func reloadServerListForSearch(reloadFinishedCompletion: (() -> Void)? = nil) {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
-        loadServerTable(servers: results, reloadFinishedCompletion: reloadFinishedCompletion)
+        loadServerTable(servers: results, shouldColapse: true, reloadFinishedCompletion: reloadFinishedCompletion)
     }
 }
 
