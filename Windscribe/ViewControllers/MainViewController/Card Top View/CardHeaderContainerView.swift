@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import RxSwift
 
-fileprivate class ButtonImageView: UIView {
+private class ButtonImageView: UIView {
     let button = UIButton()
     let imageView = UIImageView()
     var disposeBag = DisposeBag()

@@ -30,16 +30,18 @@ extension MainViewController {
                     onAllServerCompletion: {
                         self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
                         self.favTableView.reloadData()
+                        self.endRefreshControls(update: false)
                     }, onStaticCompletion: {
                         self.staticIpTableView.reloadData()
+                        self.endRefreshControls(update: false)
                     }, onCustomConfigCompletion: {
                         self.customConfigTableView.reloadData()
+                        self.endRefreshControls(update: false)
                     },
                     onExitCompletion: {
                         guard self.isRefreshing else { return }
                         self.isRefreshing = false
                         self.isLoadingLatencyValues = false
-                        self.endRefreshControls(update: false)
                     })
             } else {
                 self.endRefreshControls(update: false)
