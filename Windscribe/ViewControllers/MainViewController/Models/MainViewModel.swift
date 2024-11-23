@@ -252,7 +252,8 @@ class MainViewModel: MainViewModelType {
     }
 
     private func sortServerNodes(serverList: [ServerSection], orderBy: String) -> [ServerSection] {
-        serverList.map {
+        guard orderBy != Fields.Values.geography else { return serverList }
+        return serverList.map {
             guard let serverModel = $0.server, let serverGroups = serverModel.groups else { return $0 }
             var sortedGroups = [GroupModel]()
             switch orderBy {
@@ -264,9 +265,12 @@ class MainViewModel: MainViewModelType {
                 }
             default:
                 sortedGroups = serverGroups.sorted {
-                    guard let nick1 = $0.nick else { return false }
-                    guard let nick2 = $1.nick else { return true }
-                    return nick1 < nick2
+                    guard let nick1 = $0.nick, let city1 = $0.city else { return false }
+                    guard let nick2 = $1.nick, let city2 = $1.city else { return true }
+                    if city1 == city2 {
+                        return nick1 < nick2
+                    }
+                    return city1 < city2
                 }
             }
             let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p)
