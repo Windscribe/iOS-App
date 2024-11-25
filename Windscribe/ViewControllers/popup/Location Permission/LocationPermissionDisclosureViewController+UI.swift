@@ -33,7 +33,7 @@ extension LocationPermissionDisclosureViewController {
         descriptionLabel.layer.opacity = 0.5
         descriptionLabel.numberOfLines = 0
         descriptionLabel.font = UIFont.text(size: 16)
-        descriptionLabel.text = TextsAsset.Permission.disclousarDescription
+        descriptionLabel.text = TextsAsset.Permission.disclosureDescription
         view.addSubview(descriptionLabel)
 
         actionButton = UIButton(type: .system)
