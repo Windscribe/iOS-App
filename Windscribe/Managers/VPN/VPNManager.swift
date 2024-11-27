@@ -141,6 +141,7 @@ class VPNManager: VPNManagerProtocol {
             configureStateLock.lock()
             _configurationState = newValue
             configureStateLock.unlock()
+            configureForConnectionState()
         }
     }
 
