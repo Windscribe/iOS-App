@@ -34,7 +34,6 @@ extension NewsFeedViewController {
         tableView.backgroundColor = UIColor.clear
         tableView.estimatedRowHeight = 150
         tableView.sectionFooterHeight = 50
-        tableView.register(NewsFeedCell.self, forCellReuseIdentifier: noticeCellReuseIdentifier)
         view.addSubview(tableView)
     }
 
@@ -45,28 +44,28 @@ extension NewsFeedViewController {
 
         if UIScreen.hasTopNotch {
             view.addConstraints([
-                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 70),
+                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 70)
             ])
         } else {
             view.addConstraints([
-                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 32),
+                NSLayoutConstraint(item: backButton as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 32)
             ])
         }
         view.addConstraints([
             NSLayoutConstraint(item: backButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: backButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32),
-            NSLayoutConstraint(item: backButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32),
+            NSLayoutConstraint(item: backButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: titleLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: backButton, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: titleLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32),
+            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: tableView as Any, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: tableView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: tableView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: tableView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: tableView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0)
         ])
     }
 }

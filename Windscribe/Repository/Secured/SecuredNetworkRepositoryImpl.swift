@@ -45,12 +45,14 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
 
     /// Returns currently connected saved network if avaialble
     func getCurrentNetwork() -> WifiNetwork? {
-        return try? networks.value().first { connectivity.getNetwork().name == $0.SSID }
+        let networkName = connectivity.getNetwork().name
+        return try? networks.value().first { networkName == $0.SSID }
     }
 
     /// Returns all saved network excluding current network.
     func getOtherNetworks() -> [WifiNetwork]? {
-        return try? networks.value().filter { connectivity.getNetwork().name != $0.SSID }
+        let networkName = connectivity.getNetwork().name
+        return try? networks.value().filter { networkName != $0.SSID }
     }
 
     /// Adds current network with given settings to database if network name is avaialble.

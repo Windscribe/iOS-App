@@ -16,13 +16,15 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
     private let sessionManager: SessionManagerV2
     private let preference: Preferences
     private let vpnManager: VPNManager
+	private let logger: FileLogger
 
     static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self))
 
-    init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager) {
+    init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager, logger: FileLogger) {
         preference = preferences
         self.sessionManager = sessionManager
         self.vpnManager = vpnManager
+        self.logger = logger
     }
 
     func checkAndShowDialogFirstTime(completion: @escaping () -> Void) {

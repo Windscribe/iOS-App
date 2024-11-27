@@ -174,6 +174,7 @@ extension VPNManager {
                 self.logger.logI(VPNManager.self, "Kill-Switch/Firewall on unable to remove VPN Profile.")
                 return
             }
+                self.logger.logI( VPNManager.self, "Disconnecting timeout. Removing IKEv2 VPN profile.")
 
             for manager in self.configManager.managers {
                 if manager.connection.status == .disconnecting {

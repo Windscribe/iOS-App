@@ -136,8 +136,6 @@
 		1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */; };
 		1E9F2C372C66629100607BAA /* UITextView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA21222884E700997A2A /* UITextView+Ext.swift */; };
 		1EA876C52BC6E1C900F0DD25 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */; };
-		1EA876C92BC95B6C00F0DD25 /* NewsFeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */; };
-		1EA876CB2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
 		1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */; };
 		1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */; };
 		1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */; };
@@ -148,7 +146,6 @@
 		1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */; };
 		1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */; };
 		1EA9D6FC2C7752EE00566A93 /* NewsFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */; };
-		1EA9D6FD2C77530500566A93 /* NewsFeedCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */; };
 		1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */; };
 		1EA9D7022C7754D700566A93 /* OptionSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D7012C7754D700566A93 /* OptionSelectionView.xib */; };
 		1EA9D7032C77A0C300566A93 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
@@ -784,6 +781,9 @@
 		C51EEDCE2C1779B800B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */; };
 		C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F7B73276D0AAB0074A025 /* RobertFilters.swift */; };
+		C51F8DA62CE3193800281B01 /* NewsfeedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA52CE3192E00281B01 /* NewsfeedDataSource.swift */; };
+		C51F8DA82CE319ED00281B01 /* NewsFeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA72CE319E200281B01 /* NewsFeedData.swift */; };
+		C51F8DAA2CE31C6700281B01 /* NewsFeedDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA92CE31C5D00281B01 /* NewsFeedDataCell.swift */; };
 		C524AA5826B0A06300FCB1B6 /* DynamicSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5726B0A06300FCB1B6 /* DynamicSizeTableView.swift */; };
 		C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5926B219BE00FCB1B6 /* AboutViewController.swift */; };
 		C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */; };
@@ -865,6 +865,9 @@
 		C56615F62C4D84BC008AA993 /* OpenVPNAdapter in Frameworks */ = {isa = PBXBuildFile; productRef = C56615F52C4D84BC008AA993 /* OpenVPNAdapter */; };
 		C56616152C4D9207008AA993 /* PacketTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF0B9EE9226E0C4500DCD026 /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56A3A282C064D0500D54DB9 /* ManagerErrors.swift */; };
+		C56A4BB02CE7F4560097ACDB /* NewsFeedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA72CE319E200281B01 /* NewsFeedData.swift */; };
+		C56A4BB12CE7F45E0097ACDB /* NewsfeedDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA52CE3192E00281B01 /* NewsfeedDataSource.swift */; };
+		C56A4BB22CE7FB5A0097ACDB /* NewsFeedDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F8DA92CE31C5D00281B01 /* NewsFeedDataCell.swift */; };
 		C56D5AF02C4DFECC0069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */; };
 		C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C56D5AF42C4DFF300069DB6E /* WireGuardKit */; };
 		C56F5DAE2953739C008CD223 /* ConcurrentDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */; };
@@ -1333,8 +1336,6 @@
 		1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewLogView.swift; sourceTree = "<group>"; };
 		1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesViewLogView.xib; sourceTree = "<group>"; };
 		1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
-		1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCell.swift; sourceTree = "<group>"; };
-		1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedCellViewModel.swift; sourceTree = "<group>"; };
 		1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupViewModel.swift; sourceTree = "<group>"; };
 		1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewModel.swift; sourceTree = "<group>"; };
 		1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigPickerViewModel.swift; sourceTree = "<group>"; };
@@ -1741,6 +1742,9 @@
 		C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		C51EEDD32C1C90CA00B01F8F /* WindscribeDevelopment.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WindscribeDevelopment.entitlements; sourceTree = "<group>"; };
 		C51F7B73276D0AAB0074A025 /* RobertFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertFilters.swift; sourceTree = "<group>"; };
+		C51F8DA52CE3192E00281B01 /* NewsfeedDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsfeedDataSource.swift; sourceTree = "<group>"; };
+		C51F8DA72CE319E200281B01 /* NewsFeedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedData.swift; sourceTree = "<group>"; };
+		C51F8DA92CE31C5D00281B01 /* NewsFeedDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDataCell.swift; sourceTree = "<group>"; };
 		C524AA5726B0A06300FCB1B6 /* DynamicSizeTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSizeTableView.swift; sourceTree = "<group>"; };
 		C524AA5926B219BE00FCB1B6 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItem.swift; sourceTree = "<group>"; };
@@ -2291,7 +2295,9 @@
 		1E2366CB2BC5766E000DF098 /* News Feed */ = {
 			isa = PBXGroup;
 			children = (
-				1EA876C72BC95B4D00F0DD25 /* Cell */,
+				C51F8DA92CE31C5D00281B01 /* NewsFeedDataCell.swift */,
+				C51F8DA72CE319E200281B01 /* NewsFeedData.swift */,
+				C51F8DA52CE3192E00281B01 /* NewsfeedDataSource.swift */,
 				1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */,
 				AF1442B4220E17E4006B8B5C /* NewsFeedViewController+UI.swift */,
 				1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */,
@@ -2496,15 +2502,6 @@
 				1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */,
 			);
 			path = "View Log";
-			sourceTree = "<group>";
-		};
-		1EA876C72BC95B4D00F0DD25 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				1EA876C82BC95B6C00F0DD25 /* NewsFeedCell.swift */,
-				1EA876CA2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 		1EA876D32BCEA37A00F0DD25 /* Error View */ = {
@@ -4887,6 +4884,7 @@
 				59C96D692C69C55F00546C72 /* ServerListViewController.swift in Sources */,
 				59FC73DC2C514BC600021CD1 /* Connectivity.swift in Sources */,
 				59FC74682C5167D300021CD1 /* BillingRepositoryImpl.swift in Sources */,
+				C56A4BB02CE7F4560097ACDB /* NewsFeedData.swift in Sources */,
 				59FC74332C515A3B00021CD1 /* LocalDatabaseImpl.swift in Sources */,
 				59FC747A2C51741F00021CD1 /* Date+Ext.swift in Sources */,
 				59FC743D2C515B9B00021CD1 /* SessionManagerV2.swift in Sources */,
@@ -4948,6 +4946,7 @@
 				59A2187A2C3CA0F8000D89FA /* FileLogger.swift in Sources */,
 				59FC74422C515D8E00021CD1 /* PortMapRepository.swift in Sources */,
 				599BA2B82C65453F00F0D1E4 /* UpgradeButton.swift in Sources */,
+				C56A4BB12CE7F45E0097ACDB /* NewsfeedDataSource.swift in Sources */,
 				59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */,
 				59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */,
 				59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */,
@@ -5138,7 +5137,6 @@
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,
 				5986AB5D2C47569E00167023 /* UIImage+Ext.swift in Sources */,
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
-				1EA9D6FD2C77530500566A93 /* NewsFeedCellViewModel.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
 				59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */,
@@ -5161,6 +5159,7 @@
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
+				C56A4BB22CE7FB5A0097ACDB /* NewsFeedDataCell.swift in Sources */,
 				1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */,
 				1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */,
 				C59FF1AA2CBB9C4F0072EF70 /* ClaimVoucherCodeResponse.swift in Sources */,
@@ -5305,8 +5304,8 @@
 				C5592B7A2B37FCBF00F2F110 /* APIManagerImpl+Others.swift in Sources */,
 				C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */,
 				C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */,
+				C51F8DAA2CE31C6700281B01 /* NewsFeedDataCell.swift in Sources */,
 				AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */,
-				1EA876C92BC95B6C00F0DD25 /* NewsFeedCell.swift in Sources */,
 				1E2366CD2BC5768E000DF098 /* NewsFeedModel.swift in Sources */,
 				C56F5DAE2953739C008CD223 /* ConcurrentDictionary.swift in Sources */,
 				AF69DC5222331C5400AC6FDC /* PushNotificationViewController+UI.swift in Sources */,
@@ -5318,6 +5317,7 @@
 				AF1442B5220E17E4006B8B5C /* NewsFeedViewController+UI.swift in Sources */,
 				AF935E9522FCA13800327837 /* CheckMarkButton.swift in Sources */,
 				591CF9B92BBF1160004DEB48 /* HelpViewModel.swift in Sources */,
+				C51F8DA62CE3193800281B01 /* NewsfeedDataSource.swift in Sources */,
 				C5D983B92B34A1C40069FF3A /* APIManagerImpl.swift in Sources */,
 				E97ABD6028EB33F700B38587 /* ProtocolSetPreferredViewModel.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
@@ -5415,6 +5415,7 @@
 				1E0EFF172C2D6C22002FBC72 /* ConnectedDNSView.swift in Sources */,
 				C5D0E40529BB8BE70091FB14 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				E9816B6E27D8E9BE0059D275 /* WgCredentials.swift in Sources */,
+				C51F8DA82CE319ED00281B01 /* NewsFeedData.swift in Sources */,
 				E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */,
 				59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */,
 				1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */,
@@ -5432,7 +5433,6 @@
 				AF4E926D21F235D600A3F584 /* UIFont+Ext.swift in Sources */,
 				1E24AB882BD144330004D17D /* InfoPromptViewModel.swift in Sources */,
 				C5D1C2D42BBFE1AD0083B9EC /* AdvanceRepositoryImpl.swift in Sources */,
-				1EA876CB2BC95B8000F0DD25 /* NewsFeedCellViewModel.swift in Sources */,
 				C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */,
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
 				1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */,
@@ -6433,7 +6433,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -6456,7 +6456,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.10;
+				MARKETING_VERSION = 3.8.11;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -6482,7 +6482,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -6510,7 +6510,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.10;
+				MARKETING_VERSION = 3.8.11;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -7048,7 +7048,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -7070,7 +7070,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.8.10;
+				MARKETING_VERSION = 3.8.11;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -7408,8 +7408,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
-				kind = revision;
-				revision = 72821fcd765ea1c4b61a016f0cd72d3eab14800d;
+				branch = windscribe;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

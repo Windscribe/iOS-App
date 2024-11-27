@@ -563,7 +563,6 @@ extension UpgradeViewController {
         if windscribePlans.count > 0 {
             if let plan = windscribePlans.first(where: { $0.extId == firstPlanExt }) {
                 setSelectedPlan(plan: plan)
-                logger.logD(self, "Selected Plan: \(plan)")
             }
             let attributedTitle = NSMutableAttributedString(string: "\(TextsAsset.continue) \(firstPlanOptionButton.titleLabel?.text ?? "")")
             attributedTitle.addAttribute(.font, value: UIFont.bold(size: 16), range: NSRange(location: 0, length: TextsAsset.continue.count))
@@ -581,7 +580,6 @@ extension UpgradeViewController {
         if windscribePlans.count > 1 {
             if let plan = windscribePlans.first(where: { $0.extId == secondPlanExt }) {
                 setSelectedPlan(plan: plan)
-                logger.logD(self, "Selected Plan: \(plan)")
             }
             var priceToShow = ""
             if promoCode == nil {

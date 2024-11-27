@@ -95,13 +95,13 @@ class PopupRouter: BaseRouter, RootRouter {
                 case let .bannedAccountPopup(pushAnimated):
                     from.navigationController?.pushViewController(vc, animated: pushAnimated)
                 case .setPreferredProtocolPopup,
-                     .newsFeedPopup,
-                     .privacyView,
-                     .infoPrompt,
-                     .enterCredentials,
-                     .pushNotifications,
-                     .shakeForDataPopUp,
-                     .maintenanceLocation:
+                        .newsFeedPopup,
+                        .privacyView,
+                        .infoPrompt,
+                        .enterCredentials,
+                        .shakeForDataPopUp,
+                        .pushNotifications,
+                        .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
                 case .shakeForDataView,
                      .shakeForDataResult:

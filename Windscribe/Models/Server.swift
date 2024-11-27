@@ -20,15 +20,14 @@ struct ServerModel {
     let locType: String?
     let p2p: Bool?
 
-    init(id: Int, name: String,
-         countryCode: String,
-         status: Bool,
-         premiumOnly: Bool,
-         dnsHostname: String,
+    init(id: Int?, name: String?,
+         countryCode: String?,
+         status: Bool?,
+         premiumOnly: Bool?,
+         dnsHostname: String?,
          groups: [GroupModel],
-         locType: String,
-         p2p: Bool)
-    {
+         locType: String?,
+         p2p: Bool?) {
         self.id = id
         self.name = name
         self.countryCode = countryCode

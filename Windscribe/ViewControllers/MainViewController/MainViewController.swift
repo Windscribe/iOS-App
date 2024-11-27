@@ -272,7 +272,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         guard vpnConnectionViewModel.isConnected() else { return }
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
-            logger.logE(MainViewController.self, "No internet connection available.")
+            logger.logI(MainViewController.self, "No internet connection available.")
             internetConnectionLost = true
             vpnConnectionViewModel.disableConnection()
         }
@@ -300,12 +300,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func showMaintenanceLocationView() {
         popupRouter?.routeTo(to: .maintenanceLocation, from: self)
-    }
-
-    func showSetPreferredProtocolPopup() {
-        if WifiManager.shared.getConnectedNetwork()?.preferredProtocolStatus == false && WifiManager.shared.getConnectedNetwork()?.status == false && WifiManager.shared.getConnectedNetwork()?.dontAskAgainForPreferredProtocol == false {
-            popupRouter?.routeTo(to: .setPreferredProtocolPopup, from: self)
-        }
     }
 
     // TODO: refactor vpn configs
@@ -338,18 +332,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     func showOutOfDataPopup() {
         logger.logD(self, "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
-    }
-
-    func showRateUsPopup() {
-        rateViewModel.setDate()
-        rateViewModel.setRateUsActionCompleted()
-        if #available(iOS 14.0, *) {
-            let scenes = UIApplication.shared.connectedScenes
-            if let windowScene = scenes.first as? UIWindowScene {
-                logger.logD(self, "Attempting show rate popup.")
-                SKStoreReviewController.requestReview(in: windowScene)
-            }
-        }
     }
 
     func showProPlanExpiredPopup() {
@@ -402,43 +384,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }
         customConfigListTableViewDataSource?.customConfigs = customConfigModels
         customConfigTableView.reloadData()
-    }
-
-    func sortServerListUsingUserPreferences(serverSections: [ServerSection]) -> [ServerSection] {
-        var serverSectionsOrdered = [ServerSection]()
-        guard let orderLocationsBy = try? viewModel.locationOrderBy.value() else { return serverSections }
-        switch orderLocationsBy {
-        case Fields.Values.geography:
-            serverSectionsOrdered = serverSections
-        case Fields.Values.alphabet:
-            serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
-                guard let countryCode1 = serverSection1.server?.name, let countryCode2 = serverSection2.server?.name else { return false }
-                return countryCode1 < countryCode2
-            }
-        case Fields.Values.latency:
-            serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
-                guard let hostnamesFirst = serverSection1.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }), let hostnamesSecond = serverSection2.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }) else { return false }
-                let firstNodeList = hostnamesFirst.map { viewModel.getLatency(ip: $0 ?? "") }.filter { $0 != 0 }
-                let secondNodeList = hostnamesSecond.map { viewModel.getLatency(ip: $0 ?? "") }.filter { $0 != 0 }.filter { $0 != 0 }
-                let firstLatency = firstNodeList.reduce(0) { result, value -> Int in
-                    return result + value
-                }
-                let secondLatency = secondNodeList.reduce(0) { result, value -> Int in
-                    return result + value
-                }
-                if firstNodeList.count == 0 ||
-                    secondNodeList.count == 0 ||
-                    firstLatency == 0 ||
-                    secondLatency == 0
-                {
-                    return false
-                }
-                return (firstLatency / (firstNodeList.count)) < (secondLatency / (secondNodeList.count))
-            }
-        default:
-            return serverSections
-        }
-        return serverSectionsOrdered
     }
 
     func showNoInternetConnection() {

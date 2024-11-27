@@ -68,7 +68,7 @@ class SessionManager: SessionManagerV2 {
                     if case Errors.sessionIsInvalid = error {
                         self.logoutUser()
                     } else {
-                        self.logger.logE(self, "Failed to update error")
+                        self.logger.logD(self, "Failed to update error")
                     }
                     self.sessionFetchInProgress = false
                 }).disposed(by: disposeBag)
@@ -196,6 +196,13 @@ class SessionManager: SessionManagerV2 {
 
     func logoutUser() {
         DispatchQueue.main.async {
+                if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+                    window.rootViewController?.dismiss(animated: false, completion: nil)
+                    let firstViewController = Assembler.resolve(WelcomeViewController.self)
+                    DispatchQueue.main.async {
+                        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                            window.rootViewController = UINavigationController(rootViewController: firstViewController)
+                        }, completion: nil)
             NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
             self.session = nil
             self.wgCredentials.delete()
@@ -208,15 +215,6 @@ class SessionManager: SessionManagerV2 {
                 self.preferences.saveUserSessionAuth(sessionAuth: nil)
                 self.preferences.clearSelectedLocations()
                 Assembler.container.resetObjectScope(.userScope)
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
-                    window.rootViewController?.dismiss(animated: false, completion: nil)
-                    let firstViewController = Assembler.resolve(WelcomeViewController.self)
-                    DispatchQueue.main.async {
-                        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                            window.rootViewController = UINavigationController(rootViewController: firstViewController)
-                        }, completion: nil)
-                    }
-                }
             }
         }
     }

@@ -32,12 +32,16 @@ class ConnectivityImpl: Connectivity {
         do {
             return try network.value()
         } catch {
-            fatalError("Getting AppNetwork has erroed")
+            return AppNetwork(.disconnected)
         }
     }
 
     func refreshNetwork() {
-        refreshNetworkPathMonitor(path: monitor.currentPath)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            refreshNetworkPathMonitor(path: monitor.currentPath)
+        }
+
     }
 
     /// Adds listener to network path monitor and builds network change events.
@@ -56,7 +60,8 @@ class ConnectivityImpl: Connectivity {
         WSNet.instance().setIsConnectedToVpnState(isVPN(path: path))
         WSNet.instance().setConnectivityState(path.status == .satisfied)
         let networkType = getNetworkType(path: path)
-        getNetworkName(networkType: networkType) { ssid in
+        getNetworkName(networkType: networkType) { [weak self] ssid in
+            guard let self = self else { return }
             let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
             self.logger.logI(self, "\(appNetwork.description)")
             self.network.onNext(appNetwork)

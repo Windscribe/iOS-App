@@ -255,7 +255,7 @@ class VPNManager: VPNManagerProtocol {
         }
         set(value) {
             if value != activeVPNManager {
-                logger.logE(VPNManager.self, "Active VPN Manager changed to \(value)")
+                logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
                 preferences.saveActiveManagerKey(key: value.rawValue)
                 UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
             }

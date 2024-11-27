@@ -47,12 +47,18 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     var favNodesNotificationToken: NotificationToken?
     var scrollHappened = false
     var viewModel: MainViewModelType!
-    init(serverSections: [ServerSection], viewModel: MainViewModelType) {
+    init(serverSections: [ServerSection], viewModel: MainViewModelType, shouldColapse: Bool = false) {
         super.init()
-        scrollViewDelegate = self
-        expyDelegate = self
-        self.serverSections = serverSections
+        self.scrollViewDelegate = self
+        self.expyDelegate = self
         self.viewModel = viewModel
+        self.serverSections = serverSections.map({
+            if shouldColapse, let server = $0.server {
+                return ServerSection(server: server, collapsed: true)
+            }
+            return $0
+        })
+
         viewModel.favNode.bind(onNext: { favNodes in
             self.favNodes = favNodes?.compactMap { $0.getFavNodeModel() }
 
@@ -119,8 +125,10 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
                 serverSections[section].collapsed = !expanded
             }
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.setCollapsed(collapsed: serverSections[section].collapsed)
-            cell.displayingServer = serverSections[section].server
+            if serverSections.count > 0 {
+                cell.setCollapsed(collapsed: serverSections[section].collapsed)
+                cell.displayingServer = serverSections[section].server
+            }
             return cell
         }
     }

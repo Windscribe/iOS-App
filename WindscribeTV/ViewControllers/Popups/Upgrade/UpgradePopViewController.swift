@@ -66,7 +66,7 @@ class UpgradePopViewController: UIViewController {
 
     private func bindViews() {
         guard let viewModel = viewModel else { return }
-        viewModel.loadPlans(promo: promoCode)
+        viewModel.loadPlans(promo: promoCode, id: pcpID)
         viewModel.plans.subscribe { plans in
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()

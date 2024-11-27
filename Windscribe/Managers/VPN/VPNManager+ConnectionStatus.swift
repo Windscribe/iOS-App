@@ -150,14 +150,14 @@ extension VPNManager {
             return
         }
         if connectIntent, !WifiManager.shared.isConnectedWifiTrusted(), connectivity.internetConnectionAvailable(), isDisconnected(), selectedFirewallMode == true {
-            logger.logE(VPNManager.self, "Connect Intent is true. Retrying to connect.")
+            logger.logI(VPNManager.self, "Connect Intent is true. Retrying to connect.")
             retryWithNewCredentials = true
             configureAndConnectVPN()
         }
     }
 
     func handleConnectError() {
-        if awaitingConnectionCheck || preferences.getKillSwitchSync() {
+        if awaitingConnectionCheck {
             return
         }
         awaitingConnectionCheck = true
@@ -167,14 +167,15 @@ extension VPNManager {
                 return
             }
             if error == .credentialsFailure {
+                AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logD(self, "VPN disconnected due to credential failure")
                 self.connectIntent = false
                 self.resetProfiles {
-                    self.logger.logE(self, "Disabling VPN Profiles to get access api access.")
+                    self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
                     delay(2) {
-                        self.logger.logE(self, "Getting new session.")
+                        self.logger.logI(self, "Getting new session.")
                         self.api.getSession(nil).subscribe(onSuccess: { session in
-                            self.logger.logE(self, "Saving updated session.")
+                            self.logger.logI(self, "Saving updated session.")
                             DispatchQueue.main.async {
                                 self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
                             }

@@ -58,7 +58,7 @@ class WelcomeViewModelImpl: WelcomeViewModal {
             }.subscribe(onSuccess: { [weak self] session in
                 self?.keyChainDatabase.setGhostAccountCreated()
                 self?.userRepository.login(session: session)
-                self?.logger.logE(WelcomeViewModelImpl.self, "Ghost account registration successful, Preparing user data for \(session.userId)")
+                self?.logger.logI(WelcomeViewModelImpl.self, "Ghost account registration successful, Preparing user data for \(session.userId)")
                 self?.prepareUserData()
             }, onFailure: { [weak self] error in
                 switch error {

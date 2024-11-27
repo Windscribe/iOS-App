@@ -268,9 +268,8 @@ enum TextsAsset {
         static var locationPermissionLabel: String {
             return "Locations".localize()
         }
-
-        static var disclousarDescription: String {
-            return "Windscribe needs the location permission in order to make the \"Network Whitelist\" feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.".localize()
+        static var disclosureDescription: String {
+            return "Windscribe requires the Locations permission, with Precise Location enabled, in order to make the \"Network Whitelist\" feature work. This permission is required to access WiFi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.".localize()
         }
 
         static var disclaimer: String {

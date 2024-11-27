@@ -66,7 +66,7 @@ class ConfirmEmailViewController: WSUIViewController {
     }
 
     private func resendButtonTapped() {
-        logger.logE(self, "User tapped Resend Email button.")
+        logger.logI(self, "User tapped Resend Email button.")
         resendButton.isEnabled = false
         resendButton.layer.opacity = 0.35
         viewModel.apiManager.confirmEmail().subscribe(onSuccess: { _ in

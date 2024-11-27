@@ -68,6 +68,7 @@ class UpgradeViewController: WSNavigationViewController {
         addViews()
         addAutoLayoutConstraints()
         bindState()
+        updateTheme()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -79,15 +80,15 @@ class UpgradeViewController: WSNavigationViewController {
 
     private func bindState() {
         titleLabel.text = TextsAsset.UpgradeView.title
-        viewModel.loadPlans(promo: promoCode)
+        viewModel.loadPlans(promo: promoCode, id: pcpID)
         viewModel.plans.bind(onNext: { updatedPlans in
             DispatchQueue.main.async {
                 if let plans = updatedPlans {
                     switch plans {
-                    case let .discounted(applePlan, appPlan):
+                    case .discounted(let applePlan, let appPlan):
                         self.windscribePlans = [applePlan]
                         self.renderDiscountViews(applePlan: applePlan, appPlan: appPlan)
-                    case let .standardPlans(applePlans, appPlans):
+                    case .standardPlans(let applePlans, let appPlans):
                         self.windscribePlans = applePlans
                         self.renderStandardPlans(applePlans: applePlans, appPlans: appPlans)
                     case .unableToLoad:
@@ -101,10 +102,12 @@ class UpgradeViewController: WSNavigationViewController {
                 switch state {
                 case let .success(ghostAccount):
                     self.endLoading()
-                    if ghostAccount {
+                    if ghostAccount && self.navigationController != nil {
                         self.router.goToSignUp(viewController: self, claimGhostAccount: true)
+                    } else if let navigationController = self.navigationController {
+                        navigationController.popToRootViewController(animated: true)
                     } else {
-                        self.navigationController?.popToRootViewController(animated: true)
+                        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                     }
                 case .loading:
                     self.showLoading()
@@ -134,9 +137,6 @@ class UpgradeViewController: WSNavigationViewController {
             DispatchQueue.main.async {
                 self.continueFreeButton.isHidden = !show
             }
-        }).disposed(by: disposeBag)
-        viewModel.isDarkMode.bind(onNext: {
-            self.updateTheme(isDarkMode: $0)
         }).disposed(by: disposeBag)
     }
 
@@ -174,9 +174,8 @@ class UpgradeViewController: WSNavigationViewController {
     }
 
     // MARK: - Helper
-
-    private func renderPriceViews() {
-        if promoCode == nil {
+    private func renderPriceViews(isPromo: Bool) {
+        if !isPromo {
             discountView.isHidden = true
             pricesView.isHidden = false
         } else {
@@ -188,7 +187,7 @@ class UpgradeViewController: WSNavigationViewController {
         view.layoutIfNeeded()
     }
 
-    private func updateTheme(isDarkMode: Bool) {
+    private func updateTheme(isDarkMode: Bool = true) {
         setupViews(isDark: isDarkMode)
         proView.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: isDarkMode)
 
@@ -227,12 +226,15 @@ class UpgradeViewController: WSNavigationViewController {
             durationLabel = TextsAsset.UpgradeView.month
         }
         firstPlanExt = appPlan.extId
-        logger.logD(self, "Setting first plan \(firstPlanExt ?? "") for discounted view.")
         discountLabel.text = "\(appPlan.price)/ \(durationLabel)"
-        discountPercentLabel.text = "Save \(appPlan.discount)%"
+        if appPlan.discount > 0 {
+            discountPercentLabel.text = "Save \(appPlan.discount)%"
+        } else {
+            discountPercentLabel.text = ""
+        }
         promoLabel.text = "\(appPlan.name)"
         makeFirstPlanSelected()
-        renderPriceViews()
+        renderPriceViews(isPromo: true)
 
         view.layoutIfNeeded()
         promoView.roundCorners(corners: [.bottomLeft], radius: 16)
@@ -254,12 +256,11 @@ class UpgradeViewController: WSNavigationViewController {
                                            for: .normal)
             secondPlanOptionButton.setTitle("\(secondPlan?.price ?? "")/ \(TextsAsset.UpgradeView.year)",
                                             for: .normal)
-            continuePayButton.isEnabled = true
-            logger.logD(self, "Setting first plan \(firstPlan?.extId ?? "") and Second plan \(secondPlanExt ?? "")")
+            self.continuePayButton.isEnabled = true
             makeFirstPlanSelected()
         }
-        continuePayButton.isEnabled = true
-        renderPriceViews()
-        endLoading()
+        self.continuePayButton.isEnabled = true
+        self.renderPriceViews(isPromo: false)
+        self.endLoading()
     }
 }

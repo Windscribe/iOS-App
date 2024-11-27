@@ -97,10 +97,10 @@ class SignUpViewModelImpl: SignUpViewModel {
         apiCallManager.signup(username: username, password: password, referringUsername: referralUsername, email: email, voucherCode: voucherCode).observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [weak self] session in
                 self?.userRepository.login(session: session)
-                self?.logger.logE(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
+                self?.logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
             }, onFailure: { [weak self] error in
-                self?.logger.logE(SignUpViewModelImpl.self, "Failed to signup: \(error)")
+                self?.logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
                 self?.handleError(error: error)
             }).disposed(by: disposeBag)
     }

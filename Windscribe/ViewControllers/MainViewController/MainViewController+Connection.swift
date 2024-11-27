@@ -14,7 +14,7 @@ import UIKit
 
 extension MainViewController {
     @objc func trustedNetworkValueLabelTapped() {
-        if trustedNetworkValueLabel.text == TextsAsset.unknownNetworkName {
+        if trustedNetworkValueLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
             locationManagerViewModel.requestLocationPermission {
                 self.setNetworkSsid()
             }
@@ -68,8 +68,11 @@ extension MainViewController {
                 if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
                     if network.networkType == .cellular || network.networkType == .wifi {
                         self.trustedNetworkValueLabel.text = network.name ?? ""
+                    if let name = network.name {
+                        self.trustedNetworkValueLabel.text = name
                     } else {
                         self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+                        self.logger.logD(self, "no network name detected.")
                     }
                 } else {
                     self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork

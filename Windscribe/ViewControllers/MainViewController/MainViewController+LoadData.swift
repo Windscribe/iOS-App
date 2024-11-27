@@ -28,8 +28,6 @@ extension MainViewController {
                 self.logger.logD(self, "Updating Portmap to include missing protocols.")
                 self.viewModel.loadServerList()
                 self.viewModel.loadPortMap()
-            } else {
-                self.logger.logD(self, "Updated Portmap is avaialble.")
             }
         }).disposed(by: disposeBag)
     }
@@ -95,7 +93,7 @@ extension MainViewController {
 
     func loadCustomConfigs() {
         logger.logD(self, "Loading custom configs list from disk.")
-        viewModel.customConfigs.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
+        viewModel.customConfigs.subscribe(on: MainScheduler.instance).observe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
             var customConfigs = [CustomConfigModel]()
             guard let customconfigs = customconfigs else { return }
             for result in customconfigs {

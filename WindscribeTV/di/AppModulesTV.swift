@@ -74,7 +74,7 @@ class TVViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(NewsFeedModelType.self) { r in
-            NewsFeedModel(notificationRepository: r.resolve(NotificationRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+            NewsFeedModel(localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, fileLogger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register(PreferencesMainViewModel.self) { r in
@@ -233,6 +233,7 @@ class TVViewControllers: Assembly {
             vc.viewModel = r.resolve(NewsFeedModelType.self)
             vc.router = r.resolve(HomeRouter.self)
             vc.logger = r.resolve(FileLogger.self)
+            vc.alertManager = r.resolve(AlertManagerV2.self)
         }.inObjectScope(.transient)
 
         container.register(ServerListViewController.self) { _ in

@@ -100,6 +100,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(_: UIApplication) {
         logger.logD(self, "App state changed to WillEnterForeground.")
         connectionStateViewModel.becameActive()
+        connectivity.refreshNetwork()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {

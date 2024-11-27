@@ -15,8 +15,10 @@ class HomeRouter: RootRouter {
         case .preferences:
             let vc = Assembler.resolve(PreferencesMainViewController.self)
             from.present(vc, animated: true)
-        case let .upgrade(_, _, shouldBeRoot):
+        case let .upgrade(promoCode, pcpid, shouldBeRoot):
             let vc = Assembler.resolve(UpgradePopViewController.self)
+            vc.promoCode = promoCode
+            vc.pcpID = pcpid
             presentWithPossibleNavigation(vc: vc, from: from, shouldBeRoot: shouldBeRoot)
         case .support:
             let vc: BasePopUpViewController = Assembler.resolve(BasePopUpViewController.self)

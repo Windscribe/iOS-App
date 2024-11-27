@@ -151,7 +151,11 @@ class ConnectionViewController: WSNavigationViewController {
             }
         case .circumventCensorship:
             view.setImage(UIImage(named: ImagesAsset.circumventCensorship))
-            view.iconView.isHidden = true
+            view.explainHandler = { [weak self] in
+                if let url = URL(string: FeatureExplainer.circumventCensorship.getUrl()) {
+                    self?.openLink(url: url)
+                }
+            }
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateCircumventCensorshipStatus(status: view.switchButton.status)
             }

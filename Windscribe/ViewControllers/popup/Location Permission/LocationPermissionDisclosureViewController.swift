@@ -50,6 +50,7 @@ class LocationPermissionDisclosureViewController: WSUIViewController {
     }
 
     @objc func cancelButtonTapped() {
+        logger.logD(self, "Location Permission Popup cancelled")
         dismiss(animated: true, completion: nil)
     }
 }

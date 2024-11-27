@@ -217,20 +217,32 @@ extension MainViewController {
                 self.showNoInternetConnection()
                 return
             }
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-                UIView.animate(withDuration: 0.25) {
-                    self.flagBottomGradientView.layer.opacity = 1.0
-                    self.expandButton.imageView?.rotate(180)
-                    self.expandButton.tag = 1
-                    self.autoSecureLabel.isHidden = false
-                    self.autoSecureInfoButton.isHidden = false
-                    self.trustNetworkSwitch.isHidden = false
-                    self.yourIPIcon.layer.opacity = 0.0
-                    self.yourIPValueLabel.layer.opacity = 0.0
+            let isNetworkName: Bool = ((try? self.viewModel.appNetwork.value().name) != nil)
+            if isNetworkName {
+                DispatchQueue.main.async {
+                    self.expandAutoSecure()
                 }
-                self.loadNetworkOptions()
-                self.updateNetworkOptions()
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+                    self.expandAutoSecure()
+                }
             }
+
         }
+    }
+
+    private func expandAutoSecure() {
+        UIView.animate(withDuration: 0.25) {
+            self.flagBottomGradientView.layer.opacity = 1.0
+            self.expandButton.imageView?.rotate(180)
+            self.expandButton.tag = 1
+            self.autoSecureLabel.isHidden = false
+            self.autoSecureInfoButton.isHidden = false
+            self.trustNetworkSwitch.isHidden = false
+            self.yourIPIcon.layer.opacity = 0.0
+            self.yourIPValueLabel.layer.opacity = 0.0
+        }
+        self.loadNetworkOptions()
+        self.updateNetworkOptions()
     }
 }

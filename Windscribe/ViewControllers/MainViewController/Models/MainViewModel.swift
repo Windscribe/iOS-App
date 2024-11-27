@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import StoreKit
 
 protocol MainViewModelType {
     var serverList: BehaviorSubject<[Server]> { get }
@@ -52,7 +53,7 @@ protocol MainViewModelType {
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
     func daysSinceLogin() -> Int
-    func showRateDialog() -> Bool
+    func checkRateDialogStatus()
     func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
@@ -168,7 +169,7 @@ class MainViewModel: MainViewModelType {
     }
 
     private func observeWifiNetwork() {
-        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network, refreshProtocolTrigger.asObservable()).subscribe(onNext: { [self] networks, appNetwork, _ in
+        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network, refreshProtocolTrigger.asObservable()).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork, _) in
             guard let matchingNetwork = networks.first(where: {
                 $0.SSID == appNetwork.name
             }) else { return }
@@ -220,11 +221,12 @@ class MainViewModel: MainViewModelType {
 
     func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void) {
         DispatchQueue.main.async {
-            var serverSections: [ServerSection] = []
+            var serverSections = [ServerSection]()
             var serverSectionsOrdered = [ServerSection]()
             let serverModels = servers.compactMap { $0.getServerModel() }
             serverSections = serverModels.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
-            switch (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy {
+            let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
+            switch orderBy {
             case Fields.Values.geography:
                 serverSectionsOrdered = serverSections
             case Fields.Values.alphabet:
@@ -233,29 +235,58 @@ class MainViewModel: MainViewModelType {
                     return countryCode1 < countryCode2
                 }
             case Fields.Values.latency:
-                serverSectionsOrdered = serverSections.sorted { serverSection1, serverSection2 -> Bool in
-                    guard let hostnamesFirst = serverSection1.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }), let hostnamesSecond = serverSection2.server?.groups?.filter({ $0.pingIp != "" }).map({ $0.pingIp }) else { return false }
-                    let firstNodeList = hostnamesFirst.map { self.latencyRepo.getPingData(ip: $0 ?? "")?.latency }.filter { $0 != 0 }
-                    let secondNodeList = hostnamesSecond.map { self.latencyRepo.getPingData(ip: $0 ?? "")?.latency }.filter { $0 != 0 }
-                    let firstLatency = firstNodeList.reduce(0) { result, value -> Int in
-                        return result + (value ?? -1)
-                    }
-                    let secondLatency = secondNodeList.reduce(0) { result, value -> Int in
-                        return result + (value ?? -1)
-                    }
-                    if firstNodeList.count == 0 ||
-                        secondNodeList.count == 0 ||
-                        firstLatency == 0 ||
-                        secondLatency == 0
-                    {
-                        return false
-                    }
-                    return (firstLatency / (firstNodeList.count)) < (secondLatency / (secondNodeList.count))
+                let serversMappedWithPing = serverSections.map {
+                    guard let hostnames = $0.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return ($0, -1)}
+                    let nodeList = hostnames.compactMap({
+                        let latency = self.latencyRepo.getPingData(ip: $0 ?? "")?.latency
+                        return latency == -1 ? nil : latency
+                    })
+                    guard nodeList.count != 0 else { return ($0, -1) }
+
+                    let latency = nodeList.reduce(0, { (result, value) -> Int in
+                        return result + value
+                    }) / (nodeList.count)
+                    guard latency != 0 else { return ($0, -1) }
+                    return ($0, latency)
                 }
+                let serverMappedSorted = serversMappedWithPing.sorted { (serverSection1, serverSection2) -> Bool in
+                    guard serverSection1.1 > 0 else { return false }
+                    guard serverSection2.1 > 0 else { return true }
+                    return serverSection1.1 < serverSection2.1
+                }
+                serverSectionsOrdered = serverMappedSorted.map { $0.0 }
             default:
                 serverSectionsOrdered = serverSections
             }
+            serverSectionsOrdered = self.sortServerNodes(serverList: serverSectionsOrdered, orderBy: orderBy)
             completion(serverSectionsOrdered)
+        }
+    }
+
+    private func sortServerNodes(serverList: [ServerSection], orderBy: String) -> [ServerSection] {
+        guard orderBy != Fields.Values.geography else { return serverList }
+        return serverList.map {
+            guard let serverModel = $0.server, let serverGroups = serverModel.groups else { return $0 }
+            var sortedGroups = [GroupModel]()
+            switch orderBy {
+            case Fields.Values.latency:
+                sortedGroups = serverGroups.sorted {
+                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingIp ?? "")?.latency, ping0 != -1 else { return false }
+                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingIp ?? "")?.latency, ping1 != -1 else { return true }
+                    return ping0 < ping1
+                }
+            default:
+                sortedGroups = serverGroups.sorted {
+                    guard let nick1 = $0.nick, let city1 = $0.city else { return false }
+                    guard let nick2 = $1.nick, let city2 = $1.city else { return true }
+                    if city1 == city2 {
+                        return nick1 < nick2
+                    }
+                    return city1 < city2
+                }
+            }
+            let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p)
+            return ServerSection(server: sortedServerModel, collapsed: $0.collapsed)
         }
     }
 
@@ -372,7 +403,6 @@ class MainViewModel: MainViewModelType {
             } else {
                 self.pushNotificationsManager.setNotificationCount(count: 0)
             }
-            self.logger.logD(self, "Read Notices differences count is \(readNoticeDifferentCount)")
             completion(false, readNoticeDifferentCount)
         }
     }
@@ -433,15 +463,87 @@ class MainViewModel: MainViewModelType {
         return today.interval(ofComponent: .day, fromDate: dateLoggedIn)
     }
 
-    func showRateDialog() -> Bool {
-        if let dateLastShown = preferences.getWhenRateUsPopupDisplayed() {
-            logger.logD(self, "Date last rate dialog shown is : \(dateLastShown)")
-            let today = Date()
-            logger.logD(self, "Time elapsed since last rate dialog shown is \(today.interval(ofComponent: .day, fromDate: dateLastShown))")
-            return today.interval(ofComponent: .day, fromDate: dateLastShown) > 30
-        } else {
-            return true
+    func checkRateDialogStatus() {
+        guard let session = try? session.value() else {
+            logger.logD(self, "Rate Dialog: Do not show, no session available")
+            return
         }
+        guard session.status == 1 else {
+            let statusDescription = session.status == 2 ? "Out of Data" : (session.status == 3 ? "Banned" : "Unknown: \(session.status)")
+            logger.logD(self, "Rate Dialog: Do not show! Session not in valid state: \(statusDescription)")
+            return
+        }
+        guard daysSinceLogin() >= 2 else {
+            logger.logD(self, "Rate Dialog: Do not show! It has been less than 2 days since login")
+            return
+        }
+        guard session.getDataUsedInMB() >= 1024 else {
+            logger.logD(self, "Rate Dialog: Do not show! User has not spent 1Gb yet")
+            return
+        }
+
+        // Let's check if we have shown the dialog more than 30 days ago.
+        if preferences.getRateUsActionCompleted() {
+            logger.logD(self, "Rate Dialog: The dialog has been shown before, lets check if it was more than 30 days ago.")
+            guard let dateLastShown = preferences.getWhenRateUsPopupDisplayed() else {
+                logger.logD(self, "Rate Dialog: Show Dialog! Oops, we don't have a date for last show, but we have the information that is was shown, let's try showing again.")
+                showRateSystemDialog()
+                return
+            }
+            let timeSinceLastTime = Date().interval(ofComponent: .day, fromDate: dateLastShown)
+            logger.logD(self, "Rate Dialog: Rate Dialog last shown at: \(dateLastShown), it was shown \(timeSinceLastTime) days ago.")
+            guard timeSinceLastTime > 30 else {
+                logger.logD(self, "Rate Dialog: Do not show! Rate dialog was shown less than 30 days ago.")
+                return
+            }
+
+            logger.logD(self, "Rate Dialog: Show Dialog! User has seen the dialog, but more than 30 days ago, lets try again.")
+            showRateSystemDialog()
+            return
+        }
+
+        guard let dateLastAttempted = preferences.getWhenRateUsPopupWasAttempted() else {
+            logger.logD(self, "Rate Dialog: Show Dialog! User has never seen the dialog, lets try showing it.")
+            showRateSystemDialog()
+            return
+        }
+        let timeSinceLastAttempt = Date().interval(ofComponent: .day, fromDate: dateLastAttempted)
+        guard timeSinceLastAttempt >= 1 else {
+            logger.logD(self, "Rate Dialog: Do not show! Showing Rate dialog was tried less than 1 day ago.")
+            return
+        }
+
+        logger.logD(self, "Rate Dialog: Show Dialog! We tried more than 1 day ago, lets try again.")
+        showRateSystemDialog()
+    }
+
+    private func showRateSystemDialog() {
+        guard #available(iOS 14.0, *) else {
+            logger.logD(self, "Rate Dialog: Do not show! Does not work for iOS under 14.")
+            return
+        }
+        let scenes = UIApplication.shared.connectedScenes
+        guard let windowScene = scenes.first as? UIWindowScene else {
+            logger.logD(self, "Rate Dialog: Do not show! UIWindowScene did not exist.")
+            return
+        }
+
+        NotificationCenter.default.addObserver(forName: UIWindow.didBecomeVisibleNotification, object: nil, queue: nil) { notification in
+            print(notification)
+            guard notification.object.debugDescription.contains("SKStoreReviewPresentationWindow") else { return }
+            self.preferences.saveWhenRateUsPopupDisplayed(date: Date())
+            self.preferences.saveRateUsActionCompleted(bool: true)
+            self.logger.logD(self, "Rate Dialog: Was Shown Rate Dialog! - SKStoreReviewPresentationWindow")
+        }
+
+        self.preferences.saveWhenRateUsPopupWasAttempted(date: Date())
+        preferences.saveRateUsActionCompleted(bool: false)
+        logger.logD(self, "Rate Dialog: Will Attempt now to show rate dialog!")
+#if os(iOS)
+        DispatchQueue.main.async {
+            SKStoreReviewController.requestReview(in: windowScene)
+        }
+#endif
     }
 
     func isPrivacyPopupAccepted() -> Bool {

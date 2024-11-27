@@ -59,6 +59,10 @@ extension MainViewController {
     func updateUIForSession(session: Session?) {
         logger.logD(self, "Looking for account state changes.")
         guard let session = session else { return }
+
+        // Check and shows Rate dialog if it is possible
+        viewModel.checkRateDialogStatus()
+
         // check for ghost account and present account completion screen
         if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
             didCheckForGhostAccount = true
@@ -87,11 +91,8 @@ extension MainViewController {
                 showOutOfDataPopup()
                 didShowOutOfDataPopup = true
             }
-        } else if session.getDataUsedInMB() >= 1024, viewModel.daysSinceLogin() >= 2, viewModel.showRateDialog() {
-            logger.logD(self, "Showing rating dialog with Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
-            showRateUsPopup()
         }
-        logger.logD(self, "Used data: \(session.getDataUsedInMB()) MB Logged In days: \(viewModel.daysSinceLogin()) Should show rate dialog: \(viewModel.showRateDialog())")
+
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium, oldSession.isPremium {
             if !didShowProPlanExpiredPopup {
@@ -166,18 +167,7 @@ extension MainViewController {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
         DispatchQueue.main.async {
-            let serverModels = results.compactMap { $0.getServerModel() }
-            let serverSections: [ServerSection] = serverModels.filter { $0.isForStreaming() == false }.map { ServerSection(server: $0, collapsed: true) }
-            let streamingSections: [ServerSection] = serverModels.filter { $0.isForStreaming() == true }.map { ServerSection(server: $0, collapsed: true) }
-            let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
-            let streamingSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: streamingSections)
-
-            self.serverListTableViewDataSource?.serverSections = serverSectionsOrdered
-            self.sortedServerList = serverSectionsOrdered
-            self.streamingTableViewDataSource?.streamingSections = streamingSectionsOrdered
-
-            self.serverListTableView.reloadData()
-            self.streamingTableView.reloadData()
+            self.loadServerTable(servers: results)
             self.reloadFavNodeOrder()
             self.configureBestLocation()
         }
@@ -197,14 +187,19 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func loadServerTable(servers: [Server]) {
+    func loadServerTable(servers: [Server], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
         viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
-            self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel)
+            self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel, shouldColapse: shouldColapse)
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
             self.serverListTableView.delegate = self.serverListTableViewDataSource
             if let bestLocation = try? self.viewModel.bestLocation.value(), bestLocation.isInvalidated == false {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
+            }
+            reloadFinishedCompletion?()
+            DispatchQueue.main.async {
+                self.serverListTableView.reloadData()
+                self.reloadServerList()
             }
         }
         viewModel.sortServerListUsingUserPreferences(isForStreaming: true, servers: servers) { streamingSectionsOrdered in
@@ -214,7 +209,6 @@ extension MainViewController {
             self.streamingTableView.delegate = self.streamingTableViewDataSource
             DispatchQueue.main.async {
                 self.streamingTableView.reloadData()
-                self.serverListTableView.reloadData()
                 self.reloadServerList()
             }
         }
@@ -233,7 +227,7 @@ extension MainViewController {
     @objc func connectButtonTapped() {
         HapticFeedbackGenerator.shared.run(level: .medium)
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
-            logger.logE(MainViewController.self, "User tapped to connect.")
+            logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 vpnConnectionViewModel.enableConnection()

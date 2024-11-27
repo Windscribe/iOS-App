@@ -84,23 +84,22 @@ class LatencyRepositoryImpl: LatencyRepository {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
-
         latencySingles.subscribe(
-            onFailure: { _ in
-                self.logger.logE(self, "Failure to update latency data.")
-                let pingData = self.database.getAllPingData()
-                self.latency.onNext(pingData)
-                self.pickBestLocation(pingData: pingData)
-            }
-        )
-        .disposed(by: disposeBag)
+                onSuccess: { _ in
+                    self.logger.logI(self, "Successfully updated latency data.")
+                    let pingData = self.database.getAllPingData()
+                    self.latency.onNext(pingData)
+                    self.pickBestLocation(pingData: pingData)
+                },
+                onFailure: { _ in
+                    self.logger.logE(self, "Failure to update latency data.")
+                    let pingData = self.database.getAllPingData()
+                    self.latency.onNext(pingData)
+                    self.pickBestLocation(pingData: pingData)
+                })
+            .disposed(by: self.disposeBag)
 
-        return latencySingles.do(onSuccess: { _ in
-            self.logger.logE(self, "Successfully updated latency data.")
-            let pingData = self.database.getAllPingData()
-            self.latency.onNext(pingData)
-            self.pickBestLocation(pingData: pingData)
-        }).asCompletable()
+        return latencySingles.asCompletable()
     }
 
     func loadFavouriteLatency() -> Completable {
@@ -160,7 +159,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
-        #if os(iOS)
+#if os(iOS)
             if vpnManager.isConnected() {
                 completion(-1)
             } else {
@@ -175,12 +174,12 @@ class LatencyRepositoryImpl: LatencyRepository {
                     }
                 }
             }
-        #endif
+#endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
         let pingIps = database.getServers()?
-            .compactMap { region in region.groups.toArray() }
+            .compactMap { region in region.groups.toArray()}
             .reduce([], +)
             .filter {
                 if sessionManager.session?.isPremium == false && $0.premiumOnly == true {

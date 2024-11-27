@@ -29,6 +29,8 @@ protocol ConnectionStateManagerType {
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
     func checkConnectedState()
+    func isConnected() -> Bool
+    func isDisconnected() -> Bool
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 
     // NEW
@@ -130,6 +132,14 @@ class ConnectionStateManager: ConnectionStateManagerType {
 
     func isConnecting() -> Bool {
         getCurrentState().state == .connecting
+    }
+
+    func isConnected() -> Bool {
+        getCurrentState().state == .connected
+    }
+
+    func isDisconnected() -> Bool {
+        getCurrentState().state == .disconnected
     }
 
     func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
