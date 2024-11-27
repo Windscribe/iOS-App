@@ -173,13 +173,15 @@ class VPNManager: VPNManagerProtocol {
             .compactMap { $0 }
             .map { [weak self] info in
                 guard let self = self else { return NEVPNStatus.invalid }
-                self.logger.logD("VPNConfiguration", "vpnInfo update to: \(self.configurationState)")
                 switch self.configurationState {
                 case .configuring:
+                    self.logger.logD("VPNConfiguration", "vpnInfo update to: configuring -> connecting")
                     return NEVPNStatus.connecting
                 case .disabling:
+                    self.logger.logD("VPNConfiguration", "vpnInfo update to: disabling -> disconnecting")
                     return NEVPNStatus.disconnecting
                 case .initial:
+                    self.logger.logD("VPNConfiguration", "vpnInfo update to: Initial -> \(info.description)")
                     return info.status
                 }
             }

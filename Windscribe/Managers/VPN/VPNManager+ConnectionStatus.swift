@@ -96,6 +96,8 @@ extension VPNManager {
         #endif
     }
 
+    
+    //TODO: VPNManager Need this update to bounce as well
     func configureForConnectionState() {
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()
@@ -103,11 +105,11 @@ extension VPNManager {
                 guard let info = info else {
                     return
                 }
+                self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
                 self.vpnInfo.onNext(info)
                 let connectionStatus = info.status
                 let protocolType = info.selectedProtocol
                 if self.lastConnectionStatus == connectionStatus { return }
-                self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
                 self.lastConnectionStatus = connectionStatus
                 self.delegate?.saveDataForWidget()
                 switch connectionStatus {
