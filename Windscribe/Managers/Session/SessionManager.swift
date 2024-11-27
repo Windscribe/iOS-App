@@ -196,13 +196,15 @@ class SessionManager: SessionManagerV2 {
 
     func logoutUser() {
         DispatchQueue.main.async {
-                if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
-                    window.rootViewController?.dismiss(animated: false, completion: nil)
-                    let firstViewController = Assembler.resolve(WelcomeViewController.self)
-                    DispatchQueue.main.async {
-                        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                            window.rootViewController = UINavigationController(rootViewController: firstViewController)
-                        }, completion: nil)
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+                window.rootViewController?.dismiss(animated: false, completion: nil)
+                let firstViewController = Assembler.resolve(WelcomeViewController.self)
+                DispatchQueue.main.async {
+                    UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                        window.rootViewController = UINavigationController(rootViewController: firstViewController)
+                    }, completion: nil)
+                }
+            }
             NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
             self.session = nil
             self.wgCredentials.delete()

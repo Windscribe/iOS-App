@@ -18,7 +18,7 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
     private let vpnManager: VPNManager
 	private let logger: FileLogger
 
-    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self))
+    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self), logger: Assembler.resolve(FileLogger.self))
 
     init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager, logger: FileLogger) {
         preference = preferences

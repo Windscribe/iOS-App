@@ -65,9 +65,8 @@ extension MainViewController {
     func setNetworkSsid() {
         viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] network in
             if self.vpnConnectionViewModel.isConnecting() { return }
-                if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
-                    if network.networkType == .cellular || network.networkType == .wifi {
-                        self.trustedNetworkValueLabel.text = network.name ?? ""
+            if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
+                if network.networkType == .cellular || network.networkType == .wifi {
                     if let name = network.name {
                         self.trustedNetworkValueLabel.text = name
                     } else {
@@ -77,8 +76,9 @@ extension MainViewController {
                 } else {
                     self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
                 }
-            }, onError: { [self] _ in
-                self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
-            }).disposed(by: disposeBag)
+            }
+        }, onError: { _ in
+            self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+        }).disposed(by: disposeBag)
     }
 }
