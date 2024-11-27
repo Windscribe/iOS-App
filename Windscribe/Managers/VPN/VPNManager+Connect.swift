@@ -73,7 +73,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     }
 
     func getLocationId() -> String {
-        getLocationNode()?.groupId ?? "0"
+        return preferences.getLastSelectedLocation()
     }
 
     /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
