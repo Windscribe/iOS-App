@@ -14,7 +14,6 @@ import RxSwift
 import Swinject
 
 protocol ConnectionStateManagerType {
-    var selectedNodeSubject: PublishSubject<SelectedNode> { get }
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
@@ -44,7 +43,6 @@ class ConnectionStateManager: ConnectionStateManagerType {
     var disconnectingStateTimer: Timer?
 
     var connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
-    var selectedNodeSubject = PublishSubject<SelectedNode>()
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     var showAutoModeScreenTrigger = PublishSubject<Void>()
     var openNetworkHateUsDialogTrigger = PublishSubject<Void>()

@@ -11,7 +11,6 @@ import RxSwift
 import Combine
 
 protocol ConnectionStateViewModelType {
-    var selectedNodeSubject: PublishSubject<SelectedNode> { get }
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
@@ -30,7 +29,6 @@ protocol ConnectionStateViewModelType {
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
-    let selectedNodeSubject: PublishSubject<SelectedNode>
     let loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo>
     let showAutoModeScreenTrigger: PublishSubject<Void>
     let openNetworkHateUsDialogTrigger: PublishSubject<Void>
@@ -47,7 +45,6 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
         self.vpnManager = vpnManager
-        selectedNodeSubject = connectionStateManager.selectedNodeSubject
         loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
         showAutoModeScreenTrigger = connectionStateManager.showAutoModeScreenTrigger
         openNetworkHateUsDialogTrigger = connectionStateManager.openNetworkHateUsDialogTrigger
