@@ -301,24 +301,25 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         popupRouter?.routeTo(to: .maintenanceLocation, from: self)
     }
 
-    // TODO: refactor vpn configs
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        if let bestLocation = self.viewModel.getBestLocation() {
-            self.logger.logD(self, "Configuring best location.")
-            self.serverListTableViewDataSource?.bestLocation = bestLocation
-            if selectBestLocation || self.noSelectedNodeToConnect() {
-                self.connectionStateViewModel.updateBestLocation(bestLocationId: "\(bestLocation.groupId)")
+        if let bestLocation = viewModel.getBestLocation() {
+            let locationId = "\(bestLocation.groupId ?? 0)"
+            logger.logD(self, "Configuring best location.")
+            serverListTableViewDataSource?.bestLocation = bestLocation
+            if selectBestLocation || noSelectedNodeToConnect() {
+                vpnConnectionViewModel.selectBestLocation(with: locationId)
             }
             if connectToBestLocation {
-                self.logger.logD(self, "Forcing to connect to best location.")
-                self.enableVPNConnection()
+                logger.logD(self, "Forcing to connect to best location.")
+                enableVPNConnection()
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
             let isGroupProOnly = displayingGroup.premiumOnly
-            if let isUserPro = try? self.viewModel.session.value()?.isPremium,
+            if let isUserPro = try? viewModel.session.value()?.isPremium,
+               vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
                !isUserPro {
-                self.connectionStateViewModel.updateBestLocation(bestLocationId: "\(bestLocation.groupId)")
+                vpnConnectionViewModel.selectBestLocation(with: locationId)
             }
         }
     }
