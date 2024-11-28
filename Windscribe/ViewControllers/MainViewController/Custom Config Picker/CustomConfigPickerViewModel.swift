@@ -30,13 +30,14 @@ protocol CustomConfigPickerViewModelType: CustomConfigListModelDelegate {
 }
 
 class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
-    var logger: FileLogger
-    var alertManager: AlertManagerV2
-    var customConfigRepository: CustomConfigRepository
-    var vpnManager: VPNManager
-    var localDataBase: LocalDatabase
-    var connectivity: Connectivity
+    let logger: FileLogger
+    let alertManager: AlertManagerV2
+    let customConfigRepository: CustomConfigRepository
+    let vpnManager: VPNManager
+    let localDataBase: LocalDatabase
+    let connectivity: Connectivity
     let preferences: Preferences
+    let locationsManager: LocationsManagerType
 
     var displayAllertTrigger = PublishSubject<ConfigAlertType>()
     var configureVPNTrigger = PublishSubject<Void>()
@@ -51,7 +52,8 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
          connectivity: Connectivity,
-         preferences: Preferences)
+         preferences: Preferences,
+         locationsManager: LocationsManagerType)
     {
         self.logger = logger
         self.alertManager = alertManager
@@ -60,6 +62,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
         self.localDataBase = localDataBase
         self.connectivity = connectivity
         self.preferences = preferences
+        self.locationsManager = locationsManager
     }
 }
 
@@ -151,12 +154,13 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     private func setBestLocation() {
-        localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if let bestLocation = bestLocation, self.vpnManager.isConnecting() { self.logger.logD(self, "Changing selected location to Best location with hostname \(bestLocation.hostname)")
-                self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
-            } else {
-                self.preferences.saveBestLocation(with: "")
-            }
-        }).disposed(by: disposeBag)
+        let locationID = locationsManager.getBestLocation()
+        if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
+            self.logger.logD(self, "Changing selected location to Best location ID \(locationID) from the server list.")
+            self.locationsManager.selectBestLocation(with: locationID)
+            self.configureVPNTrigger.onNext(())
+        } else {
+            self.locationsManager.saveBestLocation(with: "")
+        }
     }
 }

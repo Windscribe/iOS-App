@@ -28,12 +28,12 @@ class ServerListViewModel: ServerListViewModelType {
     var showUpgradeTrigger = PublishSubject<Void>()
     var reloadTrigger = PublishSubject<Void>()
 
-    var logger: FileLogger
-    var vpnManager: VPNManager
-    var connectivity: Connectivity
-    var localDataBase: LocalDatabase
-    var preferences: Preferences
-    var sessionManager: SessionManagerV2
+    let logger: FileLogger
+    let vpnManager: VPNManager
+    let connectivity: Connectivity
+    let localDataBase: LocalDatabase
+    let preferences: Preferences
+    let sessionManager: SessionManagerV2
     let locationsManager: LocationsManagerType
 
     let disposeBag = DisposeBag()
@@ -89,7 +89,7 @@ class ServerListViewModel: ServerListViewModelType {
     func connectToBestLocation() {
         let locationID = locationsManager.getBestLocation()
         if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
-            self.logger.logD(MainViewController.self, "Tapped on Best Location with ID \(locationID) from the server list.")
+            self.logger.logD(self, "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
             self.configureVPNTrigger.onNext(())
         } else {
