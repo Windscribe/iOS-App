@@ -182,7 +182,8 @@ class ViewModels: Assembly {
                                         vpnManager: r.resolve(VPNManager.self)!,
                                         localDataBase: r.resolve(LocalDatabase.self)!,
                                         connectivity: r.resolve(Connectivity.self)!,
-                                        preferences: r.resolve(Preferences.self)!)
+                                        preferences: r.resolve(Preferences.self)!,
+                                        locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(FavNodesListViewModelType.self) { r in
             FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
@@ -197,7 +198,8 @@ class ViewModels: Assembly {
                                 connectivity: r.resolve(Connectivity.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
                                 preferences: r.resolve(Preferences.self)!,
-                                sessionManager: r.resolve(SessionManagerV2.self)!)
+                                sessionManager: r.resolve(SessionManagerV2.self)!,
+                                locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,

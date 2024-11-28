@@ -121,7 +121,7 @@ class Managers: Assembly {
             AlertManager()
         }.inObjectScope(.userScope)
         container.register(LocationsManagerType.self) { r in
-            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!)
+            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
             VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!,
