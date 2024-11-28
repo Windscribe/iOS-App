@@ -17,14 +17,14 @@ protocol LocationsManagerType {
     func getBestLocation() -> String
     func getLastSelectedLocation() -> String
 
-    var selectedLocationUpdatedSubject: PublishSubject<Void> { get }
+    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
 
 class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
 
-    let selectedLocationUpdatedSubject = PublishSubject<Void>()
+    let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
 
     init(localDatabase: LocalDatabase, preferences: Preferences) {
         self.localDatabase = localDatabase

@@ -17,7 +17,7 @@ protocol ConnectionViewModelType {
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
-    var selectedLocationUpdatedSubject: PublishSubject<Void> { get }
+    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -51,8 +51,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showPrivacyTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let ipAddressSubject = PublishSubject<String>()
-    var selectedLocationUpdatedSubject = PublishSubject<Void>()
-
+    var selectedLocationUpdatedSubject: BehaviorSubject<Void>
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -70,6 +69,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.vpnManager = vpnManager
         self.preferences = preferences
         self.locationsManager = locationsManager
+        selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
@@ -79,7 +79,6 @@ class ConnectionViewModel: ConnectionViewModelType {
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
 
-        selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
     }
 }
 
