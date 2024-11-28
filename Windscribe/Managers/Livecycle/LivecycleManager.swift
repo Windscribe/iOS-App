@@ -30,6 +30,7 @@ class LivecycleManager: LivecycleManagerType {
     let ipRepository: IPRepository
     let configManager: ConfigurationsManager
     let connectivityManager: ConnectionManagerV2
+    let locationsManager: LocationsManagerType
 
     let showNetworkSecurityTrigger = PublishSubject<Void>()
     let showNotificationsTrigger = PublishSubject<Void>()
@@ -50,7 +51,8 @@ class LivecycleManager: LivecycleManagerType {
          notificationRepo: NotificationRepository,
          ipRepository: IPRepository,
          configManager: ConfigurationsManager,
-         conenctivityManager: ConnectionManagerV2)
+         connectivityManager: ConnectionManagerV2,
+         locationsManager: LocationsManagerType)
     {
         self.logger = logger
         self.sessionManager = sessionManager
@@ -61,7 +63,8 @@ class LivecycleManager: LivecycleManagerType {
         self.notificationRepo = notificationRepo
         self.ipRepository = ipRepository
         self.configManager = configManager
-        connectivityManager = conenctivityManager
+        self.connectivityManager = connectivityManager
+        self.locationsManager = locationsManager
     }
 
     /// Fresh app launch.
@@ -107,7 +110,7 @@ class LivecycleManager: LivecycleManagerType {
     }
 
     private func validateLocation() async throws {
-        let id = vpnManager.getLocationId()
+        let id = locationsManager.getLastSelectedLocation()
         do {
             let updatedId = try await configManager.validateLocation(lastLocation: id)
             if let updatedId = updatedId, id != updatedId {

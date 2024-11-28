@@ -143,7 +143,8 @@ class Managers: Assembly {
                        connectivity: r.resolve(Connectivity.self)!,
                        configManager: r.resolve(ConfigurationsManager.self)!,
                        connectionManager: r.resolve(ConnectionManagerV2.self)!,
-                       alertManager: r.resolve(AlertManagerV2.self)!)
+                       alertManager: r.resolve(AlertManagerV2.self)!,
+                       locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
@@ -168,7 +169,17 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
-            LivecycleManager(logger: r.resolve(FileLogger.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, credentialsRepo: r.resolve(CredentialsRepository.self)!, notificationRepo: r.resolve(NotificationRepository.self)!, ipRepository: r.resolve(IPRepository.self)!, configManager: r.resolve(ConfigurationsManager.self)!, conenctivityManager: r.resolve(ConnectionManagerV2.self)!)
+            LivecycleManager(logger: r.resolve(FileLogger.self)!,
+                             sessionManager: r.resolve(SessionManagerV2.self)!,
+                             preferences: r.resolve(Preferences.self)!,
+                             vpnManager: r.resolve(VPNManager.self)!,
+                             connectivity: r.resolve(Connectivity.self)!,
+                             credentialsRepo: r.resolve(CredentialsRepository.self)!,
+                             notificationRepo: r.resolve(NotificationRepository.self)!,
+                             ipRepository: r.resolve(IPRepository.self)!,
+                             configManager: r.resolve(ConfigurationsManager.self)!,
+                             connectivityManager: r.resolve(ConnectionManagerV2.self)!,
+                             locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.userScope)
     }
 }

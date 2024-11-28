@@ -115,7 +115,7 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryInfo() -> (countryCode: String, nickName: String, cityName: String) {
-        guard let location = try? locationsManager.getLocation(from: preferences.getLastSelectedLocation()) else { return (countryCode: "", nickName: "", cityName: "") }
+        guard let location = try? locationsManager.getLocation(from: locationsManager.getLastSelectedLocation()) else { return (countryCode: "", nickName: "", cityName: "") }
         return (countryCode: location.0.countryCode, nickName: location.1.nick, cityName: location.1.city)
     }
 
@@ -147,7 +147,7 @@ extension ConnectionViewModel {
     func enableConnection() {
         Task { @MainActor in
             let protocolPort = await vpnManager.getProtocolPort()
-            let locationID = vpnManager.getLocationId()
+            let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
                 .receive(on: DispatchQueue.main)

@@ -96,11 +96,12 @@ class VPNManager: VPNManagerProtocol {
     let configManager: ConfigurationsManager
     let connectionManager: ConnectionManagerV2
     let alertManager: AlertManagerV2
+    let locationsManager: LocationsManagerType
 
     lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
 
-    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, alertManager: AlertManagerV2) {
+    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
         self.wgCrendentials = wgCrendentials
         self.wgRepository = wgRepository
         self.api = api
@@ -113,6 +114,7 @@ class VPNManager: VPNManagerProtocol {
         self.configManager = configManager
         self.connectionManager = connectionManager
         self.alertManager = alertManager
+        self.locationsManager = locationsManager
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),

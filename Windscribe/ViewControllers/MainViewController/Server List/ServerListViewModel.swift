@@ -55,8 +55,7 @@ class ServerListViewModel: ServerListViewModelType {
     }
 
     func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel)
-    {
+                                   group: GroupModel) {
         if !connectivity.internetConnectionAvailable() {
             return
         }
