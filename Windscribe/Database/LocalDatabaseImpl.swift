@@ -191,7 +191,7 @@ class LocalDatabaseImpl: LocalDatabase {
     func saveRobertFilters(filters: RobertFilters) -> Disposable {
         return updateRealmObject(object: filters)
     }
-    
+
     func getLastConnection() -> Observable<VPNConnection?> {
         return getSafeRealmObservable(type: VPNConnection.self)
     }

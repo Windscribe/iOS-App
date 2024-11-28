@@ -410,7 +410,7 @@ extension ConfigurationsManager {
         if let city = groupResult {
             return "\(city.id ?? 0)"
         } else {
-            let bestLocation = preferences.getBestLocation()
+            let bestLocation = locationsManager.getBestLocation()
             if !bestLocation.isEmpty {
                 return bestLocation
             }

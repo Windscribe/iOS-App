@@ -26,6 +26,7 @@ class ConfigurationsManager {
     let wgRepository: WireguardConfigRepository
     let wgCredentials: WgCredentials
     let preferences: Preferences
+    let locationsManager: LocationsManagerType
     var api: APIManager {
         return Assembler.resolve(APIManager.self)
     }
@@ -55,7 +56,7 @@ class ConfigurationsManager {
     /// Delay between connectivity test attempt.
     let delayBetweenConnectivityAttempts: UInt64 = 500_000_000
 
-    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials, preferences: Preferences) {
+    init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials, preferences: Preferences, locationsManager: LocationsManagerType) {
         self.logger = logger
         self.localDatabase = localDatabase
         self.keychainDb = keychainDb
@@ -64,6 +65,7 @@ class ConfigurationsManager {
         self.wgRepository = wgRepository
         self.wgCredentials = wgCredentials
         self.preferences = preferences
+        self.locationsManager = locationsManager
         load()
     }
 
