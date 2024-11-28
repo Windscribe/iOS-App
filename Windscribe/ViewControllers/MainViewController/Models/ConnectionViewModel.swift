@@ -33,6 +33,7 @@ protocol ConnectionViewModelType {
     func disableConnection()
     func saveLastSelectedLocation(with locationID: String)
     func saveBestLocation(with locationID: String)
+    func selectBestLocation(with locationID: String)
 
     // Info
     func getSelectedCountryCode() -> String
@@ -52,15 +53,17 @@ class ConnectionViewModel: ConnectionViewModelType {
     let logger: FileLogger
     let apiManager: APIManager
     let preferences: Preferences
+    let locationsManager: LocationsManagerType
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
 
-    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, preferences: Preferences) {
+    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, preferences: Preferences, locationsManager: LocationsManagerType) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.preferences = preferences
+        self.locationsManager = locationsManager
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
                 ConnectionStateInfo(state: ConnectionState.state(from: state),
@@ -99,11 +102,12 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryCode() -> String {
-        vpnManager.getLocationNode()?.countryCode ?? ""
+        guard let location = try? locationsManager.getLocation(from: preferences.getLastSelectedLocation()) else { return "" }
+        return location.0.countryCode
     }
 
     func isBestLocationSelected() -> Bool {
-        return vpnManager.getLocationNode()?.cityName == Fields.Values.bestLocation
+        return preferences.getBestLocation() == preferences.getLastSelectedLocation()
     }
 
     func saveLastSelectedLocation(with locationID: String) {
@@ -111,6 +115,11 @@ extension ConnectionViewModel {
     }
 
     func saveBestLocation(with locationID: String) {
+        preferences.saveBestLocation(with: locationID)
+    }
+
+    func selectBestLocation(with locationID: String) {
+        preferences.saveLastSelectedLocation(with: locationID)
         preferences.saveBestLocation(with: locationID)
     }
 

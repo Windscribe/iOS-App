@@ -68,10 +68,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
-    func getLocationNode() -> LastConnectedNode? {
-        return localDB.getLastConnectedNode()
-    }
-
     func getLocationId() -> String {
         return preferences.getLastSelectedLocation()
     }
@@ -80,7 +76,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
     ///
     /// - Returns: A tuple containing the connection `id` and `ProtocolPort` with protocol and port details.
     private func prepareConnectionPreferences() -> (String, ProtocolPort) {
-        var id = "\(preferences.getLastSelectedLocation())"
+        let id = "\(preferences.getLastSelectedLocation())"
         connectionAlert.updateProgress(message: "Please select protocol and connect")
 
         // TODO: VPNManager: check for staticIPCredentials and customConfig
