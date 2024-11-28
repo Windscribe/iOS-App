@@ -56,7 +56,6 @@ protocol MainViewModelType {
     func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
-    func getLastConnectedNode() -> LastConnectedNode?
     func isAntiCensorshipEnabled() -> Bool
     func markBlurStaticIpAddress(isBlured: Bool)
     func markBlurNetworkName(isBlured: Bool)
@@ -179,10 +178,6 @@ class MainViewModel: MainViewModelType {
         localDatabase.getSession().subscribe(onNext: { session in
             self.session.onNext(session)
         }, onError: { _ in }).disposed(by: disposeBag)
-    }
-
-    func getLastConnectedNode() -> LastConnectedNode? {
-        return localDatabase.getLastConnectedNode()
     }
 
     func observeNetworkStatus() {
