@@ -39,7 +39,6 @@ extension MainViewController {
         sessionManager.listenForSessionChanges()
         setupIntentsForSiri()
         configureNotificationListeners()
-        // self.configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
         loadLatencyWhenReady()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark

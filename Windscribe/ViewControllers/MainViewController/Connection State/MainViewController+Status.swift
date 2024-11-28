@@ -135,7 +135,6 @@ extension MainViewController {
                     self.hideAutoSecureViews()
                 }
             }
-//            if case .test = info.state { self.hideSplashView() }
             if [.connected, .disconnected, .test].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()

@@ -79,7 +79,6 @@ class WSUIViewController: UIViewController {
                 self.splashView?.layer.opacity = 0.1
             }, completion: { _ in
                 self.splashView?.removeFromSuperview()
-                NotificationCenter.default.post(Notification(name: Notifications.configureBestLocation))
             })
         }
     }

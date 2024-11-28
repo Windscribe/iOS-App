@@ -409,8 +409,11 @@ extension ConfigurationsManager {
         }
         if let city = groupResult {
             return "\(city.id ?? 0)"
-        } else if let bestLocation = try? Assembler.resolve(LatencyRepository.self).bestLocation.value()?.groupId {
-            return "\(bestLocation)"
+        } else {
+            let bestLocation = preferences.getBestLocation()
+            if !bestLocation.isEmpty {
+                return bestLocation
+            }
         }
 
         return nil
