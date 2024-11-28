@@ -26,20 +26,20 @@ class FavNodesListViewModel: FavNodesListViewModelType {
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
-    var preferences: Preferences
     var sessionManager: SessionManagerV2
+    let locationsManager: LocationsManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
-         preferences: Preferences,
-         sessionManager: SessionManagerV2)
+         sessionManager: SessionManagerV2,
+         locationsManager: LocationsManagerType)
     {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
-        self.preferences = preferences
         self.sessionManager = sessionManager
+        self.locationsManager = locationsManager
     }
 
     func setSelectedFavNode(favNode: FavNodeModel) {
@@ -58,7 +58,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
                   let cityName = favNode.cityName,
                   let groupId = Int(favNode.groupId ?? "1") else { return }
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
-            preferences.saveLastSelectedLocation(with: "\(groupId)")
+            locationsManager.saveLastSelectedLocation(with: "\(groupId)")
 
             configureVPNTrigger.onNext(())
         } else {

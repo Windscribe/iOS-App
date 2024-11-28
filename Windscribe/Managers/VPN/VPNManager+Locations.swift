@@ -8,10 +8,10 @@
 
 extension VPNManager {
     func saveLastSelectedLocation(with locationID: String) {
-        preferences.saveLastSelectedLocation(with: locationID)
+        locationsManager.saveLastSelectedLocation(with: locationID)
     }
 
     func saveBestLocation(with locationID: String) {
-        preferences.saveBestLocation(with: locationID)
+        locationsManager.saveBestLocation(with: locationID)
     }
 }

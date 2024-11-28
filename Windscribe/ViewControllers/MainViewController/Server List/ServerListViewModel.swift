@@ -32,7 +32,6 @@ class ServerListViewModel: ServerListViewModelType {
     let vpnManager: VPNManager
     let connectivity: Connectivity
     let localDataBase: LocalDatabase
-    let preferences: Preferences
     let sessionManager: SessionManagerV2
     let locationsManager: LocationsManagerType
 
@@ -42,14 +41,12 @@ class ServerListViewModel: ServerListViewModelType {
          vpnManager: VPNManager,
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
-         preferences: Preferences,
          sessionManager: SessionManagerV2,
          locationsManager: LocationsManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.localDataBase = localDataBase
-        self.preferences = preferences
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
     }
@@ -77,7 +74,7 @@ class ServerListViewModel: ServerListViewModelType {
                   let bestNodeHostname = bestNode.hostname,
                   let groupId = group.id else { return }
             logger.logD(self, "Tapped on a node with groupID: \(groupId) \(bestNodeHostname) from the server list.")
-            preferences.saveLastSelectedLocation(with: "\(groupId)")
+            locationsManager.saveLastSelectedLocation(with: "\(groupId)")
             configureVPNTrigger.onNext(())
         } else {
             presentConnectingAlertTrigger.onNext(())

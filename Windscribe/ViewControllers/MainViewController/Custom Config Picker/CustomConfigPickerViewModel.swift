@@ -134,7 +134,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         logger.logD(self, "Tapped on Custom config from the list.")
         guard let name = customConfig.name, let serverAddress = customConfig.serverAddress else { return }
 
-        preferences.saveLastSelectedLocation(with: "0")
+        locationsManager.saveLastSelectedLocation(with: "0")
         if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
             showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))
             return
