@@ -120,6 +120,9 @@ class Managers: Assembly {
         container.register(AlertManagerV2.self) { _ in
             AlertManager()
         }.inObjectScope(.userScope)
+        container.register(LocationsManagerType.self) { r in
+            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
             VPNManager(wgCrendentials: r.resolve(WgCredentials.self)!,
                        wgRepository: r.resolve(WireguardConfigRepository.self)!,

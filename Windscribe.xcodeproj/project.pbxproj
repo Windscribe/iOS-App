@@ -188,6 +188,8 @@
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
 		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
+		1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF43D512CF897B000B56C01 /* LocationsManager.swift */; };
+		1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF43D512CF897B000B56C01 /* LocationsManager.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
 		1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */; };
@@ -1376,6 +1378,7 @@
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
 		1EF11EE72C94791100C3FD64 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1EF43D512CF897B000B56C01 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
 		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
 		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -2688,6 +2691,14 @@
 			path = ShakeData;
 			sourceTree = "<group>";
 		};
+		1EF43D502CF897A500B56C01 /* Locations */ = {
+			isa = PBXGroup;
+			children = (
+				1EF43D512CF897B000B56C01 /* LocationsManager.swift */,
+			);
+			path = Locations;
+			sourceTree = "<group>";
+		};
 		1EF7BB2F2C6D0D5F0032A4DF /* Components */ = {
 			isa = PBXGroup;
 			children = (
@@ -3051,6 +3062,7 @@
 		AF018E0921B0A34D00B225FF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				1EF43D502CF897A500B56C01 /* Locations */,
 				1E7918C12CDE2FBC00C20723 /* Livecycle */,
 				1E2696C92BF7856D00B0AD59 /* Connection State */,
 				1E2366D32BC5A1C6000DF098 /* Wifi */,
@@ -4986,6 +4998,7 @@
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59FC740D2C5153F400021CD1 /* Score.swift in Sources */,
 				59A2186A2C3C9C24000D89FA /* SharedUserDefaults.swift in Sources */,
+				1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */,
 				59FC740E2C51540300021CD1 /* SuggestedPorts.swift in Sources */,
 				59C96D6A2C6A883300546C72 /* LatencyViewModel.swift in Sources */,
@@ -5484,6 +5497,7 @@
 				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				AF3E90E1231D970F00AD192A /* PrivacyViewController.swift in Sources */,
 				59EB6D1D2B328D6400616414 /* PreferencesMainViewModel.swift in Sources */,
+				1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				AF02A9EB22B14D4700A9F44B /* SelectedNode.swift in Sources */,
 				AFA0764A21E69F4E001023C1 /* RealmCascadeDeletion.swift in Sources */,
 				AF914A7423CE2012002D3041 /* Token.swift in Sources */,
