@@ -392,18 +392,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         connectivityTestImageView.isHidden = true
     }
 
-    func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {
-        DispatchQueue.main.async {
-            self.showFlagAnimation(countryCode: selectedNode.countryCode, autoPicked: selectedNode.autoPicked || selectedNode.customConfig != nil)
-            self.connectedServerLabel.text = selectedNode.nickName
-            if selectedNode.cityName == Fields.Values.bestLocation {
-                self.connectedCityLabel.text = TextsAsset.bestLocation
-            } else {
-                self.connectedCityLabel.text = selectedNode.cityName
-            }
-        }
-    }
-
     func showFlagAnimation(countryCode: String, autoPicked: Bool = false) {
         DispatchQueue.main.async {
             if autoPicked {

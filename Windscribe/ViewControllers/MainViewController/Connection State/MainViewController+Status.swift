@@ -12,10 +12,6 @@ import UIKit
 
 extension MainViewController {
     func bindConnectionStateViewModel() {
-        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance) .subscribe(onNext: {
-            self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
-        }).disposed(by: disposeBag)
-
         connectionStateViewModel.loadLatencyValuesSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
@@ -76,6 +72,10 @@ extension MainViewController {
 
         vpnConnectionViewModel.selectedProtoPort.subscribe(onNext: {
             self.refreshProtocol(from: nil, with: $0)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.selectedLocationUpdatedSubject.subscribe(onNext: {
+            self.updateSelectedLocationUI()
         }).disposed(by: disposeBag)
     }
 
@@ -176,5 +176,21 @@ extension MainViewController {
 
     private func nonAnimationConnectionState() {
         preferredProtocolBadge.isUserInteractionEnabled = false
+    }
+
+    private func updateSelectedLocationUI() {
+        let location = vpnConnectionViewModel.getSelectedCountryInfo()
+        let isAutoPicked = false
+        let customConfig: CustomConfigModel? = nil
+        guard !location.countryCode.isEmpty else { return }
+        DispatchQueue.main.async {
+            self.showFlagAnimation(countryCode: location.countryCode, autoPicked: isAutoPicked || customConfig != nil)
+            self.connectedServerLabel.text = location.nickName
+            if self.vpnConnectionViewModel.isBestLocationSelected() {
+                self.connectedCityLabel.text = TextsAsset.bestLocation
+            } else {
+                self.connectedCityLabel.text = location.cityName
+            }
+        }
     }
 }
