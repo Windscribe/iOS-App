@@ -17,6 +17,7 @@ protocol ConnectionViewModelType {
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
+    var selectedLocationUpdatedSubject: PublishSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -37,6 +38,7 @@ protocol ConnectionViewModelType {
 
     // Info
     func getSelectedCountryCode() -> String
+    func getSelectedCountryInfo() -> (countryCode: String, nickName: String, cityName: String)
     func isBestLocationSelected() -> Bool
 }
 
@@ -47,6 +49,8 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showPrivacyTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let ipAddressSubject = PublishSubject<String>()
+    var selectedLocationUpdatedSubject = PublishSubject<Void>()
+
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -64,6 +68,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.vpnManager = vpnManager
         self.preferences = preferences
         self.locationsManager = locationsManager
+        
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
                 ConnectionStateInfo(state: ConnectionState.state(from: state),
@@ -71,6 +76,8 @@ class ConnectionViewModel: ConnectionViewModelType {
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
+        
+        selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
     }
 }
 
@@ -102,25 +109,28 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryCode() -> String {
-        guard let location = try? locationsManager.getLocation(from: preferences.getLastSelectedLocation()) else { return "" }
-        return location.0.countryCode
+        return getSelectedCountryInfo().countryCode
+    }
+
+    func getSelectedCountryInfo() -> (countryCode: String, nickName: String, cityName: String) {
+        guard let location = try? locationsManager.getLocation(from: preferences.getLastSelectedLocation()) else { return (countryCode: "", nickName: "", cityName: "") }
+        return (countryCode: location.0.countryCode, nickName: location.1.nick, cityName: location.1.city)
     }
 
     func isBestLocationSelected() -> Bool {
-        return preferences.getBestLocation() == preferences.getLastSelectedLocation()
+        return locationsManager.getBestLocation() == locationsManager.getLastSelectedLocation()
     }
 
     func saveLastSelectedLocation(with locationID: String) {
-        preferences.saveLastSelectedLocation(with: locationID)
+        locationsManager.saveLastSelectedLocation(with: locationID)
     }
 
     func saveBestLocation(with locationID: String) {
-        preferences.saveBestLocation(with: locationID)
+        locationsManager.saveBestLocation(with: locationID)
     }
 
     func selectBestLocation(with locationID: String) {
-        preferences.saveLastSelectedLocation(with: locationID)
-        preferences.saveBestLocation(with: locationID)
+        locationsManager.selectBestLocation(with: locationID)
     }
 
     func enableConnection() {
