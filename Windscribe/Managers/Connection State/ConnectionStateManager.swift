@@ -31,9 +31,6 @@ protocol ConnectionStateManagerType {
     func isConnected() -> Bool
     func isDisconnected() -> Bool
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
-
-    // NEW
-    func updateBestLocation(bestLocationId: String)
 }
 
 class ConnectionStateManager: ConnectionStateManagerType {
@@ -161,13 +158,6 @@ extension ConnectionStateManager: VPNManagerDelegate {
                 }
             #endif
         }
-    }
-}
-
-// MARK: - NEW
-extension ConnectionStateManager {
-    func updateBestLocation(bestLocationId: String) {
-        preferences.saveBestLocation(with: bestLocationId)
     }
 }
 

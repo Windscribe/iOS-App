@@ -18,7 +18,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnManager: VPNManager
-    private let preferences: Preferences
+    private let locationsManager: LocationsManagerType
     private var sessionManager: SessionManagerV2 {
         return Assembler.resolve(SessionManagerV2.self)
     }
@@ -28,12 +28,12 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
 
-    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, preferences: Preferences) {
+    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManagerType) {
         self.pingManager = pingManager
         self.database = database
         self.vpnManager = vpnManager
         self.logger = logger
-        self.preferences = preferences
+        self.locationsManager = locationsManager
         latency.onNext(self.database.getAllPingData())
         observeFavNodes()
     }
@@ -216,7 +216,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             outerLoop: for server in servers ?? [] {
                 for group in server.groups {
                     if group.pingIp == lowestPingIp {
-                        preferences.saveBestLocation(with: "\(group.id)")
+                        locationsManager.saveBestLocation(with: "\(group.id)")
                         break outerLoop
                     }
                 }
@@ -290,7 +290,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Build and save the best location using the selected server, group, and node
     private func buildAndSaveBestLocation(group: Group) -> String {
-        preferences.saveBestLocation(with: "\(group.id)")
+        locationsManager.saveBestLocation(with: "\(group.id)")
         return group.city
     }
 }
