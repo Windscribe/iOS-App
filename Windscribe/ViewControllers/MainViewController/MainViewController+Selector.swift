@@ -193,7 +193,7 @@ extension MainViewController {
             self.serverListTableViewDataSource?.delegate = self
             self.serverListTableView.dataSource = self.serverListTableViewDataSource
             self.serverListTableView.delegate = self.serverListTableViewDataSource
-            if let bestLocation = self.viewModel.getBestLocation() {
+            if let bestLocation = self.vpnConnectionViewModel.getBestLocation() {
                 self.serverListTableViewDataSource?.bestLocation = bestLocation
             }
             reloadFinishedCompletion?()

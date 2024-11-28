@@ -16,14 +16,14 @@ protocol LocationsManagerType {
     func selectBestLocation(with locationID: String)
     func getBestLocation() -> String
     func getLastSelectedLocation() -> String
-    
+
     var selectedLocationUpdatedSubject: PublishSubject<Void> { get }
 }
 
 class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
-    
+
     let selectedLocationUpdatedSubject = PublishSubject<Void>()
 
     init(localDatabase: LocalDatabase, preferences: Preferences) {
@@ -55,7 +55,7 @@ class LocationsManager: LocationsManagerType {
         }
         return (serverResultSafe, groupResultSafe)
     }
-    
+
     func saveLastSelectedLocation(with locationID: String) {
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdatedSubject.onNext(())
@@ -69,11 +69,11 @@ class LocationsManager: LocationsManagerType {
         saveLastSelectedLocation(with: locationID)
         saveBestLocation(with: locationID)
     }
-    
+
     func getBestLocation() -> String {
         preferences.getBestLocation()
     }
-    
+
     func getLastSelectedLocation() -> String {
         preferences.getLastSelectedLocation()
     }

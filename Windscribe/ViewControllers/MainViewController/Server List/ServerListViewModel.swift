@@ -44,8 +44,7 @@ class ServerListViewModel: ServerListViewModelType {
          localDataBase: LocalDatabase,
          preferences: Preferences,
          sessionManager: SessionManagerV2,
-         locationsManager: LocationsManagerType)
-    {
+         locationsManager: LocationsManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity

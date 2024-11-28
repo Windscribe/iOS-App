@@ -40,6 +40,8 @@ protocol ConnectionViewModelType {
     func getSelectedCountryCode() -> String
     func getSelectedCountryInfo() -> (countryCode: String, nickName: String, cityName: String)
     func isBestLocationSelected() -> Bool
+    func getBestLocationId() -> String
+    func getBestLocation() -> BestLocationModel?
 }
 
 class ConnectionViewModel: ConnectionViewModelType {
@@ -68,7 +70,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.vpnManager = vpnManager
         self.preferences = preferences
         self.locationsManager = locationsManager
-        
+
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
                 ConnectionStateInfo(state: ConnectionState.state(from: state),
@@ -76,7 +78,7 @@ class ConnectionViewModel: ConnectionViewModelType {
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
-        
+
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
     }
 }
@@ -131,6 +133,15 @@ extension ConnectionViewModel {
 
     func selectBestLocation(with locationID: String) {
         locationsManager.selectBestLocation(with: locationID)
+    }
+
+    func getBestLocationId() -> String {
+        return preferences.getBestLocation()
+    }
+
+    func getBestLocation() -> BestLocationModel? {
+        let bestLocationId = getBestLocationId()
+        return locationsManager.getBestLocationModel(from: bestLocationId)
     }
 
     func enableConnection() {

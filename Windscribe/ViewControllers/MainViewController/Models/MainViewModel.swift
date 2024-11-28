@@ -63,8 +63,6 @@ protocol MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
-    func getBestLocationId() -> String
-    func getBestLocation() -> BestLocationModel?
 }
 
 class MainViewModel: MainViewModelType {
@@ -362,15 +360,6 @@ class MainViewModel: MainViewModelType {
         latencyRepo.latency.bind(onNext: { [self] data in
             latencies.onNext(data)
         }).disposed(by: disposeBag)
-    }
-
-    func getBestLocationId() -> String {
-        return preferences.getBestLocation()
-    }
-
-    func getBestLocation() -> BestLocationModel? {
-        let bestLocationId = getBestLocationId()
-        return locationsManager.getBestLocationModel(from: bestLocationId)
     }
 
     func getNotices() {
