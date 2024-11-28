@@ -26,7 +26,7 @@ protocol ConnectionStateViewModelType {
     func displayLocalIPAddress(force: Bool)
     func becameActive()
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
-    func updateBestLocation(bestLocation: BestLocation)
+    func updateBestLocation(bestLocationId: String)
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
@@ -77,7 +77,7 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
 }
 
 extension ConnectionStateViewModel {
-    func updateBestLocation(bestLocation: BestLocation) {
-        connectionStateManager.updateBestLocation(bestLocation: bestLocation)
+    func updateBestLocation(bestLocationId: String) {
+        connectionStateManager.updateBestLocation(bestLocationId: bestLocationId)
     }
 }

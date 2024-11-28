@@ -368,16 +368,16 @@ class MainViewModel: MainViewModelType {
             latencies.onNext(data)
         }).disposed(by: disposeBag)
     }
-    
+
     func getBestLocationId() -> String {
         return preferences.getBestLocation()
     }
-    
+
     func getBestLocation() -> BestLocationModel? {
         let bestLocationId = getBestLocationId()
         return locationsManager.getBestLocationModel(from: bestLocationId)
     }
-    
+
     func getNotices() {
         Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { _, notifications in
             self.notices.onNext(notifications)

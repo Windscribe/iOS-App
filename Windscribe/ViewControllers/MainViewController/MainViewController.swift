@@ -303,12 +303,11 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     // TODO: refactor vpn configs
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
-        viewModel.bestLocation.filter { $0?.isInvalidated == false }.bind(onNext: { bestLocation in
-            guard let bestLocation = bestLocation, bestLocation.isInvalidated == false else { return }
+        if let bestLocation = self.viewModel.getBestLocation() {
             self.logger.logD(self, "Configuring best location.")
-            self.serverListTableViewDataSource?.bestLocation = bestLocation.getBestLocationModel()
+            self.serverListTableViewDataSource?.bestLocation = bestLocation
             if selectBestLocation || self.noSelectedNodeToConnect() {
-                self.connectionStateViewModel.updateBestLocation(bestLocation: bestLocation)
+                self.connectionStateViewModel.updateBestLocation(bestLocationId: "\(bestLocation.groupId)")
             }
             if connectToBestLocation {
                 self.logger.logD(self, "Forcing to connect to best location.")
@@ -319,9 +318,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             if let isUserPro = try? self.viewModel.session.value()?.isPremium,
                isGroupProOnly,
                !isUserPro {
-                self.connectionStateViewModel.updateBestLocation(bestLocation: bestLocation)
+                self.connectionStateViewModel.updateBestLocation(bestLocationId: "\(bestLocation.groupId)")
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     func noSelectedNodeToConnect() -> Bool {

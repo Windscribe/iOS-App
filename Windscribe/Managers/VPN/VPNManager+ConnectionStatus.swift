@@ -96,7 +96,7 @@ extension VPNManager {
         #endif
     }
 
-    
+
     //TODO: VPNManager Need this update to bounce as well
     func configureForConnectionState() {
         DispatchQueue.main.async {

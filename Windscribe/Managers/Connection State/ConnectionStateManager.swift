@@ -34,7 +34,7 @@ protocol ConnectionStateManagerType {
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 
     // NEW
-    func updateBestLocation(bestLocation: BestLocation)
+    func updateBestLocation(bestLocationId: String)
 }
 
 class ConnectionStateManager: ConnectionStateManagerType {
@@ -168,8 +168,8 @@ extension ConnectionStateManager: VPNManagerDelegate {
 
 // MARK: - NEW
 extension ConnectionStateManager {
-    func updateBestLocation(bestLocation: BestLocation) {
-        preferences.saveBestLocation(with: "\(bestLocation.groupId)")
+    func updateBestLocation(bestLocationId: String) {
+        preferences.saveBestLocation(with: bestLocationId)
     }
 }
 

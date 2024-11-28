@@ -13,11 +13,11 @@ protocol LocationsManagerType {
 
 class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
-    
+
     init(localDatabase: LocalDatabase) {
         self.localDatabase = localDatabase
     }
-    
+
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
         guard let groupServer = try? getLocation(from: groupId),
               let node = groupServer.1.nodes.randomElement(),
@@ -26,7 +26,7 @@ class LocationsManager: LocationsManagerType {
                                  group: groupServer.1.getGroupModel(),
                                  server: serverModel)
     }
-    
+
     func getLocation(from groupId: String) throws -> (Server, Group) {
         guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(groupId) }
         var serverResult: Server?
