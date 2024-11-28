@@ -12,7 +12,6 @@ import StoreKit
 
 protocol MainViewModelType {
     var serverList: BehaviorSubject<[Server]> { get }
-    var bestLocation: BehaviorSubject<BestLocation?> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
     var portMap: BehaviorSubject<[PortMap]?> { get }
     var favNode: BehaviorSubject<[FavNode]?> { get }
@@ -65,6 +64,8 @@ protocol MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
+    func getBestLocationId() -> String
+    func getBestLocation() -> BestLocationModel?
 }
 
 class MainViewModel: MainViewModelType {
@@ -82,9 +83,9 @@ class MainViewModel: MainViewModelType {
     let notificationsRepo: NotificationRepository!
     let credentialsRepository: CredentialsRepository
     let livecycleManager: LivecycleManagerType
+    let locationsManager: LocationsManagerType
 
     let serverList = BehaviorSubject<[Server]>(value: [])
-    let bestLocation = BehaviorSubject<BestLocation?>(value: nil)
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMap = BehaviorSubject<[PortMap]?>(value: nil)
     var favNode = BehaviorSubject<[FavNode]?>(value: nil)
@@ -114,7 +115,7 @@ class MainViewModel: MainViewModelType {
     let refreshProtocolTrigger = PublishSubject<Void>()
 
     let disposeBag = DisposeBag()
-    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, themeManager: ThemeManager, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType) {
+    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, themeManager: ThemeManager, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType) {
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
@@ -129,13 +130,13 @@ class MainViewModel: MainViewModelType {
         self.credentialsRepository = credentialsRepository
         self.connectivity = connectivity
         self.livecycleManager = livecycleManager
+        self.locationsManager = locationsManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
         becameActiveTrigger = livecycleManager.becameActiveTrigger
 
         isDarkMode = themeManager.darkTheme
-        getBestLocation()
         loadNotifications()
         loadServerList()
         loadFavNode()
@@ -162,9 +163,6 @@ class MainViewModel: MainViewModelType {
         }, onError: { _ in }).disposed(by: disposeBag)
         localDatabase.getServersObservable().subscribe(onNext: { [self] data in
             self.serverList.onNext(data)
-        }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getLanguageManagerSelectedLanguage().subscribe(onNext: { [self] _ in
-            self.bestLocation.onNext(try? bestLocation.value())
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
@@ -290,13 +288,6 @@ class MainViewModel: MainViewModelType {
         }
     }
 
-    func getBestLocation() {
-        latencyRepo.bestLocation.subscribe(onNext: { [self] data in
-            bestLocation.onNext(data)
-        }, onError: { _ in
-        }).disposed(by: disposeBag)
-    }
-
     func loadLastConnection() {
         localDatabase.getLastConnection().subscribe(onNext: { [self] data in
             lastConnection.onNext(data)
@@ -377,7 +368,16 @@ class MainViewModel: MainViewModelType {
             latencies.onNext(data)
         }).disposed(by: disposeBag)
     }
-
+    
+    func getBestLocationId() -> String {
+        return preferences.getBestLocation()
+    }
+    
+    func getBestLocation() -> BestLocationModel? {
+        let bestLocationId = getBestLocationId()
+        return locationsManager.getBestLocationModel(from: bestLocationId)
+    }
+    
     func getNotices() {
         Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { _, notifications in
             self.notices.onNext(notifications)
