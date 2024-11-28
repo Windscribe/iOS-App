@@ -34,6 +34,7 @@ class ServerListViewModel: ServerListViewModelType {
     var localDataBase: LocalDatabase
     var preferences: Preferences
     var sessionManager: SessionManagerV2
+    let locationsManager: LocationsManagerType
 
     let disposeBag = DisposeBag()
 
@@ -41,7 +42,9 @@ class ServerListViewModel: ServerListViewModelType {
          vpnManager: VPNManager,
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
-         preferences: Preferences, sessionManager: SessionManagerV2)
+         preferences: Preferences,
+         sessionManager: SessionManagerV2,
+         locationsManager: LocationsManagerType)
     {
         self.logger = logger
         self.vpnManager = vpnManager
@@ -49,6 +52,7 @@ class ServerListViewModel: ServerListViewModelType {
         self.localDataBase = localDataBase
         self.preferences = preferences
         self.sessionManager = sessionManager
+        self.locationsManager = locationsManager
     }
 
     func setSelectedServerAndGroup(server: ServerModel,
@@ -83,15 +87,14 @@ class ServerListViewModel: ServerListViewModelType {
     }
 
     func connectToBestLocation() {
-        localDataBase.getBestLocation().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: { bestLocation in
-            if let bestLocation = bestLocation, !self.vpnManager.isConnecting() {
-                self.logger.logD(MainViewController.self, "Tapped on Best Location \(bestLocation.hostname) from the server list.")
-                self.preferences.saveBestLocation(with: "\(bestLocation.groupId)")
-                self.configureVPNTrigger.onNext(())
-            } else {
-                self.presentConnectingAlertTrigger.onNext(())
-            }
-        }).disposed(by: disposeBag)
+        let locationID = locationsManager.getBestLocation()
+        if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
+            self.logger.logD(MainViewController.self, "Tapped on Best Location with ID \(locationID) from the server list.")
+            self.locationsManager.selectBestLocation(with: locationID)
+            self.configureVPNTrigger.onNext(())
+        } else {
+            self.presentConnectingAlertTrigger.onNext(())
+        }
     }
 }
 
