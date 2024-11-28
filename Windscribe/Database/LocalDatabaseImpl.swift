@@ -191,15 +191,7 @@ class LocalDatabaseImpl: LocalDatabase {
     func saveRobertFilters(filters: RobertFilters) -> Disposable {
         return updateRealmObject(object: filters)
     }
-
-    func getLastConnectedNode() -> LastConnectedNode? {
-        return getRealmObjects(type: LastConnectedNode.self)?.sorted { $0.connectedAt < $1.connectedAt }.last
-    }
-
-    func getBestLocation() -> Observable<BestLocation?> {
-        return getSafeRealmObservable(type: BestLocation.self)
-    }
-
+    
     func getLastConnection() -> Observable<VPNConnection?> {
         return getSafeRealmObservable(type: VPNConnection.self)
     }

@@ -50,8 +50,6 @@ protocol LocalDatabase {
     func getPorts(protocolType: String) -> [String]?
     func getRobertFilters() -> RobertFilters?
     func saveRobertFilters(filters: RobertFilters) -> Disposable
-    func getLastConnectedNode() -> LastConnectedNode?
-    func getBestLocation() -> Observable<BestLocation?>
     func getLastConnection() -> Observable<VPNConnection?>
     func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable
     func saveFavNode(favNode: FavNode) -> Disposable
