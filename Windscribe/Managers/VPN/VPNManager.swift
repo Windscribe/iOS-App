@@ -58,6 +58,13 @@ class VPNManager {
     lazy var credentialsRepository: CredentialsRepository = {
         return Assembler.resolve(CredentialsRepository.self)
     }()
+    lazy var latencyRepo: LatencyRepository = {
+        return Assembler.resolve(LatencyRepository.self)
+    }()
+    lazy var connectionStateManager: ConnectionStateManagerType = {
+        return Assembler.resolve(ConnectionStateManagerType.self)
+    }()
+
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
     var selectedFirewallMode: Bool = true
     var selectedConnectionMode: String?

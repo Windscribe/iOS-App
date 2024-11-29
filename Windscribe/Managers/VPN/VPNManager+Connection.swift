@@ -249,13 +249,54 @@ extension VPNManager {
                 logger.logD(self, "Switching to \(sisterLocation.1.city ?? "").")
                 switchLocation(from: sisterLocation)
             } else {
-                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
-                switchLocation(from: nil)
+                if connectionStatus() == .connected {
+                    connectionStateManager.disconnect()
+                    userTappedToDisconnect = false
+                }
+                self.latencyRepo.loadAllServerLatency().subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+                    .observe(on: MainScheduler.asyncInstance)
+                    .subscribe(onCompleted: {
+                        self.logger.logD(self, "Successfully update latency.")
+                        self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                        self.switchLocation(from: nil)
+                        if !self.userTappedToDisconnect {
+                            self.configureAndConnectVPN()
+                        }
+                    }, onError: { _ in
+                        self.logger.logD(self, "Failed to update latency.")
+                        self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                        self.switchLocation(from: nil)
+                        if !self.userTappedToDisconnect {
+                            self.configureAndConnectVPN()
+                        }
+                    })
+                    .disposed(by: self.disposeBag)
             }
             return
         }
         if !sessionManager.canAccesstoProLocation() && currentLocation.1.premiumOnly ?? false {
-            switchLocation(from: nil)
+            if connectionStatus() == .connected {
+                connectionStateManager.disconnect()
+                userTappedToDisconnect = false
+            }
+            self.latencyRepo.loadAllServerLatency().subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+                .observe(on: MainScheduler.asyncInstance)
+                .subscribe(onCompleted: {
+                    self.logger.logD(self, "Successfully update latency.")
+                    self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                    self.switchLocation(from: nil)
+                    if !self.userTappedToDisconnect {
+                        self.configureAndConnectVPN()
+                    }
+                }, onError: { _ in
+                    self.logger.logD(self, "Failed to update latency.")
+                    self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                    self.switchLocation(from: nil)
+                    if !self.userTappedToDisconnect {
+                        self.configureAndConnectVPN()
+                    }
+                })
+                .disposed(by: self.disposeBag)
         }
     }
 
