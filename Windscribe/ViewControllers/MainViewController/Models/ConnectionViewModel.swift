@@ -57,18 +57,18 @@ class ConnectionViewModel: ConnectionViewModelType {
     let vpnManager: VPNManager
     let logger: FileLogger
     let apiManager: APIManager
-    let preferences: Preferences
     let locationsManager: LocationsManagerType
+    let connectionManager : ConnectionManagerV2
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
 
-    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, preferences: Preferences, locationsManager: LocationsManagerType) {
+    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, locationsManager: LocationsManagerType, connectionManager : ConnectionManagerV2) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
-        self.preferences = preferences
         self.locationsManager = locationsManager
+        self.connectionManager = connectionManager
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -145,7 +145,7 @@ extension ConnectionViewModel {
 
     func enableConnection() {
         Task { @MainActor in
-            let protocolPort = await vpnManager.getProtocolPort()
+            let protocolPort = connectionManager.getNextProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
