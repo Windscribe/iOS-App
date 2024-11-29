@@ -63,7 +63,9 @@ class EnterEmailViewController: WSNavigationViewController {
         }).disposed(by: disposeBag)
 
         Observable.combineLatest(continueButtonEnabled.asObservable(), viewModel.isDarkMode.asObservable()).bind { (isEnabled, isDark) in
-            let color = isEnabled ? UIColor.seaGreen : ThemeUtils.primaryTextColor(isDarkMode: isDark)
+            let backgroundColor = isEnabled ? UIColor.seaGreen : ThemeUtils.wrapperColor(isDarkMode: isDark)
+            self.continueButton.backgroundColor = backgroundColor
+            let color = isEnabled ? UIColor.midnight : ThemeUtils.primaryTextColor50(isDarkMode: isDark)
             self.continueButton.setTitleColor(color, for: .normal)
         }.disposed(by: disposeBag)
 
@@ -110,6 +112,13 @@ class EnterEmailViewController: WSNavigationViewController {
                         buttonText: "Ok"
                     )
                     self?.navigationController?.popToRootViewController(animated: true)
+                } else if error.localizedDescription == Errors.noNetwork.localizedDescription{
+                    self?.viewModel.alertManager.showSimpleAlert(
+                        viewController: self,
+                        title: TextsAsset.error,
+                        message: TextsAsset.noNetworksAvailable,
+                        buttonText: "Ok"
+                    )
                 } else {
                     self?.viewModel.alertManager.showSimpleAlert(
                         viewController: self,
