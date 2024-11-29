@@ -75,8 +75,6 @@ class VPNManager: VPNManagerProtocol {
     var connectionTaskPublisher: AnyCancellable?
     var connectionTask: Task<Void, Never>?
     var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
-    let connectionAlert = VPNConnectionAlert()
-    let disconnectAlert = VPNConnectionAlert()
 
     /// Represents the configuration state of the VPN.
     private var _configurationState = ConfigurationState.initial
@@ -94,14 +92,14 @@ class VPNManager: VPNManagerProtocol {
     let preferences: Preferences
     let connectivity: Connectivity
     let configManager: ConfigurationsManager
-    let connectionManager: ConnectionManagerV2
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManagerType
 
     lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+    lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
 
-    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, connectionManager: ConnectionManagerV2, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
+    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
         self.wgCrendentials = wgCrendentials
         self.wgRepository = wgRepository
         self.api = api
@@ -112,7 +110,6 @@ class VPNManager: VPNManagerProtocol {
         self.preferences = preferences
         self.connectivity = connectivity
         self.configManager = configManager
-        self.connectionManager = connectionManager
         self.alertManager = alertManager
         self.locationsManager = locationsManager
 

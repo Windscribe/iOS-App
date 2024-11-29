@@ -1049,8 +1049,6 @@
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
 		C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4A72C36CAC0009B67DC /* WireGuardKit */; };
 		C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */; };
-		C5F0747B2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */; };
-		C5F0747C2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */; };
 		C5FA3E802684BA56001D03A7 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */; };
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E882684E232001D03A7 /* SubmitTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E872684E232001D03A7 /* SubmitTicketViewController.swift */; };
@@ -1889,7 +1887,6 @@
 		C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryImpl.swift; sourceTree = "<group>"; };
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
-		C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConnectionAlert.swift; sourceTree = "<group>"; };
 		C5F550AADF77DA1974F7700A /* Pods-Windscribe TV.staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Windscribe TV.staging.xcconfig"; path = "Target Support Files/Pods-Windscribe TV/Pods-Windscribe TV.staging.xcconfig"; sourceTree = "<group>"; };
 		C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
@@ -2398,7 +2395,6 @@
 				1E593DA92CC9378F0051FF5E /* ConfigurationsManager+IKEV2.swift */,
 				C59CA15E2CD400D9007517DA /* ConfigurationsManager+Connect.swift */,
 				C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */,
-				C5F0747A2CD5EA7D00FC0248 /* VPNConnectionAlert.swift */,
 				1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */,
 				C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */,
 			);
@@ -5116,7 +5112,6 @@
 				59FC741E2C51547000021CD1 /* AdvanceRepositoryImpl.swift in Sources */,
 				59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */,
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
-				C5F0747C2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				59FC743E2C515B9E00021CD1 /* SessionManager.swift in Sources */,
 				C59CA1602CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
@@ -5415,7 +5410,6 @@
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
 				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
 				AF2199582270B147009B42E5 /* Resolver.swift in Sources */,
-				C5F0747B2CD5EA7E00FC0248 /* VPNConnectionAlert.swift in Sources */,
 				1A9DB35428168E8500C3EC1C /* UITableViewCell.swift in Sources */,
 				AF2C1869234F5429008657FA /* VPNConnection.swift in Sources */,
 				E90E56A7275E4A02004E4AC0 /* URLRequestExtension.swift in Sources */,

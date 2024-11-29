@@ -142,7 +142,6 @@ class Managers: Assembly {
                        preferences: r.resolve(Preferences.self)!,
                        connectivity: r.resolve(Connectivity.self)!,
                        configManager: r.resolve(ConfigurationsManager.self)!,
-                       connectionManager: r.resolve(ConnectionManagerV2.self)!,
                        alertManager: r.resolve(AlertManagerV2.self)!,
                        locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.userScope)

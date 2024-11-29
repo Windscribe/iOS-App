@@ -12,7 +12,7 @@ import RxSwift
 import Swinject
 
 /// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
-extension VPNManager: VPNConnectionAlertDelegate {
+extension VPNManager {
     /// Initiates a disconnect action from the ViewModel, updating the connection state throughout the process.
     /// - Returns: An `AnyPublisher` that publishes updates on the disconnection `State` or an error if the disconnection fails.
     ///
@@ -68,28 +68,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
         }
     }
 
-    /// Prepares connection preferences by selecting the protocol and connection ID based on user-selected settings or a default configuration.
-    ///
-    /// - Returns: A tuple containing the connection `id` and `ProtocolPort` with protocol and port details.
-    private func prepareConnectionPreferences() -> (String, ProtocolPort) {
-        let id = "\(locationsManager.getLastSelectedLocation())"
-        connectionAlert.updateProgress(message: "Please select protocol and connect")
-
-        // TODO: VPNManager: check for staticIPCredentials and customConfig
-//        if selectedNode?.staticIPCredentials != nil {
-//            let ipId = localDB.getStaticIPs()?.first { $0.connectIP == selectedNode?.staticIpToConnect }?.ipId ?? 0
-//            id = "static_\(ipId)"
-//        }
-//        if let customId = selectedNode?.customConfig?.id {
-//            id = "custom_\(customId)"
-//            if let proto = configManager.getProtoFromConfig(locationId: customId) {
-//                let port = localDB.getPorts(protocolType: proto)?.first ?? "443"
-//                selectedProtocol = ProtocolPort(proto, port)
-//            }
-//        }
-        return (id, selectedProtocol)
-    }
-
     /// Initiates the VPN connection process, handling connection states and errors, and updating the user through progress alerts.
     ///
     /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
@@ -139,16 +117,6 @@ extension VPNManager: VPNConnectionAlertDelegate {
 //        }
     }
 
-    /// Displays an error alert to the user in case of a VPN connection error and logs the error.
-    ///
-    /// - Parameter error: A `VPNConfigurationErrors` instance representing the encountered error.
-    private func showError(error: VPNConfigurationErrors) {
-        let alert = VPNConnectionAlert()
-        alert.configure(for: .error("\(error)"))
-        showPopup(popup: alert)
-        logger.logD("VPNConfiguration", "Connection process failed: \(error)")
-    }
-
     /// Attempts to connect to the VPN, with retry logic for handling authentication failures and connectivity issues.
     ///
     /// - Parameters:
@@ -175,122 +143,7 @@ extension VPNManager: VPNConnectionAlertDelegate {
                     }
                 }
                 return Fail(error: error).eraseToAnyPublisher()
-            }.catch { error in
-                self.logger.logD("VPNConfiguration", "\(error)")
-                // Handle wg api errors.
-                if let e = error as? Errors {
-                    switch e {
-                    case let .apiError(apiError) where apiError.errorCode == wgLimitExceeded:
-                        return self.showDeleteWgKeyPopup(for: error, message: apiError.errorMessage ?? "")
-                            .flatMap {
-                                var settings = self.makeUserSettings()
-                                settings.deleteOldestKey = true
-                                return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: settings)
-                            }.eraseToAnyPublisher()
-                    default: ()
-                    }
-                }
-                // Show options for other protocols.
-                return self.showProtocolSelectionPopup(for: error)
-                    .flatMap { userSelection in
-                        self.connectWithUserSelection(id: id, userSelection: userSelection)
-                    }
-                    .eraseToAnyPublisher()
             }.eraseToAnyPublisher()
-    }
-
-    /// Initiates a connection using a protocol selected by the user.
-    ///
-    /// - Parameters:
-    ///   - id: The location ID for the VPN connection.
-    ///   - userSelection: The protocol and port selected by the user.
-    /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails.
-    private func connectWithUserSelection(id: String, userSelection: ProtocolPort) -> AnyPublisher<State, Error> {
-        return configManager.connectAsync(locationID: id, proto: userSelection.protocolName, port: userSelection.portName, vpnSettings: makeUserSettings())
-            .catch { error in
-                self.showProtocolSelectionPopup(for: error)
-                    .flatMap { newSelection in
-                        self.connectWithUserSelection(id: id, userSelection: newSelection)
-                    }
-                    .eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-
-    /// Shows a protocol selection popup for the user to choose an alternate protocol upon connection failure.
-    ///
-    /// - Parameter error: The error that triggered the protocol selection popup.
-    /// - Returns: A `Future` containing the selected `ProtocolPort` or an `Error` if selection fails.
-    private func showProtocolSelectionPopup(for error: Error) -> Future<ProtocolPort, Error> {
-        return Future { promise in
-            DispatchQueue.main.async {
-                self.logger.logD("VPNConfiguration", "Showing user protocols selection.")
-                self.connectionAlert.dismissAlert()
-                self.presentProtocolSelectionPopup(
-                    error: error,
-                    onSelection: { customError in
-                        self.changeProtocol.onSelection = nil
-                        if let customError = customError {
-                            self.logger.logD("VPNConfiguration", "User cancelled selection.")
-                            promise(.failure(customError))
-                        } else {
-                            let newSelection = self.connectionManager.getNextProtocol()
-                            self.logger.logD("VPNConfiguration", "User selected: \(newSelection)")
-                            promise(.success(newSelection))
-                        }
-                    }
-                )
-            }
-        }
-    }
-
-    /// Shows a confirmation popup to ask if user wish to delete last wg key.
-    ///
-    /// - Parameter error: The error that triggered the delete key alert.
-    /// - Returns: A `Future` containing success or an `Error` if user cancel.
-    private func showDeleteWgKeyPopup(for error: Error, message: String) -> Future<Void, Error> {
-        return Future { promise in
-            Task {
-                self.logger.logD("VPNConfiguration", "Showing delete oldest key popup.")
-                await self.connectionAlert.dismissAlert()
-                let accept = try await self.alertManager.askUser(message: message).value
-                if accept {
-                    promise(.success(()))
-                } else {
-                    promise(.failure(error))
-                }
-            }
-        }
-    }
-
-    /// Presents the protocol selection popup to the user and registers a callback for their selection.
-    ///
-    /// - Parameters:
-    ///   - error: The error that prompted the protocol selection.
-    ///   - onSelection: A closure called with the user's selection or error.
-    private func presentProtocolSelectionPopup(error: Error, onSelection: @escaping (Error?) -> Void) {
-        changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
-        changeProtocol.type = .failure
-        connectionManager.onProtocolFail { allProtocolFailed in
-            if allProtocolFailed {
-                onSelection(VPNConfigurationErrors.allProtocolFailed)
-                return
-            }
-            self.changeProtocol.onSelection = onSelection
-            if let e = error as? VPNConfigurationErrors {
-                self.changeProtocol.error = e
-            }
-            self.showPopup(popup: self.changeProtocol)
-        }
-    }
-
-    /// Displays a modal popup alert for the specified view controller.
-    ///
-    /// - Parameter popup: The `UIViewController` to present as a modal popup.
-    private func showPopup(popup: UIViewController) {
-        if let topController = UIApplication.shared.keyWindow?.rootViewController {
-            topController.present(popup, animated: true, completion: nil)
-        }
     }
 
     /// Attempts to update VPN connection data, including server data and credentials, in case of an authentication failure.
@@ -361,45 +214,5 @@ extension VPNManager: VPNConnectionAlertDelegate {
 //                default: ()
 //                }
 //            })
-    }
-
-    func showDisconnectPopup() {
-        DispatchQueue.main.async {
-            self.disconnectAlert.delegate = self
-            self.disconnectAlert.configure(for: .disconnect)
-            self.disconnectAlert.updateProgress(message: "")
-            self.showPopup(popup: self.disconnectAlert)
-        }
-        disconnectTask()
-    }
-
-    func showConnectPopup() {
-        DispatchQueue.main.async {
-            self.connectionAlert.delegate = self
-            self.connectionAlert.configure(for: .connect)
-            self.connectionAlert.updateProgress(message: "")
-            self.showPopup(popup: self.connectionAlert)
-        }
-    }
-
-    func didSelectProtocol(protocolPort: ProtocolPort) {
-        connectionManager.onUserSelectProtocol(proto: protocolPort)
-        connectionManager.loadProtocols(shouldReset: false) { _ in
-            self.selectedProtocol = protocolPort
-            self.connectTask()
-        }
-    }
-
-    func didTapDisconnect() {
-        if configurationState == .disabling {
-            return
-        }
-        showDisconnectPopup()
-    }
-
-    func tapToCancel() {
-        logger.logD("VPNConfiguration", "Tapped to cancel conenction task.")
-        connectionTaskPublisher?.cancel()
-        disconnectAlert.dismissAlert()
     }
 }
