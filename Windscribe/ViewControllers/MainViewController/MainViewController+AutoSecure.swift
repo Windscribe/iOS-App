@@ -103,7 +103,6 @@ extension MainViewController {
         if network.status == true { return }
         preferredProtocolSwitch.toggle()
         viewModel.updatePreferredProtocolSwitch(network: network, preferredProtocolStatus: preferredProtocolSwitch.status)
-        vpnConnectionViewModel.refreshProtocols()
         updateNetworkOptions()
     }
 

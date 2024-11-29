@@ -19,7 +19,6 @@ extension MainViewController: DropdownDelegate {
             if let protocolName = protocolDropdownButton.button.titleLabel?.text, let defaultPort = viewModel.getPortList(protocolName: protocolName)?.first {
                 portDropdownButton.setTitle(defaultPort)
                 viewModel.updatePreferred(port: defaultPort, and: option, for: network)
-                vpnConnectionViewModel.refreshProtocols()
             }
         case portDropdownButton.dropdown:
             portDropdownButton.setTitle(option)

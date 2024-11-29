@@ -248,13 +248,7 @@ extension MainViewController {
         } else {
             hideAutoSecureViews()
             WifiManager.shared.saveCurrentWifiNetworks()
-            guard let result = WifiManager.shared.getConnectedNetwork() else { return }
-            let nextProtocol = ConnectionManager.shared.getNextProtocol()
-            if vpnConnectionViewModel.isConnected(), nextProtocol.protocolName != result.preferredProtocol || nextProtocol.portName != result.preferredPort {
-                enableVPNConnection()
-            } else {
-                viewModel.refreshProtocolInfo()
-            }
+            vpnConnectionViewModel.refreshProtocols()
         }
     }
 

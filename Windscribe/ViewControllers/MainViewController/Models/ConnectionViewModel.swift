@@ -84,6 +84,16 @@ class ConnectionViewModel: ConnectionViewModelType {
             self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
         }).disposed(by: disposeBag)
 
+        connectionManager.protocolListUpdatedTrigger.subscribe(onNext: { _ in
+            guard let info = try? vpnManager.vpnInfo.value() else {
+                self.enableConnection()
+                return
+            }
+            let nextProtocol = connectionManager.getNextProtocol()
+            if self.isConnected(), nextProtocol.protocolName != info.selectedProtocol || nextProtocol.portName != info.selectedPort {
+                self.enableConnection()
+            }
+        }).disposed(by: disposeBag)
     }
 }
 

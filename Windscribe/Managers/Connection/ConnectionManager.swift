@@ -40,6 +40,9 @@ class ConnectionManager: ConnectionManagerV2 {
     var manualProtocol: String = DefaultValues.protocol
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
+
+    let protocolListUpdatedTrigger = PublishSubject<Void>()
+
     init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase) {
         self.logger = logger
         self.connectivity = connectivity
@@ -126,6 +129,7 @@ class ConnectionManager: ConnectionManagerV2 {
         let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
         comletion(protocolsToConnectList)
+        protocolListUpdatedTrigger.onNext(())
     }
 
     private var called = false
@@ -177,6 +181,7 @@ class ConnectionManager: ConnectionManagerV2 {
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.protocolName)
+        protocolListUpdatedTrigger.onNext(())
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
@@ -198,6 +203,7 @@ class ConnectionManager: ConnectionManagerV2 {
             let failedProtocol = getNextProtocol()
             logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
             setPriority(proto: failedProtocol.protocolName, type: .fail)
+            protocolListUpdatedTrigger.onNext(())
             if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
                 logger.logI(self, "No more protocol left to connect.")
                 reset(completion: completion)
