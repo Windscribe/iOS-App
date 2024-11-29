@@ -331,7 +331,7 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadCustomConfigs() {
-        localDatabase.getCustomConfig().flatMap { value in
+        localDatabase.getCustomConfig().filter {$0.filter({$0.isInvalidated}).count == 0}.flatMap { value in
             return Single<[CustomConfig]>.create { single in
                 self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: {
                     single(.success(value))
@@ -340,7 +340,7 @@ class MainViewModel: MainViewModelType {
                 }).disposed(by: self.disposeBag)
                 return Disposables.create {}
             }
-        }.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] data in
+        }.observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] data in
             customConfigs.onNext(data)
         }).disposed(by: disposeBag)
 
