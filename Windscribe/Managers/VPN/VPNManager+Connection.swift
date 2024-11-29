@@ -249,55 +249,38 @@ extension VPNManager {
                 logger.logD(self, "Switching to \(sisterLocation.1.city ?? "").")
                 switchLocation(from: sisterLocation)
             } else {
-                if connectionStatus() == .connected {
-                    connectionStateManager.disconnect()
-                    userTappedToDisconnect = false
-                }
-                self.latencyRepo.loadAllServerLatency().subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-                    .observe(on: MainScheduler.asyncInstance)
-                    .subscribe(onCompleted: {
-                        self.logger.logD(self, "Successfully update latency.")
-                        self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
-                        self.switchLocation(from: nil)
-                        if !self.userTappedToDisconnect {
-                            self.configureAndConnectVPN()
-                        }
-                    }, onError: { _ in
-                        self.logger.logD(self, "Failed to update latency.")
-                        self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
-                        self.switchLocation(from: nil)
-                        if !self.userTappedToDisconnect {
-                            self.configureAndConnectVPN()
-                        }
-                    })
-                    .disposed(by: self.disposeBag)
+                updateLatencyAndSwitchLocation()
             }
             return
         }
         if !sessionManager.canAccesstoProLocation() && currentLocation.1.premiumOnly ?? false {
-            if connectionStatus() == .connected {
-                connectionStateManager.disconnect()
-                userTappedToDisconnect = false
-            }
-            self.latencyRepo.loadAllServerLatency().subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-                .observe(on: MainScheduler.asyncInstance)
-                .subscribe(onCompleted: {
-                    self.logger.logD(self, "Successfully update latency.")
-                    self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
-                    self.switchLocation(from: nil)
-                    if !self.userTappedToDisconnect {
-                        self.configureAndConnectVPN()
-                    }
-                }, onError: { _ in
-                    self.logger.logD(self, "Failed to update latency.")
-                    self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
-                    self.switchLocation(from: nil)
-                    if !self.userTappedToDisconnect {
-                        self.configureAndConnectVPN()
-                    }
-                })
-                .disposed(by: self.disposeBag)
+            updateLatencyAndSwitchLocation()
         }
+    }
+
+    private func updateLatencyAndSwitchLocation() {
+        if connectionStatus() == .connected {
+            delegate?.disconnectVpn()
+            userTappedToDisconnect = false
+        }
+        self.latencyRepo.loadAllServerLatency().subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onCompleted: {
+                self.logger.logD(self, "Successfully update latency.")
+                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                self.switchLocation(from: nil)
+                if !self.userTappedToDisconnect {
+                    self.configureAndConnectVPN()
+                }
+            }, onError: { _ in
+                self.logger.logD(self, "Failed to update latency.")
+                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                self.switchLocation(from: nil)
+                if !self.userTappedToDisconnect {
+                    self.configureAndConnectVPN()
+                }
+            })
+            .disposed(by: self.disposeBag)
     }
 
     private func getCurrentLocation() -> (ServerModel, GroupModel)? {
