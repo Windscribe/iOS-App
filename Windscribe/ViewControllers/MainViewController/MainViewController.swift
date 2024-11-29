@@ -371,7 +371,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             loadLatencyValues()
         }
         if vpnConnectionViewModel.isConnected() {
-            vpnConnectionViewModel.enableConnection()
+            enableVPNConnection()
         }
     }
 
@@ -440,7 +440,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         }, completion: { _ in
             self.autoModeSelectorView.isHidden = true
             if connect {
-                self.vpnConnectionViewModel.enableConnection()
+                self.enableVPNConnection()
             }
         })
     }

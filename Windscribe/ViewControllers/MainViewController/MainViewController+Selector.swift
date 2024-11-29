@@ -230,7 +230,7 @@ extension MainViewController {
             logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                vpnConnectionViewModel.enableConnection()
+                enableVPNConnection()
             } else {
                 displayInternetConnectionLostAlert()
             }

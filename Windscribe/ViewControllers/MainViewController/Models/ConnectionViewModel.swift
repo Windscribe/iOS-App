@@ -29,6 +29,7 @@ protocol ConnectionViewModelType {
     func isInvalid() -> Bool
 
     // Actions
+    func refreshProtocols()
     func setOutOfData()
     func enableConnection()
     func disableConnection()
@@ -141,6 +142,10 @@ extension ConnectionViewModel {
     func getBestLocation() -> BestLocationModel? {
         let bestLocationId = getBestLocationId()
         return locationsManager.getBestLocationModel(from: bestLocationId)
+    }
+
+    func refreshProtocols() {
+        connectionManager.loadProtocols(shouldReset: false) { _ in }
     }
 
     func enableConnection() {
