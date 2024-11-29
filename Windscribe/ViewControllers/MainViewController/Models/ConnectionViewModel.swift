@@ -135,7 +135,7 @@ extension ConnectionViewModel {
     }
 
     func getBestLocationId() -> String {
-        return preferences.getBestLocation()
+        return locationsManager.getBestLocation()
     }
 
     func getBestLocation() -> BestLocationModel? {

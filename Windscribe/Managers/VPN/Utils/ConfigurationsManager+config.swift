@@ -78,7 +78,7 @@ extension ConfigurationsManager {
     private func buildWgConfig(location: String, port: String, vpnSettings: VPNUserSettings) async throws -> WireguardVPNConfiguration {
         switch try getLocationType(id: location) {
         case .server:
-            let location = try getLocation(id: location)
+            let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: location.1.nodes.toArray())
             let ip = node.ip3
             let hostname = node.hostname
@@ -119,7 +119,7 @@ extension ConfigurationsManager {
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let location = try getLocation(id: location)
+            let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: location.1.nodes.toArray())
             let ip = node.ip
             let hostname = node.hostname
@@ -156,7 +156,7 @@ extension ConfigurationsManager {
             let username = credentials.username.base64Decoded()
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
-            let location = try getLocation(id: location)
+            let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: location.1.nodes.toArray())
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
             let hostname = node.ip2
@@ -272,23 +272,6 @@ extension ConfigurationsManager {
         return (FilePaths.openVPN, appendedConfigData)
     }
 
-    /// Gets server location from database.
-    private func getLocation(id: String) throws -> (Server, Group) {
-        guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(id) }
-        var serverResult: Server?
-        var groupResult: Group?
-        for server in servers {
-            let groups = server.groups
-            for group in groups where id == "\(group.id)" {
-                serverResult = server
-                groupResult = group
-            }
-        }
-        guard let serverResultSafe = serverResult, let groupResultSafe = groupResult else { throw VPNConfigurationErrors.locationNotFound(id)
-        }
-        return (serverResultSafe, groupResultSafe)
-    }
-
     /// Gets static ip location from database.
     private func getStaticIPLocation(id: String) throws -> StaticIP {
         let ipId = getId(location: id)
@@ -370,7 +353,7 @@ extension ConfigurationsManager {
 
             switch locationType {
             case .server:
-                let location = try getLocation(id: locationID)
+                let location = try locationsManager.getLocation(from: locationID)
                 let isFreeUser = localDatabase.getSessionSync()?.isPremium == false
                 if isFreeUser, location.1.premiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
@@ -428,7 +411,7 @@ extension ConfigurationsManager {
                 }
                 switch try self.getLocationType(id: locationID) {
                 case .server:
-                    let location = try self.getLocation(id: locationID)
+                    let location = try self.locationsManager.getLocation(from: locationID)
                     let isFreeUser = self.localDatabase.getSessionSync()?.isPremium == false
                     if isFreeUser, location.1.premiumOnly {
                         promise(.failure(VPNConfigurationErrors.upgradeRequired))
