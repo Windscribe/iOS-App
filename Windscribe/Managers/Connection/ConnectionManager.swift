@@ -19,6 +19,7 @@ class ConnectionManager: ConnectionManagerV2 {
     private var securedNetwork: SecuredNetworkRepository
     private var preferences: Preferences
     static var shared = Assembler.resolve(ConnectionManagerV2.self)
+    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
     // MARK: - Properties
 
@@ -115,6 +116,16 @@ class ConnectionManager: ConnectionManagerV2 {
             logger.logD(self, "Failed: \(displayProtocol.protocolPort.protocolName)")
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
+
+        if let info = try? vpnManager.vpnInfo.value(), info.status == NEVPNStatus.connected {
+            appendPort(proto: info.selectedProtocol, port: info.selectedPort)
+            setPriority(proto: info.selectedProtocol, type: .connected)
+        } else {
+            protocolsToConnectList.first?.viewType = .nextUp
+        }
+        let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
+        logger.logI(self, log)
+        comletion(protocolsToConnectList)
     }
 
     private var called = false
@@ -165,7 +176,7 @@ class ConnectionManager: ConnectionManagerV2 {
     func onUserSelectProtocol(proto: ProtocolPort) {
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
-        setPriority(proto: proto.portName)
+        setPriority(proto: proto.protocolName)
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
