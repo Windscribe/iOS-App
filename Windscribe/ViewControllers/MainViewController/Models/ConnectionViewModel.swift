@@ -79,6 +79,10 @@ class ConnectionViewModel: ConnectionViewModelType {
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
+        vpnManager.vpnInfo.subscribe(onNext: { info in
+            guard let info = info else { return }
+            self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
+        }).disposed(by: disposeBag)
 
     }
 }
