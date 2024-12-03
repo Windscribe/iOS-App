@@ -50,10 +50,10 @@ class ConnectionManager: ConnectionManagerV2 {
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         logger.logI(self, "Starting connection manager.")
-        loadProtocols(shouldReset: true) { [weak self] list in
-            self?.protocolsToConnectList = list
-        }
         bindData()
+        Task {
+            await refreshProtocols(shouldReset: true, shouldUpdate: true)
+        }
     }
 
     func bindData() {
@@ -70,11 +70,11 @@ class ConnectionManager: ConnectionManagerV2 {
 
     // MARK: - Actions
 
-    /// Load protocols
+    /// reloads the protocols
     /// change their priority based on user settings.
     /// append port
     /// Priority order [Connected, User selected, Preferred, Manual, Good, Failed]
-    func loadProtocols(shouldReset: Bool, comletion: @escaping ([DisplayProtocolPort]) -> Void) {
+    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             goodProtocol = nil
             userSelected = nil
@@ -128,29 +128,29 @@ class ConnectionManager: ConnectionManagerV2 {
         }
         let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
-        comletion(protocolsToConnectList)
-        protocolListUpdatedTrigger.onNext(())
+
+        if shouldUpdate { protocolListUpdatedTrigger.onNext(()) }
+    }
+
+
+    func getRefreshedProtocols() async -> [DisplayProtocolPort] {
+        await refreshProtocols(shouldReset: false, shouldUpdate: false)
+        return protocolsToConnectList
     }
 
     private var called = false
-    func getNextProtocol(shouldReset: Bool) async throws -> ProtocolPort {
-        called = false
-        return try await withCheckedThrowingContinuation { continuation in
-            DispatchQueue.main.async {
-                self.loadProtocols(shouldReset: shouldReset) { protocols in
-                    if self.called {
-                        return
-                    }
-                    self.called = true
-                    self.logger.logD("VPNManager", "\(protocols)")
-                    continuation.resume(returning: self.getNextProtocol())
-                }
-            }
-        }
+
+    func getNextProtocol() async -> ProtocolPort {
+        await getNextProtocol(shouldReset: false)
+    }
+
+    func getNextProtocol(shouldReset: Bool) async -> ProtocolPort {
+        await refreshProtocols(shouldReset: shouldReset, shouldUpdate: false)
+        return self.getFirstProtocol()
     }
 
     /// Next protocol to connect.
-    func getNextProtocol() -> ProtocolPort {
+    private func getFirstProtocol() -> ProtocolPort {
         accessQueue.sync {
             protocolsToConnectList.first.map { displayPort in
                 displayPort.protocolPort
@@ -190,26 +190,27 @@ class ConnectionManager: ConnectionManagerV2 {
             let diff = Date().timeIntervalSince(resetGoodProtocolTime ?? Date())
             if diff >= 43200 {
                 logger.logI(self, "Resetting good Protocol after 12 hours.")
-                reset { _ in }
-                scheduledTimer.invalidate()
+                Task { @MainActor in
+                    await reset()
+                    scheduledTimer.invalidate()
+                }
             }
         }
     }
 
     /// Current protocol failed to connect, lower its priority.
-    func onProtocolFail(completion: @escaping (Bool) -> Void) {
+    func onProtocolFail() async -> Bool {
         userSelected = nil
-        return accessQueue.sync { [self] in
-            let failedProtocol = getNextProtocol()
-            logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
-            setPriority(proto: failedProtocol.protocolName, type: .fail)
-            protocolListUpdatedTrigger.onNext(())
-            if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
-                logger.logI(self, "No more protocol left to connect.")
-                reset(completion: completion)
-            } else {
-                completion(false)
-            }
+        let failedProtocol = await getNextProtocol()
+        logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
+        setPriority(proto: failedProtocol.protocolName, type: .fail)
+        protocolListUpdatedTrigger.onNext(())
+        if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
+            logger.logI(self, "No more protocol left to connect.")
+            await reset()
+            return true
+        } else {
+            return false
         }
     }
 
@@ -227,13 +228,12 @@ class ConnectionManager: ConnectionManagerV2 {
         return TextsAsset.General.protocols
     }
 
-    private func reset(completion: @escaping (Bool) -> Void) {
+    private func reset() async {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
-        loadProtocols(shouldReset: true) { _ in
-            completion(true)
-        }
+        await refreshProtocols(shouldReset: true, shouldUpdate: true)
+        return
     }
 
     private func setPriority(proto: String, type: ProtocolViewType = .normal) {
