@@ -126,6 +126,12 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
             )
             self.cancelButton.setAttributedTitle(attribute, for: .normal)
         }.disposed(by: disposeBag)
+
+        Task { @MainActor in
+            if self.protocolName.isEmpty {
+                self.protocolName = await viewModel.getProtocolName()
+            }
+        }
     }
 
     private func setup() {

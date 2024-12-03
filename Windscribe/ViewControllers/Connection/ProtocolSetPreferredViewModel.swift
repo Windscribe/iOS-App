@@ -29,6 +29,7 @@ protocol ProtocolSetPreferredViewModelV2 {
 
     func submitLog()
     func getSubHeader() -> String
+    func getProtocolName() async  -> String
 }
 
 class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
@@ -39,11 +40,12 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     var logger: FileLogger
     var sessionManager: SessionManagerV2
     var apiManager: APIManager
+    var connectionManager: ConnectionManagerV2
     var disposeBag = DisposeBag()
     var submitLogState = BehaviorSubject(value: SubmitLogState.initial)
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager) {
+    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager, connectionManager: ConnectionManagerV2) {
         self.alertManager = alertManager
         self.type = type
         self.securedNetwork = securedNetwork
@@ -51,6 +53,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
         self.logger = logger
+        self.connectionManager = connectionManager
         isDarkMode = themeManager.darkTheme
     }
 
@@ -80,5 +83,9 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
             }, onFailure: { [self] _ in
                 submitLogState.onNext(.failed)
             }).disposed(by: disposeBag)
+    }
+
+    func getProtocolName() async -> String {
+        await connectionManager.getNextProtocol().protocolName
     }
 }
