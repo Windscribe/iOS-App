@@ -64,7 +64,7 @@ extension VPNManager {
         if let info = try? vpnInfo.value() {
             return ProtocolPort( info.selectedProtocol, info.selectedPort)
         } else {
-            return connectionManager.getNextProtocol()
+            return await connectionManager.getNextProtocol()
         }
     }
 

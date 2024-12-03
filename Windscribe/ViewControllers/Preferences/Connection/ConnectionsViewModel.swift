@@ -53,7 +53,7 @@ protocol ConnectionsViewModelType {
 class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
 
-    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2
+    let preferences: Preferences, disposeBag = DisposeBag(), themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2, connectionManager: ConnectionManagerV2
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -68,13 +68,14 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
     let languageUpdatedTrigger = PublishSubject<Void>()
 
-    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2) {
+    init(preferences: Preferences, themeManager: ThemeManager, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManagerV2, connectionManager: ConnectionManagerV2) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.localDb = localDb
         self.connectivity = connectivity
         self.networkRepository = networkRepository
         self.languageManager = languageManager
+        self.connectionManager = connectionManager
         isDarkMode = themeManager.darkTheme
         loadData()
     }
@@ -209,7 +210,9 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
-        ConnectionManager.shared.loadProtocols(shouldReset: true) { _ in }
+        Task {
+            await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true)
+        }
     }
 
     func updateProtocol(value: String) {

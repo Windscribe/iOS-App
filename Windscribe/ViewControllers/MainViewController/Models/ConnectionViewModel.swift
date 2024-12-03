@@ -89,9 +89,11 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.enableConnection()
                 return
             }
-            let nextProtocol = connectionManager.getNextProtocol()
-            if self.isConnected(), nextProtocol.protocolName != info.selectedProtocol || nextProtocol.portName != info.selectedPort {
-                self.enableConnection()
+            Task { @MainActor in
+                let nextProtocol = await connectionManager.getNextProtocol()
+                if self.isConnected(), nextProtocol.protocolName != info.selectedProtocol || nextProtocol.portName != info.selectedPort {
+                    self.enableConnection()
+                }
             }
         }).disposed(by: disposeBag)
     }
@@ -159,12 +161,14 @@ extension ConnectionViewModel {
     }
 
     func refreshProtocols() {
-        connectionManager.loadProtocols(shouldReset: false) { _ in }
+        Task {
+            await connectionManager.refreshProtocols(shouldReset: false, shouldUpdate: true)
+        }
     }
 
     func enableConnection() {
         Task { @MainActor in
-            let protocolPort = connectionManager.getNextProtocol()
+            let protocolPort = await connectionManager.getNextProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
