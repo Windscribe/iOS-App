@@ -289,7 +289,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func showPrivacyConfirmationPopup(willConnectOnAccepting: Bool = false) {
         popupRouter?.routeTo(to: .privacyView(completionHandler: {
-            if willConnectOnAccepting { self.enableVPNConnection() }
+            if willConnectOnAccepting {
+                self.enableVPNConnection()
+            }
         }), from: self)
     }
 
