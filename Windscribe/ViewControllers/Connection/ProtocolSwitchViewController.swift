@@ -11,7 +11,6 @@ import RxSwift
 import UIKit
 
 protocol ProtocolSwitchVCDelegate: AnyObject {
-    func protocolSwitchVCCountdownCompleted()
     func disconnectFromFailOver()
 }
 
@@ -163,7 +162,6 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            //  delegate?.protocolSwitchVCCountdownCompleted()
             onSelection?(nil)
             backButtonTapped()
         }
@@ -173,7 +171,6 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         protocolView.invalidateTimer()
         if !viewModel.isConnected() {
             connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            //  delegate?.protocolSwitchVCCountdownCompleted()
             onSelection?(nil)
         }
         backButtonTapped()
