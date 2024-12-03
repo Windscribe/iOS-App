@@ -26,7 +26,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         connectionStateViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel, protocolName: ""), from: self)
+            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
         }).disposed(by: disposeBag)
 
         connectionStateViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
@@ -39,7 +39,7 @@ extension MainViewController {
 
         connectionStateViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.locationManagerViewModel.requestLocationPermission {
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil, protocolName: ConnectionManager.shared.getNextProtocol().protocolName), from: self)
+                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
             }
         }).disposed(by: disposeBag)
 
