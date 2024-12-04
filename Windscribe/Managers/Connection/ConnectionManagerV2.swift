@@ -14,16 +14,17 @@ protocol ConnectionManagerV2 {
     var goodProtocol: ProtocolPort? { get set }
     var resetGoodProtocolTime: Date? { get set }
 
-    var protocolListUpdatedTrigger: PublishSubject<Void> { get }
+    var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
 
-    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool) async
+    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]
     func getNextProtocol() async -> ProtocolPort
-    func getNextProtocol(shouldReset: Bool) async -> ProtocolPort
+    func getProtocol() -> ProtocolPort
     func onProtocolFail() async -> Bool
     func onUserSelectProtocol(proto: ProtocolPort)
     func resetGoodProtocol()
     func onConnectStateChange(state: NEVPNStatus)
     func scheduleTimer()
     func saveCurrentWifiNetworks()
+    func nextSelecteProtocol() -> ProtocolPort
 }

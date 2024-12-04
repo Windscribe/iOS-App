@@ -41,7 +41,7 @@ class ConnectionManager: ConnectionManagerV2 {
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
 
-    let protocolListUpdatedTrigger = PublishSubject<Void>()
+    var currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
 
     init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase) {
         self.logger = logger
@@ -52,7 +52,7 @@ class ConnectionManager: ConnectionManagerV2 {
         logger.logI(self, "Starting connection manager.")
         bindData()
         Task {
-            await refreshProtocols(shouldReset: true, shouldUpdate: true)
+            await refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         }
     }
 
@@ -74,7 +74,8 @@ class ConnectionManager: ConnectionManagerV2 {
     /// change their priority based on user settings.
     /// append port
     /// Priority order [Connected, User selected, Preferred, Manual, Good, Failed]
-    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool) async {
+    @MainActor
+    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             goodProtocol = nil
             userSelected = nil
@@ -120,7 +121,7 @@ class ConnectionManager: ConnectionManagerV2 {
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
-        if let info = try? vpnManager.vpnInfo.value(), info.status == NEVPNStatus.connected {
+        if !shouldReconnect, let info = try? vpnManager.vpnInfo.value(), info.status == .connected {
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
         } else {
@@ -129,24 +130,24 @@ class ConnectionManager: ConnectionManagerV2 {
         let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
 
-        if shouldUpdate { protocolListUpdatedTrigger.onNext(()) }
+        currentProtocolSubject.onNext(shouldUpdate ? getFirstProtocol() : nil)
     }
 
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
-        await refreshProtocols(shouldReset: false, shouldUpdate: false)
+        await refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
         return protocolsToConnectList
     }
 
     private var called = false
 
     func getNextProtocol() async -> ProtocolPort {
-        await getNextProtocol(shouldReset: false)
+        await refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
+        return self.getFirstProtocol()
     }
 
-    func getNextProtocol(shouldReset: Bool) async -> ProtocolPort {
-        await refreshProtocols(shouldReset: shouldReset, shouldUpdate: false)
-        return self.getFirstProtocol()
+    func getProtocol() -> ProtocolPort {
+        getFirstProtocol()
     }
 
     /// Next protocol to connect.
@@ -181,7 +182,7 @@ class ConnectionManager: ConnectionManagerV2 {
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.protocolName)
-        protocolListUpdatedTrigger.onNext(())
+        currentProtocolSubject.onNext(getFirstProtocol())
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
@@ -204,12 +205,13 @@ class ConnectionManager: ConnectionManagerV2 {
         let failedProtocol = await getNextProtocol()
         logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
         setPriority(proto: failedProtocol.protocolName, type: .fail)
-        protocolListUpdatedTrigger.onNext(())
         if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
             logger.logI(self, "No more protocol left to connect.")
             await reset()
+            currentProtocolSubject.onNext(getFirstProtocol())
             return true
         } else {
+            currentProtocolSubject.onNext(getFirstProtocol())
             return false
         }
     }
@@ -232,7 +234,7 @@ class ConnectionManager: ConnectionManagerV2 {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
-        await refreshProtocols(shouldReset: true, shouldUpdate: true)
+        await refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         return
     }
 
@@ -271,5 +273,30 @@ class ConnectionManager: ConnectionManagerV2 {
             }
         }
         protocolsToConnectList = lstConnection.map { DisplayProtocolPort(protocolPort: $0, viewType: .normal) }
+    }
+
+    func nextSelecteProtocol() -> ProtocolPort {
+        if let info = try? vpnManager.vpnInfo.value() {
+            if info.status == .disconnecting {
+                return getFirstProtocol()
+            }
+            if [.connected, .connecting].contains(info.status) {
+                return ProtocolPort(info.selectedProtocol, info.selectedPort)
+            }
+        }
+        if self.vpnManager.isCustomConfigSelected() {
+            return ProtocolPort(TextsAsset.wireGuard, "443")
+        }
+        if self.vpnManager.isFromProtocolFailover || self.vpnManager.isFromProtocolChange {
+            return getFirstProtocol()
+        }
+        WifiManager.shared.saveCurrentWifiNetworks()
+        if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
+            return ProtocolPort(currentNetwork.preferredProtocol, currentNetwork.preferredPort)
+        }
+        if connectionMode == Fields.Values.manual {
+            return ProtocolPort(manualProtocol, manualPort)
+        }
+        return ProtocolPort(WifiManager.shared.selectedProtocol ?? TextsAsset.wireGuard, WifiManager.shared.selectedPort ?? "443")
     }
 }
