@@ -84,10 +84,7 @@ class ConnectionViewModel: ConnectionViewModelType {
             .bind { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
-                    Task {
-                        let startingProtocol = await connectionManager.getNextProtocol()
-                        self.selectedProtoPort.onNext(startingProtocol)
-                    }
+                    self.selectedProtoPort.onNext(connectionManager.getProtocol())
                 } else if let info = info, [.connected, .connecting].contains(info.status) {
                     self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
                 } else if let nextProtocol = nextProtocol {
