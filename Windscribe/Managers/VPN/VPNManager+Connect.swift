@@ -60,14 +60,6 @@ extension VPNManager {
         }).eraseToAnyPublisher()
     }
 
-    func getProtocolPort() async -> ProtocolPort {
-        if let info = try? vpnInfo.value() {
-            return ProtocolPort( info.selectedProtocol, info.selectedPort)
-        } else {
-            return await connectionManager.getNextProtocol()
-        }
-    }
-
     /// Initiates the VPN connection process, handling connection states and errors, and updating the user through progress alerts.
     ///
     /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.

@@ -146,7 +146,7 @@ class LivecycleManager: LivecycleManagerType {
 
     private func connectToVPN(updatedLocationId: String) async throws {
         let settings = vpnManager.makeUserSettings()
-        let proto = await vpnManager.getProtocolPort()
+        let proto = ProtocolPort(TextsAsset.wireGuard, "443")//TODO: vpnManager  - await vpnManager.getProtocolPort()
 
         try await withCheckedThrowingContinuation { continuation in
             self.connectTask = configManager.connectAsync(
@@ -171,7 +171,6 @@ class LivecycleManager: LivecycleManagerType {
     }
 
     private func handleShortcutLaunch() {
-        LivecycleManager.self
         let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
         (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
         if shortcut == .networkSecurity {

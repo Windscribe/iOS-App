@@ -130,7 +130,7 @@ class ConnectionManager: ConnectionManagerV2 {
         let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
 
-        currentProtocolSubject.onNext(shouldUpdate ? getFirstProtocol() : nil)
+        currentProtocolSubject.onNext(shouldReconnect ? getFirstProtocol() : nil)
     }
 
 
