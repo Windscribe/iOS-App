@@ -42,6 +42,7 @@ class ConnectionManager: ConnectionManagerV2 {
     var connectionMode = DefaultValues.connectionMode
 
     var currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
+    var connectionProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
 
     init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase) {
         self.logger = logger
@@ -60,11 +61,20 @@ class ConnectionManager: ConnectionManagerV2 {
         preferences.getConnectionMode().subscribe(onNext: { [weak self] mode in
             self?.connectionMode = mode ?? DefaultValues.connectionMode
         }).disposed(by: disposeBag)
+
         preferences.getSelectedProtocol().subscribe(onNext: { [weak self] proto in
             self?.manualProtocol = proto ?? DefaultValues.protocol
         }).disposed(by: disposeBag)
+
         preferences.getSelectedPort().subscribe(onNext: { [weak self] port in
             self?.manualPort = port ?? DefaultValues.port
+        }).disposed(by: disposeBag)
+
+        securedNetwork.networks.subscribe(onNext: { [weak self] networks in
+            guard !networks.isEmpty else { return }
+            Task {
+                await self?.refreshProtocols(shouldReset: false, shouldUpdate: true, shouldReconnect: false)
+            }
         }).disposed(by: disposeBag)
     }
 
@@ -130,9 +140,9 @@ class ConnectionManager: ConnectionManagerV2 {
         let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
 
-        currentProtocolSubject.onNext(shouldReconnect ? getFirstProtocol() : nil)
+        currentProtocolSubject.onNext(getFirstProtocol())
+        connectionProtocolSubject.onNext(shouldReconnect ? getFirstProtocol() : nil)
     }
-
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
         await refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)

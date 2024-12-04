@@ -45,9 +45,9 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                 let userPublicKey = self.wgCrendentials.getPublicKey() ?? ""
                 return self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: false)
                     .catch { error in
-                        if case Errors.apiError(let code) = error,  code.errorCode == wgLimitExceeded {
+                        if let code = error as? Errors, code == .wgLimitExceeded {
                             if let alertManager = self.alertManager {
-                                return alertManager.askUser(message: code.errorMessage ?? "").flatMap { accept in
+                                return alertManager.askUser(message: code.description).flatMap { accept in
                                     if accept {
                                         return self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)
                                     } else {

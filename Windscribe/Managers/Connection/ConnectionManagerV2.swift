@@ -15,6 +15,7 @@ protocol ConnectionManagerV2 {
     var resetGoodProtocolTime: Date? { get set }
 
     var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
+    var connectionProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
 
     func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]

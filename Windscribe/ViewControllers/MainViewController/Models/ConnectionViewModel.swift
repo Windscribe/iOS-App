@@ -92,8 +92,8 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
             }.disposed(by: disposeBag)
 
-        connectionManager.currentProtocolSubject.subscribe(onNext: { nextProtocol in
-            guard nextProtocol != nil else { return }
+        connectionManager.connectionProtocolSubject.subscribe(onNext: { connectionProtocol in
+            guard connectionProtocol != nil else { return }
             self.enableConnection()
         }).disposed(by: disposeBag)
     }
