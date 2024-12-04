@@ -329,6 +329,16 @@ enum VPNManagerType: String {
         default: return ""
         }
     }
+
+    init(from key: String) {
+        if key == TextsAsset.iKEv2 {
+            self = .iKEV2
+        } else if key == TextsAsset.openVPN {
+            self = .openVPN
+        } else {
+            self = .wg
+        }
+    }
 }
 
 struct VPNConnectionInfo: CustomStringConvertible {
@@ -344,6 +354,11 @@ struct VPNConnectionInfo: CustomStringConvertible {
 }
 
 extension VPNManager: ConfigurationsManagerDelegate {
+    func setActiveManager(with type: VPNManagerType?) {
+        guard let type = type else { return }
+        activeVPNManager = type
+    }
+
     func disconnectOrFail() {
 
     }

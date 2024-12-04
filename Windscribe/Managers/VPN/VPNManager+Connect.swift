@@ -21,10 +21,13 @@ extension VPNManager {
     func disconnectFromViewModel() -> AnyPublisher<State, Error> {
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
+                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to configuring")
                 self.configurationState = .disabling
             }, receiveCompletion: { _ in
+                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to initial")
                 self.configurationState = .initial
             }, receiveCancel: {
+                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to initial from cancel")
                 self.configurationState = .initial
             }).eraseToAnyPublisher()
     }
@@ -49,13 +52,13 @@ extension VPNManager {
             }
             return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName)
         }.handleEvents(receiveSubscription: { _ in
-            self.logger.logD("VPNConfiguration", "configurationState set to configuring")
+            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to configuring")
             self.configurationState = .configuring
         }, receiveCompletion: { _ in
-            self.logger.logD("VPNConfiguration", "configurationState set to initial")
+            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to initial")
             self.configurationState = .initial
         }, receiveCancel: {
-            self.logger.logD("VPNConfiguration", "configurationState set to initial from cancel")
+            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to initial from cancel")
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }

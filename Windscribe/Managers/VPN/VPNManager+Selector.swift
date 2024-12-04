@@ -29,26 +29,6 @@ extension VPNManager {
         retryInProgress = false
     }
 
-    @objc func retryIKEv2Connection() {
-        Task {
-            self.activeVPNManager = .iKEV2
-            await configManager.connect(with: .iKEV2, killSwitch: killSwitch)
-        }
-    }
-
-    @objc func retryOpenVPNConnection() {
-        Task {
-            self.activeVPNManager = .openVPN
-            await configManager.connect(with: .openVPN, killSwitch: killSwitch)
-        }
-    }
-
-    @objc func retryWireGuardVPNConnection() {
-        Task {
-            self.activeVPNManager = .wg
-            await configManager.connect(with: .wg, killSwitch: killSwitch)
-        }
-    }
 
     private func resetProfiles() -> Completable {
         return Completable.create { completable in

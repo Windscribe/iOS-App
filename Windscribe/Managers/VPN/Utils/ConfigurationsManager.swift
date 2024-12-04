@@ -15,6 +15,7 @@ protocol ConfigurationsManagerDelegate: AnyObject {
     func setRestartOnDisconnect(with value: Bool)
     func configureForConnectionState()
     func disconnectOrFail()
+    func setActiveManager(with type: VPNManagerType?)
 }
 
 class ConfigurationsManager {
