@@ -52,6 +52,8 @@ class WelcomeViewController: UIViewController {
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
+        loginButton.hasBorder = true
+        getStartedButton.hasBorder = true
 
     }
 
