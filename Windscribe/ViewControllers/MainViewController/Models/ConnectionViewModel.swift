@@ -79,21 +79,30 @@ class ConnectionViewModel: ConnectionViewModelType {
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
-        vpnManager.vpnInfo.subscribe(onNext: { info in
-            guard let info = info else { return }
-            self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
-        }).disposed(by: disposeBag)
 
-        connectionManager.protocolListUpdatedTrigger.subscribe(onNext: { _ in
+        Observable.combineLatest(vpnManager.vpnInfo, connectionManager.currentProtocolSubject)
+            .bind { [weak self] (info, nextProtocol) in
+                guard let self = self else { return }
+                if info == nil && nextProtocol == nil {
+                    Task {
+                        let startingProtocol = await connectionManager.getNextProtocol()
+                        self.selectedProtoPort.onNext(startingProtocol)
+                    }
+                } else if let info = info, [.connected, .connecting].contains(info.status) {
+                    self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
+                } else if let nextProtocol = nextProtocol {
+                    self.selectedProtoPort.onNext(nextProtocol)
+                }
+            }.disposed(by: disposeBag)
+
+        connectionManager.currentProtocolSubject.subscribe(onNext: { nextProtocol in
+            guard let nextProtocol = nextProtocol else { return }
             guard let info = try? vpnManager.vpnInfo.value() else {
                 self.enableConnection()
                 return
             }
-            Task { @MainActor in
-                let nextProtocol = await connectionManager.getNextProtocol()
-                if self.isConnected(), nextProtocol.protocolName != info.selectedProtocol || nextProtocol.portName != info.selectedPort {
-                    self.enableConnection()
-                }
+            if self.isConnected(), nextProtocol.protocolName != info.selectedProtocol || nextProtocol.portName != info.selectedPort {
+                self.enableConnection()
             }
         }).disposed(by: disposeBag)
     }
@@ -162,16 +171,16 @@ extension ConnectionViewModel {
 
     func refreshProtocols() {
         Task {
-            await connectionManager.refreshProtocols(shouldReset: false, shouldUpdate: true)
+            await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
         }
     }
 
     func enableConnection() {
         Task { @MainActor in
-            let protocolPort = await connectionManager.getNextProtocol()
+            let nextProtocol = connectionManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
-            connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: protocolPort)
+            connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {

@@ -211,7 +211,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
         Task {
-            await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true)
+            await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         }
     }
 
