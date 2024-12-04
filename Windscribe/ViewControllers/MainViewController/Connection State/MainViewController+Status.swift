@@ -132,14 +132,12 @@ extension MainViewController {
                     }
                 }
                 if info.state == .connecting {
-                    self.viewModel.refreshProtocolInfo()
                     self.hideAutoSecureViews()
                 }
             }
             if [.connected, .disconnected, .test].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()
-            self.viewModel.refreshProtocolInfo()
         }
     }
 

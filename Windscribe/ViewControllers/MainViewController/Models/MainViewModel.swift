@@ -59,7 +59,6 @@ protocol MainViewModelType {
     func isAntiCensorshipEnabled() -> Bool
     func markBlurStaticIpAddress(isBlured: Bool)
     func markBlurNetworkName(isBlured: Bool)
-    func refreshProtocolInfo()
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
@@ -109,7 +108,6 @@ class MainViewModel: MainViewModelType {
     var didShowProPlanExpiredPopup = false
     var didShowOutOfDataPopup = false
     let isDarkMode: BehaviorSubject<Bool>
-    let refreshProtocolTrigger = PublishSubject<Void>()
 
     let disposeBag = DisposeBag()
     init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, themeManager: ThemeManager, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType) {
@@ -164,7 +162,7 @@ class MainViewModel: MainViewModelType {
     }
 
     private func observeWifiNetwork() {
-        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network, refreshProtocolTrigger.asObservable()).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork, _) in
+        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork) in
             guard let matchingNetwork = networks.first(where: {
                 $0.SSID == appNetwork.name
             }) else { return }
@@ -557,9 +555,5 @@ class MainViewModel: MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel? {
         guard let id = customConfigID else { return nil }
         return localDatabase.getCustomConfigs().first { $0.id == id }?.getModel()
-    }
-
-    func refreshProtocolInfo() {
-        refreshProtocolTrigger.onNext(())
     }
 }

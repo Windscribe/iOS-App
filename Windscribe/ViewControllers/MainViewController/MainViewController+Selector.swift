@@ -111,8 +111,12 @@ extension MainViewController {
             self.protocolLabel.text = protoPort.protocolName
             self.portLabel.text = protoPort.portName
 
-            if !network.SSID.isEmpty, self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
-                self.setPreferredProtocolBadgeVisibility(hidden: !(network?.preferredProtocolStatus ?? false))
+            if !(network?.SSID.isEmpty ?? true), self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
+                if let status = network?.preferredProtocolStatus, status {
+                    self.setPreferredProtocolBadgeVisibility(hidden: false)
+                } else {
+                    self.setPreferredProtocolBadgeVisibility(hidden: true)
+                }
                 return
             }
             if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == protoPort.protocolName, WifiManager.shared.selectedPreferredPort == protoPort.portName {
@@ -273,7 +277,6 @@ extension MainViewController {
         }
         WifiManager.shared.saveCurrentWifiNetworks()
         setNetworkSsid()
-        viewModel.refreshProtocolInfo()
     }
 
     @objc func popoverDismissed() {
