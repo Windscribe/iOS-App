@@ -70,13 +70,14 @@ extension MainViewController {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.selectedProtoPort.subscribe(onNext: {
-            self.refreshProtocol(from: nil, with: $0)
-        }).disposed(by: disposeBag)
-
         vpnConnectionViewModel.selectedLocationUpdatedSubject.subscribe(onNext: {
             self.updateSelectedLocationUI()
         }).disposed(by: disposeBag)
+
+        Observable.combineLatest(viewModel.wifiNetwork,
+                                 vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
+                self.refreshProtocol(from: network, with: protocolPort)
+        }.disposed(by: disposeBag)
     }
 
     func animateConnectedState(with info: ConnectionStateInfo) {
