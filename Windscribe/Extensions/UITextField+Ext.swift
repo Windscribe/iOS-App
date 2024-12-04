@@ -40,20 +40,9 @@ class WSTextFieldTv: UITextField {
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
         self.tintColor = .clear
-
         layer.addSublayer(textLayer)
     }
 
-    override func layoutSublayers(of layer: CALayer) {
-        layer.backgroundColor = self.isFocused ? UIColor.whiteWithOpacity(opacity: 0.19).cgColor : UIColor.clear.cgColor
-        textLayer.frame = layer.bounds
-        textLayer.string = self.text?.isEmpty ?? true ? self.placeholder : self.text
-    }
-
-    override func addSubview(_ view: UIView) {
-
-        // blocks standard styling
-    }
 
 }
 
