@@ -45,6 +45,8 @@ struct APIError: Equatable {
             return Errors.sandboxReceipt
         case 4008:
             return Errors.missingTransactionId
+        case 1313:
+            return Errors.wgLimitExceeded
         default:
             return nil
         }
@@ -83,6 +85,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case handled
     case ipNotAvailable
     case missingRemoteAddress
+    case wgLimitExceeded
 
     public var description: String {
         switch self {
@@ -114,6 +117,8 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "Ip1 and ip3 are not avaialble to configure this profile."
         case .missingRemoteAddress:
             return "Missing remote address in selected location."
+        case .wgLimitExceeded:
+            return "You have reached your limit of WireGuard keys. Do you want to delete your oldest key?"
         default:
             return "Unknown error."
         }
