@@ -104,7 +104,6 @@ extension MainViewController {
 
     func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
         DispatchQueue.main.async {
-            guard !self.vpnConnectionViewModel.isDisconnecting() else { return }
             guard let protoPort = protoPort else {
                 self.setPreferredProtocolBadgeVisibility(hidden: true)
                 return
