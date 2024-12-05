@@ -37,7 +37,6 @@ class ConfigurationsManager {
     var managers: [NEVPNManager] = []
     var reloadManagersTrigger = BehaviorSubject<Void>(value: ())
     var disposeBag = DisposeBag()
-    var noResponseTimer: Timer?
 
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0

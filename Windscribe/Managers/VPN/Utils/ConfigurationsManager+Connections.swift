@@ -9,50 +9,9 @@
 import Combine
 import NetworkExtension
 import Swinject
+import RxSwift
 
 extension ConfigurationsManager {
-    func connect(with type: VPNManagerType, killSwitch: Bool) async {
-        guard let manager = getManager(for: type) else { return }
-        let otherManagers = Array(Set(managers).subtracting([manager]))
-
-        for otherManager in otherManagers {
-            if otherManager.connection.status == .connected {
-                delegate?.setRestartOnDisconnect(with: true)
-                await disconnect(killSwitch: killSwitch, manager: otherManager)
-                break
-            }
-        }
-        if manager.connection.status == .connected || manager.connection.status == .connecting {
-            delegate?.setRestartOnDisconnect(with: true)
-            await restartConnection(killSwitch: killSwitch, manager: manager)
-        } else {
-            for otherManager in otherManagers {
-                await removeProfile(killSwitch: killSwitch, manager: otherManager)
-            }
-            manager.isOnDemandEnabled = DefaultValues.firewallMode
-            manager.isEnabled = true
-            do {
-                try await saveToPreferences(manager: manager)
-                try manager.connection.startVPNTunnel(options: getTunnelParams(for: type))
-                handleVPNManagerNoResponse(for: type, killSwitch: killSwitch)
-                logger.logD(ConfigurationsManager.self, "WireGuard tunnel started.")
-
-            } catch {
-                logger.logE(ConfigurationsManager.self, "Error occured when establishing WireGuard connection: \(error.localizedDescription)")
-            }
-        }
-    }
-
-    func restartConnection(killSwitch: Bool, manager: NEVPNManager) async {
-        logger.logD(ConfigurationsManager.self, "Restarting OpenVPN connection.")
-        await disconnect(restartOnDisconnect: true, killSwitch: killSwitch, manager: manager)
-    }
-
-    func disconnect(with type: VPNManagerType, restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool) async {
-        guard let manager = getManager(for: type) else { return }
-        await disconnect(restartOnDisconnect: restartOnDisconnect, force: force, killSwitch: killSwitch, manager: manager)
-    }
-
     func removeProfile(with type: VPNManagerType, killSwitch: Bool) async {
         guard let manager = getManager(for: type) else { return }
         await removeProfile(killSwitch: killSwitch, manager: manager)
@@ -82,29 +41,6 @@ extension ConfigurationsManager {
             #endif
             try? await saveToPreferences(manager: manager)
             manager.connection.stopVPNTunnel()
-        }
-    }
-
-    func invalidateTimer() {
-        noResponseTimer?.invalidate()
-    }
-
-    private func getTunnelParams(for type: VPNManagerType) -> [String: NSObject]? {
-        if type == .wg,
-           let activationId = wgCredentials.address?.SHA1() as? NSObject
-        {
-            return ["activationAttemptId": activationId]
-        } else {
-            return nil
-        }
-    }
-
-    /// Sometimes If another ikev2 profile is configured and kill switch is on VPNManager may not respond.
-    private func handleVPNManagerNoResponse(for type: VPNManagerType, killSwitch: Bool) {
-        if type == .iKEV2, killSwitch {
-            noResponseTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: false) { _ in
-                self.delegate?.disconnectOrFail()
-            }
         }
     }
 }
