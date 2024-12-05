@@ -16,13 +16,7 @@ protocol ProtocolSwitchDelegateViewModelType: ProtocolSwitchVCDelegate {
 class ProtocolSwitchDelegateViewModel: ProtocolSwitchDelegateViewModelType {
     var disableVPNTrigger = PublishSubject<Void>()
 
-    var vpnManager: VPNManager
-    var connectionStateManager: ConnectionStateManagerType
-
-    init(vpnManager: VPNManager, connectionStateManager: ConnectionStateManagerType) {
-        self.vpnManager = vpnManager
-        self.connectionStateManager = connectionStateManager
-    }
+    init() { }
 }
 
 extension ProtocolSwitchDelegateViewModel: ProtocolSwitchVCDelegate {

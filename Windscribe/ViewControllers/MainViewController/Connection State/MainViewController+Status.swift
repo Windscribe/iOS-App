@@ -12,37 +12,6 @@ import UIKit
 
 extension MainViewController {
     func bindConnectionStateViewModel() {
-        connectionStateViewModel.loadLatencyValuesSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            guard let viewControllers = self.navigationController?.viewControllers,
-                  !viewControllers.contains(where: { $0 is ProtocolSetPreferredViewController }),
-                  !viewControllers.contains(where: { $0 is ProtocolSwitchViewController })
-            else { return }
-
-            self.router?.routeTo(to: RouteID.protocolSwitchVC(delegate: self.protocolSwitchViewModel, type: .failure), from: self)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.popupRouter?.routeTo(to: .pushNotifications, from: self)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.displaySiriShortcutPopup()
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.locationManagerViewModel.requestLocationPermission {
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
-            }
-        }).disposed(by: disposeBag)
-
         connectionStateViewModel.autoModeSelectorHiddenChecker.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             $0(self.autoModeSelectorView.isHidden)
         }).disposed(by: disposeBag)
@@ -78,6 +47,33 @@ extension MainViewController {
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
                 self.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
+        
+        vpnConnectionViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            guard let viewControllers = self.navigationController?.viewControllers,
+                  !viewControllers.contains(where: { $0 is ProtocolSetPreferredViewController }),
+                  !viewControllers.contains(where: { $0 is ProtocolSwitchViewController })
+            else { return }
+            
+            self.router?.routeTo(to: RouteID.protocolSwitchVC(delegate: self.protocolSwitchViewModel, type: .failure), from: self)
+        }).disposed(by: disposeBag)
+        
+        vpnConnectionViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
+            }).disposed(by: disposeBag)
+        
+        vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.popupRouter?.routeTo(to: .pushNotifications, from: self)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.displaySiriShortcutPopup()
+        }).disposed(by: disposeBag)
+        
+        connectionStateViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.locationManagerViewModel.requestLocationPermission {
+                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
+            }
+        }).disposed(by: disposeBag)
     }
 
     func animateConnectedState(with info: ConnectionStateInfo) {

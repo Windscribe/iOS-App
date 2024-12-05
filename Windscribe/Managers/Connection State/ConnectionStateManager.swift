@@ -14,12 +14,6 @@ import RxSwift
 import Swinject
 
 protocol ConnectionStateManagerType {
-    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> { get }
-    var showAutoModeScreenTrigger: PublishSubject<Void> { get }
-    var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
-    var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
-    var siriShortcutTrigger: PublishSubject<Void> { get }
-    var requestLocationTrigger: PublishSubject<Void> { get }
     var enableConnectTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
     var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> { get }
@@ -40,12 +34,6 @@ class ConnectionStateManager: ConnectionStateManagerType {
     var disconnectingStateTimer: Timer?
 
     var connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
-    var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
-    var showAutoModeScreenTrigger = PublishSubject<Void>()
-    var openNetworkHateUsDialogTrigger = PublishSubject<Void>()
-    var pushNotificationPermissionsTrigger = PublishSubject<Void>()
-    var siriShortcutTrigger = PublishSubject<Void>()
-    var requestLocationTrigger = PublishSubject<Void>()
     var enableConnectTrigger = PublishSubject<Void>()
     var ipAddressSubject = PublishSubject<String>()
     var autoModeSelectorHiddenChecker = PublishSubject<(_ value: Bool) -> Void>()
@@ -170,11 +158,7 @@ extension ConnectionStateManager {
         }
         return false
     }
-
-    @objc private func loadLatencyValues() {
-        loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, selectBestLocation: true, connectToBestLocation: true))
-    }
-
+    
     private func updateStateInfo(to state: ConnectionState) {
         DispatchQueue.main.async {
             let info = ConnectionStateInfo(state: state,

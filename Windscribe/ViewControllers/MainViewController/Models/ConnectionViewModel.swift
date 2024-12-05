@@ -13,11 +13,17 @@ import Combine
 protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
     var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
+    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
+    
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
-    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
+    var showAutoModeScreenTrigger: PublishSubject<Void> { get }
+    var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
+    var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
+    var siriShortcutTrigger: PublishSubject<Void> { get }
+    var requestLocationTrigger: PublishSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -48,28 +54,36 @@ protocol ConnectionViewModelType {
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
+    var selectedLocationUpdatedSubject: BehaviorSubject<Void>
+    
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let ipAddressSubject = PublishSubject<String>()
-    var selectedLocationUpdatedSubject: BehaviorSubject<Void>
+    let showAutoModeScreenTrigger = PublishSubject<Void>()
+    let openNetworkHateUsDialogTrigger = PublishSubject<Void>()
+    let pushNotificationPermissionsTrigger = PublishSubject<Void>()
+    let siriShortcutTrigger = PublishSubject<Void>()
+    let requestLocationTrigger = PublishSubject<Void>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
     let logger: FileLogger
     let apiManager: APIManager
     let locationsManager: LocationsManagerType
-    let connectionManager : ConnectionManagerV2
+    let connectionManager: ConnectionManagerV2
+    let preferences: Preferences
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
 
-    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, locationsManager: LocationsManagerType, connectionManager : ConnectionManagerV2) {
+    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, locationsManager: LocationsManagerType, connectionManager : ConnectionManagerV2, preferences: Preferences) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.locationsManager = locationsManager
         self.connectionManager = connectionManager
+        self.preferences = preferences
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -168,6 +182,7 @@ extension ConnectionViewModel {
 
     func enableConnection() {
         Task { @MainActor in
+            checkPreferencesForTriggers()
             let nextProtocol = connectionManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
@@ -241,6 +256,17 @@ extension ConnectionViewModel {
             self.gettingIpAddress = false
         }).disposed(by: disposeBag)
     }
+    
+    private func checkPreferencesForTriggers() {
+        if preferences.getConnectionCount() == 1 {
+            logger.logD(self, "Displaying push notifications permission popup to user.")
+            pushNotificationPermissionsTrigger.onNext(())
+        }
+        if preferences.getConnectionCount() == 5 {
+            logger.logD(self, "Displaying Siri shortcut popup.")
+            siriShortcutTrigger.onNext(())
+        }
+    }
 }
 
 extension ConnectionViewModel {
@@ -254,17 +280,51 @@ extension ConnectionViewModel {
                 .invalidServerConfig,
                 .configNotFound,
                 .incorrectVPNManager,
-                .connectionTimeout,
                 .connectivityTestFailed,
-                .allProtocolFailed,
                 .authFailure,
                 .networkIsOffline:
             if fromEnable {showConnectionFailedTrigger.onNext(()) }
             logger.logE(self, error.description)
+        case .connectionTimeout :
+            openNetworkHateUsDialogTrigger.onNext(())
+        case .allProtocolFailed:
+            showAutoModeScreenTrigger.onNext(())
         case .upgradeRequired:
             showUpgradeRequiredTrigger.onNext(())
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
         }
+    }
+}
+
+extension ConnectionViewModel: VPNManagerDelegate {
+    func displaySetPrefferedProtocol() {
+        if let connectedWifi = WifiManager.shared.getConnectedNetwork() {
+            if vpnManager.successfullProtocolChange == true && connectedWifi.preferredProtocolStatus == false {
+                vpnManager.successfullProtocolChange = false
+                requestLocationTrigger.onNext(())
+            }
+        }
+    }
+    
+    func saveDataForWidget() {
+//        if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
+//            preferences.saveServerNameKey(key: cityName)
+//            preferences.saveNickNameKey(key: nickName)
+//            preferences.saveCountryCodeKey(key: countryCode)
+//
+//            if credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
+//                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
+//            } else {
+//                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
+//            }
+//        }
+//        #if os(iOS)
+//        if #available(iOS 14.0, *) {
+//            #if arch(arm64) || arch(i386) || arch(x86_64)
+//            WidgetCenter.shared.reloadAllTimelines()
+//            #endif
+//        }
+//        #endif
     }
 }

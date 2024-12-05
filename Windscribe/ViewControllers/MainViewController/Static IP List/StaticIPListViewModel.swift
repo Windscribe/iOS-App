@@ -34,16 +34,11 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
     var logger: FileLogger
     var vpnManager: VPNManager
-    var connectionStateManager: ConnectionStateManagerType
     var connectivity: Connectivity
 
-    init(logger: FileLogger,
-         vpnManager: VPNManager,
-         connectionStateManager: ConnectionStateManagerType, connectivity: Connectivity)
-    {
+    init(logger: FileLogger, vpnManager: VPNManager, connectivity: Connectivity) {
         self.logger = logger
         self.vpnManager = vpnManager
-        self.connectionStateManager = connectionStateManager
         self.connectivity = connectivity
     }
 
@@ -51,9 +46,10 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnManager.isDisconnecting() {
             presentAlertTrigger.onNext(.disconnecting)
-
             return
         }
+        
+        // TODO: VPNManager revamp StaticIP
         if !vpnManager.isConnecting() {
             guard let node = staticIP.bestNode else { return }
             guard let staticIPN = staticIP.staticIP,

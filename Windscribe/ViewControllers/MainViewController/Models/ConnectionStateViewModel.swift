@@ -11,11 +11,6 @@ import RxSwift
 import Combine
 
 protocol ConnectionStateViewModelType {
-    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> { get }
-    var showAutoModeScreenTrigger: PublishSubject<Void> { get }
-    var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
-    var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
-    var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
     var enableConnectTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
@@ -28,11 +23,6 @@ protocol ConnectionStateViewModelType {
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
-    let loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo>
-    let showAutoModeScreenTrigger: PublishSubject<Void>
-    let openNetworkHateUsDialogTrigger: PublishSubject<Void>
-    let pushNotificationPermissionsTrigger: PublishSubject<Void>
-    let siriShortcutTrigger: PublishSubject<Void>
     let requestLocationTrigger: PublishSubject<Void>
     let enableConnectTrigger: PublishSubject<Void>
     let ipAddressSubject: PublishSubject<String>
@@ -44,11 +34,6 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
         self.vpnManager = vpnManager
-        loadLatencyValuesSubject = connectionStateManager.loadLatencyValuesSubject
-        showAutoModeScreenTrigger = connectionStateManager.showAutoModeScreenTrigger
-        openNetworkHateUsDialogTrigger = connectionStateManager.openNetworkHateUsDialogTrigger
-        pushNotificationPermissionsTrigger = connectionStateManager.pushNotificationPermissionsTrigger
-        siriShortcutTrigger = connectionStateManager.siriShortcutTrigger
         requestLocationTrigger = connectionStateManager.requestLocationTrigger
         enableConnectTrigger = connectionStateManager.enableConnectTrigger
         ipAddressSubject = connectionStateManager.ipAddressSubject
