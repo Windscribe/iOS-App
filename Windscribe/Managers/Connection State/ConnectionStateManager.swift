@@ -101,7 +101,7 @@ class ConnectionStateManager: ConnectionStateManagerType {
     }
 
     func checkConnectedState() {
-        if case .connecting = vpnManager.connectionStatus() {
+        if vpnManager.isConnecting() {
             logger.logD(self, "Displaying connection state \(!connectivity.internetConnectionAvailable() ? TextsAsset.disconnect : TextsAsset.connecting)")
 
             updateStateInfo(to: !connectivity.internetConnectionAvailable() ? .disconnected : .connecting)

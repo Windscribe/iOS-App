@@ -15,19 +15,6 @@ import RealmSwift
 #endif
 
 extension VPNManager {
-    func isConnectedToVpn() -> Bool {
-        if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
-           let scopes = settings["__SCOPED__"] as? [String: Any]
-        {
-            for (key, _) in scopes {
-                if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
-                    return true
-                }
-            }
-        }
-        return false
-    }
-
     func isConnected() -> Bool {
         (try? vpnInfo.value())?.status == .connected
     }
@@ -48,30 +35,12 @@ extension VPNManager {
         (try? vpnInfo.value())?.status == .invalid
     }
 
-    func isDisconnectedAndNotConfigured() -> Bool {
-        return isDisconnected() || (!configManager.isConfigured(manager: configManager.iKEV2Manager()) && !configManager.isConfigured(manager: configManager.openVPNdManager()))
-    }
-
     func checkIfUserIsOutOfData() {
         DispatchQueue.main.async {
             guard let session = self.sessionManager.session else { return }
             if session.status == 2, !self.isCustomConfigSelected() {
                 self.disconnectAllVPNConnections(setDisconnect: true)
             }
-        }
-    }
-
-    func setTimeoutForConnectingState() {
-        connectingTimer?.invalidate()
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self {
-            connectingTimer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(disconnectIfStillConnecting), userInfo: nil, repeats: false)
-        } else {
-            connectingTimer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(disconnectIfStillConnecting), userInfo: nil, repeats: false)
         }
     }
 
@@ -141,23 +110,6 @@ extension VPNManager {
         }
     }
 
-    func forceToKeepConnectingState() -> Bool {
-        return (keepConnectingState || connectIntent || retryWithNewCredentials) && connectivity.internetConnectionAvailable()
-    }
-
-    @objc func checkForConnectIntent() {
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if connectIntent, !WifiManager.shared.isConnectedWifiTrusted(), connectivity.internetConnectionAvailable(), isDisconnected(), selectedFirewallMode == true {
-            logger.logI(VPNManager.self, "Connect Intent is true. Retrying to connect.")
-            retryWithNewCredentials = true
-            configureAndConnectVPN()
-        }
-    }
-
     func handleConnectError() {
         if awaitingConnectionCheck {
             return
@@ -195,25 +147,6 @@ extension VPNManager {
         }
     }
 
-    @available(iOS 16.0, tvOS 17.0, *)
-    private func handleIKEv2Error(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
-        guard let error = error else {
-            completion(nil)
-            return
-        }
-        if let nsError = error as NSError?, nsError.domain == NEVPNConnectionErrorDomain {
-            switch nsError.code {
-            case 12, 8:
-                completion(.credentialsFailure)
-            default:
-                logger.logD(self, "NEVPNManager error: \(error)")
-                completion(nil)
-            }
-        } else {
-            logger.logD(self, "NEVPNManager error: \(error)")
-            completion(nil)
-        }
-    }
 
     @available(iOS 16.0, tvOS 17.0, *)
     private func handleNEVPNProviderError(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
@@ -250,14 +183,6 @@ extension VPNManager {
             }
         } else {
             completion(nil)
-        }
-    }
-
-    private func disableOnDemandMode() {
-        for manager in configManager.managers {
-            if manager.protocolConfiguration?.username != nil {
-                configManager.setOnDemandMode(false, for: manager)
-            }
         }
     }
 }

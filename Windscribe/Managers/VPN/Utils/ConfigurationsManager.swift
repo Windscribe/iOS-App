@@ -83,27 +83,6 @@ class ConfigurationsManager {
         }
     }
 
-    func getActiveManager() async throws -> NEVPNManager {
-        do {
-            return try await getNETunnelProvider()
-        } catch let e {
-            if let e = e as? AppIntentError, e == AppIntentError.VPNNotConfigured {
-                return try await getNEVPNManager()
-            } else {
-                throw e
-            }
-        }
-    }
-
-    private func getNETunnelProvider() async throws -> NEVPNManager {
-        let providers = try await NETunnelProviderManager.loadAllFromPreferences()
-        if providers.count > 0 {
-            return providers[0]
-        } else {
-            throw AppIntentError.VPNNotConfigured
-        }
-    }
-
     private func getNEVPNManager() async throws -> NEVPNManager {
         let manager = NEVPNManager.shared()
         try await manager.loadFromPreferences()
@@ -130,11 +109,6 @@ class ConfigurationsManager {
 
     func getConfiguredManager() async throws -> NEVPNManager? {
         try? await getAllManagers().first { isManagerConfigured(for: $0) }
-    }
-
-    func isConfigured(manager: NEVPNManager?) -> Bool {
-        guard let manager = manager else { return false }
-        return manager.protocolConfiguration?.username != nil
     }
 
     func remove(manager: NEVPNManager) async {

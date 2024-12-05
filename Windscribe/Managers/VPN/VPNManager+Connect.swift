@@ -63,55 +63,6 @@ extension VPNManager {
         }).eraseToAnyPublisher()
     }
 
-    /// Initiates the VPN connection process, handling connection states and errors, and updating the user through progress alerts.
-    ///
-    /// This method uses the `connectWithInitialRetry` function to manage retry logic in case of connection errors.
-    private func connectTask() {
-//        if configurationState == .configuring {
-//            logger.logD("VPNConfiguration", "Connection in progress.")
-//            DispatchQueue.main.async {
-//                self.connectionAlert.dismissAlert()
-//                self.disconnectAlert.delegate = self
-//                self.disconnectAlert.configure(for: .cancel)
-//                self.disconnectAlert.updateProgress(message: "")
-//                self.showPopup(popup: self.disconnectAlert)
-//            }
-//            return
-//        }
-//        connectionTask?.cancel()
-//        connectionTaskPublisher?.cancel()
-//        connectionTask = Task(priority: TaskPriority.userInitiated) { @MainActor in
-//            let data = prepareConnectionPreferences()
-//            connectionTaskPublisher = connectFromViewModel(locationId: data.0, proto: data.1)
-//                .receive(on: DispatchQueue.main)
-//                .sink(receiveCompletion: { completion in
-//                    self.connectionAlert.dismissAlert()
-//                    switch completion {
-//                    case .finished:
-//                        self.logger.logD("VPNConfiguration", "Connection process completed.")
-//                    case let .failure(e):
-//                        if let e = e as? VPNConfigurationErrors {
-//                            self.showError(error: e)
-//                        }
-//                    }
-//                    self.connectionTaskPublisher?.cancel()
-//                    self.connectionTask?.cancel()
-//                }, receiveValue: { state in
-//                    switch state {
-//                    case let .update(message):
-//                        self.logger.logD("VPNConfiguration", message)
-//                        self.connectionAlert.updateProgress(message: message)
-//                    case let .validated(ip):
-//                        self.logger.logD("VPNConfiguration", message)
-//                    case let .vpn(status):
-//
-//                    default:
-//                        break
-//                    }
-//                })
-//        }
-    }
-
     /// Attempts to connect to the VPN, with retry logic for handling authentication failures and connectivity issues.
     ///
     /// - Parameters:
@@ -178,36 +129,5 @@ extension VPNManager {
                 }
             }
         }
-    }
-
-    /// Initiates the VPN disconnection process, updating the user on progress and handling completion and errors.
-    private func disconnectTask() {
-//        delegate?.setDisconnecting()
-//        connectionTaskPublisher = disconnectFromViewModel()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                self.disconnectAlert.dismissAlert()
-//                self.delegate?.setDisconnected()
-//                switch completion {
-//                case .finished:
-//                    self.logger.logD("VPNConfiguration", "Disconnect process completed.")
-//                    self.disconnectAlert.dismissAlert()
-//                case let .failure(error):
-//                    self.disconnectAlert.dismissAlert()
-//                    if let e = error as? VPNConfigurationErrors {
-//                        self.logger.logD("VPNConfiguration", "Failed to disconnect with error: \(e.description)")
-//                    }
-//                }
-//            }, receiveValue: { state in
-//                switch state {
-//                case let .update(message):
-//                    self.disconnectAlert.updateProgress(message: message)
-//                case let .vpn(status):
-//                    if status == NEVPNStatus.connected {
-//                        self.disconnectAlert.dismissAlert()
-//                    }
-//                default: ()
-//                }
-//            })
     }
 }

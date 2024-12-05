@@ -197,15 +197,6 @@ class VPNManager: VPNManagerProtocol {
         }.disposed(by: disposeBag)
     }
 
-    func removeAllVPNProfiles() {
-        NEVPNManager.shared().removeFromPreferences { _ in }
-        NETunnelProviderManager.loadAllFromPreferences { managers, error in
-            guard error != nil else { return }
-            managers?.forEach { $0.removeFromPreferences { _ in }
-            }
-        }
-    }
-
     func getOnDemandRules() -> [NEOnDemandRule] {
         var onDemandRules: [NEOnDemandRule] = []
         if let networks = localDB.getNetworksSync() {
@@ -240,11 +231,6 @@ class VPNManager: VPNManagerProtocol {
                 await configManager.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
             }
         }
-    }
-
-    func setTimeoutForDisconnectingState() {
-        disconnectingTimer?.invalidate()
-        disconnectingTimer = Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(removeVPNProfileIfStillDisconnecting), userInfo: nil, repeats: false)
     }
 
     private let activeManagerKey = "activeManager"

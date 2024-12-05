@@ -114,7 +114,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      If vpn state is disconnected on app launch reset country override for the server list.
      */
     private func resetCountryOverrideForServerList() {
-        if vpnManager.connectionStatus() == NEVPNStatus.disconnected {
+        if vpnManager.isDisconnected() {
             preferences.saveCountryOverrride(value: nil)
         }
     }
