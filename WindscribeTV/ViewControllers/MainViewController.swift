@@ -71,6 +71,8 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        logger.logD(self, "Main view will appear")
+        sessionManager.keepSessionUpdated()
         super.viewWillAppear(animated)
         connectionStateViewModel.becameActive()
     }
@@ -296,7 +298,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func bindViews() {
-        connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
+        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
         configureBestLocation(selectBestLocation: true)
@@ -306,10 +308,10 @@ class MainViewController: PreferredFocusedViewController {
         }, onError: { _ in
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.ipAddressSubject.subscribe(onNext: {
+        connectionStateViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
-        viewModel.session.subscribe(onNext: {
+        viewModel.session.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
 
@@ -317,31 +319,31 @@ class MainViewController: PreferredFocusedViewController {
             self.refreshProtocol(from: $0)
         }).disposed(by: disposeBag)
 
-        viewModel.selectedProtocol.subscribe(onNext: { _ in
+        viewModel.selectedProtocol.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
-        viewModel.selectedPort.subscribe(onNext: { _ in
+        viewModel.selectedPort.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.selectedNodeSubject.subscribe(onNext: {
+        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
         }).disposed(by: disposeBag)
         setFlagImages()
 
-        serverListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
+        serverListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
-        favNodesListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
+        favNodesListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
-        staticIPListViewModel.configureVPNTrigger.subscribe(onNext: { _ in
+        staticIPListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.configureVPN()
         }).disposed(by: disposeBag)
 
-        languageManager.activelanguage.subscribe(onNext: { [self] _ in
+        languageManager.activelanguage.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] _ in
             localisation()
         }, onError: { _ in }).disposed(by: disposeBag)
 
@@ -491,8 +493,8 @@ class MainViewController: PreferredFocusedViewController {
                 self.portLabel.text = try? self.viewModel.selectedPort.value()
                 return
             }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol ?? protocolLabel.text
-            self.portLabel.text = WifiManager.shared.selectedPort ?? portLabel.text
+            self.protocolLabel.text = WifiManager.shared.selectedProtocol  ?? (try? self.viewModel.selectedProtocol.value())
+            self.portLabel.text = WifiManager.shared.selectedPort ?? (try? self.viewModel.selectedPort.value())
         }
     }
 

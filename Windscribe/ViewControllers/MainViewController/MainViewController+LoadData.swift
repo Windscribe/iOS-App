@@ -57,8 +57,10 @@ extension MainViewController {
                 favNodesListTableViewDataSource?.delegate = self
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.delegate = favNodesListTableViewDataSource
-                favTableView.reloadData()
-                serverListTableView.reloadData()
+                DispatchQueue.main.async { [weak self] in
+                    self?.favTableView.reloadData()
+                    self?.serverListTableView.reloadData()
+                }
             }
 
         }, onError: { error in

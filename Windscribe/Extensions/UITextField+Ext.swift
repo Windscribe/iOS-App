@@ -37,19 +37,10 @@ class WSTextFieldTv: UITextField {
         layer.cornerRadius = 10
         clipsToBounds = true
         tintColor = .clear
-
         layer.addSublayer(textLayer)
     }
 
-    override func layoutSublayers(of layer: CALayer) {
-        layer.backgroundColor = isFocused ? UIColor.whiteWithOpacity(opacity: 0.19).cgColor : UIColor.clear.cgColor
-        textLayer.frame = layer.bounds
-        textLayer.string = text?.isEmpty ?? true ? placeholder : text
-    }
 
-    override func addSubview(_: UIView) {
-        // blocks standard styling
-    }
 }
 
 class PasswordTextFieldTv: UITextField, UITextFieldDelegate {

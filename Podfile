@@ -1,4 +1,4 @@
-is_tvos = false
+is_tvos = true
 target_platform = is_tvos ? :tvos : :ios
 platform_version = is_tvos ? '17.0' : '12.0'
 # Core app dependecies.
@@ -10,6 +10,7 @@ def core
   pod "RxRealm"
   pod 'Swinject'
   pod 'RxBlocking', '6.6.0'
+  pod 'SwiftSoup', '1.7.4'
 end
 # Realm database.
 def realm
@@ -25,7 +26,6 @@ target 'Windscribe' do
   pod 'SwipeCellKit', '2.5.4'
   pod "RxGesture", '4.0.4'
   pod 'SimpleKeychain', '~> 1.0'
-  pod 'SwiftSoup', '1.7.4'
   core
   realm
 end

@@ -168,10 +168,23 @@ class SessionManager: SessionManagerV2 {
             serverRepo.getUpdatedServers().delaySubscription(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance).subscribe(
                 onSuccess: { _ in
                     self.logger.logD(self, "Updated server list.")
-                    self.loadLatency()
+                    if self.vpnManager.connectionStatus() == .connected {
+                        DispatchQueue.main.async {
+                            self.vpnManager.checkLocationValidity()
+                        }
+                    } else {
+                        self.loadLatency()
+                    }
+
                 }, onFailure: { _ in
                     self.logger.logD(self, "Failed to update server list.")
-                    self.loadLatency()
+                    self.vpnManager.checkLocationValidity()
+                    if self.vpnManager.connectionStatus() == .connected {
+                        self.vpnManager.checkLocationValidity()
+
+                    } else {
+                        self.loadLatency()
+                    }
                 }
             ).disposed(by: disposeBag)
             credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)

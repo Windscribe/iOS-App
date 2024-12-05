@@ -2750,7 +2750,6 @@
 		592EDBFA2C3C688400351D44 /* WindscribeTV */ = {
 			isa = PBXGroup;
 			children = (
-				5938EE382CAB24C3008FEA9D /* SmallFlags.xcassets */,
 				59FC748A2C53150400021CD1 /* Model */,
 				59FC74802C52D7B900021CD1 /* TVRouter */,
 				5986AB592C47432D00167023 /* Info.plist */,
@@ -2758,6 +2757,7 @@
 				59A218622C3C7BF3000D89FA /* di */,
 				592CA79B2C4F1CE80078D487 /* View */,
 				592EDBFB2C3C688400351D44 /* AppDelegate.swift */,
+				5938EE382CAB24C3008FEA9D /* SmallFlags.xcassets */,
 				592EDC022C3C688500351D44 /* Assets.xcassets */,
 				5938EE362CAB2474008FEA9D /* LargeFlags.xcassets */,
 				592EDC042C3C688500351D44 /* LaunchScreen.storyboard */,

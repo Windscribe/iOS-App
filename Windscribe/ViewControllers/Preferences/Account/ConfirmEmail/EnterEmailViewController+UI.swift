@@ -64,13 +64,11 @@ extension EnterEmailViewController {
 
     func enableContinueButton() {
         continueButtonEnabled.onNext(true)
-        continueButton.layer.opacity = 1.0
         continueButton.isEnabled = true
     }
 
     func disableContinueButton() {
         continueButtonEnabled.onNext(false)
-        continueButton.layer.opacity = 0.1
         continueButton.isEnabled = false
     }
 

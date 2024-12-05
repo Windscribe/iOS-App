@@ -15,6 +15,7 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
 
     var tableView: DynamicSizeTableView!
     var robertFilters: [RobertFilter]?
+    var buttonToggled: Int? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Robert View")
@@ -29,7 +30,11 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
         viewModel.loadRobertFilters()
         viewModel.robertFilters.bind(onNext: { filters in
             self.robertFilters = filters
-            self.tableView.reloadData()
+            if let optionToggled = self.buttonToggled {
+                self.tableView.reloadRows(at: [IndexPath(row: optionToggled, section: 0)], with: .automatic)
+            } else {
+                self.tableView.reloadData()
+            }
         }).disposed(by: disposeBag)
         viewModel.showProgress.bind(onNext: { show in
             DispatchQueue.main.async {
@@ -133,6 +138,7 @@ extension RobertViewController {
         if (try? viewModel.updadeinProgress.value()) ?? false {
             return
         }
+        buttonToggled = button.tag
         viewModel.ruleUpdateTapped(number: button.tag)
     }
 }

@@ -81,25 +81,9 @@ extension MainViewController: SearchCountryViewDelegate {
     }
 
     private func find(groupList: [ServerModel], keyword: String) -> [ServerModel] {
-        // Sort server list by keyword
-        let sortedGroupList = groupList.sorted { o1, o2 in
-                let containsFirst = self.filterIfStartsWith(group: o1, keyword: keyword)
-                let containsSecond = self.filterIfStartsWith(group: o2, keyword: keyword)
-
-                if containsFirst && !containsSecond {
-                    return true // o1 should come before o2
-                }
-                if !containsFirst && containsSecond {
-                    return false// o2 should come before o1
-                }
-
-                return false // Maintain original order
-
-        }
-
         // Filter servers containing the keyword
         var updatedList: [ServerModel] = []
-        for group in sortedGroupList {
+        for group in groupList {
             if let filteredGroup = filterIfContains(group: group, keyword: keyword) {
                 updatedList.append(filteredGroup)
             }
