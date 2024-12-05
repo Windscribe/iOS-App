@@ -192,7 +192,9 @@ class ConnectionManager: ConnectionManagerV2 {
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.protocolName)
-        currentProtocolSubject.onNext(getFirstProtocol())
+        let firstProtocol = getFirstProtocol()
+        currentProtocolSubject.onNext(firstProtocol)
+        connectionProtocolSubject.onNext(firstProtocol)
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
