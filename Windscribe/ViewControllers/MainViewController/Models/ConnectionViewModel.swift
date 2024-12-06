@@ -54,6 +54,7 @@ protocol ConnectionViewModelType {
     func isBestLocationSelected() -> Bool
     func getBestLocationId() -> String
     func getBestLocation() -> BestLocationModel?
+    func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool
 }
 
 class ConnectionViewModel: ConnectionViewModelType {
@@ -150,6 +151,10 @@ extension ConnectionViewModel {
         (try? connectedState.value())?.state == .invalid
     }
 
+    func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
+        return isConnecting() && network?.SSID == "Cellular"
+    }
+    
     func becameActive() {
         checkConnectedState()
     }

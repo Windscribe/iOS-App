@@ -111,13 +111,16 @@ extension MainViewController {
             self.protocolLabel.text = protoPort.protocolName
             self.portLabel.text = protoPort.portName
 
-
-            // TODO: if the SSID is celular, the status is connecting, and the preferred protocol badge was not hidden beffore, then do not change
-
             if !(network?.SSID.isEmpty ?? true), self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
+                
+                
                 if let status = network?.preferredProtocolStatus, status {
                     self.setPreferredProtocolBadgeVisibility(hidden: false)
                 } else {
+                    guard !self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network) else {
+                        // This means the network is temporarly cellular while connecting to VPN
+                        return
+                    }
                     self.setPreferredProtocolBadgeVisibility(hidden: true)
                 }
                 return
