@@ -154,7 +154,7 @@ extension ConnectionViewModel {
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
         return isConnecting() && network?.SSID == "Cellular"
     }
-    
+
     func becameActive() {
         checkConnectedState()
     }

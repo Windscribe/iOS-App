@@ -112,8 +112,8 @@ extension MainViewController {
             self.portLabel.text = protoPort.portName
 
             if !(network?.SSID.isEmpty ?? true), self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
-                
-                
+
+
                 if let status = network?.preferredProtocolStatus, status {
                     self.setPreferredProtocolBadgeVisibility(hidden: false)
                 } else {

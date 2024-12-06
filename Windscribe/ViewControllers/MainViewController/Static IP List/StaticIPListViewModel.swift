@@ -35,11 +35,13 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
+    var preferences: Preferences
 
-    init(logger: FileLogger, vpnManager: VPNManager, connectivity: Connectivity) {
+    init(logger: FileLogger, vpnManager: VPNManager, connectivity: Connectivity, preferences: Preferences) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
+        self.preferences = preferences
     }
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
@@ -49,14 +51,10 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
             return
         }
 
+
         // TODO: VPNManager revamp StaticIP
         if !vpnManager.isConnecting() {
-            guard let node = staticIP.bestNode else { return }
-            guard let staticIPN = staticIP.staticIP,
-                  let countryCode = staticIP.countryCode,
-                  let dnsHostname = node.dnsHostname,
-                  let hostname = node.hostname, let serverAddress = node.ip2, let nickName = staticIP.staticIP, let cityName = staticIP.cityName, let credentials = staticIP.credentials else { return }
-            logger.logD(self, "Tapped on Static IP \(staticIPN) from the server list.")
+            preferences.saveLastSelectedLocation(with: "static_\(staticIP.id ?? 0)")
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)
