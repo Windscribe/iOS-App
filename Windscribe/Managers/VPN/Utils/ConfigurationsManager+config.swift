@@ -275,7 +275,7 @@ extension ConfigurationsManager {
     /// Gets static ip location from database.
     private func getStaticIPLocation(id: String) throws -> StaticIP {
         let ipId = getId(location: id)
-        guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.ipId)" }) else {
+        guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.id)" }) else {
             throw VPNConfigurationErrors.locationNotFound(id)
         }
         return location
