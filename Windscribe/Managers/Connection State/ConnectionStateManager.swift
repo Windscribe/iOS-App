@@ -14,9 +14,6 @@ import RxSwift
 import Swinject
 
 protocol ConnectionStateManagerType {
-    var enableConnectTrigger: PublishSubject<Void> { get }
-    var ipAddressSubject: PublishSubject<String> { get }
-    var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> { get }
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
 
     func displayLocalIPAddress()
@@ -24,19 +21,14 @@ protocol ConnectionStateManagerType {
     func checkConnectedState()
     func isConnected() -> Bool
     func isDisconnected() -> Bool
-    func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 }
 
 class ConnectionStateManager: ConnectionStateManagerType {
-    var loadLatencyValuesOnDisconnect = false
     var gettingIpAddress = false
     var ipAddressTimer: Timer?
     var disconnectingStateTimer: Timer?
 
     var connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
-    var enableConnectTrigger = PublishSubject<Void>()
-    var ipAddressSubject = PublishSubject<String>()
-    var autoModeSelectorHiddenChecker = PublishSubject<(_ value: Bool) -> Void>()
 
     var vpnManager: VPNManager
     var logger: FileLogger
@@ -80,7 +72,6 @@ class ConnectionStateManager: ConnectionStateManagerType {
                 self.gettingIpAddress = false
                 if self.vpnManager.isDisconnected() || force {
                     self.vpnManager.ipAddressBeforeConnection = myIp.userIp
-                    self.ipAddressSubject.onNext(myIp.userIp)
                 }
             }, onFailure: { _ in
                 self.gettingIpAddress = false
@@ -125,9 +116,6 @@ class ConnectionStateManager: ConnectionStateManagerType {
         getCurrentState().state == .disconnected
     }
 
-    func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
-        loadLatencyValuesOnDisconnect = value
-    }
 }
 
 extension ConnectionStateManager: VPNManagerDelegate {

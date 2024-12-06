@@ -359,7 +359,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 if vpnConnectionViewModel.isDisconnected() {
                     loadLatencyValues()
                 } else {
-                    connectionStateViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
+                    vpnConnectionViewModel.updateLoadLatencyValuesOnDisconnect(with: true)
                 }
             }
         }

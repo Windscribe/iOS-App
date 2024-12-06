@@ -298,19 +298,15 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func bindViews() {
-        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
-        }).disposed(by: disposeBag)
         configureBestLocation(selectBestLocation: true)
         connectionStateViewModel.displayLocalIPAddress(force: true)
+        setFlagImages()
+        
         latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: { [self] in
             self.configureBestLocation()
         }, onError: { _ in
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showSecureIPAddressState(ipAddress: $0)
-        }).disposed(by: disposeBag)
         viewModel.session.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
@@ -325,11 +321,6 @@ class MainViewController: PreferredFocusedViewController {
         viewModel.selectedPort.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
-
-        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
-        }).disposed(by: disposeBag)
-        setFlagImages()
 
         serverListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
             self.configureVPN()
@@ -424,18 +415,6 @@ class MainViewController: PreferredFocusedViewController {
             }
         }).disposed(by: self.disposeBag)
 
-    }
-
-    func setConnectionLabelValuesForSelectedNode(selectedNode: SelectedNode) {
-        DispatchQueue.main.async {
-            self.connectedServerLabel.text = selectedNode.nickName
-            if selectedNode.cityName == Fields.Values.bestLocation {
-                self.connectedCityLabel.text = TextsAsset.bestLocation
-            } else {
-                self.connectedCityLabel.text = selectedNode.cityName
-            }
-            self.flagView.image = UIImage(named: "\(selectedNode.countryCode.lowercased())-l")
-        }
     }
 
     func setUpgradeButton(session: Session?) {

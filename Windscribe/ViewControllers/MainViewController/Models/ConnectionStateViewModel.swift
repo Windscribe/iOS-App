@@ -11,22 +11,13 @@ import RxSwift
 import Combine
 
 protocol ConnectionStateViewModelType {
-    var requestLocationTrigger: PublishSubject<Void> { get }
-    var enableConnectTrigger: PublishSubject<Void> { get }
-    var ipAddressSubject: PublishSubject<String> { get }
-    var autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void> { get }
 
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
     func becameActive()
-    func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 }
 
 class ConnectionStateViewModel: ConnectionStateViewModelType {
-    let requestLocationTrigger: PublishSubject<Void>
-    let enableConnectTrigger: PublishSubject<Void>
-    let ipAddressSubject: PublishSubject<String>
-    let autoModeSelectorHiddenChecker: PublishSubject<(_ value: Bool) -> Void>
 
     private let connectionStateManager: ConnectionStateManagerType
     let vpnManager: VPNManager
@@ -34,10 +25,6 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
     init(connectionStateManager: ConnectionStateManagerType, vpnManager: VPNManager) {
         self.connectionStateManager = connectionStateManager
         self.vpnManager = vpnManager
-        requestLocationTrigger = connectionStateManager.requestLocationTrigger
-        enableConnectTrigger = connectionStateManager.enableConnectTrigger
-        ipAddressSubject = connectionStateManager.ipAddressSubject
-        autoModeSelectorHiddenChecker = connectionStateManager.autoModeSelectorHiddenChecker
     }
 
     func displayLocalIPAddress() {
@@ -50,9 +37,5 @@ class ConnectionStateViewModel: ConnectionStateViewModelType {
 
     func becameActive() {
         connectionStateManager.checkConnectedState()
-    }
-
-    func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
-        connectionStateManager.updateLoadLatencyValuesOnDisconnect(with: value)
     }
 }

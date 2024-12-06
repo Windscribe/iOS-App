@@ -164,7 +164,7 @@ class ViewModels: Assembly {
                                 apiManager: r.resolve(APIManager.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
-                                connectionManager: r.resolve(ConnectionManagerV2.self)!)
+                                connectionManager: r.resolve(ConnectionManagerV2.self)!, preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
@@ -202,11 +202,10 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!,
-                                  connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, connectivity: r.resolve(Connectivity.self)!)
+                                  vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchDelegateViewModelType.self) { r in
-            ProtocolSwitchDelegateViewModel(vpnManager: r.resolve(VPNManager.self)!, connectionStateManager: r.resolve(ConnectionStateManagerType.self)!)
+            ProtocolSwitchDelegateViewModel()
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)

@@ -48,7 +48,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
-        
+
         // TODO: VPNManager revamp StaticIP
         if !vpnManager.isConnecting() {
             guard let node = staticIP.bestNode else { return }

@@ -15,6 +15,7 @@ protocol ConnectionViewModelType {
     var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
     
+    var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
@@ -42,6 +43,7 @@ protocol ConnectionViewModelType {
     func saveLastSelectedLocation(with locationID: String)
     func saveBestLocation(with locationID: String)
     func selectBestLocation(with locationID: String)
+    func updateLoadLatencyValuesOnDisconnect(with value: Bool)
 
     // Info
     func getSelectedCountryCode() -> String
@@ -56,6 +58,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
     var selectedLocationUpdatedSubject: BehaviorSubject<Void>
     
+    var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
@@ -76,8 +79,14 @@ class ConnectionViewModel: ConnectionViewModelType {
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
+    private var loadLatencyValuesOnDisconnect = false
 
-    init(logger: FileLogger, apiManager: APIManager, vpnManager: VPNManager, locationsManager: LocationsManagerType, connectionManager : ConnectionManagerV2, preferences: Preferences) {
+    init(logger: FileLogger,
+         apiManager: APIManager,
+         vpnManager: VPNManager,
+         locationsManager: LocationsManagerType,
+         connectionManager: ConnectionManagerV2,
+         preferences: Preferences) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -114,6 +123,10 @@ class ConnectionViewModel: ConnectionViewModelType {
 }
 
 extension ConnectionViewModel {
+    func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
+        loadLatencyValuesOnDisconnect = value
+    }
+    
     func isConnected() -> Bool {
         (try? connectedState.value())?.state == .connected
     }
@@ -225,6 +238,11 @@ extension ConnectionViewModel {
                 case .finished:
                     self.logger.logD(self, "Finished disabling connection.")
                     self.updateLocalIPAddress()
+                    if self.loadLatencyValuesOnDisconnect {
+                        self.loadLatencyValuesOnDisconnect = false
+                        Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.loadLatencyValues), userInfo: nil, repeats: false)
+                        return
+                    }
                 case let .failure(error):
                     if let error = error as? VPNConfigurationErrors {
                         self.logger.logD(self, "Disable connection had a VPNConfigurationErrors:")
@@ -243,6 +261,10 @@ extension ConnectionViewModel {
                 }
             }
     }
+    
+    @objc private func loadLatencyValues() {
+        loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, connectToBestLocation: true))
+    }
 
     private func updateLocalIPAddress() {
         logger.logD(self, "Displaying local IP Address.")
@@ -256,7 +278,7 @@ extension ConnectionViewModel {
             self.gettingIpAddress = false
         }).disposed(by: disposeBag)
     }
-    
+
     private func checkPreferencesForTriggers() {
         if preferences.getConnectionCount() == 1 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
@@ -306,7 +328,7 @@ extension ConnectionViewModel: VPNManagerDelegate {
             }
         }
     }
-    
+
     func saveDataForWidget() {
 //        if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
 //            preferences.saveServerNameKey(key: cityName)
