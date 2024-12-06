@@ -14,7 +14,7 @@ protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
     var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
-    
+
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
@@ -44,6 +44,9 @@ protocol ConnectionViewModelType {
     func saveBestLocation(with locationID: String)
     func selectBestLocation(with locationID: String)
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
+    func displayLocalIPAddress()
+    func displayLocalIPAddress(force: Bool)
+    func becameActive()
 
     // Info
     func getSelectedCountryCode() -> String
@@ -57,7 +60,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
     var selectedLocationUpdatedSubject: BehaviorSubject<Void>
-    
+
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
@@ -126,7 +129,7 @@ extension ConnectionViewModel {
     func updateLoadLatencyValuesOnDisconnect(with value: Bool) {
         loadLatencyValuesOnDisconnect = value
     }
-    
+
     func isConnected() -> Bool {
         (try? connectedState.value())?.state == .connected
     }
@@ -145,6 +148,10 @@ extension ConnectionViewModel {
 
     func isInvalid() -> Bool {
         (try? connectedState.value())?.state == .invalid
+    }
+    
+    func becameActive() {
+        checkConnectedState()
     }
 
     func setOutOfData() {
@@ -190,6 +197,25 @@ extension ConnectionViewModel {
     func refreshProtocols() {
         Task {
             await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+        }
+    }
+    
+    func displayLocalIPAddress() {
+        displayLocalIPAddress(force: false)
+    }
+
+    func displayLocalIPAddress(force: Bool = false) {
+        if !gettingIpAddress && !isConnecting() {
+            logger.logD(self, "Displaying local IP Address.")
+            gettingIpAddress = true
+            apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+                self.gettingIpAddress = false
+                if self.vpnManager.isDisconnected() || force {
+                    self.vpnManager.ipAddressBeforeConnection = myIp.userIp
+                }
+            }, onFailure: { _ in
+                self.gettingIpAddress = false
+            }).disposed(by: disposeBag)
         }
     }
 
@@ -261,7 +287,7 @@ extension ConnectionViewModel {
                 }
             }
     }
-    
+
     @objc private func loadLatencyValues() {
         loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, connectToBestLocation: true))
     }
@@ -316,6 +342,34 @@ extension ConnectionViewModel {
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
         }
+    }
+}
+
+// TODO: ,ight need a few touches
+extension ConnectionViewModel {
+    func checkConnectedState() {
+//        if vpnManager.isConnecting() {
+//            logger.logD(self, "Displaying connection state \(!connectivity.internetConnectionAvailable() ? TextsAsset.disconnect : TextsAsset.connecting)")
+//
+//            updateStateInfo(to: !connectivity.internetConnectionAvailable() ? .disconnected : .connecting)
+//            return
+//        }
+//        if vpnManager.connectivityTestTimer?.isValid ?? false {
+//            updateStateInfo(to: .test)
+//            return
+//        }
+//        let state = ConnectionState.state(from: vpnManager.connectionStatus())
+//        if state == .connecting, !connectivity.internetConnectionAvailable() {
+//            if connectivity.getNetwork().isVPN {
+//                logger.logD(self, "Ignoring no internet state during connection \(connectivity.getNetwork()) ")
+//                return
+//            }
+//            logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
+//            updateStateInfo(to: .disconnected)
+//            return
+//        }
+//        logger.logD(self, "Displaying connection state \(state.statusText)")
+//        updateStateInfo(to: state)
     }
 }
 

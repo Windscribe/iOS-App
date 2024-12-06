@@ -161,7 +161,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     var viewModel: MainViewModelType!
     var locationManagerViewModel: LocationManagingViewModelType!
-    var connectionStateViewModel: ConnectionStateViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var customConfigPickerViewModel: CustomConfigPickerViewModelType!
     var favNodesListViewModel: FavNodesListViewModelType!

@@ -138,7 +138,6 @@
 		1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */; };
 		1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */; };
 		1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
-		1EA91DDE2BECFE4100496DF8 /* ConnectionStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DDD2BECFE4100496DF8 /* ConnectionStateViewModel.swift */; };
 		1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */; };
 		1EA9D6FB2C7747E000566A93 /* NewsFeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */; };
 		1EA9D6FC2C7752EE00566A93 /* NewsFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366CC2BC5768E000DF098 /* NewsFeedModel.swift */; };
@@ -242,7 +241,6 @@
 		59532A142CB852700069CC8F /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		59532A152CB852740069CC8F /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		59532A162CB852740069CC8F /* WSNet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5963A2F12C66AAE30091138E /* ConnectionStateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DDD2BECFE4100496DF8 /* ConnectionStateViewModel.swift */; };
 		5963A2F22C66AE770091138E /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A2D2BD145F1002E566F /* MainViewModel.swift */; };
 		59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59656F632C72D5D000707EA2 /* ServerListCollectionViewCell.swift */; };
 		59656F682C72D5D000707EA2 /* ServerListCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59656F642C72D5D000707EA2 /* ServerListCollectionViewCell.xib */; };
@@ -1332,7 +1330,6 @@
 		1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CustomConfigPicker.swift"; sourceTree = "<group>"; };
 		1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MainViewController+Status.swift"; sourceTree = "<group>"; };
 		1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionStateInfo.swift; sourceTree = "<group>"; };
-		1EA91DDD2BECFE4100496DF8 /* ConnectionStateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStateViewModel.swift; sourceTree = "<group>"; };
 		1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewController.swift; sourceTree = "<group>"; };
 		1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewsFeedViewController.xib; sourceTree = "<group>"; };
 		1EA9D6FF2C7754BD00566A93 /* OptionSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelectionView.swift; sourceTree = "<group>"; };
@@ -2604,7 +2601,6 @@
 			isa = PBXGroup;
 			children = (
 				1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */,
-				1EA91DDD2BECFE4100496DF8 /* ConnectionStateViewModel.swift */,
 				59E63A2D2BD145F1002E566F /* MainViewModel.swift */,
 				1EC6C7892BE293690036248B /* LocationMainViewModel.swift */,
 				C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */,
@@ -5041,7 +5037,6 @@
 				59DA7FC72C3DC4D000042E57 /* DynamicWireGuardConfig.swift in Sources */,
 				59FC73FD2C51539B00021CD1 /* Notice.swift in Sources */,
 				1EF7BB422C74C2E20032A4DF /* RateUsPopupModel.swift in Sources */,
-				5963A2F12C66AAE30091138E /* ConnectionStateViewModel.swift in Sources */,
 				59FC747F2C52D74F00021CD1 /* WelcomeViewModal.swift in Sources */,
 				59A218692C3C9C21000D89FA /* Preferences.swift in Sources */,
 				592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */,
@@ -5512,7 +5507,6 @@
 				AFB0DC0421FB997300C40E3C /* StaticIPTableViewCell.swift in Sources */,
 				1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */,
 				C5A930EF2B44AA730001CFA0 /* PortMapRepository.swift in Sources */,
-				1EA91DDE2BECFE4100496DF8 /* ConnectionStateViewModel.swift in Sources */,
 				C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */,
 				E9D3D36F274D1BA800283285 /* MainViewController+Selector.swift in Sources */,
 				AF42802E22D793E9006761C5 /* ViewLogViewController.swift in Sources */,

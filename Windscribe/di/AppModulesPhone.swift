@@ -156,9 +156,6 @@ class ViewModels: Assembly {
         container.register(LocationManagingViewModelType.self) { r in
             LocationManagingViewModel(connectivityManager: r.resolve(ConnectionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.transient)
-        container.register(ConnectionStateViewModelType.self) { r in
-            ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
-        }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
                                 apiManager: r.resolve(APIManager.self)!,
@@ -234,7 +231,6 @@ class ViewControllerModule: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
-            vc.connectionStateViewModel = r.resolve(ConnectionStateViewModelType.self)
             vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.customConfigPickerViewModel = r.resolve(CustomConfigPickerViewModelType.self)
             vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)

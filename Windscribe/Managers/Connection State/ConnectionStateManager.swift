@@ -146,7 +146,7 @@ extension ConnectionStateManager {
         }
         return false
     }
-    
+
     private func updateStateInfo(to state: ConnectionState) {
         DispatchQueue.main.async {
             let info = ConnectionStateInfo(state: state,

@@ -11,10 +11,6 @@ import RxSwift
 import UIKit
 
 extension MainViewController {
-    func bindConnectionStateViewModel() {
-        //TODO: connectionStateViewModel
-    }
-
     func bindVPNConnectionsViewModel() {
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
@@ -72,7 +68,7 @@ extension MainViewController {
                 self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
             }
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)

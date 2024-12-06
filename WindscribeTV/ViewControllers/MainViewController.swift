@@ -301,7 +301,7 @@ class MainViewController: PreferredFocusedViewController {
         configureBestLocation(selectBestLocation: true)
         connectionStateViewModel.displayLocalIPAddress(force: true)
         setFlagImages()
-        
+
         latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: { [self] in
             self.configureBestLocation()
         }, onError: { _ in

@@ -56,7 +56,7 @@ extension MainViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        connectionStateViewModel.becameActive()
+        vpnConnectionViewModel.becameActive()
         setNetworkSsid()
         checkForInternetConnection()
         hideAutoSecureViews()
@@ -73,7 +73,6 @@ extension MainViewController {
     private func bindViewModels() {
         bindMainViewModel()
         bindCustomConfigPickerModel()
-        bindConnectionStateViewModel()
         bindVPNConnectionsViewModel()
         bindFavNodesListViewModel()
         bindStaticIPListViewModel()
