@@ -505,8 +505,8 @@ class MainViewController: PreferredFocusedViewController {
                 self.portLabel.text = try? self.viewModel.selectedPort.value()
                 return
             }
-            self.protocolLabel.text = WifiManager.shared.selectedProtocol  ?? (try? self.viewModel.selectedProtocol.value())
-            self.portLabel.text = WifiManager.shared.selectedPort ?? (try? self.viewModel.selectedPort.value())
+            self.protocolLabel.text = WifiManager.shared.selectedProtocol  ?? info?.selectedProtocol ?? (try? self.viewModel.selectedProtocol.value())
+            self.portLabel.text = WifiManager.shared.selectedPort ?? info?.selectedProtocol ?? (try? self.viewModel.selectedPort.value())
         }
     }
 

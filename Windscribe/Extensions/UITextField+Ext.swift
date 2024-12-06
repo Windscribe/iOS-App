@@ -36,7 +36,7 @@ class WSTextFieldTv: UITextField {
         textLayer.bounds = CGRect(x: -10, y: -10, width: layer.bounds.width - 10, height: layer.bounds.height - 10)
         self.backgroundColor = .clear
         self.textColor = .whiteWithOpacity(opacity: 0.50)
-        self.font = UIFont.text(size: 30)
+        self.font = UIFont.bold(size: 30)
         self.layer.cornerRadius = 10
         self.clipsToBounds = true
         self.tintColor = .clear
@@ -80,7 +80,7 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
 
          self.backgroundColor = .clear
          self.textColor = .whiteWithOpacity(opacity: 0.50)
-         self.font = UIFont.text(size: 30)
+         self.font = UIFont.bold(size: 30)
          self.layer.cornerRadius = 10
          self.clipsToBounds = true
          self.tintColor = .clear

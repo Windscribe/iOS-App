@@ -143,13 +143,21 @@ class SignUpViewController: PreferredFocusedViewController {
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if context.nextFocusedView == usernameTextField {
-            usernameTextField.layer.backgroundColor = UIColor.whiteWithOpacity(opacity: 0.15).cgColor
-            passwordTextField.layer.backgroundColor = UIColor.clear.cgColor
-
-        } else if context.nextFocusedView == passwordTextField {
-            passwordTextField.layer.backgroundColor = UIColor.whiteWithOpacity(opacity: 0.15).cgColor
-            usernameTextField.layer.backgroundColor = UIColor.clear.cgColor
+        DispatchQueue.main.async {
+            if context.nextFocusedView == self.usernameTextField {
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+            } else {
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+            }
+            if context.nextFocusedView == self.passwordTextField {
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+            } else {
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+            }
         }
     }
 
