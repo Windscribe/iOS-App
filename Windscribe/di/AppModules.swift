@@ -160,12 +160,6 @@ class Managers: Assembly {
         container.register(ConnectionManagerV2.self) { r in
             ConnectionManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
-        container.register(ConnectionStateManagerType.self) { r in
-            ConnectionStateManager(apiManager: r.resolve(APIManager.self)!, vpnManager: r.resolve(VPNManager.self)!,
-                                   securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!,
-                                   latencyRepository: r.resolve(LatencyRepository.self)!,
-                                   logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
             LivecycleManager(logger: r.resolve(FileLogger.self)!,
