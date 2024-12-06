@@ -70,7 +70,6 @@
 		1E24AB882BD144330004D17D /* InfoPromptViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24AB872BD144330004D17D /* InfoPromptViewModel.swift */; };
 		1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E24AB8A2BD16E720004D17D /* EnterCredentialsViewModel.swift */; };
 		1E2696C82BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696C72BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift */; };
-		1E2696CB2BF7858000B0AD59 /* ConnectionStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CA2BF7858000B0AD59 /* ConnectionStateManager.swift */; };
 		1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */; };
 		1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */; };
 		1E2CBFEC2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */; };
@@ -482,7 +481,6 @@
 		59FC746C2C5167F500021CD1 /* CustomConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA5282B63902B00E5C571 /* CustomConfigRepositoryImpl.swift */; };
 		59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		59FC746E2C51693200021CD1 /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
-		59FC746F2C51694A00021CD1 /* ConnectionStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CA2BF7858000B0AD59 /* ConnectionStateManager.swift */; };
 		59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
 		59FC74712C516D9000021CD1 /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */; };
 		59FC74722C516D9700021CD1 /* InAppPurchaseManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1722272EBE00997A2A /* InAppPurchaseManagerImpl.swift */; };
@@ -1294,7 +1292,6 @@
 		1E24AB872BD144330004D17D /* InfoPromptViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPromptViewModel.swift; sourceTree = "<group>"; };
 		1E24AB8A2BD16E720004D17D /* EnterCredentialsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCredentialsViewModel.swift; sourceTree = "<group>"; };
 		1E2696C72BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchDelegateViewModel.swift; sourceTree = "<group>"; };
-		1E2696CA2BF7858000B0AD59 /* ConnectionStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionStateManager.swift; sourceTree = "<group>"; };
 		1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewModel.swift; sourceTree = "<group>"; };
 		1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDebugLogCompletedViewModel.swift; sourceTree = "<group>"; };
 		1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = SiriIntents.intentdefinition; sourceTree = "<group>"; };
@@ -2337,14 +2334,6 @@
 			path = "Protocol Switch";
 			sourceTree = "<group>";
 		};
-		1E2696C92BF7856D00B0AD59 /* Connection State */ = {
-			isa = PBXGroup;
-			children = (
-				1E2696CA2BF7858000B0AD59 /* ConnectionStateManager.swift */,
-			);
-			path = "Connection State";
-			sourceTree = "<group>";
-		};
 		1E4933482BF3A50700C853AF /* Static IP List */ = {
 			isa = PBXGroup;
 			children = (
@@ -3041,7 +3030,6 @@
 			children = (
 				1EF43D502CF897A500B56C01 /* Locations */,
 				1E7918C12CDE2FBC00C20723 /* Livecycle */,
-				1E2696C92BF7856D00B0AD59 /* Connection State */,
 				1E2366D32BC5A1C6000DF098 /* Wifi */,
 				C50F208E2B60E37E00266B23 /* Theme */,
 				C50F208D2B60E36800266B23 /* Haptic */,
@@ -4865,7 +4853,6 @@
 				59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */,
 				59FC74232C51556000021CD1 /* VPNManager+Connection.swift in Sources */,
 				59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */,
-				59FC746F2C51694A00021CD1 /* ConnectionStateManager.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
 				59FC74282C5155B000021CD1 /* Proxy.swift in Sources */,
 				59FC745D2C51641D00021CD1 /* PushNotificationManagerV2.swift in Sources */,
@@ -5408,7 +5395,6 @@
 				AF914A6A23CCDE86002D3041 /* InfoPromptViewController+UI.swift in Sources */,
 				AF36A20A237DEA2600BDDCDB /* ShakeForDataResultViewController+UI.swift in Sources */,
 				C5BF38502B917EF300AA725C /* UserDataRepository.swift in Sources */,
-				1E2696CB2BF7858000B0AD59 /* ConnectionStateManager.swift in Sources */,
 				C580FDF62B4DB735004FA857 /* ConnectivityImpl.swift in Sources */,
 				AF4E926D21F235D600A3F584 /* UIFont+Ext.swift in Sources */,
 				1E24AB882BD144330004D17D /* InfoPromptViewModel.swift in Sources */,
