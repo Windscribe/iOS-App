@@ -149,7 +149,7 @@ extension ConnectionViewModel {
     func isInvalid() -> Bool {
         (try? connectedState.value())?.state == .invalid
     }
-    
+
     func becameActive() {
         checkConnectedState()
     }
@@ -199,7 +199,7 @@ extension ConnectionViewModel {
             await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
         }
     }
-    
+
     func displayLocalIPAddress() {
         displayLocalIPAddress(force: false)
     }
