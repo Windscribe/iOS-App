@@ -28,20 +28,20 @@ protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
 }
 
 class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
-    var presentLinkTrigger = PublishSubject<URL>()
-    var presentAlertTrigger = PublishSubject<StaticIPAlertType>()
-    var configureVPNTrigger = PublishSubject<Void>()
+    let presentLinkTrigger = PublishSubject<URL>()
+    let presentAlertTrigger = PublishSubject<StaticIPAlertType>()
+    let configureVPNTrigger = PublishSubject<Void>()
 
-    var logger: FileLogger
-    var vpnManager: VPNManager
-    var connectivity: Connectivity
-    var preferences: Preferences
+    private let logger: FileLogger
+    private let vpnManager: VPNManager
+    private let connectivity: Connectivity
+    private let locationsManager: LocationsManagerType
 
-    init(logger: FileLogger, vpnManager: VPNManager, connectivity: Connectivity, preferences: Preferences) {
+    init(logger: FileLogger, vpnManager: VPNManager, connectivity: Connectivity, locationsManager: LocationsManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
-        self.preferences = preferences
+        self.locationsManager = locationsManager
     }
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
@@ -54,7 +54,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
         // TODO: VPNManager revamp StaticIP
         if !vpnManager.isConnecting() {
-            preferences.saveLastSelectedLocation(with: "static_\(staticIP.id ?? 0)")
+            locationsManager.saveLastSelectedLocation(with: "static_\(staticIP.id ?? 0)")
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)
