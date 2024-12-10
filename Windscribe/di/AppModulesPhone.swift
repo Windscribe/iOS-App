@@ -199,7 +199,7 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!)
+                                  vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchDelegateViewModelType.self) { r in
             ProtocolSwitchDelegateViewModel()

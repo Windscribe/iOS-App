@@ -126,20 +126,18 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) {
-        if isConnecting {
+        logger.logD(self, "Tapped on Custom config from the list.")
+
+        guard !isConnecting else {
             displayAllertTrigger.onNext(.connecting)
             return
         }
 
-        logger.logD(self, "Tapped on Custom config from the list.")
-        guard let name = customConfig.name, let serverAddress = customConfig.serverAddress else { return }
-
-        locationsManager.saveLastSelectedLocation(with: "0")
+        locationsManager.saveLastSelectedLocation(with: "custom_\(customConfig.id ?? "0")")
         if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
             showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))
             return
         }
-
         configureVPNTrigger.onNext(())
     }
 
