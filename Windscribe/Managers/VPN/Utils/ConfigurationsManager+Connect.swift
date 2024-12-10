@@ -37,9 +37,17 @@ extension ConfigurationsManager {
         let task = Task { [weak self] in
             guard let self = self else { return }
             do {
-                let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(proto) ? TextsAsset.openVPN : proto
-                self.logger.logD("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)")
-                progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(proto) \(port) \(vpnSettings.description)"))
+                let config = try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+                self.logger.logD("VPNConfiguration", "Configuration built successfully \(config.description)")
+                progressPublisher.send(.update("Configuration built successfully \(config.description)"))
+
+                let correctedProtocolPort = checkForCustomConfig(config: config, proto: proto, port: port)
+                let protocolName = correctedProtocolPort.protocolName
+                let portName = correctedProtocolPort.portName
+
+                let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(protocolName) ? TextsAsset.openVPN : protocolName
+                self.logger.logD("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)")
+                progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)"))
                 guard !Task.isCancelled else { return }
                 self.logger.logD("VPNConfiguration", "disconnectExistingConnections")
                 try await self.disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
@@ -53,9 +61,6 @@ extension ConfigurationsManager {
                 progressPublisher.send(.update("Building configuration."))
 
                 guard !Task.isCancelled else { return }
-                let config = try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
-                self.logger.logD("VPNConfiguration", "Configuration built successfully \(config.description)")
-                progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
                 self.logger.logD("VPNConfiguration", "Building NEVPNTunnelProtocol.")
                 progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
@@ -78,9 +83,8 @@ extension ConfigurationsManager {
 
                 // Connection status and timeout logic
                 progressPublisher.send(.update("Awaiting connection update."))
-                progressPublisher.send(.update("Awaiting connection update."))
                 let startTime = Date()
-                let timerPublisher = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+                let timerPublisher = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
                 var cancellable: AnyCancellable?
                 let maxTimeout = self.getMaxTimeout(proto: wrapperProtocol)
 
@@ -140,6 +144,15 @@ extension ConfigurationsManager {
                 }
             })
             .eraseToAnyPublisher()
+    }
+
+    private func checkForCustomConfig(config: VPNConfiguration, proto: String, port: String) -> ProtocolPort {
+        if let config = config as? OpenVPNConfiguration {
+            return ProtocolPort(protocolName: config.proto, portName: proto == TextsAsset.iKEv2 ? "443" : port)
+        } else if let config = config as? WireguardVPNConfiguration {
+            return ProtocolPort(protocolName: TextsAsset.wireGuard, portName: proto == TextsAsset.iKEv2 ? "443" : port)
+        }
+        return ProtocolPort(protocolName: proto, portName: port)
     }
 
     private func getConnectError(manager: NEVPNManager, completion: @escaping (Error) -> Void) {
