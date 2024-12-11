@@ -31,6 +31,7 @@ class VPNManager: VPNManagerProtocol {
     lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
 
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
+    var connectionStateUpdatedTrigger = PublishSubject<Void>()
     var selectedFirewallMode: Bool = true
     var selectedConnectionMode: String?
 
@@ -127,6 +128,13 @@ class VPNManager: VPNManagerProtocol {
                 self.selectedConnectionMode = data
             }
         }.disposed(by: disposeBag)
+
+        connectionStateUpdatedTrigger
+            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .subscribe { _ in
+                self.configureForConnectionState()
+        }.disposed(by: disposeBag)
+
     }
 
     /// The current configuration state of the VPN, with thread-safe access.

@@ -49,18 +49,9 @@ extension VPNManager {
     }
 
     @objc func connectionStatusChanged(_: Notification?) {
-        configureForConnectionState()
-        #if os(iOS)
-            if #available(iOS 14.0, *) {
-                #if arch(arm64) || arch(i386) || arch(x86_64)
-                    WidgetCenter.shared.reloadAllTimelines()
-                #endif
-            }
-        #endif
+        connectionStateUpdatedTrigger.onNext(())
     }
-
-
-    //TODO: VPNManager Need this update to bounce as well
+    
     func configureForConnectionState() {
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()
@@ -74,7 +65,6 @@ extension VPNManager {
                 let protocolType = info.selectedProtocol
                 if self.lastConnectionStatus == connectionStatus { return }
                 self.lastConnectionStatus = connectionStatus
-                self.delegate?.saveDataForWidget()
                 switch connectionStatus {
                 case .connecting:
                     self.logger.logD(VPNManager.self, "[\(uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
