@@ -91,7 +91,7 @@ extension ConfigurationsManager {
             guard let node = location.nodes.toArray().randomElement() else {
                 throw VPNConfigurationErrors.noValidNodeFound
             }
-            let ip = node.ip
+            let ip = location.wgIp
             let hostname = node.hostname
             let publickey = location.wgPublicKey
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
