@@ -112,10 +112,10 @@ extension ConfigurationsManager {
                                 progressPublisher.send(.validated(userIp))
                                 progressPublisher.send(completion: .finished)
                             } catch {
+                                try await self.disableProfile(nextManager)
                                 progressPublisher.send(completion: .failure(error))
                             }
                         }
-
                         cancellable?.cancel()
                     } else if elapsedTime >= maxTimeout {
                         progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
@@ -124,8 +124,8 @@ extension ConfigurationsManager {
                             self.getConnectError(manager: nextManager) { error in
                                 progressPublisher.send(completion: .failure(error))
                             }
-                            cancellable?.cancel()
                         }
+                        cancellable?.cancel()
                     } else {
                         progressPublisher.send(.update("Attempting to connect... elapsed time: \(Int(elapsedTime)) seconds"))
                     }
