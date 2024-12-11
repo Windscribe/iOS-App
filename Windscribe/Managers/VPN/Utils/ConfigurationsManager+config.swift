@@ -14,10 +14,10 @@ import WireGuardKit
 extension ConfigurationsManager {
     /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
-        let locationType = try getLocationType(id: location)
+        let locationType = try locationsManager.getLocationType(id: location)
         // If location type is custom config, proto/port does not matter just use whats in the profile.
         if locationType == .custom {
-            let locationId = getId(location: location)
+            let locationId = locationsManager.getId(location: location)
             do {
                 return try wgConfigFromCustomConfig(locationID: locationId)
             } catch {
@@ -76,7 +76,7 @@ extension ConfigurationsManager {
 
     /// Builds WireGuard configuration for a location based on its type.
     private func buildWgConfig(location: String, port: String, vpnSettings: VPNUserSettings) async throws -> WireguardVPNConfiguration {
-        switch try getLocationType(id: location) {
+        switch try locationsManager.getLocationType(id: location) {
         case .server:
             let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: location.1.nodes.toArray())
@@ -111,7 +111,7 @@ extension ConfigurationsManager {
 
     /// Creates an IKEv2 VPN configuration for the specified location.
     private func buildIKEv2Config(location: String) throws -> IKEv2VPNConfiguration {
-        switch try getLocationType(id: location) {
+        switch try locationsManager.getLocationType(id: location) {
         case .server:
             guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
@@ -149,8 +149,8 @@ extension ConfigurationsManager {
 
     /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) throws -> OpenVPNConfiguration {
-        let locationID = getId(location: location)
-        switch try getLocationType(id: location) {
+        let locationID = locationsManager.getId(location: location)
+        switch try locationsManager.getLocationType(id: location) {
         case .server:
             guard let credentials = localDatabase.getOpenVPNServerCredentials() else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
             let username = credentials.username.base64Decoded()
@@ -274,36 +274,11 @@ extension ConfigurationsManager {
 
     /// Gets static ip location from database.
     private func getStaticIPLocation(id: String) throws -> StaticIP {
-        let ipId = getId(location: id)
+        let ipId = locationsManager.getId(location: id)
         guard let location = localDatabase.getStaticIPs()?.first(where: { ipId == "\($0.id)" }) else {
             throw VPNConfigurationErrors.locationNotFound(id)
         }
         return location
-    }
-
-    /// Gets id from location id which can be used to access data from database.
-    private func getId(location: String) -> String {
-        let parts = location.split(separator: "_")
-        if parts.count == 1 {
-            return location
-        }
-        return String(parts[1])
-    }
-
-    /// Gets location type based on id.
-    private func getLocationType(id: String) throws -> LocationType {
-        let parts = id.split(separator: "_")
-        if parts.count == 1 {
-            return LocationType.server
-        }
-        let prefix = parts[0]
-        if prefix == "static" {
-            return LocationType.staticIP
-        } else if prefix == "custom" {
-            return LocationType.custom
-        }
-        // Should never happen
-        throw VPNConfigurationErrors.invalidLocationType
     }
 
     /// Selects a random node from the provided list of nodes, considering specific constraints and preferences.
@@ -348,8 +323,8 @@ extension ConfigurationsManager {
     @MainActor
     func validateLocation(lastLocation: String) async throws -> String? {
         do {
-            let locationID = getId(location: lastLocation)
-            let locationType = try getLocationType(id: locationID)
+            let locationID = locationsManager.getId(location: lastLocation)
+            let locationType = try locationsManager.getLocationType(id: locationID)
 
             switch locationType {
             case .server:
@@ -380,7 +355,7 @@ extension ConfigurationsManager {
     }
 
     private func handleLocationFallback(for location: String) -> String? {
-        let locationID = getId(location: location)
+        let locationID = locationsManager.getId(location: location)
         logger.logD("VPNConfiguration", "Looking for fallback location for \(location)")
         guard let servers = localDatabase.getServers() else { return nil }
 
@@ -409,7 +384,7 @@ extension ConfigurationsManager {
                     promise(.failure(VPNConfigurationErrors.privacyNotAccepted))
                     return
                 }
-                switch try self.getLocationType(id: locationID) {
+                switch try self.locationsManager.getLocationType(id: locationID) {
                 case .server:
                     let location = try self.locationsManager.getLocation(from: locationID)
                     let isFreeUser = self.localDatabase.getSessionSync()?.isPremium == false

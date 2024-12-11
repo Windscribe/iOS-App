@@ -179,8 +179,8 @@ class ViewModels: Assembly {
                                         vpnManager: r.resolve(VPNManager.self)!,
                                         localDataBase: r.resolve(LocalDatabase.self)!,
                                         connectivity: r.resolve(Connectivity.self)!,
-                                        preferences: r.resolve(Preferences.self)!,
-                                        locationsManager: r.resolve(LocationsManagerType.self)!)
+                                        locationsManager: r.resolve(LocationsManagerType.self)!,
+                                        connectionManager: r.resolve(ConnectionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(FavNodesListViewModelType.self) { r in
             FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,

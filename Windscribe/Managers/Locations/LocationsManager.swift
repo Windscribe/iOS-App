@@ -16,6 +16,10 @@ protocol LocationsManagerType {
     func selectBestLocation(with locationID: String)
     func getBestLocation() -> String
     func getLastSelectedLocation() -> String
+    func getLocationType() throws -> LocationType
+    func getLocationType(id: String) throws -> LocationType
+    func getId() -> String
+    func getId(location: String) -> String
 
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
@@ -76,5 +80,38 @@ class LocationsManager: LocationsManagerType {
 
     func getLastSelectedLocation() -> String {
         preferences.getLastSelectedLocation()
+    }
+
+    func getLocationType() throws -> LocationType {
+        return try getLocationType(id: getLastSelectedLocation())
+    }
+
+    /// Gets location type based on id.
+    func getLocationType(id: String) throws -> LocationType {
+        let parts = id.split(separator: "_")
+        if parts.count == 1 {
+            return LocationType.server
+        }
+        let prefix = parts[0]
+        if prefix == "static" {
+            return LocationType.staticIP
+        } else if prefix == "custom" {
+            return LocationType.custom
+        }
+        // Should never happen
+        throw VPNConfigurationErrors.invalidLocationType
+    }
+
+    /// Gets id from location id which can be used to access data from database.
+    func getId() -> String {
+        return getId(location: getLastSelectedLocation())
+    }
+
+    func getId(location: String) -> String {
+        let parts = location.split(separator: "_")
+        if parts.count == 1 {
+            return location
+        }
+        return String(parts[1])
     }
 }

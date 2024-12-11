@@ -37,8 +37,8 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let vpnManager: VPNManager
     let localDataBase: LocalDatabase
     let connectivity: Connectivity
-    let preferences: Preferences
     let locationsManager: LocationsManagerType
+    let connectionManager: ConnectionManagerV2
 
     var displayAllertTrigger = PublishSubject<ConfigAlertType>()
     var configureVPNTrigger = PublishSubject<Void>()
@@ -54,8 +54,8 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
          connectivity: Connectivity,
-         preferences: Preferences,
-         locationsManager: LocationsManagerType)
+         locationsManager: LocationsManagerType,
+         connectionManager: ConnectionManagerV2)
     {
         self.logger = logger
         self.alertManager = alertManager
@@ -63,8 +63,8 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
         self.vpnManager = vpnManager
         self.localDataBase = localDataBase
         self.connectivity = connectivity
-        self.preferences = preferences
         self.locationsManager = locationsManager
+        self.connectionManager = connectionManager
     }
 }
 
@@ -106,7 +106,9 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             displayAllertTrigger.onNext(.disconnecting)
             return
         }
-        continueSetSelected(with: customConfig, and: vpnManager.isConnecting())
+        Task { @MainActor in
+            await continueSetSelected(with: customConfig, and: vpnManager.isConnecting())
+        }
     }
 
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
@@ -130,7 +132,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: true))
     }
 
-    private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) {
+    private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) async {
         logger.logD(self, "Tapped on Custom config from the list.")
 
         guard !isConnecting else {
@@ -139,6 +141,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         }
 
         locationsManager.saveLastSelectedLocation(with: "custom_\(customConfig.id ?? "0")")
+        await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
             showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))
             return

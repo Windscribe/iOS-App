@@ -18,6 +18,7 @@ class ConnectionManager: ConnectionManagerV2 {
     private var localDatabase: LocalDatabase
     private var securedNetwork: SecuredNetworkRepository
     private var preferences: Preferences
+    private var locationManager: LocationsManagerType
     static var shared = Assembler.resolve(ConnectionManagerV2.self)
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
@@ -44,12 +45,13 @@ class ConnectionManager: ConnectionManagerV2 {
     var currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
     var connectionProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
 
-    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase) {
+    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManagerType) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
+        self.locationManager = locationManager
         logger.logI(self, "Starting connection manager.")
         bindData()
         Task {
@@ -129,6 +131,12 @@ class ConnectionManager: ConnectionManagerV2 {
         for displayProtocol in failedProtocols {
             logger.logD(self, "Failed: \(displayProtocol.protocolPort.protocolName)")
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
+        }
+
+        let locationID = locationManager.getId()
+        if !locationID.isEmpty, let locationType = try? locationManager.getLocationType(), locationType == .custom, let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(), let protocolName = config.protocolType, let portName = config.port {
+            appendPort(proto: protocolName, port: portName)
+            setPriority(proto: protocolName, type: .normal)
         }
 
         if !shouldReconnect, let info = try? vpnManager.vpnInfo.value(), info.status == .connected {
@@ -285,30 +293,5 @@ class ConnectionManager: ConnectionManagerV2 {
             }
         }
         protocolsToConnectList = lstConnection.map { DisplayProtocolPort(protocolPort: $0, viewType: .normal) }
-    }
-
-    func nextSelecteProtocol() -> ProtocolPort {
-        if let info = try? vpnManager.vpnInfo.value() {
-            if info.status == .disconnecting {
-                return getFirstProtocol()
-            }
-            if [.connected, .connecting].contains(info.status) {
-                return ProtocolPort(info.selectedProtocol, info.selectedPort)
-            }
-        }
-        if self.vpnManager.isCustomConfigSelected() {
-            return ProtocolPort(TextsAsset.wireGuard, "443")
-        }
-        if self.vpnManager.isFromProtocolFailover || self.vpnManager.isFromProtocolChange {
-            return getFirstProtocol()
-        }
-        WifiManager.shared.saveCurrentWifiNetworks()
-        if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
-            return ProtocolPort(currentNetwork.preferredProtocol, currentNetwork.preferredPort)
-        }
-        if connectionMode == Fields.Values.manual {
-            return ProtocolPort(manualProtocol, manualPort)
-        }
-        return ProtocolPort(WifiManager.shared.selectedProtocol ?? TextsAsset.wireGuard, WifiManager.shared.selectedPort ?? "443")
     }
 }
