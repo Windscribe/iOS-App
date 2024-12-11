@@ -25,6 +25,7 @@ protocol AddCustomConfigDelegate: AnyObject {
 protocol CustomConfigPickerViewModelType: CustomConfigListModelDelegate {
     var displayAllertTrigger: PublishSubject<ConfigAlertType> { get }
     var configureVPNTrigger: PublishSubject<Void> { get }
+    var disableVPNTrigger: PublishSubject<Void> { get }
     var presentDocumentPickerTrigger: PublishSubject<UIDocumentPickerViewController> { get }
     var showEditCustomConfigTrigger: PublishSubject<(customConfig: CustomConfigModel, isUpdating: Bool)> { get }
 }
@@ -41,6 +42,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
 
     var displayAllertTrigger = PublishSubject<ConfigAlertType>()
     var configureVPNTrigger = PublishSubject<Void>()
+    var disableVPNTrigger = PublishSubject<Void>()
     var presentDocumentPickerTrigger = PublishSubject<UIDocumentPickerViewController>()
     var showEditCustomConfigTrigger = PublishSubject<(customConfig: CustomConfigModel, isUpdating: Bool)>()
 
@@ -114,6 +116,9 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             } else {
                 self.customConfigRepository.removeOpenVPNConfig(fileId: id)
             }
+            if self.locationsManager.getLastSelectedLocation() == id {
+                self.resetConnectionStatus()
+            }
         }
         AlertManager.shared.showAlert(title: TextsAsset.RemoveCustomConfig.title,
                                       message: TextsAsset.RemoveCustomConfig.message,
@@ -142,12 +147,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     private func resetConnectionStatus() {
-        Task {
-            if await vpnManager.isActive() {
-                logger.logD(self, "Disconnecting from selected custom config.")
-                vpnManager.disconnectActiveVPNConnection()
-            }
-        }
+        disableVPNTrigger.onNext(())
         setBestLocation()
     }
 
@@ -155,7 +155,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         let locationID = locationsManager.getBestLocation()
         if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
             self.logger.logD(self, "Changing selected location to Best location ID \(locationID) from the server list.")
-            self.locationsManager.selectBestLocation(with: locationID)
+            self.locationsManager.saveLastSelectedLocation(with: locationID)
             self.configureVPNTrigger.onNext(())
         } else {
             self.locationsManager.saveBestLocation(with: "")

@@ -14,6 +14,9 @@ extension MainViewController {
         customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: {
             self.enableVPNConnection()
         }).disposed(by: disposeBag)
+        customConfigPickerViewModel.disableVPNTrigger.subscribe(onNext: {
+            self.disableVPNConnection()
+        }).disposed(by: disposeBag)
 
         customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: {
             switch $0 {
