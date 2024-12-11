@@ -11,6 +11,12 @@ import RealmSwift
 import RxCocoa
 import RxSwift
 
+enum LocationType {
+    case server
+    case staticIP
+    case custom
+}
+
 class SharedSecretDefaults: Preferences {
     static let shared = SharedSecretDefaults()
     let sharedDefault = UserDefaults(suiteName: SharedKeys.sharedGroup)
@@ -436,14 +442,6 @@ class SharedSecretDefaults: Preferences {
         setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
     }
 
-    func isCustomConfigSelected() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.isCustomConfigSelected) ?? false
-    }
-
-    func saveConnectingToCustomConfig(value: Bool) {
-        setBool(value, forKey: SharedKeys.isCustomConfigSelected)
-    }
-
     func saveCountryOverrride(value: String?) {
         setString(value, forKey: SharedKeys.countryOverride)
     }
@@ -521,6 +519,30 @@ class SharedSecretDefaults: Preferences {
 
     func getBestLocation() -> String {
         return sharedDefault?.string(forKey: SharedKeys.savedBestLocation) ?? "0"
+    }
+
+    func isCustomConfigSelected() -> Bool {
+        return getLocationType() == .custom
+    }
+
+
+    func getLocationType() -> LocationType? {
+        return getLocationType(id: getLastSelectedLocation())
+    }
+
+    /// Gets location type based on id.
+    func getLocationType(id: String) -> LocationType? {
+        let parts = id.split(separator: "_")
+        if parts.count == 1 {
+            return LocationType.server
+        }
+        let prefix = parts[0]
+        if prefix == "static" {
+            return LocationType.staticIP
+        } else if prefix == "custom" {
+            return LocationType.custom
+        }
+        return nil
     }
 
     // MARK: - Base Types

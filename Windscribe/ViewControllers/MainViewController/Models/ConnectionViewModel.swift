@@ -102,7 +102,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         vpnManager.getStatus().subscribe(onNext: { state in
             self.connectedState.onNext(
                 ConnectionStateInfo(state: ConnectionState.state(from: state),
-                                    isCustomConfigSelected: false,
+                                    isCustomConfigSelected: locationsManager.isCustomConfigSelected(),
                                     internetConnectionAvailable: false,
                                     connectedWifi: nil))
         }).disposed(by: disposeBag)
@@ -160,7 +160,7 @@ extension ConnectionViewModel {
     }
 
     func setOutOfData() {
-        if isConnected(), !vpnManager.isCustomConfigSelected() {
+        if isConnected(), !locationsManager.isCustomConfigSelected() {
             disableConnection()
         }
     }

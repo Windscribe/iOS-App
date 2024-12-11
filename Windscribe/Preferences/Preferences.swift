@@ -99,8 +99,6 @@ protocol Preferences {
     func getcountryCodeKey() -> String?
     func saveNickNameKey(key: String?)
     func getNickNameKey() -> String?
-    func isCustomConfigSelected() -> Bool
-    func saveConnectingToCustomConfig(value: Bool)
     func getCircumventCensorshipEnabled() -> RxSwift.Observable<Bool>
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
@@ -155,4 +153,7 @@ protocol Preferences {
     func getLastSelectedLocation() -> String
     func saveBestLocation(with locationID: String)
     func getBestLocation() -> String
+    func isCustomConfigSelected() -> Bool
+    func getLocationType() -> LocationType?
+    func getLocationType(id: String) -> LocationType?
 }

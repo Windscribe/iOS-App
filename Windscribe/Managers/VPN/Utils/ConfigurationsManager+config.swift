@@ -14,7 +14,9 @@ import WireGuardKit
 extension ConfigurationsManager {
     /// Builds the appropriate VPN configuration based on location, location type, protocol, and port.
     func buildConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> VPNConfiguration {
-        let locationType = try locationsManager.getLocationType(id: location)
+        guard let locationType = locationsManager.getLocationType(id: location) else {
+            throw VPNConfigurationErrors.invalidLocationType
+        }
         // If location type is custom config, proto/port does not matter just use whats in the profile.
         if locationType == .custom {
             let locationId = locationsManager.getId(location: location)
@@ -76,7 +78,10 @@ extension ConfigurationsManager {
 
     /// Builds WireGuard configuration for a location based on its type.
     private func buildWgConfig(location: String, port: String, vpnSettings: VPNUserSettings) async throws -> WireguardVPNConfiguration {
-        switch try locationsManager.getLocationType(id: location) {
+        guard let locationType = locationsManager.getLocationType(id: location) else {
+            throw VPNConfigurationErrors.invalidLocationType
+        }
+        switch locationType {
         case .server:
             let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: location.1.nodes.toArray())
@@ -111,7 +116,10 @@ extension ConfigurationsManager {
 
     /// Creates an IKEv2 VPN configuration for the specified location.
     private func buildIKEv2Config(location: String) throws -> IKEv2VPNConfiguration {
-        switch try locationsManager.getLocationType(id: location) {
+        guard let locationType = locationsManager.getLocationType(id: location) else {
+            throw VPNConfigurationErrors.invalidLocationType
+        }
+        switch locationType {
         case .server:
             guard let credentials = localDatabase.getIKEv2ServerCredentials() else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
@@ -150,7 +158,10 @@ extension ConfigurationsManager {
     /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
     private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) throws -> OpenVPNConfiguration {
         let locationID = locationsManager.getId(location: location)
-        switch try locationsManager.getLocationType(id: location) {
+        guard let locationType = locationsManager.getLocationType(id: location) else {
+            throw VPNConfigurationErrors.invalidLocationType
+        }
+        switch locationType {
         case .server:
             guard let credentials = localDatabase.getOpenVPNServerCredentials() else { throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN) }
             let username = credentials.username.base64Decoded()
@@ -324,7 +335,9 @@ extension ConfigurationsManager {
     func validateLocation(lastLocation: String) async throws -> String? {
         do {
             let locationID = locationsManager.getId(location: lastLocation)
-            let locationType = try locationsManager.getLocationType(id: locationID)
+            guard let locationType = locationsManager.getLocationType(id: locationID) else {
+                throw VPNConfigurationErrors.invalidLocationType
+            }
 
             switch locationType {
             case .server:
@@ -384,7 +397,10 @@ extension ConfigurationsManager {
                     promise(.failure(VPNConfigurationErrors.privacyNotAccepted))
                     return
                 }
-                switch try self.locationsManager.getLocationType(id: locationID) {
+                guard let locationType = self.locationsManager.getLocationType(id: locationID) else {
+                    throw VPNConfigurationErrors.invalidLocationType
+                }
+                switch locationType {
                 case .server:
                     let location = try self.locationsManager.getLocation(from: locationID)
                     let isFreeUser = self.localDatabase.getSessionSync()?.isPremium == false

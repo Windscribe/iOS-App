@@ -29,6 +29,7 @@ class SessionManager: SessionManagerV2 {
     let preferences = Assembler.resolve(Preferences.self)
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
     let userRepo = Assembler.resolve(UserRepository.self)
+    let locationsManager = Assembler.resolve(LocationsManagerType.self)
 
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
@@ -124,7 +125,7 @@ class SessionManager: SessionManagerV2 {
         if session.status == 3 {
             logger.logD(MainViewController.self, "User is banned.")
             vpnManager.disconnectAllVPNConnections(setDisconnect: true)
-        } else if session.status == 2 && !vpnManager.isCustomConfigSelected() {
+        } else if session.status == 2 && !locationsManager.isCustomConfigSelected() {
             logger.logD(MainViewController.self, "User is out of data.")
             vpnManager.disconnectAllVPNConnections(setDisconnect: true)
         }

@@ -38,7 +38,7 @@ extension VPNManager {
     func checkIfUserIsOutOfData() {
         DispatchQueue.main.async {
             guard let session = self.sessionManager.session else { return }
-            if session.status == 2, !self.isCustomConfigSelected() {
+            if session.status == 2, !self.locationsManager.isCustomConfigSelected() {
                 self.disconnectAllVPNConnections(setDisconnect: true)
             }
         }
@@ -46,12 +46,6 @@ extension VPNManager {
 
     func connectionStatus() -> NEVPNStatus {
         return (try? vpnInfo.value()?.status) ?? NEVPNStatus.disconnected
-    }
-
-    func isCustomConfigSelected() -> Bool {
-        // TODO: VPNManager Check if custom Config is used
-//        return selectedNode?.customConfig != nil
-        return false
     }
 
     @objc func connectionStatusChanged(_: Notification?) {

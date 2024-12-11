@@ -22,7 +22,6 @@ enum SharedKeys {
     static let serverPublicKey = "serverPublicKey"
     static let port = "port"
     static let wgPort = "wgPort"
-    static let isCustomConfigSelected = "isCustomConfigSelected"
     static let countryOverride = "countryOverride"
     static let circumventCensorship = "circumventCensorship"
     static let advanceParams = "AdvanceParams"
