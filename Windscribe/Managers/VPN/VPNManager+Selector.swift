@@ -17,14 +17,18 @@ import RxSwift
 import Swinject
 
 extension VPNManager {
-    func enableConnection() -> AnyPublisher<State, Error> {
+    func simpleEnableConnection() {
         let nextProtocol = connectionManager.getProtocol()
         let locationID = locationsManager.getLastSelectedLocation()
-        return connectFromViewModel(locationId: locationID, proto: nextProtocol)
+        connectionTaskPublisher?.cancel()
+        connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol)
+            .sink { _ in } receiveValue: { _ in }
     }
 
-    func disableConnection() -> AnyPublisher<State, Error> {
-        disconnectFromViewModel()
+    func simpleDisableConnection() {
+        connectionTaskPublisher?.cancel()
+        connectionTaskPublisher = disconnectFromViewModel()
+            .sink { _ in } receiveValue: { _ in }
     }
 
     func resetProfiles(comletion: @escaping () -> Void) {

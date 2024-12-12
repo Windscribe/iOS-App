@@ -45,7 +45,7 @@ extension ConfigurationsManager {
                 let protocolName = correctedProtocolPort.protocolName
                 let portName = correctedProtocolPort.portName
 
-                let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(protocolName) ? TextsAsset.openVPN : protocolName
+                let wrapperProtocol = [udp, udp.lowercased(), tcp, tcp.lowercased(), wsTunnel, stealth].contains(protocolName) ? TextsAsset.openVPN : protocolName
                 self.logger.logD("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)")
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)"))
                 guard !Task.isCancelled else { return }

@@ -33,7 +33,7 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
         guard let type = payload.type else { return }
         switch type {
         case "disable_ondemand", "force_disconnect":
-            _ = vpnManager.disableConnection()
+            vpnManager.simpleDisableConnection()
         case "account_downgraded":
             session.keepSessionUpdated()
         case "promo":

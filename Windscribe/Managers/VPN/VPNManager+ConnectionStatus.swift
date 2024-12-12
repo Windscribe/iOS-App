@@ -39,7 +39,7 @@ extension VPNManager {
         DispatchQueue.main.async {
             guard let session = self.sessionManager.session else { return }
             if session.status == 2, !self.locationsManager.isCustomConfigSelected() {
-                _ = self.disableConnection()
+                self.simpleDisableConnection()
             }
         }
     }

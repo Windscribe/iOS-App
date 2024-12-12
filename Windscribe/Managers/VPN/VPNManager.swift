@@ -92,6 +92,8 @@ class VPNManager: VPNManagerProtocol {
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManagerType
 
+    var connectionTaskPublisher: AnyCancellable?
+
     lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
     lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)

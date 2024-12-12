@@ -525,13 +525,13 @@ class SharedSecretDefaults: Preferences {
         return getLocationType() == .custom
     }
 
-
     func getLocationType() -> LocationType? {
         return getLocationType(id: getLastSelectedLocation())
     }
 
     /// Gets location type based on id.
     func getLocationType(id: String) -> LocationType? {
+        guard !id.isEmpty else { return nil }
         let parts = id.split(separator: "_")
         if parts.count == 1 {
             return LocationType.server

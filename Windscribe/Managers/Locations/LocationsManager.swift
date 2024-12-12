@@ -68,7 +68,7 @@ class LocationsManager: LocationsManagerType {
         }
         return (serverResultSafe, groupResultSafe)
     }
-    
+
     func getLocationUIInfo() -> LocationUIInfo? {
         guard let locationType = getLocationType() else { return nil }
         let groupId = getLastSelectedLocation()
@@ -100,11 +100,11 @@ class LocationsManager: LocationsManagerType {
     func saveStaticIP(withID staticID: Int?) {
         saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
     }
-    
+
     func saveCustomConfig(withID customID: String?) {
         saveLastSelectedLocation(with: "custom_\(customID ?? "0")")
     }
-    
+
     func clearLastSelectedLocation() {
         preferences.saveLastSelectedLocation(with: "")
     }
@@ -141,13 +141,17 @@ class LocationsManager: LocationsManagerType {
     }
 
     func getId(location: String) -> String {
+        guard !location.isEmpty else {
+            return getBestLocation()
+        }
+
         let parts = location.split(separator: "_")
         if parts.count == 1 {
             return location
         }
         return String(parts[1])
     }
-    
+
     func isCustomConfigSelected() -> Bool {
         return preferences.isCustomConfigSelected()
     }
@@ -179,7 +183,7 @@ extension LocationsManager {
     private func updateToBestLocation() {
         saveLastSelectedLocation(with: getBestLocation())
     }
-    
+
     private func getSisterLocationID(from groupId: String) -> String? {
         guard let servers = localDatabase.getServers() else { return nil }
         let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }

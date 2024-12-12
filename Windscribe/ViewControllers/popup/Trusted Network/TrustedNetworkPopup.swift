@@ -28,7 +28,7 @@ class TrustedNetworkPopup: TrustedNetworkPopupType {
         let currentNetwork = securedNetwork.getCurrentNetwork()
         logger.logD(self, "User tapped Protect Me button while in a trusted network.")
         vpnManager.untrustedOneTimeOnlySSID = currentNetwork?.SSID ?? ""
-        _ = vpnManager.enableConnection()
+        vpnManager.simpleEnableConnection()
     }
 
     func getConnectedWifiNetworkSSID() -> String {
