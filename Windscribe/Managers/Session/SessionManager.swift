@@ -137,13 +137,19 @@ class SessionManager: SessionManagerV2 {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {
                 self.logger.logD(self, "Successfully update latency.")
-                self.vpnManager.checkLocationValidity()
+                self.checkLocationValidity()
             }, onError: { _ in
                 self.logger.logD(self, "Failed to update latency.")
                 self.latencyRepo.pickBestLocation(pingData: self.localDatabase.getAllPingData())
-                self.vpnManager.checkLocationValidity()
+                self.checkLocationValidity()
             })
             .disposed(by: disposeBag)
+    }
+
+    private func checkLocationValidity() {
+        DispatchQueue.main.async {
+            self.locationsManager.checkLocationValidity(checkProAccess: { self.canAccesstoProLocation()} )
+        }
     }
 
     func checkForSessionChange() {
@@ -170,20 +176,15 @@ class SessionManager: SessionManagerV2 {
                 onSuccess: { _ in
                     self.logger.logD(self, "Updated server list.")
                     if self.vpnManager.connectionStatus() == .connected {
-                        DispatchQueue.main.async {
-                            self.vpnManager.checkLocationValidity()
-                        }
+                        self.checkLocationValidity()
                     } else {
                         self.loadLatency()
                     }
 
                 }, onFailure: { _ in
                     self.logger.logD(self, "Failed to update server list.")
-                    self.vpnManager.checkLocationValidity()
-                    if self.vpnManager.connectionStatus() == .connected {
-                        self.vpnManager.checkLocationValidity()
-
-                    } else {
+                    self.checkLocationValidity()
+                    if self.vpnManager.connectionStatus() != .connected {
                         self.loadLatency()
                     }
                 }

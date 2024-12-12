@@ -413,7 +413,6 @@
 		59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF507D7229D86BA00C094A0 /* VPNManager.swift */; };
 		59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1C2D52BBFE2F40083B9EC /* AdvanceKeys.swift */; };
 		59FC74212C51555500021CD1 /* ProxyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */; };
-		59FC74232C51556000021CD1 /* VPNManager+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */; };
 		59FC74242C51556900021CD1 /* VPNManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E5F344273C147200226BED /* VPNManagerDelegate.swift */; };
 		59FC74282C5155B000021CD1 /* Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59C074329424CF300D6C3C1 /* Proxy.swift */; };
 		59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */; };
@@ -1057,7 +1056,6 @@
 		E90FD03327397A6600721874 /* MainViewController+AutoSecure.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD03227397A6600721874 /* MainViewController+AutoSecure.swift */; };
 		E90FD04527397DA800721874 /* MainViewController+StreamingListTableViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD04427397DA800721874 /* MainViewController+StreamingListTableViewDelegate.swift */; };
 		E90FD04727397DDB00721874 /* MainViewController+ServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD04627397DDB00721874 /* MainViewController+ServerList.swift */; };
-		E91CBB722743F4030054A0D1 /* VPNManager+Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */; };
 		E9219FED2885A3AE0026E544 /* UIView+Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FEC2885A3AE0026E544 /* UIView+Constraint.swift */; };
 		E9219FEF2885AF900026E544 /* UIEdgeInsets+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FEE2885AF900026E544 /* UIEdgeInsets+Ext.swift */; };
 		E9219FF12885AFB90026E544 /* UIStackView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FF02885AFB90026E544 /* UIStackView+Ext.swift */; };
@@ -1896,7 +1894,6 @@
 		E90FD03227397A6600721874 /* MainViewController+AutoSecure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+AutoSecure.swift"; sourceTree = "<group>"; };
 		E90FD04427397DA800721874 /* MainViewController+StreamingListTableViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StreamingListTableViewDelegate.swift"; sourceTree = "<group>"; };
 		E90FD04627397DDB00721874 /* MainViewController+ServerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+ServerList.swift"; sourceTree = "<group>"; };
-		E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+Connection.swift"; sourceTree = "<group>"; };
 		E91DE3B2274942040025741C /* AES256Encrypter.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AES256Encrypter.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9219FEC2885A3AE0026E544 /* UIView+Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Constraint.swift"; sourceTree = "<group>"; };
 		E9219FEE2885AF900026E544 /* UIEdgeInsets+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIEdgeInsets+Ext.swift"; sourceTree = "<group>"; };
@@ -3453,7 +3450,6 @@
 				1E593DA82CC9377D0051FF5E /* Utils */,
 				AFF507D7229D86BA00C094A0 /* VPNManager.swift */,
 				E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */,
-				E91CBB712743F4030054A0D1 /* VPNManager+Connection.swift */,
 				E93AE6682744BA060097843B /* VPNManager+Selector.swift */,
 				E9E5F344273C147200226BED /* VPNManagerDelegate.swift */,
 				C59C073E29406EB800D6C3C1 /* ProxyInfo.swift */,
@@ -4851,7 +4847,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */,
-				59FC74232C51556000021CD1 /* VPNManager+Connection.swift in Sources */,
 				59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
 				59FC74282C5155B000021CD1 /* Proxy.swift in Sources */,
@@ -5518,7 +5513,6 @@
 				1A9DB34E28167B8800C3EC1C /* LanguageTableViewCell.swift in Sources */,
 				AF914A7A23D63DFC002D3041 /* GhostAccountViewController.swift in Sources */,
 				1AF57D43280FCBE2004E8082 /* LanguageManager.swift in Sources */,
-				E91CBB722743F4030054A0D1 /* VPNManager+Connection.swift in Sources */,
 				C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */,
 				1A0FD3C8283D106D00148E39 /* ConnectionSecureView.swift in Sources */,
 				AFB83C2A23C7BC4F00607881 /* LoginViewController+UI.swift in Sources */,

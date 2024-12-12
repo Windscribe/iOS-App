@@ -51,7 +51,7 @@ extension VPNManager {
     @objc func connectionStatusChanged(_: Notification?) {
         connectionStateUpdatedTrigger.onNext(())
     }
-    
+
     func configureForConnectionState() {
         DispatchQueue.main.async {
             self.delegate?.saveDataForWidget()

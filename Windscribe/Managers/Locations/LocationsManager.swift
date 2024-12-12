@@ -21,6 +21,7 @@ protocol LocationsManagerType {
     func getId() -> String
     func getId(location: String) -> String
     func isCustomConfigSelected() -> Bool
+    func checkLocationValidity(checkProAccess: () -> Bool)
 
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
@@ -28,12 +29,14 @@ protocol LocationsManagerType {
 class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
+    private let logger: FileLogger
 
     let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
 
-    init(localDatabase: LocalDatabase, preferences: Preferences) {
+    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger) {
         self.localDatabase = localDatabase
         self.preferences = preferences
+        self.logger = logger
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
@@ -47,16 +50,10 @@ class LocationsManager: LocationsManagerType {
 
     func getLocation(from groupId: String) throws -> (Server, Group) {
         guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(groupId) }
-        var serverResult: Server?
-        var groupResult: Group?
-        for server in servers {
-            let groups = server.groups
-            for group in groups where groupId == "\(group.id)" {
-                serverResult = server
-                groupResult = group
-            }
-        }
-        guard let serverResultSafe = serverResult, let groupResultSafe = groupResult else { throw VPNConfigurationErrors.locationNotFound(groupId)
+        let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
+        guard let serverResultSafe = serverResult else { throw VPNConfigurationErrors.locationNotFound(groupId) }
+        var groupResult = serverResultSafe.groups.first(where: { groupId == "\($0.id)" })
+        guard let groupResultSafe = groupResult else { throw VPNConfigurationErrors.locationNotFound(groupId)
         }
         return (serverResultSafe, groupResultSafe)
     }
@@ -107,5 +104,44 @@ class LocationsManager: LocationsManagerType {
 
     func isCustomConfigSelected() -> Bool {
         return preferences.isCustomConfigSelected()
+    }
+
+    func checkLocationValidity(checkProAccess: () -> Bool) {
+        let locationID = getLastSelectedLocation()
+        guard !locationID.isEmpty, locationID != "0" else {
+            self.logger.logD(self, "Location is empty or invalid.. Switching to Best location.")
+            updateToBestLocation()
+            return
+        }
+        guard let currentLocation = try? getLocation(from: locationID) else {
+            self.logger.logD(self, "Unable to find location with ID: \(locationID). Switching to Sister location.")
+            if let sisterLocationID = getSisterLocationID(from: locationID) {
+                saveLastSelectedLocation(with: sisterLocationID)
+            } else {
+                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                updateToBestLocation()
+            }
+            return
+        }
+        if !checkProAccess() && currentLocation.1.premiumOnly {
+            updateToBestLocation()
+        }
+    }
+}
+
+extension LocationsManager {
+    private func updateToBestLocation() {
+        saveLastSelectedLocation(with: getBestLocation())
+    }
+
+    private func getSisterLocationID(from groupId: String) -> String? {
+        guard let servers = localDatabase.getServers() else { return nil }
+        let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
+        guard let serverResultSafe = serverResult else { return nil }
+        let groupResult = serverResultSafe.groups.filter {
+            groupId != "\($0.id)" && $0.getGroupModel().isNodesAvailable()
+        }.randomElement()
+        guard let groupResultSafe = groupResult else { return nil }
+        return "\(groupResultSafe.id)"
     }
 }
