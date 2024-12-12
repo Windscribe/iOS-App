@@ -46,7 +46,6 @@ protocol ConnectionViewModelType {
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
-    func becameActive()
 
     // Info
     func getSelectedCountryCode() -> String
@@ -153,10 +152,6 @@ extension ConnectionViewModel {
 
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
         return isConnecting() && network?.SSID == "Cellular"
-    }
-
-    func becameActive() {
-        checkConnectedState()
     }
 
     func setOutOfData() {
@@ -347,34 +342,6 @@ extension ConnectionViewModel {
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
         }
-    }
-}
-
-// TODO: might need a few touches
-extension ConnectionViewModel {
-    func checkConnectedState() {
-//        if vpnManager.isConnecting() {
-//            logger.logD(self, "Displaying connection state \(!connectivity.internetConnectionAvailable() ? TextsAsset.disconnect : TextsAsset.connecting)")
-//
-//            updateStateInfo(to: !connectivity.internetConnectionAvailable() ? .disconnected : .connecting)
-//            return
-//        }
-//        if vpnManager.connectivityTestTimer?.isValid ?? false {
-//            updateStateInfo(to: .test)
-//            return
-//        }
-//        let state = ConnectionState.state(from: vpnManager.connectionStatus())
-//        if state == .connecting, !connectivity.internetConnectionAvailable() {
-//            if connectivity.getNetwork().isVPN {
-//                logger.logD(self, "Ignoring no internet state during connection \(connectivity.getNetwork()) ")
-//                return
-//            }
-//            logger.logD(self, "Updating connection state to \(ConnectionState.disconnected.statusText)")
-//            updateStateInfo(to: .disconnected)
-//            return
-//        }
-//        logger.logD(self, "Displaying connection state \(state.statusText)")
-//        updateStateInfo(to: state)
     }
 }
 

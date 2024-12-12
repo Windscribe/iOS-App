@@ -22,11 +22,11 @@ extension VPNManager {
         let locationID = locationsManager.getLastSelectedLocation()
         return connectFromViewModel(locationId: locationID, proto: nextProtocol)
     }
-    
+
     func disableConnection() -> AnyPublisher<State, Error> {
         disconnectFromViewModel()
     }
-    
+
     func resetProfiles(comletion: @escaping () -> Void) {
         Task {
             for manager in configManager.managers {

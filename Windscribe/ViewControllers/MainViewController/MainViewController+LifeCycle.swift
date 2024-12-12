@@ -56,7 +56,6 @@ extension MainViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        vpnConnectionViewModel.becameActive()
         setNetworkSsid()
         checkForInternetConnection()
         hideAutoSecureViews()

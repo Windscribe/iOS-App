@@ -19,7 +19,6 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    // TODO: need to check for protocols
     func loadPortMap() {
         let appProtocols = TextsAsset.General.protocols.sorted()
         viewModel.portMap.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { portMaps in
