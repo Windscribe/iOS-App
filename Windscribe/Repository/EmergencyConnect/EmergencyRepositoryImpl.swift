@@ -15,15 +15,17 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let fileDatabase: FileDatabase
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
+    private let locationsManager: LocationsManagerType
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
-    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger) {
+    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManagerType) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
         self.vpnManager = vpnManager
         self.fileDatabase = fileDatabase
         self.localDatabase = localDatabase
         self.logger = logger
+        self.locationsManager = locationsManager
     }
 
     /// Loads Emergency connect configurations from WSNet.
@@ -68,7 +70,12 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     func cleansEmergencyConfigs() {
-        // TODO: VPNManager cleansEmergencyConfigs
+        locationsManager.clearLastSelectedLocation()
+        localDatabase.getCustomConfigs().filter { config in
+            config.name == configuationName && config.isInvalidated == false
+        }.forEach {
+            localDatabase.removeCustomConfig(fileId: $0.id)
+        }
     }
 
     // Stops tunnel
@@ -78,8 +85,14 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     /// Configures OpenVPN and attempts a connection.
     func connect(configInfo: OpenVPNConnectionInfo) -> Completable {
-        // TODO: VPNManager connect
-        return Completable.empty()
+        return buildConfiguration(configInfo: configInfo).flatMapCompletable { [self] data in
+            let customConfig = saveConfiguration(data: data, configInfo: configInfo)
+            locationsManager.saveCustomConfig(withID: customConfig.id)
+            return Completable.empty()
+        }.do(onCompleted: {
+            // TODO: Connect with VPN Manager once that code is there
+//            OpenVPNManager.shared.connect()
+        })
     }
 
     /// Saves configuration as file and custom config model
@@ -90,12 +103,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
         localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
         return customConfig
-    }
-
-    /// Loads configuration in OpenVPNManager
-    private func loadConfiguration(name: String, serverAddress: String, customConfig: CustomConfigModel) -> Completable {
-        // TODO: VPNManager loadConfiguration
-        return Completable.empty()
     }
 
     /// Builds OpenVPN Configuration from OpenVPNConnectionInfo

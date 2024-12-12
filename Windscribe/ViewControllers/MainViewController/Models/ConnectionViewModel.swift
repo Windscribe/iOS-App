@@ -350,7 +350,7 @@ extension ConnectionViewModel {
     }
 }
 
-// TODO: ,ight need a few touches
+// TODO: might need a few touches
 extension ConnectionViewModel {
     func checkConnectedState() {
 //        if vpnManager.isConnecting() {
