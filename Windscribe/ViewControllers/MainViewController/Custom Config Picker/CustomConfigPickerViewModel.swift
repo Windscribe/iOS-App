@@ -140,7 +140,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
             return
         }
 
-        locationsManager.saveLastSelectedLocation(with: "custom_\(customConfig.id ?? "0")")
+        locationsManager.saveCustomConfig(withID: customConfig.id)
         await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
             showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))

@@ -12,6 +12,9 @@ protocol LocationsManagerType {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
     func getLocation(from groupId: String) throws -> (Server, Group)
     func saveLastSelectedLocation(with locationID: String)
+    func saveStaticIP(withID staticID: Int?)
+    func saveCustomConfig(withID staticID: String?)
+    func clearLastSelectedLocation()
     func saveBestLocation(with locationID: String)
     func selectBestLocation(with locationID: String)
     func getBestLocation() -> String
@@ -52,7 +55,7 @@ class LocationsManager: LocationsManagerType {
         guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(groupId) }
         let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
         guard let serverResultSafe = serverResult else { throw VPNConfigurationErrors.locationNotFound(groupId) }
-        var groupResult = serverResultSafe.groups.first(where: { groupId == "\($0.id)" })
+        let groupResult = serverResultSafe.groups.first(where: { groupId == "\($0.id)" })
         guard let groupResultSafe = groupResult else { throw VPNConfigurationErrors.locationNotFound(groupId)
         }
         return (serverResultSafe, groupResultSafe)
@@ -61,6 +64,17 @@ class LocationsManager: LocationsManagerType {
     func saveLastSelectedLocation(with locationID: String) {
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdatedSubject.onNext(())
+    }
+    func saveStaticIP(withID staticID: Int?) {
+        saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
+    }
+
+    func saveCustomConfig(withID customID: String?) {
+        saveLastSelectedLocation(with: "custom_\(customID ?? "0")")
+    }
+
+    func clearLastSelectedLocation() {
+        preferences.saveLastSelectedLocation(with: "")
     }
 
     func saveBestLocation(with locationID: String) {

@@ -51,10 +51,8 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
             return
         }
 
-
-        // TODO: VPNManager revamp StaticIP
         if !vpnManager.isConnecting() {
-            locationsManager.saveLastSelectedLocation(with: "static_\(staticIP.id ?? 0)")
+            locationsManager.saveStaticIP(withID: staticIP.id)
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)
