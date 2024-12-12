@@ -124,10 +124,10 @@ class SessionManager: SessionManagerV2 {
         }
         if session.status == 3 {
             logger.logD(MainViewController.self, "User is banned.")
-            vpnManager.disconnectAllVPNConnections(setDisconnect: true)
+            _ = vpnManager.disableConnection()
         } else if session.status == 2 && !locationsManager.isCustomConfigSelected() {
             logger.logD(MainViewController.self, "User is out of data.")
-            vpnManager.disconnectAllVPNConnections(setDisconnect: true)
+            _ = vpnManager.disableConnection()
         }
     }
 

@@ -73,10 +73,6 @@ class VPNManager: VPNManagerProtocol {
     var killSwitch: Bool = DefaultValues.killSwitch
     var allowLane: Bool = DefaultValues.allowLaneMode
 
-    var connectionTaskPublisher: AnyCancellable?
-    var connectionTask: Task<Void, Never>?
-    var selectedProtocol = ProtocolPort(TextsAsset.wireGuard, "443")
-
     /// Represents the configuration state of the VPN.
     private var _configurationState = ConfigurationState.initial
 
