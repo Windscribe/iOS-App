@@ -179,7 +179,7 @@ extension MainViewController {
         DispatchQueue.main.async {
             self.showFlagAnimation(countryCode: location.countryCode, autoPicked: isAutoPicked || customConfig != nil)
             self.connectedServerLabel.text = location.nickName
-            if self.vpnConnectionViewModel.isBestLocationSelected() {
+            if location.isBestLocation {
                 self.connectedCityLabel.text = TextsAsset.bestLocation
             } else {
                 self.connectedCityLabel.text = location.cityName

@@ -8,9 +8,17 @@
 
 import RxSwift
 
+struct LocationUIInfo {
+    let nickName: String
+    let isBestLocation: Bool
+    let cityName: String
+    let countryCode: String
+}
+
 protocol LocationsManagerType {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
     func getLocation(from groupId: String) throws -> (Server, Group)
+    func getLocationUIInfo() -> LocationUIInfo?
     func saveLastSelectedLocation(with locationID: String)
     func saveStaticIP(withID staticID: Int?)
     func saveCustomConfig(withID staticID: String?)
@@ -60,6 +68,30 @@ class LocationsManager: LocationsManagerType {
         }
         return (serverResultSafe, groupResultSafe)
     }
+    
+    func getLocationUIInfo() -> LocationUIInfo? {
+        guard let locationType = getLocationType() else { return nil }
+        let groupId = getLastSelectedLocation()
+        if locationType == .server {
+            guard let location = try? getLocation(from: groupId) else { return nil }
+            let isBestLocation = getBestLocation() == getLastSelectedLocation()
+            return LocationUIInfo(nickName: location.1.nick, isBestLocation: isBestLocation, cityName: location.1.city, countryCode: location.0.countryCode)
+        } else {
+            let locationID = getId()
+            if locationType == .custom {
+                guard let customConfig = localDatabase.getCustomConfigs().first(where: { locationID == "\($0.id)" }) else {
+                    return nil
+                }
+                return LocationUIInfo(nickName: customConfig.name, isBestLocation: false, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation)
+            } else if locationType == .staticIP {
+                guard let staticIP = localDatabase.getStaticIPs()?.first(where: { locationID == "\($0.id)" }) else {
+                    return nil
+                }
+                return LocationUIInfo(nickName: staticIP.name, isBestLocation: false, cityName: staticIP.cityName, countryCode: staticIP.countryCode)
+            }
+        }
+        return nil
+    }
 
     func saveLastSelectedLocation(with locationID: String) {
         preferences.saveLastSelectedLocation(with: locationID)
@@ -68,11 +100,11 @@ class LocationsManager: LocationsManagerType {
     func saveStaticIP(withID staticID: Int?) {
         saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
     }
-
+    
     func saveCustomConfig(withID customID: String?) {
         saveLastSelectedLocation(with: "custom_\(customID ?? "0")")
     }
-
+    
     func clearLastSelectedLocation() {
         preferences.saveLastSelectedLocation(with: "")
     }
@@ -115,7 +147,7 @@ class LocationsManager: LocationsManagerType {
         }
         return String(parts[1])
     }
-
+    
     func isCustomConfigSelected() -> Bool {
         return preferences.isCustomConfigSelected()
     }
@@ -147,7 +179,7 @@ extension LocationsManager {
     private func updateToBestLocation() {
         saveLastSelectedLocation(with: getBestLocation())
     }
-
+    
     private func getSisterLocationID(from groupId: String) -> String? {
         guard let servers = localDatabase.getServers() else { return nil }
         let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
