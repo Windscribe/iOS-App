@@ -80,7 +80,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     // Stops tunnel
     func disconnect() {
-       // TODO: VPNManager Disconnect
+        _ = vpnManager.disableConnection()
     }
 
     /// Configures OpenVPN and attempts a connection.
@@ -90,8 +90,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             locationsManager.saveCustomConfig(withID: customConfig.id)
             return Completable.empty()
         }.do(onCompleted: {
-            // TODO: Connect with VPN Manager once that code is there
-//            OpenVPNManager.shared.connect()
+            _ = self.vpnManager.enableConnection()
         })
     }
 
