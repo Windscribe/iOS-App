@@ -108,21 +108,21 @@ extension VPNManager {
                 AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logD(self, "VPN disconnected due to credential failure")
                 self.connectIntent = false
-                self.resetProfiles {
+                Task {
+                    await self.resetProfiles()
                     self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
-                    delay(2) {
-                        self.logger.logI(self, "Getting new session.")
-                        self.api.getSession(nil).subscribe(onSuccess: { session in
-                            self.logger.logI(self, "Saving updated session.")
-                            DispatchQueue.main.async {
-                                self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
-                            }
-                            self.awaitingConnectionCheck = false
-                        }, onFailure: { _ in
-                            self.logger.logE(self, "Failure to update session after disabling VPN profile.")
-                            self.awaitingConnectionCheck = false
-                        }).disposed(by: self.disposeBag)
-                    }
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                    self.logger.logI(self, "Getting new session.")
+                    self.api.getSession(nil).subscribe(onSuccess: { session in
+                        self.logger.logI(self, "Saving updated session.")
+                        DispatchQueue.main.async {
+                            self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
+                        }
+                        self.awaitingConnectionCheck = false
+                    }, onFailure: { _ in
+                        self.logger.logE(self, "Failure to update session after disabling VPN profile.")
+                        self.awaitingConnectionCheck = false
+                    }).disposed(by: self.disposeBag)
                 }
             } else {
                 self.awaitingConnectionCheck = false

@@ -210,7 +210,7 @@ class SessionManager: SessionManagerV2 {
     }
 
     func logoutUser() {
-        DispatchQueue.main.async {
+        Task { @MainActor in
             if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
                 window.rootViewController?.dismiss(animated: false, completion: nil)
                 let firstViewController = Assembler.resolve(WelcomeViewController.self)
@@ -221,18 +221,17 @@ class SessionManager: SessionManagerV2 {
                 }
             }
             NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
-            self.session = nil
-            self.wgCredentials.delete()
-            self.preferences.saveConnectionCount(count: 0)
+            session = nil
+            wgCredentials.delete()
+            preferences.saveConnectionCount(count: 0)
             Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
-            self.vpnManager.resetProfiles {
-                self.vpnManager.resetProperties()
-                self.localDatabase.clean()
-                self.preferences.clearFavourites()
-                self.preferences.saveUserSessionAuth(sessionAuth: nil)
-                self.preferences.clearSelectedLocations()
-                Assembler.container.resetObjectScope(.userScope)
-            }
+            await vpnManager.resetProfiles()
+            vpnManager.resetProperties()
+            localDatabase.clean()
+            preferences.clearFavourites()
+            preferences.saveUserSessionAuth(sessionAuth: nil)
+            preferences.clearSelectedLocations()
+            Assembler.container.resetObjectScope(.userScope)
         }
     }
 

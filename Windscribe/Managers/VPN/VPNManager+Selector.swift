@@ -31,13 +31,9 @@ extension VPNManager {
             .sink { _ in } receiveValue: { _ in }
     }
 
-    func resetProfiles(comletion: @escaping () -> Void) {
-        Task {
-            for manager in configManager.managers {
-                await configManager.reset(manager: manager)
-                comletion()
-            }
-            comletion()
+    func resetProfiles() async {
+        for manager in configManager.managers {
+            await configManager.reset(manager: manager)
         }
     }
 

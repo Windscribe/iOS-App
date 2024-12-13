@@ -155,12 +155,13 @@ class LoginViewModelImpl: LoginViewModel {
             emergencyConnectRepository.cleansEmergencyConfigs()
             if emergencyConnectRepository.isConnected() == true {
                 logger.logD(self, "Disconnecting emergency connect.")
-                emergencyConnectRepository.removeProfile().subscribe(onCompleted: {
+                Task {
+                    await emergencyConnectRepository.removeProfile()
                     DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
                         Assembler.resolve(LatencyRepository.self).loadLatency()
                     }
                     self.routeToMainView.onNext(true)
-                }).disposed(by: disposeBag)
+                }
             } else {
                 routeToMainView.onNext(true)
             }

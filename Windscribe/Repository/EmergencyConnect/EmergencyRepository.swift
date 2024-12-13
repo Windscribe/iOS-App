@@ -10,10 +10,10 @@ import Foundation
 import RxSwift
 
 protocol EmergencyRepository {
-    func getConfig() -> Single<[OpenVPNConnectionInfo]>
-    func connect(configInfo: OpenVPNConnectionInfo) -> Completable
+    func getConfig() async -> [OpenVPNConnectionInfo]
+    func connect(configInfo: OpenVPNConnectionInfo) async throws
     func disconnect()
     func isConnected() -> Bool
-    func removeProfile() -> Completable
+    func removeProfile() async
     func cleansEmergencyConfigs()
 }
