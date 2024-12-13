@@ -43,9 +43,9 @@ extension VPNManager {
     /// 2. Validate the current state and ensure the conditions are met to start a connection.
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
-    func connectFromViewModel(locationId: String, proto: ProtocolPort) -> AnyPublisher<State, Error> {
+    func connectFromViewModel(locationId: String, proto: ProtocolPort, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
         self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
-        return configManager.validateAccessToLocation(locationID: locationId).flatMap { () in
+        return configManager.validateAccessToLocation(locationID: locationId, isEmergency: isEmergency).flatMap { () in
             let status = self.connectivity.getNetwork().status
             if [NetworkStatus.disconnected].contains(status) {
                 return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()

@@ -90,7 +90,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             locationsManager.saveCustomConfig(withID: customConfig.id)
             return Completable.empty()
         }.do(onCompleted: {
-            self.vpnManager.simpleEnableConnection()
+            self.vpnManager.simpleEnableConnection(isEmergency: true)
         })
     }
 
