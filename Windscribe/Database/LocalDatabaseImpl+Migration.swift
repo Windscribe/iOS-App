@@ -249,13 +249,11 @@ extension LocalDatabaseImpl {
                     migration.enumerateObjects(ofType: LastConnectedNode.className()) { oldObject, _ in
                         if let groupId = oldObject?["groupId"] as? String {
                             self.preferences.saveLastSelectedLocation(with: groupId)
-                            migration.deleteData(forType: LastConnectedNode.className())
                         }
                     }
                     migration.enumerateObjects(ofType: BestLocation.className()) { oldObject, _ in
                         if let groupId = oldObject?["groupId"] as? String {
                             self.preferences.saveBestLocation(with: groupId)
-                            migration.deleteData(forType: BestLocation.className())
                         }
                     }
                 }
