@@ -26,7 +26,7 @@ extension ConfigurationsManager {
                 return try openConfigFromCustomConfig(locationID: locationId)
             }
         }
-        if [udp, tcp, stealth, wsTunnel].contains(proto) {
+        if [udp, tcp, wsTunnel, stealth].contains(proto) {
             return try buildOpenVPNConfig(location: location, proto: proto, port: port, userSettings: userSettings)
         } else if proto == TextsAsset.iKEv2 {
             return try buildIKEv2Config(location: location)
@@ -43,10 +43,10 @@ extension ConfigurationsManager {
 
     /// Gets the protocol type from the stored configuration based on location ID.
     func getProtoFromConfig(locationId: String) -> String? {
-        if let _ = try? wgConfigFromCustomConfig(locationID: "\(locationId)") {
+        if let _ = try? wgConfigFromCustomConfig(locationID: locationId) {
             return TextsAsset.wireGuard
         }
-        if let config = try? openConfigFromCustomConfig(locationID: "\(locationId)") {
+        if let config = try? openConfigFromCustomConfig(locationID: locationId) {
             return config.proto
         }
         return nil
@@ -61,7 +61,10 @@ extension ConfigurationsManager {
         guard let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() else {
             throw VPNConfigurationErrors.configNotFound
         }
-        return OpenVPNConfiguration(proto: config.protocolType ?? udp, ip: config.serverAddress ?? "", username: config.username?.base64Decoded(), password: config.password?.base64Decoded(), path: configFilePath, data: configData)
+        let stringData = String(data: configData, encoding: String.Encoding.utf8)
+        let username = config.username?.base64Decoded() == "" ? config.username : config.username?.base64Decoded()
+        let password = config.password?.base64Decoded() == "" ? config.password : config.password?.base64Decoded()
+        return OpenVPNConfiguration(proto: config.protocolType ?? udp, ip: config.serverAddress ?? "", username: username, password: password, path: configFilePath, data: configData)
     }
 
     /// Loads a WireGuard configuration from a file path.
