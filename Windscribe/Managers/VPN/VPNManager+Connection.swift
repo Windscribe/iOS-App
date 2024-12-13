@@ -137,7 +137,10 @@ extension VPNManager {
             } else {
                 DispatchQueue.main.async {
                     VPNManager.shared.delegate?.setDisconnected()
-                    AlertManager.shared.showSimpleAlert(title: "Error", message: "Unable to connect. Check your network connection.", buttonText: "Ok")
+                    if !self.connectivity.internetConnectionAvailable() {
+                        AlertManager.shared.showSimpleAlert(title: "Error", message: "Unable to connect. Check your network connection.", buttonText: "Ok")
+                    }
+                    
                 }
             }
         }).disposed(by: disposeBag)

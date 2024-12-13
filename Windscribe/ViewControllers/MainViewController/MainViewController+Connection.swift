@@ -72,8 +72,6 @@ extension MainViewController {
                 if network.networkType == .cellular || network.networkType == .wifi {
                     if let name = network.name {
                         self.trustedNetworkValueLabel.text = name
-                    } else {
-                        self.logger.logD(self, "no network name detected.")
                     }
                 } else {
                     self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
