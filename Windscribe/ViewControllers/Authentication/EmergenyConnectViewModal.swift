@@ -72,8 +72,8 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
     }
 
     private func connect() {
-        if let ovpnInfo = ovpnInfoList.first, shouldRetry == true {
-            ovpnInfoList.removeFirst()
+        if let ovpnInfo = ovpnInfoList.last, shouldRetry == true {
+            ovpnInfoList.removeLast()
             logger.logD(EmergencyConnectModalImpl.self, "Connecting to emergency connect. \(ovpnInfo)")
             DispatchQueue.main.async {
                 self.emergencyRepository.connect(configInfo: ovpnInfo).subscribe(onCompleted: { [self] in
