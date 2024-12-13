@@ -50,7 +50,7 @@ extension VPNManager {
             if [NetworkStatus.disconnected].contains(status) {
                 return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
             }
-            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName)
+            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, isEmergency: isEmergency)
         }.handleEvents(receiveSubscription: { _ in
             self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to configuring")
             self.configurationState = .configuring
@@ -70,8 +70,8 @@ extension VPNManager {
     ///   - proto: The protocol to be used for the connection (e.g., OpenVPN, IKEv2).
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
-    private func connectWithInitialRetry(id: String, proto: String, port: String) -> AnyPublisher<State, Error> {
-        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings())
+    private func connectWithInitialRetry(id: String, proto: String, port: String, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
+        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings(), isEmergency: isEmergency)
             .catch { error in
                 self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? VPNConfigurationErrors {
@@ -79,7 +79,7 @@ extension VPNManager {
                     case .authFailure:
                         return self.updateConnectionData(locationID: id, connectionError: error)
                             .flatMap { updatedLocation in
-                                self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                                self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), isEmergency: isEmergency)
                             }.eraseToAnyPublisher()
                     // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
