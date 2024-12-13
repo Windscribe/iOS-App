@@ -76,6 +76,10 @@ class LatencyRepositoryImpl: LatencyRepository {
             self.logger.logE(self, "Server list not ready for latency update.")
             return Completable.empty()
         }
+        if vpnManager.isConnected() {
+            self.logger.logE(self, "Latency not updated as vpn is connected")
+            return Completable.empty()
+        }
         let latencySingles =  self.createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
