@@ -115,7 +115,7 @@ extension ConfigurationsManager {
                                 progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
                                 progressPublisher.send(.validated(userIp))
                                 progressPublisher.send(completion: .finished)
-                                
+
                                 self.preferences.increaseConnectionCount()
                             } catch {
                                 try await self.disableProfile(nextManager)

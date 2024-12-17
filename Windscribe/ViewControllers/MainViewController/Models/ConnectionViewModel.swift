@@ -99,7 +99,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
-            self.updateState(with: state)
+            self.updateState(with: ConnectionState.state(from: state))
         }).disposed(by: disposeBag)
 
         Observable.combineLatest(vpnManager.vpnInfo, connectionManager.currentProtocolSubject)
@@ -341,7 +341,7 @@ extension ConnectionViewModel {
             showPrivacyTrigger.onNext(())
         }
     }
-
+    
     func updateState(with state: ConnectionState) {
         connectedState.onNext(ConnectionStateInfo(state: state,
                                 isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),

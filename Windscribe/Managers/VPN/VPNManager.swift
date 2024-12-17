@@ -189,6 +189,8 @@ class VPNManager: VPNManagerProtocol {
                 case .initial:
                     self.logger.logD("VPNConfiguration", "vpnInfo update to: Initial -> \(info.description)")
                     return info.status
+                case .testing:
+                    return info.status
                 }
             }
             .distinctUntilChanged()

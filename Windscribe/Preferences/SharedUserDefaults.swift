@@ -229,12 +229,12 @@ class SharedSecretDefaults: Preferences {
     func getConnectionCount() -> Int? {
         return getInt(forKey: SharedKeys.connectionCount)
     }
-    
+
     func increaseConnectionCount() {
         let currentCount = getConnectionCount() ?? 0
         setInt(currentCount + 1, forKey: SharedKeys.connectionCount)
     }
-    
+
     func saveConnectionCount(count: Int) {
         setInt(count, forKey: SharedKeys.connectionCount)
     }
