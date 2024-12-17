@@ -20,6 +20,7 @@ enum ConfigurationState {
     case configuring
     case disabling
     case initial
+    case testing
 }
 
 protocol VPNManagerProtocol {}
@@ -98,6 +99,21 @@ class VPNManager: VPNManagerProtocol {
     lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
     lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
 
+    /// The current configuration state of the VPN, with thread-safe access.
+    var configurationState: ConfigurationState {
+        get {
+            configureStateLock.lock()
+            defer { configureStateLock.unlock() }
+            return _configurationState
+        }
+        set {
+            configureStateLock.lock()
+            _configurationState = newValue
+            configureStateLock.unlock()
+            configureForConnectionState()
+        }
+    }
+
     init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
         self.wgCrendentials = wgCrendentials
         self.wgRepository = wgRepository
@@ -128,26 +144,11 @@ class VPNManager: VPNManagerProtocol {
         }.disposed(by: disposeBag)
 
         connectionStateUpdatedTrigger
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(250), scheduler: MainScheduler.instance)
             .subscribe { _ in
                 self.configureForConnectionState()
         }.disposed(by: disposeBag)
 
-    }
-
-    /// The current configuration state of the VPN, with thread-safe access.
-    var configurationState: ConfigurationState {
-        get {
-            configureStateLock.lock()
-            defer { configureStateLock.unlock() }
-            return _configurationState
-        }
-        set {
-            configureStateLock.lock()
-            _configurationState = newValue
-            configureStateLock.unlock()
-            configureForConnectionState()
-        }
     }
 
     func resetProperties() {

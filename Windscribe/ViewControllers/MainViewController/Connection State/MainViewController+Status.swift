@@ -96,15 +96,15 @@ extension MainViewController {
                     self.addOrRemoveTapOnProtocolLabel(![.disconnected, .disconnecting].contains(info.state))
                 }
                 self.connectivityTestImageView.isHidden = [.connecting, .automaticFailed, .connected, .disconnected, .disconnecting].contains(info.state)
-                if case .test = info.state {
+                if case .testing = info.state {
                     self.connectivityTestImageView.image = UIImage.gifImageWithName("dots")
                 }
                 self.statusDivider.isHidden = [.automaticFailed].contains(info.state)
                 self.statusImageView.image = UIImage(named: info.state.statusImage)
-                self.statusImageView.isHidden = [.test, .connected, .disconnected, .disconnecting].contains(info.state)
+                self.statusImageView.isHidden = [.testing, .connected, .disconnected, .disconnecting].contains(info.state)
                 self.statusView.backgroundColor = info.state.statusViewColor
                 self.statusLabel.text = info.state.statusText
-                self.statusLabel.isHidden = [.test, .connecting, .automaticFailed].contains(info.state)
+                self.statusLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(info.state)
                 self.statusLabel.textColor = info.state.statusColor
                 self.protocolLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
                 self.portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
@@ -129,7 +129,7 @@ extension MainViewController {
                     self.hideAutoSecureViews()
                 }
             }
-            if [.connected, .disconnected, .test].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
+            if [.connected, .disconnected, .testing].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()
         }

@@ -15,7 +15,7 @@ enum ConnectionState {
     case connected
     case disconnecting
     case disconnected
-    case test
+    case testing
     case automaticFailed
     case invalid
 
@@ -63,7 +63,7 @@ struct ConnectionStateInfo {
 extension ConnectionState {
     var backgroundColor: UIColor {
         switch self {
-        case .connected, .test: .connectedStartBlue
+        case .connected, .testing: .connectedStartBlue
         case .connecting, .automaticFailed: .connectingStartBlue
         case .disconnecting: .disconnectedStartBlack
         case .disconnected, .invalid: .lightMidnight
@@ -73,7 +73,7 @@ extension ConnectionState {
     var backgroundOpacity: Float { [.disconnecting].contains(self) ? 0.10 : 0.25 }
     var statusText: String {
         switch self {
-        case .test: TextsAsset.Status.connectivityTest
+        case .testing: TextsAsset.Status.connectivityTest
         case .connected: TextsAsset.Status.on
         case .connecting: TextsAsset.Status.connecting
         case .disconnected, .disconnecting, .invalid: TextsAsset.Status.off
@@ -83,7 +83,7 @@ extension ConnectionState {
 
     var statusColor: UIColor {
         switch self {
-        case .connected, .test: .seaGreen
+        case .connected, .testing: .seaGreen
         case .connecting: .lowGreen
         case .disconnecting, .disconnected, .invalid: .white
         case .automaticFailed: .failedConnectionYellow
@@ -91,11 +91,11 @@ extension ConnectionState {
     }
 
     var statusImage: String { self == .automaticFailed ? ImagesAsset.protocolFailed : ImagesAsset.connectionSpinner }
-    var statusAlpha: CGFloat { [.connected, .test, .connecting, .automaticFailed].contains(self) ? 1.0 : 0.5 }
+    var statusAlpha: CGFloat { [.connected, .testing, .connecting, .automaticFailed].contains(self) ? 1.0 : 0.5 }
     var statusViewColor: UIColor { ([.disconnected, .disconnecting].contains(self) ? UIColor.white : .midnight).withAlphaComponent(0.25) }
     var preferredProtocolBadge: String {
         switch self {
-        case .connected, .test: ImagesAsset.preferredProtocolBadgeOn
+        case .connected, .testing: ImagesAsset.preferredProtocolBadgeOn
         case .connecting: ImagesAsset.preferredProtocolBadgeConnecting
         case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.preferredProtocolBadgeOff
         }
@@ -103,7 +103,7 @@ extension ConnectionState {
 
     var connectButtonRing: String {
         switch self {
-        case .connected, .test: ImagesAsset.connectButtonRing
+        case .connected, .testing: ImagesAsset.connectButtonRing
         case .connecting: ImagesAsset.connectingButtonRing
         case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.failedConnectionButtonRing
         }
@@ -111,7 +111,7 @@ extension ConnectionState {
 
     var connectButtonRingTv: String {
         switch self {
-        case .connected, .test: ImagesAsset.TvAsset.connectedRing
+        case .connected, .testing: ImagesAsset.TvAsset.connectedRing
         case .connecting: ImagesAsset.TvAsset.connectingRing
         case .disconnecting, .disconnected, .automaticFailed, .invalid: ImagesAsset.TvAsset.disconnectedRing
         }

@@ -99,11 +99,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
-            self.connectedState.onNext(
-                ConnectionStateInfo(state: ConnectionState.state(from: state),
-                                    isCustomConfigSelected: locationsManager.isCustomConfigSelected(),
-                                    internetConnectionAvailable: false,
-                                    connectedWifi: nil))
+            self.updateState(with: state)
         }).disposed(by: disposeBag)
 
         Observable.combineLatest(vpnManager.vpnInfo, connectionManager.currentProtocolSubject)
@@ -251,8 +247,8 @@ extension ConnectionViewModel {
                         self.ipAddressSubject.onNext(ip)
                     case let .vpn(status):
                         self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
-                    default:
-                        break
+                    case .validating:
+                        self.updateState(with: .testing)
                     }
                 })
         }
@@ -344,6 +340,13 @@ extension ConnectionViewModel {
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
         }
+    }
+
+    func updateState(with state: ConnectionState) {
+        connectedState.onNext(ConnectionStateInfo(state: state,
+                                isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
+                                internetConnectionAvailable: false,
+                                connectedWifi: nil))
     }
 }
 
