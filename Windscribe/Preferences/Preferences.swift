@@ -45,6 +45,7 @@ protocol Preferences {
 
     // PersistenceManager+UserDefaults
     func getConnectionCount() -> Int?
+    func increaseConnectionCount()
     func saveConnectionCount(count: Int)
     func getLastConnectedNetworkName() -> String?
     func saveLastConnectedNetworkName(network: String)
