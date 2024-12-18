@@ -183,6 +183,23 @@ class LoginViewController: PreferredFocusedViewController {
         } else if generateCodeButton != nil {
             generateCodeButton?.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.50).cgColor
         }
+        DispatchQueue.main.async {
+            if context.nextFocusedView == self.usernameTextField {
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+            } else {
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+            }
+            if context.nextFocusedView == self.passwordTextField {
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+            } else {
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
+                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+            }
+        }
+       
     }
 
     @IBAction func backButtonAction(_: Any?) {

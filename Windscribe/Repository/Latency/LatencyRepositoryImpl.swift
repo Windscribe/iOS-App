@@ -66,7 +66,11 @@ class LatencyRepositoryImpl: LatencyRepository {
             logger.logE(self, "Server list not ready for latency update.")
             return Completable.empty()
         }
-        let latencySingles = createLatencyTask(from: pingServers)
+        if vpnManager.isConnected() {
+            self.logger.logE(self, "Latency not updated as vpn is connected")
+            return Completable.empty()
+        }
+        let latencySingles =  createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
