@@ -46,6 +46,7 @@ protocol ConnectionViewModelType {
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
     func displayLocalIPAddress(force: Bool)
+    func checkForForceDisconnect()
 
     // Info
     func getSelectedCountryCode() -> String
@@ -221,6 +222,12 @@ extension ConnectionViewModel {
             }, onFailure: { _ in
                 self.gettingIpAddress = false
             }).disposed(by: disposeBag)
+        }
+    }
+
+    func checkForForceDisconnect() {
+        if locationsManager.checkForForceDisconnect(), isConnected() {
+            enableConnection()
         }
     }
 

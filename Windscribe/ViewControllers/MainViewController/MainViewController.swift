@@ -366,9 +366,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         if isAnyRefreshControlIsRefreshing() {
             loadLatencyValues()
         }
-        if vpnConnectionViewModel.isConnected() {
-            enableVPNConnection()
-        }
+        vpnConnectionViewModel.checkForForceDisconnect()
     }
 
     func reloadCustomConfigs() {

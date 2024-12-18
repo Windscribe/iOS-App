@@ -33,6 +33,7 @@ protocol LocationsManagerType {
     func getId(location: String) -> String
     func isCustomConfigSelected() -> Bool
     func checkLocationValidity(checkProAccess: () -> Bool)
+    func checkForForceDisconnect() -> Bool
 
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
@@ -92,7 +93,20 @@ class LocationsManager: LocationsManagerType {
         }
         return nil
     }
-
+    
+    func checkForForceDisconnect() -> Bool {
+        let locationID = getLastSelectedLocation()
+        guard !locationID.isEmpty, locationID != "0" else { return false }
+        guard let serverGroup = try? getLocation(from: locationID) else { return false }
+        if serverGroup.1.bestNode?.forceDisconnect ?? false {
+            if let sisterLocationID = getSisterLocationID(from: locationID) {
+                saveLastSelectedLocation(with: sisterLocationID)
+                return true
+            }
+        }
+        return false
+    }
+    
     func saveLastSelectedLocation(with locationID: String) {
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdatedSubject.onNext(())
