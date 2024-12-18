@@ -62,6 +62,7 @@ extension MainViewController {
         navigationController?.isNavigationBarHidden = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         restartServerRefreshControl()
+        updateConnectedState()
     }
 
     override func viewDidAppear(_ animated: Bool) {

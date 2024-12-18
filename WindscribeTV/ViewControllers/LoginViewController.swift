@@ -199,7 +199,7 @@ class LoginViewController: PreferredFocusedViewController {
                                                                                   attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
         }
-       
+
     }
 
     @IBAction func backButtonAction(_: Any?) {

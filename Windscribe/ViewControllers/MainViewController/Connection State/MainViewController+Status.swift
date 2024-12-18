@@ -74,9 +74,15 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func animateConnectedState(with info: ConnectionStateInfo) {
+    func updateConnectedState() {
+        if let state = try? vpnConnectionViewModel.connectedState.value() {
+            animateConnectedState(with: state, animated: false)
+        }
+    }
+
+    func animateConnectedState(with info: ConnectionStateInfo, animated: Bool = true) {
         DispatchQueue.main.async {
-            var duration = 0.25
+            var duration = animated ? 0.25 : 0.0
             if info.state == .automaticFailed {
                 guard let connectedWifi = info.connectedWifi else { return }
                 self.protocolLabel.text = "\(connectedWifi.protocolType.uppercased()) \(TextsAsset.Status.failed)"
