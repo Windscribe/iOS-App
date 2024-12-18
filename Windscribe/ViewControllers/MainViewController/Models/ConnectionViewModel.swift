@@ -211,6 +211,7 @@ extension ConnectionViewModel {
                 if self.vpnManager.isDisconnected() || force {
                     self.vpnManager.ipAddressBeforeConnection = myIp.userIp
                 }
+                self.ipAddressSubject.onNext(myIp.userIp)
             }, onFailure: { _ in
                 self.gettingIpAddress = false
             }).disposed(by: disposeBag)
@@ -244,6 +245,7 @@ extension ConnectionViewModel {
                         self.logger.logD(self, "Enable connection had an update: \(message)")
                     case let .validated(ip):
                         self.logger.logD(self, "Enable connection validate IP: \(ip)")
+                        self.updateState(with: .connected)
                         self.ipAddressSubject.onNext(ip)
                     case let .vpn(status):
                         self.logger.logD(self, "Enable connection new status: \(status.rawValue)")

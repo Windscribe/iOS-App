@@ -111,6 +111,10 @@ class LocationsManager: LocationsManagerType {
 
     func saveBestLocation(with locationID: String) {
         preferences.saveBestLocation(with: locationID)
+        let lastLocation = getLastSelectedLocation()
+        if lastLocation.isEmpty || lastLocation == "0" {
+            preferences.saveLastSelectedLocation(with: locationID)
+        }
     }
 
     func selectBestLocation(with locationID: String) {

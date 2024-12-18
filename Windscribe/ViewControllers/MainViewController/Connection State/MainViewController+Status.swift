@@ -29,7 +29,7 @@ extension MainViewController {
             self.showConnectionFailed()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
+        vpnConnectionViewModel.ipAddressSubject.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
