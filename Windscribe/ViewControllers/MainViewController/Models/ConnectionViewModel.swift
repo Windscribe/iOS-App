@@ -341,7 +341,7 @@ extension ConnectionViewModel {
             showPrivacyTrigger.onNext(())
         }
     }
-    
+
     func updateState(with state: ConnectionState) {
         connectedState.onNext(ConnectionStateInfo(state: state,
                                 isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),

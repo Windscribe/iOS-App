@@ -58,7 +58,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             }
             return $0
         })
-        
+
         viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { favNodes in
             self.favNodes = favNodes?.compactMap { $0.getFavNodeModel() }
         }).disposed(by: disposeBag)
