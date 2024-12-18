@@ -113,7 +113,7 @@ class LocationsManager: LocationsManagerType {
         preferences.saveBestLocation(with: locationID)
         let lastLocation = getLastSelectedLocation()
         if lastLocation.isEmpty || lastLocation == "0" {
-            preferences.saveLastSelectedLocation(with: locationID)
+            saveLastSelectedLocation(with: locationID)
         }
     }
 

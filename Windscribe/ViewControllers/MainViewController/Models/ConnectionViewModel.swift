@@ -114,10 +114,16 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
             }.disposed(by: disposeBag)
 
-        connectionManager.connectionProtocolSubject.subscribe(onNext: { connectionProtocol in
-            guard connectionProtocol != nil else { return }
-            self.enableConnection()
-        }).disposed(by: disposeBag)
+        connectionManager.connectionProtocolSubject
+            .subscribe { [weak self] connectionProtocol in
+                guard let self = self, let connectionProtocol = connectionProtocol else { return }
+                if let info = try? vpnManager.vpnInfo.value(),
+                   info.selectedProtocol == connectionProtocol.protocolName,
+                   [.connected, .connecting].contains(info.status) {
+                    return
+                }
+                self.enableConnection()
+            }.disposed(by: disposeBag)
     }
 }
 
