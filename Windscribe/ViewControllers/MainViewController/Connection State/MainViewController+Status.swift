@@ -179,17 +179,12 @@ extension MainViewController {
 
     private func updateSelectedLocationUI() {
         let location = vpnConnectionViewModel.getSelectedCountryInfo()
-        let isAutoPicked = false
-        let customConfig: CustomConfigModel? = nil
         guard !location.countryCode.isEmpty else { return }
         DispatchQueue.main.async {
-            self.showFlagAnimation(countryCode: location.countryCode, autoPicked: isAutoPicked || customConfig != nil)
+            self.showFlagAnimation(countryCode: location.countryCode,
+                                   autoPicked: self.vpnConnectionViewModel.isBestLocationSelected() || self.vpnConnectionViewModel.isCustomConfigSelected())
             self.connectedServerLabel.text = location.nickName
-            if location.isBestLocation {
-                self.connectedCityLabel.text = TextsAsset.bestLocation
-            } else {
-                self.connectedCityLabel.text = location.cityName
-            }
+            self.connectedCityLabel.text = location.cityName
         }
     }
 }

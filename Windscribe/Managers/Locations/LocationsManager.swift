@@ -9,8 +9,7 @@
 import RxSwift
 
 struct LocationUIInfo {
-    var nickName: String
-    let isBestLocation: Bool
+    let nickName: String
     let cityName: String
     let countryCode: String
 }
@@ -35,7 +34,6 @@ protocol LocationsManagerType {
     func checkLocationValidity(checkProAccess: () -> Bool)
     func checkForForceDisconnect() -> Bool
 
-    func getStaticIpInfo() -> String?
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
 
@@ -76,20 +74,20 @@ class LocationsManager: LocationsManagerType {
         let groupId = getLastSelectedLocation()
         if locationType == .server {
             guard let location = try? getLocation(from: groupId) else { return nil }
-            let isBestLocation = getBestLocation() == getLastSelectedLocation()
-            return LocationUIInfo(nickName: location.1.nick, isBestLocation: isBestLocation, cityName: location.1.city, countryCode: location.0.countryCode)
+            let cityName = getBestLocation() == getLastSelectedLocation() ? TextsAsset.bestLocation : location.1.city
+            return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode)
         } else {
             let locationID = getId()
             if locationType == .custom {
                 guard let customConfig = localDatabase.getCustomConfigs().first(where: { locationID == "\($0.id)" }) else {
                     return nil
                 }
-                return LocationUIInfo(nickName: customConfig.name, isBestLocation: false, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation)
+                return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation)
             } else if locationType == .staticIP {
                 guard let staticIP = localDatabase.getStaticIPs()?.first(where: { locationID == "\($0.id)" }) else {
                     return nil
                 }
-                return LocationUIInfo(nickName: staticIP.name, isBestLocation: false, cityName: staticIP.cityName, countryCode: staticIP.countryCode)
+                return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode)
             }
         }
         return nil
@@ -106,17 +104,6 @@ class LocationsManager: LocationsManagerType {
             }
         }
         return false
-    }
-
-    func getStaticIpInfo() -> String? {
-        guard let locationType = getLocationType() else { return nil }
-        if locationType == .staticIP {
-            guard let staticIP = localDatabase.getStaticIPs()?.first(where: { getId() == "\($0.id)" }) else {
-                return nil
-            }
-            return staticIP.staticIP
-        }
-        return nil
     }
 
     func saveLastSelectedLocation(with locationID: String) {
