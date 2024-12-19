@@ -175,8 +175,13 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryInfo() -> LocationUIInfo {
-        guard let location = locationsManager.getLocationUIInfo() else {
+        guard var location = locationsManager.getLocationUIInfo() else {
             return LocationUIInfo(nickName: "", isBestLocation: false, cityName: "", countryCode: "")
+        }
+        if locationsManager.getLocationType() == .staticIP {
+            if let staticIp = locationsManager.getStaticIpInfo() {
+                location.nickName = staticIp
+            }
         }
         return location
     }

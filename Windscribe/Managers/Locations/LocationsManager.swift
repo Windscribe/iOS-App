@@ -9,7 +9,7 @@
 import RxSwift
 
 struct LocationUIInfo {
-    let nickName: String
+    var nickName: String
     let isBestLocation: Bool
     let cityName: String
     let countryCode: String
@@ -35,6 +35,7 @@ protocol LocationsManagerType {
     func checkLocationValidity(checkProAccess: () -> Bool)
     func checkForForceDisconnect() -> Bool
 
+    func getStaticIpInfo() -> String?
     var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
 }
 
@@ -105,6 +106,17 @@ class LocationsManager: LocationsManagerType {
             }
         }
         return false
+    }
+
+    func getStaticIpInfo() -> String? {
+        guard let locationType = getLocationType() else { return nil }
+        if locationType == .staticIP {
+            guard let staticIP = localDatabase.getStaticIPs()?.first(where: { getId() == "\($0.id)" }) else {
+                return nil
+            }
+            return staticIP.staticIP
+        }
+        return nil
     }
 
     func saveLastSelectedLocation(with locationID: String) {
