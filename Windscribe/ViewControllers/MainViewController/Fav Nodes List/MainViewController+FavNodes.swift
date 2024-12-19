@@ -19,9 +19,6 @@ extension MainViewController {
             case .disconnecting: self.displayDisconnectingAlert()
             }
         }.disposed(by: disposeBag)
-        favNodesListViewModel.configureVPNTrigger.subscribe { _ in
-            self.enableVPNConnection()
-        }.disposed(by: disposeBag)
         favNodesListViewModel.showUpgradeTrigger.subscribe { _ in
             self.showUpgradeView()
         }.disposed(by: disposeBag)

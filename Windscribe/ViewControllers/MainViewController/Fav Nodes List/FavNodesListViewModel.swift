@@ -13,14 +13,12 @@ enum FavNodesIPAlertType { case connecting; case disconnecting }
 
 protocol FavNodesListViewModelType {
     var presentAlertTrigger: PublishSubject<FavNodesIPAlertType> { get }
-    var configureVPNTrigger: PublishSubject<Void> { get }
     var showUpgradeTrigger: PublishSubject<Void> { get }
     func setSelectedFavNode(favNode: FavNodeModel)
 }
 
 class FavNodesListViewModel: FavNodesListViewModelType {
     var presentAlertTrigger = PublishSubject<FavNodesIPAlertType>()
-    var configureVPNTrigger = PublishSubject<Void>()
     var showUpgradeTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
@@ -28,18 +26,20 @@ class FavNodesListViewModel: FavNodesListViewModelType {
     var connectivity: Connectivity
     var sessionManager: SessionManagerV2
     let locationsManager: LocationsManagerType
+    let connectionManager: ConnectionManagerV2
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
          sessionManager: SessionManagerV2,
-         locationsManager: LocationsManagerType)
-    {
+         locationsManager: LocationsManagerType,
+         connectionManager: ConnectionManagerV2) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
+        self.connectionManager = connectionManager
     }
 
     func setSelectedFavNode(favNode: FavNodeModel) {
@@ -59,7 +59,9 @@ class FavNodesListViewModel: FavNodesListViewModelType {
                   let groupId = Int(favNode.groupId ?? "1") else { return }
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
-            configureVPNTrigger.onNext(())
+            Task {
+                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+            }
         } else {
             presentAlertTrigger.onNext(.connecting)
         }
