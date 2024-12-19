@@ -52,6 +52,7 @@ protocol ConnectionViewModelType {
     func getSelectedCountryCode() -> String
     func getSelectedCountryInfo() -> LocationUIInfo
     func isBestLocationSelected() -> Bool
+    func isCustomConfigSelected() -> Bool
     func getBestLocationId() -> String
     func getBestLocation() -> BestLocationModel?
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool
@@ -160,6 +161,10 @@ extension ConnectionViewModel {
         (try? connectedState.value())?.state == .invalid
     }
 
+    func isCustomConfigSelected() -> Bool {
+        locationsManager.isCustomConfigSelected()
+    }
+
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
         return isConnecting() && network?.SSID == "Cellular"
     }
@@ -176,12 +181,7 @@ extension ConnectionViewModel {
 
     func getSelectedCountryInfo() -> LocationUIInfo {
         guard var location = locationsManager.getLocationUIInfo() else {
-            return LocationUIInfo(nickName: "", isBestLocation: false, cityName: "", countryCode: "")
-        }
-        if locationsManager.getLocationType() == .staticIP {
-            if let staticIp = locationsManager.getStaticIpInfo() {
-                location.nickName = staticIp
-            }
+            return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
         }
         return location
     }

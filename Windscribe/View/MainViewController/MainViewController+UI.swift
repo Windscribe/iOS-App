@@ -38,8 +38,13 @@ extension MainViewController {
         flagView = UIImageView()
         flagView.isUserInteractionEnabled = false
         flagView.contentMode = .scaleAspectFill
-        flagView.image = UIImage(named: vpnConnectionViewModel.getSelectedCountryCode())
-        flagView.layer.opacity = 0.25
+        if let newFlag = UIImage(named: vpnConnectionViewModel.getSelectedCountryCode()) {
+            flagView.image = newFlag
+            flagView.alpha = 0.25
+        } else {
+            flagView.image = UIImage(named: "US")
+            self.flagView.alpha = 0.0
+        }
         gradient = CAGradientLayer()
         gradient.frame = flagView.bounds
         gradient.colors = [UIColor.clear.cgColor, UIColor.lightMidnight.cgColor]

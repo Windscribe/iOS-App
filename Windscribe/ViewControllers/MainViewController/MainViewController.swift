@@ -388,24 +388,30 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func showFlagAnimation(countryCode: String, autoPicked: Bool = false) {
         DispatchQueue.main.async {
+            let newFlag = UIImage(named: countryCode)
             if autoPicked {
                 UIView.transition(with: self.flagView, duration: 0.25, options: .transitionCrossDissolve, animations: {
-                    self.flagView.image = UIImage(named: countryCode)
+                    if let newFlag = newFlag {
+                        self.flagView.image = newFlag
+                        self.flagView.alpha = 0.25
+                    } else {
+                        self.flagView.alpha = 0.0
+                    }
                 }, completion: nil)
                 return
             }
-            if self.flagView.frame.height != 0 {
-                self.flagViewTopConstraint.constant = self.flagView.frame.height + 10
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseOut, animations: {
+            guard self.flagView.frame.height != 0 else { return }
+            self.flagViewTopConstraint.constant = self.flagView.frame.height + 10
+            UIView.animate(withDuration: self.flagView != nil ? 0.5 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { _ in
+                self.flagView.alpha = 0.25
+                self.flagView.image = newFlag
+                self.flagViewTopConstraint.constant = 0
+                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
                     self.view.layoutIfNeeded()
-                }, completion: { _ in
-                    self.flagView.image = UIImage(named: countryCode)
-                    self.flagViewTopConstraint.constant = 0
-                    UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
-                        self.view.layoutIfNeeded()
-                    }, completion: nil)
-                })
-            }
+                }, completion: nil)
+            })
         }
     }
 
