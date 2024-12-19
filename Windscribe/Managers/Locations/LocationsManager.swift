@@ -93,7 +93,7 @@ class LocationsManager: LocationsManagerType {
         }
         return nil
     }
-    
+
     func checkForForceDisconnect() -> Bool {
         let locationID = getLastSelectedLocation()
         guard !locationID.isEmpty, locationID != "0" else { return false }
@@ -106,8 +106,9 @@ class LocationsManager: LocationsManagerType {
         }
         return false
     }
-    
+
     func saveLastSelectedLocation(with locationID: String) {
+        guard locationID != getLastSelectedLocation() else { return }
         preferences.saveLastSelectedLocation(with: locationID)
         selectedLocationUpdatedSubject.onNext(())
     }

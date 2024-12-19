@@ -18,11 +18,11 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showOutOfDataPopup()
+            self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
+            self.showOutOfDataPopup()
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
