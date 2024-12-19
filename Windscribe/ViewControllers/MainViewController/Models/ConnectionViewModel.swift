@@ -125,6 +125,13 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
                 self.enableConnection()
             }.disposed(by: disposeBag)
+        
+        locationsManager.selectedLocationUpdatedSubject.subscribe { _ in
+            let locationID = locationsManager.getLastSelectedLocation()
+            if !locationID.isEmpty, locationID != "0", self.isConnected() {
+                self.enableConnection()
+            }
+        }.disposed(by: disposeBag)
     }
 }
 

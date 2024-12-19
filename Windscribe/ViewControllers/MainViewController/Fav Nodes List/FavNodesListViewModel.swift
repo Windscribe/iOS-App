@@ -59,7 +59,6 @@ class FavNodesListViewModel: FavNodesListViewModelType {
                   let groupId = Int(favNode.groupId ?? "1") else { return }
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
-
             configureVPNTrigger.onNext(())
         } else {
             presentAlertTrigger.onNext(.connecting)
