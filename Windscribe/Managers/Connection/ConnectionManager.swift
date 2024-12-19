@@ -97,6 +97,7 @@ class ConnectionManager: ConnectionManagerV2 {
         failoverNetworkName = connectivity.getNetwork().networkType
         if shouldReset {
             getProtocolList()
+            userSelected = nil
         }
         // Save all failed protocols
         let failedProtocols = protocolsToConnectList.filter { list in list.viewType == .fail }
