@@ -187,7 +187,8 @@ class ViewModels: Assembly {
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
                                   sessionManager: r.resolve(SessionManagerV2.self)!,
-                                  locationsManager: r.resolve(LocationsManagerType.self)!)
+                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  connectionManager: r.resolve(ConnectionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
@@ -195,13 +196,17 @@ class ViewModels: Assembly {
                                 connectivity: r.resolve(Connectivity.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
                                 sessionManager: r.resolve(SessionManagerV2.self)!,
-                                locationsManager: r.resolve(LocationsManagerType.self)!)
+                                locationsManager: r.resolve(LocationsManagerType.self)!,
+                                connectionManager: r.resolve(ConnectionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!, connectivity: r.resolve(Connectivity.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
+                                  vpnManager: r.resolve(VPNManager.self)!,
+                                  connectivity: r.resolve(Connectivity.self)!,
+                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  connectionManager: r.resolve(ConnectionManagerV2.self)!)
         }.inObjectScope(.transient)
-        container.register(ProtocolSwitchDelegateViewModelType.self) { r in
+        container.register(ProtocolSwitchDelegateViewModelType.self) { _ in
             ProtocolSwitchDelegateViewModel()
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in

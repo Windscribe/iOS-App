@@ -11,7 +11,6 @@ import RxSwift
 
 protocol ServerListViewModelType {
     var presentConnectingAlertTrigger: PublishSubject<Void> { get }
-    var configureVPNTrigger: PublishSubject<Void> { get }
     var showMaintenanceLocationTrigger: PublishSubject<Void> { get }
     var showUpgradeTrigger: PublishSubject<Void> { get }
     var reloadTrigger: PublishSubject<Void> { get }
@@ -23,17 +22,17 @@ protocol ServerListViewModelType {
 
 class ServerListViewModel: ServerListViewModelType {
     var presentConnectingAlertTrigger = PublishSubject<Void>()
-    var configureVPNTrigger = PublishSubject<Void>()
     var showMaintenanceLocationTrigger = PublishSubject<Void>()
     var showUpgradeTrigger = PublishSubject<Void>()
     var reloadTrigger = PublishSubject<Void>()
 
-    let logger: FileLogger
-    let vpnManager: VPNManager
-    let connectivity: Connectivity
-    let localDataBase: LocalDatabase
-    let sessionManager: SessionManagerV2
-    let locationsManager: LocationsManagerType
+    private let logger: FileLogger
+    private let vpnManager: VPNManager
+    private let connectivity: Connectivity
+    private let localDataBase: LocalDatabase
+    private let sessionManager: SessionManagerV2
+    private let locationsManager: LocationsManagerType
+    private let connectionManager: ConnectionManagerV2
 
     let disposeBag = DisposeBag()
 
@@ -42,13 +41,15 @@ class ServerListViewModel: ServerListViewModelType {
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
          sessionManager: SessionManagerV2,
-         locationsManager: LocationsManagerType) {
+         locationsManager: LocationsManagerType,
+         connectionManager: ConnectionManagerV2) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.localDataBase = localDataBase
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
+        self.connectionManager = connectionManager
     }
 
     func setSelectedServerAndGroup(server: ServerModel,
@@ -75,7 +76,9 @@ class ServerListViewModel: ServerListViewModelType {
                   let groupId = group.id else { return }
             logger.logD(self, "Tapped on a node with groupID: \(groupId) \(bestNodeHostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
-            configureVPNTrigger.onNext(())
+            Task {
+                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+            }
         } else {
             presentConnectingAlertTrigger.onNext(())
         }
@@ -86,7 +89,9 @@ class ServerListViewModel: ServerListViewModelType {
         if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
             self.logger.logD(self, "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
-            self.configureVPNTrigger.onNext(())
+            Task {
+                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+            }
         } else {
             self.presentConnectingAlertTrigger.onNext(())
         }

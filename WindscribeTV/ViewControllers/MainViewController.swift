@@ -322,18 +322,6 @@ class MainViewController: PreferredFocusedViewController {
             self.refreshProtocol(from: nil)
         }).disposed(by: disposeBag)
 
-        serverListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
-            self.configureVPN()
-        }).disposed(by: disposeBag)
-
-        favNodesListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
-            self.configureVPN()
-        }).disposed(by: disposeBag)
-
-        staticIPListViewModel.configureVPNTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {_ in
-            self.configureVPN()
-        }).disposed(by: disposeBag)
-
         languageManager.activelanguage.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] _ in
             localisation()
         }, onError: { _ in }).disposed(by: disposeBag)

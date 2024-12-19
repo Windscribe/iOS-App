@@ -259,11 +259,6 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }, onError: { error in
             self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
-
-        serverListViewModel.configureVPNTrigger.subscribe(onNext: {
-            print("Testing")
-            // self.configureVPN()
-        }).disposed(by: disposeBag)
     }
 
     override func viewWillDisappear(_: Bool) {
