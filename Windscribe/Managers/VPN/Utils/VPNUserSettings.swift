@@ -141,7 +141,9 @@ extension VPNConfiguration {
             }
             // iOS 16.0+ excludeLocalNetworks does'nt get enforced without killswitch.
             if #available(iOS 16.0, *) {
-                manager.protocolConfiguration?.includeAllNetworks = settings.allowLan
+                if !settings.allowLan {
+                    manager.protocolConfiguration?.includeAllNetworks = true
+                }
             }
         #endif
         manager.onDemandRules?.removeAll()
