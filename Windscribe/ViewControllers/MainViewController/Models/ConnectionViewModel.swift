@@ -258,10 +258,12 @@ extension ConnectionViewModel {
                     case let .failure(error):
                         if let error = error as? VPNConfigurationErrors {
                             self.logger.logD(self, "Enable connection had a VPNConfigurationErrors:")
-                            self.handleErrors(error: error, fromEnable: true)
+                            if !self.handleErrors(error: error, fromEnable: true) {
+                                self.checkAutoModeFail()
+                            }
                         } else {
-                            self.showConnectionFailedTrigger.onNext(())
                             self.logger.logE(self, "Enable Connection with unknown error: \(error.localizedDescription)")
+                            self.checkAutoModeFail()
                         }
                     }
                 }, receiveValue: { state in
@@ -297,7 +299,7 @@ extension ConnectionViewModel {
                 case let .failure(error):
                     if let error = error as? VPNConfigurationErrors {
                         self.logger.logD(self, "Disable connection had a VPNConfigurationErrors:")
-                        self.handleErrors(error: error)
+                        _ = !self.handleErrors(error: error)
                     } else {
                         self.logger.logE(self, "Disable Connection with unknown error: \(error.localizedDescription)")
                     }
@@ -343,7 +345,7 @@ extension ConnectionViewModel {
 }
 
 extension ConnectionViewModel {
-    func handleErrors(error: VPNConfigurationErrors, fromEnable: Bool = false) {
+    func handleErrors(error: VPNConfigurationErrors, fromEnable: Bool = false) -> Bool {
         switch error {
         case .credentialsNotFound,
                 .invalidLocationType,
@@ -355,11 +357,10 @@ extension ConnectionViewModel {
                 .incorrectVPNManager,
                 .connectivityTestFailed,
                 .authFailure,
-                .networkIsOffline:
-            if fromEnable {showConnectionFailedTrigger.onNext(()) }
+                .networkIsOffline,
+                .connectionTimeout:
             logger.logE(self, error.description)
-        case .connectionTimeout :
-            openNetworkHateUsDialogTrigger.onNext(())
+            return false
         case .allProtocolFailed:
             showAutoModeScreenTrigger.onNext(())
         case .upgradeRequired:
@@ -367,8 +368,20 @@ extension ConnectionViewModel {
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
         }
+        return true
     }
 
+    func checkAutoModeFail() {
+        Task {
+            let allProtocolsFailed = await connectionManager.onProtocolFail()
+            if allProtocolsFailed {
+                openNetworkHateUsDialogTrigger.onNext(())
+            } else {
+                showAutoModeScreenTrigger.onNext(())
+            }
+        }
+    }
+    
     func updateState(with state: ConnectionState) {
         connectedState.onNext(ConnectionStateInfo(state: state,
                                 isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
