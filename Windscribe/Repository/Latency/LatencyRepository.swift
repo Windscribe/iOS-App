@@ -20,4 +20,5 @@ protocol LatencyRepository {
     func loadCustomConfigLatency() -> Completable
     func pickBestLocation(pingData: [PingData])
     func pickBestLocation(servers: [Server])
+    func refreshBestLocation()
 }

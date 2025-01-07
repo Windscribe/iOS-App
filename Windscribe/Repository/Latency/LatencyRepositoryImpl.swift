@@ -77,15 +77,11 @@ class LatencyRepositoryImpl: LatencyRepository {
         latencySingles.subscribe(
                 onSuccess: { _ in
                     self.logger.logI(self, "Successfully updated latency data.")
-                    let pingData = self.database.getAllPingData()
-                    self.latency.onNext(pingData)
-                    self.pickBestLocation(pingData: pingData)
+                    self.refreshBestLocation()
                 },
                 onFailure: { _ in
                     self.logger.logE(self, "Failure to update latency data.")
-                    let pingData = self.database.getAllPingData()
-                    self.latency.onNext(pingData)
-                    self.pickBestLocation(pingData: pingData)
+                    self.refreshBestLocation()
                 })
             .disposed(by: self.disposeBag)
 
@@ -212,6 +208,12 @@ class LatencyRepositoryImpl: LatencyRepository {
             .compactMap { region in region.groups.toArray() }
             .reduce([], +)
             .map { city in (city.pingIp, city.pingHost) } ?? []
+    }
+
+    func refreshBestLocation() {
+        let pingData = self.database.getAllPingData()
+        self.latency.onNext(pingData)
+        self.pickBestLocation(pingData: pingData)
     }
 
     func pickBestLocation(pingData: [PingData]) {

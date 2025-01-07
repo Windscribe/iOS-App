@@ -137,18 +137,29 @@ class SessionManager: SessionManagerV2 {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {
                 self.logger.logD(self, "Successfully update latency.")
-                self.checkLocationValidity()
+                self.refreshLocations()
             }, onError: { _ in
                 self.logger.logD(self, "Failed to update latency.")
-                self.latencyRepo.pickBestLocation(pingData: self.localDatabase.getAllPingData())
-                self.checkLocationValidity()
+                self.refreshLocations()
             })
             .disposed(by: disposeBag)
     }
 
+    private func refreshLocations() {
+        Task { @MainActor in
+            latencyRepo.pickBestLocation(pingData: localDatabase.getAllPingData())
+            locationsManager.checkLocationValidity(checkProAccess:{canAccesstoProLocation()})
+        }
+    }
+
     private func checkLocationValidity() {
-        DispatchQueue.main.async {
-            self.locationsManager.checkLocationValidity(checkProAccess: { self.canAccesstoProLocation()} )
+        Task { @MainActor in
+            if vpnManager.isConnected() {
+                latencyRepo.refreshBestLocation()
+                locationsManager.checkLocationValidity(checkProAccess:{canAccesstoProLocation()})
+            } else {
+                loadLatency()
+            }
         }
     }
 
@@ -175,18 +186,10 @@ class SessionManager: SessionManagerV2 {
             serverRepo.getUpdatedServers().delaySubscription(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance).subscribe(
                 onSuccess: { _ in
                     self.logger.logD(self, "Updated server list.")
-                    if self.vpnManager.connectionStatus() == .connected {
-                        self.checkLocationValidity()
-                    } else {
-                        self.loadLatency()
-                    }
-
+                    self.checkLocationValidity()
                 }, onFailure: { _ in
                     self.logger.logD(self, "Failed to update server list.")
                     self.checkLocationValidity()
-                    if self.vpnManager.connectionStatus() != .connected {
-                        self.loadLatency()
-                    }
                 }
             ).disposed(by: disposeBag)
             credentialsRepo.getUpdatedIKEv2Crendentials().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
