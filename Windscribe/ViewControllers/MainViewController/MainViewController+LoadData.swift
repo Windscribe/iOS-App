@@ -135,9 +135,6 @@ extension MainViewController {
         viewModel.latencies.subscribe(onNext: { _ in
             if self.vpnConnectionViewModel.isDisconnected() || force ||
                 self.isAnyRefreshControlIsRefreshing() {
-                if let observer = self.latencyLoaderObserver {
-                    NotificationCenter.default.removeObserver(observer)
-                }
                 if self.vpnConnectionViewModel.isBestLocationSelected(), connectToBestLocation {
                     Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOutWithSelectAndConnectBestLocation), userInfo: nil, repeats: false)
                 } else {
