@@ -290,7 +290,7 @@ extension ConnectionViewModel {
                 switch completion {
                 case .finished:
                     self.logger.logD(self, "Finished disabling connection.")
-                    self.updateLocalIPAddress()
+                    self.updateToLocalIPAddress()
                     if self.loadLatencyValuesOnDisconnect {
                         self.loadLatencyValuesOnDisconnect = false
                         Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.loadLatencyValues), userInfo: nil, repeats: false)
@@ -319,19 +319,6 @@ extension ConnectionViewModel {
         loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, connectToBestLocation: true))
     }
 
-    private func updateLocalIPAddress() {
-        logger.logD(self, "Displaying local IP Address.")
-        gettingIpAddress = true
-        apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
-            self.gettingIpAddress = false
-            if self.isDisconnected() {
-                self.ipAddressSubject.onNext(myIp.userIp)
-            }
-        }, onFailure: { _ in
-            self.gettingIpAddress = false
-        }).disposed(by: disposeBag)
-    }
-
     private func checkPreferencesForTriggers() {
         if preferences.getConnectionCount() == 1 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
@@ -341,6 +328,18 @@ extension ConnectionViewModel {
             logger.logD(self, "Displaying Siri shortcut popup.")
             siriShortcutTrigger.onNext(())
         }
+    }
+    
+    // This should only be called when VPN is disconnected
+    private func updateToLocalIPAddress() {
+        logger.logD(self, "Displaying local IP Address.")
+        gettingIpAddress = true
+        apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+            self.gettingIpAddress = false
+            self.ipAddressSubject.onNext(myIp.userIp)
+        }, onFailure: { _ in
+            self.gettingIpAddress = false
+        }).disposed(by: disposeBag)
     }
 }
 
@@ -383,6 +382,10 @@ extension ConnectionViewModel {
     }
 
     func updateState(with state: ConnectionState) {
+        if !gettingIpAddress, state == .disconnected, !isDisconnected() {
+            updateToLocalIPAddress()
+        }
+        
         connectedState.onNext(ConnectionStateInfo(state: state,
                                 isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
                                 internetConnectionAvailable: false,
