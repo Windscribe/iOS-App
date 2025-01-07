@@ -54,11 +54,6 @@ extension MainViewController {
         UIView.animate(withDuration: 0.25) { [weak self] in
             guard let self = self else { return }
             self.yourIPValueLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
-            if self.vpnConnectionViewModel.isConnected() {
-                self.yourIPIcon.image = UIImage(named: ImagesAsset.secure)
-            } else {
-                self.yourIPIcon.image = UIImage(named: ImagesAsset.unsecure)
-            }
         }
     }
 

@@ -45,7 +45,6 @@ protocol ConnectionViewModelType {
     func selectBestLocation(with locationID: String)
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
-    func displayLocalIPAddress(force: Bool)
     func checkForForceDisconnect()
 
     // Info
@@ -218,18 +217,11 @@ extension ConnectionViewModel {
     }
 
     func displayLocalIPAddress() {
-        displayLocalIPAddress(force: false)
-    }
-
-    func displayLocalIPAddress(force: Bool = false) {
         if !gettingIpAddress && !isConnecting() {
             logger.logD(self, "Displaying local IP Address.")
             gettingIpAddress = true
             apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
                 self.gettingIpAddress = false
-                if self.vpnManager.isDisconnected() || force {
-                    self.vpnManager.ipAddressBeforeConnection = myIp.userIp
-                }
                 self.ipAddressSubject.onNext(myIp.userIp)
             }, onFailure: { _ in
                 self.gettingIpAddress = false
@@ -290,7 +282,7 @@ extension ConnectionViewModel {
                 switch completion {
                 case .finished:
                     self.logger.logD(self, "Finished disabling connection.")
-                    self.updateToLocalIPAddress()
+                    self.displayLocalIPAddress()
                     if self.loadLatencyValuesOnDisconnect {
                         self.loadLatencyValuesOnDisconnect = false
                         Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.loadLatencyValues), userInfo: nil, repeats: false)
@@ -383,9 +375,9 @@ extension ConnectionViewModel {
 
     func updateState(with state: ConnectionState) {
         if !gettingIpAddress, state == .disconnected, !isDisconnected() {
-            updateToLocalIPAddress()
+            displayLocalIPAddress()
         }
-        
+
         connectedState.onNext(ConnectionStateInfo(state: state,
                                 isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
                                 internetConnectionAvailable: false,

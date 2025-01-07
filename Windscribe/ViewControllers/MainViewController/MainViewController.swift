@@ -144,8 +144,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var notificationToken: NotificationToken?
 
     // MARK: Timers
-
-    weak var latencyLoaderObserver: NSObjectProtocol?
     var autoModeSelectorViewTimer: Timer?
     var notificationTimer: Timer?
     var expandedSections: [Int: Bool]?
@@ -227,9 +225,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func configureNotificationListeners() {
-        if vpnConnectionViewModel.isDisconnected() {
-            loadLatencyWhenReady()
-        }
         NotificationCenter.default.addObserver(self, selector: #selector(popoverDismissed), name: Notifications.popoverDismissed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableViews), name: Notifications.reloadTableViews, object: nil)

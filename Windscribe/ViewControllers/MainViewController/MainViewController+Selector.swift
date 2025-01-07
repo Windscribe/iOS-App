@@ -262,23 +262,24 @@ extension MainViewController {
     }
 
     @objc func loadLatencyWhenReady() {
-        guard let observer = latencyLoaderObserver else { return }
         if vpnConnectionViewModel.isInvalid() { return }
-        NotificationCenter.default.removeObserver(observer)
         sessionManager.keepSessionUpdated()
-        if appJustStarted, vpnConnectionViewModel.isDisconnected() {
+        if appJustStarted {
+            appJustStarted = false
             vpnConnectionViewModel.displayLocalIPAddress()
-            loadLatencyValues()
-        } else {
-            reloadTableViews()
-            hideSplashView()
-            configureBestLocation()
+            if vpnConnectionViewModel.isDisconnected() {
+                loadLatencyValues()
+                return
+            }
         }
+        reloadTableViews()
+        hideSplashView()
+        configureBestLocation()
     }
 
     @objc func reachabilityChanged() {
         checkForInternetConnection()
-        if !vpnConnectionViewModel.isConnected() {
+        if vpnConnectionViewModel.isDisconnected() {
             vpnConnectionViewModel.displayLocalIPAddress()
         }
         WifiManager.shared.saveCurrentWifiNetworks()

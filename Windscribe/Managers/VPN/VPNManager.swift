@@ -53,8 +53,6 @@ class VPNManager: VPNManagerProtocol {
     var failCountTimer: Timer?
     var disconnectCounter: Int = 0
     var switchingLocation = false
-
-    var ipAddressBeforeConnection: String = ""
     var userTappedToDisconnect: Bool = false
     var isFromProtocolFailover: Bool = false
     var isFromProtocolChange: Bool = false

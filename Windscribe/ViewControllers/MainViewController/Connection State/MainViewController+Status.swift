@@ -138,6 +138,7 @@ extension MainViewController {
             if [.connected, .disconnected, .testing].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
             if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
             self.updateRefreshControls()
+            self.yourIPIcon.image = UIImage(named: info.state == .connected ? ImagesAsset.secure : ImagesAsset.unsecure)
         }
     }
 
