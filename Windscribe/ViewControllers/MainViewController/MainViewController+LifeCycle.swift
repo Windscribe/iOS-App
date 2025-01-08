@@ -56,7 +56,7 @@ extension MainViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        setNetworkSsid()
+        viewModel.updateSSID()
         checkForInternetConnection()
         hideAutoSecureViews()
         navigationController?.isNavigationBarHidden = true

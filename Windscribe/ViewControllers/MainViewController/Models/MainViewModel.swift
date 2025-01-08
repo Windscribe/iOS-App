@@ -33,6 +33,7 @@ protocol MainViewModelType {
     var showNetworkSecurityTrigger: PublishSubject<Void> { get }
     var showNotificationsTrigger: PublishSubject<Void> { get }
     var becameActiveTrigger: PublishSubject<Void> { get }
+    var updateSSIDTrigger: PublishSubject<Void> { get }
 
     var isBlurStaticIpAddress: Bool { get }
     var isBlurNetworkName: Bool { get }
@@ -62,6 +63,7 @@ protocol MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
+    func updateSSID()
 }
 
 class MainViewModel: MainViewModelType {
@@ -102,6 +104,7 @@ class MainViewModel: MainViewModelType {
     let showNetworkSecurityTrigger: PublishSubject<Void>
     let showNotificationsTrigger: PublishSubject<Void>
     let becameActiveTrigger: PublishSubject<Void>
+    let updateSSIDTrigger = PublishSubject<Void> ()
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
@@ -555,5 +558,9 @@ class MainViewModel: MainViewModelType {
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel? {
         guard let id = customConfigID else { return nil }
         return localDatabase.getCustomConfigs().first { $0.id == id }?.getModel()
+    }
+
+    func updateSSID() {
+        updateSSIDTrigger.onNext(())
     }
 }
