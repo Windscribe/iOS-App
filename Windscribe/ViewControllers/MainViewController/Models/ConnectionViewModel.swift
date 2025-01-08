@@ -321,7 +321,7 @@ extension ConnectionViewModel {
             siriShortcutTrigger.onNext(())
         }
     }
-    
+
     // This should only be called when VPN is disconnected
     private func updateToLocalIPAddress() {
         logger.logD(self, "Displaying local IP Address.")
