@@ -222,6 +222,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.clearScrollHappened()
             self.checkAndShowShareDialogIfNeed()
         }).disposed(by: disposeBag)
+
+        setNetworkSsid()
     }
 
     func configureNotificationListeners() {
@@ -418,7 +420,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     override func setupLocalized() {
         displayLeftDataInformation()
         getMoreDataButton.setTitle(TextsAsset.getMoreData.uppercased(), for: .normal)
-        setNetworkSsid()
+        viewModel.updateSSID()
         localizeAutoSecure()
     }
 

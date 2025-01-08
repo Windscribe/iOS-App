@@ -285,7 +285,7 @@ extension MainViewController {
             vpnConnectionViewModel.displayLocalIPAddress()
         }
         WifiManager.shared.saveCurrentWifiNetworks()
-        setNetworkSsid()
+        viewModel.updateSSID()
     }
 
     @objc func popoverDismissed() {

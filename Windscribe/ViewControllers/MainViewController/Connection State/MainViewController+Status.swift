@@ -15,6 +15,9 @@ extension MainViewController {
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
             self.setCircumventCensorshipBadge(color: $0.state.statusColor.withAlphaComponent($0.state.statusAlpha))
+            if [.connected, .disconnected].contains($0.state) {
+                self.viewModel.updateSSID()
+            }
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
