@@ -237,6 +237,7 @@ extension ConfigurationsManager {
                 other.connection.stopVPNTunnel()
                 try? await waitForDisconnection(manager: other)
             }
+            other.isEnabled = false
             other.onDemandRules = []
             try await saveToPreferences(manager: other)
         }
