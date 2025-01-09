@@ -16,7 +16,7 @@ extension MainViewController {
     @objc func trustedNetworkValueLabelTapped() {
         if trustedNetworkValueLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
             locationManagerViewModel.requestLocationPermission {
-                self.setNetworkSsid()
+                self.viewModel.updateSSID()
             }
         } else {
             viewModel.markBlurNetworkName(isBlured: !viewModel.isBlurNetworkName)
@@ -58,19 +58,22 @@ extension MainViewController {
     }
 
     func setNetworkSsid() {
-        viewModel.appNetwork.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] network in
-            if self.vpnConnectionViewModel.isConnecting() { return }
-            if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
-                if network.networkType == .cellular || network.networkType == .wifi {
-                    if let name = network.name {
-                        self.trustedNetworkValueLabel.text = name
+        Observable.combineLatest(viewModel.updateSSIDTrigger, viewModel.appNetwork)
+            .subscribe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { [weak self] (_, network) in
+                guard let self = self else { return }
+                if self.vpnConnectionViewModel.isConnecting() { return }
+                if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
+                    if network.networkType == .cellular || network.networkType == .wifi {
+                        if let name = network.name {
+                            self.trustedNetworkValueLabel.text = name
+                        }
+                    } else {
+                        self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
                     }
-                } else {
-                    self.trustedNetworkValueLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
                 }
-            }
-        }, onError: { _ in
-            self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
-        }).disposed(by: disposeBag)
+            }, onError: { _ in
+                self.trustedNetworkValueLabel.text = TextsAsset.noNetworksAvailable
+            }).disposed(by: disposeBag)
     }
 }
