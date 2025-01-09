@@ -94,7 +94,7 @@ class ConfigurationsManager {
             }
         }
     }
-    
+
     /// Cache OpenVPN and wireguard managers when first configured.
     func cacheTunnelManager(manager: NEVPNManager) {
         tunnelManagerLock.withLock {
