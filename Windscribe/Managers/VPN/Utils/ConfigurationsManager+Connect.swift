@@ -74,7 +74,7 @@ extension ConfigurationsManager {
                 self.logger.logD("VPNConfiguration", "Saving configuration.")
                 progressPublisher.send(.update("Saving configuration."))
                 try await self.saveToPreferences(manager: nextManager)
-
+                cacheTunnelManager(manager:  nextManager)
                 self.logger.logD("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()

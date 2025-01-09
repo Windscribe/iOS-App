@@ -56,6 +56,11 @@ class ConfigurationsManager {
     /// Delay between connectivity test attempt.
     let delayBetweenConnectivityAttempts: UInt64 = 500_000_000
 
+    /// NETunnelProvider mangers safe for concurrent use.
+    var wgTunnelManager: NETunnelProviderManager?
+    var opTunnelManager: NETunnelProviderManager?
+    private let tunnelManagerLock = NSLock()
+
     init(logger: FileLogger, localDatabase: LocalDatabase, keychainDb: KeyChainDatabase, fileDatabase: FileDatabase, advanceRepository: AdvanceRepository, wgRepository: WireguardConfigRepository, wgCredentials: WgCredentials, preferences: Preferences, locationsManager: LocationsManagerType) {
         self.logger = logger
         self.localDatabase = localDatabase
@@ -66,7 +71,40 @@ class ConfigurationsManager {
         self.wgCredentials = wgCredentials
         self.preferences = preferences
         self.locationsManager = locationsManager
+        loadTunnelManagers()
         load()
+    }
+
+    /// Load OpenVPN and wireguard managers if already configured
+    private func loadTunnelManagers() {
+        tunnelManagerLock.lock()
+        DispatchQueue.main.async {
+            NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
+                if let tunnels = tunnels {
+                    for tunnel in tunnels {
+                        if tunnel.protocolConfiguration?.username == TextsAsset.wireGuard && self.wgTunnelManager == nil {
+                            self.wgTunnelManager = tunnel
+                        }
+                        if tunnel.protocolConfiguration?.username == TextsAsset.openVPN && self.opTunnelManager == nil {
+                            self.opTunnelManager = tunnel
+                        }
+                    }
+                }
+                self.tunnelManagerLock.unlock()
+            }
+        }
+    }
+    
+    /// Cache OpenVPN and wireguard managers when first configured.
+    func cacheTunnelManager(manager: NEVPNManager) {
+        tunnelManagerLock.withLock {
+            if manager.protocolConfiguration?.username == TextsAsset.openVPN &&  opTunnelManager == nil {
+                opTunnelManager = manager as? NETunnelProviderManager
+            }
+            if manager.protocolConfiguration?.username == TextsAsset.wireGuard &&  wgTunnelManager == nil {
+                wgTunnelManager = manager as? NETunnelProviderManager
+            }
+        }
     }
 
     private func load() {
@@ -93,8 +131,14 @@ class ConfigurationsManager {
 
     func getAllManagers() async throws -> [NEVPNManager] {
         var providers: [NEVPNManager] = await [try? getNEVPNManager()].compactMap { $0 }
-        let tunnelProviders = try? await NETunnelProviderManager.loadAllFromPreferences()
-        providers.append(contentsOf: tunnelProviders ?? [])
+        tunnelManagerLock.withLock {
+            if let wgTunnelManager = wgTunnelManager {
+                providers.append(wgTunnelManager)
+            }
+            if let opTunnelManager = opTunnelManager {
+                providers.append(opTunnelManager)
+            }
+        }
         guard providers.count > 0 else { throw AppIntentError.VPNNotConfigured }
         return providers
     }
