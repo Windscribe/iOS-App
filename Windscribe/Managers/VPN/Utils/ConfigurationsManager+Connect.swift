@@ -203,7 +203,6 @@ extension ConfigurationsManager {
         Task {
             progressPublisher.send(.update("Retrieving active VPN manager..."))
             do {
-                // Maybe it doesn't really need to reload all the managers, just get the local `managers`
                 let managers = (try? await getAllManagers()) ?? []
                 for activeManager in managers {
                     progressPublisher.send(.update("Active VPN manager found, starting disconnection process..."))
