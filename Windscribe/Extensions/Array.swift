@@ -29,24 +29,3 @@ extension Array where Element: Hashable {
         return Array(thisSet.symmetricDifference(otherSet))
     }
 }
-
-extension Array {
-    func chunked(into size: Int) -> [[Element]] {
-        var chunks: [[Element]] = []
-        var chunk: [Element] = []
-
-        for element in self {
-            chunk.append(element)
-            if chunk.count == size {
-                chunks.append(chunk)
-                chunk = []
-            }
-        }
-
-        if !chunk.isEmpty {
-            chunks.append(chunk)
-        }
-
-        return chunks
-    }
-}
