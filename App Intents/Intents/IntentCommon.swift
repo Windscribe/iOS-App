@@ -98,7 +98,7 @@ extension IntentDialog {
     }
 
     static func responseSuccessWithNoConnection(ipAddress: String) -> Self {
-        "You are not connected to VPN. Your  IP address is \(ipAddress)."
+        "You are now connected to VPN. Your  IP address is \(ipAddress)."
     }
 
     static var responseFailureState: Self {
