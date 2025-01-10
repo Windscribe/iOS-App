@@ -181,20 +181,47 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Returns single task built from list of ip and hosts.
     private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
-        let tasks = from.map { ip, host in
-            Single<PingData>.create { completion in
-                self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
-                    let pingData = PingData(ip: ip, latency: -1)
-                    if success {
-                        pingData.latency = Int(time)
-                        self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+        let concurrentQueue = DispatchQueue(label: "com.windscribe.latencyTask", qos: .userInitiated, attributes: .concurrent)
+        let group = DispatchGroup()
+        var successfulItems = 0
+        var totalLatency = 0
+        var results: [PingData] = []
+        let resultLock = NSLock()
+        let chunks = from.chunked(into: 30)
+        for chunk in chunks {
+            for (ip, host) in chunk {
+                group.enter()
+                concurrentQueue.async {
+                    self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
+                        let pingData = PingData(ip: ip, latency: -1)
+                        if success {
+                            pingData.latency = Int(time)
+                            self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+                            resultLock.lock()
+                            totalLatency += pingData.latency
+                            successfulItems += 1
+                            results.append(pingData)
+                            resultLock.unlock()
+                        } else {
+                            resultLock.lock()
+                            results.append(pingData)
+                            resultLock.unlock()
+                        }
+                        group.leave()
                     }
-                    completion(.success(pingData))
                 }
-                return Disposables.create()
             }
-        }.map { single in single.asObservable() }
-        return Observable.zip(tasks).asSingle()
+            group.wait()
+        }
+        if successfulItems > 0 {
+            self.logger.logD(self, "Average for server list: \(totalLatency / successfulItems)")
+        }
+        return Single<[PingData]>.create { single in
+            group.notify(queue: .main) {
+                single(.success(results))
+            }
+            return Disposables.create()
+        }
     }
 
     private func getStaticPingAndHosts() -> [(String, String)] {
