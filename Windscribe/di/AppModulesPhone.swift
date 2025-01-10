@@ -161,7 +161,11 @@ class ViewModels: Assembly {
                                 apiManager: r.resolve(APIManager.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
-                                connectionManager: r.resolve(ConnectionManagerV2.self)!, preferences: r.resolve(Preferences.self)!)
+                                connectionManager: r.resolve(ConnectionManagerV2.self)!,
+                                preferences: r.resolve(Preferences.self)!,
+                                connectivity: r.resolve(Connectivity.self)!,
+                                wifiManager: WifiManager.shared,
+                                securedNetwork: r.resolve(SecuredNetworkRepository.self)!)
         }.inObjectScope(.transient)
         container.register(CardTopViewModelType.self) { r in
             CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)

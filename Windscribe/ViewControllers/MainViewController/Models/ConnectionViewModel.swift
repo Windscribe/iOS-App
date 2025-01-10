@@ -80,23 +80,34 @@ class ConnectionViewModel: ConnectionViewModelType {
     let locationsManager: LocationsManagerType
     let connectionManager: ConnectionManagerV2
     let preferences: Preferences
+    let connectivity: Connectivity
+    let wifiManager: WifiManager
+    let securedNetwork: SecuredNetworkRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
     private var loadLatencyValuesOnDisconnect = false
+    private var currentNetwork: AppNetwork?
 
     init(logger: FileLogger,
          apiManager: APIManager,
          vpnManager: VPNManager,
          locationsManager: LocationsManagerType,
          connectionManager: ConnectionManagerV2,
-         preferences: Preferences) {
+         preferences: Preferences,
+         connectivity: Connectivity,
+         wifiManager: WifiManager,
+         securedNetwork: SecuredNetworkRepository) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.locationsManager = locationsManager
         self.connectionManager = connectionManager
         self.preferences = preferences
+        self.connectivity = connectivity
+        self.wifiManager = wifiManager
+        self.securedNetwork = securedNetwork
+
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -132,6 +143,15 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.enableConnection()
             }
         }.disposed(by: disposeBag)
+
+        connectivity.network.subscribe(onNext: { network in
+            if self.currentNetwork?.name != network.name,
+               let info = try? vpnManager.vpnInfo.value(),
+               info.status == .connected {
+                self.refreshConnectionFromNetworkChange()
+            }
+            self.currentNetwork = network
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 }
 
@@ -179,7 +199,7 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryInfo() -> LocationUIInfo {
-        guard var location = locationsManager.getLocationUIInfo() else {
+        guard let location = locationsManager.getLocationUIInfo() else {
             return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
         }
         return location
@@ -211,9 +231,26 @@ extension ConnectionViewModel {
     }
 
     func refreshProtocols() {
-        Task {
-            await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+        Task { @MainActor in
+            wifiManager.saveCurrentWifiNetworks()
+            guard securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true else { return }
+            await connectionManager.refreshProtocols(shouldReset: true,
+                                                     shouldUpdate: true,
+                                                     shouldReconnect: isConnected())
         }
+    }
+
+    private func refreshConnectionFromNetworkChange() {
+        wifiManager.saveCurrentWifiNetworks()
+        connectionTaskPublisher?.cancel()
+        connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
+            .sink { _ in
+                Task { @MainActor in
+                    await self.connectionManager.refreshProtocols(shouldReset: true,
+                                                             shouldUpdate: true,
+                                                             shouldReconnect: true)
+                }
+            } receiveValue: { _ in }
     }
 
     func displayLocalIPAddress() {
