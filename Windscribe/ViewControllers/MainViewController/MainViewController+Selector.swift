@@ -257,9 +257,7 @@ extension MainViewController {
         } else {
             hideAutoSecureViews()
             WifiManager.shared.saveCurrentWifiNetworks()
-            if preferredProtocolSwitch.status {
-                vpnConnectionViewModel.refreshProtocols()
-            }
+            vpnConnectionViewModel.refreshProtocols()
         }
     }
 
