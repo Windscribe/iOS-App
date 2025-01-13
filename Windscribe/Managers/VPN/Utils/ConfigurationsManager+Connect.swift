@@ -108,7 +108,7 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                let userIp = try await self.testConnectivityWithRetries()
+                                let userIp = try await self.testConnectivityWithRetries(nextManager: nextManager)
                                 if Task.isCancelled {
                                     progressPublisher.send(.update("Task cancelled"))
                                 }
@@ -125,14 +125,26 @@ extension ConfigurationsManager {
                     } else if elapsedTime >= maxTimeout {
                         progressPublisher.send(.update("Failed to connect: Timed out after \(Int(maxTimeout)) seconds"))
                         Task {
-                            try await self.disableProfile(nextManager)
-                            self.getConnectError(manager: nextManager) { error in
+                            do {
+                                try await self.getConnectError(manager: nextManager)
+                                try await self.disableProfile(nextManager)
+                            } catch {
                                 progressPublisher.send(completion: .failure(error))
                             }
                         }
                         cancellable?.cancel()
                     } else {
-                        progressPublisher.send(.update("Attempting to connect... elapsed time: \(Int(elapsedTime)) seconds"))
+                        Task {
+                            do {
+                                try await self.lookForAuthFailure(manager: nextManager)
+                            } catch {
+                                cancellable?.cancel()
+                                try await self.disableProfile(nextManager)
+                                progressPublisher.send(completion: .failure(error))
+                            }
+                            let parsedTime = "\(Int(elapsedTime)).\(Int(elapsedTime * 10.0) % 10)"
+                            progressPublisher.send(.update("Attempting to connect... elapsed time: \(parsedTime) seconds"))
+                        }
                     }
                 }
             } catch {
@@ -160,25 +172,49 @@ extension ConfigurationsManager {
         return ProtocolPort(protocolName: proto, portName: port)
     }
 
-    private func getConnectError(manager: NEVPNManager, completion: @escaping (Error) -> Void) {
+    private func getConnectError(manager: NEVPNManager) async throws {
         if #available(iOS 16.0, *) {
-            manager.connection.fetchLastDisconnectError { error in
-                guard let error = error else {
-                    completion(VPNConfigurationErrors.connectionTimeout)
-                    return
-                }
+            do {
+                try await manager.connection.fetchLastDisconnectError()
+            } catch {
                 if let nsError = error as NSError? {
-                    self.logger.logD("VPNConfiguration", "\(nsError)")
+                    self.logger.logD("VPNConfiguration", "Connection error: \(nsError)")
+                    if [12, 8, 50].contains(nsError.code) {
+                        throw VPNConfigurationErrors.authFailure
+                    }
                 }
-                if let nsError = error as NSError?, [12, 8, 50].contains(nsError.code) {
-                    completion(VPNConfigurationErrors.authFailure)
-                    return
-                }
-                completion(VPNConfigurationErrors.connectionTimeout)
             }
-        } else {
-            completion(VPNConfigurationErrors.connectionTimeout)
         }
+        throw VPNConfigurationErrors.connectionTimeout
+    }
+
+    private func lookForAuthFailure(manager: NEVPNManager) async throws {
+        if #available(iOS 16.0, *) {
+            do {
+                try await manager.connection.fetchLastDisconnectError()
+            } catch {
+                if let nsError = error as NSError?, [12, 8, 50].contains(nsError.code) {
+                    throw VPNConfigurationErrors.authFailure
+                }
+            }
+        }
+    }
+
+    /// Test VPN connection for network connectivity.
+    private func testConnectivityWithRetries(nextManager: NEVPNManager) async throws -> String {
+        for attempt in 1 ... maxConnectivityTestAttempts {
+            do {
+                let userIp = try await api.getIp().value.userIp
+                return userIp
+            } catch {
+                if attempt == maxConnectivityTestAttempts {
+                    self.logger.logE("VPNConfiguration", "Connectivity error: \(error)")
+                    throw VPNConfigurationErrors.connectivityTestFailed
+                }
+                try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
+            }
+        }
+        throw VPNConfigurationErrors.connectivityTestFailed
     }
 
     /// Initiates an asynchronous VPN disconnection process for any active VPN managers.
@@ -238,7 +274,7 @@ extension ConfigurationsManager {
             }
             other.isEnabled = false
             other.onDemandRules = []
-            try await saveToPreferences(manager: other)
+            try? await saveToPreferences(manager: other)
         }
     }
 
@@ -254,22 +290,6 @@ extension ConfigurationsManager {
         }
         try await disableProfile(nextManager)
         return nextManager
-    }
-
-    /// Test VPN connection for network connectivity.
-    private func testConnectivityWithRetries() async throws -> String {
-        for attempt in 1 ... maxConnectivityTestAttempts {
-            do {
-                let userIp = try await api.getIp().value.userIp
-                return userIp
-            } catch {
-                if attempt == maxConnectivityTestAttempts {
-                    throw error
-                }
-                try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
-            }
-        }
-        throw VPNConfigurationErrors.connectivityTestFailed
     }
 
     /// Block untill disconnect event is received.

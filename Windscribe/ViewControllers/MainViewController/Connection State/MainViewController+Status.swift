@@ -24,6 +24,10 @@ extension MainViewController {
             self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
 
+        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showAuthFailurePopup()
+        }).disposed(by: disposeBag)
+
         vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showOutOfDataPopup()
         }).disposed(by: disposeBag)
