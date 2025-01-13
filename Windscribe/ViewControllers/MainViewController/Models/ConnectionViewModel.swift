@@ -18,6 +18,7 @@ protocol ConnectionViewModelType {
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
     var showPrivacyTrigger: PublishSubject<Void> { get }
+    var showAuthFailureTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
@@ -65,6 +66,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
     let showPrivacyTrigger = PublishSubject<Void>()
+    let showAuthFailureTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let ipAddressSubject = PublishSubject<String>()
     let showAutoModeScreenTrigger = PublishSubject<Void>()
@@ -383,8 +385,6 @@ extension ConnectionViewModel {
                 .invalidServerConfig,
                 .configNotFound,
                 .incorrectVPNManager,
-                .connectivityTestFailed,
-                .authFailure,
                 .networkIsOffline,
                 .connectionTimeout:
             logger.logE(self, error.description)
@@ -395,6 +395,14 @@ extension ConnectionViewModel {
             showUpgradeRequiredTrigger.onNext(())
         case .privacyNotAccepted:
             showPrivacyTrigger.onNext(())
+        case .authFailure:
+            showAuthFailureTrigger.onNext(())
+        case .connectivityTestFailed:
+            guard locationsManager.getLocationType() == .custom else {
+                logger.logE(self, error.description)
+                return false
+            }
+            showAuthFailureTrigger.onNext(())
         }
         return true
     }
