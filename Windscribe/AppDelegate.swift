@@ -48,7 +48,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
     {
-        print("$$$ \(ProcessInfo.processInfo.processName)")
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
@@ -59,12 +58,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             registerForPushNotifications()
             resetCountryOverrideForServerList()
             purchaseManager.verifyPendingTransaction()
-            if preferences.userSessionAuth() != nil {
-                latencyRepository.loadLatency()
-            }
-            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
             setApplicationWindow()
+            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+            if preferences.userSessionAuth() != nil {
+                delay(2) {
+                    self.latencyRepository.loadLatency()
+                }
+            }
         }
         return true
     }
