@@ -154,6 +154,13 @@ extension MainViewController {
                                             buttonText: TextsAsset.okay)
     }
 
+    func showAuthFailurePopup() {
+        AlertManager.shared.showSimpleAlert(viewController: self,
+                                            title: TextsAsset.AuthFailure.title,
+                                            message: TextsAsset.AuthFailure.message,
+                                            buttonText: TextsAsset.okay)
+    }
+
     @objc func reloadTableViews() {
         DispatchQueue.main.async { [weak self] in
             self?.serverListTableView.reloadData()

@@ -77,14 +77,18 @@ extension VPNManager {
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
                     case .authFailure:
-                        return self.updateConnectionData(locationID: id, connectionError: error)
-                            .flatMap { updatedLocation in
-                                self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), isEmergency: isEmergency)
-                            }.eraseToAnyPublisher()
+                        if self.locationsManager.getLocationType(id: id) != .custom {
+                            return self.updateConnectionData(locationID: id, connectionError: error)
+                                .flatMap { updatedLocation in
+                                    self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), isEmergency: isEmergency)
+                                }.eraseToAnyPublisher()
+                        }
                     // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
-                        self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
-                        return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                        if self.locationsManager.getLocationType(id: id) != .custom {
+                            self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
+                            return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
+                        }
                     default: ()
                     }
                 }

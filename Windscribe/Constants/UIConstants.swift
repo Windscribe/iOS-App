@@ -335,6 +335,16 @@ enum TextsAsset {
         }
     }
 
+    enum AuthFailure {
+        static var title: String {
+            return "Unable to connect".localize()
+        }
+
+        static var message: String {
+            return "VPN will be disconnected due to credential failure.".localize()
+        }
+    }
+
     static var appLogSubmitSuccessAlert: String {
         return "App Log Submitted.".localize()
     }
