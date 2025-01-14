@@ -22,11 +22,7 @@ protocol CustomConfigListViewDelegate: WTableViewDataSourceDelegate, AnyObject {
     func showCustomConfigRefreshControl()
 }
 
-class CustomConfigListTableViewDataSource: WTableViewDataSource,
-    UITableViewDataSource,
-    WTableViewDataSourceDelegate,
-    SwipeTableViewCellDelegate
-{
+class CustomConfigListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate, SwipeTableViewCellDelegate {
     var customConfigs: [CustomConfigModel]?
     weak var logicDelegate: CustomConfigListModelDelegate?
     weak var uiDelegate: CustomConfigListViewDelegate?
@@ -41,9 +37,7 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource,
         self.customConfigs = customConfigs
     }
 
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection _: Int) -> Int
-    {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
         guard let count = customConfigs?.count else { return 0 }
         if count == 0 {
             uiDelegate?.hideCustomConfigRefreshControl()
@@ -55,9 +49,7 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource,
         return count
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: customConfigCellReuseIdentifier, for: indexPath) as? CustomConfigTableViewCell ?? CustomConfigTableViewCell(style: .default, reuseIdentifier: customConfigCellReuseIdentifier)
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
         cell.delegate = self
@@ -66,15 +58,11 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource,
         return cell
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 50
     }
 
-    func tableView(_: UITableView,
-                   didSelectRowAt indexPath: IndexPath)
-    {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let customConfig = customConfigs?[indexPath.row] else { return }
         logicDelegate?.setSelectedCustomConfig(customConfig: customConfig)
     }
@@ -87,16 +75,11 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource,
         tableView.backgroundView = view
     }
 
-    func tableView(_: UITableView,
-                   canEditRowAt _: IndexPath) -> Bool
-    {
+    func tableView(_: UITableView, canEditRowAt _: IndexPath) -> Bool {
         return true
     }
 
-    func tableView(_: UITableView,
-                   editActionsForRowAt indexPath: IndexPath,
-                   for orientation: SwipeActionsOrientation) -> [SwipeAction]?
-    {
+    func tableView(_: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         guard orientation == .right else { return nil }
         guard let customConfig = customConfigs?[indexPath.row], let fileId = customConfig.id, let protocolType = customConfig.protocolType else { return nil }
 
