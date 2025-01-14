@@ -41,7 +41,7 @@ extension ViewLogViewController {
         var pointSize = font?.pointSize
         let fontName = font?.fontName
 
-        pointSize = ((gestureRecognizer.velocity > 0) ? 1 : -1) * 1 + pointSize!
+        pointSize = min(max(gestureRecognizer.velocity * 0.5, -1.0), 1.0) + pointSize!
 
         if pointSize! < 6 {
             pointSize = 6

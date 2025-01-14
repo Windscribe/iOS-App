@@ -27,7 +27,7 @@ protocol CustomConfigPickerViewModelType: CustomConfigListModelDelegate {
     var configureVPNTrigger: PublishSubject<Void> { get }
     var disableVPNTrigger: PublishSubject<Void> { get }
     var presentDocumentPickerTrigger: PublishSubject<UIDocumentPickerViewController> { get }
-    var showEditCustomConfigTrigger: PublishSubject<(customConfig: CustomConfigModel, isUpdating: Bool)> { get }
+    var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
 }
 
 class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
@@ -44,7 +44,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     var configureVPNTrigger = PublishSubject<Void>()
     var disableVPNTrigger = PublishSubject<Void>()
     var presentDocumentPickerTrigger = PublishSubject<UIDocumentPickerViewController>()
-    var showEditCustomConfigTrigger = PublishSubject<(customConfig: CustomConfigModel, isUpdating: Bool)>()
+    var showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
 
     let disposeBag = DisposeBag()
 
@@ -129,7 +129,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     func showEditCustomConfig(customConfig: CustomConfigModel) {
-        showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: true))
+        showEditCustomConfigTrigger.onNext(customConfig)
     }
 
     private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) async {
@@ -141,11 +141,6 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
         }
 
         locationsManager.saveCustomConfig(withID: customConfig.id)
-        await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
-        if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
-            showEditCustomConfigTrigger.onNext((customConfig: customConfig, isUpdating: false))
-            return
-        }
         configureVPNTrigger.onNext(())
     }
 

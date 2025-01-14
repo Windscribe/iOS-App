@@ -114,7 +114,7 @@ extension MainViewController {
                 }
                 self.statusDivider.isHidden = [.automaticFailed].contains(info.state)
                 self.statusImageView.image = UIImage(named: info.state.statusImage)
-                self.statusImageView.isHidden = [.testing, .connected, .disconnected, .disconnecting].contains(info.state)
+                self.statusImageView.isHidden = info.state != .connecting
                 self.statusView.backgroundColor = info.state.statusViewColor
                 self.statusLabel.text = info.state.statusText
                 self.statusLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(info.state)
@@ -124,7 +124,7 @@ extension MainViewController {
                 self.preferredProtocolBadge.image = UIImage(named: info.state.preferredProtocolBadge)
                 self.trustedNetworkIcon.image = UIImage(named: info.trustedNetworkImage)
                 self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
-                self.connectButtonRingView.isHidden = [.disconnected, .disconnecting].contains(info.state)
+                self.connectButtonRingView.isHidden = [.disconnected, .disconnecting, .invalid, .automaticFailed].contains(info.state)
                 self.connectButtonRingView.image = UIImage(named: info.state.connectButtonRing)
                 self.connectButton.setImage(UIImage(named: info.state.connectButton), for: .normal)
                 if info.state == .disconnected {
@@ -142,8 +142,13 @@ extension MainViewController {
                     self.hideAutoSecureViews()
                 }
             }
-            if [.connected, .disconnected, .testing].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
-            if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
+            if [.connected, .testing].contains(info.state) {
+                self.connectButtonRingView.stopRotating()
+            } else {
+                self.connectButtonRingView.rotate()
+            }
+            if info.state == .connecting { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
+
             self.updateRefreshControls()
             self.yourIPIcon.image = UIImage(named: info.state == .connected ? ImagesAsset.secure : ImagesAsset.unsecure)
         }

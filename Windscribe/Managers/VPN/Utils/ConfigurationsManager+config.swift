@@ -416,6 +416,17 @@ extension ConfigurationsManager {
                     } else {
                         promise(.success(()))
                     }
+                case .custom:
+                    let customID = self.locationsManager.getId(location: locationID)
+                    guard let customConfig = self.localDatabase.getCustomConfigs().first(where: { $0.id == customID })?.getModel() else {
+                        promise(.failure(VPNConfigurationErrors.customConfigSupportNotAvailable))
+                        return
+                    }
+                    if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
+                        promise(.failure(VPNConfigurationErrors.customConfigMissingCredentials(customConfig)))
+                        return
+                    }
+                    promise(.success(()))
                 default:
                     promise(.success(()))
                 }

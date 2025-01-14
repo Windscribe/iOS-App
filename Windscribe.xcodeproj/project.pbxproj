@@ -2521,7 +2521,6 @@
 			isa = PBXGroup;
 			children = (
 				1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */,
-				1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */,
 			);
 			path = "Connection State";
 			sourceTree = "<group>";
@@ -3259,6 +3258,7 @@
 				1EC6C77C2BE10DB00036248B /* Search Locations */,
 				E9D3D36B274D0F1A00283285 /* Delegates */,
 				AF018DEE21B0866600B225FF /* MainViewController.swift */,
+				1EA91DD72BEA7F2C00496DF8 /* MainViewController+Status.swift */,
 				AF36A1FE237DC3FE00BDDCDB /* MainViewController+Motion.swift */,
 				C5B6E865268208D40038B4D6 /* MainViewController+RefreshControls.swift */,
 				E9C9143C2735770000C2ABCD /* MainViewController+Connection.swift */,

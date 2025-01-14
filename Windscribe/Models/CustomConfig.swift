@@ -10,7 +10,7 @@ import Foundation
 import Realm
 import RealmSwift
 
-struct CustomConfigModel {
+struct CustomConfigModel: Equatable {
     let id: String?
     let name: String?
     let serverAddress: String?
