@@ -315,30 +315,35 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadFavNode() {
-        localDatabase.getFavNode().subscribe(onNext: { [self] data in
-            favNode.onNext(data)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        localDatabase.getFavNode()
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [self] data in
+                favNode.onNext(data)
+            }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func loadStaticIps() {
-        staticIpRepository.getStaticServers().subscribe(on: MainScheduler.instance).subscribe(onSuccess: { [self] data in
-            staticIPs.onNext(data)
-        }).disposed(by: disposeBag)
+        staticIpRepository.getStaticServers()
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onSuccess: { [self] data in
+                staticIPs.onNext(data)
+            }).disposed(by: disposeBag)
     }
 
     func loadCustomConfigs() {
-        localDatabase.getCustomConfig().filter {$0.filter({$0.isInvalidated}).count == 0}.flatMap { value in
-            Single<[CustomConfig]>.create { single in
-                self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: {
-                    single(.success(value))
-                }, onError: { _ in
-                    single(.success(value))
-                }).disposed(by: self.disposeBag)
-                return Disposables.create {}
-            }
-        }.observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] data in
+        localDatabase.getCustomConfig().filter {$0.filter({$0.isInvalidated}).count == 0}
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(on: MainScheduler.instance)
+            .subscribe(onNext: { [self] data in
             customConfigs.onNext(data)
+                updateCustomConfigLatency()
         }).disposed(by: disposeBag)
+    }
+
+    func updateCustomConfigLatency() {
+        self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: { } ).disposed(by: self.disposeBag)
     }
 
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
