@@ -32,7 +32,11 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
-            self.popupRouter?.routeTo(to: .enterCredentials(config: $0.customConfig, isUpdating: $0.isUpdating), from: self)
+            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: true), from: self)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
+            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: false), from: self)
         }).disposed(by: disposeBag)
     }
 }

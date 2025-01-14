@@ -26,6 +26,7 @@ protocol ConnectionViewModelType {
     var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
+    var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -74,6 +75,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let pushNotificationPermissionsTrigger = PublishSubject<Void>()
     let siriShortcutTrigger = PublishSubject<Void>()
     let requestLocationTrigger = PublishSubject<Void>()
+    let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -403,6 +405,8 @@ extension ConnectionViewModel {
                 return false
             }
             showAuthFailureTrigger.onNext(())
+        case let .customConfigMissingCredentials(customConfig):
+            showEditCustomConfigTrigger.onNext(customConfig)
         }
         return true
     }

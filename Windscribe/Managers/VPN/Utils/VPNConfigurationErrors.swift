@@ -24,6 +24,7 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case upgradeRequired
     case networkIsOffline
     case privacyNotAccepted
+    case customConfigMissingCredentials(CustomConfigModel)
 
     var description: String {
         switch self {
@@ -57,6 +58,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "Network seems offline."
         case .privacyNotAccepted:
             return "Privacy has not been accepted yet."
+        case .customConfigMissingCredentials:
+            return "Custom config is missing the credentials."
         }
     }
 }
