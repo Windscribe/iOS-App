@@ -63,10 +63,11 @@ class VPNManager: VPNManagerProtocol {
     let configManager: ConfigurationsManager
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManagerType
-    let sessionManager: SessionManagerV2
-    let protocolManager: ProtocolManagerType
 
     var connectionTaskPublisher: AnyCancellable?
+
+    lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+    lazy var protocolManager: ProtocolManagerType =  Assembler.resolve(ProtocolManagerType.self)
 
     /// The current configuration state of the VPN, with thread-safe access.
     var configurationState: ConfigurationState {
@@ -83,7 +84,7 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType, sessionManager: SessionManagerV2, protocolManager: ProtocolManagerType) {
+    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -93,8 +94,6 @@ class VPNManager: VPNManagerProtocol {
         self.configManager = configManager
         self.alertManager = alertManager
         self.locationsManager = locationsManager
-        self.sessionManager = sessionManager
-        self.protocolManager = protocolManager
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
