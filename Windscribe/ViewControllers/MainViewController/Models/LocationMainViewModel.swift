@@ -21,7 +21,7 @@ protocol LocationManagingViewModelType: DisclosureAlertDelegate {
 }
 
 class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
-    var connectivityManager: ConnectionManagerV2
+    var connectivityManager: ProtocolManagerType
     var logger: FileLogger
     var shouldPresentLocationPopUp = PublishSubject<Bool>()
     private var connectivity: Connectivity
@@ -30,7 +30,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
     private var locationCallback: (() -> Void)?
     private let locationManager = CLLocationManager()
 
-    init(connectivityManager: ConnectionManagerV2, logger: FileLogger, connectivity: Connectivity, wifiManager: WifiManager) {
+    init(connectivityManager: ProtocolManagerType, logger: FileLogger, connectivity: Connectivity, wifiManager: WifiManager) {
         self.connectivityManager = connectivityManager
         self.logger = logger
         self.connectivity = connectivity

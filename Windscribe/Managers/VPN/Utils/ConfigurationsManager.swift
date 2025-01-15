@@ -12,9 +12,7 @@ import RxSwift
 import Swinject
 
 protocol ConfigurationsManagerDelegate: AnyObject {
-    func setRestartOnDisconnect(with value: Bool)
     func configureForConnectionState()
-    func disconnectOrFail()
     func setActiveManager(with type: VPNManagerType?)
 }
 
@@ -269,8 +267,7 @@ class ConfigurationsManager {
             manager.protocolConfiguration?.includeAllNetworks = false
         #endif
         if (try? await saveToPreferences(manager: manager)) != nil,
-           [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status)
-        {
+           [NEVPNStatus.connected, NEVPNStatus.connecting].contains(manager.connection.status) {
             manager.connection.stopVPNTunnel()
         }
         try? await Task.sleep(nanoseconds: 2_000_000_000)

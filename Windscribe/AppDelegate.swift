@@ -53,7 +53,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         languageManager.setAppLanguage()
         Task {
             livecycleManager.onAppStart()
-            await vpnManager.setup()
             recordInstallIfFirstLoad()
             registerForPushNotifications()
             resetCountryOverrideForServerList()
@@ -129,10 +128,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         if preferences.userSessionAuth() != nil {
             if userActivity.activityType == SiriIdentifiers.connect {
                 NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
-                vpnManager.connectWhenReady = true
             } else if userActivity.activityType == SiriIdentifiers.disconnect {
                 NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
-                vpnManager.disconnectWhenReady = true
             }
         }
         return true
@@ -160,10 +157,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             } else {
                 if url.absoluteString.contains("disconnect") {
                     NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
-                    vpnManager.disconnectWhenReady = true
                 } else {
                     NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
-                    vpnManager.connectWhenReady = true
                 }
             }
         }
@@ -201,7 +196,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationWillEnterForeground(_: UIApplication) {
         logger.logD(self, "App state changed to WillEnterForeground.")
-        ConnectionManager.shared.resetGoodProtocol()
+        ProtocolManager.shared.resetGoodProtocol()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {

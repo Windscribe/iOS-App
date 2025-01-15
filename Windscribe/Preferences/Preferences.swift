@@ -31,6 +31,7 @@ protocol Preferences {
     func getKillSwitch() -> Observable<Bool?>
     func getKillSwitchSync() -> Bool
     func saveAllowLane(mode: Bool)
+    func getAllowLaneSync() -> Bool
     func getAllowLane() -> Observable<Bool?>
     func saveHapticFeedback(haptic: Bool)
     func getHapticFeedback() -> Observable<Bool?>

@@ -23,6 +23,10 @@ enum ConfigurationState {
     case testing
 }
 
+protocol VPNManagerDelegate: AnyObject {
+    func saveDataForWidget()
+}
+
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
@@ -33,44 +37,14 @@ class VPNManager: VPNManagerProtocol {
 
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
     var connectionStateUpdatedTrigger = PublishSubject<Void>()
-    var selectedFirewallMode: Bool = true
-    var selectedConnectionMode: String?
 
-    var uniqueConnectionId = ""
     var lastConnectionStatus: NEVPNStatus = .disconnected
 
-    var restartOnDisconnect: Bool = false
-    var retryWithNewCredentials: Bool = false
-    var retryInProgress: Bool = false
-    var keepConnectingState: Bool = false
-    var triedToConnect: Bool = false
-    var disableOrFailOnDisconnect: Bool = false
-    var retryTimer: Timer?
-    var connectingTimer: Timer?
-    var disconnectingTimer: Timer?
-    var contentIntentTimer: Timer?
-    var connectivityTestTimer: Timer?
-    var failCountTimer: Timer?
-    var disconnectCounter: Int = 0
-    var switchingLocation = false
-    var userTappedToDisconnect: Bool = false
     var isFromProtocolFailover: Bool = false
     var isFromProtocolChange: Bool = false
-    var successfullProtocolChange: Bool = false
-    var connectIntent: Bool = false
-    var isOnDemandRetry: Bool = false
     var awaitingConnectionCheck = false
 
-    // siri shortcut and today extension intents
-    var connectWhenReady = false
-    var disconnectWhenReady = false
-
-    var displayingAskToRetryPopup: UIAlertController?
-
     var untrustedOneTimeOnlySSID: String = ""
-
-    var killSwitch: Bool = DefaultValues.killSwitch
-    var allowLane: Bool = DefaultValues.allowLaneMode
 
     /// Represents the configuration state of the VPN.
     private var _configurationState = ConfigurationState.initial
@@ -78,9 +52,8 @@ class VPNManager: VPNManagerProtocol {
     /// A lock used to synchronize access to the configuration state.
     private let configureStateLock = NSLock()
 
-    let wgCrendentials: WgCredentials
-    let wgRepository: WireguardConfigRepository
-    let api: APIManager
+    private let activeManagerKey = "activeManager"
+
     let logger: FileLogger
     let localDB: LocalDatabase
     let serverRepository: ServerRepository
@@ -90,12 +63,10 @@ class VPNManager: VPNManagerProtocol {
     let configManager: ConfigurationsManager
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManagerType
+    let sessionManager: SessionManagerV2
+    let protocolManager: ProtocolManagerType
 
     var connectionTaskPublisher: AnyCancellable?
-
-    lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
-    lazy var connectionManager: ConnectionManagerV2 = Assembler.resolve(ConnectionManagerV2.self)
-    lazy var changeProtocol = Assembler.resolve(ProtocolSwitchViewController.self)
 
     /// The current configuration state of the VPN, with thread-safe access.
     var configurationState: ConfigurationState {
@@ -112,10 +83,7 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    init(wgCrendentials: WgCredentials, wgRepository: WireguardConfigRepository, api: APIManager, logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
-        self.wgCrendentials = wgCrendentials
-        self.wgRepository = wgRepository
-        self.api = api
+    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType, sessionManager: SessionManagerV2, protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -125,41 +93,20 @@ class VPNManager: VPNManagerProtocol {
         self.configManager = configManager
         self.alertManager = alertManager
         self.locationsManager = locationsManager
+        self.sessionManager = sessionManager
+        self.protocolManager = protocolManager
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
                                                name: NSNotification.Name.NEVPNStatusDidChange,
                                                object: nil)
-        preferences.getFirewallMode().subscribe { data in
-            self.selectedFirewallMode = data ?? DefaultValues.firewallMode
-        }.disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe { data in
-            if data == nil {
-                self.selectedConnectionMode = DefaultValues.connectionMode
-            } else {
-                self.selectedConnectionMode = data
-            }
-        }.disposed(by: disposeBag)
-
         connectionStateUpdatedTrigger
             .debounce(.milliseconds(250), scheduler: MainScheduler.instance)
             .subscribe { _ in
                 self.configureForConnectionState()
         }.disposed(by: disposeBag)
 
-    }
-
-    func resetProperties() {
-        retryWithNewCredentials = false
-        restartOnDisconnect = false
-        keepConnectingState = false
-        disableOrFailOnDisconnect = false
-        retryTimer?.invalidate()
-        connectingTimer?.invalidate()
-        disconnectingTimer?.invalidate()
-        contentIntentTimer?.invalidate()
-        connectivityTestTimer?.invalidate()
-        failCountTimer?.invalidate()
+        self.configManager.delegate = self
     }
 
     func isActive() async -> Bool {
@@ -194,17 +141,40 @@ class VPNManager: VPNManagerProtocol {
             .distinctUntilChanged()
     }
 
-    func setup() async {
-        configManager.delegate = self
-        preferences.getKillSwitch().subscribe { data in
-            self.killSwitch = data ?? DefaultValues.killSwitch
-        }.disposed(by: disposeBag)
-        preferences.getAllowLane().subscribe { data in
-            self.allowLane = data ?? DefaultValues.allowLaneMode
-        }.disposed(by: disposeBag)
+    func updateOnDemandRules() {
+        let onDemandRules = getOnDemandRules()
+        for manager in configManager.managers {
+            Task {
+                await configManager.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
+            }
+        }
     }
 
-    func getOnDemandRules() -> [NEOnDemandRule] {
+    // Replace below with SharedUserDefaults
+    var activeVPNManager: VPNManagerType {
+        get {
+            VPNManagerType(rawValue: preferences.getActiveManagerKey() ?? "") ?? VPNManagerType.wg
+        }
+        set(value) {
+            if value != activeVPNManager {
+                logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
+                preferences.saveActiveManagerKey(key: value.rawValue)
+                UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
+            }
+        }
+    }
+
+    func makeUserSettings() -> VPNUserSettings {
+        return VPNUserSettings(killSwitch: preferences.getKillSwitchSync(),
+                               allowLan: preferences.getAllowLaneSync(),
+                               isRFC: checkLocalIPIsRFC(),
+                               isCircumventCensorshipEnabled: preferences.isCircumventCensorshipEnabled(),
+                               onDemandRules: getOnDemandRules())
+    }
+}
+
+extension VPNManager {
+    private func getOnDemandRules() -> [NEOnDemandRule] {
         var onDemandRules: [NEOnDemandRule] = []
         if let networks = localDB.getNetworksSync() {
             networks.filter { $0.status == true }.forEach { network in
@@ -228,84 +198,6 @@ class VPNManager: VPNManagerProtocol {
         let ruleConnect = NEOnDemandRuleConnect()
         onDemandRules.append(ruleConnect)
         return onDemandRules
-    }
-
-    func updateOnDemandRules() {
-        isOnDemandRetry = false
-        let onDemandRules = getOnDemandRules()
-        for manager in configManager.managers {
-            Task {
-                await configManager.updateOnDemandRules(manager: manager, onDemandRules: onDemandRules)
-            }
-        }
-    }
-
-    private let activeManagerKey = "activeManager"
-    var lastVPNState = NEVPNStatus.invalid
-
-    // Replace below with SharedUserDefaults
-    var activeVPNManager: VPNManagerType {
-        get {
-            VPNManagerType(rawValue: preferences.getActiveManagerKey() ?? "") ?? VPNManagerType.wg
-        }
-        set(value) {
-            if value != activeVPNManager {
-                logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
-                preferences.saveActiveManagerKey(key: value.rawValue)
-                UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
-            }
-        }
-    }
-
-    /**
-     Parses updated VPN connection info from configured VPN managers.
-     */
-    func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
-        // Refresh and load all VPN Managers from system preferrances.
-        let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
-        var priorityManagers: [NEVPNManager] = []
-        for manager in configManager.managers {
-            if priorityStates.contains(manager.connection.status) {
-                priorityManagers.append(manager)
-            }
-        }
-        if priorityManagers.count == 1 {
-            if configManager.isIKEV2(manager: priorityManagers[0]) {
-                completion(configManager.getIKEV2ConnectionInfo(manager: priorityManagers[0]))
-            } else {
-                completion(configManager.getVPNConnectionInfo(manager: priorityManagers[0]))
-            }
-            return
-        }
-
-        if let enabledManager = priorityManagers.filter({ $0.isEnabled }).first {
-            if configManager.isIKEV2(manager: enabledManager) {
-                completion(configManager.getIKEV2ConnectionInfo(manager: enabledManager))
-            } else {
-                completion(configManager.getVPNConnectionInfo(manager: enabledManager))
-            }
-            return
-        }
-
-        // No VPN Manager is configured
-        if (configManager.managers.filter { $0.connection.status != .invalid }).isEmpty {
-            completion(nil)
-            return
-        }
-        // Get VPN connection info from last active manager.
-        if activeVPNManager == .iKEV2 {
-            completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
-        } else {
-            completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
-        }
-    }
-
-    func makeUserSettings() -> VPNUserSettings {
-        return VPNUserSettings(killSwitch: killSwitch,
-                               allowLan: allowLane,
-                               isRFC: checkLocalIPIsRFC(),
-                               isCircumventCensorshipEnabled: preferences.isCircumventCensorshipEnabled(),
-                               onDemandRules: getOnDemandRules())
     }
 }
 
@@ -350,13 +242,5 @@ extension VPNManager: ConfigurationsManagerDelegate {
     func setActiveManager(with type: VPNManagerType?) {
         guard let type = type else { return }
         activeVPNManager = type
-    }
-
-    func disconnectOrFail() {
-
-    }
-
-    func setRestartOnDisconnect(with value: Bool) {
-        restartOnDisconnect = value
     }
 }

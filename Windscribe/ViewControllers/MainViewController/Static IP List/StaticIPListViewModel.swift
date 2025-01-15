@@ -34,18 +34,18 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
     private let vpnManager: VPNManager
     private let connectivity: Connectivity
     private let locationsManager: LocationsManagerType
-    private let connectionManager: ConnectionManagerV2
+    private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
          locationsManager: LocationsManagerType,
-         connectionManager: ConnectionManagerV2) {
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.locationsManager = locationsManager
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
     }
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
@@ -58,7 +58,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
         if !vpnManager.isConnecting() {
             locationsManager.saveStaticIP(withID: staticIP.id)
             Task {
-                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
             }
         } else {
             presentAlertTrigger.onNext(.connecting)

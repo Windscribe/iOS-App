@@ -1,5 +1,5 @@
 //
-//  ConnectionManager.swift
+//  ProtocolManager.swift
 //  Windscribe
 //
 //  Created by Thomas on 14/10/2022.
@@ -11,7 +11,26 @@ import NetworkExtension
 import RxSwift
 import Swinject
 
-class ConnectionManager: ConnectionManagerV2 {
+protocol ProtocolManagerType {
+    var goodProtocol: ProtocolPort? { get set }
+    var resetGoodProtocolTime: Date? { get set }
+
+    var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
+    var connectionProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
+
+    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async
+    func getRefreshedProtocols() async -> [DisplayProtocolPort]
+    func getNextProtocol() async -> ProtocolPort
+    func getProtocol() -> ProtocolPort
+    func onProtocolFail() async -> Bool
+    func onUserSelectProtocol(proto: ProtocolPort)
+    func resetGoodProtocol()
+    func onConnectStateChange(state: NEVPNStatus)
+    func scheduleTimer()
+    func saveCurrentWifiNetworks()
+}
+
+class ProtocolManager: ProtocolManagerType {
     private var logger: FileLogger
     private let disposeBag = DisposeBag()
     private var connectivity: Connectivity
@@ -19,7 +38,7 @@ class ConnectionManager: ConnectionManagerV2 {
     private var securedNetwork: SecuredNetworkRepository
     private var preferences: Preferences
     private var locationManager: LocationsManagerType
-    static var shared = Assembler.resolve(ConnectionManagerV2.self)
+    static var shared = Assembler.resolve(ProtocolManagerType.self)
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
     // MARK: - Properties
@@ -27,7 +46,7 @@ class ConnectionManager: ConnectionManagerV2 {
     /// Default protocol
     let defaultProtocol = ProtocolPort(wireGuard, DefaultValues.port)
     /// Provides concurrent access to protocol list.
-    private let accessQueue = DispatchQueue(label: "connectionManagerAccessQueve", attributes: .concurrent)
+    private let accessQueue = DispatchQueue(label: "protocolManagerAccessQueve", attributes: .concurrent)
     /// List of Protocols in ordered by priority
     private(set) var protocolsToConnectList: [DisplayProtocolPort] = []
     /// App selected this protocol automatcally or user selected it

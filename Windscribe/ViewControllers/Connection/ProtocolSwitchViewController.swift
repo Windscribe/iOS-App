@@ -16,7 +16,7 @@ protocol ProtocolSwitchVCDelegate: AnyObject {
 
 class ProtocolSwitchViewController: WSNavigationViewController {
     var viewModel: ProtocolSwitchViewModelType!
-    var connectionManager: ConnectionManagerV2!
+    var protocolManager: ProtocolManagerType!
     var router: ProtocolSwitchViewRouter!
     var onSelection: ((Error?) -> Void)?
     var error: VPNConfigurationErrors?
@@ -123,7 +123,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     private func createProtocolView() {
         protocolStack.removeAllArrangedSubviews()
         Task { @MainActor in
-            let displayConnection = await connectionManager.getRefreshedProtocols()
+            let displayConnection = await protocolManager.getRefreshedProtocols()
             for dt in displayConnection {
                 var protocolDescription: String
                 switch dt.protocolPort.protocolName {
@@ -161,7 +161,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         if protocolView.type == .connected {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
-            connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
             onSelection?(nil)
             backButtonTapped()
         }
@@ -170,7 +170,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
     func protocolViewNextUpCompleteCoundown(_ protocolView: ProtocolView) {
         protocolView.invalidateTimer()
         if !viewModel.isConnected() {
-            connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
             onSelection?(nil)
         }
         backButtonTapped()
