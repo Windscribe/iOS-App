@@ -149,9 +149,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         }.disposed(by: disposeBag)
 
         connectivity.network.subscribe(onNext: { network in
-            if self.currentNetwork?.name != network.name,
-               let info = try? vpnManager.vpnInfo.value(),
-               [.connected, .connecting].contains(info.status) {
+            if self.currentNetwork?.name != network.name {
                 self.refreshConnectionFromNetworkChange()
             }
             self.currentNetwork = network
@@ -245,16 +243,26 @@ extension ConnectionViewModel {
     }
 
     private func refreshConnectionFromNetworkChange() {
-        wifiManager.saveCurrentWifiNetworks()
-        connectionTaskPublisher?.cancel()
-        connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
-            .sink { _ in
+        if let info = try? vpnManager.vpnInfo.value() {
+            if .connected == info.status {
+                wifiManager.saveCurrentWifiNetworks()
+                connectionTaskPublisher?.cancel()
+                connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
+                    .sink { _ in
+                        Task { @MainActor in
+                            await self.protocolManager.refreshProtocols(shouldReset: true,
+                                                                        shouldUpdate: true,
+                                                                        shouldReconnect: true)
+                        }
+                    } receiveValue: { _ in }
+            } else if .connecting != info.status {
                 Task { @MainActor in
                     await self.protocolManager.refreshProtocols(shouldReset: true,
-                                                             shouldUpdate: true,
-                                                             shouldReconnect: true)
+                                                                shouldUpdate: true,
+                                                                shouldReconnect: false)
                 }
-            } receiveValue: { _ in }
+            }
+        }
     }
 
     func displayLocalIPAddress() {
