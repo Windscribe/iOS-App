@@ -46,8 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
 
     func application(_: UIApplication,
-                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
-    {
+                     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()

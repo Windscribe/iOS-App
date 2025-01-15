@@ -221,6 +221,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         viewModel.becameActiveTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.clearScrollHappened()
             self.checkAndShowShareDialogIfNeed()
+            self.updateConnectedState()
         }).disposed(by: disposeBag)
 
         setNetworkSsid()
