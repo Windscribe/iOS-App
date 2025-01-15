@@ -26,20 +26,20 @@ class FavNodesListViewModel: FavNodesListViewModelType {
     var connectivity: Connectivity
     var sessionManager: SessionManagerV2
     let locationsManager: LocationsManagerType
-    let connectionManager: ConnectionManagerV2
+    let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
          sessionManager: SessionManagerV2,
          locationsManager: LocationsManagerType,
-         connectionManager: ConnectionManagerV2) {
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
     }
 
     func setSelectedFavNode(favNode: FavNodeModel) {
@@ -60,7 +60,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
             Task {
-                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
             }
         } else {
             presentAlertTrigger.onNext(.connecting)

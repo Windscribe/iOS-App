@@ -40,12 +40,12 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     var logger: FileLogger
     var sessionManager: SessionManagerV2
     var apiManager: APIManager
-    var connectionManager: ConnectionManagerV2
+    var protocolManager: ProtocolManagerType
     var disposeBag = DisposeBag()
     var submitLogState = BehaviorSubject(value: SubmitLogState.initial)
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager, connectionManager: ConnectionManagerV2) {
+    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager, protocolManager: ProtocolManagerType) {
         self.alertManager = alertManager
         self.type = type
         self.securedNetwork = securedNetwork
@@ -53,7 +53,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
         self.logger = logger
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
         isDarkMode = themeManager.darkTheme
     }
 
@@ -86,6 +86,6 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     }
 
     func getProtocolName() async -> String {
-        await connectionManager.getNextProtocol().protocolName
+        await protocolManager.getNextProtocol().protocolName
     }
 }

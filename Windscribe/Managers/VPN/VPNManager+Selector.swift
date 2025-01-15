@@ -18,7 +18,7 @@ import Swinject
 
 extension VPNManager {
     func simpleEnableConnection(isEmergency: Bool = false) {
-        let nextProtocol = connectionManager.getProtocol()
+        let nextProtocol = protocolManager.getProtocol()
         let locationID = locationsManager.getLastSelectedLocation()
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, isEmergency: isEmergency)
@@ -51,5 +51,10 @@ extension VPNManager {
             logger.logD(VPNManager.self, "Failed to retrieve local IP address.")
             return true
         }
+    }
+
+    func removeEmergencyProfile() async {
+        await resetProfiles()
+        await configManager.removeProfile(with: .openVPN, userSettings: makeUserSettings())
     }
 }

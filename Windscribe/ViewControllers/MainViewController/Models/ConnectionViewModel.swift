@@ -82,7 +82,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let logger: FileLogger
     let apiManager: APIManager
     let locationsManager: LocationsManagerType
-    let connectionManager: ConnectionManagerV2
+    let protocolManager: ProtocolManagerType
     let preferences: Preferences
     let connectivity: Connectivity
     let wifiManager: WifiManager
@@ -97,7 +97,7 @@ class ConnectionViewModel: ConnectionViewModelType {
          apiManager: APIManager,
          vpnManager: VPNManager,
          locationsManager: LocationsManagerType,
-         connectionManager: ConnectionManagerV2,
+         protocolManager: ProtocolManagerType,
          preferences: Preferences,
          connectivity: Connectivity,
          wifiManager: WifiManager,
@@ -106,7 +106,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.apiManager = apiManager
         self.vpnManager = vpnManager
         self.locationsManager = locationsManager
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
         self.preferences = preferences
         self.connectivity = connectivity
         self.wifiManager = wifiManager
@@ -118,11 +118,11 @@ class ConnectionViewModel: ConnectionViewModelType {
             self.updateState(with: ConnectionState.state(from: state))
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(vpnManager.vpnInfo, connectionManager.currentProtocolSubject)
+        Observable.combineLatest(vpnManager.vpnInfo, protocolManager.currentProtocolSubject)
             .bind { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
-                    self.selectedProtoPort.onNext(connectionManager.getProtocol())
+                    self.selectedProtoPort.onNext(protocolManager.getProtocol())
                 } else if let info = info, [.connected, .connecting].contains(info.status) {
                     self.selectedProtoPort.onNext(ProtocolPort(info.selectedProtocol, info.selectedPort))
                 } else if let nextProtocol = nextProtocol {
@@ -130,7 +130,7 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
             }.disposed(by: disposeBag)
 
-        connectionManager.connectionProtocolSubject
+        protocolManager.connectionProtocolSubject
             .subscribe { [weak self] connectionProtocol in
                 guard let self = self, let connectionProtocol = connectionProtocol else { return }
                 if let info = try? vpnManager.vpnInfo.value(),
@@ -238,7 +238,7 @@ extension ConnectionViewModel {
         Task { @MainActor in
             wifiManager.saveCurrentWifiNetworks()
             guard securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true else { return }
-            await connectionManager.refreshProtocols(shouldReset: true,
+            await protocolManager.refreshProtocols(shouldReset: true,
                                                      shouldUpdate: true,
                                                      shouldReconnect: isConnected())
         }
@@ -250,7 +250,7 @@ extension ConnectionViewModel {
         connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
             .sink { _ in
                 Task { @MainActor in
-                    await self.connectionManager.refreshProtocols(shouldReset: true,
+                    await self.protocolManager.refreshProtocols(shouldReset: true,
                                                              shouldUpdate: true,
                                                              shouldReconnect: true)
                 }
@@ -279,7 +279,7 @@ extension ConnectionViewModel {
     func enableConnection() {
         Task { @MainActor in
             checkPreferencesForTriggers()
-            let nextProtocol = connectionManager.getProtocol()
+            let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol)
@@ -413,7 +413,7 @@ extension ConnectionViewModel {
 
     func checkAutoModeFail() {
         Task {
-            let allProtocolsFailed = await connectionManager.onProtocolFail()
+            let allProtocolsFailed = await protocolManager.onProtocolFail()
             if allProtocolsFailed {
                 openNetworkHateUsDialogTrigger.onNext(())
             } else {
@@ -435,15 +435,6 @@ extension ConnectionViewModel {
 }
 
 extension ConnectionViewModel: VPNManagerDelegate {
-    func displaySetPrefferedProtocol() {
-        if let connectedWifi = WifiManager.shared.getConnectedNetwork() {
-            if vpnManager.successfullProtocolChange == true && connectedWifi.preferredProtocolStatus == false {
-                vpnManager.successfullProtocolChange = false
-                requestLocationTrigger.onNext(())
-            }
-        }
-    }
-
     func saveDataForWidget() {
 //        if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
 //            preferences.saveServerNameKey(key: cityName)

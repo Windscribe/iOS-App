@@ -42,8 +42,6 @@ class SessionManager: SessionManagerV2 {
 
     @objc func cancelTimers() {
         logger.logD(MainViewController.self, "Cancelled Session timer.")
-        vpnManager.resetProperties()
-        vpnManager.connectIntent = false
         sessionTimer?.invalidate()
         sessionTimer = nil
     }
@@ -65,7 +63,6 @@ class SessionManager: SessionManagerV2 {
                     self.logger.logD(self, "Session updated for \(session.username)")
                     self.sessionFetchInProgress = false
                 }, onFailure: { error in
-                   // self.vpnManager.handleConnectError()
                     if case Errors.sessionIsInvalid = error {
                         self.logoutUser()
                     } else {
@@ -229,7 +226,6 @@ class SessionManager: SessionManagerV2 {
             preferences.saveConnectionCount(count: 0)
             Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
             await vpnManager.resetProfiles()
-            vpnManager.resetProperties()
             localDatabase.clean()
             preferences.clearFavourites()
             preferences.saveUserSessionAuth(sessionAuth: nil)

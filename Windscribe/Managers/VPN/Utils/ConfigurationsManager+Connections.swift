@@ -12,20 +12,20 @@ import Swinject
 import RxSwift
 
 extension ConfigurationsManager {
-    func removeProfile(with type: VPNManagerType, killSwitch: Bool) async {
+    func removeProfile(with type: VPNManagerType, userSettings: VPNUserSettings) async {
         guard let manager = getManager(for: type) else { return }
-        await removeProfile(killSwitch: killSwitch, manager: manager)
+        await removeProfile(userSettings: userSettings, manager: manager)
     }
 
-    func removeProfile(killSwitch: Bool, manager: NEVPNManager) async {
+    func removeProfile(userSettings: VPNUserSettings, manager: NEVPNManager) async {
         guard (try? await manager.loadFromPreferences()) != nil else { return }
         if manager.protocolConfiguration?.username != nil {
-            await disconnect(killSwitch: killSwitch, manager: manager)
+            await disconnect(userSettings: userSettings, manager: manager)
             await remove(manager: manager)
         }
     }
 
-    func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, killSwitch: Bool, manager: NEVPNManager, connectIntent: Bool = false) async {
+    func disconnect(restartOnDisconnect: Bool = false, force: Bool = false, userSettings: VPNUserSettings, manager: NEVPNManager, connectIntent: Bool = false) async {
         if manager.connection.status == .disconnected, !force { return }
         guard (try? await manager.loadFromPreferences()) != nil else { return }
         if manager.protocolConfiguration?.username != nil {
@@ -35,7 +35,7 @@ extension ConfigurationsManager {
                     if restartOnDisconnect {
                         manager.protocolConfiguration?.includeAllNetworks = false
                     } else {
-                        manager.protocolConfiguration?.includeAllNetworks = killSwitch
+                        manager.protocolConfiguration?.includeAllNetworks = userSettings.killSwitch
                     }
                 }
             #endif

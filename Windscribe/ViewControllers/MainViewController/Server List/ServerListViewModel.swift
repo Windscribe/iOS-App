@@ -32,7 +32,7 @@ class ServerListViewModel: ServerListViewModelType {
     private let localDataBase: LocalDatabase
     private let sessionManager: SessionManagerV2
     private let locationsManager: LocationsManagerType
-    private let connectionManager: ConnectionManagerV2
+    private let protocolManager: ProtocolManagerType
 
     let disposeBag = DisposeBag()
 
@@ -42,14 +42,14 @@ class ServerListViewModel: ServerListViewModelType {
          localDataBase: LocalDatabase,
          sessionManager: SessionManagerV2,
          locationsManager: LocationsManagerType,
-         connectionManager: ConnectionManagerV2) {
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
         self.localDataBase = localDataBase
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
     }
 
     func setSelectedServerAndGroup(server: ServerModel,
@@ -77,7 +77,7 @@ class ServerListViewModel: ServerListViewModelType {
             logger.logD(self, "Tapped on a node with groupID: \(groupId) \(bestNodeHostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
             Task {
-                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
             }
         } else {
             presentConnectingAlertTrigger.onNext(())
@@ -90,7 +90,7 @@ class ServerListViewModel: ServerListViewModelType {
             self.logger.logD(self, "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
             Task {
-                await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
             }
         } else {
             self.presentConnectingAlertTrigger.onNext(())

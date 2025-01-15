@@ -360,11 +360,15 @@ class SharedSecretDefaults: Preferences {
     }
 
     func getKillSwitchSync() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.killSwitch) ?? false
+        return sharedDefault?.bool(forKey: SharedKeys.killSwitch) ?? DefaultValues.killSwitch
     }
 
     func saveAllowLane(mode: Bool) {
         setBool(mode, forKey: SharedKeys.allowLanMode)
+    }
+
+    func getAllowLaneSync() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.allowLanMode) ?? DefaultValues.allowLaneMode
     }
 
     func getAllowLane() -> RxSwift.Observable<Bool?> {

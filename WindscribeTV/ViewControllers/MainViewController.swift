@@ -466,7 +466,6 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     @IBAction func connectButtonPressed(_: Any) {
-        vpnConnectionViewModel.vpnManager.resetProperties()
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
             logger.logI(MainViewController.self, "User tapped to connect.")

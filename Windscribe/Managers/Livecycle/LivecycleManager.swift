@@ -29,7 +29,7 @@ class LivecycleManager: LivecycleManagerType {
     let notificationRepo: NotificationRepository
     let ipRepository: IPRepository
     let configManager: ConfigurationsManager
-    let connectivityManager: ConnectionManagerV2
+    let connectivityManager: ProtocolManagerType
     let locationsManager: LocationsManagerType
 
     let showNetworkSecurityTrigger = PublishSubject<Void>()
@@ -40,8 +40,6 @@ class LivecycleManager: LivecycleManagerType {
     var connectTask: AnyCancellable?
     var testTask: Task<Void, Error>?
 
-    private var connectivityTestTimer: Timer?
-
     init(logger: FileLogger,
          sessionManager: SessionManagerV2,
          preferences: Preferences,
@@ -51,7 +49,7 @@ class LivecycleManager: LivecycleManagerType {
          notificationRepo: NotificationRepository,
          ipRepository: IPRepository,
          configManager: ConfigurationsManager,
-         connectivityManager: ConnectionManagerV2,
+         connectivityManager: ProtocolManagerType,
          locationsManager: LocationsManagerType)
     {
         self.logger = logger

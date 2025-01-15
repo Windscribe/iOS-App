@@ -47,7 +47,7 @@ class ViewModels: Assembly {
             ShareWithFriendViewModel(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, referFriendManager: r.resolve(ReferAndShareManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, connectionManager: r.resolve(ConnectionManagerV2.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(LanguageViewModelType.self) { r in
             LanguageViewModel(languageManager: r.resolve(LanguageManagerV2.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!)
@@ -92,7 +92,7 @@ class ViewModels: Assembly {
             SetPreferredProtocolModel(connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSetPreferredViewModelV2.self) { r in
-            ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: .connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!, connectionManager: r.resolve(ConnectionManagerV2.self)!)
+            ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: .connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(NewsFeedModelType.self) { r in
             return NewsFeedModel(localDatabase: r.resolve(LocalDatabase.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, fileLogger: r.resolve(FileLogger.self)!)
@@ -154,14 +154,14 @@ class ViewModels: Assembly {
             SearchLocationsViewModel(themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(LocationManagingViewModelType.self) { r in
-            LocationManagingViewModel(connectivityManager: r.resolve(ConnectionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
+            LocationManagingViewModel(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
                                 apiManager: r.resolve(APIManager.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
-                                connectionManager: r.resolve(ConnectionManagerV2.self)!,
+                                protocolManager: r.resolve(ProtocolManagerType.self)!,
                                 preferences: r.resolve(Preferences.self)!,
                                 connectivity: r.resolve(Connectivity.self)!,
                                 wifiManager: WifiManager.shared,
@@ -184,7 +184,7 @@ class ViewModels: Assembly {
                                         localDataBase: r.resolve(LocalDatabase.self)!,
                                         connectivity: r.resolve(Connectivity.self)!,
                                         locationsManager: r.resolve(LocationsManagerType.self)!,
-                                        connectionManager: r.resolve(ConnectionManagerV2.self)!)
+                                        protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(FavNodesListViewModelType.self) { r in
             FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
@@ -192,7 +192,7 @@ class ViewModels: Assembly {
                                   connectivity: r.resolve(Connectivity.self)!,
                                   sessionManager: r.resolve(SessionManagerV2.self)!,
                                   locationsManager: r.resolve(LocationsManagerType.self)!,
-                                  connectionManager: r.resolve(ConnectionManagerV2.self)!)
+                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
@@ -201,14 +201,14 @@ class ViewModels: Assembly {
                                 localDataBase: r.resolve(LocalDatabase.self)!,
                                 sessionManager: r.resolve(SessionManagerV2.self)!,
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
-                                connectionManager: r.resolve(ConnectionManagerV2.self)!)
+                                protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
                                   locationsManager: r.resolve(LocationsManagerType.self)!,
-                                  connectionManager: r.resolve(ConnectionManagerV2.self)!)
+                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchDelegateViewModelType.self) { _ in
             ProtocolSwitchDelegateViewModel()
@@ -419,7 +419,7 @@ class ViewControllerModule: Assembly {
         container.register(ProtocolSwitchViewController.self) { _ in
             ProtocolSwitchViewController()
         }.initCompleted { r, c in
-            c.connectionManager = ConnectionManager.shared
+            c.protocolManager = ProtocolManager.shared
             c.viewModel = r.resolve(ProtocolSwitchViewModelType.self)
             c.router = r.resolve(ProtocolSwitchViewRouter.self)
             c.type = .change

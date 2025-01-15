@@ -16,18 +16,18 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let locationsManager: LocationsManagerType
-    private let connectionManager: ConnectionManagerV2
+    private let protocolManager: ProtocolManagerType
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
-    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManagerType, connectionManager: ConnectionManagerV2) {
+    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManagerType, protocolManager: ProtocolManagerType) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
         self.vpnManager = vpnManager
         self.fileDatabase = fileDatabase
         self.localDatabase = localDatabase
         self.logger = logger
         self.locationsManager = locationsManager
-        self.connectionManager = connectionManager
+        self.protocolManager = protocolManager
     }
 
     /// Loads Emergency connect configurations from WSNet.
@@ -59,9 +59,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
 
     // Removes Emergency connect profile.
     func removeProfile() async {
-        await vpnManager.resetProfiles()
-        vpnManager.resetProperties()
-        await vpnManager.configManager.removeProfile(with: .openVPN, killSwitch: vpnManager.killSwitch)
+        await vpnManager.removeEmergencyProfile()
     }
 
     func cleansEmergencyConfigs() {
@@ -83,7 +81,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let data = try await buildConfiguration(configInfo: configInfo)
         let customConfig = saveConfiguration(data: data, configInfo: configInfo)
         locationsManager.saveCustomConfig(withID: customConfig.id)
-        await connectionManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+        await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
         vpnManager.simpleEnableConnection(isEmergency: true)
     }
 
