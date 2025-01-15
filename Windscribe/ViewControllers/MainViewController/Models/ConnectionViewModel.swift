@@ -151,7 +151,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         connectivity.network.subscribe(onNext: { network in
             if self.currentNetwork?.name != network.name,
                let info = try? vpnManager.vpnInfo.value(),
-               info.status == .connected {
+               [.connected, .connecting].contains(info.status) {
                 self.refreshConnectionFromNetworkChange()
             }
             self.currentNetwork = network
