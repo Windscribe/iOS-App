@@ -161,7 +161,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         if protocolView.type == .connected {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
-            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName), connectionType: .user)
             onSelection?(nil)
             backButtonTapped()
         }
@@ -170,7 +170,7 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
     func protocolViewNextUpCompleteCoundown(_ protocolView: ProtocolView) {
         protocolView.invalidateTimer()
         if !viewModel.isConnected() {
-            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName), connectionType: .failover)
             onSelection?(nil)
         }
         backButtonTapped()

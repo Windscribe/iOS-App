@@ -11,6 +11,12 @@ import NetworkExtension
 import RxSwift
 import Swinject
 
+enum ConnectionType {
+    case user
+    case failover
+    case emergency
+}
+
 /// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
 extension VPNManager {
     /// Initiates a disconnect action from the ViewModel, updating the connection state throughout the process.
@@ -43,14 +49,14 @@ extension VPNManager {
     /// 2. Validate the current state and ensure the conditions are met to start a connection.
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
-    func connectFromViewModel(locationId: String, proto: ProtocolPort, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
+    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
         self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
-        return configManager.validateAccessToLocation(locationID: locationId, isEmergency: isEmergency).flatMap { () in
+        return configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).flatMap { () in
             let status = self.connectivity.getNetwork().status
             if [NetworkStatus.disconnected].contains(status) {
                 return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
             }
-            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, isEmergency: isEmergency)
+            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
         }.handleEvents(receiveSubscription: { _ in
             self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to configuring")
             self.configurationState = .configuring
@@ -70,8 +76,8 @@ extension VPNManager {
     ///   - proto: The protocol to be used for the connection (e.g., OpenVPN, IKEv2).
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
-    private func connectWithInitialRetry(id: String, proto: String, port: String, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
-        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings(), isEmergency: isEmergency)
+    private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
+        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? VPNConfigurationErrors {
@@ -80,12 +86,12 @@ extension VPNManager {
                         if self.locationsManager.getLocationType(id: id) != .custom {
                             return self.updateConnectionData(locationID: id, connectionError: error)
                                 .flatMap { updatedLocation in
-                                    self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), isEmergency: isEmergency)
+                                    self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
                                 }.eraseToAnyPublisher()
                         }
                     // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
-                        if self.locationsManager.getLocationType(id: id) != .custom {
+                        if connectionType == .user, self.locationsManager.getLocationType(id: id) != .custom {
                             self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
                             return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
                         }

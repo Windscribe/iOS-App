@@ -131,14 +131,14 @@ class ConnectionViewModel: ConnectionViewModelType {
             }.disposed(by: disposeBag)
 
         protocolManager.connectionProtocolSubject
-            .subscribe { [weak self] connectionProtocol in
-                guard let self = self, let connectionProtocol = connectionProtocol else { return }
+            .subscribe { [weak self] value in
+                guard let self = self, let value = value else { return }
                 if let info = try? vpnManager.vpnInfo.value(),
-                   info.selectedProtocol == connectionProtocol.protocolName,
+                   info.selectedProtocol == value.protocolPort.protocolName,
                    [.connected, .connecting].contains(info.status) {
                     return
                 }
-                self.enableConnection()
+                self.enableConnection(connectionType: value.connectionType)
             }.disposed(by: disposeBag)
 
         locationsManager.selectedLocationUpdatedSubject.subscribe { _ in
@@ -285,12 +285,16 @@ extension ConnectionViewModel {
     }
 
     func enableConnection() {
+        enableConnection(connectionType: .user)
+    }
+
+    private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
             checkPreferencesForTriggers()
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
-            connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol)
+            connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: connectionType)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {

@@ -21,7 +21,7 @@ extension VPNManager {
         let nextProtocol = protocolManager.getProtocol()
         let locationID = locationsManager.getLastSelectedLocation()
         connectionTaskPublisher?.cancel()
-        connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, isEmergency: isEmergency)
+        connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .emergency)
             .sink { _ in } receiveValue: { _ in }
     }
 
