@@ -34,6 +34,7 @@ extension ConfigurationsManager {
     func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
         let progressPublisher = PassthroughSubject<State, Error>()
         var nextManager: NEVPNManager?
+        var isCancelled = false
         let task = Task { [weak self] in
             guard let self = self else { return }
             do {
@@ -89,7 +90,7 @@ extension ConfigurationsManager {
                 let maxTimeout = self.getMaxTimeout(proto: wrapperProtocol)
 
                 cancellable = timerPublisher.sink { _ in
-                    guard !Task.isCancelled else {
+                    guard !isCancelled else {
                         progressPublisher.send(completion: .failure(CancellationError()))
                         cancellable?.cancel()
                         return
@@ -108,8 +109,10 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                let userIp = try await self.testConnectivityWithRetries(nextManager: nextManager)
-                                if Task.isCancelled {
+                                let userIp = try await self.testConnectivityWithRetries(nextManager: nextManager) {
+                                    return isCancelled
+                                }
+                                if isCancelled {
                                     progressPublisher.send(.update("Task cancelled"))
                                 }
                                 progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
@@ -156,6 +159,7 @@ extension ConfigurationsManager {
             .handleEvents(receiveCancel: {
                 self.logger.logD("VPNConfiguration", "Cancelling connection task.")
                 task.cancel()
+                isCancelled = true
                 Task {
                     try await self.disableProfile(self.getNextManager(proto: proto))
                 }
@@ -201,12 +205,15 @@ extension ConfigurationsManager {
     }
 
     /// Test VPN connection for network connectivity.
-    private func testConnectivityWithRetries(nextManager: NEVPNManager) async throws -> String {
+    private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws -> String {
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 let userIp = try await api.getIp().value.userIp
                 return userIp
             } catch {
+                if checkIsTaskCancelled() {
+                    throw VPNConfigurationErrors.connectivityTestFailed
+                }
                 if attempt == maxConnectivityTestAttempts {
                     self.logger.logE("VPNConfiguration", "Connectivity error: \(error)")
                     throw VPNConfigurationErrors.connectivityTestFailed
