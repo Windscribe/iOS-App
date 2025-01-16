@@ -31,7 +31,7 @@ extension ConfigurationsManager {
     /// - Returns: An `AnyPublisher<State, Error>` publisher that emits values of type `State` over time, providing updates
     ///   on the current state of the connection (e.g., connecting, validating, connected). In the event of an error, the
     ///   publisher terminates with an `VPNConnectionErrors`.
-    func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, isEmergency: Bool = false) -> AnyPublisher<State, Error> {
+    func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
         let progressPublisher = PassthroughSubject<State, Error>()
         var nextManager: NEVPNManager?
         var isCancelled = false
@@ -103,7 +103,7 @@ extension ConfigurationsManager {
                         progressPublisher.send(.update("Testing connectivity."))
                         progressPublisher.send(.validating)
                         cancellable?.cancel()
-                        if isEmergency {
+                        if connectionType == .emergency {
                             progressPublisher.send(completion: .finished)
                             return
                         }

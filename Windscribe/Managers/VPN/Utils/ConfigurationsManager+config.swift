@@ -392,11 +392,11 @@ extension ConfigurationsManager {
         return nil
     }
 
-    func validateAccessToLocation(locationID: String, isEmergency: Bool = false) -> Future<Void, Error> {
+    func validateAccessToLocation(locationID: String, connectionType: ConnectionType = .user) -> Future<Void, Error> {
         return Future { promise in
             do {
                 // if it's an emergency connect we should not validate access to the location
-                guard !isEmergency else {
+                guard connectionType != .emergency else {
                     promise(.success(()))
                     return
                 }

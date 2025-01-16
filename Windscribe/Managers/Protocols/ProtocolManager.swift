@@ -16,14 +16,14 @@ protocol ProtocolManagerType {
     var resetGoodProtocolTime: Date? { get set }
 
     var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
-    var connectionProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
+    var connectionProtocolSubject: BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?> { get }
 
     func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]
     func getNextProtocol() async -> ProtocolPort
     func getProtocol() -> ProtocolPort
     func onProtocolFail() async -> Bool
-    func onUserSelectProtocol(proto: ProtocolPort)
+    func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType)
     func resetGoodProtocol()
     func onConnectStateChange(state: NEVPNStatus)
     func scheduleTimer()
@@ -62,7 +62,7 @@ class ProtocolManager: ProtocolManagerType {
     var connectionMode = DefaultValues.connectionMode
 
     var currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
-    var connectionProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
+    var connectionProtocolSubject = BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?>(value: nil)
 
     init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManagerType) {
         self.logger = logger
@@ -169,7 +169,7 @@ class ProtocolManager: ProtocolManagerType {
         logger.logI(self, log)
 
         currentProtocolSubject.onNext(getFirstProtocol())
-        connectionProtocolSubject.onNext(shouldReconnect ? getFirstProtocol() : nil)
+        connectionProtocolSubject.onNext(shouldReconnect ? (protocolPort: getFirstProtocol(), connectionType: .user) : nil)
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
@@ -216,13 +216,13 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     /// User/App selected this protocol to connect.
-    func onUserSelectProtocol(proto: ProtocolPort) {
+    func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType) {
         logger.logI(self, "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.protocolName)
         let firstProtocol = getFirstProtocol()
         currentProtocolSubject.onNext(firstProtocol)
-        connectionProtocolSubject.onNext(firstProtocol)
+        connectionProtocolSubject.onNext((protocolPort: firstProtocol, connectionType: connectionType))
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
