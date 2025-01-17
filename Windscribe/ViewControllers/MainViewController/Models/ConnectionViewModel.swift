@@ -148,7 +148,9 @@ class ConnectionViewModel: ConnectionViewModelType {
             }
         }.disposed(by: disposeBag)
 
-        connectivity.network.subscribe(onNext: { network in
+        connectivity.network
+            .debounce(.seconds(4), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { network in
             if self.currentNetwork?.name != network.name {
                 self.refreshConnectionFromNetworkChange()
             }
