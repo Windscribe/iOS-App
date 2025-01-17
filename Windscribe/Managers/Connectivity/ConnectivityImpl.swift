@@ -102,11 +102,7 @@ class ConnectivityImpl: Connectivity {
         } else if path.usesInterfaceType(.cellular) {
             return .cellular
         } else {
-            if path.availableInterfaces.filter({ $0.type == .cellular }).first?.type == .cellular {
-                return .cellular
-            } else {
-                return .none
-            }
+            return .none
         }
     }
 

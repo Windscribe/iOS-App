@@ -206,6 +206,7 @@ extension ConfigurationsManager {
 
     /// Test VPN connection for network connectivity.
     private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws -> String {
+        try await Task.sleep(nanoseconds :  delayBetweenConnectivityAttempts)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 let userIp = try await api.getIp().value.userIp
