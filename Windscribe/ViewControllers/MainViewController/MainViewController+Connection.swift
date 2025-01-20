@@ -62,7 +62,8 @@ extension MainViewController {
             .subscribe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] (_, network) in
                 guard let self = self else { return }
-                if self.vpnConnectionViewModel.isConnecting() { return }
+                guard !self.vpnConnectionViewModel.isConnecting() else { return }
+                guard !vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network) else { return }
                 if self.locationManagerViewModel.getStatus() == .authorizedWhenInUse || self.locationManagerViewModel.getStatus() == .authorizedAlways {
                     if network.networkType == .cellular || network.networkType == .wifi {
                         if let name = network.name {
