@@ -149,7 +149,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         }.disposed(by: disposeBag)
 
         connectivity.network
-            .debounce(.seconds(4), scheduler: MainScheduler.instance)
+            .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { network in
             if self.currentNetwork?.name != network.name {
                 self.refreshConnectionFromNetworkChange()
