@@ -57,6 +57,7 @@ protocol ConnectionViewModelType {
     func getBestLocationId() -> String
     func getBestLocation() -> BestLocationModel?
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool
+    func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool
 }
 
 class ConnectionViewModel: ConnectionViewModelType {
@@ -151,11 +152,17 @@ class ConnectionViewModel: ConnectionViewModelType {
         connectivity.network
             .debounce(.seconds(1), scheduler: MainScheduler.instance)
             .subscribe(onNext: { network in
-            if self.currentNetwork?.name != network.name {
-                self.refreshConnectionFromNetworkChange()
-            }
-            self.currentNetwork = network
-        }, onError: { _ in }).disposed(by: disposeBag)
+                guard network.networkType != .none else {
+                    return
+                }
+                guard network.name?.uppercased() != TextsAsset.NetworkSecurity.unknownNetwork.uppercased() else {
+                    return
+                }
+                if self.currentNetwork?.name != network.name {
+                    self.refreshConnectionFromNetworkChange()
+                }
+                self.currentNetwork = network
+            }, onError: { _ in }).disposed(by: disposeBag)
     }
 }
 
@@ -189,7 +196,19 @@ extension ConnectionViewModel {
     }
 
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
-        return isConnecting() && network?.SSID == "Cellular"
+        if isConnecting() && network?.SSID == "Cellular" { return true }
+        if ((isConnecting() || isConnected()) && network?.SSID.uppercased() == TextsAsset.NetworkSecurity.unknownNetwork.uppercased()) {
+            return true
+        }
+        return false
+    }
+
+    func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool {
+        if isConnecting() && network?.name == "Cellular" { return true }
+        if ((isConnecting() || isConnected()) && network?.networkType == NetworkType.none) {
+            return true
+        }
+        return false
     }
 
     func setOutOfData() {
