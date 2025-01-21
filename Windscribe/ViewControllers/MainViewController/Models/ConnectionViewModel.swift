@@ -197,15 +197,18 @@ extension ConnectionViewModel {
 
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
         if isConnecting() && network?.SSID == "Cellular" { return true }
-        if ((isConnecting() || isConnected()) && network?.SSID.uppercased() == TextsAsset.NetworkSecurity.unknownNetwork.uppercased()) {
-            return true
+        if isConnecting() || isConnected() {
+            if let appNetwork = try? connectivity.network.value() {
+                return appNetwork.networkType == NetworkType.none
+            }
+            return network?.SSID.uppercased() == TextsAsset.NetworkSecurity.unknownNetwork.uppercased()
         }
         return false
     }
 
     func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool {
         if isConnecting() && network?.name == "Cellular" { return true }
-        if ((isConnecting() || isConnected()) && network?.networkType == NetworkType.none) {
+        if (isConnecting() || isConnected()) && network?.networkType == NetworkType.none {
             return true
         }
         return false
