@@ -11,7 +11,6 @@ import NetworkExtension
 import RealmSwift
 #if canImport(WidgetKit)
     import RxSwift
-    import WidgetKit
 #endif
 
 extension VPNManager {
@@ -45,7 +44,6 @@ extension VPNManager {
 
     func configureForConnectionState() {
         DispatchQueue.main.async {
-            self.delegate?.saveDataForWidget()
             self.getVPNConnectionInfo(completion: { [self] info in
                 guard let info = info else {
                     return

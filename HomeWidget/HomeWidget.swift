@@ -129,18 +129,20 @@ struct HomeWidgetEntryView: View {
         ZStack {
             HStack {
                 VStack {
-                    Image("main-logo").resizable()
-                        .frame(width: 24, height: 24).padding(.bottom, 3)
+                    Image("main-logo-24").padding(.bottom, 3)
                     HStack {
                         VStack(alignment: .leading, spacing: 3, content: {
                             ZStack {
                                 if entry.status == .disconnected || entry.status == .connected {
                                     Capsule().fill(isConnected ? midnight.opacity(0.25) : Color.white.opacity(0.25)).frame(width: 36, height: 20)
                                 }
-                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white).font(.custom("IBMPlexSans-Bold", size: 10))
+                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white)
+                                    .font(.custom("IBMPlexSans-Bold", size: 10))
                             }
-                            Text(entry.name).foregroundColor(Color.white).font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
-                            Text(entry.nickname).foregroundColor(Color.white.opacity(0.7)).font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
+                            Text(entry.name).foregroundColor(Color.white)
+                                .font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
+                            Text(entry.nickname).foregroundColor(Color.white.opacity(0.7))
+                                .font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
                         })
                         Spacer()
                         if !isWidgetSmall {

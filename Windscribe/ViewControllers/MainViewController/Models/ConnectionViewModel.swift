@@ -9,6 +9,9 @@
 import Foundation
 import RxSwift
 import Combine
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
@@ -90,6 +93,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let connectivity: Connectivity
     let wifiManager: WifiManager
     let securedNetwork: SecuredNetworkRepository
+    let credentialsRepository: CredentialsRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -104,7 +108,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          preferences: Preferences,
          connectivity: Connectivity,
          wifiManager: WifiManager,
-         securedNetwork: SecuredNetworkRepository) {
+         securedNetwork: SecuredNetworkRepository,
+         credentialsRepository: CredentialsRepository) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -114,11 +119,13 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.connectivity = connectivity
         self.wifiManager = wifiManager
         self.securedNetwork = securedNetwork
+        self.credentialsRepository = credentialsRepository
 
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
             self.updateState(with: ConnectionState.state(from: state))
+            self.saveDataForWidget()
         }).disposed(by: disposeBag)
 
         Observable.combineLatest(vpnManager.vpnInfo, protocolManager.currentProtocolSubject)
@@ -263,8 +270,8 @@ extension ConnectionViewModel {
             wifiManager.saveCurrentWifiNetworks()
             guard securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true else { return }
             await protocolManager.refreshProtocols(shouldReset: true,
-                                                     shouldUpdate: true,
-                                                     shouldReconnect: isConnected())
+                                                   shouldUpdate: true,
+                                                   shouldReconnect: isConnected())
         }
     }
 
@@ -412,6 +419,28 @@ extension ConnectionViewModel {
             self.gettingIpAddress = false
         }).disposed(by: disposeBag)
     }
+
+    private func saveDataForWidget() {
+        guard let locationInfo = locationsManager.getLocationUIInfo() else { return }
+
+        preferences.saveServerNameKey(key: locationInfo.cityName)
+        preferences.saveNickNameKey(key: locationInfo.nickName)
+        preferences.saveCountryCodeKey(key: locationInfo.countryCode)
+
+        if credentialsRepository.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
+            preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
+        } else {
+            preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
+        }
+
+#if os(iOS)
+        if #available(iOS 14.0, *) {
+#if arch(arm64) || arch(i386) || arch(x86_64)
+            WidgetCenter.shared.reloadAllTimelines()
+#endif
+        }
+#endif
+    }
 }
 
 extension ConnectionViewModel {
@@ -467,31 +496,8 @@ extension ConnectionViewModel {
         }
 
         connectedState.onNext(ConnectionStateInfo(state: state,
-                                isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
-                                internetConnectionAvailable: false,
-                                connectedWifi: nil))
-    }
-}
-
-extension ConnectionViewModel: VPNManagerDelegate {
-    func saveDataForWidget() {
-//        if let cityName = self.vpnManager.selectedNode?.cityName, let nickName = self.vpnManager.selectedNode?.nickName, let countryCode = self.vpnManager.selectedNode?.countryCode {
-//            preferences.saveServerNameKey(key: cityName)
-//            preferences.saveNickNameKey(key: nickName)
-//            preferences.saveCountryCodeKey(key: countryCode)
-//
-//            if credentialsRepo.selectedServerCredentialsType() == IKEv2ServerCredentials.self {
-//                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.iKEv2)
-//            } else {
-//                preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
-//            }
-//        }
-//        #if os(iOS)
-//        if #available(iOS 14.0, *) {
-//            #if arch(arm64) || arch(i386) || arch(x86_64)
-//            WidgetCenter.shared.reloadAllTimelines()
-//            #endif
-//        }
-//        #endif
+                                                  isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
+                                                  internetConnectionAvailable: false,
+                                                  connectedWifi: nil))
     }
 }

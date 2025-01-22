@@ -315,7 +315,7 @@ extension ConfigurationsManager {
 
     /// Disable VPN configuration
     private func disableProfile(_ manager: NEVPNManager) async throws {
-        var includesAllNetworks = false
+        var includesAllNetworks: Bool? = false
 #if os(iOS)
         includesAllNetworks = manager.protocolConfiguration?.includeAllNetworks
 #endif
