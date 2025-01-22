@@ -283,6 +283,7 @@ extension ConfigurationsManager {
                 try? await waitForDisconnection(manager: other)
             }
             other.isEnabled = false
+            other.isOnDemandEnabled = false
             other.onDemandRules = []
             try? await saveToPreferences(manager: other)
         }
