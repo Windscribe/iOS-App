@@ -130,6 +130,9 @@
 		1E9F2C352C665FD100607BAA /* PreferencesViewLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */; };
 		1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */; };
 		1E9F2C372C66629100607BAA /* UITextView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA21222884E700997A2A /* UITextView+Ext.swift */; };
+		1EA4FA712D3E89A60021C656 /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
+		1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
+		1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		1EA876C52BC6E1C900F0DD25 /* NewsFeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876C42BC6E1C900F0DD25 /* NewsFeedViewController.swift */; };
 		1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */; };
 		1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */; };
@@ -4926,6 +4929,7 @@
 				59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */,
 				59FC73CD2C514A7A00021CD1 /* AppModules.swift in Sources */,
 				1EA9D7132C87192A00566A93 /* PrivacyViewModel.swift in Sources */,
+				1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */,
 				59FC74492C515DF500021CD1 /* ProtocolManager.swift in Sources */,
 				1E79CA5A2C63D1D4006D4DE7 /* LinkProvider.swift in Sources */,
 				C5B8DF072C9FD3450072333E /* VPNErrors.swift in Sources */,
@@ -4950,6 +4954,7 @@
 				1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				1EDAA9212CD1433B0014E678 /* ConfigurationsManager+Connections.swift in Sources */,
 				59FC740E2C51540300021CD1 /* SuggestedPorts.swift in Sources */,
+				1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */,
 				59C96D6A2C6A883300546C72 /* LatencyViewModel.swift in Sources */,
 				59DA7FB82C3D897100042E57 /* FileLogFormater.swift in Sources */,
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
@@ -4986,6 +4991,7 @@
 				1E0D9D732C6103A3008AFF2D /* PreferencesGeneralView.swift in Sources */,
 				59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */,
 				1EF7BB412C74B0880032A4DF /* UIVIew+Gradient.swift in Sources */,
+				1EA4FA712D3E89A60021C656 /* VPNConfigurationErrors.swift in Sources */,
 				59FC745B2C5161D900021CD1 /* UIView+Ext.swift in Sources */,
 				59FC74132C51542300021CD1 /* RobertFilters.swift in Sources */,
 				59DA7FBA2C3D898F00042E57 /* FileDatabaseImpl.swift in Sources */,

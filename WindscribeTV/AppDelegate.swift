@@ -38,8 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
 
     private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
-
-    private lazy var connectionStateViewModel: ConnectionStateViewModelType = Assembler.resolve(ConnectionStateViewModelType.self)
+    
+    private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -47,15 +47,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
         connectivity.refreshNetwork()
-        vpnManager.setup { [self] in
+        Task {
             recordInstallIfFirstLoad()
-            // registerForPushNotifications()
             resetCountryOverrideForServerList()
             purchaseManager.verifyPendingTransaction()
-            latencyRepository.loadLatency()
             latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
             setApplicationWindow()
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+            if preferences.userSessionAuth() != nil {
+                delay(2) {
+                    self.latencyRepository.loadLatency()
+                }
+            }
         }
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             localDatabase.saveOldSession()
@@ -99,13 +102,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_: UIApplication) {
         logger.logD(self, "App state changed to WillEnterForeground.")
-        connectionStateViewModel.becameActive()
-        connectivity.refreshNetwork()
+        ProtocolManager.shared.resetGoodProtocol()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
         logger.logD(self, "App state changed to Active.")
-        connectionStateViewModel.becameActive()
+        livecycleManager.appEnteredForeground()
     }
 
     /**

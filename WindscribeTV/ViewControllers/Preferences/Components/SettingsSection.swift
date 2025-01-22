@@ -31,7 +31,7 @@ class SettingsSection: UIView {
         contentStackView.removeAllArrangedSubviews()
         listOfOptionViewss = [SettingOption]()
         for item in list {
-            let optionView = SettingOption.fromNib()
+            let optionView: SettingOption = SettingOption.fromNib()
             optionView.setup(with: item)
             optionView.delegate = self
             contentStackView.addArrangedSubview(optionView)

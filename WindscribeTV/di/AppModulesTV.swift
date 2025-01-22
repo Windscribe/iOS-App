@@ -36,7 +36,7 @@ class TVViewModels: Assembly {
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManagerV2.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
@@ -44,14 +44,19 @@ class TVViewModels: Assembly {
         container.register(UpgradeViewModel.self) { r in
             UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!, billingRepository: r.resolve(BillingRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
-        container.register(ConnectionStateViewModelType.self) { r in
-            ConnectionStateViewModel(connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, vpnManager: r.resolve(VPNManager.self)!)
-        }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
-            ConnectionViewModel(vpnManager: r.resolve(VPNManager.self)!)
+            ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
+                                apiManager: r.resolve(APIManager.self)!,
+                                vpnManager: r.resolve(VPNManager.self)!,
+                                locationsManager: r.resolve(LocationsManagerType.self)!,
+                                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                                preferences: r.resolve(Preferences.self)!,
+                                connectivity: r.resolve(Connectivity.self)!,
+                                wifiManager: WifiManager.shared,
+                                securedNetwork: r.resolve(SecuredNetworkRepository.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, themeManager: r.resolve(ThemeManager.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!)
+            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, themeManager: r.resolve(ThemeManager.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
@@ -106,18 +111,24 @@ class TVViewModels: Assembly {
                                 vpnManager: r.resolve(VPNManager.self)!,
                                 connectivity: r.resolve(Connectivity.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
-                                connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+                                sessionManager: r.resolve(SessionManagerV2.self)!,
+                                locationsManager: r.resolve(LocationsManagerType.self)!,
+                                protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(FavNodesListViewModelType.self) { r in
             FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
-                                  connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+                                  sessionManager: r.resolve(SessionManagerV2.self)!,
+                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
-                                  connectionStateManager: r.resolve(ConnectionStateManagerType.self)!, connectivity: r.resolve(Connectivity.self)!)
+                                  connectivity: r.resolve(Connectivity.self)!,
+                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
     }
 }
@@ -132,12 +143,12 @@ class TVViewControllers: Assembly {
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MainViewController") as! MainViewController
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(MainViewModelType.self)
-            vc.connectionStateViewModel = r.resolve(ConnectionStateViewModelType.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
+            vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
         container.register(WelcomeViewController.self) { _ in

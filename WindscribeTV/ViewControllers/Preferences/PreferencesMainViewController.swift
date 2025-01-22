@@ -78,7 +78,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
     private func setup() {
         for option in options {
-            let optionView = PreferencesOptionView.fromNib()
+            let optionView: PreferencesOptionView = PreferencesOptionView.fromNib()
             optionsStackView.addArrangedSubview(optionView)
             optionView.viewModel = viewModel
             optionView.selectionDelegate = self

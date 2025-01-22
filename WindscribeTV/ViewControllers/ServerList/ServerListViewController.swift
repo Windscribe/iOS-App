@@ -212,7 +212,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     private func setup() {
         sideMenu.distribution = .fillEqually
         for sideOption in sideOptions {
-            let optionView = SideMenuOptions.fromNib()
+            let optionView: SideMenuOptions = SideMenuOptions.fromNib()
             optionView.setup(with: sideOption)
             optionView.delegate = self
             sideMenu.addArrangedSubview(optionView)

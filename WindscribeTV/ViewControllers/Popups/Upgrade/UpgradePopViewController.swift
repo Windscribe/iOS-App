@@ -42,7 +42,7 @@ class UpgradePopViewController: UIViewController {
                         (title: TextsAsset.UpgradeView.allLocations, body: TextsAsset.UpgradeView.allLocationsMessage),
                         (title: TextsAsset.UpgradeView.robert, body: TextsAsset.UpgradeView.robertMessage)]
         for (title, body) in infoList {
-            let planView = UpgradePlanDetailView.fromNib()
+            let planView: UpgradePlanDetailView = UpgradePlanDetailView.fromNib()
             planView.setup(with: title, and: body)
             plansStackView.addArrangedSubview(planView)
         }
@@ -73,14 +73,14 @@ class UpgradePopViewController: UIViewController {
                 switch plans {
                 case let .standardPlans(products, appPlans):
                     for product in products {
-                        let priceView = UpgradePricingView.fromNib()
+                        let priceView: UpgradePricingView = UpgradePricingView.fromNib()
                         priceView.setup(with: product.tvPlanLabel, and: product.price, isSelected: product.tvPlanLabel == products.first?.tvPlanLabel)
                         self.pricingStackView.addArrangedSubview(priceView)
                         priceView.delegate = self
                         priceView.plan = product
                     }
                 case let .discounted(plan, appPlan):
-                    let priceView = UpgradePricingView.fromNib()
+                    let priceView: UpgradePricingView = UpgradePricingView.fromNib()
                     priceView.setup(with: appPlan.name, and: plan.price)
                     self.pricingStackView.addArrangedSubview(priceView)
                     priceView.delegate = self
