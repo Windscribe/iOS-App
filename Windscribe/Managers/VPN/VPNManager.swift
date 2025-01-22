@@ -9,9 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-#if canImport(WidgetKit)
-    import WidgetKit
-#endif
 import Combine
 import RxSwift
 import Swinject
@@ -23,17 +20,10 @@ enum ConfigurationState {
     case testing
 }
 
-protocol VPNManagerDelegate: AnyObject {
-    func saveDataForWidget()
-}
-
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
-    weak var delegate: VPNManagerDelegate?
     let disposeBag = DisposeBag()
-
-    lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
 
     var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
     var connectionStateUpdatedTrigger = PublishSubject<Void>()
@@ -66,6 +56,7 @@ class VPNManager: VPNManagerProtocol {
 
     var connectionTaskPublisher: AnyCancellable?
 
+    lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
     lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
     lazy var protocolManager: ProtocolManagerType =  Assembler.resolve(ProtocolManagerType.self)
 

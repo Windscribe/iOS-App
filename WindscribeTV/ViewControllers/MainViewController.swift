@@ -298,15 +298,15 @@ class MainViewController: PreferredFocusedViewController {
         configureBestLocation(selectBestLocation: true)
         vpnConnectionViewModel.displayLocalIPAddress()
         setFlagImages()
-        
+
         vpnConnectionViewModel.selectedLocationUpdatedSubject.subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode()
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.connectedState.subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
@@ -341,7 +341,7 @@ class MainViewController: PreferredFocusedViewController {
             .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] session, _ in
                 self?.setUpgradeButton(session: session)
             }).disposed(by: disposeBag)
-        
+
         Observable.combineLatest(viewModel.wifiNetwork,
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
                 self.refreshProtocol(from: network, with: protocolPort)
@@ -359,11 +359,11 @@ class MainViewController: PreferredFocusedViewController {
             self.portLabel.text = lastconnection?.port
         }).disposed(by: disposeBag)
     }
-    
+
     func noSelectedNodeToConnect() -> Bool {
         return vpnConnectionViewModel.getSelectedCountryCode() == ""
     }
-    
+
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId ?? 0)"
@@ -399,7 +399,7 @@ class MainViewController: PreferredFocusedViewController {
         }).disposed(by: self.disposeBag)
 
     }
-    
+
     func setConnectionLabelValuesForSelectedNode() {
         let location = vpnConnectionViewModel.getSelectedCountryInfo()
         guard !location.countryCode.isEmpty else { return }
@@ -480,7 +480,7 @@ class MainViewController: PreferredFocusedViewController {
     @objc func enableVPNConnection() {
         vpnConnectionViewModel.enableConnection()
     }
-    
+
     @objc func disableVPNConnection() {
         vpnConnectionViewModel.disableConnection()
     }
@@ -523,7 +523,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func showPrivacyConfirmationPopup() {
-        
+
         if !viewModel.isPrivacyPopupAccepted() {
             router?.routeTo(to: .privacyView(completionHandler: {
                 self.enableVPNConnection()

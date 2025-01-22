@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
 
     private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
-    
+
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {

@@ -9,9 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-#if canImport(WidgetKit)
-    import WidgetKit
-#endif
 import Combine
 import RxSwift
 import Swinject
