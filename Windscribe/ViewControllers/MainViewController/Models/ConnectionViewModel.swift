@@ -20,6 +20,7 @@ protocol ConnectionViewModelType {
     var showPrivacyTrigger: PublishSubject<Void> { get }
     var showAuthFailureTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
+    var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
     var ipAddressSubject: PublishSubject<String> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
@@ -77,6 +78,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let siriShortcutTrigger = PublishSubject<Void>()
     let requestLocationTrigger = PublishSubject<Void>()
     let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
+    let showNoConnectionAlertTrigger = PublishSubject<Void>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -423,10 +425,11 @@ extension ConnectionViewModel {
                 .invalidServerConfig,
                 .configNotFound,
                 .incorrectVPNManager,
-                .networkIsOffline,
                 .connectionTimeout:
             logger.logE(self, error.description)
             return false
+        case .networkIsOffline:
+            showNoConnectionAlertTrigger.onNext(())
         case .allProtocolFailed:
             showAutoModeScreenTrigger.onNext(())
         case .upgradeRequired:

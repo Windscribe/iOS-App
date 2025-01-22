@@ -20,6 +20,10 @@ extension MainViewController {
             }
         }).disposed(by: disposeBag)
 
+        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.displayInternetConnectionLostAlert()
+        }).disposed(by: disposeBag)
+
         vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
@@ -46,7 +50,7 @@ extension MainViewController {
 
         Observable.combineLatest(viewModel.wifiNetwork,
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
-                self.refreshProtocol(from: network, with: protocolPort)
+            self.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
 
         vpnConnectionViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
@@ -59,8 +63,8 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
-            }).disposed(by: disposeBag)
+            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
+        }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.popupRouter?.routeTo(to: .pushNotifications, from: self)
