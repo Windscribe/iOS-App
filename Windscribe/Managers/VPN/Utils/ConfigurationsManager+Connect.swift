@@ -250,7 +250,9 @@ extension ConfigurationsManager {
                 let managers = (try? await getAllManagers()) ?? []
                 for activeManager in managers {
                     progressPublisher.send(.update("Active VPN manager found, starting disconnection process..."))
+#if os(iOS)
                     activeManager.protocolConfiguration?.includeAllNetworks = false
+#endif
                     activeManager.isOnDemandEnabled = false
                     try await saveToPreferences(manager: activeManager)
                     activeManager.connection.stopVPNTunnel()
@@ -313,10 +315,16 @@ extension ConfigurationsManager {
 
     /// Disable VPN configuration
     private func disableProfile(_ manager: NEVPNManager) async throws {
-        if manager.protocolConfiguration?.includeAllNetworks == true || manager.isEnabled || manager.isOnDemandEnabled {
+        var includesAllNetworks = false
+#if os(iOS)
+        includesAllNetworks = manager.protocolConfiguration?.includeAllNetworks
+#endif
+        if  includesAllNetworks == true || manager.isEnabled || manager.isOnDemandEnabled {
             manager.isEnabled = false
             manager.isOnDemandEnabled = false
+#if os(iOS)
             manager.protocolConfiguration?.includeAllNetworks = false
+#endif
             try await saveToPreferences(manager: manager)
         }
     }

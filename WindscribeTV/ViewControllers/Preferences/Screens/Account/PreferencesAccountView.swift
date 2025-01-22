@@ -24,7 +24,7 @@ class PreferencesAccountView: UIView {
         guard let accountViewModel = viewModel else { return }
         contentStackView.removeAllArrangedSubviews()
         for section in accountViewModel.getSections() {
-            let sectionView = AccountSectionView.fromNib()
+            let sectionView: AccountSectionView = AccountSectionView.fromNib()
             sectionView.setup(with: section)
             sectionView.delegate = self
             contentStackView.addArrangedSubview(sectionView)

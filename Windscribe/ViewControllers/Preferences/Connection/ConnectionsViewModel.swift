@@ -179,6 +179,11 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func updateConnectionMode(value: ConnectionModeType) {
         preferences.saveConnectionMode(mode: value.fieldValue)
+        if value == .auto {
+            Task {
+                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+            }
+        }
     }
 
     func updateConnectedDNS(type: ConnectedDNSType) {
@@ -219,6 +224,9 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         preferences.saveSelectedProtocol(selectedProtocol: value)
         if let port = localDb.getPorts(protocolType: value) {
             preferences.saveSelectedPort(port: port[0])
+        }
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
         }
     }
 

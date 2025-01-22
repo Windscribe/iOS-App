@@ -30,7 +30,7 @@ class AccountSectionView: UIView {
                                                        ])
 
         for item in sectionData.items {
-            let itemView = AccountItemView.fromNib()
+            let itemView: AccountItemView = AccountItemView.fromNib()
             itemView.setup(with: item)
             itemView.delegate = self
             stackView.addArrangedSubview(itemView)

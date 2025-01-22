@@ -23,6 +23,7 @@ class PreferencesViewLogView: UIView {
         textView.isSelectable = true
         textView.showsVerticalScrollIndicator = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
+        textView.textColor = .white.withAlphaComponent(0.5)
     }
 
     func scrolltoBottom() {

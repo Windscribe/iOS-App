@@ -106,9 +106,11 @@ struct OpenVPNConfiguration: VPNConfiguration {
 
         tunnelProtocol.disconnectOnSleep = false
         manager.protocolConfiguration = tunnelProtocol
+#if os(iOS)
         if #available(iOS 16.0, *) {
             manager.protocolConfiguration?.includeAllNetworks = true
         }
+#endif
     }
 }
 
