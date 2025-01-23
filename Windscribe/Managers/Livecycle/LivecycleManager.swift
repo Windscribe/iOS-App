@@ -9,6 +9,7 @@
 import Combine
 import RxSwift
 import UIKit
+import NetworkExtension
 
 protocol LivecycleManagerType {
     var showNetworkSecurityTrigger: PublishSubject<Void> { get }
@@ -70,14 +71,22 @@ class LivecycleManager: LivecycleManagerType {
         notificationRepo.loadNotifications()
     }
 
+    private func checkForKillSwitch() {
+        vpnManager.configureForConnectionState()
+        let info = try? vpnManager.vpnInfo.value()
+        if info?.killSwitch == true && vpnManager.isDisconnected() {
+            vpnManager.simpleDisableConnection()
+        } else if vpnManager.isConnected() && testTask == nil {
+                logger.logD("LivecycleManager", "VPN conencted. testing conenctivity.")
+                testTask = testConnectivity()
+            }
+    }
+    
     /// App foreground.
     func appEnteredForeground() {
+        checkForKillSwitch()
         logger.logD("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.onNext(())
-        if vpnManager.isConnected() && testTask == nil {
-            logger.logD("LivecycleManager", "VPN conencted. testing conenctivity.")
-            testTask = testConnectivity()
-        }
         sessionManager.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
