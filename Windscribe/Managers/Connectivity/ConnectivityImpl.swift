@@ -1,11 +1,3 @@
-//
-//  ConnectivityImpl.swift
-//  Windscribe
-//
-//  Created by Ginder Singh on 2024-01-09.
-//  Copyright © 2024 Windscribe. All rights reserved.
-//
-
 import Combine
 import Foundation
 import Network
@@ -21,6 +13,9 @@ class ConnectivityImpl: Connectivity {
     /// Observe this subject to get network change events.
     let network: BehaviorSubject<AppNetwork> = BehaviorSubject(value: AppNetwork(.disconnected))
     private let monitor = NWPathMonitor()
+    private var lastEvent: AppNetwork? // Cache the last emitted network event
+    private var debounceTimer: Timer? // Timer for event bouncing
+    private var lastValidNetworkName: String?
 
     init(logger: FileLogger) {
         self.logger = logger
@@ -39,19 +34,18 @@ class ConnectivityImpl: Connectivity {
     func refreshNetwork() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            refreshNetworkPathMonitor(path: monitor.currentPath)
+            self.refreshNetworkPathMonitor(path: self.monitor.currentPath)
         }
-
     }
 
     /// Adds listener to network path monitor and builds network change events.
     private func registerNetworkPathMonitor() {
-        let pathUpdateHandler = { (path: NWPath) in
+        monitor.pathUpdateHandler = { [weak self] path in
+            guard let self = self else { return }
             DispatchQueue.main.async {
                 self.refreshNetworkPathMonitor(path: path)
             }
         }
-        monitor.pathUpdateHandler = pathUpdateHandler
         let queue = DispatchQueue(label: "monitor queue", qos: .userInitiated)
         monitor.start(queue: queue)
     }
@@ -62,10 +56,28 @@ class ConnectivityImpl: Connectivity {
         let networkType = getNetworkType(path: path)
         getNetworkName(networkType: networkType) { [weak self] ssid in
             guard let self = self else { return }
-            let appNetwork = AppNetwork(self.getNetworkStatus(path: path), networkType: networkType, name: ssid, isVPN: self.isVPN(path: path))
-            self.logger.logI(self, "\(appNetwork.description)")
-            self.network.onNext(appNetwork)
-            NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
+
+            var networkName = ssid
+            if networkName == nil && networkType == .wifi {
+                networkName = self.lastValidNetworkName
+            }
+
+            if networkName != nil && networkType == .wifi {
+                self.lastValidNetworkName = networkName
+            }
+
+            let appNetwork = AppNetwork(
+                self.getNetworkStatus(path: path),
+                networkType: networkType,
+                name: networkName,
+                isVPN: self.isVPN(path: path)
+            )
+            if lastEvent != appNetwork {
+                logger.logD(self,  appNetwork.description)
+                self.network.onNext(appNetwork)
+                NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
+            }
+            lastEvent = appNetwork
         }
     }
 

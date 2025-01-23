@@ -33,6 +33,6 @@ struct AppNetwork: CustomStringConvertible, Equatable {
     }
 
     var description: String {
-        return "Internet Connection [Status:\(status) NetworkType:\(networkType) Name:\(name ?? "Unknown") isVPN:\(isVPN)]"
+        return "Internet: [Status:\(status) NetworkType:\(networkType) SSID:\( name ?? " Network name not available.") isVPN: \(isVPN)]"
     }
 }
