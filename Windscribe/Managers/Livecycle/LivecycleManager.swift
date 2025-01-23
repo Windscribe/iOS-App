@@ -82,6 +82,7 @@ class LivecycleManager: LivecycleManagerType {
                 logger.logD("LivecycleManager", "VPN conencted. testing conenctivity.")
                 testTask = testConnectivity()
             }
+        }
     }
 
     /// App foreground.
