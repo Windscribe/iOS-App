@@ -277,8 +277,16 @@ extension ConnectionViewModel {
 
     private func refreshConnectionFromNetworkChange() {
         if let info = try? vpnManager.vpnInfo.value() {
+            if connectivity.getNetwork().name == nil || connectivity.getNetwork().name == "Unknown" {
+                return
+            }
+
+            let network = vpnManager.localDB.getNetworksSync()?.filter {$0.SSID == connectivity.getNetwork().name}.first
             if .connected == info.status {
                 wifiManager.saveCurrentWifiNetworks()
+                if network?.preferredProtocol == info.selectedProtocol  && network?.preferredPort == info.selectedPort {
+                    return
+                }
                 connectionTaskPublisher?.cancel()
                 connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
                     .sink { _ in
