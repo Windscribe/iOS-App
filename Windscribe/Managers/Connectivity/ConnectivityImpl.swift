@@ -51,8 +51,6 @@ class ConnectivityImpl: Connectivity {
     }
 
     private func refreshNetworkPathMonitor(path: NWPath) {
-        WSNet.instance().setIsConnectedToVpnState(isVPN(path: path))
-        WSNet.instance().setConnectivityState(path.status == .satisfied)
         let networkType = getNetworkType(path: path)
         getNetworkName(networkType: networkType) { [weak self] ssid in
             guard let self = self else { return }
@@ -75,6 +73,8 @@ class ConnectivityImpl: Connectivity {
             if lastEvent != appNetwork {
                 logger.logD(self,  appNetwork.description)
                 self.network.onNext(appNetwork)
+                WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
+                WSNet.instance().setConnectivityState(appNetwork.status == .connected)
                 NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
             }
             lastEvent = appNetwork
