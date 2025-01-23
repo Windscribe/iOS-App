@@ -81,7 +81,7 @@ class LivecycleManager: LivecycleManagerType {
                 testTask = testConnectivity()
             }
     }
-    
+
     /// App foreground.
     func appEnteredForeground() {
         checkForKillSwitch()

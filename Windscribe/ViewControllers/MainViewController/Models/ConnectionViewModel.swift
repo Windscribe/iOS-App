@@ -167,7 +167,7 @@ class ConnectionViewModel: ConnectionViewModelType {
                 guard network.name?.uppercased() != TextsAsset.NetworkSecurity.unknownNetwork.uppercased() else {
                     return
                 }
-                if self.currentNetwork?.name != network.name {
+                if self.currentNetwork != nil, self.currentNetwork?.name != network.name {
                     self.refreshConnectionFromNetworkChange()
                 }
                 self.currentNetwork = network

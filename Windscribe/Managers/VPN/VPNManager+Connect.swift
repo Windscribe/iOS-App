@@ -71,7 +71,7 @@ extension VPNManager {
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }
-    
+
     /// Disconnect and disable killswitch if ON
     private func disableKillSwitchIfRequired() -> AnyPublisher<Void, Never> {
         guard let info = try? vpnInfo.value(), info.killSwitch == true else {
@@ -83,7 +83,7 @@ extension VPNManager {
             .replaceError(with: ())
             .eraseToAnyPublisher()
     }
-    
+
     /// Attempts to connect to the VPN, with retry logic for handling authentication failures and connectivity issues.
     ///
     /// - Parameters:
