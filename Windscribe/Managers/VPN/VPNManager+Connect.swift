@@ -51,7 +51,10 @@ extension VPNManager {
     /// 4. See connectTask func for more info
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
         self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
-        return configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).flatMap { () in
+        return disableKillSwitchIfRequired()
+            .flatMap { _ in
+                return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()
+            }.flatMap { () in
             let status = self.connectivity.getNetwork().status
             if [NetworkStatus.disconnected].contains(status) {
                 return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
