@@ -74,9 +74,11 @@ class LivecycleManager: LivecycleManagerType {
     private func checkForKillSwitch() {
         vpnManager.configureForConnectionState()
         let info = try? vpnManager.vpnInfo.value()
-        if info?.killSwitch == true && vpnManager.isDisconnected() {
-            vpnManager.simpleDisableConnection()
-        } else if vpnManager.isConnected() && testTask == nil {
+        if connectivity.internetConnectionAvailable() {
+            if info?.killSwitch == true && vpnManager.isDisconnected() {
+                logger.logD("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
+                vpnManager.simpleDisableConnection()
+            } else if vpnManager.isConnected() && testTask == nil {
                 logger.logD("LivecycleManager", "VPN conencted. testing conenctivity.")
                 testTask = testConnectivity()
             }
@@ -84,7 +86,7 @@ class LivecycleManager: LivecycleManagerType {
 
     /// App foreground.
     func appEnteredForeground() {
-      //  checkForKillSwitch()
+        checkForKillSwitch()
         logger.logD("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.onNext(())
         sessionManager.keepSessionUpdated()

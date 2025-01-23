@@ -78,7 +78,7 @@ extension VPNManager {
             return Just(()).eraseToAnyPublisher()
         }
         return configManager.disconnectAsync()
-            .first()
+            .last()
             .map { _ in () }
             .replaceError(with: ())
             .eraseToAnyPublisher()
