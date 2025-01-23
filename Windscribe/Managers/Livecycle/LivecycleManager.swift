@@ -84,7 +84,7 @@ class LivecycleManager: LivecycleManagerType {
 
     /// App foreground.
     func appEnteredForeground() {
-        checkForKillSwitch()
+      //  checkForKillSwitch()
         logger.logD("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.onNext(())
         sessionManager.keepSessionUpdated()
