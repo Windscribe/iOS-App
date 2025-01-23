@@ -97,13 +97,23 @@ class ConnectivityImpl: Connectivity {
 
     /// Returns network type from NWPath
     private func getNetworkType(path: NWPath) -> NetworkType {
-        if path.usesInterfaceType(.wifi) {
-            return .wifi
-        } else if path.usesInterfaceType(.cellular) {
-            return .cellular
-        } else {
-            return .none
+        for interface in path.availableInterfaces {
+            if interface.name.hasPrefix("pdp") {
+                return .cellular
+            }
+            if interface.name.hasPrefix("en") {
+                return .wifi
+            }
         }
+        if path.status == .satisfied {
+            if path.usesInterfaceType(.cellular) {
+                return .cellular
+            }
+            if path.usesInterfaceType(.wifi) {
+                return .wifi
+            }
+        }
+        return .none
     }
 
     /// Returns  if VPN is active.
