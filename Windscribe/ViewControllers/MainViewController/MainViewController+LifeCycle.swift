@@ -78,5 +78,6 @@ extension MainViewController {
         bindStaticIPListViewModel()
         bindServerListViewModel()
         bindProtocolSwitchViewModel()
+        bindActions()
     }
 }

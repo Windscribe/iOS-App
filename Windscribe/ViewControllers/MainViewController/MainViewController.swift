@@ -237,6 +237,12 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         setNetworkSsid()
     }
 
+    func bindActions() {
+        preferencesTapAreaButton.rx.tap.throttle(.seconds(1), scheduler: MainScheduler.instance).bind {
+            self.logoButtonTapped()
+        }.disposed(by: disposeBag)
+    }
+
     func configureNotificationListeners() {
         NotificationCenter.default.addObserver(self, selector: #selector(popoverDismissed), name: Notifications.popoverDismissed, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(reloadServerListOrder), name: Notifications.serverListOrderPrefChanged, object: nil)

@@ -275,7 +275,6 @@ extension MainViewController {
         preferencesTapAreaButton = LargeTapAreaImageButton()
         preferencesTapAreaButton.imageView?.contentMode = .scaleAspectFit
         preferencesTapAreaButton.layer.opacity = 0.4
-        preferencesTapAreaButton.addTarget(self, action: #selector(logoButtonTapped), for: .touchUpInside)
         preferencesTapAreaButton.setImage(UIImage(named: ImagesAsset.topNavBarMenu), for: .normal)
         view.addSubview(preferencesTapAreaButton)
 
