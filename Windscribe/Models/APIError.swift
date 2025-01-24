@@ -119,6 +119,10 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "Missing remote address in selected location."
         case .wgLimitExceeded:
             return "You have reached your limit of WireGuard keys. Do you want to delete your oldest key?"
+        case .twoFactorRequired:
+            return "2FA code required to login."
+        case .invalid2FA:
+            return "Invalid 2FA Code provided."
         default:
             return "Unknown error."
         }
