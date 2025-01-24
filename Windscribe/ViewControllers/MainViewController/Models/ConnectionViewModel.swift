@@ -31,6 +31,7 @@ protocol ConnectionViewModelType {
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
     var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
+    var reloadLocationsTrigger:  PublishSubject<String> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -82,6 +83,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let requestLocationTrigger = PublishSubject<Void>()
     let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
     let showNoConnectionAlertTrigger = PublishSubject<Void>()
+    let reloadLocationsTrigger = PublishSubject<String>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -457,7 +459,6 @@ extension ConnectionViewModel {
         case .credentialsNotFound,
                 .invalidLocationType,
                 .customConfigSupportNotAvailable,
-                .locationNotFound,
                 .noValidNodeFound,
                 .invalidServerConfig,
                 .configNotFound,
@@ -465,6 +466,8 @@ extension ConnectionViewModel {
                 .connectionTimeout:
             logger.logE(self, error.description)
             return false
+        case .locationNotFound(let id):
+            reloadLocationsTrigger.onNext(id)
         case .networkIsOffline:
             showNoConnectionAlertTrigger.onNext(())
         case .allProtocolFailed:

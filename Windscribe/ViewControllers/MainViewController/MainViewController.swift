@@ -224,6 +224,16 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             self.updateConnectedState()
         }).disposed(by: disposeBag)
 
+        vpnConnectionViewModel.reloadLocationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {  id in
+            if id.starts(with: "static") {
+                self.loadStaticIPs()
+            } else if id.starts(with: "custom") {
+                self.loadCustomConfigs()
+            } else {
+                self.loadServerList()
+            }
+        }).disposed(by: disposeBag)
+
         setNetworkSsid()
     }
 
