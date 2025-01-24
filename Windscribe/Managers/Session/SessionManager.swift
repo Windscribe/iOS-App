@@ -170,8 +170,10 @@ class SessionManager: SessionManagerV2 {
             serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
-            logger.logD(MainViewController.self, "ALC changes detected. Request to retrieve server list")
-            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            logger.logD(self, "ALC changes detected. Request to retrieve server list")
+            serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in
+                self.checkLocationValidity()
+            }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         let sipCount = localDatabase.getStaticIPs()?.count ?? 0
         if sipCount != newSession.getSipCount() {
