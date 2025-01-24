@@ -346,6 +346,8 @@ class MainViewController: PreferredFocusedViewController {
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
                 self.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
+
+        bindActions()
     }
 
     func localisation() {

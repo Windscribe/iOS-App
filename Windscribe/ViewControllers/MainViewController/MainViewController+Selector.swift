@@ -297,7 +297,7 @@ extension MainViewController {
         }
     }
 
-    @objc func logoButtonTapped() {
+    func logoButtonTapped() {
         logger.logD(self, "User tapped to view Preferences view.")
         //  HapticFeedbackGenerator.shared.run(level: .medium)
         router?.routeTo(to: RouteID.mainMenu, from: self)

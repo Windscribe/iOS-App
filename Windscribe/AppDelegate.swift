@@ -50,21 +50,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
-        Task {
-            livecycleManager.onAppStart()
-            recordInstallIfFirstLoad()
-            registerForPushNotifications()
-            resetCountryOverrideForServerList()
-            purchaseManager.verifyPendingTransaction()
-            setApplicationWindow()
-            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-            if preferences.userSessionAuth() != nil {
-                delay(2) {
-                    self.latencyRepository.loadLatency()
+        livecycleManager.onAppStart()
+        recordInstallIfFirstLoad()
+        registerForPushNotifications()
+        resetCountryOverrideForServerList()
+        purchaseManager.verifyPendingTransaction()
+        setApplicationWindow()
+        Task.detached { [unowned self] in
+            await latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
+            await UIApplication.shared
+                .setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+            if await preferences.userSessionAuth() != nil {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                await self.latencyRepository.loadLatency()
                 }
-            }
         }
+
         return true
     }
 
