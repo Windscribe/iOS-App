@@ -268,7 +268,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         for server in servers where server.countryCode == countryCode {
             let availableGroups = server.groups.filter { group in
                 guard !group.nodes.isEmpty else { return false }
-                if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
                     return false
                 }
                 return true
@@ -293,7 +293,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             if timeDifference <= 3600 {
                 let availableGroups = server.groups.filter { group in
                     guard !group.nodes.isEmpty else { return false }
-                    if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                    if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
                         return false
                     }
                     return true
