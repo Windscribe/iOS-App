@@ -334,7 +334,6 @@ extension ConnectionViewModel {
 
     private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
-            checkPreferencesForTriggers()
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
@@ -367,6 +366,7 @@ extension ConnectionViewModel {
                         self.logger.logD(self, "Enable connection validate IP: \(ip)")
                         self.updateState(with: .connected)
                         self.ipAddressSubject.onNext(ip)
+                        self.checkPreferencesForTriggers()
                     case let .vpn(status):
                         self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
                     case .validating:
@@ -413,7 +413,7 @@ extension ConnectionViewModel {
     }
 
     private func checkPreferencesForTriggers() {
-        if preferences.getConnectionCount() == 1 {
+        if preferences.getConnectionCount() == 2 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
             pushNotificationPermissionsTrigger.onNext(())
         }
