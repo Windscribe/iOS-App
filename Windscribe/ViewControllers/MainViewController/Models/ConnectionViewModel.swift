@@ -11,6 +11,7 @@ import RxSwift
 import Combine
 #if canImport(WidgetKit)
 import WidgetKit
+import NetworkExtension
 #endif
 
 protocol ConnectionViewModelType {
@@ -344,6 +345,10 @@ extension ConnectionViewModel {
                     case .finished:
                         self.logger.logD(self, "Finished enabling connection.")
                     case let .failure(error):
+                        if let error = error as? NEVPNError {
+                            self.logger.logD(self, "NEVPNError: \(error.code)")
+                            return
+                        }
                         if let error = error as? VPNConfigurationErrors {
                             self.logger.logD(self, "Enable connection had a VPNConfigurationErrors:")
                             if !self.handleErrors(error: error, fromEnable: true) {

@@ -95,6 +95,18 @@ extension VPNManager {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
+                if let error = error as? NEVPNError {
+                    // First connection to ikev2 may throw this error if config is not saved yet.
+                    // Wait for 2 seconds and retry.
+                    if error.code == NEVPNError.Code.configurationInvalid {
+                        self.logger.logD(self, "NEVPNError: Configuration is invalid.")
+                        return Just(())
+                            .delay(for: .seconds(2), scheduler: DispatchQueue.main)
+                            .flatMap { _ in
+                                self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
+                            }.eraseToAnyPublisher()
+                    }
+                }
                 if let error = error as? VPNConfigurationErrors {
                     switch error {
                     case .authFailure:
