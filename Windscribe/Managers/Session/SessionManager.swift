@@ -177,8 +177,11 @@ class SessionManager: SessionManagerV2 {
         }
         let sipCount = localDatabase.getStaticIPs()?.count ?? 0
         if sipCount != newSession.getSipCount() {
-            logger.logD(MainViewController.self, "SIP changes detected. Request to retrieve static ip list")
-            staticIPRepo.getStaticServers().flatMap { _ in self.latencyRepo.loadStaticIpLatency() }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+            logger.logD(self, "SIP changes detected. Request to retrieve static ip list")
+            staticIPRepo.getStaticServers().flatMap { _ in
+                self.checkLocationValidity()
+                return self.latencyRepo.loadStaticIpLatency()
+            }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if !newSession.isPremium && oldSession.isPremium {
             logger.logD(MainViewController.self, "User's pro plan expired.")
