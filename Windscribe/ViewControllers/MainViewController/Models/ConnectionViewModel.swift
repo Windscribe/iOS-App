@@ -9,9 +9,9 @@
 import Foundation
 import RxSwift
 import Combine
+import NetworkExtension
 #if canImport(WidgetKit)
 import WidgetKit
-import NetworkExtension
 #endif
 
 protocol ConnectionViewModelType {
