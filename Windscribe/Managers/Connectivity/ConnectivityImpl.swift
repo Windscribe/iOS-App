@@ -16,7 +16,7 @@ class ConnectivityImpl: Connectivity {
     private var lastEvent: AppNetwork?
     private var debounceTimer: Timer?
     private var lastValidNetworkName: String?
-    
+
     init(logger: FileLogger) {
         self.logger = logger
         registerNetworkPathMonitor()
@@ -37,7 +37,7 @@ class ConnectivityImpl: Connectivity {
             self.refreshNetworkPathMonitor(path: self.monitor.currentPath)
         }
     }
-    
+
     /// Adds listener to network path monitor and builds network change events.
     private func registerNetworkPathMonitor() {
         monitor.pathUpdateHandler = { [weak self] path in
@@ -54,16 +54,16 @@ class ConnectivityImpl: Connectivity {
         let networkType = getNetworkType(path: path)
         getNetworkName(networkType: networkType) { [weak self] ssid in
             guard let self = self else { return }
-            
+
             var networkName = ssid
             if networkName == nil && networkType == .wifi {
                 networkName = self.lastValidNetworkName
             }
-            
+
             if networkName != nil && networkType == .wifi {
                 self.lastValidNetworkName = networkName
             }
-            
+
             let appNetwork = AppNetwork(
                 self.getNetworkStatus(path: path),
                 networkType: networkType,
@@ -80,7 +80,7 @@ class ConnectivityImpl: Connectivity {
             lastEvent = appNetwork
         }
     }
-    
+
     func awaitNetwork(maxTime: Double) async throws {
         let timeout: TimeInterval = maxTime
         let startTime = Date()
