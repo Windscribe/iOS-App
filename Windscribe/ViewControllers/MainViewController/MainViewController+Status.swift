@@ -44,9 +44,11 @@ extension MainViewController {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.selectedLocationUpdatedSubject.subscribe(onNext: {
-            self.updateSelectedLocationUI()
-        }).disposed(by: disposeBag)
+        vpnConnectionViewModel.selectedLocationUpdatedSubject
+            .delaySubscription(RxTimeInterval.seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: MainScheduler.instance)
+            .subscribe(onNext: {
+                self.updateSelectedLocationUI()
+            }).disposed(by: disposeBag)
 
         Observable.combineLatest(viewModel.wifiNetwork,
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
