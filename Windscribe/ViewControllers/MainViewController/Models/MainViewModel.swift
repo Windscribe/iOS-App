@@ -167,7 +167,7 @@ class MainViewModel: MainViewModelType {
     private func observeWifiNetwork() {
         Observable.combineLatest(localDatabase.getNetworks(), connectivity.network).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork) in
             guard let matchingNetwork = networks.first(where: {
-                $0.SSID == appNetwork.name
+                $0.isInvalidated == false && $0.SSID == appNetwork.name
             }) else { return }
             self.wifiNetwork.onNext(matchingNetwork)
         }, onError: { _ in }).disposed(by: disposeBag)
@@ -215,6 +215,10 @@ class MainViewModel: MainViewModelType {
         DispatchQueue.main.async {
             var serverSections = [ServerSection]()
             var serverSectionsOrdered = [ServerSection]()
+            if servers.filter({$0.isInvalidated}).count > 0 {
+                completion(serverSectionsOrdered)
+                return
+            }
             let serverModels = servers.compactMap { $0.getServerModel() }
             serverSections = serverModels.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
             let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
