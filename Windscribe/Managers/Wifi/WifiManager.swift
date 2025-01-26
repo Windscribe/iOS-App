@@ -120,7 +120,9 @@ class WifiManager {
                 self.updateSelectedPreferences()
             }
             self.initialNetworkFetch = false
-            self.connectedSecuredNetwork = networks.filter { $0.SSID == network.name }.first
+            self.connectedSecuredNetwork = networks.filter {
+                !$0.isInvalidated && $0.SSID == network.name
+            }.first
             if self.connectedSecuredNetwork == nil {
                 guard let networkName = network.name else { return }
                 self.saveNewNetwork(wifiSSID: networkName)
