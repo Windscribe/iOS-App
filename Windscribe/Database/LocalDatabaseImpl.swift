@@ -222,7 +222,10 @@ class LocalDatabaseImpl: LocalDatabase {
         let realm = try? Realm()
         if let session = realm?.objects(Session.self).first {
             let oldSession = OldSession(session: session)
-            updateRealmObject(object: oldSession).disposed(by: disposeBag)
+            let realm = try? Realm()
+            try? realm?.safeWrite {
+                realm?.add(oldSession, update: .modified)
+            }
         }
     }
 

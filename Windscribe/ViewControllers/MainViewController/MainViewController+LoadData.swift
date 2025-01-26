@@ -40,7 +40,8 @@ extension MainViewController {
 
     @objc func reloadFavNodeOrder() {
         viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] favNodes in
-            if favNodes?.count == 0 {
+                let invalidatedNodes = favNodes?.count(where: {  $0.isInvalidated}) ?? 0  > 0
+                if favNodes?.count == 0 ||  invalidatedNodes {
                 favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: [], viewModel: viewModel)
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.reloadData()
