@@ -27,7 +27,7 @@ enum GeneralOption {
     case preferredProtocol
 }
 
-struct GeneralHelper {
+enum GeneralHelper {
     static func getAsset(_ option: GeneralOption) -> String {
         switch option {
         case .locationOrder:

@@ -16,10 +16,10 @@ protocol SearchCountryViewDelegate: AnyObject {
 }
 
 protocol SearchLocationsViewModelType {
-    var isSearchActive: BehaviorSubject<Bool> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isSearchActive: BehaviorSubject<Bool> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
-    var delegate: SearchCountryViewDelegate? {get set}
+    var delegate: SearchCountryViewDelegate? { get set }
 
     func searchTextFieldDidChange(text: String)
     func toggleSearch()
@@ -46,6 +46,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     func toggleSearch() {
         let isSearchActive = (try? isSearchActive.value()) ?? false
         if isSearchActive {
+            delegate?.searchLocationUpdated(with: "")
             delegate?.dismissSearchLocation()
         } else {
             delegate?.showSearchLocation()
@@ -54,7 +55,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     }
 
     func isActive() -> Bool {
-       return (try? isSearchActive.value()) ?? false
+        return (try? isSearchActive.value()) ?? false
     }
 
     func dismiss() {
@@ -68,7 +69,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     }
 
     private func load() {
-        themeManager.darkTheme.subscribe {data in
+        themeManager.darkTheme.subscribe { data in
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
     }

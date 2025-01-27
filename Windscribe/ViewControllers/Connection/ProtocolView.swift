@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 enum ProtocolViewType {
     case connected
@@ -37,15 +37,16 @@ class ProtocolView: UIView {
     private let disposeBag = DisposeBag()
 
     // MARK: - UI Elements
+
     private lazy var wrapperView: UIView = {
         let vw = UIView()
         vw.layer.cornerRadius = 8
         return vw
     }()
 
-    private var protocolLabel: UILabel = UILabel()
+    private var protocolLabel: UILabel = .init()
 
-    private var portLabel: UILabel = UILabel()
+    private var portLabel: UILabel = .init()
 
     private lazy var protocolSeparateLine: UIView = {
         let vw = UIView()
@@ -58,7 +59,7 @@ class ProtocolView: UIView {
             protocolLabel,
             protocolSeparateLine,
             portLabel,
-            UIView()
+            UIView(),
         ])
         stack.spacing = 8
         return stack
@@ -81,6 +82,7 @@ class ProtocolView: UIView {
         lbl.textColor = .seaGreen
         return lbl
     }()
+
     private lazy var nextInLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "Next Up In \(countdownValue)s".localize()
@@ -88,11 +90,12 @@ class ProtocolView: UIView {
         lbl.textColor = .seaGreen
         return lbl
     }()
+
     private lazy var topRightView: UIView = {
         let vw = UIView()
         let stack = UIStackView(arrangedSubviews: [
             connectedLabel,
-            nextInLabel
+            nextInLabel,
         ])
         vw.addSubview(stack)
         stack.fillSuperview()
@@ -130,19 +133,21 @@ class ProtocolView: UIView {
     }()
 
     // MARK: - Config
+
     init(type: ProtocolViewType, protocolName: String, portName: String, description: String, isDarkMode: BehaviorSubject<Bool>, delegate: ProtocolViewDelegate? = nil, fallbackType: ProtocolFallbacksType) {
         self.type = type
         self.delegate = delegate
         self.protocolName = protocolName
         self.portName = portName
-        self.protocolDescription = description
+        protocolDescription = description
         self.fallbackType = fallbackType
         super.init(frame: .zero)
         setup()
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -156,7 +161,7 @@ class ProtocolView: UIView {
         mainstackView.fillSuperview()
         mainstackView.addArrangedSubviews([
             protocolStack,
-            descriptionLabel
+            descriptionLabel,
         ])
         mainstackView.addSubview(wrapperView)
         wrapperView.fillSuperview()
@@ -172,11 +177,11 @@ class ProtocolView: UIView {
         configUIRightArrow()
 
         let gs = UITapGestureRecognizer(target: self, action: #selector(selectedAction))
-        self.addGestureRecognizer(gs)
+        addGestureRecognizer(gs)
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.updateUI(isDarkMode: $0)
             self.wrapperView.backgroundColor = ThemeUtils.wrapperColor(isDarkMode: $0)
@@ -199,7 +204,7 @@ class ProtocolView: UIView {
         topRightViewTopConstraint?.isActive = true
         topRightViewTrailingConstraint?.isActive = true
 
-        rightArrowImage.anchor(right: self.rightAnchor, paddingRight: 16)
+        rightArrowImage.anchor(right: rightAnchor, paddingRight: 16)
         rightArrowImageCenterYConstraint = NSLayoutConstraint(item: rightArrowImage, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)
         rightArrowImageCenterYDescConstraint = NSLayoutConstraint(item: rightArrowImage, attribute: .centerY, relatedBy: .equal, toItem: descriptionLabel, attribute: .centerY, multiplier: 1, constant: 0)
 

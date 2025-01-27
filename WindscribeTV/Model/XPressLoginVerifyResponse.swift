@@ -7,17 +7,18 @@
 //
 
 import Foundation
+
 class XPressLoginVerifyResponse: Decodable {
     var sessionAuth: String = ""
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case sessionAuth = "session_auth_hash"
     }
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        self.sessionAuth = try data.decodeIfPresent(String.self, forKey: .sessionAuth) ?? ""
+        sessionAuth = try data.decodeIfPresent(String.self, forKey: .sessionAuth) ?? ""
     }
 }

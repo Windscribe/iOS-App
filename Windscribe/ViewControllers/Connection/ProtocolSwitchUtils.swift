@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 enum ProtocolFallbacksType {
     case failure
     case change
@@ -39,12 +40,16 @@ enum ProtocolFallbacksType {
 }
 
 typealias ProtocolPort = (protocolName: String, portName: String)
-class DisplayProtocolPort {
+class DisplayProtocolPort: CustomStringConvertible {
     var protocolPort: ProtocolPort
     var viewType: ProtocolViewType
 
     init(protocolPort: ProtocolPort, viewType: ProtocolViewType) {
         self.protocolPort = protocolPort
         self.viewType = viewType
+    }
+
+    var description: String {
+        return "\(protocolPort) \(viewType)"
     }
 }

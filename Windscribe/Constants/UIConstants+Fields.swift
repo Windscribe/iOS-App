@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Fields {
+enum Fields {
     static let connectionMode = "Connection Mode"
     static let protocolType = "Protocol"
     static let port = "Port"
@@ -24,7 +24,7 @@ struct Fields {
     static let hapticFeedback = "Haptic Feedback"
     static let showServerHealth = "Show Server Health"
 
-    struct WifiNetwork {
+    enum WifiNetwork {
         static let trustStatus = "Trust Status"
         static let preferredProtocolStatus = "Pref Proto Status"
         static let preferredProtocol = "Preferred Protocol"
@@ -32,7 +32,7 @@ struct Fields {
         static let dontAskAgainForPreferredProtocol = "Dont Ask Again For Preferred Protocol"
     }
 
-    struct Values {
+    enum Values {
         static let auto = "Auto"
         static let manual = "Manual"
         static let custom = "Custom"

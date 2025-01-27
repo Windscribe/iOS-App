@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum WSNetErrors: Int32 {
     case success = 0
     case networkError = 1

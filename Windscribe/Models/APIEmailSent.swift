@@ -12,7 +12,7 @@ struct APIEmailSent: Decodable {
     let emailSent: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case emailSent = "email_sent"
     }
 

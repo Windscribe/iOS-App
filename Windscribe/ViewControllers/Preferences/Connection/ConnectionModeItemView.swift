@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 protocol ConnectionModeItemViewDelegate: AnyObject {
-    func connectionModeItemViewDidSelectDropdownButton(_ sender: DropdownButton,_ view: ConnectionModeItemView)
+    func connectionModeItemViewDidSelectDropdownButton(_ sender: DropdownButton, _ view: ConnectionModeItemView)
 }
 
 class ConnectionModeItemView: UIView {
@@ -31,7 +31,8 @@ class ConnectionModeItemView: UIView {
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 extension ObjectScope {
     /// Add dependencies that needds to be reacreated on user logout.
     static let userScope = ObjectScope(storageFactory: PermanentStorage.init)

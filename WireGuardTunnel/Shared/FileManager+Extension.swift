@@ -7,14 +7,15 @@ import os.log
 extension FileManager {
     static var appGroupId: String? {
         #if os(iOS) || os(tvOS)
-        let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup
+            let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup
         #elseif os(macOS)
-        let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup
+            let appGroupIdInfoDictionaryKey = SharedKeys.sharedGroup
         #else
-        #error("Unimplemented")
+            #error("Unimplemented")
         #endif
         return Bundle.main.object(forInfoDictionaryKey: appGroupIdInfoDictionaryKey) as? String
     }
+
     private static var sharedFolderURL: URL? {
         guard let sharedFolderURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup) else {
             return nil

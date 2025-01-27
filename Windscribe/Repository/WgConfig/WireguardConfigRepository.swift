@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol WireguardConfigRepository {
     func getCredentials() -> Completable
 }

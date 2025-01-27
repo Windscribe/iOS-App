@@ -6,18 +6,15 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PreferencesGeneralView: UIView {
-    lazy var languagesView: TopSettingSection = {
-        TopSettingSection.fromNib()
-    }()
-    lazy var orderByView: SettingsSection = {
-        SettingsSection.fromNib()
-    }()
+    lazy var languagesView: TopSettingSection = .fromNib()
 
-    @IBOutlet weak var contentStackView: UIStackView!
+    lazy var orderByView: SettingsSection = .fromNib()
+
+    @IBOutlet var contentStackView: UIStackView!
 
     var viewModel: GeneralViewModelType!
     private let disposeBag = DisposeBag()
@@ -66,11 +63,11 @@ extension PreferencesGeneralView: SettingsSectionDelegate {
     func optionWasSelected(for view: SettingsSection, with value: String) {
         if view == languagesView {
             viewModel.selectLanguage(with: value)
-          return
+            return
         }
         if view == orderByView {
             viewModel.didSelectedLocationOrder(value: value)
-          return
+            return
         }
     }
 }

@@ -9,6 +9,7 @@
 import Foundation
 import Swinject
 import UIKit
+
 class PreferenceMainRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {
         switch to {
@@ -19,7 +20,7 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(HelpViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
         case let RouteID.signup(claimGhostAccount):
-                goToSignUp(viewController: from, claimGhostAccount: claimGhostAccount)
+            goToSignUp(viewController: from, claimGhostAccount: claimGhostAccount)
         case RouteID.general:
             let vc = Assembler.resolve(GeneralViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)

@@ -1,10 +1,11 @@
-import UIKit
 import RxSwift
+import UIKit
 
 class HelpViewController: WSNavigationViewController {
     var router: HelpRouter!, logger: FileLogger!, viewModel: HelpViewModel!
 
     // MARK: UI elements
+
     private lazy var knowledgeBaseRow = HelpView(item: HelpItem(icon: ImagesAsset.Help.apple,
                                                                 title: Help.knowledgeBase,
                                                                 subTitle: Help.allYouNeedToknowIsHere),
@@ -27,16 +28,16 @@ class HelpViewController: WSNavigationViewController {
                                                 type: .action,
                                                 delegate: self, isDarkMode: viewModel.isDarkMode)
     private lazy var advanceParams = HelpView(item: HelpItem(icon: ImagesAsset.Preferences.advanceParams,
-                                                                title: TextsAsset.Preferences.advanceParameters,
-                                                                subTitle: Help.advanceParamDescription),
-                                                 type: .navigation,
-                                                 delegate: self, isDarkMode: viewModel.isDarkMode)
+                                                             title: TextsAsset.Preferences.advanceParameters,
+                                                             subTitle: Help.advanceParamDescription),
+                                              type: .navigation,
+                                              delegate: self, isDarkMode: viewModel.isDarkMode)
 
     private lazy var sendDebugLogRow: HelpView = {
         let vw = HelpView(item: HelpItem(icon: ImagesAsset.Help.debugSend,
-                                                               title: TextsAsset.Debug.sendLog),
-                                                type: .action,
-                                                delegate: self, isDarkMode: viewModel.isDarkMode)
+                                         title: TextsAsset.Debug.sendLog),
+                          type: .action,
+                          delegate: self, isDarkMode: viewModel.isDarkMode)
         vw.header.updateStatus(TextsAsset.Debug.sentLog)
         return vw
     }()
@@ -76,30 +77,30 @@ class HelpViewController: WSNavigationViewController {
     private func setupUI() {
         setupFillLayoutView()
         // if free user, then hide send ticket
-          guard let isUserPro = sessionManager.session?.isUserPro else {
-              logger.logD(HelpViewController.self, "session.isPremium is nil")
-              return
-          }
-          if isUserPro {
-              layoutView.stackView.addArrangedSubviews([
-                  knowledgeBaseRow,
-                  talkToGarryRow,
-                  sendTicketRow,
-                  communitySupportRow,
-                  advanceParams,
-                  viewDebugLogRow,
-                  sendDebugLogRow
-              ])
-          } else {
-              layoutView.stackView.addArrangedSubviews([
-                  knowledgeBaseRow,
-                  talkToGarryRow,
-                  communitySupportRow,
-                  advanceParams,
-                  viewDebugLogRow,
-                  sendDebugLogRow
-              ])
-          }
+        guard let isUserPro = sessionManager.session?.isUserPro else {
+            logger.logD(HelpViewController.self, "session.isPremium is nil")
+            return
+        }
+        if isUserPro {
+            layoutView.stackView.addArrangedSubviews([
+                knowledgeBaseRow,
+                talkToGarryRow,
+                sendTicketRow,
+                communitySupportRow,
+                advanceParams,
+                viewDebugLogRow,
+                sendDebugLogRow,
+            ])
+        } else {
+            layoutView.stackView.addArrangedSubviews([
+                knowledgeBaseRow,
+                talkToGarryRow,
+                communitySupportRow,
+                advanceParams,
+                viewDebugLogRow,
+                sendDebugLogRow,
+            ])
+        }
 
         layoutView.stackView.setPadding(UIEdgeInsets(horizontalInset: 16, verticalInset: 12))
         layoutView.stackView.spacing = 16
@@ -114,7 +115,7 @@ class HelpViewController: WSNavigationViewController {
         } else {
             sendDebugLogRow.header.updateTitle("\(TextsAsset.Debug.sendingLog)...", font: UIFont.text(size: 16))
             sendDebugLogRow.header.showLoading()
-            viewModel.submitDebugLog(username: nil) { (_, error) in
+            viewModel.submitDebugLog(username: nil) { _, error in
                 DispatchQueue.main.async {
                     self.sendDebugLogRow.header.updateTitle(TextsAsset.Debug.sendLog, font: UIFont.bold(size: 16))
                     self.sendDebugLogRow.header.completeLoading(error)
@@ -127,16 +128,15 @@ class HelpViewController: WSNavigationViewController {
                 }
             }
         }
-
     }
 
     @objc func viewLogButtonTapped() {
         router?.routeTo(to: RouteID.viewLog, from: self)
     }
-
 }
 
 // MARK: - HelpViewController
+
 extension HelpViewController: HelpViewDelegate {
     func helpViewDidSelect(_ sender: HelpView) {
         switch sender {
@@ -161,6 +161,7 @@ extension HelpViewController: HelpViewDelegate {
 }
 
 // MARK: - HelpSubRowViewDelegate
+
 extension HelpViewController: HelpSubRowViewDelegate {
     func helpSubRowViewDidTap(_ sender: HelpSubRowView) {
         switch sender {

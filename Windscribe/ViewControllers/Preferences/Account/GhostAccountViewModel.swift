@@ -24,6 +24,6 @@ class GhostAccountViewModel: GhostAccountViewModelType {
     }
 
     func isUserPro() -> Bool? {
-       return sessionManager.session?.isUserPro
+        return sessionManager.session?.isUserPro
     }
 }

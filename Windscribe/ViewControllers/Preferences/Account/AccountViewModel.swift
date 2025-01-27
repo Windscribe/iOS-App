@@ -8,19 +8,21 @@
 
 import Foundation
 import RxSwift
+
 enum ManageAccountState {
     case initial
     case loading
     case error(String)
     case success
 }
+
 protocol AccountViewModelType {
-    var apiCallManager: APIManager {get}
-    var alertManager: AlertManagerV2 {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
-    var cancelAccountState: BehaviorSubject<ManageAccountState> {get}
-    var languageUpdatedTrigger: PublishSubject<()> { get }
-    var sessionUpdatedTrigger: PublishSubject<()> { get }
+    var apiCallManager: APIManager { get }
+    var alertManager: AlertManagerV2 { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
+    var cancelAccountState: BehaviorSubject<ManageAccountState> { get }
+    var languageUpdatedTrigger: PublishSubject<Void> { get }
+    var sessionUpdatedTrigger: PublishSubject<Void> { get }
 
     func titleForHeader(in section: Int) -> String
     func numberOfSections() -> Int
@@ -48,8 +50,8 @@ class AccountViewModel: AccountViewModelType {
     let disposeBag = DisposeBag()
     let isDarkMode: BehaviorSubject<Bool>
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
-    let languageUpdatedTrigger = PublishSubject<()>()
-    var sessionUpdatedTrigger = PublishSubject<()>()
+    let languageUpdatedTrigger = PublishSubject<Void>()
+    var sessionUpdatedTrigger = PublishSubject<Void>()
     let session = BehaviorSubject<Session?>(value: nil)
 
     init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2, localDatabase: LocalDatabase) {
@@ -61,9 +63,9 @@ class AccountViewModel: AccountViewModelType {
 
         isDarkMode = themeManager.darkTheme
         #if os(iOS)
-        sections = [.info, .plan, .other]
+            sections = [.info, .plan, .other]
         #else
-        sections = [.info, .plan]
+            sections = [.info, .plan]
         #endif
         languageManager.activelanguage.subscribe { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
@@ -109,7 +111,6 @@ class AccountViewModel: AccountViewModelType {
         }, onFailure: { error in
             failure?(error.localizedDescription)
         }).disposed(by: disposeBag)
-
     }
 
     func cancelAccount(password: String) {
@@ -121,7 +122,7 @@ class AccountViewModel: AccountViewModelType {
             switch error {
             case Errors.validationFailure:
                 self.cancelAccountState.onNext(.error("Password is incorrect."))
-            case Errors.apiError(let e):
+            case let Errors.apiError(e):
                 self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
             default:
                 self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
@@ -155,7 +156,7 @@ class AccountViewModel: AccountViewModelType {
         }, onFailure: { error in
             if let error = error as? Errors {
                 switch error {
-                case .apiError(let e):
+                case let .apiError(e):
                     failure?(e.errorMessage ?? "Failed to verify login code.")
                 default:
                     failure?("Failed to verify login code \(error.description)")
@@ -170,7 +171,7 @@ class AccountViewModel: AccountViewModelType {
         }, onFailure: { error in
             if let error = error as? Errors {
                 switch error {
-                case .apiError(let e):
+                case let .apiError(e):
                     failure?(e.errorMessage ?? "Error applying Voucher Code: \(code)")
                 default:
                     failure?("Error applying Voucher Code: \(error.description)")

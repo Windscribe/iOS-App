@@ -9,20 +9,20 @@
 import Foundation
 import RxSwift
 
-typealias CompletionHandler = (() -> Void)
+typealias CompletionHandler = () -> Void
 
 protocol NetworkOptionViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
-    var networks: BehaviorSubject<[WifiNetwork]> {get set}
-    var themeManager: ThemeManager {get set}
-    var displayingNetwork: WifiNetwork? {get set}
-    var preferredProtocol: String? {get set}
-    var preferredPort: String? {get set}
-    var hideForgetNetwork: Bool {get set}
+    var networks: BehaviorSubject<[WifiNetwork]> { get set }
+    var themeManager: ThemeManager { get set }
+    var displayingNetwork: WifiNetwork? { get set }
+    var preferredProtocol: String? { get set }
+    var preferredPort: String? { get set }
+    var hideForgetNetwork: Bool { get set }
 
-    var trustNetworkStatus: Bool {get set}
-    var preferredProtocolStatus: Bool {get set}
-    var showPreferredProtocol: Bool {get set}
+    var trustNetworkStatus: Bool { get set }
+    var preferredProtocolStatus: Bool { get set }
+    var showPreferredProtocol: Bool { get set }
 
     func updatePreferredProtocol(value: String)
     func toggleAutoSecure()
@@ -51,18 +51,20 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
 
     private let localDatabase: LocalDatabase
     private let connectivity: Connectivity
+    private let vpnManager: VPNManager
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity) {
+    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity, vpnManager: VPNManager) {
         self.localDatabase = localDatabase
         self.themeManager = themeManager
         self.connectivity = connectivity
+        self.vpnManager = vpnManager
         loadData()
     }
 
     private func loadData() {
-        localDatabase.getNetworks().filter {$0.filter({$0.isInvalidated}).count == 0}.subscribe { networks in
+        localDatabase.getNetworks().filter { $0.filter { $0.isInvalidated }.count == 0 }.subscribe { networks in
             self.networks.onNext(networks)
         }.disposed(by: disposeBag)
 
@@ -72,31 +74,30 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func loadNetwork(completion: CompletionHandler) {
-        let existingNetworks = (try? networks.value().filter {!$0.isInvalidated}) ?? []
+        let existingNetworks = (try? networks.value().filter { !$0.isInvalidated }) ?? []
         if displayingNetwork?.isInvalidated == true {
             completion()
             return
         }
-        guard let networkSSID = self.displayingNetwork?.SSID, let network = existingNetworks
-        .filter({$0.SSID == networkSSID })
-        .first else { return }
+        guard let networkSSID = displayingNetwork?.SSID, let network = existingNetworks
+            .filter({ $0.SSID == networkSSID })
+            .first else { return }
 
-        self.preferredProtocol = network.preferredProtocol
-        self.preferredPort = network.preferredPort
+        preferredProtocol = network.preferredProtocol
+        preferredPort = network.preferredPort
 
-         self.trustNetworkStatus = !network.status
+        trustNetworkStatus = !network.status
 
-         self.preferredProtocolStatus = network.preferredProtocolStatus
+        preferredProtocolStatus = network.preferredProtocolStatus
         if network.preferredProtocolStatus == true && network.status == false {
-            self.showPreferredProtocol = true
+            showPreferredProtocol = true
         } else {
-            self.showPreferredProtocol = false
+            showPreferredProtocol = false
         }
-        if connectivity.getWifiSSID() ==  self.displayingNetwork?.SSID {
-             self.hideForgetNetwork = true
+        if connectivity.getWifiSSID() == displayingNetwork?.SSID {
+            hideForgetNetwork = true
         }
         completion()
-
     }
 
     func toggleAutoSecure() {
@@ -104,7 +105,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func updatePreferredProtocol(value: String) {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         let port = getPorts(by: value).first ?? DefaultValues.port
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: value, preferredPort: port, preferredProtocolStatus: network.preferredProtocolStatus)
         localDatabase.saveNetwork(wifiNetwork: updated).disposed(by: disposeBag)
@@ -112,7 +113,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func updatePreferredPort(value: String) {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: network.preferredProtocol, preferredPort: value, preferredProtocolStatus: network.preferredProtocolStatus)
         localDatabase.saveNetwork(wifiNetwork: updated).disposed(by: disposeBag)
         preferredPort = network.preferredPort
@@ -136,7 +137,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     }
 
     func updatePreferredProtocolSwitch(_ status: Bool, completion: CompletionHandler) {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         if network.status == true { return }
 
         localDatabase.updateNetworkWithPreferredProtocolSwitch(network: network, status: status)
@@ -145,14 +146,14 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
 
     // Auto-secure
     func updateTrustNetwork(_ status: Bool, completion: CompletionHandler) {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         localDatabase.updateTrustNetwork(network: network, status: status)
-        VPNManager.shared.updateOnDemandRules()
+        vpnManager.updateOnDemandRules()
         loadNetwork(completion: completion)
     }
 
     func forgetNetwork(completion: CompletionHandler) {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         localDatabase.removeNetwork(wifiNetwork: network)
         completion()
     }

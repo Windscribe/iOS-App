@@ -6,47 +6,48 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 extension MainViewController {
     @objc func handleRefresh() {
-        if VPNManager.shared.isConnected() || VPNManager.shared.isConnecting() {
-            self.endRefreshControls(update: false)
+        if vpnConnectionViewModel.isConnected() || vpnConnectionViewModel.isConnecting() {
+            endRefreshControls(update: false)
             return
         }
-        if isRefreshing == false && isLoadingLatencyValues == false {
+        if isRefreshing == false, isLoadingLatencyValues == false {
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
-            if VPNManager.shared.isDisconnected() ||
-                (!IKEv2VPNManager.shared.isConfigured() &&
-                !OpenVPNManager.shared.isConfigured()) ||
-                isOnline {
-                self.beginRefreshControls()
-                self.isRefreshing = true
-                self.isLoadingLatencyValues = true
-                self.hideTextOnRefreshControls()
-                latencyViewModel.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-                    self.serverListTableView.reloadData()
-                    self.favTableView.reloadData()
-                    self.streamingTableView.reloadData()
-                    self.staticIpTableView.reloadData()
-                    self.customConfigTableView.reloadData()
-                    self.isRefreshing = false
-                    self.isLoadingLatencyValues = false
-                    self.endRefreshControls(update: false)
-                }, onError: { _ in
-                    self.isRefreshing = false
-                    self.isLoadingLatencyValues = false
-                    self.endRefreshControls(update: false)
-                }).disposed(by: disposeBag)
+            if vpnConnectionViewModel.isDisconnected() || isOnline {
+                beginRefreshControls()
+                isRefreshing = true
+                isLoadingLatencyValues = true
+                hideTextOnRefreshControls()
+
+                latencyViewModel.loadAllServerLatency(
+                    onAllServerCompletion: {
+                        self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
+                        self.favTableView.reloadData()
+                        self.endRefreshControls(update: false)
+                    }, onStaticCompletion: {
+                        self.staticIpTableView.reloadData()
+                        self.endRefreshControls(update: false)
+                    }, onCustomConfigCompletion: {
+                        self.customConfigTableView.reloadData()
+                        self.endRefreshControls(update: false)
+                    },
+                    onExitCompletion: {
+                        guard self.isRefreshing else { return }
+                        self.isRefreshing = false
+                        self.isLoadingLatencyValues = false
+                    })
             } else {
-                self.endRefreshControls(update: false)
+                endRefreshControls(update: false)
             }
         }
     }
 
     func hideTextOnRefreshControls() {
-        self.serverListTableView.refreshControl?.attributedTitle = nil
+        serverListTableView.refreshControl?.attributedTitle = nil
         favTableViewRefreshControl.attributedTitle = nil
         streamingTableViewRefreshControl.attributedTitle = nil
         staticIpTableViewRefreshControl.attributedTitle = nil
@@ -55,10 +56,10 @@ extension MainViewController {
 
     func beginRefreshControls() {
         serverListTableView.refreshControl?.beginRefreshing()
-        self.favTableViewRefreshControl.beginRefreshing()
-        self.streamingTableViewRefreshControl.beginRefreshing()
-        self.staticIpTableViewRefreshControl.beginRefreshing()
-        self.customConfigsTableViewRefreshControl.beginRefreshing()
+        favTableViewRefreshControl.beginRefreshing()
+        streamingTableViewRefreshControl.beginRefreshing()
+        staticIpTableViewRefreshControl.beginRefreshing()
+        customConfigsTableViewRefreshControl.beginRefreshing()
     }
 
     func endRefreshControls(update: Bool = true) {
@@ -77,22 +78,22 @@ extension MainViewController {
     }
 
     @objc func updateRefreshControls() {
-        if VPNManager.shared.isDisconnected() || (!IKEv2VPNManager.shared.isConfigured() && !OpenVPNManager.shared.isConfigured()) {
-            if let serverRefreshControl = self.serverListTableView.refreshControl as? WSRefreshControl {
-                self.showRefreshControlDisconnectedState(serverRefreshControl)
+        if vpnConnectionViewModel.isDisconnected() {
+            if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
+                showRefreshControlDisconnectedState(serverRefreshControl)
             }
-            self.showRefreshControlDisconnectedState(self.favTableViewRefreshControl)
-            self.showRefreshControlDisconnectedState(self.streamingTableViewRefreshControl)
-            self.showRefreshControlDisconnectedState(self.staticIpTableViewRefreshControl)
-            self.showRefreshControlDisconnectedState(self.customConfigsTableViewRefreshControl)
+            showRefreshControlDisconnectedState(favTableViewRefreshControl)
+            showRefreshControlDisconnectedState(streamingTableViewRefreshControl)
+            showRefreshControlDisconnectedState(staticIpTableViewRefreshControl)
+            showRefreshControlDisconnectedState(customConfigsTableViewRefreshControl)
         } else {
-            if let serverRefreshControl = self.serverListTableView.refreshControl as? WSRefreshControl {
-                self.showRefreshControlConnectedState(serverRefreshControl)
+            if let serverRefreshControl = serverListTableView.refreshControl as? WSRefreshControl {
+                showRefreshControlConnectedState(serverRefreshControl)
             }
-            self.showRefreshControlConnectedState(self.favTableViewRefreshControl)
-            self.showRefreshControlConnectedState(self.streamingTableViewRefreshControl)
-            self.showRefreshControlConnectedState(self.staticIpTableViewRefreshControl)
-            self.showRefreshControlConnectedState(self.customConfigsTableViewRefreshControl)
+            showRefreshControlConnectedState(favTableViewRefreshControl)
+            showRefreshControlConnectedState(streamingTableViewRefreshControl)
+            showRefreshControlConnectedState(staticIpTableViewRefreshControl)
+            showRefreshControlConnectedState(customConfigsTableViewRefreshControl)
         }
     }
 
@@ -110,18 +111,18 @@ extension MainViewController {
     }
 
     func isAnyRefreshControlIsRefreshing() -> Bool {
-        return self.serverListTableView.refreshControl?.isRefreshing ?? false || self.favTableViewRefreshControl.isRefreshing || self.streamingTableViewRefreshControl.isRefreshing || self.staticIpTableViewRefreshControl.isRefreshing || self.customConfigsTableViewRefreshControl.isRefreshing
+        return serverListTableView.refreshControl?.isRefreshing ?? false || favTableViewRefreshControl.isRefreshing || streamingTableViewRefreshControl.isRefreshing || staticIpTableViewRefreshControl.isRefreshing || customConfigsTableViewRefreshControl.isRefreshing
     }
 
     func addRefreshControls() {
         serverListTableViewRefreshControl.resetText()
-        self.serverListTableView.refreshControl = serverListTableViewRefreshControl
+        serverListTableView.refreshControl = serverListTableViewRefreshControl
         if (favNodesListTableViewDataSource?.favNodes?.count ?? 0) > 0 {
-            self.favTableView.addSubview(favTableViewRefreshControl)
+            favTableView.addSubview(favTableViewRefreshControl)
         }
-        self.streamingTableView.addSubview(streamingTableViewRefreshControl)
-        self.staticIpTableView.addSubview(staticIpTableViewRefreshControl)
-        self.customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
+        streamingTableView.addSubview(streamingTableViewRefreshControl)
+        staticIpTableView.addSubview(staticIpTableViewRefreshControl)
+        customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
     }
 
     func removeRefreshControls() {
@@ -131,10 +132,10 @@ extension MainViewController {
         staticIpTableViewRefreshControl.removeFromSuperview()
         customConfigsTableViewRefreshControl.removeFromSuperview()
     }
-
 }
 
 // MARK: Extension for handling server refresh controller in background mode
+
 extension MainViewController {
     public func beginRefreshingServerList() {
         if serverListTableView.refreshControl == nil {
@@ -167,5 +168,4 @@ extension MainViewController {
             serverListTableView.refreshControl?.beginRefreshing()
         }
     }
-
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ImagesAsset {
+enum ImagesAsset {
     static let logoOnLogin = "logo-login"
     static let mainBackground = "main-background"
     static let logoText = "logo-text"
@@ -87,14 +87,14 @@ struct ImagesAsset {
     static let customDns = "custom-dns"
     static let closeCross = "close-cross"
 
-    struct Slides {
+    enum Slides {
         static let first = "scope"
         static let second = "bug"
         static let third = "barbed"
         static let fourth = "psy"
     }
 
-    struct Servers {
+    enum Servers {
         static let all = "servers-all"
         static let fav = "servers-fav"
         static let flix = "servers-flix"
@@ -102,7 +102,7 @@ struct ImagesAsset {
         static let config = "servers-config"
     }
 
-    struct Preferences {
+    enum Preferences {
         static let general = "pref-general"
         static let account = "pref-account"
         static let robert = "pref-robert"
@@ -115,7 +115,8 @@ struct ImagesAsset {
         static let logoutRed = "pref-logout-red"
         static let advanceParams = "advance-params"
     }
-    struct Help {
+
+    enum Help {
         static let apple = "apple"
         static let garry = "garry"
         static let ticket = "ticket"
@@ -127,14 +128,13 @@ struct ImagesAsset {
         static let debugSend = "debug-send"
     }
 
-    struct Robert {
-        static let filterIcons = ["malware": "malware","ads": "ads", "social": "social",
+    enum Robert {
+        static let filterIcons = ["malware": "malware", "ads": "ads", "social": "social",
                                   "porn": "porn", "gambling": "gambling", "fakenews": "fake-news",
-                                  "competitors": "other-vpn", "cryptominers": "crypto"
-        ]
+                                  "competitors": "other-vpn", "cryptominers": "crypto"]
     }
 
-    struct General {
+    enum General {
         static let locationOrder = "location_order_ic_white"
         static let latencyDisplay = "latency_display_ic_white"
         static let language = "language_ic_white"
@@ -152,7 +152,7 @@ struct ImagesAsset {
         static let autoSecureNew = "auto_secure_new"
     }
 
-    struct SignalBars {
+    enum SignalBars {
         static let connectedFull = "signal-bars-connected-full"
         static let connectedMedium = "signal-bars-connected-med"
         static let connectedLow = "signal-bars-connected-low"
@@ -160,14 +160,15 @@ struct ImagesAsset {
 
         static let disconnectedNone = "signal-bars-disconnected-none"
     }
-    struct CellSignalBars {
+
+    enum CellSignalBars {
         static let low = "cell-signal-bars-connected-low"
         static let medium = "cell-signal-bars-connected-med"
         static let full = "cell-signal-bars-connected-full"
         static let down = "cell-signal-bars-down"
     }
 
-    struct Garry {
+    enum Garry {
         static let noData = "garry-no-data"
         static let sad = "garry-sad"
         static let angry = "garry-angry"
@@ -180,7 +181,7 @@ struct ImagesAsset {
     static let search = "search"
     static let exitSearch = "exit-search"
 
-    struct DarkMode {
+    enum DarkMode {
         static let serversAll = "servers-all-white"
         static let serversFav = "servers-fav-white"
         static let serversFlix = "servers-flix-white"
@@ -211,25 +212,26 @@ struct ImagesAsset {
         static let prefRightIcon = "pref-right-arrow-white"
         static let prefBackIcon = "pref-back-white"
         static let tenGig = "ten-gig-white"
-        static let filterIcons = ["malware": "malware-white","ads": "ads-white", "social": "social-white",
+        static let filterIcons = ["malware": "malware-white", "ads": "ads-white", "social": "social-white",
                                   "porn": "porn-white", "gambling": "gambling-white", "fakenews": "fake-news-white",
-                                  "competitors": "other-vpn-white", "cryptominers": "crypto-white"
-        ]
+                                  "competitors": "other-vpn-white", "cryptominers": "crypto-white"]
     }
 
-    struct SwitchButton {
+    enum SwitchButton {
         static let on = "switch-button-on"
         static let off = "switch-button-off"
         static let offBlack = "switch-button-off-black"
     }
-    struct CheckMarkButton {
+
+    enum CheckMarkButton {
         static let on = "check-mark-on"
         static let off = "check-mark-off"
     }
+
     static let delete = "delete-black"
     static let edit = "edit-black"
 
-    struct ProtocolBadges {
+    enum ProtocolBadges {
         static let iKEV2 = "badge-ikev2"
         static let udp = "badge-udp"
         static let tcp = "badge-tcp"
@@ -259,7 +261,7 @@ struct ImagesAsset {
     static let rightArrowBold = "right-arrow-bold"
     static let preferredProtocolBadgeConnecting = "preferred-protocol-badge-connecting"
 
-    struct TvAsset {
+    enum TvAsset {
         static let settingsButton = "settingButton"
         static let notificationsIcon = "notifications_icon"
         static let helpIcon = "help_icon"

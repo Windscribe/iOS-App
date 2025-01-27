@@ -11,20 +11,20 @@ import UIKit
 
 extension MainViewController {
     func hidePreferredProtocolView() {
-       DispatchQueue.main.async { [weak self] in
-           UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
-               guard let self = self else { return }
-               self.preferredProtocolLabel.isHidden = true
-               self.preferredProtocolInfoButton.isHidden = true
-               self.preferredProtocolSwitch.isHidden = true
-               self.cellDivider1.isHidden = true
-               self.view.removeConstraint(self.cardViewTopConstraint)
-               self.cardViewTopConstraint = NSLayoutConstraint(item: self.cardView as Any, attribute: .top, relatedBy: .equal, toItem: self.autoSecureLabel, attribute: .bottom, multiplier: 1.0, constant: 13)
-               self.view.addConstraint(self.cardViewTopConstraint)
-               self.view.layoutIfNeeded()
+        DispatchQueue.main.async { [weak self] in
+            UIView.animate(withDuration: 0.25, delay: 0.0, options: .curveEaseIn, animations: { [weak self] in
+                guard let self = self else { return }
+                self.preferredProtocolLabel.isHidden = true
+                self.preferredProtocolInfoButton.isHidden = true
+                self.preferredProtocolSwitch.isHidden = true
+                self.cellDivider1.isHidden = true
+                self.view.removeConstraint(self.cardViewTopConstraint)
+                self.cardViewTopConstraint = NSLayoutConstraint(item: self.cardView as Any, attribute: .top, relatedBy: .equal, toItem: self.autoSecureLabel, attribute: .bottom, multiplier: 1.0, constant: 13)
+                self.view.addConstraint(self.cardViewTopConstraint)
+                self.view.layoutIfNeeded()
             })
-       }
-   }
+        }
+    }
 
     func showPreferredProtocolView() {
         DispatchQueue.main.async { [weak self] in
@@ -40,7 +40,7 @@ extension MainViewController {
                 self.cellDivider1.isHidden = false
             })
         }
-   }
+    }
 
     func hideProtocolSelectionView() {
         DispatchQueue.main.async { [weak self] in

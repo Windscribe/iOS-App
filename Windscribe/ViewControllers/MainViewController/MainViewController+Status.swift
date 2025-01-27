@@ -6,23 +6,56 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import NetworkExtension
+import RxSwift
+import UIKit
 
 extension MainViewController {
-    func bindConnectionStateViewModel() {
-        connectionStateViewModel.displayLocalIPAddress(force: true)
-
-        connectionStateViewModel.selectedNodeSubject.observe(on: MainScheduler.asyncInstance) .subscribe(onNext: {
-            self.setConnectionLabelValuesForSelectedNode(selectedNode: $0)
+    func bindVPNConnectionsViewModel() {
+        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.animateConnectedState(with: $0)
+            self.setCircumventCensorshipBadge(color: $0.state.statusColor.withAlphaComponent($0.state.statusAlpha))
+            if [.connected, .disconnected].contains($0.state) {
+                self.viewModel.updateSSID()
+            }
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.loadLatencyValuesSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.loadLatencyValues(force: $0.force, selectBestLocation: $0.selectBestLocation, connectToBestLocation: $0.connectToBestLocation)
+        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showAuthFailurePopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showOutOfDataPopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showConnectionFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showConnectionFailed()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.ipAddressSubject.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showSecureIPAddressState(ipAddress: $0)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.selectedLocationUpdatedSubject
+            .delaySubscription(RxTimeInterval.seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: MainScheduler.instance)
+            .subscribe(onNext: {
+                self.updateSelectedLocationUI()
+            }).disposed(by: disposeBag)
+
+        Observable.combineLatest(viewModel.wifiNetwork,
+                                 vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
+            self.refreshProtocol(from: network, with: protocolPort)
+        }.disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             guard let viewControllers = self.navigationController?.viewControllers,
                   !viewControllers.contains(where: { $0 is ProtocolSetPreferredViewController }),
                   !viewControllers.contains(where: { $0 is ProtocolSwitchViewController })
@@ -31,44 +64,38 @@ extension MainViewController {
             self.router?.routeTo(to: RouteID.protocolSwitchVC(delegate: self.protocolSwitchViewModel, type: .failure), from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel, protocolName: ""), from: self)
+        vpnConnectionViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.popupRouter?.routeTo(to: .pushNotifications, from: self)
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.siriShortcutTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.displaySiriShortcutPopup()
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.locationManagerViewModel.requestLocationPermission {
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil, protocolName: ConnectionManager.shared.getNextProtocol().protocolName), from: self)
+                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
             }
         }).disposed(by: disposeBag)
 
-        connectionStateViewModel.enableConnectTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.enableConnectButton()
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showSecureIPAddressState(ipAddress: $0)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.autoModeSelectorHiddenChecker.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            $0(self.autoModeSelectorView.isHidden)
-        }).disposed(by: disposeBag)
-
-        connectionStateViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.animateConnectedState(with: $0)
+        vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
+            self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
     }
 
-    func animateConnectedState(with info: ConnectionStateInfo) {
+    func updateConnectedState() {
+        if let state = try? vpnConnectionViewModel.connectedState.value() {
+            animateConnectedState(with: state, animated: false)
+        }
+    }
+
+    func animateConnectedState(with info: ConnectionStateInfo, animated: Bool = true) {
         DispatchQueue.main.async {
-            var duration = 0.25
+            var duration = animated ? 0.25 : 0.0
             if info.state == .automaticFailed {
                 guard let connectedWifi = info.connectedWifi else { return }
                 self.protocolLabel.text = "\(connectedWifi.protocolType.uppercased()) \(TextsAsset.Status.failed)"
@@ -88,22 +115,22 @@ extension MainViewController {
                     self.addOrRemoveTapOnProtocolLabel(![.disconnected, .disconnecting].contains(info.state))
                 }
                 self.connectivityTestImageView.isHidden = [.connecting, .automaticFailed, .connected, .disconnected, .disconnecting].contains(info.state)
-                if case .test = info.state {
+                if case .testing = info.state {
                     self.connectivityTestImageView.image = UIImage.gifImageWithName("dots")
                 }
                 self.statusDivider.isHidden = [.automaticFailed].contains(info.state)
                 self.statusImageView.image = UIImage(named: info.state.statusImage)
-                self.statusImageView.isHidden = [.test, .connected, .disconnected, .disconnecting].contains(info.state)
+                self.statusImageView.isHidden = info.state != .connecting
                 self.statusView.backgroundColor = info.state.statusViewColor
                 self.statusLabel.text = info.state.statusText
-                self.statusLabel.isHidden = [.test, .connecting, .automaticFailed].contains(info.state)
+                self.statusLabel.isHidden = [.testing, .connecting, .automaticFailed].contains(info.state)
                 self.statusLabel.textColor = info.state.statusColor
                 self.protocolLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
                 self.portLabel.textColor = info.state.statusColor.withAlphaComponent(info.state.statusAlpha)
                 self.preferredProtocolBadge.image = UIImage(named: info.state.preferredProtocolBadge)
                 self.trustedNetworkIcon.image = UIImage(named: info.trustedNetworkImage)
                 self.setCircumventCensorshipBadge(color: info.state.statusColor.withAlphaComponent(info.state.statusAlpha))
-                self.connectButtonRingView.isHidden = [.disconnected, .disconnecting].contains(info.state)
+                self.connectButtonRingView.isHidden = [.disconnected, .disconnecting, .invalid, .automaticFailed].contains(info.state)
                 self.connectButtonRingView.image = UIImage(named: info.state.connectButtonRing)
                 self.connectButton.setImage(UIImage(named: info.state.connectButton), for: .normal)
                 if info.state == .disconnected {
@@ -111,22 +138,25 @@ extension MainViewController {
                     if !isOnline {
                         self.showNoInternetConnection()
                     }
-                    if info.customConfig != nil {
-                       self.disableAutoSecureViews()
+                    if info.isCustomConfigSelected {
+                        self.disableAutoSecureViews()
                     } else {
                         self.enableAutoSecureViews()
                     }
                 }
                 if info.state == .connecting {
-                    self.viewModel.refreshProtocolInfo()
                     self.hideAutoSecureViews()
                 }
             }
-//            if case .test = info.state { self.hideSplashView() }
-            if [.connected, .disconnected, .test].contains(info.state) { self.connectButtonRingView.stopRotating() } else { self.connectButtonRingView.rotate() }
-            if [.connecting].contains(info.state) { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
+            if [.connected, .testing].contains(info.state) {
+                self.connectButtonRingView.stopRotating()
+            } else {
+                self.connectButtonRingView.rotate()
+            }
+            if info.state == .connecting { self.statusImageView.rotate() } else { self.statusImageView.stopRotating() }
+
             self.updateRefreshControls()
-            self.viewModel.refreshProtocolInfo()
+            self.yourIPIcon.image = UIImage(named: info.state == .connected ? ImagesAsset.secure : ImagesAsset.unsecure)
         }
     }
 
@@ -163,6 +193,17 @@ extension MainViewController {
     }
 
     private func nonAnimationConnectionState() {
-        self.preferredProtocolBadge.isUserInteractionEnabled = false
+        preferredProtocolBadge.isUserInteractionEnabled = false
+    }
+
+    private func updateSelectedLocationUI() {
+        let location = vpnConnectionViewModel.getSelectedCountryInfo()
+        guard !location.countryCode.isEmpty else { return }
+        DispatchQueue.main.async {
+            self.showFlagAnimation(countryCode: location.countryCode,
+                                   autoPicked: self.vpnConnectionViewModel.isBestLocationSelected() || self.vpnConnectionViewModel.isCustomConfigSelected())
+            self.connectedServerLabel.text = location.nickName
+            self.connectedCityLabel.text = location.cityName
+        }
     }
 }

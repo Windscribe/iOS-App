@@ -33,7 +33,7 @@ class RateUsPopupModel: RateUsPopupModelType {
     }
 
     func getNativeRateUsDisplayCount() -> Int? {
-       return preferences.getNativeRateUsPopupDisplayCount()
+        return preferences.getNativeRateUsPopupDisplayCount()
     }
 
     func increaseNativeRateUsPopupDisplayCount() {

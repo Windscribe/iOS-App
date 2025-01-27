@@ -23,11 +23,12 @@ class HapticFeedbackGenerator: HapticFeedbackGeneratorV2 {
         preference.getHapticFeedback().subscribe(
             onNext: { data in
                 self.hapticFeedback = data ?? true
-            },onError: { _ in
+            }, onError: { _ in
                 self.hapticFeedback = true
-            },onCompleted: {
+            }, onCompleted: {
                 self.hapticFeedback = true
-            }).disposed(by: disposeBag)
+            }
+        ).disposed(by: disposeBag)
     }
 
     func run(level: UIImpactFeedbackGenerator.FeedbackStyle) {

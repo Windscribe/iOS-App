@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import RxSwift
 import RxCocoa
+import RxSwift
 
 protocol ViewLeaderboardViewModelType {
-    var scoresSection: BehaviorRelay<[ScoreSection]> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var scoresSection: BehaviorRelay<[ScoreSection]> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func wasShown()
     func load()
 }
@@ -35,7 +35,6 @@ class ViewLeaderboardViewModel: ViewLeaderboardViewModelType {
         repository.getLeaderboardScores().subscribe(onSuccess: { scores in
             self.scoresSection.accept([ScoreSection(items: scores)])
         }, onFailure: { _ in
-            return
         }).disposed(by: disposeBag)
     }
 

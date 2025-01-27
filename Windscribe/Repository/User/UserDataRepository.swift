@@ -9,9 +9,11 @@
 import Foundation
 import RxSwift
 import Swinject
+
 protocol UserDataRepository {
     func prepareUserData() -> Single<Void>
 }
+
 class UserDataRepositoryImpl: UserDataRepository {
     private let serverRepository: ServerRepository
     private let credentialsRepository: CredentialsRepository
@@ -22,6 +24,7 @@ class UserDataRepositoryImpl: UserDataRepository {
     private var emergencyRepository: EmergencyRepository {
         return Assembler.resolve(EmergencyRepository.self)
     }
+
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
 
@@ -36,7 +39,7 @@ class UserDataRepositoryImpl: UserDataRepository {
     }
 
     func prepareUserData() -> Single<Void> {
-        self.logger.logD(UserDataRepositoryImpl.self, "Getting server list.")
+        logger.logD(UserDataRepositoryImpl.self, "Getting server list.")
         return serverRepository.getUpdatedServers().flatMap { servers in
             DispatchQueue.main.async {
                 self.latencyRepository.pickBestLocation(servers: servers)

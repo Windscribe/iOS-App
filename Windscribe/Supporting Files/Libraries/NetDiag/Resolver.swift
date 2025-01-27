@@ -10,7 +10,6 @@ import Foundation
 
 // swiftlint:disable all
 open class Resolver {
-
     fileprivate var state = __res_9_state()
 
     public init() {
@@ -22,18 +21,17 @@ open class Resolver {
     }
 
     public final func getservers() -> [res_9_sockaddr_union] {
-
         let maxServers = 10
         var servers = [res_9_sockaddr_union](repeating: res_9_sockaddr_union(), count: maxServers)
         let found = Int(res_9_getservers(&state, &servers, Int32(maxServers)))
 
         // filter is to remove the erroneous empty entry when there's no real servers
-        return Array(servers[0 ..< found]).filter() { $0.sin.sin_len > 0 }
+        return Array(servers[0 ..< found]).filter { $0.sin.sin_len > 0 }
     }
 }
 
-extension Resolver {
-    public static func getnameinfo(_ s: res_9_sockaddr_union) -> String {
+public extension Resolver {
+    static func getnameinfo(_ s: res_9_sockaddr_union) -> String {
         var s = s
         var hostBuffer = [CChar](repeating: 0, count: Int(NI_MAXHOST))
 

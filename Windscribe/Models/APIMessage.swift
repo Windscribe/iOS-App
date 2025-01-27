@@ -21,7 +21,7 @@ class APIMessage: Decodable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        self.message = try data.decodeIfPresent(String.self, forKey: .message) ?? ""
-        self.success = try data.decodeIfPresent(Int.self, forKey: .success) == 1 ? true : false
+        message = try data.decodeIfPresent(String.self, forKey: .message) ?? ""
+        success = try data.decodeIfPresent(Int.self, forKey: .success) == 1 ? true : false
     }
 }

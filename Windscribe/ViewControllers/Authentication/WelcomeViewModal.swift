@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol WelcomeViewModal {
     var showLoadingView: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
@@ -16,12 +17,13 @@ protocol WelcomeViewModal {
     var failedState: BehaviorSubject<String?> { get }
     func continueButtonTapped()
 }
+
 class WelcomeViewModelImpl: WelcomeViewModal {
     let showLoadingView = BehaviorSubject(value: false)
     let routeToSignup = PublishSubject<Bool>()
     let routeToMainView = PublishSubject<Bool>()
     let failedState = BehaviorSubject<String?>(value: nil)
-    let emergencyConnectStatus =  BehaviorSubject<Bool>(value: false)
+    let emergencyConnectStatus = BehaviorSubject<Bool>(value: false)
 
     let userRepository: UserRepository
     let keyChainDatabase: KeyChainDatabase
@@ -32,7 +34,7 @@ class WelcomeViewModelImpl: WelcomeViewModal {
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(userRepository: UserRepository, keyChainDatabase: KeyChainDatabase, userDataRepository: UserDataRepository, apiManager: APIManager, preferences: Preferences,vpnManager: VPNManager, logger: FileLogger) {
+    init(userRepository: UserRepository, keyChainDatabase: KeyChainDatabase, userDataRepository: UserDataRepository, apiManager: APIManager, preferences: Preferences, vpnManager: VPNManager, logger: FileLogger) {
         self.userRepository = userRepository
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
@@ -52,16 +54,16 @@ class WelcomeViewModelImpl: WelcomeViewModal {
         showLoadingView.onNext(true)
         apiManager.regToken().observe(on: MainScheduler.instance)
             .flatMap { result in
-                return self.apiManager.signUpUsingToken(token: result.token)
+                self.apiManager.signUpUsingToken(token: result.token)
             }.subscribe(onSuccess: { [weak self] session in
                 self?.keyChainDatabase.setGhostAccountCreated()
                 self?.userRepository.login(session: session)
                 self?.logger.logI(WelcomeViewModelImpl.self, "Ghost account registration successful, Preparing user data for \(session.userId)")
                 self?.prepareUserData()
-            },onFailure: { [weak self] error in
+            }, onFailure: { [weak self] error in
                 switch error {
-                case Errors.apiError(let e):
-                        self?.logger.logE(WelcomeViewModelImpl.self, "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
+                case let Errors.apiError(e):
+                    self?.logger.logE(WelcomeViewModelImpl.self, "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
                 default: ()
                 }
                 self?.showLoadingView.onNext(false)
@@ -79,7 +81,7 @@ class WelcomeViewModelImpl: WelcomeViewModal {
             self?.logger.logE(WelcomeViewModelImpl.self, "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {
-            case Errors.apiError(let e):
+            case let Errors.apiError(e):
                 self?.failedState.onNext(e.errorMessage ?? "")
             default:
                 if let error = error as? Errors {
@@ -93,7 +95,7 @@ class WelcomeViewModelImpl: WelcomeViewModal {
 
     private func listenForVPNStateChange() {
         vpnManager.vpnInfo.subscribe(onNext: { [weak self] vpnInfo in
-            if vpnInfo != nil && vpnInfo?.status == .connected {
+            if vpnInfo != nil, vpnInfo?.status == .connected {
                 self?.emergencyConnectStatus.onNext(true)
             } else {
                 self?.emergencyConnectStatus.onNext(false)

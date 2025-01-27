@@ -1,5 +1,5 @@
 //
-//  User.swift
+//  Session.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-11-30.
@@ -10,7 +10,6 @@ import Foundation
 import RealmSwift
 
 @objcMembers class Session: Object, Decodable {
-
     dynamic var session: String = "session"
     dynamic var sessionAuthHash: String = ""
     dynamic var username: String = ""
@@ -31,8 +30,9 @@ import RealmSwift
     var sipCount = List<SipCount>()
 
     var isUserPro: Bool {
-        return (isPremium || billingPlanId == -9)
+        return isPremium || billingPlanId == -9
     }
+
     var hasUserAddedEmail: Bool {
         return email != ""
     }
@@ -53,14 +53,14 @@ import RealmSwift
     }
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case sessionAuthHash = "session_auth_hash"
-        case username = "username"
+        case username
         case userId = "user_id"
         case trafficUsed = "traffic_used"
         case trafficMax = "traffic_max"
-        case status = "status"
-        case email = "email"
+        case status
+        case email
         case emailStatus = "email_status"
         case billingPlanId = "billing_plan_id"
         case isPremium = "is_premium"
@@ -69,8 +69,8 @@ import RealmSwift
         case lastReset = "last_reset"
         case locRev = "loc_rev"
         case locHash = "loc_hash"
-        case alc = "alc"
-        case sip = "sip"
+        case alc
+        case sip
     }
 
     required convenience init(from decoder: Decoder) throws {
@@ -84,9 +84,9 @@ import RealmSwift
         trafficMax = try data.decodeIfPresent(Double.self, forKey: .trafficMax) ?? 0.0
         status = try data.decodeIfPresent(Int.self, forKey: .status) ?? 0
         email = try data.decodeIfPresent(String.self, forKey: .email) ?? ""
-        emailStatus = try data.decodeIfPresent(Int.self, forKey: .emailStatus)   == 1 ? true : false
+        emailStatus = try data.decodeIfPresent(Int.self, forKey: .emailStatus) == 1 ? true : false
         billingPlanId = try data.decodeIfPresent(Int.self, forKey: .billingPlanId) ?? 0
-        isPremium = try data.decodeIfPresent(Int.self, forKey: .isPremium)   == 1 ? true : false
+        isPremium = try data.decodeIfPresent(Int.self, forKey: .isPremium) == 1 ? true : false
         premiumExpiryDate = try data.decodeIfPresent(String.self, forKey: .premiumExpiryDate) ?? ""
         regDate = try data.decodeIfPresent(Int.self, forKey: .regDate) ?? 0
         lastReset = try data.decodeIfPresent(String.self, forKey: .lastReset) ?? ""
@@ -94,14 +94,14 @@ import RealmSwift
             locRev = try data.decodeIfPresent(Int.self, forKey: .locRev) ?? 0
         } catch DecodingError.typeMismatch {
             let value = try container.decodeIfPresent(Bool.self, forKey: .locRev) ?? false
-            locRev = value ? 1: 0
+            locRev = value ? 1 : 0
         }
         locHash = try data.decodeIfPresent(String.self, forKey: .locHash) ?? ""
         if let alcArray = try data.decodeIfPresent([String].self, forKey: .alc) {
-            self.setALC(array: alcArray)
+            setALC(array: alcArray)
         }
         if let sip = try data.decodeIfPresent(SipCount.self, forKey: .sip) {
-            self.setSip(object: sip)
+            setSip(object: sip)
         }
     }
 
@@ -124,15 +124,15 @@ import RealmSwift
     }
 
     func getSipCount() -> Int {
-        return self.sipCount.first?.countNumber ?? 0
+        return sipCount.first?.countNumber ?? 0
     }
 
     // swiftlint:disable shorthand_operator
     func getDataLeft() -> String {
         var unit = "MB"
-        let data = self.trafficMax - self.trafficUsed
-        var dataLeft = data/1024/1024
-        if dataLeft > 1024 { unit = "GB"; dataLeft = dataLeft/1024 }
+        let data = trafficMax - trafficUsed
+        var dataLeft = data / 1024 / 1024
+        if dataLeft > 1024 { unit = "GB"; dataLeft = dataLeft / 1024 }
         if dataLeft <= 0 {
             return "0 MB"
         }
@@ -141,47 +141,44 @@ import RealmSwift
     }
 
     func getDataUsedInMB() -> Int {
-       return Int(self.trafficUsed/1024/1024)
+        return Int(trafficUsed / 1024 / 1024)
     }
 
     func getDataMax() -> String {
         var unit = "MB"
-        var maxData = trafficMax/1024/1024
-        if maxData > 1024 { unit = "GB"; maxData = maxData/1024 }
+        var maxData = trafficMax / 1024 / 1024
+        if maxData > 1024 { unit = "GB"; maxData = maxData / 1024 }
         return "\(maxData) " + unit
     }
+
     // swiftlint:enable shorthand_operator
     func getNextReset() -> String {
         let dateFormat = "yyyy-MM-dd"
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = dateFormat
-        guard let lastResetDate = dateFormatter.date(from: self.lastReset), let nextResetDate = Calendar.current.date(byAdding: .month, value: 1, to: lastResetDate) else { return "" }
+        guard let lastResetDate = dateFormatter.date(from: lastReset), let nextResetDate = Calendar.current.date(byAdding: .month, value: 1, to: lastResetDate) else { return "" }
         return dateFormatter.string(from: nextResetDate)
     }
-
 }
 
 class OldSession: Session {
-
     convenience init(session: Session) {
         self.init()
-        self.userId = session.userId
-        self.trafficMax = session.trafficMax
-        self.trafficUsed = session.trafficUsed
-        self.status = session.status
-        self.emailStatus = session.emailStatus
-        self.billingPlanId = session.billingPlanId
-        self.isPremium = session.isPremium
-        self.alc = session.alc
-        self.sipCount = session.sipCount
-        self.locHash = session.locHash
-        self.sessionAuthHash = session.sessionAuthHash
+        userId = session.userId
+        trafficMax = session.trafficMax
+        trafficUsed = session.trafficUsed
+        status = session.status
+        emailStatus = session.emailStatus
+        billingPlanId = session.billingPlanId
+        isPremium = session.isPremium
+        alc = session.alc
+        sipCount = session.sipCount
+        locHash = session.locHash
+        sessionAuthHash = session.sessionAuthHash
     }
-
 }
 
 @objcMembers class SipCount: Object, Decodable {
-
     dynamic var countNumber: Int = 0
     var update = List<String>()
 
@@ -195,7 +192,7 @@ class OldSession: Session {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         countNumber = try container.decodeIfPresent(Int.self, forKey: .countNumber) ?? 0
         if let updateArray = try container.decodeIfPresent([String].self, forKey: .update) {
-            self.setUpdate(array: updateArray)
+            setUpdate(array: updateArray)
         }
     }
 

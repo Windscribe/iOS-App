@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct URLs {
+enum URLs {
     static let forgotPassword = "https://windscribe.com/" + "forgotpassword"
 }

@@ -20,7 +20,6 @@ extension Array where Element: Equatable {
 
         return result
     }
-
 }
 
 extension Array where Element: Hashable {

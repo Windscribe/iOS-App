@@ -6,12 +6,13 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import WidgetKit
-import SwiftUI
-import NetworkExtension
-import Swinject
 import AppIntents
+import NetworkExtension
 import os
+import SwiftUI
+import Swinject
+import WidgetKit
+
 struct Provider: TimelineProvider {
     let tag = "AppIntents"
     let resolver = ContainerResolver()
@@ -24,29 +25,29 @@ struct Provider: TimelineProvider {
         return resolver.getPreferences()
     }
 
-    func placeholder(in context: Context) -> SimpleEntry {
+    func placeholder(in _: Context) -> SimpleEntry {
         return snapshotEntry
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
+    func getSnapshot(in _: Context, completion: @escaping (SimpleEntry) -> Void) {
         completion(snapshotEntry)
     }
 
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func getTimeline(in _: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         var entries: [SimpleEntry] = []
         entries.append(snapshotEntry)
         logger.logD(tag, "Getting widget timeline")
         getActiveManager { result in
             switch result {
-                case .success(let manager):
-                    if let entry = buildSimpleEntry(manager: manager) {
-                        logger.logD(tag, "Updated widget with status:  \(manager.connection.status)")
-                        entries.append(entry)
-                    }
-                case .failure(let failure):
-                    logger.logD(tag, "No VPN Configuration found Error: \(failure).")
-                    let entry = buildErrorEntry(failure: failure)
+            case let .success(manager):
+                if let entry = buildSimpleEntry(manager: manager) {
+                    logger.logD(tag, "Updated widget with status:  \(manager.connection.status)")
                     entries.append(entry)
+                }
+            case let .failure(failure):
+                logger.logD(tag, "No VPN Configuration found Error: \(failure).")
+                let entry = buildErrorEntry(failure: failure)
+                entries.append(entry)
             }
             let timeline = Timeline(entries: entries, policy: .atEnd)
             completion(timeline)
@@ -57,15 +58,16 @@ struct Provider: TimelineProvider {
         let status: WidgetStatus = manager.connection.status == .connected ? .connected : .disconnected
         if let countryCode = preferences.getcountryCodeKey(),
            let serverName = preferences.getServerNameKey(),
-           let nickName = preferences.getNickNameKey() {
+           let nickName = preferences.getNickNameKey()
+        {
             let entry = SimpleEntry(date: Date(),
                                     status: status,
                                     name: serverName,
                                     nickname: nickName,
                                     countryCode: countryCode)
-           return entry
+            return entry
         }
-      return nil
+        return nil
     }
 
     private func buildErrorEntry(failure: Error) -> SimpleEntry {
@@ -89,12 +91,12 @@ struct SimpleEntry: TimelineEntry {
     let countryCode: String
     var statusDescription: String {
         switch status {
-            case .disconnected:
-                return TextsAsset.Status.off
-            case .connected:
-                return TextsAsset.Status.on
-            case .error(let e):
-                return e
+        case .disconnected:
+            return TextsAsset.Status.off
+        case .connected:
+            return TextsAsset.Status.on
+        case let .error(e):
+            return e
         }
     }
 }
@@ -107,37 +109,40 @@ let snapshotEntry = SimpleEntry(
     countryCode: "CA"
 )
 
-struct HomeWidgetEntryView : View {
+struct HomeWidgetEntryView: View {
     var entry: Provider.Entry
     @Environment(\.widgetFamily) private var widgetFamily
 
     var isConnected: Bool {
         return (entry as SimpleEntry).status == WidgetStatus.connected
     }
+
     var isWidgetSmall: Bool {
         return widgetFamily == .systemSmall
     }
 
-    var connectedBlue = Color(red: 0/255.0, green: 106/255.0, blue: 255/255.0)
-    var seaGreen = Color(red: 85/255.0, green: 255/255.0, blue: 138/255.0)
-    var midnight = Color(red: 2/255.0, green: 13/255.0, blue: 28/255.0)
+    var connectedBlue = Color(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0)
+    var seaGreen = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
+    var midnight = Color(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0)
 
     var body: some View {
         ZStack {
             HStack {
                 VStack {
-                    Image("main-logo").resizable()
-                        .frame(width: 24, height: 24).padding(.bottom, 3)
+                    Image("main-logo-24").padding(.bottom, 3)
                     HStack {
                         VStack(alignment: .leading, spacing: 3, content: {
                             ZStack {
                                 if entry.status == .disconnected || entry.status == .connected {
                                     Capsule().fill(isConnected ? midnight.opacity(0.25) : Color.white.opacity(0.25)).frame(width: 36, height: 20)
                                 }
-                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white).font(.custom("IBMPlexSans-Bold", size: 10))
+                                Text(entry.statusDescription).foregroundColor(isConnected ? seaGreen : Color.white)
+                                    .font(.custom("IBMPlexSans-Bold", size: 10))
                             }
-                            Text(entry.name).foregroundColor(Color.white).font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
-                            Text(entry.nickname).foregroundColor(Color.white.opacity(0.7)).font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
+                            Text(entry.name).foregroundColor(Color.white)
+                                .font(.custom("IBMPlexSans-Bold", size: isWidgetSmall ? 16 : 21))
+                            Text(entry.nickname).foregroundColor(Color.white.opacity(0.7))
+                                .font(.custom("IBMPlexSans-Regular", size: isWidgetSmall ? 12 : 16))
                         })
                         Spacer()
                         if !isWidgetSmall {
@@ -218,7 +223,6 @@ struct HomeWidget: Widget {
         .description("")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
-
 }
 
 struct HomeWidget_Previews: PreviewProvider {

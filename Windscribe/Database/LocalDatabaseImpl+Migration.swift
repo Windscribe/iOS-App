@@ -9,15 +9,17 @@
 import Foundation
 import Realm
 import RealmSwift
+import RxSwift
 
 extension LocalDatabaseImpl {
     // MARK: migration
+
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 51,
+            schemaVersion: 52,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
-                    migration.enumerateObjects(ofType: Session.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: Session.className()) { _, _ in }
                 } else if oldSchemaVersion < 2 {
                     var nextID = 0
                     migration.enumerateObjects(ofType: Group.className()) { _, newObject in
@@ -47,34 +49,34 @@ extension LocalDatabaseImpl {
                         newObject!["SSID"] = TextsAsset.unknownNetworkName
                     }
                 } else if oldSchemaVersion < 7 {
-                    migration.enumerateObjects(ofType: UserPreferences.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: UserPreferences.className()) { _, _ in }
                 } else if oldSchemaVersion < 8 {
                     migration.enumerateObjects(ofType: Node.className()) { _, newObject in
                         newObject!["forceDisconnect"] = false
                     }
                 } else if oldSchemaVersion < 9 {
-                    migration.enumerateObjects(ofType: UserPreferences.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: UserPreferences.className()) { _, _ in }
                 } else if oldSchemaVersion < 10 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 11 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 12 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 13 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 14 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 15 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
                 } else if oldSchemaVersion < 16 {
-                    migration.enumerateObjects(ofType: CustomConfig.className()) { _,_ in }
-                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: CustomConfig.className()) { _, _ in }
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { _, _ in }
                 } else if oldSchemaVersion < 17 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
                 } else if oldSchemaVersion < 18 {
-                    migration.enumerateObjects(ofType: StaticIP.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: StaticIP.className()) { _, _ in }
                 } else if oldSchemaVersion < 19 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
                 } else if oldSchemaVersion < 20 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
                         newObject!["preferredProtocolStatus"] = false
@@ -82,11 +84,11 @@ extension LocalDatabaseImpl {
                         newObject!["preferredPort"] = "443"
                     }
                 } else if oldSchemaVersion < 21 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
                 } else if oldSchemaVersion < 22 {
-                    migration.enumerateObjects(ofType: Notice.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: Notice.className()) { _, _ in }
                 } else if oldSchemaVersion < 23 {
-                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: WifiNetwork.className()) { _, _ in }
                 } else if oldSchemaVersion < 24 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
                         newObject!["autoSecureNewNetworks"] = true
@@ -96,13 +98,13 @@ extension LocalDatabaseImpl {
                         newObject!["connectedAt"] = Date()
                     }
                 } else if oldSchemaVersion < 28 {
-                    migration.enumerateObjects(ofType: Group.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: Group.className()) { _, _ in }
                 } else if oldSchemaVersion < 29 {
-                    migration.enumerateObjects(ofType: StaticIP.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: StaticIP.className()) { _, _ in }
                 } else if oldSchemaVersion < 30 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
                 } else if oldSchemaVersion < 31 {
-                    migration.enumerateObjects(ofType: VPNConnection.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: VPNConnection.className()) { _, _ in }
                 } else if oldSchemaVersion < 32 {
                     migration.enumerateObjects(ofType: WifiNetwork.className()) { _, newObject in
                         newObject!["protocolType"] = wireGuard
@@ -116,13 +118,13 @@ extension LocalDatabaseImpl {
                         newObject!["hapticFeedback"] = true
                     }
                 } else if oldSchemaVersion < 34 {
-                    migration.enumerateObjects(ofType: Node.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: Node.className()) { _, _ in }
                 } else if oldSchemaVersion < 35 {
-                    migration.enumerateObjects(ofType: Group.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: Group.className()) { _, _ in }
                 } else if oldSchemaVersion < 36 {
-                    migration.enumerateObjects(ofType: BestNode.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: BestNode.className()) { _, _ in }
                 } else if oldSchemaVersion < 37 {
-                    migration.enumerateObjects(ofType: FavNode.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: FavNode.className()) { _, _ in }
                 } else if oldSchemaVersion < 39 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { _, newObject in
                         newObject!["protocolType"] = wireGuard
@@ -216,9 +218,9 @@ extension LocalDatabaseImpl {
                             self.preferences.saveSelectedPort(port: port)
                         }
                     }
-                    migration.enumerateObjects(ofType: PortMap.className()) { _,_ in }
-                    migration.enumerateObjects(ofType: PingData.className()) { _,_ in }
-                    migration.enumerateObjects(ofType: MyIP.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: PortMap.className()) { _, _ in }
+                    migration.enumerateObjects(ofType: PingData.className()) { _, _ in }
+                    migration.enumerateObjects(ofType: MyIP.className()) { _, _ in }
                     migration.enumerateObjects(ofType: OpenVPNServerCredentials.className()) { _, newObject in
                         newObject!["id"] = "OpenVPNServerCredentials"
                     }
@@ -230,7 +232,7 @@ extension LocalDatabaseImpl {
                         newObject!["pingHost"] = ""
                     }
                 } else if oldSchemaVersion < 49 {
-                    migration.enumerateObjects(ofType: MobilePlan.className()) { _,_ in }
+                    migration.enumerateObjects(ofType: MobilePlan.className()) { _, _ in }
                 } else if oldSchemaVersion < 50 {
                     migration.enumerateObjects(ofType: FavNode.className()) { _, newObject in
                         newObject!["isPremiumOnly"] = false
@@ -243,7 +245,19 @@ extension LocalDatabaseImpl {
                         newObject?["id"] = "BestLocation"
                     }
                     migration.deleteData(forType: BestLocation.className())
+                } else if oldSchemaVersion < 52 {
+                    migration.enumerateObjects(ofType: LastConnectedNode.className()) { oldObject, _ in
+                        if let groupId = oldObject?["groupId"] as? String {
+                            self.preferences.saveLastSelectedLocation(with: groupId)
+                        }
+                    }
+                    migration.enumerateObjects(ofType: BestLocation.className()) { oldObject, _ in
+                        if let groupId = oldObject?["groupId"] as? String {
+                            self.preferences.saveBestLocation(with: groupId)
+                        }
+                    }
                 }
-            }, deleteRealmIfMigrationNeeded: false)
+            }, deleteRealmIfMigrationNeeded: false
+        )
     }
 }

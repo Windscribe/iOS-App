@@ -13,21 +13,21 @@ protocol SettingOptionDelegate: NSObject {
 }
 
 class SettingOption: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var selectedView: UIView!
-    @IBOutlet weak var buttonContainerView: UIStackView!
-    @IBOutlet weak var selectedImageView: UIImageView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var selectedView: UIView!
+    @IBOutlet var buttonContainerView: UIStackView!
+    @IBOutlet var selectedImageView: UIImageView!
     private var button = UIButton()
     private var value: String = ""
     private let borderWidth = 4.0
 
     weak var delegate: SettingOptionDelegate?
 
-    @IBAction func selectOption(_ sender: Any) {
+    @IBAction func selectOption(_: Any) {
         delegate?.optionWasSelected(with: value)
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         var newColor = UIColor.clear
         var hasBorder = true
         if let nextButton = context.nextFocusedItem as? UIButton, nextButton == button {

@@ -13,32 +13,33 @@ enum FavNodesIPAlertType { case connecting; case disconnecting }
 
 protocol FavNodesListViewModelType {
     var presentAlertTrigger: PublishSubject<FavNodesIPAlertType> { get }
-    var configureVPNTrigger: PublishSubject<()> { get }
-    var showUpgradeTrigger: PublishSubject<()> { get }
+    var showUpgradeTrigger: PublishSubject<Void> { get }
     func setSelectedFavNode(favNode: FavNodeModel)
 }
 
 class FavNodesListViewModel: FavNodesListViewModelType {
     var presentAlertTrigger = PublishSubject<FavNodesIPAlertType>()
-    var configureVPNTrigger = PublishSubject<()>()
-    var showUpgradeTrigger = PublishSubject<()>()
+    var showUpgradeTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
-    var connectionStateManager: ConnectionStateManagerType
     var sessionManager: SessionManagerV2
+    let locationsManager: LocationsManagerType
+    let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
-         connectionStateManager: ConnectionStateManagerType,
-         sessionManager: SessionManagerV2 ) {
+         sessionManager: SessionManagerV2,
+         locationsManager: LocationsManagerType,
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
         self.connectivity = connectivity
-        self.connectionStateManager = connectionStateManager
         self.sessionManager = sessionManager
+        self.locationsManager = locationsManager
+        self.protocolManager = protocolManager
     }
 
     func setSelectedFavNode(favNode: FavNodeModel) {
@@ -48,26 +49,19 @@ class FavNodesListViewModel: FavNodesListViewModelType {
             return
         }
         if !canAccesstoProLocation() &&
-            favNode.isPremiumOnly ?? false {
+            favNode.isPremiumOnly ?? false
+        {
             showUpgradeTrigger.onNext(())
             return
-        } else if !connectionStateManager.isConnecting() {
-            guard let countryCode = favNode.countryCode,
-                  let dnsHostname = favNode.dnsHostname,
-                  let hostname = favNode.hostname,
-                  let nickName = favNode.nickName,
+        } else if !vpnManager.isConnecting() {
+            guard let hostname = favNode.hostname,
                   let cityName = favNode.cityName,
-                  let ipAddress = favNode.ipAddress,
                   let groupId = Int(favNode.groupId ?? "1") else { return }
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
-            self.vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                        dnsHostname: dnsHostname,
-                                                        hostname: hostname,
-                                                        serverAddress: ipAddress,
-                                                        nickName: nickName,
-                                                        cityName: cityName,
-                                                        groupId: groupId)
-            configureVPNTrigger.onNext(())
+            locationsManager.saveLastSelectedLocation(with: "\(groupId)")
+            Task {
+                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+            }
         } else {
             presentAlertTrigger.onNext(.connecting)
         }

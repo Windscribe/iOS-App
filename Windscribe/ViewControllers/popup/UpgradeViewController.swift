@@ -6,15 +6,15 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
+import RxSwift
 import StoreKit
 import Swinject
-import RxSwift
+import UIKit
 
 class UpgradeViewController: WSNavigationViewController {
+    // MARK: - UI Elements
 
-// MARK: - UI Elements
     var scrollView: UIScrollView!
     var contentView: UIView!
     var proView: UIView!
@@ -96,7 +96,8 @@ class UpgradeViewController: WSNavigationViewController {
     }
 
     override func viewWillTransition(to size: CGSize,
-                                     with coordinator: UIViewControllerTransitionCoordinator) {
+                                     with coordinator: UIViewControllerTransitionCoordinator)
+    {
         super.viewWillTransition(to: size, with: coordinator)
         addAutoLayoutConstraints()
     }
@@ -117,56 +118,53 @@ class UpgradeViewController: WSNavigationViewController {
 
     func loadPlansFromDisk() {
         guard let mobilePlans = viewModel.localDatabase.getMobilePlans() else {
-            self.endLoading()
+            endLoading()
             return
         }
-        inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({ $0.extId }))
+        inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map { $0.extId })
     }
 
     func loadPlans() {
         viewModel.apiManager.getMobileBillingPlans().subscribe(onSuccess: { _ in
             self.loadPlansFromDisk()
 
-        }, onFailure: {[weak self] _ in
+        }, onFailure: { [weak self] _ in
             self?.endLoading()
-            return
         }).disposed(by: disposeBag)
-
     }
 
     func loadPromoPlans() {
-
         // Replace this with wsnet api call
         NetworkManager.shared.getPromoMobilePlans(promoCode: promoCode ?? "",
                                                   success: { [weak self] plans in
-            guard plans.mobilePlans.isEmpty == false else {
-                if let self = self {
-                    self.endLoading()
-                    self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.UpgradeView.promoNotValid,
-                                                             dismissAction: {
-                        self.navigationController?.popViewController(animated: true)
-                    }), from: self)
-                }
-                return
-            }
-            // if promo is not valid server may send regular plans
-            if plans.mobilePlans.count >= 2 {
-                self?.promoCode = nil
-                self?.inAppPurchaseManager.fetchAvailableProducts(productIDs: plans.mobilePlans.map({ $0.extId }))
-            } else {
-                // Use first plan as discounted plan.
-                self?.discountedPlan = plans.mobilePlans.first
-                self?.inAppPurchaseManager.fetchAvailableProducts(productIDs: [self?.discountedPlan?.extId ?? ""])
-            }
-        }, failure: { [weak self] _ in
-            if let self = self {
-                self.endLoading()
-                self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.UpgradeView.networkError,
-                                                         dismissAction: {
-                    self.navigationController?.popViewController(animated: true)
-                }), from: self)
-            }
-        })
+                                                      guard plans.mobilePlans.isEmpty == false else {
+                                                          if let self = self {
+                                                              self.endLoading()
+                                                              self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.UpgradeView.promoNotValid,
+                                                                                                       dismissAction: {
+                                                                                                           self.navigationController?.popViewController(animated: true)
+                                                                                                       }), from: self)
+                                                          }
+                                                          return
+                                                      }
+                                                      // if promo is not valid server may send regular plans
+                                                      if plans.mobilePlans.count >= 2 {
+                                                          self?.promoCode = nil
+                                                          self?.inAppPurchaseManager.fetchAvailableProducts(productIDs: plans.mobilePlans.map { $0.extId })
+                                                      } else {
+                                                          // Use first plan as discounted plan.
+                                                          self?.discountedPlan = plans.mobilePlans.first
+                                                          self?.inAppPurchaseManager.fetchAvailableProducts(productIDs: [self?.discountedPlan?.extId ?? ""])
+                                                      }
+                                                  }, failure: { [weak self] _ in
+                                                      if let self = self {
+                                                          self.endLoading()
+                                                          self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.UpgradeView.networkError,
+                                                                                                   dismissAction: {
+                                                                                                       self.navigationController?.popViewController(animated: true)
+                                                                                                   }), from: self)
+                                                      }
+                                                  })
     }
 
     func showSuccesView() {
@@ -177,9 +175,8 @@ class UpgradeViewController: WSNavigationViewController {
             } else {
                 self.router.goToSignUp(viewController: self, claimGhostAccount: true)
             }
-        }, onFailure: {_ in
+        }, onFailure: { _ in
         }).disposed(by: disposeBag)
-
     }
 
     @objc func continuePayButtonTapped() {
@@ -195,13 +192,13 @@ class UpgradeViewController: WSNavigationViewController {
         } else if viewModel.sessionManager.session?.hasUserAddedEmail == false && viewModel.sessionManager.session?.isUserGhost == false {
             router.routeTo(to: RouteID.enterEmail, from: self)
         } else {
-            self.router.goToSignUp(viewController: self, claimGhostAccount: true)
+            router.goToSignUp(viewController: self, claimGhostAccount: true)
         }
     }
 
     @objc func restoreButtonTapped() {
         logger.logD(self, "User tapped to restore purchases.")
-        self.showLoading()
+        showLoading()
         inAppPurchaseManager.restorePurchase()
     }
 
@@ -219,23 +216,22 @@ class UpgradeViewController: WSNavigationViewController {
         }
         viewModel.alertManager.showSimpleAlert(viewController: self, title: "", message: message, buttonText: TextsAsset.okay)
     }
-
 }
 
 // MARK: - Extensions
-extension UpgradeViewController: InAppPurchaseManagerDelegate {
 
-    func purchasedSuccessfully(transaction: SKPaymentTransaction, appleID: String, appleData: String,  appleSIG: String) {
+extension UpgradeViewController: InAppPurchaseManagerDelegate {
+    func purchasedSuccessfully(transaction _: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
         // Replace this with wsnet api call
 
         NetworkManager.shared.sendPurchase(appleID: appleID, appleData: appleData, appleSIG: appleSIG) { apiResult in
             switch apiResult {
-            case .ApiError(let error):
+            case let .ApiError(error):
                 DispatchQueue.main.async {
                     self.loadingAlert?.dismiss(animated: true, completion: nil)
                     LogManager.shared.log(text: "\(error)")
                     self.saveIncompleteTransactionDetails(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-                    self.popupRouter.routeTo(to: .errorPopup(message: "\(error)", dismissAction: { }), from: self)
+                    self.popupRouter.routeTo(to: .errorPopup(message: "\(error)", dismissAction: {}), from: self)
                 }
             case .Success:
                 LogManager.shared.log(
@@ -276,9 +272,9 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
             } else {
                 if windscribeProducts.count >= 2 {
                     self.firstPlanOptionButton.setTitle(windscribeProducts[0].planLabel,
-                                                      for: .normal)
+                                                        for: .normal)
                     self.secondPlanOptionButton.setTitle(windscribeProducts[1].planLabel,
-                                                       for: .normal)
+                                                         for: .normal)
                     self.continuePayButton.isEnabled = true
                     self.makeFirstPlanSelected()
                 }
@@ -307,9 +303,9 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
 
     func readyToMakePurchase(price1: String, price2: String) {
         firstPlanOptionButton.setTitle("\(price2)/ \(TextsAsset.UpgradeView.year)",
-                                    for: .normal)
+                                       for: .normal)
         secondPlanOptionButton.setTitle("\(price1)/ \(TextsAsset.UpgradeView.month)",
-                                     for: .normal)
+                                        for: .normal)
         continuePayButton.isEnabled = true
         renderPriceViews()
         makeFirstPlanSelected()
@@ -344,12 +340,12 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
     func unableToRestorePurchase(error: Error) {
         DispatchQueue.main.async {
             self.endLoading()
-            if let err = error as? URLError, err.code  == URLError.Code.notConnectedToInternet {
-                self.popupRouter.routeTo(to: .errorPopup(message: Errors.noNetwork.description, dismissAction: { }), from: self)
+            if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
+                self.popupRouter.routeTo(to: .errorPopup(message: Errors.noNetwork.description, dismissAction: {}), from: self)
             } else if let _ = error as? URLError {
-                self.popupRouter.routeTo(to: .errorPopup(message: Errors.unknownError.description, dismissAction: { }), from: self)
+                self.popupRouter.routeTo(to: .errorPopup(message: Errors.unknownError.description, dismissAction: {}), from: self)
             } else {
-                self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.PurchaseRestoredAlert.error, dismissAction: { }), from: self)
+                self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.PurchaseRestoredAlert.error, dismissAction: {}), from: self)
             }
         }
     }
@@ -360,7 +356,7 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
             if transaction == nil {
                 if let self = self {
                     self.logger.logD(self, "Restored failed with error: \(error ?? "")")
-                    self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.PurchaseRestoredAlert.error, dismissAction: { }), from: self)
+                    self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.PurchaseRestoredAlert.error, dismissAction: {}), from: self)
                 }
             } else {
                 self?.logger.logD(self, "Successfully verified item: \(transaction?.description ?? "")")
@@ -370,22 +366,20 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
     }
 
     func failedToLoadProducts() {
-        self.endLoading()
+        endLoading()
     }
 
     func unableToMakePurchase() {
-        self.loadingAlert?.dismiss(animated: true, completion: nil)
+        loadingAlert?.dismiss(animated: true, completion: nil)
     }
 
-    func saveIncompleteTransactionDetails(appleID: String?, appleData: String?,  appleSIG: String?) {
+    func saveIncompleteTransactionDetails(appleID: String?, appleData: String?, appleSIG: String?) {
         viewModel.saveAppleData(appleID: appleID, appleData: appleData, appleSig: appleSIG)
     }
 }
 
 extension UpgradeViewController: ConfirmEmailViewControllerDelegate {
-
-    func dismissWith(action: ConfirmEmailAction) {
+    func dismissWith(action _: ConfirmEmailAction) {
         // router?.dismissPopup(action: action, navigationVC: self.navigationController)
     }
-
 }

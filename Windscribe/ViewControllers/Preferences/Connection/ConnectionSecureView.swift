@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class ConnectionSecureView: UIView {
     var isDarkMode: BehaviorSubject<Bool>
@@ -25,7 +25,7 @@ class ConnectionSecureView: UIView {
     var explainHandler: (() -> Void)?
 
     private let disposeBag = DisposeBag()
-    private let imageSetTrigger = PublishSubject<()>()
+    private let imageSetTrigger = PublishSubject<Void>()
 
     init(isDarkMode: BehaviorSubject<Bool>) {
         self.isDarkMode = isDarkMode
@@ -128,7 +128,7 @@ class ConnectionSecureView: UIView {
     }
 
     private func bindViews() {
-        Observable.combineLatest(imageSetTrigger, isDarkMode).bind { (_, isDark) in
+        Observable.combineLatest(imageSetTrigger, isDarkMode).bind { _, isDark in
             self.updateTheme(isDark: isDark)
         }.disposed(by: disposeBag)
     }
@@ -141,7 +141,8 @@ class ConnectionSecureView: UIView {
         }
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -157,8 +158,8 @@ class ConnectionSecureView: UIView {
     }
 
     func udpateStringData(title: String, subTitle: String) {
-        self.titleLabel.text = title
-        self.subTitleLabel.text = subTitle
+        titleLabel.text = title
+        subTitleLabel.text = subTitle
     }
 
     func hideShowExplainIcon(_ isHidden: Bool = true) {

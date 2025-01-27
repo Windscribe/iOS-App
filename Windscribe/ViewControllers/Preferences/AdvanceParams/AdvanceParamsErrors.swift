@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum AdvanceParamsErrors: Error {
     case invalidKeyValuePair
 }

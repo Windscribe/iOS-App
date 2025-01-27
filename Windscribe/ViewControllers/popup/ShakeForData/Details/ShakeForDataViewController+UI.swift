@@ -10,55 +10,55 @@ import UIKit
 
 extension ShakeForDataViewController {
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         fillView = UIView()
         fillView.layer.cornerRadius = 24
         fillView.backgroundColor = UIColor.backgroundBlue
-        self.view.addSubview(fillView)
+        view.addSubview(fillView)
 
         arrowViewTopLeft = UIImageView()
         arrowViewTopLeft.image = UIImage(named: ImagesAsset.shakeForDataArrowTopLeft)
         arrowViewTopLeft.contentMode = .scaleAspectFit
-        self.view.addSubview(arrowViewTopLeft)
+        view.addSubview(arrowViewTopLeft)
 
         arrowViewTopRight = UIImageView()
         arrowViewTopRight.image = UIImage(named: ImagesAsset.shakeForDataArrowTopRight)
         arrowViewTopRight.contentMode = .scaleAspectFit
-        self.view.addSubview(arrowViewTopRight)
+        view.addSubview(arrowViewTopRight)
 
         arrowViewBottomLeft = UIImageView()
         arrowViewBottomLeft.image = UIImage(named: ImagesAsset.shakeForDataArrowBottomLeft)
         arrowViewBottomLeft.contentMode = .scaleAspectFit
-        self.view.addSubview(arrowViewBottomLeft)
+        view.addSubview(arrowViewBottomLeft)
 
         arrowViewBottomRight = UIImageView()
         arrowViewBottomRight.image = UIImage(named: ImagesAsset.shakeForDataArrowBottomRight)
         arrowViewBottomRight.contentMode = .scaleAspectFit
-        self.view.addSubview(arrowViewBottomRight)
+        view.addSubview(arrowViewBottomRight)
 
         timerIcon = UIImageView()
         timerIcon.image = UIImage(named: ImagesAsset.shakeForDataTimer)
         timerIcon.contentMode = .scaleAspectFit
-        self.view.addSubview(timerIcon)
+        view.addSubview(timerIcon)
 
         timerLabel = UILabel()
         timerLabel.font = UIFont.bold(size: 32)
         timerLabel.adjustsFontSizeToFitWidth = true
         timerLabel.textColor = UIColor.white
         timerLabel.textAlignment = .center
-        self.view.addSubview(timerLabel)
+        view.addSubview(timerLabel)
 
         shakeCounterLabel = UILabel()
         shakeCounterLabel.font = UIFont.text(size: 128)
         shakeCounterLabel.adjustsFontSizeToFitWidth = true
         shakeCounterLabel.textColor = UIColor.white
         shakeCounterLabel.textAlignment = .center
-        self.view.addSubview(shakeCounterLabel)
+        view.addSubview(shakeCounterLabel)
 
         shakeInfoLabel = UILabel()
         shakeInfoLabel.adjustsFontSizeToFitWidth = true
@@ -67,7 +67,7 @@ extension ShakeForDataViewController {
         shakeInfoLabel.font = UIFont.text(size: 24)
         shakeInfoLabel.layer.opacity = 0.5
         shakeInfoLabel.textColor = UIColor.white
-        self.view.addSubview(shakeInfoLabel)
+        view.addSubview(shakeInfoLabel)
 
         quitButton = UIButton(type: .system)
         quitButton.setTitleColor(UIColor.white, for: .normal)
@@ -75,8 +75,7 @@ extension ShakeForDataViewController {
         quitButton.titleLabel?.adjustsFontSizeToFitWidth = true
         quitButton.clipsToBounds = true
         quitButton.layer.opacity = 0.5
-        self.view.addSubview(quitButton)
-
+        view.addSubview(quitButton)
     }
 
     func addAutoLayoutConstraints() {
@@ -155,7 +154,7 @@ extension ShakeForDataViewController {
             // quitButton
             quitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -18),
             quitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quitButton.heightAnchor.constraint(equalToConstant: 20)
+            quitButton.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
 }

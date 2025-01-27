@@ -10,14 +10,15 @@ import Foundation
 import RxSwift
 
 protocol SetPreferredProtocolModelType {
-    var networkNameLabel: BehaviorSubject<String> {get}
-    var title: BehaviorSubject<String> {get}
+    var networkNameLabel: BehaviorSubject<String> { get }
+    var title: BehaviorSubject<String> { get }
     func action()
     func cancel()
 }
 
 class SetPreferredProtocolModel: SetPreferredProtocolModelType {
     // MARK: - Dependencies
+
     let connectivity: Connectivity
     let networkRepository: SecuredNetworkRepository
     let logger: FileLogger
@@ -30,7 +31,7 @@ class SetPreferredProtocolModel: SetPreferredProtocolModelType {
         self.connectivity = connectivity
         self.networkRepository = networkRepository
         self.logger = logger
-        self.load()
+        load()
     }
 
     private func load() {

@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import Swinject
 import RxSwift
+import Swinject
 
 protocol HelpViewModel {
-    var isDarkMode: BehaviorSubject<Bool> {get}
-    var sessionManager: SessionManagerV2 {get}
-    var apiManager: APIManager {get}
-    var alertManager: AlertManagerV2 {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
+    var sessionManager: SessionManagerV2 { get }
+    var apiManager: APIManager { get }
+    var alertManager: AlertManagerV2 { get }
     var networkStatus: NetworkStatus { get }
     func submitDebugLog(username: String?, completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
 }
@@ -59,7 +59,7 @@ class HelpViewModelImpl: HelpViewModel {
             if username != nil {
                 debugUsername = username ?? ""
             }
-            if let session =  self.sessionManager.session, session.isUserGhost == true {
+            if let session = self.sessionManager.session, session.isUserGhost == true {
                 debugUsername = "ghost_\(session.userId)"
             }
             return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
@@ -70,5 +70,4 @@ class HelpViewModelImpl: HelpViewModel {
             completion(false, error.localizedDescription)
         }).disposed(by: dispose)
     }
-
 }

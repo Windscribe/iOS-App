@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Constants {
+enum Constants {
     static let appName = "Windscribe"
     static let service = "WindscribeServerCreds"
 }

@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 class AccountHeaderView: UIView {
     lazy var label: UILabel = {
@@ -38,7 +38,7 @@ class AccountHeaderView: UIView {
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
         }).disposed(by: disposeBag)

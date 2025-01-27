@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 struct User {
     let username: String
     let isPro: Bool
@@ -20,7 +21,7 @@ struct User {
         username = session.username
         locationHash = session.locHash
         planType = isPro ? "1" : "0"
-        alcList =  session.alc.toArray()
+        alcList = session.alc.toArray()
         allAccessPlan = session.isPremium
     }
 }

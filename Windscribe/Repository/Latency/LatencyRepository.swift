@@ -8,9 +8,9 @@
 
 import Foundation
 import RxSwift
+
 protocol LatencyRepository {
     var latency: BehaviorSubject<[PingData]> { get }
-    var bestLocation: BehaviorSubject <BestLocation?> { get }
     func getPingData(ip: String) -> PingData?
     func loadLatency()
     func loadAllServerLatency() -> Completable
@@ -20,4 +20,5 @@ protocol LatencyRepository {
     func loadCustomConfigLatency() -> Completable
     func pickBestLocation(pingData: [PingData])
     func pickBestLocation(servers: [Server])
+    func refreshBestLocation()
 }

@@ -6,10 +6,10 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
-class AboutViewController: WSNavigationViewController {
+import UIKit
 
+class AboutViewController: WSNavigationViewController {
     var viewModel: AboutViewModelType!, logger: FileLogger!
 
     lazy var tableView: DynamicSizeTableView = {
@@ -20,6 +20,7 @@ class AboutViewController: WSNavigationViewController {
         tableView.backgroundView?.backgroundColor = .clear
         return tableView
     }()
+
     lazy var backgroundView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
@@ -69,14 +70,12 @@ class AboutViewController: WSNavigationViewController {
         super.setupViews(isDark: isDark)
         tableView.reloadData()
     }
-
 }
 
 // MARK: - Extensions
 
 extension AboutViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return viewModel.numberOfRowsInSection()
     }
 
@@ -89,9 +88,8 @@ extension AboutViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = viewModel.celldata(at: indexPath)
         openLink(url: data.url)
     }
-
 }

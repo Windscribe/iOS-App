@@ -6,13 +6,14 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class EnterEmailViewController: WSNavigationViewController {
     var router: EmailRouter!, viewModel: EnterEmailViewModel!, logger: FileLogger!
 
     // MARK: - UI elements
+
     var emailLabel: UILabel!
     var emailTextField: LoginTextField!
     var continueButton: UIButton!
@@ -21,26 +22,26 @@ class EnterEmailViewController: WSNavigationViewController {
 
     var continueButtonBottomConstraint: NSLayoutConstraint!
 
-    lazy var continueButtonEnabled = { BehaviorSubject(value: continueButton.isEnabled) }()
+    lazy var continueButtonEnabled = BehaviorSubject(value: continueButton.isEnabled)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Add Email View")
-        self.addViews()
-        self.addAutoLayoutConstraints()
-        self.titleLabel.text = TextsAsset.addEmail
+        addViews()
+        addAutoLayoutConstraints()
+        titleLabel.text = TextsAsset.addEmail
 
         if let session = viewModel.sessionManager.session, session.isUserPro {
-            self.emailInfoLabel.isHidden = true
+            emailInfoLabel.isHidden = true
         }
 
-        self.addNotificationObservers()
+        addNotificationObservers()
         bindViews()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.emailTextField.becomeFirstResponder()
+        emailTextField.becomeFirstResponder()
     }
 
     override func setupLocalized() {
@@ -62,8 +63,10 @@ class EnterEmailViewController: WSNavigationViewController {
             infoLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(continueButtonEnabled.asObservable(), viewModel.isDarkMode.asObservable()).bind { (isEnabled, isDark) in
-            let color = isEnabled ? UIColor.seaGreen : ThemeUtils.primaryTextColor(isDarkMode: isDark)
+        Observable.combineLatest(continueButtonEnabled.asObservable(), viewModel.isDarkMode.asObservable()).bind { isEnabled, isDark in
+            let backgroundColor = isEnabled ? UIColor.seaGreen : ThemeUtils.wrapperColor(isDarkMode: isDark)
+            self.continueButton.backgroundColor = backgroundColor
+            let color = isEnabled ? UIColor.midnight : ThemeUtils.primaryTextColor50(isDarkMode: isDark)
             self.continueButton.setTitleColor(color, for: .normal)
         }.disposed(by: disposeBag)
 
@@ -75,14 +78,13 @@ class EnterEmailViewController: WSNavigationViewController {
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
         logger.logI(self, "User tapped to submit email.")
-        self.showLoading()
-        self.continueButton.isEnabled = false
+        showLoading()
+        continueButton.isEnabled = false
         viewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            DispatchQueue.main.async { [ self] in
+            DispatchQueue.main.async { [self] in
                 self.endLoading()
                 self.continueButton.isEnabled = true
                 self.router.routeTo(to: RouteID.confirmEmail(delegate: self), from: self)
-
             }
         }, onFailure: { [weak self] error in
             DispatchQueue.main.async { [weak self] in
@@ -110,6 +112,13 @@ class EnterEmailViewController: WSNavigationViewController {
                         buttonText: "Ok"
                     )
                     self?.navigationController?.popToRootViewController(animated: true)
+                } else if error.localizedDescription == Errors.noNetwork.localizedDescription{
+                    self?.viewModel.alertManager.showSimpleAlert(
+                        viewController: self,
+                        title: TextsAsset.error,
+                        message: TextsAsset.noNetworksAvailable,
+                        buttonText: "Ok"
+                    )
                 } else {
                     self?.viewModel.alertManager.showSimpleAlert(
                         viewController: self,
@@ -121,13 +130,10 @@ class EnterEmailViewController: WSNavigationViewController {
             }
         }).disposed(by: disposeBag)
     }
-
 }
 
 extension EnterEmailViewController: ConfirmEmailViewControllerDelegate {
-
     func dismissWith(action: ConfirmEmailAction) {
-        router?.dismissPopup(action: action, navigationVC: self.navigationController)
+        router?.dismissPopup(action: action, navigationVC: navigationController)
     }
-
 }

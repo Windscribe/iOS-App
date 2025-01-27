@@ -7,9 +7,15 @@
 //
 
 import Foundation
+import RealmSwift
 import RxCocoa
 import RxSwift
-import RealmSwift
+
+enum LocationType {
+    case server
+    case staticIP
+    case custom
+}
 
 class SharedSecretDefaults: Preferences {
     static let shared = SharedSecretDefaults()
@@ -224,6 +230,11 @@ class SharedSecretDefaults: Preferences {
         return getInt(forKey: SharedKeys.connectionCount)
     }
 
+    func increaseConnectionCount() {
+        let currentCount = getConnectionCount() ?? 0
+        setInt(currentCount + 1, forKey: SharedKeys.connectionCount)
+    }
+
     func saveConnectionCount(count: Int) {
         setInt(count, forKey: SharedKeys.connectionCount)
     }
@@ -305,7 +316,7 @@ class SharedSecretDefaults: Preferences {
     }
 
     func getLatencyType() -> RxSwift.Observable<String> {
-        sharedDefault?.rx.observe(String.self, SharedKeys.latencyType).map {$0 ?? DefaultValues.latencyType} ?? Observable.just(DefaultValues.latencyType)
+        sharedDefault?.rx.observe(String.self, SharedKeys.latencyType).map { $0 ?? DefaultValues.latencyType } ?? Observable.just(DefaultValues.latencyType)
     }
 
     func saveOrderLocationsBy(order: String) {
@@ -318,22 +329,18 @@ class SharedSecretDefaults: Preferences {
 
     func saveAppearance(appearance: String) {
         setString(appearance, forKey: SharedKeys.appearance)
-
     }
 
     func getAppearance() -> RxSwift.Observable<String?> {
         return sharedDefault?.rx.observe(String.self, SharedKeys.appearance) ?? Observable.just(DefaultValues.appearance)
-
     }
 
     func saveLanguage(language: String) {
         setString(language, forKey: SharedKeys.language)
-
     }
 
     func getLanguage() -> RxSwift.Observable<String?> {
         return sharedDefault?.rx.observe(String.self, SharedKeys.language) ?? Observable.just(DefaultValues.language)
-
     }
 
     func saveFirewallMode(firewall: Bool) {
@@ -353,12 +360,15 @@ class SharedSecretDefaults: Preferences {
     }
 
     func getKillSwitchSync() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.killSwitch) ?? false
+        return sharedDefault?.bool(forKey: SharedKeys.killSwitch) ?? DefaultValues.killSwitch
     }
 
     func saveAllowLane(mode: Bool) {
         setBool(mode, forKey: SharedKeys.allowLanMode)
+    }
 
+    func getAllowLaneSync() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.allowLanMode) ?? DefaultValues.allowLaneMode
     }
 
     func getAllowLane() -> RxSwift.Observable<Bool?> {
@@ -367,7 +377,6 @@ class SharedSecretDefaults: Preferences {
 
     func saveHapticFeedback(haptic: Bool) {
         setBool(haptic, forKey: SharedKeys.hapticFeedback)
-
     }
 
     func getHapticFeedback() -> RxSwift.Observable<Bool?> {
@@ -442,14 +451,6 @@ class SharedSecretDefaults: Preferences {
         setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
     }
 
-    func isCustomConfigSelected() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.isCustomConfigSelected) ?? false
-    }
-
-    func saveConnectingToCustomConfig(value: Bool) {
-        setBool(value, forKey: SharedKeys.isCustomConfigSelected)
-    }
-
     func saveCountryOverrride(value: String?) {
         setString(value, forKey: SharedKeys.countryOverride)
     }
@@ -457,6 +458,7 @@ class SharedSecretDefaults: Preferences {
     func getCountryOverride() -> String? {
         return sharedDefault?.string(forKey: SharedKeys.countryOverride)
     }
+
     func saveCircumventCensorshipStatus(status: Bool) {
         setBool(status, forKey: SharedKeys.circumventCensorship)
     }
@@ -473,7 +475,7 @@ class SharedSecretDefaults: Preferences {
     }
 
     func isRestrictedCountry() -> Bool {
-       return ["be", "fa", "ru", "tr", "zh"].contains(Locale.current.languageCode)
+        return ["be", "fa", "ru", "tr", "zh"].contains(Locale.current.languageCode)
     }
 
     func getServerSettings() -> String {
@@ -508,7 +510,52 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.bool(forKey: SharedKeys.widgetConnectionRequested) ?? false
     }
 
+    func clearSelectedLocations() {
+        sharedDefault?.set("", forKey: SharedKeys.savedLastLocation)
+    }
+
+    func saveLastSelectedLocation(with locationID: String) {
+        sharedDefault?.set(locationID, forKey: SharedKeys.savedLastLocation)
+    }
+
+    func getLastSelectedLocation() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.savedLastLocation) ?? "0"
+    }
+
+    func saveBestLocation(with locationID: String) {
+        sharedDefault?.set(locationID, forKey: SharedKeys.savedBestLocation)
+    }
+
+    func getBestLocation() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.savedBestLocation) ?? "0"
+    }
+
+    func isCustomConfigSelected() -> Bool {
+        return getLocationType() == .custom
+    }
+
+    func getLocationType() -> LocationType? {
+        return getLocationType(id: getLastSelectedLocation())
+    }
+
+    /// Gets location type based on id.
+    func getLocationType(id: String) -> LocationType? {
+        guard !id.isEmpty else { return nil }
+        let parts = id.split(separator: "_")
+        if parts.count == 1 {
+            return LocationType.server
+        }
+        let prefix = parts[0]
+        if prefix == "static" {
+            return LocationType.staticIP
+        } else if prefix == "custom" {
+            return LocationType.custom
+        }
+        return nil
+    }
+
     // MARK: - Base Types
+
     func setString(_ value: String?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)
     }
@@ -522,8 +569,8 @@ class SharedSecretDefaults: Preferences {
     }
 
     func removeObjects(forKey: [String]) {
-        forKey.forEach { key in
-            self.sharedDefault?.removeObject(forKey: key)
+        for key in forKey {
+            sharedDefault?.removeObject(forKey: key)
         }
     }
 
@@ -539,7 +586,7 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.integer(forKey: forKey)
     }
 
-    func setDate(_ value: Any?, forKey: String) {
+    func setDate(_: Any?, forKey: String) {
         sharedDefault?.set(Date(), forKey: forKey)
     }
 
@@ -593,10 +640,11 @@ class SharedSecretDefaults: Preferences {
 }
 
 extension UserDefaults {
-    func rx_observe<T: Codable>(_ type: T.Type, forKey key: String) -> Observable<T?> {
+    func rx_observe<T: Codable>(_: T.Type, forKey key: String) -> Observable<T?> {
         return Observable.create { observer in
             if let data = self.data(forKey: key),
-               let value = try? JSONDecoder().decode(T.self, from: data) {
+               let value = try? JSONDecoder().decode(T.self, from: data)
+            {
                 observer.onNext(value)
             } else {
                 observer.onNext(nil)
@@ -604,7 +652,8 @@ extension UserDefaults {
             let notificationName = UserDefaults.didChangeNotification
             let notificationObserver = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
                 if let data = self.data(forKey: key),
-                   let value = try? JSONDecoder().decode(T.self, from: data) {
+                   let value = try? JSONDecoder().decode(T.self, from: data)
+                {
                     observer.onNext(value)
                 } else {
                     observer.onNext(nil)

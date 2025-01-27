@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 protocol ErrorPopupViewModelType {
-    var message: BehaviorSubject<String> {get}
-    var dismissAction: (() -> Void)? {get}
+    var message: BehaviorSubject<String> { get }
+    var dismissAction: (() -> Void)? { get }
     func setMessage(with message: String)
     func setDismissAction(with dismissAction: (() -> Void)?)
 }

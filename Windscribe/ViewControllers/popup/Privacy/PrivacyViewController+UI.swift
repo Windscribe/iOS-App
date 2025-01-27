@@ -1,5 +1,5 @@
 //
-//  PushNotificationPermissionViewController.swift
+//  PrivacyViewController+UI.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-09-02.
@@ -9,14 +9,13 @@
 import UIKit
 
 extension PrivacyViewController {
-
     func addViews() {
-        self.view.backgroundColor = UIColor.clear
+        view.backgroundColor = UIColor.clear
 
         backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.midnight
         backgroundView.layer.opacity = 0.95
-        self.view.addSubview(backgroundView)
+        view.addSubview(backgroundView)
 
         descriptionLabel = UILabel()
         descriptionLabel.text = TextsAsset.PrivacyView.description
@@ -27,7 +26,7 @@ extension PrivacyViewController {
         descriptionLabel.adjustsFontSizeToFitWidth = true
 
         descriptionLabel.textColor = UIColor.white
-        self.view.addSubview(descriptionLabel)
+        view.addSubview(descriptionLabel)
 
         actionButton = UIButton(type: .system)
         actionButton.setTitle(TextsAsset.PrivacyView.action, for: .normal)
@@ -37,7 +36,7 @@ extension PrivacyViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.layer.cornerRadius = 24
         actionButton.clipsToBounds = true
-        self.view.addSubview(actionButton)
+        view.addSubview(actionButton)
     }
 
     func addAutoLayoutConstraints() {
@@ -47,23 +46,22 @@ extension PrivacyViewController {
 
         NSLayoutConstraint.activate([
             // backgroundView
-            backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0),
-            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
-            backgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0),
+            backgroundView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
+            backgroundView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
 
             // descriptionLabel
-            descriptionLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: UIScreen.isSmallScreen ? 60 : 120),
-            descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 35),
-            descriptionLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -35),
+            descriptionLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: UIScreen.isSmallScreen ? 60 : 120),
+            descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 35),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
 
             // actionButton
-            actionButton.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 32),
-            actionButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 68),
-            actionButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -68),
-            actionButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30),
-            actionButton.heightAnchor.constraint(equalToConstant: 48)
+            actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 32),
+            actionButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
+            actionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
+            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            actionButton.heightAnchor.constraint(equalToConstant: 48),
         ])
-
     }
 }

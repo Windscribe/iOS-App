@@ -7,9 +7,11 @@
 //
 
 import Foundation
-struct LinkProvider {
+
+enum LinkProvider {
     static func getWindscribeLinkWithAutoLogin(path: String,
-                                               tempSession: String) -> String {
+                                               tempSession: String) -> String
+    {
         return Links.base + path + "?temp_session=\(tempSession)"
     }
 
@@ -22,7 +24,6 @@ struct LinkProvider {
         components.fragment = "robertrules"
         components.queryItems = queryItems
         return components.url
-
     }
 
     static func getWindscribeLink(path: String) -> String {

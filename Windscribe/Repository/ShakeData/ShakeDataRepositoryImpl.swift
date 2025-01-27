@@ -21,9 +21,9 @@ struct ShakeDataRepositoryImpl: ShakeDataRepository {
 
     func getLeaderboardScores() -> Single<[Score]> {
         return apiManager.getShakeForDataLeaderboard().flatMap { scoreList in
-            return Single.just(scoreList.scores)
+            Single.just(scoreList.scores)
         }.catch { error in
-             return Single.error(error)
+            Single.error(error)
         }
     }
 
@@ -32,9 +32,9 @@ struct ShakeDataRepositoryImpl: ShakeDataRepository {
             return Single.error(Errors.sessionIsInvalid)
         }
         return apiManager.recordShakeForDataScore(score: score, userID: userID).flatMap { apiMessage in
-            return Single.just(apiMessage.message)
+            Single.just(apiMessage.message)
         }.catch { error in
-             return Single.error(error)
+            Single.error(error)
         }
     }
 }

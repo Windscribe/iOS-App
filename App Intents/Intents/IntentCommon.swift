@@ -6,9 +6,9 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import AppIntents
 import Foundation
 import NetworkExtension
-import AppIntents
 
 enum AppIntentError: Error, LocalizedError {
     case VPNNotConfigured
@@ -46,11 +46,12 @@ func getActiveManager() async throws -> NEVPNManager {
         }
     }
 }
+
 // Open and wireguard
 @available(iOS 13.0.0, *)
 func getNETunnelProvider() async throws -> NEVPNManager {
     let providers = try await NETunnelProviderManager.loadAllFromPreferences()
-    let providersFound = providers.map {$0.protocolConfiguration?.username ?? ""}.joined(separator: ", ")
+    let providersFound = providers.map { $0.protocolConfiguration?.username ?? "" }.joined(separator: ", ")
     print(providersFound)
     if providers.count > 0 {
         return providers[0]
@@ -75,24 +76,31 @@ extension IntentDialog {
     static var responseSuccess: Self {
         "Connection request to the VPN was successful."
     }
+
     static var responseFailure: Self {
         "Sorry, something went wrong while trying to connect, please check the Windscribe app."
     }
+
     static var responseTimeoutFailure: Self {
         "Sorry, VPN is taking too long to connect, please check the Windscribe app."
     }
+
     static var responseSuccessDisconnect: Self {
         "Disconnect request of the VPN was successful."
     }
+
     static var responseFailureDisconnect: Self {
         "Sorry, something went wrong while trying to disconnect, please check the Windscribe app."
     }
+
     static func responseSuccess(cityName: String, nickName: String, ipAddress: String) -> Self {
         "You are connected to \(cityName), \(nickName) and your IP address is \(ipAddress)."
     }
+
     static func responseSuccessWithNoConnection(ipAddress: String) -> Self {
-        "You are not connected to VPN. Your  IP address is \(ipAddress)."
+        "You are now connected to VPN. Your  IP address is \(ipAddress)."
     }
+
     static var responseFailureState: Self {
         "Sorry, something went wrong while trying to get your connection state, please check the Windscribe app."
     }

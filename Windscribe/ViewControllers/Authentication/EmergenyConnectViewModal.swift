@@ -8,15 +8,18 @@
 
 import Foundation
 import RxSwift
+
 enum EmergencyConnectState {
     case disconnected, disconnecting, connecting, connected
 }
+
 protocol EmergenyConnectViewModal {
     var state: BehaviorSubject<EmergencyConnectState> { get }
     func connectButtonTapped()
 }
+
 class EmergencyConnectModalImpl: EmergenyConnectViewModal {
-    let state =  BehaviorSubject(value: EmergencyConnectState.disconnected)
+    let state = BehaviorSubject(value: EmergencyConnectState.disconnected)
     let vpnManager: VPNManager
     let emergencyRepository: EmergencyRepository
     let logger: FileLogger
@@ -61,25 +64,27 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
         } else {
             shouldRetry = true
             logger.logD(EmergencyConnectModalImpl.self, "Getting emergency connect info.")
-            emergencyRepository.getConfig().subscribe(onSuccess: { ovpnInfo in
+            Task { @MainActor in
+                let ovpnInfo = await emergencyRepository.getConfig()
                 self.ovpnInfoList.append(contentsOf: ovpnInfo)
                 self.connect()
-            }).disposed(by: disposeBag)
+            }
         }
     }
 
     private func connect() {
-        if let ovpnInfo = ovpnInfoList.first, shouldRetry == true {
-            ovpnInfoList.removeFirst()
+        if let ovpnInfo = ovpnInfoList.last, shouldRetry == true {
+            ovpnInfoList.removeLast()
             logger.logD(EmergencyConnectModalImpl.self, "Connecting to emergency connect. \(ovpnInfo)")
-            DispatchQueue.main.async {
-                self.emergencyRepository.connect(configInfo: ovpnInfo).subscribe(onCompleted: { [self] in
+            Task { @MainActor in
+                do {
+                    try await emergencyRepository.connect(configInfo: ovpnInfo)
                     logger.logD(self, "Successfully started OpenVPN.")
-                }, onError: { error in
+                } catch {
                     if let error = error as? RepositoryError {
                         self.logger.logE(self, error.description)
                     }
-                }).disposed(by: self.disposeBag)
+                }
             }
         }
     }

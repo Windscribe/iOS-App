@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct APIParameters {
+enum APIParameters {
     static let data = "data"
     static let errorCode = "errorCode"
     static let clientAuthHash = "client_auth_hash"
@@ -40,13 +40,13 @@ struct APIParameters {
     static let wgHostname = "hostname"
     static let wgTtl = "wg_ttl"
 
-    struct IAP {
+    enum IAP {
         static let appleID = "apple_id"
         static let appleSIG = "apple_sig"
         static let appleData = "apple_data"
     }
 
-    struct Errors {
+    enum Errors {
         static let errorCode = "errorCode"
         static let errorDescription = "errorDescription"
         static let errorMessage = "errorMessage"

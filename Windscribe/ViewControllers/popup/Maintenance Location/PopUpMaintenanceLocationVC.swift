@@ -6,14 +6,16 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PopUpMaintenanceLocationVC: WSNavigationViewController {
     // MARK: - PROPERTIES
 
     var viewModel: PopUpMaintenanceLocationModelType!
+
     // MARK: - UI ELEMENTs
+
     private lazy var topImage: UIImageView = {
         let vw = UIImageView()
         vw.contentMode = .scaleAspectFit
@@ -71,10 +73,10 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
             headerLabel,
             subHeaderLabel,
             checkStatusButton,
-            cancelButton
+            cancelButton,
         ])
-        self.view.backgroundColor = UIColor.midnight
-        self.view.layer.opacity = 0.97
+        view.backgroundColor = UIColor.midnight
+        view.layer.opacity = 0.97
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
         layoutView.stackView.setCustomSpacing(32, after: topImage)
         layoutView.stackView.setCustomSpacing(32, after: subHeaderLabel)
@@ -95,14 +97,16 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
             let attributeString = NSAttributedString(
                 string: title,
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5),
-                             .font: UIFont.text(size: 16)])
+                             .font: UIFont.text(size: 16)]
+            )
             self.cancelButton.setAttributedTitle(attributeString, for: .normal)
         }).disposed(by: disposeBag)
         viewModel.checkStatusButtonTitle.subscribe(onNext: { title in
             let attributeString = NSAttributedString(
                 string: title,
                 attributes: [NSAttributedString.Key.foregroundColor: UIColor.midnight,
-                             .font: UIFont.text(size: 16)])
+                             .font: UIFont.text(size: 16)]
+            )
             self.checkStatusButton.setAttributedTitle(attributeString, for: .normal)
         }).disposed(by: disposeBag)
         viewModel.isDarkMode.subscribe(onNext: { [self] in
@@ -112,6 +116,7 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
     }
 
     // MARK: - Actions
+
     @objc private func cancelAction() {
         viewModel.cancel(vc: self)
     }

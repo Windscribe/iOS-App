@@ -6,14 +6,15 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RealmSwift
 import RxSwift
+import UIKit
 
 class NetworkSecurityViewController: WSNavigationViewController {
-
     var router: NetworkSecurityRouter!, viewModel: NetworkSecurityViewModelType!, logger: FileLogger!
+
     // MARK: - UI elements
+
     lazy var autoSecureView = createAutoSecureView()
     lazy var headerLabel: UILabel = {
         let lbl = UILabel()
@@ -35,30 +36,29 @@ class NetworkSecurityViewController: WSNavigationViewController {
     lazy var currentNetworkView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             currentNetworkTitle,
-            currentNetworkStackView
+            currentNetworkStackView,
         ])
         stack.axis = .vertical
         return stack
     }()
+
     lazy var currentNetworkTitle = createHeader(text: TextsAsset.NetworkSecurity.currentNetwork)
-    lazy var currentNetworkStackView: UIStackView = {
-        makeNetworkStackView()
-    }()
+    lazy var currentNetworkStackView: UIStackView = makeNetworkStackView()
 
     lazy var otherNetworkView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             otherNetworkTitle,
-            otherNetworkStackView
+            otherNetworkStackView,
         ])
         stack.axis = .vertical
         return stack
     }()
+
     lazy var otherNetworkTitle = createHeader(text: TextsAsset.NetworkSecurity.otherNetwork)
-    lazy var otherNetworkStackView: UIStackView = {
-        makeNetworkStackView()
-    }()
+    lazy var otherNetworkStackView: UIStackView = makeNetworkStackView()
 
     // MARK: - Life cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Network Security View")
@@ -82,9 +82,10 @@ class NetworkSecurityViewController: WSNavigationViewController {
                     self.createListNetworkView()
                     let isOnline: Bool = ((try? self.viewModel.isOnline.value()) != nil)
                     self.currentNetworkView.isHidden = !isOnline
-                },onError: { [self] error in
+                }, onError: { [self] error in
                     self.logger.logE(self, "Realm network notification error \(error.localizedDescription)")
-                }).disposed(by: disposeBag)
+                }
+            ).disposed(by: disposeBag)
     }
 
     override func viewWillLayoutSubviews() {
@@ -98,7 +99,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
             headerView,
             autoSecureView,
             currentNetworkView,
-            otherNetworkView
+            otherNetworkView,
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(inset: 16))
         layoutView.stackView.spacing = 16
@@ -188,9 +189,11 @@ extension NetworkSecurityViewController: NetworkCellViewDelegate {
 }
 
 // MARK: - NetworkCellView
+
 protocol NetworkCellViewDelegate: AnyObject {
     func networkCellViewDidSelect(_ network: WifiNetwork)
 }
+
 class NetworkCellView: UIStackView {
     private(set) var network: WifiNetwork?
     let disposeBag = DisposeBag()
@@ -204,7 +207,8 @@ class NetworkCellView: UIStackView {
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -220,12 +224,12 @@ class NetworkCellView: UIStackView {
             lblName,
             UIView(),
             lblSecureStatus,
-            iconArrow
+            iconArrow,
         ])
         axis = .horizontal
         setPadding(UIEdgeInsets(inset: 16))
         spacing = 8
-        self.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { _ in
+        rx.anyGesture(.tap()).skip(1).subscribe(onNext: { _ in
             self.handleSelect()
         }).disposed(by: disposeBag)
     }
@@ -256,25 +260,25 @@ class NetworkCellView: UIStackView {
 
     func bindData(_ data: WifiNetwork) {
         network = data
-        self.lblName.setTextWithOffSet(text: data.SSID)
-        self.lblSecureStatus.text = TextsAsset.NetworkSecurity.untrusted
+        lblName.setTextWithOffSet(text: data.SSID)
+        lblSecureStatus.text = TextsAsset.NetworkSecurity.untrusted
         if data.status {
-            self.lblSecureStatus.text = TextsAsset.NetworkSecurity.trusted
+            lblSecureStatus.text = TextsAsset.NetworkSecurity.trusted
         }
     }
 
     @objc private func handleSelect() {
         if let network = network {
-            self.delegate?.networkCellViewDidSelect(network)
+            delegate?.networkCellViewDidSelect(network)
         }
     }
 }
 
 extension UILabel {
-  func addCharacterSpacing(kernValue: Double = 1.15) {
-    guard let text = text, !text.isEmpty else { return }
-    let string = NSMutableAttributedString(string: text)
-    string.addAttribute(NSAttributedString.Key.kern, value: kernValue, range: NSRange(location: 0, length: string.length - 1))
-    attributedText = string
-  }
+    func addCharacterSpacing(kernValue: Double = 1.15) {
+        guard let text = text, !text.isEmpty else { return }
+        let string = NSMutableAttributedString(string: text)
+        string.addAttribute(NSAttributedString.Key.kern, value: kernValue, range: NSRange(location: 0, length: string.length - 1))
+        attributedText = string
+    }
 }

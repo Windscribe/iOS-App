@@ -9,7 +9,6 @@
 import UIKit
 
 extension ViewLeaderboardViewController {
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         addAutoLayoutConstraints()
@@ -23,7 +22,7 @@ extension ViewLeaderboardViewController {
         tableView.backgroundColor = UIColor.clear
         tableView.rowHeight = 50
         tableView.register(LeaderboardTableViewCell.self, forCellReuseIdentifier: leaderboardCellReuseIdentifier)
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
     }
 
     func addAutoLayoutConstraints() {
@@ -34,7 +33,7 @@ extension ViewLeaderboardViewController {
             tableView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 24),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
 }

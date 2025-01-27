@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 #if canImport(SafariServices)
-import SafariServices
+    import SafariServices
 #endif
 import RxSwift
 
@@ -22,54 +22,44 @@ protocol StaticIPListFooterViewDelegate: AnyObject {
 protocol StaticIPListViewModelType: StaticIPListFooterViewDelegate {
     var presentLinkTrigger: PublishSubject<URL> { get }
     var presentAlertTrigger: PublishSubject<StaticIPAlertType> { get }
-    var configureVPNTrigger: PublishSubject<()> { get }
 
     func setSelectedStaticIP(staticIP: StaticIPModel)
 }
 
 class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
-    var presentLinkTrigger = PublishSubject<URL>()
-    var presentAlertTrigger = PublishSubject<StaticIPAlertType>()
-    var configureVPNTrigger = PublishSubject<()>()
+    let presentLinkTrigger = PublishSubject<URL>()
+    let presentAlertTrigger = PublishSubject<StaticIPAlertType>()
 
-    var logger: FileLogger
-    var vpnManager: VPNManager
-    var connectionStateManager: ConnectionStateManagerType
-    var connectivity: Connectivity
+    private let logger: FileLogger
+    private let vpnManager: VPNManager
+    private let connectivity: Connectivity
+    private let locationsManager: LocationsManagerType
+    private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
-         connectionStateManager: ConnectionStateManagerType, connectivity: Connectivity) {
+         connectivity: Connectivity,
+         locationsManager: LocationsManagerType,
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
-        self.connectionStateManager = connectionStateManager
         self.connectivity = connectivity
+        self.locationsManager = locationsManager
+        self.protocolManager = protocolManager
     }
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnManager.isDisconnecting() {
             presentAlertTrigger.onNext(.disconnecting)
-
             return
         }
-        if !connectionStateManager.isConnecting() {
-            guard let node = staticIP.bestNode else { return }
-            guard let staticIPN = staticIP.staticIP,
-                  let countryCode = staticIP.countryCode,
-                  let dnsHostname = node.dnsHostname,
-                  let hostname = node.hostname, let serverAddress = node.ip2, let nickName = staticIP.staticIP, let cityName = staticIP.cityName, let credentials = staticIP.credentials else { return }
-            logger.logD(self, "Tapped on Static IP \(staticIPN) from the server list.")
-            vpnManager.selectedNode = SelectedNode(countryCode: countryCode,
-                                                        dnsHostname: dnsHostname,
-                                                        hostname: hostname,
-                                                        serverAddress: serverAddress,
-                                                        nickName: nickName,
-                                                        cityName: cityName,
-                                                        staticIPCredentials: credentials.last,
-                                                        groupId: 0)
 
-            configureVPNTrigger.onNext(())
+        if !vpnManager.isConnecting() {
+            locationsManager.saveStaticIP(withID: staticIP.id)
+            Task {
+                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
+            }
         } else {
             presentAlertTrigger.onNext(.connecting)
         }

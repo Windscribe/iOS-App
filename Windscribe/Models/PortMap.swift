@@ -18,9 +18,9 @@ import RealmSwift
 
     enum CodingKeys: String, CodingKey {
         case connectionProtocol = "protocol"
-        case heading = "heading"
-        case use = "use"
-        case ports = "ports"
+        case heading
+        case use
+        case ports
         case legacyPorts = "legacy_ports"
     }
 
@@ -31,10 +31,10 @@ import RealmSwift
         heading = try data.decodeIfPresent(String.self, forKey: .heading) ?? ""
         use = try data.decodeIfPresent(String.self, forKey: .use) ?? ""
         if let portsArray = try data.decodeIfPresent([String].self, forKey: .ports) {
-            self.setPortsArray(array: portsArray)
+            setPortsArray(array: portsArray)
         }
         if let legacyPortsArray = try data.decodeIfPresent([String].self, forKey: .legacyPorts) {
-            self.setLegacyPortsArray(array: legacyPortsArray)
+            setLegacyPortsArray(array: legacyPortsArray)
         }
     }
 
@@ -51,7 +51,6 @@ import RealmSwift
     override class func primaryKey() -> String? {
         return "connectionProtocol"
     }
-
 }
 
 struct PortMapList: Decodable {
@@ -67,9 +66,9 @@ struct PortMapList: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        self.suggested = try data.decodeIfPresent(SuggestedPorts.self, forKey: .suggested)
+        suggested = try data.decodeIfPresent(SuggestedPorts.self, forKey: .suggested)
         if let portMapsArray = try data.decodeIfPresent([PortMap].self, forKey: .portmap) {
-            self.setPortMaps(array: portMapsArray)
+            setPortMaps(array: portMapsArray)
         }
     }
 
@@ -77,5 +76,4 @@ struct PortMapList: Decodable {
         portMaps.removeAll()
         portMaps.append(objectsIn: array)
     }
-
 }

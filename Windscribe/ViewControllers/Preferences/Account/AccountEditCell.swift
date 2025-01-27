@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class AccountEditCell: WSTouchTableViewCell {
     private var disposeBag = DisposeBag()
@@ -62,7 +62,8 @@ class AccountEditCell: WSTouchTableViewCell {
         iconView.makeTrailingAnchor(constant: 16)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -70,6 +71,7 @@ class AccountEditCell: WSTouchTableViewCell {
         titleLbl.layer.opacity = 0.5
         iconView.layer.opacity = 0.5
     }
+
     override func configHighlight() {
         titleLbl.layer.opacity = 1
         iconView.layer.opacity = 1
@@ -77,7 +79,7 @@ class AccountEditCell: WSTouchTableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.disposeBag = DisposeBag()// Force rx disposal on reuse
+        disposeBag = DisposeBag() // Force rx disposal on reuse
     }
 
     private func updateView() {
@@ -85,7 +87,7 @@ class AccountEditCell: WSTouchTableViewCell {
     }
 
     func bindView(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.titleLbl.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.iconView.image = ThemeUtils.prefRightIcon(isDarkMode: $0)
@@ -137,7 +139,8 @@ class ArrowRowView: WSTouchStackView {
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -157,19 +160,19 @@ class ArrowRowView: WSTouchStackView {
         addArrangedSubviews([
             titleLabel,
             UIView(),
-            arrowImage
+            arrowImage,
         ])
         setPadding(UIEdgeInsets(inset: 16))
         spacing = 4
         layer.cornerRadius = 8
     }
 
-    private func bindViews(isDarkMode: BehaviorSubject<Bool>) {        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
-            guard let self = self else { return }
-            self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.arrowImage.image = ThemeUtils.prefRightIcon(isDarkMode: $0)
-            wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+    private func bindViews(isDarkMode: BehaviorSubject<Bool>) { isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
+        guard let self = self else { return }
+        self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
+        self.arrowImage.image = ThemeUtils.prefRightIcon(isDarkMode: $0)
+        wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
+    }).disposed(by: disposeBag)
     }
 }
 
@@ -178,7 +181,6 @@ protocol LazyViewDelegate: AnyObject {
 }
 
 class LazyTableViewCell: UITableViewCell {
-
     var lazyView: HelpView?
     private lazy var viewModel = Assembler.resolve(AccountViewModelType.self)
     weak var delegate: LazyViewDelegate?
@@ -188,28 +190,27 @@ class LazyTableViewCell: UITableViewCell {
 
         selectionStyle = .none
         backgroundColor = .clear
-        lazyView =  HelpView(item: HelpItem(title: TextsAsset.Account.lazyLogin,
-                                            subTitle: TextsAsset.Account.lazyLoginDescription),
-                             type: .navigation,
-                             delegate: self,
-                             isDarkMode: viewModel.isDarkMode)
+        lazyView = HelpView(item: HelpItem(title: TextsAsset.Account.lazyLogin,
+                                           subTitle: TextsAsset.Account.lazyLoginDescription),
+                            type: .navigation,
+                            delegate: self,
+                            isDarkMode: viewModel.isDarkMode)
         contentView.addSubview(lazyView!)
         lazyView?.translatesAutoresizingMaskIntoConstraints = false
 
         lazyView?.makeLeadingAnchor(constant: 0)
         lazyView?.makeTrailingAnchor(constant: 0)
-
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 extension LazyTableViewCell: HelpViewDelegate {
-    func helpViewDidSelect(_ sender: HelpView) {
-        self.delegate?.lazyViewDidSelect()
+    func helpViewDidSelect(_: HelpView) {
+        delegate?.lazyViewDidSelect()
     }
 }
 
@@ -218,7 +219,6 @@ protocol VoucherDelegate: AnyObject {
 }
 
 class VoucherCodeTableViewCell: UITableViewCell {
-
     var voucherView: HelpView?
     private lazy var viewModel = Assembler.resolve(AccountViewModelType.self)
     weak var delegate: VoucherDelegate?
@@ -228,27 +228,26 @@ class VoucherCodeTableViewCell: UITableViewCell {
 
         selectionStyle = .none
         backgroundColor = .clear
-        voucherView =  HelpView(item: HelpItem(title: TextsAsset.voucherCode,
-                                            subTitle: TextsAsset.Account.voucherCodeDescription),
-                             type: .navigation,
-                             delegate: self,
-                             isDarkMode: viewModel.isDarkMode)
+        voucherView = HelpView(item: HelpItem(title: TextsAsset.voucherCode,
+                                              subTitle: TextsAsset.Account.voucherCodeDescription),
+                               type: .navigation,
+                               delegate: self,
+                               isDarkMode: viewModel.isDarkMode)
         contentView.addSubview(voucherView!)
         voucherView?.translatesAutoresizingMaskIntoConstraints = false
 
         voucherView?.makeLeadingAnchor(constant: 0)
         voucherView?.makeTrailingAnchor(constant: 0)
-
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 }
 
 extension VoucherCodeTableViewCell: HelpViewDelegate {
-    func helpViewDidSelect(_ sender: HelpView) {
-        self.delegate?.voucherViewDidSelect()
+    func helpViewDidSelect(_: HelpView) {
+        delegate?.voucherViewDidSelect()
     }
 }

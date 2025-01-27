@@ -37,7 +37,8 @@ struct SelectedNode {
          staticIPCredentials: StaticIPCredentialsModel? = nil,
          autoPicked: Bool = false,
          customConfig: CustomConfigModel? = nil,
-         groupId: Int) {
+         groupId: Int)
+    {
         self.countryCode = countryCode
         self.dnsHostname = dnsHostname
         self.hostname = hostname
@@ -45,13 +46,15 @@ struct SelectedNode {
         self.nickName = nickName
         self.cityName = cityName
         if let username = staticIPCredentials?.username,
-           let password = staticIPCredentials?.password {
+           let password = staticIPCredentials?.password
+        {
             self.staticIPCredentials = StaticIPCredentialsModel(username: username, password: password)
         }
         self.autoPicked = autoPicked
         self.customConfig = customConfig
         if let groups = localDb.getGroups(),
-           let node = groups.filter({ $0.nodes.contains(where: { $0.hostname == hostname })}).first {
+           let node = groups.filter({ $0.nodes.contains(where: { $0.hostname == hostname }) }).first
+        {
             wgPublicKey = node.wgPublicKey
             ovpnX509 = node.ovpnX509
             let selectedNode = node.nodes.first { $0.hostname == hostname }
@@ -72,17 +75,17 @@ struct SelectedNode {
                 self.hostname = firstNode.hostname
             }
 
-            self.logger.logD("Selected Node", "Selected node changed to \(String(describing: self.hostname))")
+            logger.logD("Selected Node", "Selected node changed to \(String(describing: self.hostname))")
         }
 
         if staticIPCredentials != nil {
-            if let staticIP = localDb.getStaticIPs()?.filter({$0.staticIP == nickName}).first {
-                self.wgPublicKey = staticIP.wgPublicKey
-                self.ovpnX509 = staticIP.ovpnX509
-                self.ip1 = staticIP.nodes.first?.ip
-                self.ip2 = staticIP.nodes.first?.ip2
-                self.ip3 = staticIP.wgIp
-                self.staticIpToConnect = staticIP.connectIP
+            if let staticIP = localDb.getStaticIPs()?.filter({ $0.staticIP == nickName }).first {
+                wgPublicKey = staticIP.wgPublicKey
+                ovpnX509 = staticIP.ovpnX509
+                ip1 = staticIP.nodes.first?.ip
+                ip2 = staticIP.nodes.first?.ip2
+                ip3 = staticIP.wgIp
+                staticIpToConnect = staticIP.connectIP
             }
         }
         self.groupId = groupId

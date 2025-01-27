@@ -1,5 +1,5 @@
 //
-//  RouteID.swift
+//  RouteIDs.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2023-12-13.
@@ -7,14 +7,18 @@
 //
 
 import Foundation
+
 enum RouteID {
     // MARK: - Main
+
     case login
     case signup(claimGhostAccount: Bool)
     case home
     case emergency
     case mainMenu
+
     // MARK: - Preferences Menu
+
     case advanceParams
     case help
     case viewLog
@@ -33,7 +37,9 @@ enum RouteID {
     case network(with: WifiNetwork)
     case submitTicket
     case locationPermission(delegate: DisclosureAlertDelegate, denied: Bool)
+
     // MARK: - Pop Up
+
     case shakeForDataPopUp
     case shakeForDataView
     case shakeForDataResult(shakeCount: Int)
@@ -51,9 +57,11 @@ enum RouteID {
     case infoPrompt(title: String, actionValue: String,
                     justDismissOnAction: Bool, delegate: InfoPromptViewDelegate?)
     case trustedNetwork
+
     // MARK: - Protocol View
-    case sendDebugLogCompleted(delegate: SendDebugLogCompletedVCDelegate )
-    case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String)
+
+    case sendDebugLogCompleted(delegate: SendDebugLogCompletedVCDelegate)
+    case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String = "")
     case maintenanceLocation
     case protocolSwitchVC(delegate: ProtocolSwitchVCDelegate?, type: ProtocolFallbacksType)
     case rateUsPopUp

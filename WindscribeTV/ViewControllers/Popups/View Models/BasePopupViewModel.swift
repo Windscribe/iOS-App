@@ -22,7 +22,5 @@ class BasePopupViewModel: BasePopupViewModelType {
         self.type = type
     }
 
-    func actionButtonPressed() {
-
-    }
+    func actionButtonPressed() {}
 }

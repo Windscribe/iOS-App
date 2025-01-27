@@ -12,24 +12,24 @@ extension UIView {
     func addBlueGradientBackground() {
         let startColor = UIColor.startBlue.cgColor
         let endColor = UIColor.gray.cgColor
-        let gradient: CAGradientLayer = CAGradientLayer()
+        let gradient = CAGradientLayer()
         gradient.colors = [startColor, endColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 1.0, y: 0.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
-        gradient.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
-        self.layer.insertSublayer(gradient, at: 0)
+        gradient.frame = CGRect(x: 0.0, y: 0.0, width: frame.width, height: frame.height)
+        layer.insertSublayer(gradient, at: 0)
     }
 
     func addGreyHGradientBackground() {
         let startColor = UIColor.whiteWithOpacity(opacity: 0.2).cgColor
         let endColor = UIColor.clear.cgColor
-        let gradient: CAGradientLayer = CAGradientLayer()
+        let gradient = CAGradientLayer()
         gradient.colors = [startColor, endColor]
         gradient.locations = [0.0, 1.0]
         gradient.startPoint = CGPoint(x: 0.0, y: 1.0)
         gradient.endPoint = CGPoint(x: 1.0, y: 1.0)
-        gradient.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
-        self.layer.insertSublayer(gradient, at: 0)
+        gradient.frame = CGRect(x: 0.0, y: 0.0, width: frame.width, height: frame.height)
+        layer.insertSublayer(gradient, at: 0)
     }
 }

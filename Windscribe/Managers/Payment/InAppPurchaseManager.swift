@@ -8,6 +8,7 @@
 
 import Foundation
 import StoreKit
+
 protocol InAppPurchaseManager {
     func canMakePurchases() -> Bool
     func purchase(windscribeInAppProduct: WindscribeInAppProduct)
@@ -15,5 +16,5 @@ protocol InAppPurchaseManager {
     func fetchAvailableProducts(productIDs: [String])
     func matchInAppPurchaseWithWindscribeData(transaction: SKPaymentTransaction)
     func verifyPendingTransaction()
-    var delegate: InAppPurchaseManagerDelegate? {get set}
+    var delegate: InAppPurchaseManagerDelegate? { get set }
 }

@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+
 class WelcomeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {

@@ -7,8 +7,10 @@
 //
 
 import Foundation
+
 enum RouteID {
     // MARK: - Main
+
     case login
     case signup(claimGhostAccount: Bool)
     case mainMenu

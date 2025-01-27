@@ -13,8 +13,8 @@ protocol GeneralViewModelType {
     var hapticFeedback: BehaviorSubject<Bool> { get }
     var showServerHealth: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
-    var languageUpdatedTrigger: PublishSubject<()> { get }
-    var themeManager: ThemeManager {get}
+    var languageUpdatedTrigger: PublishSubject<Void> { get }
+    var themeManager: ThemeManager { get }
     func didSelectedLocationOrder(value: String)
     func didSelectedLatencyDisplay(value: String)
     func didSelectedAppearance(value: String)
@@ -33,6 +33,7 @@ protocol GeneralViewModelType {
 
 class GeneralViewModel: GeneralViewModelType {
     // MARK: - Dependencies
+
     let preferences: Preferences
     let themeManager: ThemeManager
     let languageManager: LanguageManagerV2
@@ -46,15 +47,16 @@ class GeneralViewModel: GeneralViewModelType {
     let locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencyType = BehaviorSubject<String>(value: DefaultValues.latencyType)
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
-    let languageUpdatedTrigger = PublishSubject<()>()
+    let languageUpdatedTrigger = PublishSubject<Void>()
 
     // MARK: - Data
+
     init(preferences: Preferences, themeManager: ThemeManager, languageManager: LanguageManagerV2, pushNotificationManager: PushNotificationManagerV2) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.languageManager = languageManager
         self.pushNotificationManager = pushNotificationManager
-        self.load()
+        load()
     }
 
     private func load() {
@@ -84,17 +86,16 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func updateHapticFeedback() {
-        try? self.preferences.saveHapticFeedback(haptic: !hapticFeedback.value())
+        try? preferences.saveHapticFeedback(haptic: !hapticFeedback.value())
     }
 
     func updateShowServerHealth() {
-        try? self.preferences.saveShowServerHealth(show: !showServerHealth.value())
-
+        try? preferences.saveShowServerHealth(show: !showServerHealth.value())
     }
 
     func didSelectedLocationOrder(value: String) {
         guard let valueToSave = TextsAsset.General.getValue(displayText: value) else { return }
-        self.preferences.saveOrderLocationsBy(order: valueToSave)
+        preferences.saveOrderLocationsBy(order: valueToSave)
     }
 
     func didSelectedAppearance(value: String) {
@@ -128,7 +129,7 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     func selectLanguage(with value: String) {
-        if let language = TextsAsset.General.languagesList.first(where: { $0.name == value}) {
+        if let language = TextsAsset.General.languagesList.first(where: { $0.name == value }) {
             languageManager.setLanguage(language: language)
         }
     }
@@ -139,19 +140,18 @@ class GeneralViewModel: GeneralViewModelType {
 
     func getHapticFeedback() -> Bool {
         return (try? hapticFeedback.value()) ?? DefaultValues.hapticFeedback
-
     }
 
     func updateHapticFeedback(_ status: Bool) {
-        self.preferences.saveHapticFeedback(haptic: status)
+        preferences.saveHapticFeedback(haptic: status)
     }
 
     func updateServerHealth(_ status: Bool) {
-        self.preferences.saveShowServerHealth(show: status)
+        preferences.saveShowServerHealth(show: status)
     }
 
     func getVersion() -> String {
-        guard let releaseNumber = Bundle.main.releaseVersionNumber, let buildNumber = Bundle.main.buildVersionNumber else { return ""}
+        guard let releaseNumber = Bundle.main.releaseVersionNumber, let buildNumber = Bundle.main.buildVersionNumber else { return "" }
         return "v\(releaseNumber) (\(buildNumber))"
     }
 

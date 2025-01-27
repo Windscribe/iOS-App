@@ -6,14 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreLocation
+import Foundation
 import NetworkExtension
 import RxSwift
+import UIKit
 
 protocol LocationManagingViewModelType: DisclosureAlertDelegate {
-    var shouldPresentLocationPopUp: PublishSubject<Bool> {get}
+    var shouldPresentLocationPopUp: PublishSubject<Bool> { get }
     func requestLocationPermission(callback: @escaping () -> Void)
     func logStatus()
     func getStatus() -> CLAuthorizationStatus
@@ -21,7 +21,7 @@ protocol LocationManagingViewModelType: DisclosureAlertDelegate {
 }
 
 class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
-    var connectivityManager: ConnectionManagerV2
+    var connectivityManager: ProtocolManagerType
     var logger: FileLogger
     var shouldPresentLocationPopUp = PublishSubject<Bool>()
     private var connectivity: Connectivity
@@ -30,7 +30,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
     private var locationCallback: (() -> Void)?
     private let locationManager = CLLocationManager()
 
-    init(connectivityManager: ConnectionManagerV2, logger: FileLogger, connectivity: Connectivity, wifiManager: WifiManager) {
+    init(connectivityManager: ProtocolManagerType, logger: FileLogger, connectivity: Connectivity, wifiManager: WifiManager) {
         self.connectivityManager = connectivityManager
         self.logger = logger
         self.connectivity = connectivity
@@ -66,7 +66,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
         logger.logI(self, "\(getStatus())")
     }
 
-     func getStatus() -> CLAuthorizationStatus {
+    func getStatus() -> CLAuthorizationStatus {
         if #available(iOS 15.0, *) {
             return locationManager.authorizationStatus
         } else {
@@ -83,9 +83,7 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
 }
 
 extension LocationManagingViewModel: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-
-    }
+    func locationManager(_: CLLocationManager, didFailWithError _: Error) {}
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         connectivity.refreshNetwork()

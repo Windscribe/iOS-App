@@ -1,14 +1,14 @@
 //
-//  FavNodesTableViewDataSource+Delegate.swift
+//  FavNodesListTableViewDataSource+Delegate.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-31.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 protocol FavNodesListTableViewDelegate: AnyObject {
     func setSelectedFavNode(favNode: FavNodeModel)
@@ -19,9 +19,9 @@ protocol FavNodesListTableViewDelegate: AnyObject {
 }
 
 class FavNodesListTableViewDataSource: WTableViewDataSource,
-                                       UITableViewDataSource,
-                                       WTableViewDataSourceDelegate {
-
+    UITableViewDataSource,
+    WTableViewDataSourceDelegate
+{
     var favNodes: [FavNodeModel]?
     weak var delegate: FavNodesListTableViewDelegate?
     var scrollHappened = false
@@ -41,8 +41,9 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
     }
 
     func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        guard let count = favNodes?.count else { return 0; }
+                   numberOfRowsInSection _: Int) -> Int
+    {
+        guard let count = favNodes?.count else { return 0 }
         if count == 0 {
             delegate?.hideFavNodeRefreshControl()
             showEmptyView(tableView: tableView)
@@ -54,7 +55,8 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
     }
 
     func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         let cell = tableView.dequeueReusableCell(withIdentifier: favNodeCellReuseIdentifier, for: indexPath) as? FavNodeTableViewCell ?? FavNodeTableViewCell(style: .default, reuseIdentifier: favNodeCellReuseIdentifier)
         let node = favNodes?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
@@ -62,28 +64,30 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
         return cell
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView,
+                   heightForRowAt _: IndexPath) -> CGFloat
+    {
         return 50
     }
 
-    func tableView(_ tableView: UITableView,
-                   didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView,
+                   didSelectRowAt indexPath: IndexPath)
+    {
         guard let favNode = favNodes?[indexPath.row] else { return }
         delegate?.setSelectedFavNode(favNode: favNode)
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         return 0
     }
 
     func showEmptyView(tableView: UITableView) {
         let emptyView = UIView(frame: tableView.bounds)
-        let imageView = UIImageView(frame: CGRect(x: emptyView.frame.midX-16, y: emptyView.frame.midY-60, width: 32, height: 28))
+        let imageView = UIImageView(frame: CGRect(x: emptyView.frame.midX - 16, y: emptyView.frame.midY - 60, width: 32, height: 28))
         imageView.image = UIImage(named: ImagesAsset.brokenHeart)
         imageView.layer.opacity = 0.4
         emptyView.addSubview(imageView)
-        label.frame = CGRect(x: 0, y: imageView.frame.maxY+10, width: emptyView.frame.width, height: 32)
+        label.frame = CGRect(x: 0, y: imageView.frame.maxY + 10, width: emptyView.frame.width, height: 32)
         label.textAlignment = .center
         label.font = UIFont.text(size: 19)
         label.text = TextsAsset.nothingToSeeHere
@@ -96,21 +100,20 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
     }
 
     func handleRefresh() {
-        self.delegate?.handleRefresh()
+        delegate?.handleRefresh()
     }
 
     func tableViewScrolled(toTop: Bool) {
-        self.delegate?.tableViewScrolled(toTop: toTop)
+        delegate?.tableViewScrolled(toTop: toTop)
     }
 
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    override func scrollViewWillBeginDragging(_: UIScrollView) {
         scrollHappened = true
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 && scrollHappened {
             HapticFeedbackGenerator.shared.run(level: .light)
         }
     }
-
 }

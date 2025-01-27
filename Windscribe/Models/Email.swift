@@ -13,7 +13,8 @@ import RealmSwift
     dynamic var email: String = ""
 
     enum CodingKeys: String,
-                     CodingKey {
+        CodingKey
+    {
         case data
         case email
     }

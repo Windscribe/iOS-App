@@ -9,7 +9,6 @@
 import UIKit
 
 class LoadingButton: UIButton {
-
     @IBInspectable var indicatorColor: UIColor = .white
 
     var originalButtonText: String?
@@ -28,10 +27,10 @@ class LoadingButton: UIButton {
     }
 
     func hideLoading() {
-        DispatchQueue.main.async(execute: { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.setTitle(self?.originalButtonText, for: .normal)
             self?.activityIndicator.stopAnimating()
-        })
+        }
     }
 
     private func createActivityIndicator() -> UIActivityIndicatorView {

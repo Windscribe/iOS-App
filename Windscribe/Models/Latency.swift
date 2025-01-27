@@ -20,6 +20,5 @@ enum LatencyType {
 
 struct LoadLatencyInfo {
     let force: Bool
-    let selectBestLocation: Bool
     let connectToBestLocation: Bool
 }

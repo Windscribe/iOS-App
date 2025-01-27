@@ -7,18 +7,20 @@
 //
 
 import Foundation
-import Swinject
 import RealmSwift
+import Swinject
+
 extension Container {
     func injectLocalDatabase() -> LocalDatabase {
         register(LocalDatabase.self) { _ in
-            return LocalDatabaseImpl(logger: FileLoggerImpl(), preferences: SharedSecretDefaults())
+            LocalDatabaseImpl(logger: FileLoggerImpl(), preferences: SharedSecretDefaults())
         }
         return resolve(LocalDatabase.self)!
     }
+
     func injectPreferences() -> Preferences {
         register(Preferences.self) { _ in
-            return SharedSecretDefaults()
+            SharedSecretDefaults()
         }
         return resolve(Preferences.self)!
     }

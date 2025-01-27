@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol Preferences {
     func saveAdvanceParams(params: String)
     func getAdvanceParams() -> Observable<String?>
@@ -30,6 +31,7 @@ protocol Preferences {
     func getKillSwitch() -> Observable<Bool?>
     func getKillSwitchSync() -> Bool
     func saveAllowLane(mode: Bool)
+    func getAllowLaneSync() -> Bool
     func getAllowLane() -> Observable<Bool?>
     func saveHapticFeedback(haptic: Bool)
     func getHapticFeedback() -> Observable<Bool?>
@@ -44,6 +46,7 @@ protocol Preferences {
 
     // PersistenceManager+UserDefaults
     func getConnectionCount() -> Int?
+    func increaseConnectionCount()
     func saveConnectionCount(count: Int)
     func getLastConnectedNetworkName() -> String?
     func saveLastConnectedNetworkName(network: String)
@@ -98,8 +101,6 @@ protocol Preferences {
     func getcountryCodeKey() -> String?
     func saveNickNameKey(key: String?)
     func getNickNameKey() -> String?
-    func isCustomConfigSelected() -> Bool
-    func saveConnectingToCustomConfig(value: Bool)
     func getCircumventCensorshipEnabled() -> RxSwift.Observable<Bool>
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
@@ -147,4 +148,14 @@ protocol Preferences {
     // Widget Info
     func saveConnectionRequested(value: Bool)
     func getConnectionRequested() -> Bool
+
+    // Locations
+    func clearSelectedLocations()
+    func saveLastSelectedLocation(with locationID: String)
+    func getLastSelectedLocation() -> String
+    func saveBestLocation(with locationID: String)
+    func getBestLocation() -> String
+    func isCustomConfigSelected() -> Bool
+    func getLocationType() -> LocationType?
+    func getLocationType(id: String) -> LocationType?
 }

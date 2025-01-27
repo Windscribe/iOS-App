@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 // MARK: - UITableView register and dequeue
+
 extension UITableViewCell {
     class func registerClass(in tableView: UITableView?) {
         tableView?.register(self, forCellReuseIdentifier: className)

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 /// Simple thread safe generic dictionary
 /// K type of Key
 /// V type of Value
@@ -17,12 +18,12 @@ class ConcurrentDictionary<K: Hashable, V> {
     private let accessQueue = DispatchQueue(label: "Concurrent access queue", attributes: .concurrent)
     subscript(key: K) -> V? {
         get {
-            self.accessQueue.sync {
-                return dictionary[key]
+            accessQueue.sync {
+                dictionary[key]
             }
         }
         set(newValue) {
-            self.accessQueue.async(flags: .barrier) { [weak self] in
+            accessQueue.async(flags: .barrier) { [weak self] in
                 self?.dictionary[key] = newValue
             }
         }

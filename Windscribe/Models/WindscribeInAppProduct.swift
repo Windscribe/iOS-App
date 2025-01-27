@@ -8,8 +8,9 @@
 
 import Foundation
 import StoreKit
+
 struct WindscribeInAppProduct {
-    var price  = ""
+    var price = ""
     var extId = ""
     var planLabel = ""
     var tvPlanLabel = ""
@@ -20,7 +21,7 @@ struct WindscribeInAppProduct {
         price = formatterCurrency(number: product.price, locale: product.priceLocale) ?? ""
         extId = product.productIdentifier
 
-        if let plan = plans.first(where: {$0.extId == product.productIdentifier}) {
+        if let plan = plans.first(where: { $0.extId == product.productIdentifier }) {
             if plan.duration == 12 {
                 planLabel = "\(price)/\(TextsAsset.UpgradeView.year)"
                 tvPlanLabel = TextsAsset.UpgradeView.oneYear
@@ -31,11 +32,12 @@ struct WindscribeInAppProduct {
                 planLabel = "\(price)/\(plan.duration) \(TextsAsset.UpgradeView.months)"
                 tvPlanLabel = planLabel
             }
-           }
         }
+    }
 
     private func formatterCurrency(number: NSNumber,
-                                   locale: Locale) -> String? {
+                                   locale: Locale) -> String?
+    {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale

@@ -1,5 +1,5 @@
 //
-//  WireGuardVPNConfigs.swift
+//  WgCredentials.swift
 //  Windscribe
 //
 //  Created by Thomas on 09/03/2022.
@@ -7,12 +7,11 @@
 //
 
 import Foundation
-import WireGuardKit
-import Swinject
 import SimpleKeychain
+import Swinject
+import WireGuardKit
 
 class WgCredentials {
-
     var presharedKey: String?
     var allowedIps: String?
     var address: String?
@@ -22,6 +21,7 @@ class WgCredentials {
     var serverHostName: String?
     var serverPublicKey: String?
     var port: String?
+    var deleteOldestKey = true
     private let logger: FileLogger
     private let preferences: Preferences
     private let simpleKeychain = SimpleKeychain(service: "WireguardService", accessGroup: SharedKeys.sharedKeychainGroup)
@@ -30,7 +30,7 @@ class WgCredentials {
         self.logger = logger
     }
 
-    func load(){
+    func load() {
         // Load state from saved
         address = SharedSecretDefaults.shared.getString(forKey: SharedKeys.address)
         presharedKey = SharedSecretDefaults.shared.getString(forKey: SharedKeys.preSharedKey)
@@ -44,14 +44,14 @@ class WgCredentials {
     }
 
     func getPublicKey() -> String? {
-        let publicKey = PrivateKey.init(base64Key: getPrivateKey()!)?.publicKey.base64Key
+        let publicKey = PrivateKey(base64Key: getPrivateKey()!)?.publicKey.base64Key
         return publicKey
     }
 
-    //Generate private key if not available and save it to keychain.
+    // Generate private key if not available and save it to keychain.
     func getPrivateKey() -> String? {
         guard let currentKey = try? simpleKeychain.string(forKey: SharedKeys.privateKey) else {
-            let privateKey = PrivateKey.init().base64Key
+            let privateKey = PrivateKey().base64Key
             try? simpleKeychain.set(privateKey, forKey: SharedKeys.privateKey)
             return privateKey
         }
@@ -63,10 +63,10 @@ class WgCredentials {
         return getWgInitResponse() != nil
     }
 
-    func getWgInitResponse()-> DynamicWireGuardConfig?{
+    func getWgInitResponse() -> DynamicWireGuardConfig? {
         presharedKey = SharedSecretDefaults.shared.getString(forKey: SharedKeys.preSharedKey)
         allowedIps = SharedSecretDefaults.shared.getString(forKey: SharedKeys.allowedIp)
-        if presharedKey != nil && allowedIps != nil {
+        if presharedKey != nil, allowedIps != nil {
             let config = DynamicWireGuardConfig()
             config.presharedKey = presharedKey
             config.allowedIPs = allowedIps
@@ -75,44 +75,43 @@ class WgCredentials {
         return nil
     }
 
-    func saveInitResponse(config: DynamicWireGuardConfig){
-        self.presharedKey = config.presharedKey
-        self.allowedIps = config.allowedIPs
+    func saveInitResponse(config: DynamicWireGuardConfig) {
+        presharedKey = config.presharedKey
+        allowedIps = config.allowedIPs
         SharedSecretDefaults.shared.setString(config.presharedKey, forKey: SharedKeys.preSharedKey)
         SharedSecretDefaults.shared.setString(config.allowedIPs, forKey: SharedKeys.allowedIp)
     }
 
-
     // wg Connect
-    func saveConnectResponse(config: DynamicWireGuardConnect){
-        self.dns = config.dns
-        self.address = config.address
+    func saveConnectResponse(config: DynamicWireGuardConnect) {
+        dns = config.dns
+        address = config.address
         SharedSecretDefaults.shared.setString(config.address, forKey: SharedKeys.address)
         SharedSecretDefaults.shared.setString(config.dns, forKey: SharedKeys.dns)
     }
 
-    func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String){
+    func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String) {
         self.serverEndPoint = serverEndPoint
         self.serverHostName = serverHostName
         self.serverPublicKey = serverPublicKey
         self.port = port
-        SharedSecretDefaults.shared.setString(serverEndPoint, forKey:SharedKeys.serverEndPoint)
+        SharedSecretDefaults.shared.setString(serverEndPoint, forKey: SharedKeys.serverEndPoint)
         SharedSecretDefaults.shared.setString(serverHostName, forKey: SharedKeys.serverHostName)
         SharedSecretDefaults.shared.setString(serverPublicKey, forKey: SharedKeys.serverPublicKey)
         SharedSecretDefaults.shared.setString(port, forKey: SharedKeys.wgPort)
     }
 
-    //Delete credentials and key if user status changes
-    func delete(){
+    // Delete credentials and key if user status changes
+    func delete() {
         try? simpleKeychain.deleteItem(forKey: SharedKeys.privateKey)
-        self.dns = nil
-        self.address = nil
-        self.presharedKey = nil
-        self.allowedIps = nil
-        SharedSecretDefaults.shared.removeObjects(forKey: [ SharedKeys.preSharedKey, SharedKeys.allowedIp, SharedKeys.dns,SharedKeys.address])
+        dns = nil
+        address = nil
+        presharedKey = nil
+        allowedIps = nil
+        SharedSecretDefaults.shared.removeObjects(forKey: [SharedKeys.preSharedKey, SharedKeys.allowedIp, SharedKeys.dns, SharedKeys.address])
     }
 
-    func asWgCredentialsString() -> String?{
+    func asWgCredentialsString() -> String? {
         let udpStuffing = preferences.isCircumventCensorshipEnabled()
         if let privateKey = getPrivateKey(),
            let address = address,
@@ -121,7 +120,8 @@ class WgCredentials {
            let presharedKey = presharedKey,
            let serverPublicKey = serverPublicKey,
            let serverEndPoint = serverEndPoint,
-           let port = port {
+           let port = port
+        {
             let lines = ["[Interface]",
                          "PrivateKey = \(privateKey)",
                          "Address = \(address)",
@@ -138,7 +138,8 @@ class WgCredentials {
             return nil
         }
     }
+
     var debugDescription: String {
-        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: \(getPublicKey()  ?? "") Allowed Ip: \(allowedIps ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
+        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: \(getPublicKey() ?? "") Allowed Ip: \(allowedIps ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
     }
 }

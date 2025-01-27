@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 protocol HelpViewDelegate: AnyObject {
     func helpViewDidSelect(_ sender: HelpView)
@@ -107,14 +107,15 @@ class HelpView: UIStackView {
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func setup() {
         axis = .vertical
         addArrangedSubviews([
-            contentStack
+            contentStack,
         ])
 
         if !item.subTitle.isEmpty {
@@ -128,8 +129,8 @@ class HelpView: UIStackView {
     private func reloadContenStack() {
         contentStack.removeAllArrangedSubviews()
         contentStack.addArrangedSubview(headerView)
-        listSubView.forEach {
-            contentStack.addArrangedSubview($0)
+        for item in listSubView {
+            contentStack.addArrangedSubview(item)
         }
     }
 
@@ -138,7 +139,7 @@ class HelpView: UIStackView {
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
             self.footerLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
@@ -148,12 +149,14 @@ class HelpView: UIStackView {
 }
 
 // MARK: - HelpHeaderType
+
 enum HelpHeaderType {
     case navigation
     case action
 }
 
 // MARK: - HelpHeaderView
+
 class HelpHeaderView: WSTouchStackView {
     private(set) var item: HelpItem
     private(set) var type: HelpHeaderType
@@ -161,10 +164,10 @@ class HelpHeaderView: WSTouchStackView {
     private lazy var iconImage: UIImageView = {
         let imageView = UIImageView()
         if item.icon.count > 0 {
-           imageView.image = UIImage(named: item.icon)?.withRenderingMode(.alwaysTemplate)
-           imageView.contentMode = .scaleAspectFit
-           imageView.anchor(width: 16, height: 16)
-           return imageView
+            imageView.image = UIImage(named: item.icon)?.withRenderingMode(.alwaysTemplate)
+            imageView.contentMode = .scaleAspectFit
+            imageView.anchor(width: 16, height: 16)
+            return imageView
         } else {
             imageView.anchor(width: 0, height: 16)
             return imageView
@@ -195,12 +198,14 @@ class HelpHeaderView: WSTouchStackView {
         indicator.color = .white
         return indicator
     }()
+
     private lazy var statusLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.text(size: 16)
         lbl.isHidden = true
         return lbl
     }()
+
     private let disposeBag = DisposeBag()
 
     init(item: HelpItem, type: HelpHeaderType, isDarkMode: BehaviorSubject<Bool>) {
@@ -211,7 +216,8 @@ class HelpHeaderView: WSTouchStackView {
         bindViews(isDarkMode: isDarkMode)
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -219,6 +225,7 @@ class HelpHeaderView: WSTouchStackView {
         titleLabel.layer.opacity = 0.5
         arrowImage.layer.opacity = 0.5
     }
+
     override func configHighlight() {
         titleLabel.layer.opacity = 1
         arrowImage.layer.opacity = 1
@@ -228,7 +235,7 @@ class HelpHeaderView: WSTouchStackView {
         axis = .horizontal
         spacing = 16
         addArrangedSubviews([
-            iconImage, titleLabel, UIView(), statusLabel, loadingIndicator
+            iconImage, titleLabel, UIView(), statusLabel, loadingIndicator,
         ])
         if type == .navigation {
             addArrangedSubview(arrowImage)
@@ -236,12 +243,12 @@ class HelpHeaderView: WSTouchStackView {
     }
 
     func updateTitle(_ title: String, font: UIFont) {
-        self.titleLabel.font = font
-        self.titleLabel.setTextWithOffSet(text: title)
+        titleLabel.font = font
+        titleLabel.setTextWithOffSet(text: title)
     }
 
     func updateStatus(_ text: String) {
-        self.statusLabel.text = text
+        statusLabel.text = text
     }
 
     func showLoading() {
@@ -260,7 +267,7 @@ class HelpHeaderView: WSTouchStackView {
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.iconImage.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
@@ -273,7 +280,9 @@ class HelpHeaderView: WSTouchStackView {
 protocol HelpSubRowViewDelegate: AnyObject {
     func helpSubRowViewDidTap(_ sender: HelpSubRowView)
 }
+
 // MARK: - HelpSubRowView
+
 class HelpSubRowView: WSTouchStackView {
     private(set) var header: String
     weak var delegate: HelpSubRowViewDelegate?
@@ -286,7 +295,9 @@ class HelpSubRowView: WSTouchStackView {
         setup()
         bindViews(isDarkMode: isDarkMode)
     }
-    required init(coder: NSCoder) {
+
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -310,7 +321,7 @@ class HelpSubRowView: WSTouchStackView {
         axis = .horizontal
         spacing = 16
         addArrangedSubviews([
-            titleLabel, UIView(), arrowImage
+            titleLabel, UIView(), arrowImage,
         ])
         setPadding(UIEdgeInsets(horizontalInset: 16, verticalInset: 16))
         isUserInteractionEnabled = true
@@ -322,6 +333,7 @@ class HelpSubRowView: WSTouchStackView {
         titleLabel.layer.opacity = 0.5
         arrowImage.layer.opacity = 0.5
     }
+
     override func configHighlight() {
         titleLabel.layer.opacity = 1
         arrowImage.layer.opacity = 1
@@ -332,7 +344,7 @@ class HelpSubRowView: WSTouchStackView {
     }
 
     private func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.arrowImage.image = ThemeUtils.prefRightIcon(isDarkMode: $0)

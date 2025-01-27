@@ -6,17 +6,16 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import Foundation
-import UIKit
 import CoreLocation
+import Foundation
 import RxSwift
 import Swinject
+import UIKit
 
 extension MainViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Main view loaded. Preparing layout.")
-        loadLastConnected()
         addViews()
         renderBlurSpacedLabel()
         addGetMoreDataViews()
@@ -27,7 +26,7 @@ extension MainViewController {
         addCardHeaderView()
         displayLeftDataInformation()
         showSplashView()
-        showPrivacyConfirmationPopup()
+        checkPrivacyConfirmation()
         // UserPreferencesManager.shared.listenForUserPreferencesChange()
         WifiManager.shared.saveCurrentWifiNetworks()
         loadPortMap()
@@ -36,23 +35,19 @@ extension MainViewController {
         loadStaticIPs()
         loadCustomConfigs()
         loadLastConnection()
-        loadNotifications()
         sessionManager.setSessionTimer()
         sessionManager.listenForSessionChanges()
         setupIntentsForSiri()
         configureNotificationListeners()
-        // self.configureBestLocation(selectBestLocation: true, connectToBestLocation: false)
-        self.loadLatencyWhenReady()
-        checkForNewNotifications()
+        loadLatencyWhenReady()
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        updateServerConfigs()
         bindViewModels()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         locationManagerViewModel.shouldPresentLocationPopUp.subscribe {
             self.router?.routeTo(to: RouteID.locationPermission(delegate: self.locationManagerViewModel, denied: $0),
-                                from: self)
+                                 from: self)
         }.disposed(by: disposeBag)
     }
 
@@ -61,13 +56,13 @@ extension MainViewController {
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .dark
         }
-        connectionStateViewModel.becameActive()
-        setNetworkSsid()
+        viewModel.updateSSID()
         checkForInternetConnection()
         hideAutoSecureViews()
         navigationController?.isNavigationBarHidden = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         restartServerRefreshControl()
+        updateConnectedState()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -75,31 +70,14 @@ extension MainViewController {
         searchLocationsView.viewModel.dismiss()
     }
 
-    func handleShortcutLaunch() {
-        let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
-        (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
-        if shortcut == .networkSecurity {
-            locationManagerViewModel.requestLocationPermission {
-                self.openNetworkSecurity()
-            }
-        } else if shortcut == .notifications {
-            showNotificationsViewController()
-        }
-    }
-
     private func bindViewModels() {
         bindMainViewModel()
- 		bindCustomConfigPickerModel()
-        bindConnectionStateViewModel()
+        bindCustomConfigPickerModel()
+        bindVPNConnectionsViewModel()
         bindFavNodesListViewModel()
         bindStaticIPListViewModel()
         bindServerListViewModel()
         bindProtocolSwitchViewModel()
-    }
-
-    private func openNetworkSecurity() {
-        let vc = Assembler.resolve(NetworkViewController.self)
-        vc.modalTransitionStyle = .coverVertical
-        navigationController?.pushViewController(vc, animated: true)
+        bindActions()
     }
 }

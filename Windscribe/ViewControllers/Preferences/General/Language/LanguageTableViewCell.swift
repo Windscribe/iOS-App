@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class LanguageTableViewCell: UITableViewCell {
     var disposeBag = DisposeBag()
@@ -39,7 +39,7 @@ class LanguageTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.disposeBag = DisposeBag() // Force rx disposal on reuse
+        disposeBag = DisposeBag() // Force rx disposal on reuse
     }
 
     private func addSubviews() {
@@ -56,7 +56,7 @@ class LanguageTableViewCell: UITableViewCell {
     }
 
     func bindView(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.updateTheme(isDark: $0)
         }).disposed(by: disposeBag)
@@ -67,7 +67,8 @@ class LanguageTableViewCell: UITableViewCell {
         nameLbl.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDark)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

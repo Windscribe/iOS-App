@@ -7,6 +7,7 @@
 //
 
 import Foundation
-struct KeyChainkeys {
+
+enum KeyChainkeys {
     static let ghostAccountCreated = "ghost-account-created"
 }

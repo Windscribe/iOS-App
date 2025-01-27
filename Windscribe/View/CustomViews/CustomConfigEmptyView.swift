@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class CustomConfigEmptyView: UIView {
     var isDarkMode: BehaviorSubject<Bool>
@@ -57,7 +57,7 @@ class CustomConfigEmptyView: UIView {
 
     var addCustomConfigAction: (() -> Void)?
 
-    @objc private func addCustomConfigTouchUpInside(_ sender: UIButton) {
+    @objc private func addCustomConfigTouchUpInside(_: UIButton) {
         addCustomConfigAction?()
     }
 
@@ -67,9 +67,9 @@ class CustomConfigEmptyView: UIView {
         backgroundColor = UIColor.clear
 
         addSubview(containerView)
-        [imageView, label, addCustomButton].forEach({
-            containerView.addSubview($0)
-        })
+        for item in [imageView, label, addCustomButton] {
+            containerView.addSubview(item)
+        }
 
         containerView.makeCenter(xConstant: 20)
         containerView.makeLeadingAnchor(constant: 50)
@@ -88,17 +88,19 @@ class CustomConfigEmptyView: UIView {
         bindViews()
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     private func bindViews() {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: {
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: {
             self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }).disposed(by: self.disposeBag)
+        }).disposed(by: disposeBag)
         languageManager.activelanguage.subscribe(onNext: { [self] _ in
             self.label.text = TextsAsset.addCustomConfigDescription
             addCustomButton.setTitle(TextsAsset.addCustomConfig, for: .normal)
-        }, onError: { _ in }).disposed(by: disposeBag)    }
+        }, onError: { _ in }).disposed(by: disposeBag)
+    }
 }

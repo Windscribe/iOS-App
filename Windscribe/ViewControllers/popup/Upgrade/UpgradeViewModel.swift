@@ -79,16 +79,16 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         self.apiManager = apiManager
         self.sessionManager = sessionManager
         self.preferences = preferences
-        self.inAppPurchaseManager = inAppManager
+        inAppPurchaseManager = inAppManager
         self.pushNotificationManager = pushNotificationManager
         self.billingRepository = billingRepository
         self.logger = logger
         isDarkMode = themeManager.darkTheme
-        self.inAppPurchaseManager.delegate = self
+        inAppPurchaseManager.delegate = self
         checkAccountStatus()
     }
 
-    private func saveAppleData( appleID: String?, appleData: String?, appleSig: String?) {
+    private func saveAppleData(appleID: String?, appleData: String?, appleSig: String?) {
         DispatchQueue.main.async {
             self.preferences.saveActiveAppleID(id: appleID)
             self.preferences.saveActiveAppleData(data: appleData)
@@ -116,14 +116,14 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onSuccess: { [weak self] mobilePlans in
                 guard let self = self else { return }
-                mobilePlans.forEach { p in
+                for p in mobilePlans {
                     let discount = p.discount >= 0 ? "\(p.discount)%" : "N/A"
                     self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
                 }
                 self.mobilePlans = mobilePlans
                 self.showProgress.onNext(false)
                 if mobilePlans.count > 0 {
-                    self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map({$0.extId}))
+                    self.inAppPurchaseManager.fetchAvailableProducts(productIDs: mobilePlans.map { $0.extId })
                 }
             }, onFailure: { [weak self] _ in
                 self?.showProgress.onNext(false)
@@ -132,7 +132,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     func continuePayButtonTapped() {
         logger.logD(self, "User tapped to upgrade.")
-        self.upgradeState.onNext(.loading)
+        upgradeState.onNext(.loading)
         if let selectedPlan = selectedPlan {
             inAppPurchaseManager.purchase(windscribeInAppProduct: selectedPlan)
         }
@@ -151,7 +151,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     func restoreButtonTapped() {
         logger.logD(self, "User tapped to restore purchases.")
-        self.upgradeState.onNext(.loading)
+        upgradeState.onNext(.loading)
         inAppPurchaseManager.restorePurchase()
     }
 
@@ -160,7 +160,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         selectedPlan = plan
     }
 
-    func readyToMakePurchase(price1: String, price2: String) { }
+    func readyToMakePurchase(price1 _: String, price2 _: String) {}
 
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct]) {
         DispatchQueue.main.async { [self] in
@@ -175,7 +175,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         }
     }
 
-    func purchasedSuccessfully(transaction: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
+    func purchasedSuccessfully(transaction _: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
         logger.logD(self, "Purchase successful.")
         apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
             self.logger.logD(self, "Purchase verified successfully")
@@ -186,7 +186,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             self.saveAppleData(appleID: appleID, appleData: appleData, appleSig: appleSIG)
             if let error = error as? Errors {
                 switch error {
-                case .apiError(let error):
+                case let .apiError(error):
                     self.upgradeState.onNext(.error(error.errorMessage ?? ""))
                 default:
                     self.upgradeState.onNext(.error(error.description))
@@ -201,7 +201,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             self.logger.logI(self, "Received updated session.")
             self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             self.upgradeState.onNext(.success(session.isUserGhost))
-        },onFailure: { _ in
+        }, onFailure: { _ in
             self.logger.logE(self, "Failure to update session.")
             self.upgradeState.onNext(.success(false))
         }).disposed(by: disposeBag)
@@ -209,7 +209,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     private func postpcpID() {
         if let payID = pcpID {
-            self.logger.logD(self, "Posting pcpID")
+            logger.logD(self, "Posting pcpID")
             apiManager.postBillingCpID(pcpID: payID).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
                 self.upgrade()
             }, onFailure: { _ in
@@ -217,7 +217,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
                 self.upgrade()
             }).disposed(by: disposeBag)
         } else {
-            self.logger.logE(self, "No pcpID now upgrading.")
+            logger.logE(self, "No pcpID now upgrading.")
             upgrade()
         }
     }
@@ -229,13 +229,13 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func failedToPurchase() {
-        self.logger.logE(self, "Failed to complete transaction.")
-        self.upgradeState.onNext(.error("Failed to complete transaction."))
+        logger.logE(self, "Failed to complete transaction.")
+        upgradeState.onNext(.error("Failed to complete transaction."))
     }
 
     func unableToMakePurchase() {
-        self.logger.logE(self, "Failed to complete transaction.")
-        self.upgradeState.onNext(.error("Failed to complete transaction."))
+        logger.logE(self, "Failed to complete transaction.")
+        upgradeState.onNext(.error("Failed to complete transaction."))
     }
 
     func setVerifiedTransaction(transaction: UncompletedTransactions?, error: String?) {
@@ -251,21 +251,21 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func failedToLoadProducts() {
-        self.logger.logE(self, "Failed to load products. Check your network and try again.")
-        self.showProgress.onNext(false)
-        self.upgradeState.onNext(.error("Failed to load products. Check your network and try again."))
+        logger.logE(self, "Failed to load products. Check your network and try again.")
+        showProgress.onNext(false)
+        upgradeState.onNext(.error("Failed to load products. Check your network and try again."))
     }
 
     func unableToRestorePurchase(error: any Error) {
-        self.logger.logE(self, "Unable to restore purchase. \(error)")
-        if let err = error as? URLError, err.code  == URLError.Code.notConnectedToInternet {
-            self.upgradeState.onNext(.error(Errors.noNetwork.description))
+        logger.logE(self, "Unable to restore purchase. \(error)")
+        if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
+            upgradeState.onNext(.error(Errors.noNetwork.description))
         } else if error as? URLError != nil {
-            self.upgradeState.onNext(.error(Errors.unknownError.description))
+            upgradeState.onNext(.error(Errors.unknownError.description))
         } else {
-            self.upgradeState.onNext(.error(TextsAsset.PurchaseRestoredAlert.error))
+            upgradeState.onNext(.error(TextsAsset.PurchaseRestoredAlert.error))
         }
     }
 
-    func dismissWith(action: ConfirmEmailAction) {}
+    func dismissWith(action _: ConfirmEmailAction) {}
 }

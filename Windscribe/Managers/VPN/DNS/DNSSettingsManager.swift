@@ -13,7 +13,7 @@ protocol OpensURlType {
     func canOpenURL(_ url: URL) -> Bool
 }
 
-struct DNSSettingsManager {
+enum DNSSettingsManager {
     static func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings? {
         guard #available(iOS 14.0, *), !dnsValue.value.isEmpty else { return nil }
         switch dnsValue.type {
@@ -34,9 +34,10 @@ struct DNSSettingsManager {
         }
     }
 
-    static func getDNSValue(from value: String, opensURL: OpensURlType,
+    static func getDNSValue(from value: String, opensURL _: OpensURlType,
                             completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,
-                            completion: @escaping (_ isValid: Bool) -> Void) {
+                            completion: @escaping (_ isValid: Bool) -> Void)
+    {
         let customValue = value.lowercased()
         if IPv4Address(customValue) != nil || IPv6Address(customValue) != nil {
             completion(true)
@@ -45,14 +46,15 @@ struct DNSSettingsManager {
             }
             return
         } else if let urlHttpsRegex = try? NSRegularExpression(pattern: RegexConstants.urlHttpsRegex),
-                  let urlTlsRegex = try? NSRegularExpression(pattern: RegexConstants.urlTlsRegex) {
+                  let urlTlsRegex = try? NSRegularExpression(pattern: RegexConstants.urlTlsRegex)
+        {
             let range = NSRange(location: 0, length: customValue.utf16.count)
             if urlHttpsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
-                    DNSSettingsManager.resolveHosts(fromURL: customValue) {
-                        completionDNS(DNSValue(type: .overHttps, value: value,
-                                               servers: $0))
-                    }
+                DNSSettingsManager.resolveHosts(fromURL: customValue) {
+                    completionDNS(DNSValue(type: .overHttps, value: value,
+                                           servers: $0))
+                }
                 return
             } else if urlTlsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
@@ -123,7 +125,6 @@ struct DNSSettingsManager {
             flag = false
             print("$$$ DNS resolution timed out")
             completion([])
-
         }
     }
 }
@@ -141,11 +142,11 @@ enum ConnectedDNSType {
     init(value: String) {
         self = switch value {
         case "Auto":
-                .auto
+            .auto
         case "Custom":
-                .custom
+            .custom
         default:
-                .auto
+            .auto
         }
     }
 }

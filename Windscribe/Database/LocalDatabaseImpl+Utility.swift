@@ -7,10 +7,10 @@
 //
 
 import Foundation
+import Realm
 import RealmSwift
 import RxRealm
 import RxSwift
-import Realm
 
 extension LocalDatabaseImpl {
     func getRealmObject<T: Object>(type: T.Type) -> T? {
@@ -66,8 +66,8 @@ extension LocalDatabaseImpl {
     func updateRealmObjects<T: Object>(objects: [T]) {
         DispatchQueue.main.async {
             let realm = try? Realm()
-            try?realm?.safeWrite {
-                objects.forEach { obj in
+            try? realm?.safeWrite {
+                for obj in objects {
                     realm?.add(obj, update: .modified)
                 }
             }
@@ -75,19 +75,19 @@ extension LocalDatabaseImpl {
     }
 
     func getSafeRealmObservable<T: Object>(type: T.Type) -> Observable<[T]> {
-        return Observable.merge(cleanTrigger.asObservable().map { _ in return [T]() },
+        return Observable.merge(cleanTrigger.asObservable().map { _ in [T]() },
                                 getRealmArrayObservable(type: T.self))
     }
 
     func getSafeRealmObservable<T: Object>(type: T.Type) -> Observable<T?> {
-        return Observable.merge(cleanTrigger.asObservable().map { _ in return nil },
+        return Observable.merge(cleanTrigger.asObservable().map { _ in nil },
                                 getRealmObservable(type: T.self).map { Optional($0) })
     }
 
     private func getRealmObservable<T: Object>(type: T.Type) -> Observable<T> {
         if let object = getRealmObject(type: type) {
             return Observable.from(object: object).catch { _ in
-                return Observable.empty()
+                Observable.empty()
             }
         } else {
             return Observable.empty()
@@ -110,10 +110,10 @@ extension LocalDatabaseImpl {
                 return !changeset.deleted.isEmpty || !changeset.inserted.isEmpty || !changeset.updated.isEmpty
             }
             .map { results, _ in
-                return Array(results)
+                Array(results)
             }
             .catch { _ in
-                return Observable.just((try? Realm().objects(T.self).toArray()) ?? [])
+                Observable.just((try? Realm().objects(T.self).toArray()) ?? [])
             }
             .subscribe(on: MainScheduler.instance)
             .observe(on: MainScheduler.instance)

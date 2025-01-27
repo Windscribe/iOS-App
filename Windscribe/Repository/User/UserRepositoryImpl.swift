@@ -10,11 +10,11 @@ import Foundation
 import RxRealm
 import RxSwift
 import Swinject
+
 class UserRepositoryImpl: UserRepository {
     private let preferences: Preferences
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
-    private let vpnmanager: VPNManager
     private let wgCredentials: WgCredentials
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
@@ -23,14 +23,13 @@ class UserRepositoryImpl: UserRepository {
         return preferences.userSessionAuth()
     }
 
-    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase, vpnmanager: VPNManager, wgCredentials: WgCredentials, logger: FileLogger) {
+    init(preferences: Preferences, apiManager: APIManager, localDatabase: LocalDatabase,  wgCredentials: WgCredentials, logger: FileLogger) {
         self.preferences = preferences
         self.apiManager = apiManager
         self.localDatabase = localDatabase
-        self.vpnmanager = vpnmanager
         self.wgCredentials = wgCredentials
         self.logger = logger
-        localDatabase.getSession().subscribe(onNext: { [self] session in
+        localDatabase.getSession().subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] session in
             if let session = session {
                 self.user.onNext(User(session: session))
             } else {
@@ -39,7 +38,6 @@ class UserRepositoryImpl: UserRepository {
         }, onError: { [self] _ in
             self.user.onNext(nil)
         }).disposed(by: disposeBag)
-
     }
 
     func getUpdatedUser() -> Single<User> {

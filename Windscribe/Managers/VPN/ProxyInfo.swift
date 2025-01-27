@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 /// Holds proxy informations.
 /// learn more at https://gitlab.int.windscribe.com/ws/client/wstunnel
 struct ProxyInfo {
@@ -16,6 +17,7 @@ struct ProxyInfo {
     var text: String {
         return "local-proxy \(Proxy.defaultProxyPort) \(remoteServer) \(remotePort) \(proxyType.rawValue)"
     }
+
     var remoteEndpoint: String {
         if proxyType == .wstunnel {
             return "wss://\(remoteServer):\(remotePort)\(Proxy.wstunnelPath)"
@@ -33,10 +35,10 @@ struct ProxyInfo {
     init?(text: String) {
         let data = text.split(separator: " ")
         if data.count > 4 {
-            self.remoteServer = String(data[2])
-            self.remotePort = String(data[3])
-            if let raw  = Int(data[4]), let type = ProxyType(rawValue: raw) {
-                self.proxyType = type
+            remoteServer = String(data[2])
+            remotePort = String(data[3])
+            if let raw = Int(data[4]), let type = ProxyType(rawValue: raw) {
+                proxyType = type
             }
         } else {
             return nil

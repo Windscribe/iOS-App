@@ -10,14 +10,14 @@ import UIKit
 public class DynamicSizeTableView: PlainTableView {
     var maxHeight = CGFloat.infinity
 
-    public override var contentSize: CGSize {
+    override public var contentSize: CGSize {
         didSet {
             invalidateIntrinsicContentSize()
             setNeedsLayout()
         }
     }
 
-    public override var intrinsicContentSize: CGSize {
+    override public var intrinsicContentSize: CGSize {
         let height = min(maxHeight, contentSize.height)
         return CGSize(width: contentSize.width,
                       height: height)

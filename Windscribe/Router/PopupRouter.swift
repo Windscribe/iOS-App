@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import Swinject
 import SwiftUI
+import Swinject
 
 class PopupRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
@@ -52,9 +52,9 @@ class PopupRouter: BaseRouter, RootRouter {
         case let .infoPrompt(title, actionValue, justDismissOnAction, delegate):
             let infoPromptVC = Assembler.resolve(InfoPromptViewController.self)
             infoPromptVC.viewModel.setInfo(title: title,
-                                 actionValue: actionValue,
-                                 justDismissOnAction: justDismissOnAction,
-                                 delegate: delegate)
+                                           actionValue: actionValue,
+                                           justDismissOnAction: justDismissOnAction,
+                                           delegate: delegate)
             vc = infoPromptVC
         case .maintenanceLocation:
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
@@ -66,19 +66,23 @@ class PopupRouter: BaseRouter, RootRouter {
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
+        case .networkSecurity:
+            vc = Assembler.resolve(NetworkViewController.self)
         default: return
         }
 
         if let vc = vc {
             // Presentation Style
             switch to {
+            case .networkSecurity:
+                vc.modalTransitionStyle = .coverVertical
             case .errorPopup:
                 vc.modalPresentationStyle = .fullScreen
             case .maintenanceLocation:
                 vc.modalPresentationStyle = .overFullScreen
             case .infoPrompt,
-                    .shakeForDataView,
-                    .shakeForDataResult:
+                 .shakeForDataView,
+                 .shakeForDataResult:
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = .coverVertical
             default:
@@ -100,7 +104,7 @@ class PopupRouter: BaseRouter, RootRouter {
                         .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
                 case .shakeForDataView,
-                        .shakeForDataResult:
+                     .shakeForDataResult:
                     from.navigationController?.pushViewController(vc, animated: true)
                     from.navigationController?.viewControllers = [vc]
                 default:

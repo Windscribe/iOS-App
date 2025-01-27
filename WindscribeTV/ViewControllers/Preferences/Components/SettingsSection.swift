@@ -13,12 +13,12 @@ protocol SettingsSectionDelegate: NSObject {
 }
 
 class SettingsSection: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var contentStackView: UIStackView!
-    @IBOutlet weak var tempView: UIView!
-    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var contentStackView: UIStackView!
+    @IBOutlet var tempView: UIView!
+    @IBOutlet var scrollView: UIScrollView!
 
-    @IBOutlet weak var contentViewTop: NSLayoutConstraint!
+    @IBOutlet var contentViewTop: NSLayoutConstraint!
 
     private var listOfOptions = [String]()
     private var listOfOptionViewss = [SettingOption]()
@@ -30,9 +30,9 @@ class SettingsSection: UIView {
         updateTitle(with: title)
         contentStackView.removeAllArrangedSubviews()
         listOfOptionViewss = [SettingOption]()
-        list.forEach {
+        for item in list {
             let optionView: SettingOption = SettingOption.fromNib()
-            optionView.setup(with: $0)
+            optionView.setup(with: item)
             optionView.delegate = self
             contentStackView.addArrangedSubview(optionView)
             listOfOptionViewss.append(optionView)
@@ -46,49 +46,48 @@ class SettingsSection: UIView {
         if let title = text {
             titleLabel.attributedText = NSAttributedString(string: title.uppercased(),
                                                            attributes: [
-                                                            .font: UIFont.bold(size: 32),
-                                                            .foregroundColor: UIColor.white.withAlphaComponent(0.2),
-                                                            .kern: 4
+                                                               .font: UIFont.bold(size: 32),
+                                                               .foregroundColor: UIColor.white.withAlphaComponent(0.2),
+                                                               .kern: 4,
                                                            ])
             contentViewTop.constant = 24
         } else {
             contentViewTop.constant = 0
             titleLabel.isHidden = true
         }
-        self.layoutIfNeeded()
+        layoutIfNeeded()
     }
 
     func updateText(with list: [String], title: String? = nil) {
         updateTitle(with: title)
         listOfOptions = list
-        list.enumerated().forEach { (index, text) in
+        for (index, text) in list.enumerated() {
             listOfOptionViewss[index].updateTitle(with: text)
         }
     }
 
     func select(option: String, animated: Bool = true) {
-        contentStackView.arrangedSubviews.forEach {
-            if let optionView = $0 as? SettingOption {
+        for arrangedSubview in contentStackView.arrangedSubviews {
+            if let optionView = arrangedSubview as? SettingOption {
                 optionView.updateSelection(with: false)
             }
         }
-        if let index = listOfOptions.map({$0.localize()}).firstIndex(of: option.localize()),
-        let optionView = contentStackView.arrangedSubviews[index] as? SettingOption {
+        if let index = listOfOptions.map({ $0.localize() }).firstIndex(of: option.localize()),
+           let optionView = contentStackView.arrangedSubviews[index] as? SettingOption
+        {
             optionView.updateSelection(with: true)
             scrollView.delegate = self
             scrollToView(view: optionView, index: index, animated: animated)
         }
     }
 
-    private func scrollToView(view: UIView, index: Int, animated: Bool) {
+    private func scrollToView(view: UIView, index _: Int, animated: Bool) {
         let originX = contentStackView.convert(view.frame.origin, to: scrollView).x
-        scrollView.scrollRectToVisible(CGRect(x: originX, y: 0 , width: view.frame.width, height: 1), animated: animated)
+        scrollView.scrollRectToVisible(CGRect(x: originX, y: 0, width: view.frame.width, height: 1), animated: animated)
     }
 }
 
-extension SettingsSection: UIScrollViewDelegate {
-
-}
+extension SettingsSection: UIScrollViewDelegate {}
 
 extension SettingsSection: SettingOptionDelegate {
     func optionWasSelected(with value: String) {

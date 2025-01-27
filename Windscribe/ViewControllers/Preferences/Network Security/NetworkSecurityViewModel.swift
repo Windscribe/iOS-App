@@ -7,13 +7,13 @@
 //
 
 import Foundation
-import UIKit
 import RealmSwift
 import RxSwift
+import UIKit
 
 protocol NetworkSecurityViewModelType {
-    var networks: BehaviorSubject<[WifiNetwork]> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var networks: BehaviorSubject<[WifiNetwork]> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     var isOnline: BehaviorSubject<Bool> { get }
     var currentNetwork: BehaviorSubject<AppNetwork?> { get }
     func getAutoSecureNetworkStatus() -> Bool
@@ -32,7 +32,7 @@ class NetworkSecurityViewModel: NetworkSecurityViewModelType {
     let isOnline: BehaviorSubject<Bool> = BehaviorSubject(value: false)
     private var isObserving = false
 
-    init(localDatabase: LocalDatabase, preferences: Preferences,themeManager: ThemeManager, connectivity: Connectivity) {
+    init(localDatabase: LocalDatabase, preferences: Preferences, themeManager: ThemeManager, connectivity: Connectivity) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.themeManager = themeManager
@@ -57,11 +57,12 @@ class NetworkSecurityViewModel: NetworkSecurityViewModelType {
         localDatabase.getNetworks().subscribe(
             onNext: { savedNetworks in
                 self.networks.onNext(savedNetworks)
-            },onError: { _ in
+            }, onError: { _ in
                 self.networks.onNext([])
-            },onCompleted: {
+            }, onCompleted: {
                 self.isObserving = false
-            }).disposed(by: disposeBag)
+            }
+        ).disposed(by: disposeBag)
     }
 
     func getAutoSecureNetworkStatus() -> Bool {

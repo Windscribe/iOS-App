@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 protocol StaticIPListTableViewDelegate: AnyObject {
     func setSelectedStaticIP(staticIP: StaticIPModel)
@@ -19,9 +19,9 @@ protocol StaticIPListTableViewDelegate: AnyObject {
 }
 
 class StaticIPListTableViewDataSource: WTableViewDataSource,
-                                       UITableViewDataSource,
-                                       WTableViewDataSourceDelegate {
-
+    UITableViewDataSource,
+    WTableViewDataSourceDelegate
+{
     var staticIPs: [StaticIPModel]?
     weak var delegate: StaticIPListTableViewDelegate?
     var scrollHappened = false
@@ -32,9 +32,9 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
 
     init(staticIPs: [StaticIPModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
-        self.label = UILabel()
+        label = UILabel()
         super.init()
-        self.scrollViewDelegate = self
+        scrollViewDelegate = self
         self.staticIPs = staticIPs
         languageManager.activelanguage.subscribe(onNext: { [self] _ in
             label.text = TextsAsset.noStaticIPs
@@ -42,20 +42,22 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
     }
 
     func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection section: Int) -> Int {
-        guard let count = staticIPs?.count else { return 0; }
+                   numberOfRowsInSection _: Int) -> Int
+    {
+        guard let count = staticIPs?.count else { return 0 }
         if count == 0 {
-            self.delegate?.hideStaticIPRefreshControl()
+            delegate?.hideStaticIPRefreshControl()
             showEmptyView(tableView: tableView)
         } else {
-            self.delegate?.showStaticIPRefreshControl()
+            delegate?.showStaticIPRefreshControl()
             tableView.backgroundView = nil
         }
         return count
     }
 
     func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
+    {
         let cell = tableView.dequeueReusableCell(withIdentifier: staticIPCellReuseIdentifier, for: indexPath) as? StaticIPTableViewCell ?? StaticIPTableViewCell(style: .default, reuseIdentifier: staticIPCellReuseIdentifier)
         let staticIP = staticIPs?[indexPath.row]
         cell.displayingStaticIP = staticIP
@@ -63,19 +65,20 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
         return cell
     }
 
-    func tableView(_ tableView: UITableView,
-                   heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView,
+                   heightForRowAt _: IndexPath) -> CGFloat
+    {
         return 50
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let staticIP = staticIPs?[indexPath.row] else { return }
         delegate?.setSelectedStaticIP(staticIP: staticIP)
     }
 
     func showEmptyView(tableView: UITableView) {
         let emptyView = UIView(frame: tableView.bounds)
-        label = UILabel(frame: CGRect(x: 0, y: emptyView.frame.midY-42, width: emptyView.frame.width, height: 32))
+        label = UILabel(frame: CGRect(x: 0, y: emptyView.frame.midY - 42, width: emptyView.frame.width, height: 32))
         label.textAlignment = .center
         label.font = UIFont.text(size: 19)
         label.text = TextsAsset.noStaticIPs
@@ -87,19 +90,20 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
     }
 
     func handleRefresh() {
-        self.delegate?.handleRefresh()
+        delegate?.handleRefresh()
     }
 
     func tableViewScrolled(toTop: Bool) {
-        self.delegate?.tableViewScrolled(toTop: toTop)
+        delegate?.tableViewScrolled(toTop: toTop)
     }
 
-    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    override func scrollViewWillBeginDragging(_: UIScrollView) {
         scrollHappened = true
     }
 
-    func tableView(_ tableView: UITableView,
-                   willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView,
+                   willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath)
+    {
         if indexPath.row == 0 && scrollHappened {
             HapticFeedbackGenerator.shared.run(level: .light)
         }

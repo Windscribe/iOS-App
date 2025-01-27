@@ -8,12 +8,15 @@
 
 import Foundation
 import RxSwift
+
 enum SignUpErrorState {
-    case username(String), password(String), email(String), api(String) , network(String), none
+    case username(String), password(String), email(String), api(String), network(String), none
 }
+
 enum SignupRoutes {
     case main, noEmail, confirmEmail, setupLater
 }
+
 protocol SignUpViewModel {
     var isPremiumUser: BehaviorSubject<Bool> { get }
     var referralViewStatus: BehaviorSubject<Bool> { get }
@@ -28,11 +31,12 @@ protocol SignUpViewModel {
     func referralViewTapped()
     func keyBoardWillShow()
 }
+
 class SignUpViewModelImpl: SignUpViewModel {
     let isDarkMode: BehaviorSubject<Bool>
     let routeTo = PublishSubject<SignupRoutes>()
-    let isPremiumUser =  BehaviorSubject(value: false)
-    let referralViewStatus =  BehaviorSubject(value: false)
+    let isPremiumUser = BehaviorSubject(value: false)
+    let referralViewStatus = BehaviorSubject(value: false)
     let textfieldStatus = BehaviorSubject(value: true)
     let showLoadingView = BehaviorSubject(value: false)
     let failedState = BehaviorSubject(value: SignUpErrorState.none)
@@ -58,7 +62,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         checkUserStatus()
     }
 
-    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String? ) {
+    func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String?) {
         // Validate all inputs.
         if !isUsernameValid(username: userName) {
             showLoadingView.onNext(false)
@@ -112,7 +116,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 logger.logD(self, "Getting user data.")
                 prepareUserData(ignoreError: true)
             }
-        },onFailure: { [self] error in
+        }, onFailure: { [self] error in
             logger.logD(self, "Error claming account. \(error)")
             handleError(error: error)
         }).disposed(by: disposeBag)
@@ -145,7 +149,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             failedState.onNext(.email(TextsAsset.disposableEmail))
         case Errors.cannotChangeExistingEmail:
             failedState.onNext(.email(TextsAsset.cannotChangeExistingEmail))
-        case Errors.apiError(let e):
+        case let Errors.apiError(e):
             failedState.onNext(.api(e.errorMessage ?? ""))
         default:
             if let error = error as? Errors {
@@ -171,7 +175,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self?.preferences.saveUserSessionAuth(sessionAuth: nil)
                 self?.logger.logE(SignUpViewModelImpl.self, "Failed to prepare user data: \(error)")
                 switch error {
-                case Errors.apiError(let e):
+                case let Errors.apiError(e):
                     self?.failedState.onNext(SignUpErrorState.api(e.errorMessage ?? ""))
                 default:
                     if let error = error as? Errors {
@@ -202,7 +206,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         connectivity.network.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] appNetwork in
             if let loginError = try? self?.failedState.value() {
                 switch loginError {
-                case SignUpErrorState.network(_):
+                case SignUpErrorState.network:
                     // reset network error state if network re-connects.
                     if appNetwork.status == NetworkStatus.connected {
                         self?.failedState.onNext(.none)

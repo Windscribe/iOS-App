@@ -9,15 +9,16 @@
 import Foundation
 
 extension Date {
-
     var currentTimestamp: String {
         return timeIntervalSince1970.description
     }
+
     var currentMonth: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M"
         return dateFormatter.string(from: self)
     }
+
     var currentYear: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
@@ -25,7 +26,6 @@ extension Date {
     }
 
     func interval(ofComponent comp: Calendar.Component, fromDate date: Date) -> Int {
-
         let currentCalendar = Calendar.current
 
         guard let start = currentCalendar.ordinality(of: comp, in: .era, for: date) else { return 0 }
@@ -33,7 +33,6 @@ extension Date {
 
         return end - start
     }
-
 }
 
 extension Calendar {

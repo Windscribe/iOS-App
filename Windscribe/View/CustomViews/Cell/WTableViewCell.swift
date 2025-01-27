@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import SwipeCellKit
 import Swinject
+import SwipeCellKit
+import UIKit
 
 class WTableViewCell: SwipeTableViewCell {
     lazy var themeManager = Assembler.resolve(ThemeManager.self)
@@ -22,6 +22,7 @@ class WTableViewCell: SwipeTableViewCell {
             return UIImage(named: ImagesAsset.DarkMode.favFull)
         }
     }
+
     var emptyFavImage: UIImage? {
         if !themeManager.getIsDarkTheme() {
             return UIImage(named: ImagesAsset.favEmpty)
@@ -87,7 +88,7 @@ class WTableViewCell: SwipeTableViewCell {
     }
 
     func getSignalLevel(minTime: Int) -> Int {
-        var signalLevel: Int = 0
+        var signalLevel = 0
         if minTime <= 100 {
             signalLevel = 3
         } else if minTime <= 250 {

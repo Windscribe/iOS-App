@@ -1,5 +1,5 @@
 //
-//  TicketResponse.swift
+//  Ticket.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2021-06-26.
@@ -13,9 +13,9 @@ import Foundation
     var status: String = ""
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case ticket = "ticket_id"
-        case status = "status"
+        case status
     }
 
     required convenience init(from decoder: Decoder) throws {

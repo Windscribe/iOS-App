@@ -35,7 +35,7 @@ class LocalDatabaseTests: XCTestCase {
         object.userIp = ipAddress
         db.saveIp(myip: object).disposed(by: disposeBag)
         // Get saved object from database
-        if let myIP = try? db.getIp().toBlocking().first(), myIP.userIp == ipAddress {
+        if let myIP = try? db.getIp().toBlocking().first(), myIP?.userIp == ipAddress {
             XCTAssert(true, "MyIP object found in database.")
         } else {
             XCTFail("Did not found MyIP object.")

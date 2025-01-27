@@ -6,15 +6,15 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
 import AppIntents
-import RxSwift
+import Foundation
 import NetworkExtension
+import RxSwift
 @preconcurrency import Swinject
 
 @available(iOS 16.0, *)
 @available(iOSApplicationExtension, unavailable)
-extension ShowLocation: ForegroundContinuableIntent { }
+extension ShowLocation: ForegroundContinuableIntent {}
 @available(iOS 16.0, *)
 struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     static let intentClassName = "ShowLocationIntent"
@@ -39,13 +39,14 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         do {
-           let ip = try await getMyIp()
+            let ip = try await getMyIp()
             do {
                 let manager = try await getActiveManager()
                 if manager.connection.status == NEVPNStatus.connected {
                     let prefs = resolver.getPreferences()
                     if let serverName = prefs.getServerNameKey(),
-                       let nickName = prefs.getNickNameKey() {
+                       let nickName = prefs.getNickNameKey()
+                    {
                         return .result(dialog: .responseSuccess(cityName: serverName, nickName: nickName, ipAddress: ip))
                     } else {
                         return .result(dialog: .responseSuccessWithNoConnection(ipAddress: ip))
@@ -82,7 +83,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
 private struct IntentMyIP: Decodable {
     dynamic var userIp: String = ""
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case userIp = "user_ip"
     }
 

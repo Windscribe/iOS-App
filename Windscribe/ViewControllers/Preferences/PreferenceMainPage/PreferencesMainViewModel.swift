@@ -6,8 +6,9 @@
 //  Copyright © 2023 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
+
 protocol PreferencesMainViewModel {
     var actionDisplay: BehaviorSubject<ActionDisplay> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -58,29 +59,32 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
     private func observeLanguage() {
         languageManager.activelanguage.subscribe(onNext: { [weak self] updatedLanguage in
             self?.currentLanguage.onNext(updatedLanguage.name)
-        }, onError: { _ in }
-        ).disposed(by: disposeBag)
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func getActionButtonDisplay() {
         if sessionManager.session?.isUserPro == true &&
             sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == false {
+            sessionManager.session?.isUserGhost == false
+        {
             actionDisplay.onNext(.email)
             return
         } else if sessionManager.session?.isUserPro == false &&
-                    sessionManager.session?.hasUserAddedEmail == false &&
-                    sessionManager.session?.isUserGhost == false {
+            sessionManager.session?.hasUserAddedEmail == false &&
+            sessionManager.session?.isUserGhost == false
+        {
             actionDisplay.onNext(.emailGet10GB)
             return
         } else if sessionManager.session?.isUserPro == false &&
-                    sessionManager.session?.hasUserAddedEmail == false &&
-                    sessionManager.session?.isUserGhost == true {
+            sessionManager.session?.hasUserAddedEmail == false &&
+            sessionManager.session?.isUserGhost == true
+        {
             actionDisplay.onNext(.setupAccountAndLogin)
             return
         } else if sessionManager.session?.isUserPro == true &&
-                    sessionManager.session?.hasUserAddedEmail == false &&
-                    sessionManager.session?.isUserGhost == true {
+            sessionManager.session?.hasUserAddedEmail == false &&
+            sessionManager.session?.isUserGhost == true
+        {
             actionDisplay.onNext(.setupAccount)
             return
         } else if sessionManager.session?.userNeedsToConfirmEmail == true {
@@ -94,7 +98,6 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
 
     func logoutUser() {
         sessionManager.logoutUser()
-
     }
 
     func isUserGhost() -> Bool {
@@ -143,5 +146,4 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
     func isDarkTheme() -> Bool {
         return themeManager.getIsDarkTheme()
     }
-
 }

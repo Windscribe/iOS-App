@@ -8,10 +8,10 @@
 
 import Foundation
 import RxSwift
+import RealmSwift
 
 /// Manages Auto secure networks  data
 class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
-
     private let preferences: Preferences
     private let localdatabase: LocalDatabase
     private let connectivity: Connectivity
@@ -35,11 +35,12 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
         localdatabase.getNetworks().subscribe(
             onNext: { savedNetworks in
                 self.networks.onNext(savedNetworks)
-            },onError: { _ in
+            }, onError: { _ in
                 self.networks.onNext([])
-            },onCompleted: {
+            }, onCompleted: {
                 self.isObserving = false
-            }).disposed(by: disposeBag)
+            }
+        ).disposed(by: disposeBag)
     }
 
     /// Returns currently connected saved network if avaialble

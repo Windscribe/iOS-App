@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct APIParameterValues {
+enum APIParameterValues {
     static let mobileSessionType = "4"
     static let os = "os"
     static let platform = "ios"

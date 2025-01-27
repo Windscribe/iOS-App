@@ -10,18 +10,19 @@ import Foundation
 import RxSwift
 
 protocol PopUpMaintenanceLocationModelType {
-    var topImageName: BehaviorSubject<String> {get}
-    var headerLabelTitle: BehaviorSubject<String> {get}
-    var subHeaderLabelTitle: BehaviorSubject<String> {get}
-    var cancelButtonTitle: BehaviorSubject<String> {get}
-    var checkStatusButtonTitle: BehaviorSubject<String> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var topImageName: BehaviorSubject<String> { get }
+    var headerLabelTitle: BehaviorSubject<String> { get }
+    var subHeaderLabelTitle: BehaviorSubject<String> { get }
+    var cancelButtonTitle: BehaviorSubject<String> { get }
+    var checkStatusButtonTitle: BehaviorSubject<String> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func cancel(vc: UIViewController?)
     func checkStatusAction(vc: WSNavigationViewController?)
 }
 
 class PopUpMaintenanceLocationModel: PopUpMaintenanceLocationModelType {
     // MARK: - Dependencies
+
     var topImageName = BehaviorSubject<String>(value: "")
     var headerLabelTitle = BehaviorSubject<String>(value: "")
     var subHeaderLabelTitle = BehaviorSubject<String>(value: "")
@@ -35,11 +36,11 @@ class PopUpMaintenanceLocationModel: PopUpMaintenanceLocationModelType {
     }
 
     private func bindModel() {
-        self.topImageName.onNext(ImagesAsset.Garry.con)
-        self.headerLabelTitle.onNext(TextsAsset.MaintenanceLocationPopUp.title)
-        self.subHeaderLabelTitle.onNext(TextsAsset.MaintenanceLocationPopUp.subtHeader)
-        self.cancelButtonTitle.onNext(TextsAsset.MaintenanceLocationPopUp.cancelTitle)
-        self.checkStatusButtonTitle.onNext(TextsAsset.MaintenanceLocationPopUp.checkStatus)
+        topImageName.onNext(ImagesAsset.Garry.con)
+        headerLabelTitle.onNext(TextsAsset.MaintenanceLocationPopUp.title)
+        subHeaderLabelTitle.onNext(TextsAsset.MaintenanceLocationPopUp.subtHeader)
+        cancelButtonTitle.onNext(TextsAsset.MaintenanceLocationPopUp.cancelTitle)
+        checkStatusButtonTitle.onNext(TextsAsset.MaintenanceLocationPopUp.checkStatus)
     }
 
     func cancel(vc: UIViewController?) {

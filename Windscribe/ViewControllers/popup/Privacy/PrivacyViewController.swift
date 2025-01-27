@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PrivacyViewController: WSUIViewController {
     var backgroundView: UIView!
@@ -24,7 +24,7 @@ class PrivacyViewController: WSUIViewController {
         super.viewDidLoad()
         logger.logD(self, "Displaying Privacy Popup View")
         if UIScreen.isSmallScreen {
-            self.fontSize = 12
+            fontSize = 12
         }
         addViews()
         addAutoLayoutConstraints()

@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 class LanguageViewController: WSNavigationViewController {
-
     var viewModel: LanguageViewModelType!
 
     lazy var tableView: UITableView = {
@@ -56,7 +55,7 @@ class LanguageViewController: WSNavigationViewController {
 }
 
 extension LanguageViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return viewModel.numberOfRows()
     }
 

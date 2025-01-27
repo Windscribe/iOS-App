@@ -11,9 +11,9 @@ import RxSwift
 
 protocol ConfirmEmailViewModel {
     var alertManager: AlertManagerV2 { get }
-    var sessionManager: SessionManagerV2 {get}
-    var localDatabase: LocalDatabase {get}
-    var apiManager: APIManager {get}
+    var sessionManager: SessionManagerV2 { get }
+    var localDatabase: LocalDatabase { get }
+    var apiManager: APIManager { get }
     func getSession()
     func updateSession()
 }

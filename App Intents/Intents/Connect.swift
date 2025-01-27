@@ -6,13 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import Foundation
 import AppIntents
-import WidgetKit
+import Foundation
 import NetworkExtension
+import WidgetKit
+
 @available(iOS 16.0, *)
 @available(iOSApplicationExtension, unavailable)
-extension Connect: ForegroundContinuableIntent { }
+extension Connect: ForegroundContinuableIntent {}
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Connect: AppIntent, WidgetConfigurationIntent {
     static var title: LocalizedStringResource = "Enable Windscribe VPN"
@@ -49,7 +50,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 return .result(dialog: .responseSuccess)
             }
             // If already connecting then just wait for it to finish
-            if  vpnStatus != .connecting {
+            if vpnStatus != .connecting {
                 activeManager.isEnabled = true
                 activeManager.isOnDemandEnabled = true
                 try await activeManager.saveToPreferences()
@@ -69,7 +70,7 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
             logger.logD(tag, "Taking too long to connect.")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseTimeoutFailure)
-        } catch let error {
+        } catch {
             logger.logD(tag, "Error connecting to VPN: \(error)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailure)

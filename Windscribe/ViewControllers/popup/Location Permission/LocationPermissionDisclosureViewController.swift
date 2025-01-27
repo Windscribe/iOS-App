@@ -6,8 +6,8 @@
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
 
-import UIKit
 import Swinject
+import UIKit
 
 protocol DisclosureAlertDelegate: AnyObject {
     func grantPermissionClicked()
@@ -51,6 +51,6 @@ class LocationPermissionDisclosureViewController: WSUIViewController {
 
     @objc func cancelButtonTapped() {
         logger.logD(self, "Location Permission Popup cancelled")
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

@@ -5,23 +5,23 @@
 //  Created by Ginder Singh on 2021-06-24.
 //  Copyright © 2021 Windscribe. All rights reserved.
 //
-import UIKit
 import IQKeyboardManagerSwift
 import RxSwift
+import UIKit
 
 extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
-	func bindViews() {
+    func bindViews() {
         viewModel.isDarkMode.subscribe(on: MainScheduler.instance).subscribe {
             self.setupViews(isDark: $0)
             self.setupUI(isDark: $0)
-        }.disposed(by: self.disposeBag)
+        }.disposed(by: disposeBag)
 
-        Observable.combineLatest(continueButtonEnabledSubject.asObservable(), viewModel.isDarkMode.asObservable()).bind { (isEnabled, isDarkMode) in
+        Observable.combineLatest(continueButtonEnabledSubject.asObservable(), viewModel.isDarkMode.asObservable()).bind { isEnabled, isDarkMode in
             self.continueButton.backgroundColor = isEnabled ? UIColor.seaGreen : (isDarkMode ? UIColor.midnightWithOpacity(opacity: 0.10) : UIColor.whiteWithOpacity(opacity: 0.10))
-        }.disposed(by: self.disposeBag)
+        }.disposed(by: disposeBag)
     }
 
-	func addViews() {
+    func addViews() {
         descriptionView = UILabel()
         descriptionView.text = SubmitTicket.fillInTheFields
         descriptionView.font = UIFont.text(size: 12)
@@ -34,48 +34,48 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         descriptionContentView.layer.cornerRadius = 8
         descriptionContentView.layer.borderWidth = 2
         descriptionContentView.addSubview(descriptionView)
-        self.view.addSubview(descriptionContentView)
+        view.addSubview(descriptionContentView)
 
         categoryContentView = UIView()
         categoryContentView.layer.cornerRadius = 8
-        self.view.addSubview(categoryContentView)
+        view.addSubview(categoryContentView)
 
         categoryView = UILabel()
         categoryView.text = SubmitTicket.category
         categoryView.font = UIFont.bold(size: 16)
         categoryView.textColor = UIColor.white
-        self.view.addSubview(categoryView)
+        view.addSubview(categoryView)
 
         catergoryDropDownView = DropdownButton(isDarkMode: viewModel.isDarkMode)
         catergoryDropDownView.delegate = self
         catergoryDropDownView.setTitle(SubmitTicket.categories[0])
         catergoryDropDownView.isUserInteractionEnabled = true
-        self.view.addSubview(catergoryDropDownView)
+        view.addSubview(catergoryDropDownView)
 
         divider1 = UIView()
         divider1.layer.opacity = 0.05
         divider1.backgroundColor = UIColor.white
-        self.view.addSubview(divider1)
+        view.addSubview(divider1)
 
         yourEmailView = UILabel()
         yourEmailView.text = SubmitTicket.email
         yourEmailView.font = UIFont.bold(size: 16)
         yourEmailView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
-        self.view.addSubview(yourEmailView)
+        view.addSubview(yourEmailView)
 
         emailRequiredView = UILabel()
         emailRequiredView.text = "(\(SubmitTicket.required))"
         emailRequiredView.layer.opacity = 0.5
         emailRequiredView.textColor = UIColor.white
         emailRequiredView.font = UIFont.text(size: 16)
-        self.view.addSubview(emailRequiredView)
+        view.addSubview(emailRequiredView)
 
         emailInputView = LoginTextField(isDarkMode: viewModel.isDarkMode)
         emailInputView.text = viewModel.sessionManager.session?.email
-        emailInputView.addTarget(self, action: #selector(self.fieldsValueChanged), for: .editingChanged)
+        emailInputView.addTarget(self, action: #selector(fieldsValueChanged), for: .editingChanged)
         emailInputView.layer.cornerRadius = 24
         emailInputView.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        self.view.addSubview(emailInputView)
+        view.addSubview(emailInputView)
 
         emailExplainerView = UILabel()
         emailExplainerView.text = SubmitTicket.soWeCanContactYou
@@ -83,66 +83,66 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         emailExplainerView.layer.opacity = 0.5
         emailExplainerView.numberOfLines = 2
         emailExplainerView.textColor = UIColor.white
-        self.view.addSubview(emailExplainerView)
+        view.addSubview(emailExplainerView)
 
         subjectTitleView = UILabel()
         subjectTitleView.text = SubmitTicket.subject
         subjectTitleView.font = UIFont.bold(size: 16)
         subjectTitleView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
-        self.view.addSubview(subjectTitleView)
+        view.addSubview(subjectTitleView)
 
         subjectRequiredView = UILabel()
         subjectRequiredView.text = "(\(SubmitTicket.required))"
         subjectRequiredView.layer.opacity = 0.5
         subjectRequiredView.textColor = UIColor.white
         subjectRequiredView.font = UIFont.text(size: 16)
-        self.view.addSubview(subjectRequiredView)
+        view.addSubview(subjectRequiredView)
 
         subjectInputView = LoginTextField(isDarkMode: viewModel.isDarkMode)
-        subjectInputView.addTarget(self, action: #selector(self.fieldsValueChanged), for: .editingChanged)
+        subjectInputView.addTarget(self, action: #selector(fieldsValueChanged), for: .editingChanged)
         subjectInputView.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         subjectInputView.delegate = self
         subjectInputView.layer.cornerRadius = 24
-        self.view.addSubview(subjectInputView)
+        view.addSubview(subjectInputView)
 
         messageTitleView = UILabel()
         messageTitleView.text = SubmitTicket.whatsTheIssue
         messageTitleView.font = UIFont.bold(size: 16)
         messageTitleView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
-        self.view.addSubview(messageTitleView)
+        view.addSubview(messageTitleView)
 
         messageRequiredView = UILabel()
         messageRequiredView.text = "(\(SubmitTicket.required))"
         messageRequiredView.layer.opacity = 0.5
         messageRequiredView.textColor = UIColor.white
         messageRequiredView.font = UIFont.text(size: 16)
-        self.view.addSubview(messageRequiredView)
+        view.addSubview(messageRequiredView)
 
         messageInputView = UITextView()
         messageInputView.font = UIFont.text(size: 16)
         messageInputView.toolbarPlaceholder = "Message".localize()
         messageInputView.delegate = self
         messageInputView.isEditable = true
-        messageInputView.textContainerInset = UIEdgeInsets.init(top: 12, left: 12, bottom: 12, right: 12)
+        messageInputView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
         messageInputView.layer.cornerRadius = 8
-        self.view.addSubview(messageInputView)
+        view.addSubview(messageInputView)
 
         continueButton = UIButton()
         continueButton.setTitleColor(UIColor.whiteWithOpacity(opacity: 0.5), for: .normal)
         continueButton.titleLabel?.font = UIFont.text(size: 16)
-        continueButton.addTarget(self, action: #selector(self.continueSendTicketTapped), for: .touchUpInside)
+        continueButton.addTarget(self, action: #selector(continueSendTicketTapped), for: .touchUpInside)
         continueButton.layer.cornerRadius = 26
         continueButton.clipsToBounds = true
         continueButton.backgroundColor = UIColor.seaGreen
         let buttonTitle = "Send".localize()
         // TextsAsset.continue)
-        let attributedTitle = NSMutableAttributedString(string: (buttonTitle))
+        let attributedTitle = NSMutableAttributedString(string: buttonTitle)
         continueButton.setAttributedTitle(attributedTitle, for: .normal)
-        self.view.addSubview(continueButton)
+        view.addSubview(continueButton)
         disableContinueButton()
 
         loadingView = UIActivityIndicatorView(style: .gray)
-        self.view.addSubview(loadingView)
+        view.addSubview(loadingView)
 
         successMessageView = UILabel()
         successMessageView.isHidden = true
@@ -152,24 +152,24 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         successMessageView.textColor = UIColor.white
         successMessageView.layer.opacity = 0.5
         successMessageView.textAlignment = NSTextAlignment.center
-        self.view.addSubview(successMessageView)
+        view.addSubview(successMessageView)
 
         successIconView = UIImageView()
         successIconView.isHidden = true
         successIconView.contentMode = .scaleAspectFit
         successIconView.image = UIImage(named: ImagesAsset.Help.success)
-        self.view.addSubview(successIconView)
+        view.addSubview(successIconView)
     }
 
     func showProgressView() {
-        let attributedTitle = NSMutableAttributedString(string: (""))
+        let attributedTitle = NSMutableAttributedString(string: "")
         continueButton.setAttributedTitle(attributedTitle, for: .normal)
         loadingView.isHidden = false
     }
 
     func hideProgressView() {
         loadingView.isHidden = true
-        let attributedTitle = NSMutableAttributedString(string: (TextsAsset.continue))
+        let attributedTitle = NSMutableAttributedString(string: TextsAsset.continue)
         continueButton.setAttributedTitle(attributedTitle, for: .normal)
     }
 
@@ -224,9 +224,9 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         descriptionView.fillSuperview(padding: UIEdgeInsets(inset: 16))
 
         let descriptionViewConstraints = [
-            descriptionContentView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 32),
-            descriptionContentView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
-            descriptionContentView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16)
+            descriptionContentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
+            descriptionContentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            descriptionContentView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
         ]
         categoryContentView.anchor(top: categoryView.topAnchor,
                                    left: view.leftAnchor,
@@ -238,83 +238,83 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
 
         let categoryViewConstraints = [
             categoryView.topAnchor.constraint(equalTo: descriptionContentView.bottomAnchor, constant: 38),
-            categoryView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32)
+            categoryView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
         ]
         let categoryDropDownViewConstraints = [
             catergoryDropDownView.topAnchor.constraint(equalTo: descriptionContentView.bottomAnchor, constant: 38),
-            catergoryDropDownView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -32),
+            catergoryDropDownView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
             catergoryDropDownView.widthAnchor.constraint(equalToConstant: 60),
-            catergoryDropDownView.heightAnchor.constraint(equalToConstant: 20)
+            catergoryDropDownView.heightAnchor.constraint(equalToConstant: 20),
         ]
         let yourEmailConstraints = [
             yourEmailView.topAnchor.constraint(equalTo: categoryContentView.bottomAnchor, constant: 24),
-            yourEmailView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32)
+            yourEmailView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
         ]
         let emailRequiredViewConstraints = [
-            emailRequiredView.topAnchor.constraint(equalTo: self.categoryContentView.bottomAnchor, constant: 24),
+            emailRequiredView.topAnchor.constraint(equalTo: categoryContentView.bottomAnchor, constant: 24),
 //            emailRequiredView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16)
-            emailRequiredView.leftAnchor.constraint(equalTo: self.yourEmailView.rightAnchor, constant: 4)
+            emailRequiredView.leftAnchor.constraint(equalTo: yourEmailView.rightAnchor, constant: 4),
         ]
         let emailInputViewConstraints = [
             emailInputView.topAnchor.constraint(equalTo: yourEmailView.bottomAnchor, constant: 8),
-            emailInputView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
-            emailInputView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
-            emailInputView.heightAnchor.constraint(equalToConstant: 48)
+            emailInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            emailInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            emailInputView.heightAnchor.constraint(equalToConstant: 48),
         ]
         let emailExplainerViewConstraints = [
             emailExplainerView.topAnchor.constraint(equalTo: emailInputView.bottomAnchor, constant: 10),
-            emailExplainerView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: 32),
-            emailExplainerView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32)
+            emailExplainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 32),
+            emailExplainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
         ]
         let subjectTitleViewConstraints = [
             subjectTitleView.topAnchor.constraint(equalTo: emailExplainerView.bottomAnchor, constant: 24),
-            subjectTitleView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32)
+            subjectTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
         ]
         let subjectRequiredViewConstraints = [
             subjectRequiredView.topAnchor.constraint(equalTo: subjectTitleView.topAnchor, constant: 0),
-            subjectRequiredView.leftAnchor.constraint(equalTo: subjectTitleView.rightAnchor, constant: 4)
+            subjectRequiredView.leftAnchor.constraint(equalTo: subjectTitleView.rightAnchor, constant: 4),
         ]
         let subjectInputViewConstraints = [
             subjectInputView.topAnchor.constraint(equalTo: subjectRequiredView.bottomAnchor, constant: 8),
-            subjectInputView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
-            subjectInputView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
-            subjectInputView.heightAnchor.constraint(equalToConstant: 48)
+            subjectInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            subjectInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            subjectInputView.heightAnchor.constraint(equalToConstant: 48),
         ]
         let messageTitleViewContraints = [
             messageTitleView.topAnchor.constraint(equalTo: subjectInputView.bottomAnchor, constant: 24),
-            messageTitleView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 32)
+            messageTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
         ]
         let messageRequiredViewContraints = [
             messageRequiredView.topAnchor.constraint(equalTo: messageTitleView.topAnchor, constant: 0),
-            messageRequiredView.leftAnchor.constraint(equalTo: messageTitleView.rightAnchor, constant: 4)
+            messageRequiredView.leftAnchor.constraint(equalTo: messageTitleView.rightAnchor, constant: 4),
         ]
         let messageInputViewContraints = [
             messageInputView.topAnchor.constraint(equalTo: messageTitleView.bottomAnchor, constant: 8),
             messageInputView.bottomAnchor.constraint(equalTo: continueButton.topAnchor, constant: -16),
-            messageInputView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
-            messageInputView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16)
+            messageInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            messageInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
         ]
         let continueButtonViewContraints = [
-            continueButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -16),
-            continueButton.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16),
-            continueButton.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 16),
-            continueButton.heightAnchor.constraint(equalToConstant: 48)
+            continueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
+            continueButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            continueButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            continueButton.heightAnchor.constraint(equalToConstant: 48),
         ]
         let loadingViewContraints = [
             loadingView.centerXAnchor.constraint(equalTo: continueButton.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: continueButton.centerYAnchor),
-            loadingView.heightAnchor.constraint(equalToConstant: 48)
+            loadingView.heightAnchor.constraint(equalToConstant: 48),
         ]
         let successIconViewConstraints = [
-            successIconView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            successIconView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+            successIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            successIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             successIconView.heightAnchor.constraint(equalToConstant: 48),
-            successIconView.widthAnchor.constraint(equalToConstant: 48)
+            successIconView.widthAnchor.constraint(equalToConstant: 48),
         ]
         let successMessageViewConstraints = [
-            successMessageView.leftAnchor.constraint(equalTo: self.view.leftAnchor, constant: 75),
-            successMessageView.rightAnchor.constraint(equalTo: self.view.rightAnchor,constant: -75),
-            successMessageView.topAnchor.constraint(equalTo: successIconView.bottomAnchor,constant: 16)
+            successMessageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 75),
+            successMessageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -75),
+            successMessageView.topAnchor.constraint(equalTo: successIconView.bottomAnchor, constant: 16),
         ]
         NSLayoutConstraint.activate(descriptionViewConstraints)
         NSLayoutConstraint.activate(categoryViewConstraints)
@@ -337,7 +337,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
     }
 
     func setupUI(isDark: Bool) {
-        setupViews(isDark: isDark )
+        setupViews(isDark: isDark)
         descriptionContentView.layer.borderColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDark).cgColor
         descriptionContentView.layer.borderColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDark).cgColor
         if !isDark {
@@ -420,29 +420,28 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         messageRequiredView.layer.opacity = 0.5
     }
 
-    func textViewDidChange(_ textView: UITextView) {
+    func textViewDidChange(_: UITextView) {
         fieldsValueChanged()
     }
 
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+    func textViewDidEndEditing(_: UITextView) {
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
         }
     }
 
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if self.view.frame.origin.y != 0 {
-            self.view.frame.origin.y = 0
+    func textFieldDidEndEditing(_: UITextField) {
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
         }
     }
 }
 
 extension SubmitTicketViewController: DropdownButtonDelegate {
-
     func dropdownButtonTapped(_ sender: DropdownButton) {
         tappedOnScreen()
         currentDropdownView = Dropdown(attachedView: sender)
-        guard let dropdown = currentDropdownView else {return}
+        guard let dropdown = currentDropdownView else { return }
         dropdown.relatedIndex = 0
         dropdown.maxHeight = 180
         dropdown.dropDownDelegate = self
@@ -454,8 +453,8 @@ extension SubmitTicketViewController: DropdownButtonDelegate {
         }
         sender.dropdown = dropdown
         viewDismiss.addTapGesture(target: self, action: #selector(dismissDropdown))
-        self.view.addSubview(viewDismiss)
+        view.addSubview(viewDismiss)
         viewDismiss.fillSuperview()
-        self.view.addSubview(dropdown)
+        view.addSubview(dropdown)
     }
 }

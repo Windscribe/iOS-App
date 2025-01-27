@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum RepositoryError: Error, CustomStringConvertible, Equatable {
     case invalidConfigData
     case failedToTemplateWgConfig

@@ -9,6 +9,7 @@
 import Foundation
 @testable import Windscribe
 import XCTest
+
 class ConcurrentDictionaryTest: XCTestCase {
     func testConcurrentWriteAndRead() {
         let dispatchQueue = DispatchQueue(label: "concurrent", attributes: .concurrent)

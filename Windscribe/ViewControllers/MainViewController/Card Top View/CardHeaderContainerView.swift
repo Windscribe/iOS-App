@@ -7,25 +7,62 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
+
+private class ButtonImageView: UIView {
+    let button = UIButton()
+    let imageView = UIImageView()
+    var disposeBag = DisposeBag()
+
+    init(imageName: String, imageSize: CGFloat, tapAction: @escaping () -> Void) {
+        super.init(frame: .zero)
+        self.addSubview(imageView)
+        self.addSubview(button)
+
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            button.widthAnchor.constraint(equalTo: self.widthAnchor),
+            button.heightAnchor.constraint(equalTo: self.heightAnchor),
+            imageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            imageView.widthAnchor.constraint(equalToConstant: imageSize),
+            imageView.heightAnchor.constraint(equalToConstant: 16)
+        ])
+
+        button.rx.tap.bind {
+            tapAction()
+        }.disposed(by: disposeBag)
+    }
+
+    func setImage(_ image: UIImage?) {
+        imageView.image = image
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 
 class CardHeaderContainerView: UIView {
     var stackContainerView = UIStackView()
-    var allButton = LargeTapAreaImageButton()
-    var favButton = LargeTapAreaImageButton()
-    var flixButton = LargeTapAreaImageButton()
-    var staticIpButton = LargeTapAreaImageButton()
-    var configButton = LargeTapAreaImageButton()
+    fileprivate lazy var allButton = ButtonImageView(imageName: ImagesAsset.DarkMode.serversAll, imageSize: 16, tapAction: viewModel.allSelected)
+    fileprivate lazy var favButton = ButtonImageView(imageName: ImagesAsset.DarkMode.serversFav, imageSize: 16, tapAction: viewModel.favSelected)
+    fileprivate lazy var flixButton = ButtonImageView(imageName: ImagesAsset.DarkMode.serversFlix, imageSize: 16, tapAction: viewModel.flixSelected)
+    fileprivate lazy var staticIpButton = ButtonImageView(imageName: ImagesAsset.DarkMode.serversStaticIP, imageSize: 24, tapAction: viewModel.staticSelected)
+    fileprivate lazy var configButton = ButtonImageView(imageName: ImagesAsset.DarkMode.serversConfig, imageSize: 24, tapAction: viewModel.configSelected)
+    fileprivate lazy var startSearchButton = ButtonImageView(imageName: ImagesAsset.DarkMode.search, imageSize: 16, tapAction: viewModel.startSearchSelected)
     var spacerView = UIView()
-    var startSearchButton = LargeTapAreaImageButton()
     var headerSelectorView = UIView()
 
     var viewModel: CardTopViewModelType!
 
     var disposeBag = DisposeBag()
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -41,27 +78,27 @@ class CardHeaderContainerView: UIView {
 
     private func updateLayourForTheme(isDarkMode: Bool) {
         if isDarkMode {
-            allButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversAll), for: .normal)
-            favButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversFav), for: .normal)
-            flixButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversFlix), for: .normal)
-            staticIpButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversStaticIP), for: .normal)
-            configButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversConfig), for: .normal)
-            startSearchButton.setImage(UIImage(named: ImagesAsset.DarkMode.search), for: .normal)
+            allButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversAll))
+            favButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversFav))
+            flixButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversFlix))
+            staticIpButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversStaticIP))
+            configButton.setImage(UIImage(named: ImagesAsset.DarkMode.serversConfig))
+            startSearchButton.setImage(UIImage(named: ImagesAsset.DarkMode.search))
             headerSelectorView.backgroundColor = UIColor.white
         } else {
-            allButton.setImage(UIImage(named: ImagesAsset.Servers.all), for: .normal)
-            favButton.setImage(UIImage(named: ImagesAsset.Servers.fav), for: .normal)
-            flixButton.setImage(UIImage(named: ImagesAsset.Servers.flix), for: .normal)
-            staticIpButton.setImage(UIImage(named: ImagesAsset.Servers.staticIP), for: .normal)
-            configButton.setImage(UIImage(named: ImagesAsset.Servers.config), for: .normal)
-            startSearchButton.setImage(UIImage(named: ImagesAsset.search), for: .normal)
+            allButton.setImage(UIImage(named: ImagesAsset.Servers.all))
+            favButton.setImage(UIImage(named: ImagesAsset.Servers.fav))
+            flixButton.setImage(UIImage(named: ImagesAsset.Servers.flix))
+            staticIpButton.setImage(UIImage(named: ImagesAsset.Servers.staticIP))
+            configButton.setImage(UIImage(named: ImagesAsset.Servers.config))
+            startSearchButton.setImage(UIImage(named: ImagesAsset.search))
             headerSelectorView.backgroundColor = UIColor.black
         }
     }
 
     private func addViews() {
         stackContainerView.axis = .horizontal
-        stackContainerView.spacing = 34
+        stackContainerView.spacing = 10
 
         addSubview(headerSelectorView)
         addSubview(stackContainerView)
@@ -83,33 +120,33 @@ class CardHeaderContainerView: UIView {
         NSLayoutConstraint.activate([
             // stackContainerView
             stackContainerView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            stackContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 24),
-            stackContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -24),
-            stackContainerView.heightAnchor.constraint(equalToConstant: 16),
+            stackContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 12),
+            stackContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -12),
+            stackContainerView.heightAnchor.constraint(equalTo: self.heightAnchor),
 
             // headerSelectorView
-            headerSelectorView.bottomAnchor.constraint(equalTo: stackContainerView.bottomAnchor, constant: 4),
+            headerSelectorView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -2),
             headerSelectorView.centerXAnchor.constraint(equalTo: allButton.centerXAnchor),
             headerSelectorView.widthAnchor.constraint(equalToConstant: 16),
             headerSelectorView.heightAnchor.constraint(equalToConstant: 2),
 
             // allButton
-            allButton.widthAnchor.constraint(equalToConstant: 16),
+            allButton.widthAnchor.constraint(equalToConstant: 36),
 
             // favButton
-            favButton.widthAnchor.constraint(equalToConstant: 16),
+            favButton.widthAnchor.constraint(equalToConstant: 36),
 
             // flixButton
-            flixButton.widthAnchor.constraint(equalToConstant: 16),
+            flixButton.widthAnchor.constraint(equalToConstant: 36),
 
             // staticIpButton
-            staticIpButton.widthAnchor.constraint(equalToConstant: 24),
+            staticIpButton.widthAnchor.constraint(equalToConstant: 36),
 
             // configButton
-            configButton.widthAnchor.constraint(equalToConstant: 24),
+            configButton.widthAnchor.constraint(equalToConstant: 36),
 
             // startSearchButton
-            startSearchButton.widthAnchor.constraint(equalToConstant: 16)
+            startSearchButton.widthAnchor.constraint(equalToConstant: 40)
         ])
     }
 
@@ -117,41 +154,22 @@ class CardHeaderContainerView: UIView {
         UIView.animate(withDuration: 0.2) {
             switch cardButtonType {
             case .all:
-                self.headerSelectorView.center.x = self.allButton.center.x + 24
+                self.headerSelectorView.center.x = self.allButton.center.x + 12
             case .fav:
-                self.headerSelectorView.center.x = self.favButton.center.x + 24
+                self.headerSelectorView.center.x = self.favButton.center.x + 12
             case .flix:
-                self.headerSelectorView.center.x = self.flixButton.center.x + 24
+                self.headerSelectorView.center.x = self.flixButton.center.x + 12
             case .staticIP:
-                self.headerSelectorView.center.x = self.staticIpButton.center.x + 24
+                self.headerSelectorView.center.x = self.staticIpButton.center.x + 12
             case .config:
-                self.headerSelectorView.center.x = self.configButton.center.x + 24
+                self.headerSelectorView.center.x = self.configButton.center.x + 12
             case .startSearch:
-                self.headerSelectorView.center.x = self.startSearchButton.center.x + 24
+                self.headerSelectorView.center.x = self.startSearchButton.center.x + 12
             }
         }
     }
 
     private func bindView() {
-        allButton.rx.tap.bind {
-            self.viewModel.allSelected()
-        }.disposed(by: disposeBag)
-        favButton.rx.tap.bind {
-            self.viewModel.favSelected()
-        }.disposed(by: disposeBag)
-        flixButton.rx.tap.bind {
-            self.viewModel.flixSelected()
-        }.disposed(by: disposeBag)
-        staticIpButton.rx.tap.bind {
-            self.viewModel.staticSelected()
-        }.disposed(by: disposeBag)
-        configButton.rx.tap.bind {
-            self.viewModel.configSelected()
-        }.disposed(by: disposeBag)
-        startSearchButton.rx.tap.bind {
-            self.viewModel.startSearchSelected()
-        }.disposed(by: disposeBag)
-
         viewModel.isDarkMode.subscribe { isDarkMode in
             self.updateLayourForTheme(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)

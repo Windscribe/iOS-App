@@ -1,5 +1,5 @@
 //
-//  VPNManager+Connection.swift
+//  VPNManager+ConnectionStatus.swift
 //  Windscribe
 //
 //  Created by Thomas on 10/11/2021.
@@ -7,267 +7,86 @@
 //
 
 import Foundation
-import RealmSwift
 import NetworkExtension
+import RealmSwift
 #if canImport(WidgetKit)
-import WidgetKit
-import RxSwift
+    import RxSwift
 #endif
 
 extension VPNManager {
     func isConnected() -> Bool {
-        return (IKEv2VPNManager.shared.neVPNManager.connection.status == .connected && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .connected && OpenVPNManager.shared.isConfigured()) ||
-        (WireGuardVPNManager.shared.providerManager?.connection.status == .connected && WireGuardVPNManager.shared.isConfigured())
-    }
-
-     func isConnectedToVpn() -> Bool {
-        if let settings = CFNetworkCopySystemProxySettings()?.takeRetainedValue() as? [String: Any],
-            let scopes = settings["__SCOPED__"] as? [String: Any] {
-            for (key, _) in scopes {
-             if key.contains("tap") || key.contains("tun") || key.contains("ppp") || key.contains("ipsec") {
-                    return true
-                }
-            }
-        }
-        return false
+        (try? vpnInfo.value())?.status == .connected
     }
 
     func isConnecting() -> Bool {
-        return (IKEv2VPNManager.shared.neVPNManager.connection.status == .connecting && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .connecting && OpenVPNManager.shared.isConfigured()) ||
-            (WireGuardVPNManager.shared.providerManager?.connection.status == .connecting && WireGuardVPNManager.shared.isConfigured())
+        (try? vpnInfo.value())?.status == .connecting
     }
 
     func isDisconnected() -> Bool {
-       return (IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnected && IKEv2VPNManager.shared.isConfigured())  || (OpenVPNManager.shared.providerManager?.connection.status == .disconnected && OpenVPNManager.shared.isConfigured()) || (WireGuardVPNManager.shared.providerManager?.connection.status == .disconnected && WireGuardVPNManager.shared.isConfigured())
+        (try? vpnInfo.value())?.status == .disconnected
     }
 
     func isDisconnecting() -> Bool {
-        return IKEv2VPNManager.shared.neVPNManager.connection.status == .disconnecting ||  OpenVPNManager.shared.providerManager?.connection.status == .disconnecting ||  WireGuardVPNManager.shared.providerManager?.connection.status == .disconnecting
+        (try? vpnInfo.value())?.status == .disconnecting
     }
 
     func isInvalid() -> Bool {
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self && IKEv2VPNManager.shared.neVPNManager.connection.status != .invalid {
-            return false
-        }
-        if credentialsRepository.selectedServerCredentialsType().self == OpenVPNManager.self &&  OpenVPNManager.shared.providerManager?.connection.status != .invalid {
-            return false
-        }
-        return true
-    }
-
-    func checkIfUserIsOutOfData() {
-        guard let session = sessionManager.session else { return }
-        if session.status == 2 && !isCustomConfigSelected() {
-            VPNManager.shared.disconnectAllVPNConnections(setDisconnect: true)
-        }
-    }
-
-    func setTimeoutForConnectingState() {
-        connectingTimer?.invalidate()
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if credentialsRepository.selectedServerCredentialsType().self == IKEv2ServerCredentials.self {
-            connectingTimer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(disconnectIfStillConnecting), userInfo: nil, repeats: false)
-        } else {
-            connectingTimer = Timer.scheduledTimer(timeInterval: 15, target: self, selector: #selector(disconnectIfStillConnecting), userInfo: nil, repeats: false)
-        }
+        (try? vpnInfo.value())?.status == .invalid
     }
 
     func connectionStatus() -> NEVPNStatus {
-        var status = IKEv2VPNManager.shared.neVPNManager.connection.status
-        if OpenVPNManager.shared.isConfigured() {
-            status = OpenVPNManager.shared.providerManager?.connection.status ?? .disconnected
-        }
-        if WireGuardVPNManager.shared.isConfigured() {
-            status = WireGuardVPNManager.shared.providerManager?.connection.status ?? .disconnected
-        }
-        return status
+        return (try? vpnInfo.value()?.status) ?? NEVPNStatus.disconnected
     }
 
-    func checkForForceDisconnect() {
-        if let hostname = selectedNode?.hostname {
-           let group = localDB.getServers()?.flatMap({ $0.groups }).filter({ $0.bestNodeHostname == hostname }).first
-            if group?.bestNode?.forceDisconnect ?? false {
-                logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] force_disconnect found on \(hostname)")
-                self.selectAnotherNode()
-                if self.isConnected() {
-                    self.configureAndConnectVPN()
-                }
-            }
-        }
-    }
-
-    func isCustomConfigSelected() -> Bool {
-        return VPNManager.shared.selectedNode?.customConfig != nil
-    }
-
-    @objc func connectionStatusChanged(_ notification: Notification?) {
-        self.configureForConnectionState()
-        #if os(iOS)
-        if #available(iOS 14.0, *) {
-            #if arch(arm64) || arch(i386) || arch(x86_64)
-            WidgetCenter.shared.reloadAllTimelines()
-            #endif
-        }
-        #endif
+    @objc func connectionStatusChanged(_: Notification?) {
+        connectionStateUpdatedTrigger.onNext(())
     }
 
     func configureForConnectionState() {
         DispatchQueue.main.async {
-            self.delegate?.saveDataForWidget()
-        }
-        let state = UIApplication.shared.applicationState
-        getVPNConnectionInfo(completion: { [self] info in
-            guard let info = info else {
-                return
-            }
-            self.vpnInfo.onNext(info)
-            let inactive = state == .background || state == .inactive
-            if  inactive {
-                return
-            }
-            let connectionStatus = info.status
-            let protocolType = info.selectedProtocol
-            if self.lastConnectionStatus == connectionStatus { return }
-            let active = state == .background || state == .inactive
-            self.logger.logI(VPNManager.self, "Updated connection Info: \(info.description)")
-            self.lastConnectionStatus = connectionStatus
-            IKEv2VPNManager.shared.noResponseTimer?.invalidate()
-            switch connectionStatus {
-            case .connecting:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connecting")
-                WSNet.instance().setIsConnectedToVpnState(false)
-                self.delegate?.saveDataForWidget()
-                self.delegate?.setConnecting()
-                self.checkIfUserIsOutOfData()
-                self.setTimeoutForConnectingState()
-                VPNManager.shared.triedToConnect = true
-            case .connected:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Connected")
-                WSNet.instance().setIsConnectedToVpnState(true)
-                VPNManager.shared.untrustedOneTimeOnlySSID = ""
-                VPNManager.shared.triedToConnect = true
-                self.disconnectCounter = 0
-                self.delegate?.saveDataForWidget()
-                self.delegate?.setConnectivityTest()
-                self.contentIntentTimer?.invalidate()
-                self.connectingTimer?.invalidate()
-                self.connectivityTestTimer?.invalidate()
-                self.connectivityTestTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.runConnectivityTestWithRetry), userInfo: nil, repeats: false)
-
-            case .disconnecting:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnecting")
-
-                WSNet.instance().setIsConnectedToVpnState(false)
-                if self.forceToKeepConnectingState() { self.delegate?.setConnecting() } else { self.delegate?.setDisconnecting() }
-                self.setTimeoutForDisconnectingState()
-            case .disconnected:
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Disconnected")
-                handleConnectError()
-                WSNet.instance().setIsConnectedToVpnState(false)
-                self.delegate?.saveDataForWidget()
-                if self.forceToKeepConnectingState() { self.delegate?.setConnecting() } else { self.delegate?.setDisconnecting() }
-                self.disconnectingTimer?.invalidate()
-                self.checkForRetry()
-                self.contentIntentTimer?.invalidate()
-                self.contentIntentTimer = Timer.scheduledTimer(timeInterval: 2.5, target: self, selector: #selector(self.checkForConnectIntent), userInfo: nil, repeats: false)
-            case .invalid:
-                if !self.restartOnDisconnect {
-                    self.delegate?.setDisconnected()
+            self.getVPNConnectionInfo(completion: { [self] info in
+                guard let info = info else {
+                    return
                 }
-                self.logger.logD(VPNManager.self, "[\(VPNManager.shared.uniqueConnectionId)] [\(protocolType)] VPN Status: Invalid")
-                WSNet.instance().setIsConnectedToVpnState(false)
-            case .reasserting:
-                self.keepConnectingState = false
-            default:
-                return
-            }
-        })
-    }
-
-    func forceToKeepConnectingState() -> Bool {
-        return (keepConnectingState || VPNManager.shared.connectIntent || self.retryWithNewCredentials) && connectivity.internetConnectionAvailable()
-    }
-
-    func checkForRetry() {
-        if !VPNManager.shared.triedToConnect || VPNManager.shared.userTappedToDisconnect || !connectivity.internetConnectionAvailable() {
-            return
-        }
-        disconnectCounter += 1
-        if disconnectCounter > 3 && !isFromProtocolFailover && !isFromProtocolChange {
-            disconnectCounter = 0
-            self.logger.logI(VPNManager.self, "Too many disconnects. Disabling VPN profile.")
-            VPNManager.shared.userTappedToDisconnect = true
-            self.resetProfiles {
-                VPNManager.shared.userTappedToDisconnect = false
-            }
-            self.disconnectOrFail()
-            return
-        }
-        if restartOnDisconnect {
-            self.logger.logI(ConnectionManager.self, "Reconnecting..")
-            self.restartOnDisconnect = false
-            self.retryTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(self.retryConnection), userInfo: nil, repeats: false)
-            return
-        } else if retryWithNewCredentials && VPNManager.shared.selectedNode?.customConfig == nil && !isFromProtocolFailover && !isFromProtocolChange {
-            self.logger.logI(ConnectionManager.self, "Trying with server credentials.")
-            self.retryWithNewCredentials = false
-            self.retryConnectionWithNewServerCredentials()
-            return
-        } else if disableOrFailOnDisconnect {
-            self.disconnectOrFail()
-            return
-        }
-    }
-
-    func disconnectOrFail() {
-        self.delegate?.setConnecting()
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            self.logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if self.selectedConnectionMode != Fields.Values.auto ||
-            self.isCustomConfigSelected() {
-            self.disconnectActiveVPNConnection(setDisconnect: true)
-        } else {
-            self.disconnectActiveVPNConnection()
-            retryInProgress = true
-            retryTimer?.invalidate()
-            delay(3) { [self] in
-                ConnectionManager.shared.onProtocolFail { [self] allProtocolsFailed in
-                    if allProtocolsFailed {
-                        delegate?.showAutomaticModeFailedToConnectPopup()
-                    } else {
-                        delegate?.setAutomaticModeFailed()
-                    }
+                self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
+                self.vpnInfo.onNext(info)
+                let connectionStatus = info.status
+                let protocolType = info.selectedProtocol
+                if self.lastConnectionStatus == connectionStatus { return }
+                self.lastConnectionStatus = connectionStatus
+                switch connectionStatus {
+                case .connecting:
+                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connecting")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                    self.checkIfUserIsOutOfData()
+                case .connected:
+                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connected")
+                    WSNet.instance().setIsConnectedToVpnState(true)
+                    untrustedOneTimeOnlySSID = ""
+                case .disconnecting:
+                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnecting")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                case .disconnected:
+                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnected")
+                    handleConnectError()
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                case .invalid:
+                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Invalid")
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                default:
+                    return
                 }
-            }
+            })
         }
     }
+}
 
-    @objc func checkForConnectIntent() {
-        let state = UIApplication.shared.applicationState
-        if state == .background || state == .inactive {
-            self.logger.logI(VPNManager.self, "App is in background.")
-            return
-        }
-        if VPNManager.shared.connectIntent && !WifiManager.shared.isConnectedWifiTrusted() && connectivity.internetConnectionAvailable() && VPNManager.shared.isDisconnected() && self.selectedFirewallMode == true {
-            logger.logI(VPNManager.self, "Connect Intent is true. Retrying to connect.")
-            self.retryWithNewCredentials = true
-            self.configureAndConnectVPN()
-        }
-    }
-
-    func handleConnectError() {
+extension VPNManager {
+    private func handleConnectError() {
         if awaitingConnectionCheck {
             return
         }
-        self.awaitingConnectionCheck = true
-        self.logger.logD(self, "Checking last VPN connection for errors.")
+        awaitingConnectionCheck = true
         getLastConnectionError { error in
             guard let error = error else {
                 self.awaitingConnectionCheck = false
@@ -276,22 +95,17 @@ extension VPNManager {
             if error == .credentialsFailure {
                 AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logD(self, "VPN disconnected due to credential failure")
-                self.connectIntent = false
-                self.resetProfiles {
+                Task {
+                    await self.resetProfiles()
                     self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
-                    delay(2) {
-                        self.logger.logI(self, "Getting new session.")
-                        self.api.getSession(nil).subscribe(onSuccess: { session in
-                            self.logger.logI(self, "Saving updated session.")
-                            DispatchQueue.main.async {
-                                self.localDB.saveSession(session: session).disposed(by: self.disposeBag)
-                            }
-                            self.awaitingConnectionCheck = false
-                        },onFailure: { _ in
-                            self.logger.logE(self, "Failure to update session after disabling VPN profile.")
-                            self.awaitingConnectionCheck = false
-                        }).disposed(by: self.disposeBag)
-                    }
+                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                    self.logger.logI(self, "Getting new session.")
+                    self.sessionManager.getUppdatedSession().subscribe(onSuccess: { session in
+                        self.awaitingConnectionCheck = false
+                    }, onFailure: { _ in
+                        self.logger.logE(self, "Failure to update session after disabling VPN profile.")
+                        self.awaitingConnectionCheck = false
+                    }).disposed(by: self.disposeBag)
                 }
             } else {
                 self.awaitingConnectionCheck = false
@@ -300,23 +114,55 @@ extension VPNManager {
         }
     }
 
-    @available(iOS 16.0, tvOS 17.0, *)
-    private func handleIKEv2Error(_ error: Error?, completion: @escaping (VPNErrors?) -> Void) {
-        guard let error = error else {
+    private func checkIfUserIsOutOfData() {
+        DispatchQueue.main.async {
+            guard let session = self.sessionManager.session else { return }
+            if session.status == 2, !self.locationsManager.isCustomConfigSelected() {
+                self.simpleDisableConnection()
+            }
+        }
+    }
+
+    /**
+     Parses updated VPN connection info from configured VPN managers.
+     */
+    private func getVPNConnectionInfo(completion: @escaping (VPNConnectionInfo?) -> Void) {
+        // Refresh and load all VPN Managers from system preferrances.
+        let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
+        var priorityManagers: [NEVPNManager] = []
+        for manager in configManager.managers {
+            if priorityStates.contains(manager.connection.status) {
+                priorityManagers.append(manager)
+            }
+        }
+        if priorityManagers.count == 1 {
+            if configManager.isIKEV2(manager: priorityManagers[0]) {
+                completion(configManager.getIKEV2ConnectionInfo(manager: priorityManagers[0]))
+            } else {
+                completion(configManager.getVPNConnectionInfo(manager: priorityManagers[0]))
+            }
+            return
+        }
+
+        if let enabledManager = priorityManagers.filter({ $0.isEnabled }).first {
+            if configManager.isIKEV2(manager: enabledManager) {
+                completion(configManager.getIKEV2ConnectionInfo(manager: enabledManager))
+            } else {
+                completion(configManager.getVPNConnectionInfo(manager: enabledManager))
+            }
+            return
+        }
+
+        // No VPN Manager is configured
+        if (configManager.managers.filter { $0.connection.status != .invalid }).isEmpty {
             completion(nil)
             return
         }
-        if let nsError = error as NSError?, nsError.domain == NEVPNConnectionErrorDomain {
-            switch nsError.code {
-            case 12, 8:
-                completion(.credentialsFailure)
-            default:
-                self.logger.logD(self, "NEVPNManager error: \(error)")
-                completion(nil)
-            }
+        // Get VPN connection info from last active manager.
+        if activeVPNManager == .iKEV2 {
+            completion(configManager.getIKEV2ConnectionInfo(manager: configManager.iKEV2Manager()))
         } else {
-            self.logger.logD(self, "NEVPNManager error: \(error)")
-            completion(nil)
+            completion(configManager.getVPNConnectionInfo(manager: configManager.getManager(for: activeVPNManager)))
         }
     }
 
@@ -329,7 +175,7 @@ extension VPNManager {
         if error.code == 50 {
             completion(.credentialsFailure)
         } else {
-            self.logger.logD(self, "NEVPNProvider error: \(error)")
+            logger.logD(self, "NEVPNProvider error: \(error)")
             completion(nil)
         }
     }
@@ -339,30 +185,22 @@ extension VPNManager {
             completion(nil)
             return
         }
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
+
+        var manager: NEVPNManager?
+        if let provider = configManager.wireguardManager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        } else if let provider = configManager.openVPNdManager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        } else if let provider = configManager.iKEV2Manager(), provider.protocolConfiguration?.username != nil {
+            manager = provider
+        }
+
+        if let manager = manager {
+            manager.connection.fetchLastDisconnectError { error in
                 self.handleNEVPNProviderError(error, completion: completion)
-            }
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.providerManager.connection.fetchLastDisconnectError { error in
-                self.handleNEVPNProviderError(error, completion: completion)
-            }
-        } else if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.neVPNManager.connection.fetchLastDisconnectError { error in
-                self.handleIKEv2Error(error, completion: completion)
             }
         } else {
             completion(nil)
-        }
-    }
-
-    private func disableOnDemandMode() {
-        if WireGuardVPNManager.shared.isConfigured() {
-            WireGuardVPNManager.shared.setOnDemandMode(false)
-        } else if OpenVPNManager.shared.isConfigured() {
-            OpenVPNManager.shared.setOnDemandMode(false)
-        } else if IKEv2VPNManager.shared.isConfigured() {
-            IKEv2VPNManager.shared.setOnDemandMode(false)
         }
     }
 }

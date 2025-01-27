@@ -12,13 +12,13 @@ struct ClosestCountry: Decodable {
     let countryCode: String?
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case countryCode = "country_code"
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        self.countryCode = try data.decodeIfPresent(String.self, forKey: .countryCode) ?? ""
+        countryCode = try data.decodeIfPresent(String.self, forKey: .countryCode) ?? ""
     }
 }

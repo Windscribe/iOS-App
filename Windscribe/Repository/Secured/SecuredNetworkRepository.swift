@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol SecuredNetworkRepository {
     var networks: BehaviorSubject<[WifiNetwork]> { get }
     func addNetwork(status: Bool, protocolType: String, port: String, preferredProtocol: String, preferredPort: String)

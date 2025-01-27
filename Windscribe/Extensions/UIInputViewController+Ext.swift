@@ -9,7 +9,6 @@
 import UIKit
 
 extension UIInputViewController {
-
     func sharedApplication() throws -> UIApplication {
         var responder: UIResponder? = self
         while responder != nil {
@@ -24,5 +23,4 @@ extension UIInputViewController {
                       code: 1,
                       userInfo: nil)
     }
-
 }

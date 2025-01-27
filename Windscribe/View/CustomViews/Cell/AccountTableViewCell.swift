@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 protocol AccountTableViewCellDelegate: AnyObject {
     func upgradeButtonTapped(indexPath: IndexPath)
@@ -19,9 +19,9 @@ class AccountTableViewCell: UITableViewCell {
     lazy var rightButton = UIButton()
     lazy var cellDivider = UIView()
 
-    var indexPath: IndexPath = IndexPath()
+    var indexPath: IndexPath = .init()
     weak var delegate: AccountTableViewCellDelegate?
-    let configDataTrigger = PublishSubject<()>()
+    let configDataTrigger = PublishSubject<Void>()
     private let disposeBag = DisposeBag()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -88,7 +88,6 @@ class AccountTableViewCell: UITableViewCell {
         cellDivider.makeLeadingAnchor(constant: 16)
         cellDivider.makeTrailingAnchor()
         cellDivider.makeBottomAnchor()
-
     }
 
     override func layoutSubviews() {
@@ -124,7 +123,7 @@ class AccountTableViewCell: UITableViewCell {
 
     @objc func upgradeTap() {
         print("Tapped")
-        delegate?.upgradeButtonTapped(indexPath: self.indexPath)
+        delegate?.upgradeButtonTapped(indexPath: indexPath)
     }
 
     private func makeRoundCorners() {
@@ -153,5 +152,4 @@ class AccountTableViewCell: UITableViewCell {
             cellDivider.isHidden = false
         }
     }
-
 }

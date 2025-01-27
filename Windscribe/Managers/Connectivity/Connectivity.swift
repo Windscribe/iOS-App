@@ -8,10 +8,12 @@
 
 import Foundation
 import RxSwift
+
 protocol Connectivity {
     var network: BehaviorSubject<AppNetwork> { get }
     func getNetwork() -> AppNetwork
     func refreshNetwork()
     func internetConnectionAvailable() -> Bool
     func getWifiSSID() -> String?
+    func awaitNetwork(maxTime: Double) async throws
 }

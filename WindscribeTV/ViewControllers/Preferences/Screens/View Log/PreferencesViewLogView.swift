@@ -6,14 +6,14 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class PreferencesViewLogView: UIView {
     let disposeBag = DisposeBag()
     var viewModel: ViewLogViewModel!
 
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet var textView: UITextView!
 
     func setup(with viewModel: ViewLogViewModel) {
         self.viewModel = viewModel
@@ -23,10 +23,11 @@ class PreferencesViewLogView: UIView {
         textView.isSelectable = true
         textView.showsVerticalScrollIndicator = true
         textView.panGestureRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.indirect.rawValue)]
+        textView.textColor = .white.withAlphaComponent(0.5)
     }
 
     func scrolltoBottom() {
-        self.textView.scrollToBottom()
+        textView.scrollToBottom()
     }
 
     private func bindViews() {
@@ -35,6 +36,6 @@ class PreferencesViewLogView: UIView {
             self.textView.text = content
             self.scrolltoBottom()
         }, onError: { _ in })
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
     }
 }

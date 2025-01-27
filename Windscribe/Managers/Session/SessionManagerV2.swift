@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import RxSwift
+
 protocol SessionManagerV2 {
     var session: Session? { get }
     func setSessionTimer()
@@ -15,4 +17,5 @@ protocol SessionManagerV2 {
     func checkForSessionChange()
     func keepSessionUpdated()
     func canAccesstoProLocation() -> Bool
+    func getUppdatedSession() -> Single<Session>
 }

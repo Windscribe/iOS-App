@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class PushNotificationPayload: Equatable, CustomStringConvertible {
     var description: String {
         return "Type: \(type ?? "") PromoCode: \(promoCode ?? "") Pcpid: \(pcpid ?? "")"

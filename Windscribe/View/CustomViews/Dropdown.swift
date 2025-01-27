@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import Swinject
+import UIKit
 
 protocol DropdownDelegate: AnyObject {
     func optionSelected(dropdown: Dropdown,
@@ -16,17 +16,18 @@ protocol DropdownDelegate: AnyObject {
 }
 
 class Dropdown: UITableView {
-
     weak var dropDownDelegate: DropdownDelegate?
     var options = [String]() {
         didSet {
-            self.prepareTableView()
+            prepareTableView()
         }
     }
+
     var height: CGFloat {
         return UIDevice.current.isIphone5orLess() ?
-        CGFloat(self.options.count * 27) : CGFloat(self.options.count * 45)
+            CGFloat(options.count * 27) : CGFloat(options.count * 45)
     }
+
     var width: CGFloat = 124
     var maxHeight: CGFloat = 275
     var relatedIndex: Int = 0
@@ -48,15 +49,15 @@ class Dropdown: UITableView {
     init(attachedView: UIView) {
         super.init(frame: CGRect(x: attachedView.frame.maxX, y: attachedView.frame.minY, width: 0, height: 0), style: .plain)
         self.attachedView = attachedView
-        self.backgroundColor = UIColor.white
-        self.layer.cornerRadius = 3.0
-        self.register(DropDownTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
-        self.rowHeight = 45
-        self.separatorStyle = .none
-        self.allowsSelection = true
-        self.delegate = self
-        self.dataSource = self
-        self.displayForPrefferedAppearence()
+        backgroundColor = UIColor.white
+        layer.cornerRadius = 3.0
+        register(DropDownTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
+        rowHeight = 45
+        separatorStyle = .none
+        allowsSelection = true
+        delegate = self
+        dataSource = self
+        displayForPrefferedAppearence()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,11 +67,11 @@ class Dropdown: UITableView {
     func prepareTableView() {
         UIView.animate(withDuration: 0.25, animations: {
             if self.height <= 150 {
-                self.frame = CGRect(x: self.point.x-self.width, y: self.point.y, width: self.width, height: self.height)
+                self.frame = CGRect(x: self.point.x - self.width, y: self.point.y, width: self.width, height: self.height)
             } else {
-                self.frame = CGRect(x: self.point.x-self.width, y: self.point.y, width: self.width, height: self.maxHeight)
+                self.frame = CGRect(x: self.point.x - self.width, y: self.point.y, width: self.width, height: self.maxHeight)
             }
-        }, completion: { (_) in
+        }, completion: { _ in
             self.flashScrollIndicators()
         })
     }
@@ -98,28 +99,25 @@ class Dropdown: UITableView {
     func displayForPrefferedAppearence() {
         let isDark = themeManager.getIsDarkTheme()
         if !isDark {
-            self.backgroundColor = UIColor.midnight
+            backgroundColor = UIColor.midnight
         } else {
-            self.backgroundColor = UIColor.white
+            backgroundColor = UIColor.white
         }
-
     }
-
 }
 
 extension Dropdown: UITableViewDelegate, UITableViewDataSource, DropDownTableViewCellDelegate {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         return 1
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         return options.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? DropDownTableViewCell ?? DropDownTableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
-        cell.button.setTitle(self.options[indexPath.row], for: .normal)
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as? DropDownTableViewCell ?? DropDownTableViewCell(style: .default, reuseIdentifier: reuseIdentifier)
+        cell.button.setTitle(options[indexPath.row], for: .normal)
         cell.row = indexPath.row
         cell.delegate = self
         return cell
@@ -127,10 +125,9 @@ extension Dropdown: UITableViewDelegate, UITableViewDataSource, DropDownTableVie
 
     func buttonTapped(row: Int) {
         let value = options[row]
-        self.dropDownDelegate?.optionSelected(dropdown: self, option: value, relatedIndex: row)
-        self.removeWithAnimation()
+        dropDownDelegate?.optionSelected(dropdown: self, option: value, relatedIndex: row)
+        removeWithAnimation()
     }
-
 }
 
 protocol DropDownTableViewCellDelegate: AnyObject {
@@ -138,7 +135,6 @@ protocol DropDownTableViewCellDelegate: AnyObject {
 }
 
 class DropDownTableViewCell: UITableViewCell {
-
     var button = UIButton()
     weak var delegate: DropDownTableViewCellDelegate?
     var row: Int = 0
@@ -146,15 +142,15 @@ class DropDownTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.backgroundColor = UIColor.white
+        backgroundColor = UIColor.white
 
         button.titleLabel?.font = UIFont.text(size: 16)
         button.titleLabel?.textAlignment = .center
         button.setTitleColor(UIColor.midnight, for: .normal)
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        self.contentView.addSubview(button)
+        contentView.addSubview(button)
 
-        self.displayForPrefferedAppearence()
+        displayForPrefferedAppearence()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -165,27 +161,26 @@ class DropDownTableViewCell: UITableViewCell {
         super.layoutSubviews()
         button.translatesAutoresizingMaskIntoConstraints = false
 
-        self.addConstraints([
-         NSLayoutConstraint(item: button, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 20),
-         NSLayoutConstraint(item: button, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -20),
-         NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0),
-         NSLayoutConstraint(item: button, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0)
-         ])
+        addConstraints([
+            NSLayoutConstraint(item: button, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: button, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -20),
+            NSLayoutConstraint(item: button, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: button, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0),
+        ])
     }
 
     @objc func buttonTapped() {
-        self.delegate?.buttonTapped(row: self.row)
+        delegate?.buttonTapped(row: row)
     }
 
     func displayForPrefferedAppearence() {
         let isDark = themeManager.getIsDarkTheme()
         if !isDark {
-            self.backgroundColor = UIColor.midnight
+            backgroundColor = UIColor.midnight
             button.setTitleColor(UIColor.white, for: .normal)
         } else {
-            self.backgroundColor = UIColor.white
+            backgroundColor = UIColor.white
             button.setTitleColor(UIColor.midnight, for: .normal)
         }
     }
-
 }

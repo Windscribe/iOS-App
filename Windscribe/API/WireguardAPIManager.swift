@@ -1,5 +1,5 @@
 //
-//  ExtensionAPIManager.swift
+//  WireguardAPIManager.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-23.
@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol WireguardAPIManager {
     func getSession() -> Single<Session>
     func wgConfigInit(clientPublicKey: String, deleteOldestKey: Bool) -> RxSwift.Single<DynamicWireGuardConfig>

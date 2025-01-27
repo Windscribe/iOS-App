@@ -7,9 +7,10 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
+
 enum EmailCellType {
     case confirmEmail
     case email
@@ -31,7 +32,7 @@ protocol AccountEmailCellDelegate: AnyObject {
 }
 
 class AccountEmailCell: UITableViewCell {
-    var indexPath: IndexPath = IndexPath()
+    var indexPath: IndexPath = .init()
     weak var delegate: AccountEmailCellDelegate?
     let typeSubject = BehaviorSubject<EmailCellType>(value: .confirmEmail)
     private var disposeBag = DisposeBag()
@@ -49,15 +50,17 @@ class AccountEmailCell: UITableViewCell {
         mainStack.fillSuperview()
         mainStack.setPadding(UIEdgeInsets(inset: 16))
     }
+
     var accountItemCell: AccountItemCell = .email
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.disposeBag = DisposeBag() // Force rx disposal on reuse
+        disposeBag = DisposeBag() // Force rx disposal on reuse
     }
 
     func setType(_ type: EmailCellType, item: AccountItemCell) {
@@ -74,7 +77,7 @@ class AccountEmailCell: UITableViewCell {
 
     private lazy var mainStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            viewEmail, viewDescription, viewConfirm
+            viewEmail, viewDescription, viewConfirm,
         ])
         stack.spacing = 16
         stack.axis = .vertical
@@ -83,12 +86,13 @@ class AccountEmailCell: UITableViewCell {
 
     private lazy var viewEmail: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            iconView, leftLabel, rightButton
+            iconView, leftLabel, rightButton,
         ])
         stack.axis = .horizontal
         stack.spacing = 4
         return stack
     }()
+
     private lazy var iconView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: ImagesAsset.protocolFailed)
@@ -100,6 +104,7 @@ class AccountEmailCell: UITableViewCell {
         imageView.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return imageView
     }()
+
     private lazy var leftLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = TextsAsset.email
@@ -139,7 +144,7 @@ class AccountEmailCell: UITableViewCell {
     ///
     private lazy var viewConfirm: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            confirmLabel, UIView(), resendEmailButton
+            confirmLabel, UIView(), resendEmailButton,
         ])
         stack.axis = .horizontal
         stack.addSubview(confirmWrapper)
@@ -149,11 +154,13 @@ class AccountEmailCell: UITableViewCell {
         confirmWrapper.fillSuperview()
         return stack
     }()
+
     private lazy var confirmWrapper: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 8
         return view
     }()
+
     private lazy var confirmLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -161,6 +168,7 @@ class AccountEmailCell: UITableViewCell {
         label.font = UIFont.text(size: 14)
         return label
     }()
+
     private lazy var resendEmailButton: UIButton = {
         let resendEmailButton = UIButton()
         resendEmailButton.translatesAutoresizingMaskIntoConstraints = false
@@ -170,18 +178,18 @@ class AccountEmailCell: UITableViewCell {
         return resendEmailButton
     }()
 
-    @objc func resendEmailButtonTapped(_ sender: UIButton) {
+    @objc func resendEmailButtonTapped(_: UIButton) {
         resendEmailAction?()
     }
 
     var resendEmailAction: (() -> Void)?
 
     @objc func buttonAction() {
-        self.delegate?.addEmailButtonTapped(indexPath: self.indexPath)
+        delegate?.addEmailButtonTapped(indexPath: indexPath)
     }
 
     func bindView(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] in
+        isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
             self.rightButton.setTitleColor(ThemeUtils.primaryTextColor(isDarkMode: $0), for: .normal)
@@ -192,11 +200,12 @@ class AccountEmailCell: UITableViewCell {
             self.resendEmailButton.setTitleColor(ThemeUtils.getConfirmLabelColor(isDarkMode: $0), for: .normal)
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(typeSubject.asObservable(), isDarkMode.asObservable()).bind { (type, isDarkMode) in
+        Observable.combineLatest(typeSubject.asObservable(), isDarkMode.asObservable()).bind { type, isDarkMode in
             self.updateUI(type: type, isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
 }
+
 extension AccountEmailCell {
     func updateUI(type: EmailCellType, isDarkMode: Bool) {
         switch type {
@@ -228,7 +237,7 @@ extension AccountEmailCell {
         }
 
         iconView.setImageColor(color: type.color(isDarkMode: isDarkMode))
-        rightButton.titleLabel?.textColor =  type.color(isDarkMode: isDarkMode).withAlphaComponent(0.5)
+        rightButton.titleLabel?.textColor = type.color(isDarkMode: isDarkMode).withAlphaComponent(0.5)
         leftLabel.textColor = type.color(isDarkMode: isDarkMode)
     }
 }

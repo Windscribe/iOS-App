@@ -8,6 +8,7 @@
 
 import CocoaLumberjack
 import Foundation
+
 class FileLogFormater: NSObject, DDLogFormatter {
     let dateFormatter: DateFormatter
     override init() {

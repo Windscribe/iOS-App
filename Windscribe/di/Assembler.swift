@@ -8,15 +8,13 @@
 
 import Foundation
 import NetworkExtension
-import Swinject
 import Realm
 import RealmSwift
+import Swinject
 
 extension Assembler {
     static let container = Container()
-    static let assembler: Assembler = {
-        return Assembler([App(), Network(), Repository(), Database(), Managers(), Routers(), ViewModels(), ViewControllerModule()], container: container)
-    }()
+    static let assembler: Assembler = .init([App(), Network(), Repository(), Database(), Managers(), Routers(), ViewModels(), ViewControllerModule()], container: container)
 
     /**
      Resolves any previously added dependecy from assembler.

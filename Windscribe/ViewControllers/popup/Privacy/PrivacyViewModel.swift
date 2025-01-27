@@ -16,21 +16,20 @@ protocol PrivacyViewModelType {
 
 class PrivacyViewModel: PrivacyViewModelType {
     // MARK: - Dependencies
+
     let preferences: Preferences
     let networkRepository: SecuredNetworkRepository
     let localDatabase: LocalDatabase
-    let sharedVPNManager: IKEv2VPNManager
     let logger: FileLogger
 
     init(preferences: Preferences,
          networkRepository: SecuredNetworkRepository,
          localDatabase: LocalDatabase,
-         sharedVPNManager: IKEv2VPNManager,
-         logger: FileLogger) {
+         logger: FileLogger)
+    {
         self.preferences = preferences
         self.networkRepository = networkRepository
         self.localDatabase = localDatabase
-        self.sharedVPNManager = sharedVPNManager
         self.logger = logger
     }
 
@@ -46,18 +45,19 @@ class PrivacyViewModel: PrivacyViewModelType {
         preferences.savePrivacyPopupAccepted(bool: true)
         NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         var defaultProtocol = TextsAsset.General.protocols[0]
-        var defaultPort = self.localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-        if let suggestedProtocol = self.localDatabase.getSuggestedPorts()?.first,
+        var defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        if let suggestedProtocol = localDatabase.getSuggestedPorts()?.first,
            suggestedProtocol.protocolType != "",
-           suggestedProtocol.port != "" {
+           suggestedProtocol.port != ""
+        {
             defaultProtocol = suggestedProtocol.protocolType
             defaultPort = suggestedProtocol.port
-            self.logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+            logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
         } else {
-            self.logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
+            logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
-        self.localDatabase.updateConnectionMode(value: Fields.Values.manual)
-        self.networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
+        localDatabase.updateConnectionMode(value: Fields.Values.manual)
+        networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
         completionHandler?()
     }
 }

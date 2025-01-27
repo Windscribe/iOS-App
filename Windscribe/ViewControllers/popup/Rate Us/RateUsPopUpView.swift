@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import SwiftUI
 import StoreKit
+import SwiftUI
 import Swinject
 
 @available(iOS 16.0, *)
@@ -95,7 +95,6 @@ struct RateUsPopupView: View {
     }
 
     @MainActor private func actionButtonTapped() {
-
         viewModel.setRateUsActionCompleted()
         if (viewModel.getNativeRateUsDisplayCount() ?? 0) < 3 {
             requestReview()

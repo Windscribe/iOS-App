@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Notifications {
+enum Notifications {
     static let connectionFailed = Notification.Name(rawValue: "connection-failed")
     static let newNotificationToRead = Notification.Name(rawValue: "news-to-read")
     static let userPreferencesChanged = Notification.Name(rawValue: "user-preferences-changed")
@@ -28,5 +28,4 @@ struct Notifications {
     static let reloadTableViews = Notification.Name(rawValue: "reload-table-views")
     static let configureVPN = Notification.Name(rawValue: "configure-vpn")
     static let sessionUpdated = Notification.Name(rawValue: "session-updated")
-    static let loadLastConnected = Notification.Name(rawValue: "load-last-connected")
 }

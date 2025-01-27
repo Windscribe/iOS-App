@@ -10,32 +10,17 @@ import Foundation
 import RxSwift
 
 protocol ProtocolSwitchDelegateViewModelType: ProtocolSwitchVCDelegate {
-    var configureVPNTrigger: PublishSubject<()> {get}
+    var disableVPNTrigger: PublishSubject<Void> { get }
 }
 
 class ProtocolSwitchDelegateViewModel: ProtocolSwitchDelegateViewModelType {
-    var configureVPNTrigger = PublishSubject<()>()
+    var disableVPNTrigger = PublishSubject<Void>()
 
-    var vpnManager: VPNManager
-    var connectionStateManager: ConnectionStateManagerType
-
-    init(vpnManager: VPNManager, connectionStateManager: ConnectionStateManagerType) {
-        self.vpnManager = vpnManager
-        self.connectionStateManager = connectionStateManager
-    }
+    init() { }
 }
 
 extension ProtocolSwitchDelegateViewModel: ProtocolSwitchVCDelegate {
     func disconnectFromFailOver() {
-        connectionStateManager.disconnect()
-    }
-
-    func protocolSwitchVCCountdownCompleted() {
-        if vpnManager.isConnected() && vpnManager.isFromProtocolChange {
-            configureVPNTrigger.onNext(())
-        } else {
-            self.vpnManager.connectUsingAutomaticMode()
-            connectionStateManager.setConnecting()
-        }
+        disableVPNTrigger.onNext(())
     }
 }

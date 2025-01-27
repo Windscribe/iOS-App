@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol PortMapRepository {
     func getUpdatedPortMap() -> Single<[PortMap]>
 }

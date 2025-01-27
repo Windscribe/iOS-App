@@ -6,15 +6,15 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 protocol PreferencesAccountViewDelegate: NSObject {
     func actionSelected(with item: AccountItemCell)
 }
 
 class PreferencesAccountView: UIView {
-    @IBOutlet weak var contentStackView: UIStackView!
+    @IBOutlet var contentStackView: UIStackView!
 
     var viewModel: AccountViewModelType?
     weak var delegate: PreferencesAccountViewDelegate?
@@ -23,7 +23,7 @@ class PreferencesAccountView: UIView {
     func setup() {
         guard let accountViewModel = viewModel else { return }
         contentStackView.removeAllArrangedSubviews()
-        accountViewModel.getSections().forEach { section in
+        for section in accountViewModel.getSections() {
             let sectionView: AccountSectionView = AccountSectionView.fromNib()
             sectionView.setup(with: section)
             sectionView.delegate = self
@@ -34,8 +34,8 @@ class PreferencesAccountView: UIView {
     func bindViews() {
         viewModel?.languageUpdatedTrigger.subscribe { [weak self] _ in
             guard let self = self else { return }
-            self.contentStackView.arrangedSubviews.forEach {
-                if let sectionView = $0 as? AccountSectionView {
+            for arrangedSubview in self.contentStackView.arrangedSubviews {
+                if let sectionView = arrangedSubview as? AccountSectionView {
                     sectionView.updateLocalisation()
                 }
             }

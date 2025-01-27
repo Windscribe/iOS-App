@@ -7,23 +7,28 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 protocol ProtocolSwitchVCDelegate: AnyObject {
-    func protocolSwitchVCCountdownCompleted()
     func disconnectFromFailOver()
 }
 
 class ProtocolSwitchViewController: WSNavigationViewController {
     var viewModel: ProtocolSwitchViewModelType!
-    var connectionManager: ConnectionManagerV2!
+    var protocolManager: ProtocolManagerType!
     var router: ProtocolSwitchViewRouter!
+    var onSelection: ((Error?) -> Void)?
+    var error: VPNConfigurationErrors?
+
     // MARK: - Properties
+
     var type: ProtocolFallbacksType = .change
 
     weak var delegate: ProtocolSwitchVCDelegate?
+
     // MARK: - UI Elements
+
     private lazy var topImage: UIImageView = {
         let vw = UIImageView()
         vw.image = UIImage(named: type.getIconAsset())
@@ -43,7 +48,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
 
     private lazy var subHeaderLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = type.getDescription()
+        lbl.text = (error != nil) ? error?.description : type.getDescription()
         lbl.alpha = 0.5
         lbl.font = UIFont.text(size: 16)
         lbl.textAlignment = .center
@@ -71,13 +76,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
     }
 
     private func setup() {
-        if !VPNManager.shared.isConnected() {
-            VPNManager.shared.isFromProtocolFailover = true
-            VPNManager.shared.isFromProtocolChange = false
-        } else {
-            VPNManager.shared.isFromProtocolChange = true
-            VPNManager.shared.isFromProtocolFailover = false
-        }
+        viewModel.updateIsFromProtocol()
         setupFillLayoutView()
         layoutView.stackView.spacing = 16
         layoutView.stackView.addArrangedSubviews([
@@ -85,7 +84,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             headerLabel,
             subHeaderLabel,
             protocolStack,
-            cancelButton
+            cancelButton,
         ])
         createProtocolView()
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
@@ -110,11 +109,12 @@ class ProtocolSwitchViewController: WSNavigationViewController {
         }).disposed(by: disposeBag)
 
         cancelButton.rx.tap.bind {
-            if VPNManager.shared.isConnected() {
+            if self.viewModel.isConnected() {
                 self.backButtonTapped()
             } else {
                 AutomaticMode.shared.resetFailCounts()
                 self.delegate?.disconnectFromFailOver()
+                self.onSelection?(self.error)
                 self.backButtonTapped()
             }
         }.disposed(by: disposeBag)
@@ -122,7 +122,8 @@ class ProtocolSwitchViewController: WSNavigationViewController {
 
     private func createProtocolView() {
         protocolStack.removeAllArrangedSubviews()
-        connectionManager.loadProtocols(shouldReset: false) { [self] displayConnection in
+        Task { @MainActor in
+            let displayConnection = await protocolManager.getRefreshedProtocols()
             for dt in displayConnection {
                 var protocolDescription: String
                 switch dt.protocolPort.protocolName {
@@ -160,19 +161,17 @@ extension ProtocolSwitchViewController: ProtocolViewDelegate {
         if protocolView.type == .connected {
             router.routeTo(to: RouteID.protocolSetPreferred(type: protocolView.type, delegate: nil, protocolName: protocolView.protocolName), from: self)
         } else if protocolView.type != .fail {
-            connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            delegate?.protocolSwitchVCCountdownCompleted()
-
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName), connectionType: .user)
+            onSelection?(nil)
             backButtonTapped()
         }
     }
 
     func protocolViewNextUpCompleteCoundown(_ protocolView: ProtocolView) {
         protocolView.invalidateTimer()
-        if !VPNManager.shared.isConnected() {
-            connectionManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName))
-            delegate?.protocolSwitchVCCountdownCompleted()
-
+        if !viewModel.isConnected() {
+            protocolManager.onUserSelectProtocol(proto: (protocolView.protocolName, protocolView.portName), connectionType: .failover)
+            onSelection?(nil)
         }
         backButtonTapped()
     }

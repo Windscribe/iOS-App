@@ -10,6 +10,7 @@ def core
   pod "RxRealm"
   pod 'Swinject'
   pod 'RxBlocking', '6.6.0'
+  pod 'SwiftSoup', '1.7.4'
 end
 # Realm database.
 def realm
@@ -25,7 +26,6 @@ target 'Windscribe' do
   pod 'SwipeCellKit', '2.5.4'
   pod "RxGesture", '4.0.4'
   pod 'SimpleKeychain', '~> 1.0'
-  pod 'SwiftSoup', '1.7.4'
   core
   realm
 end
@@ -75,6 +75,7 @@ target 'WindscribeTV' do
   platform :tvos, '17.0'
   use_modular_headers!
   use_frameworks!
+  pod 'SwiftSoup', '1.7.4'
   core
   realm
   pod 'SimpleKeychain', '~> 1.0'

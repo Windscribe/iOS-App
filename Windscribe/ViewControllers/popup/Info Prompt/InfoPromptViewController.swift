@@ -6,11 +6,10 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class InfoPromptViewController: WSUIViewController {
-
     var iconView: UIImageView!
     var infoLabel: UILabel!
     var actionButton: UIButton!
@@ -27,9 +26,9 @@ class InfoPromptViewController: WSUIViewController {
     }
 
     private func bindViews() {
-        viewModel.title.bind(to: self.infoLabel.rx.text)
+        viewModel.title.bind(to: infoLabel.rx.text)
             .disposed(by: disposeBag)
-        viewModel.actionValue.bind(to: self.actionButton.rx.title(for: .normal))
+        viewModel.actionValue.bind(to: actionButton.rx.title(for: .normal))
             .disposed(by: disposeBag)
 
         actionButton.rx.tap.bind { [self] in
@@ -47,5 +46,4 @@ class InfoPromptViewController: WSUIViewController {
             self.dismiss(animated: true, completion: nil)
         }).disposed(by: disposeBag)
     }
-
 }

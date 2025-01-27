@@ -6,10 +6,10 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import AppIntents
 import Intents
 import NetworkExtension
 import Swinject
-import AppIntents
 
 class IntentHandler: INExtension {
     let showLocationHandler = ShowLocationIntentHandler()

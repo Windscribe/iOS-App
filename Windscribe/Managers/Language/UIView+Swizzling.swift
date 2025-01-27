@@ -30,7 +30,7 @@ extension UIView {
         } else {
             method_exchangeImplementations(orginalMethod!, swizzledMethod!)
         }
-  }
+    }
 
     @objc func swizzledAwakeFromNib() {
         swizzledAwakeFromNib()
@@ -41,7 +41,7 @@ extension UIView {
         case let lbl as UILabel:
             lbl.text = lbl.text?.localize()
         case let tabbar as UITabBar:
-            tabbar.items?.forEach({ $0.title = $0.title?.localize() })
+            tabbar.items?.forEach { $0.title = $0.title?.localize() }
         case let btn as UIButton:
             btn.setTitle(btn.title(for: .normal)?.localize(), for: .normal)
         case let sgmnt as UISegmentedControl:
@@ -57,7 +57,8 @@ extension UIView {
 extension String {
     func localize(comment: String = "") -> String {
         guard let bundle = Bundle.main.path(forResource: SharedSecretDefaults.shared.getSelectedLanguage(),
-                                            ofType: "lproj") else {
+                                            ofType: "lproj")
+        else {
             return NSLocalizedString(self, comment: comment)
         }
         let langBundle = Bundle(path: bundle)

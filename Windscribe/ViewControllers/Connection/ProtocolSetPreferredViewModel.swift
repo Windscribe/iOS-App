@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 enum SubmitLogState {
     case initial
     case sending
@@ -16,18 +17,19 @@ enum SubmitLogState {
 }
 
 protocol ProtocolSetPreferredViewModelV2 {
-    var alertManager: AlertManagerV2 {get}
-    var securedNetwork: SecuredNetworkRepository {get}
-    var localDatabase: LocalDatabase {get}
-    var changeMessage: String {get}
-    var failMessage: String {get}
-    var failHeaderString: String {get}
-    var type: ProtocolViewType {get set}
+    var alertManager: AlertManagerV2 { get }
+    var securedNetwork: SecuredNetworkRepository { get }
+    var localDatabase: LocalDatabase { get }
+    var changeMessage: String { get }
+    var failMessage: String { get }
+    var failHeaderString: String { get }
+    var type: ProtocolViewType { get set }
     var submitLogState: BehaviorSubject<SubmitLogState> { get }
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
     func submitLog()
     func getSubHeader() -> String
+    func getProtocolName() async  -> String
 }
 
 class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
@@ -38,11 +40,12 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     var logger: FileLogger
     var sessionManager: SessionManagerV2
     var apiManager: APIManager
+    var protocolManager: ProtocolManagerType
     var disposeBag = DisposeBag()
     var submitLogState = BehaviorSubject(value: SubmitLogState.initial)
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager) {
+    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager, protocolManager: ProtocolManagerType) {
         self.alertManager = alertManager
         self.type = type
         self.securedNetwork = securedNetwork
@@ -50,6 +53,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
         self.logger = logger
+        self.protocolManager = protocolManager
         isDarkMode = themeManager.darkTheme
     }
 
@@ -69,7 +73,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
                 if let session = self.sessionManager.session {
                     debugUsername = session.username
                 }
-                if let session =  self.sessionManager.session, session.isUserGhost == true {
+                if let session = self.sessionManager.session, session.isUserGhost == true {
                     debugUsername = "ghost_\(session.userId)"
                 }
                 return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
@@ -79,5 +83,9 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
             }, onFailure: { [self] _ in
                 submitLogState.onNext(.failed)
             }).disposed(by: disposeBag)
+    }
+
+    func getProtocolName() async -> String {
+        await protocolManager.getNextProtocol().protocolName
     }
 }

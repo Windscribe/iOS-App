@@ -6,25 +6,24 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class NewsFeedViewController: PreferredFocusedViewController {
-    @IBOutlet weak var listStackView: UIStackView!
-    @IBOutlet weak var buttonContainerView: UIStackView!
-    @IBOutlet weak var buttonHiddingView: UIView!
-    @IBOutlet weak var newsBodyText: UITextView!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet var listStackView: UIStackView!
+    @IBOutlet var buttonContainerView: UIStackView!
+    @IBOutlet var buttonHiddingView: UIView!
+    @IBOutlet var newsBodyText: UITextView!
+    @IBOutlet var titleLabel: UILabel!
 
     var button = WSPillButton()
 
-    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!
+    var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManagerV2!
     let disposeBag = DisposeBag()
-    var currentAction: NoticeAction?
-
-    private var newsSections = [NewsSection]()
+    var selectedActionLink: ActionLink?
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Notifications View")
@@ -33,6 +32,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
     }
 
     // MARK: Setting up
+
     private func setup() {
         button.setup(withHeight: 96)
         buttonContainerView.addArrangedSubview(button)
@@ -43,49 +43,37 @@ class NewsFeedViewController: PreferredFocusedViewController {
     }
 
     private func bindViews() {
-        viewModel.newsSections.subscribe { [weak self] newsSections in
-            guard let self = self else { return }
-            buildSelectionOptions(newsSections: newsSections)
-        }.disposed(by: disposeBag)
-        button.rx.primaryAction.bind { _ in
-            guard let action = self.currentAction else { return }
-            self.router.routeTo(to: .upgrade(promoCode: action.promoCode, pcpID: action.pcpid), from: self)
-        }.disposed(by: disposeBag)
-    }
-
-    private func buildSelectionOptions(newsSections: [NewsSection]) {
-        self.newsSections = newsSections
-        let firstItem = self.newsSections.first?.items.first
-        newsSections.forEach {
-            let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
-            if let details = $0.items.first {
-                self.listStackView.addArrangedSubview(newsNameView)
-                newsNameView.setup(with: details.title ?? "", isSelected: firstItem?.title == details.title)
-                newsNameView.delegate = self
+        viewModel.newsfeedData.bind { data in
+            self.newsBodyText.isHidden = true
+            self.buttonHiddingView.isHidden = true
+            if let firstItem = data.first {
+                self.newsBodyText.isHidden = false
+                data.forEach { feed in
+                    let newsNameView: OptionSelectionView = OptionSelectionView.fromNib()
+                    newsNameView.setup(with: feed.title, isSelected: firstItem.title == feed.title)
+                    newsNameView.delegate = self
+                    self.listStackView.addArrangedSubview(newsNameView)
+                }
+                self.setupDetailsView(with: firstItem)
             }
-        }
-        guard let firstItem = firstItem else { return }
-        self.setupDetailsView(with: firstItem)
-    }
+        }.disposed(by: disposeBag)
 
-    private func setupDetailsView(with item: NewsFeedCellViewModel) {
-        if let message = item.message, let messageData = message.data(using: .utf8) {
-            newsBodyText.htmlText(htmlData: messageData,
-                              font: .regular(size: 42),
-                                  foregroundColor: .white)
-        }
-        if let action = item.action {
-            button.setTitle(action.label, for: .normal)
-            buttonHiddingView.isHidden = false
-            currentAction = action
-        } else {
-            currentAction = nil
-            buttonHiddingView.isHidden = true
-        }
+        viewModel.viewToLaunch.bind(onNext: { view in
+            switch view {
+                case let .safari(url):
+                    self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
+                    self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
+                case let .payment(promo, pcpid):
+                    self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
+                    self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
+                default: ()
+            }
+        }).disposed(by: disposeBag)
     }
 }
 
 // MARK: Touches and Keys handling
+
 extension NewsFeedViewController {
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         for press in presses {
@@ -109,23 +97,43 @@ extension NewsFeedViewController {
     private func updateBodyButtonFocus() -> Bool {
         if button != UIScreen.main.focusedView {
             myPreferredFocusedView = button
-            self.setNeedsFocusUpdate()
-            self.updateFocusIfNeeded()
+            setNeedsFocusUpdate()
+            updateFocusIfNeeded()
             return true
         }
         return false
+    }
+
+    private func setupDetailsView(with item: NewsFeedData) {
+        newsBodyText.text = item.description
+        if let action = item.actionLink {
+            button.setTitle(action.title, for: .normal)
+            buttonHiddingView.isHidden = false
+            selectedActionLink = action
+            button.addTapGesture(tapNumber: 1, target: self, action: #selector(onActionClick))
+        } else {
+            selectedActionLink = nil
+            buttonHiddingView.isHidden = true
+        }
+    }
+
+    @objc private func onActionClick() {
+        if let action = selectedActionLink {
+            viewModel.didTapAction(action: action)
+        }
     }
 }
 
 extension NewsFeedViewController: OptionSelectionViewDelegate {
     func optionWasSelected(_ sender: OptionSelectionView) {
-        guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), newsSections.count >= index
+        let sections = (try? viewModel.newsfeedData.value()) ?? []
+        guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), sections.count >= index
         else { return }
-        guard let details = newsSections[index-1].items.first else { return }
-        logger.logD(self, "Pressed to see details of \(details.title ?? "No title").")
+        let details = sections[index-1]
+        logger.logD(self, "Pressed to see details of \(details.title).")
         setupDetailsView(with: details)
-        listStackView.arrangedSubviews.forEach {
-            if let view = $0 as? OptionSelectionView {
+        for arrangedSubview in listStackView.arrangedSubviews {
+            if let view = arrangedSubview as? OptionSelectionView {
                 view.updateSelection(with: view == sender)
             }
         }

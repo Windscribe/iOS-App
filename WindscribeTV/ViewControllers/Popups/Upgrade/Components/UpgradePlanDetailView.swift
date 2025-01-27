@@ -9,8 +9,8 @@
 import UIKit
 
 class UpgradePlanDetailView: UIView {
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var bodyLabel: UILabel!
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var bodyLabel: UILabel!
 
     func setup(with title: String, and body: String) {
         titleLabel.text = title

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol PushNotificationManagerV2 {
     func askForPushNotificationPermission()
     func handleSilentPushNotificationActions(payload: PushNotificationPayload)

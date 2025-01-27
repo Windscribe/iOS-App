@@ -8,8 +8,8 @@
 
 import Foundation
 import RxSwift
-extension SharedSecretDefaults {
 
+extension SharedSecretDefaults {
     func observeFavouriteIds() -> Observable<[String]> {
         return sharedDefault?.rx
             .observe([String].self, SharedKeys.tvFavourites)

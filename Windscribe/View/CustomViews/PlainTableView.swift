@@ -6,41 +6,38 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import ExpyTableView
+import UIKit
 
 public class PlainTableView: UITableView {
-
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        self.separatorStyle = .none
-        self.showsVerticalScrollIndicator = false
-        self.showsHorizontalScrollIndicator = false
-        self.rowHeight = 50
-        self.estimatedRowHeight = 50
-        self.backgroundColor = UIColor.clear
-        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        self.layer.masksToBounds = true
+        separatorStyle = .none
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+        rowHeight = 50
+        estimatedRowHeight = 50
+        backgroundColor = UIColor.clear
+        layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        layer.masksToBounds = true
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-
 }
 
 class PlainExpyTableView: ExpyTableView {
-
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        self.separatorStyle = .none
-        self.showsVerticalScrollIndicator = false
-        self.showsHorizontalScrollIndicator = false
-        self.rowHeight = 50
-        self.estimatedRowHeight = 50
-        self.backgroundColor = UIColor.clear
-        self.layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
-        self.layer.masksToBounds = true
+        separatorStyle = .none
+        showsVerticalScrollIndicator = false
+        showsHorizontalScrollIndicator = false
+        rowHeight = 50
+        estimatedRowHeight = 50
+        backgroundColor = UIColor.clear
+        layer.maskedCorners = [.layerMaxXMaxYCorner, .layerMinXMaxYCorner]
+        layer.masksToBounds = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -48,8 +45,8 @@ class PlainExpyTableView: ExpyTableView {
     }
 
     func collapseExpandedSections() {
-        for section in self.expandedSections {
-            self.collapse(section.key)
+        for section in expandedSections {
+            collapse(section.key)
         }
     }
 }

@@ -6,9 +6,9 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import SafariServices
+import UIKit
 
 class AccountPopupViewController: WSUIViewController {
     var backgroundView: UIView!
@@ -23,8 +23,8 @@ class AccountPopupViewController: WSUIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Account Popup View")
-        self.addViews()
-        self.addAutoLayoutConstraints()
+        addViews()
+        addAutoLayoutConstraints()
         bindViews()
     }
 

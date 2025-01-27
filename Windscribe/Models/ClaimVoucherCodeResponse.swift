@@ -15,12 +15,11 @@ class ClaimVoucherCodeResponse: Decodable {
     let emailRequired: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case isClaimed = "voucher_claimed"
         case isUsed = "voucher_used"
         case isTaken = "voucher_taken"
         case emailRequired = "email_required"
-
     }
 
     required init(from decoder: Decoder) throws {

@@ -1,5 +1,5 @@
 //
-//  ExtensionModules.swift
+//  WireguardModule.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-23.
@@ -8,19 +8,20 @@
 
 import Foundation
 import Swinject
+
 /// Dependencies used by Wireguard network extension.
 extension Container {
     convenience init(isExt: Bool) {
         self.init()
         injectCore(ext: isExt)
         register(WgCredentials.self) { r in
-            return WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
+            WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(WireguardAPIManager.self) { r in
-            return WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!)
+            WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.container)
         register(WireguardConfigRepository.self) { r in
-            return WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: nil, logger: r.resolve(FileLogger.self)!)
+            WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: nil, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
     }
 }

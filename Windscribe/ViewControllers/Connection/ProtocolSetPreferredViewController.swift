@@ -6,13 +6,15 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
 import Swinject
+import UIKit
 
 class ProtocolSetPreferredViewController: WSNavigationViewController {
     var router: ProtocolSwitchViewRouter!
+
     // MARK: - PROPERTIES
+
     var viewModel: ProtocolSetPreferredViewModelV2!
     weak var delegate: ProtocolSwitchVCDelegate?
     var type: ProtocolViewType?
@@ -25,6 +27,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
     }
 
     // MARK: - UI ELEMENTs
+
     private lazy var topImage: UIImageView = {
         let vw = UIImageView()
         vw.image = UIImage(named: ImagesAsset.windscribeWarning)
@@ -79,7 +82,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
         super.viewDidLoad()
         setup()
         bindViews()
-        self.viewModel.type = type ?? .connected
+        viewModel.type = type ?? .connected
     }
 
     private func bindViews() {
@@ -123,6 +126,12 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
             )
             self.cancelButton.setAttributedTitle(attribute, for: .normal)
         }.disposed(by: disposeBag)
+
+        Task { @MainActor in
+            if self.protocolName.isEmpty {
+                self.protocolName = await viewModel.getProtocolName()
+            }
+        }
     }
 
     private func setup() {
@@ -137,7 +146,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
                     s.subHeaderLabel,
                     s.setPreferredButton,
                     s.sendDebugLogButton,
-                    s.cancelButton
+                    s.cancelButton,
                 ])
                 s.layoutView.stackView.setCustomSpacing(32, after: s.topImage)
                 s.layoutView.stackView.setCustomSpacing(s.viewModel.type == .fail ? 64 : 32, after: s.subHeaderLabel)
@@ -168,11 +177,11 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
         guard let portsArray = viewModel.localDatabase.getPorts(protocolType: protocolName) else { return }
         let defaultPort = portsArray[0]
         viewModel.localDatabase.updateWifiNetwork(network: network,
-                                        properties: [
-                                            Fields.WifiNetwork.preferredProtocol: protocolName,
-                                            Fields.WifiNetwork.preferredPort: defaultPort,
-                                            Fields.WifiNetwork.preferredProtocolStatus: true
-                                        ])
+                                                  properties: [
+                                                      Fields.WifiNetwork.preferredProtocol: protocolName,
+                                                      Fields.WifiNetwork.preferredPort: defaultPort,
+                                                      Fields.WifiNetwork.preferredProtocolStatus: true,
+                                                  ])
         DispatchQueue.main.async {
             self.dismiss(animated: true)
         }

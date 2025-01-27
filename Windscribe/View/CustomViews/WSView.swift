@@ -10,14 +10,14 @@ import Foundation
 import UIKit
 
 class WSView: UIView {
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
         registerNotificationLanguageChanged()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -32,7 +32,5 @@ class WSView: UIView {
         setupLocalized()
     }
 
-    func setupLocalized() {
-
-    }
+    func setupLocalized() {}
 }

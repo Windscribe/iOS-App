@@ -1,5 +1,5 @@
-import RealmSwift
 import Realm
+import RealmSwift
 
 protocol CascadeDeleting {
     func delete<S: Sequence>(_ objects: S, cascading: Bool) where S.Iterator.Element: Object
@@ -29,14 +29,14 @@ private extension Realm {
         toBeDeleted.insert(entity)
         while !toBeDeleted.isEmpty {
             guard let element = toBeDeleted.removeFirst() as? Object,
-                !element.isInvalidated else { continue }
+                  !element.isInvalidated else { continue }
             resolve(element: element, toBeDeleted: &toBeDeleted)
         }
     }
 
     private func resolve(element: Object, toBeDeleted: inout Set<RLMObjectBase>) {
-        element.objectSchema.properties.forEach {
-            guard let value = element.value(forKey: $0.name) else { return }
+        for property in element.objectSchema.properties {
+            guard let value = element.value(forKey: property.name) else { continue }
             if let entity = value as? RLMObjectBase {
                 toBeDeleted.insert(entity)
             } else if let list = value as? RLMSwiftCollectionBase {

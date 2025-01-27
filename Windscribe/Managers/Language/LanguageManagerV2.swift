@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol LanguageManagerV2 {
     var activelanguage: BehaviorSubject<Languages> { get }
     func setAppLanguage()

@@ -14,8 +14,8 @@ protocol InfoPromptViewDelegate: AnyObject {
 }
 
 protocol InfoPromptViewModelType {
-    var title: BehaviorSubject<String> {get}
-    var actionValue: BehaviorSubject<String> {get}
+    var title: BehaviorSubject<String> { get }
+    var actionValue: BehaviorSubject<String> { get }
     func action()
     func cancel()
     func setInfo(title: String,
@@ -34,7 +34,8 @@ class InfoPromptViewModel: InfoPromptViewModelType {
     func setInfo(title: String,
                  actionValue: String,
                  justDismissOnAction: Bool,
-                 delegate: InfoPromptViewDelegate?) {
+                 delegate: InfoPromptViewDelegate?)
+    {
         self.justDismissOnAction = justDismissOnAction
         self.delegate = delegate
         self.title.onNext(title)
@@ -42,10 +43,10 @@ class InfoPromptViewModel: InfoPromptViewModelType {
     }
 
     func action() {
-        self.delegate?.dismissWith(actionTaken: !justDismissOnAction, dismiss: justDismissOnAction)
+        delegate?.dismissWith(actionTaken: !justDismissOnAction, dismiss: justDismissOnAction)
     }
 
     func cancel() {
-        self.delegate?.dismissWith(actionTaken: false, dismiss: false)
+        delegate?.dismissWith(actionTaken: false, dismiss: false)
     }
 }

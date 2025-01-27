@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 
-struct CustomConfigModel {
+struct CustomConfigModel: Equatable {
     let id: String?
     let name: String?
     let serverAddress: String?
@@ -27,7 +27,8 @@ struct CustomConfigModel {
          port: String,
          username: String = "",
          password: String = "",
-         authRequired: Bool = false) {
+         authRequired: Bool = false)
+    {
         self.id = id
         self.name = name
         self.serverAddress = serverAddress
@@ -40,7 +41,6 @@ struct CustomConfigModel {
 }
 
 @objcMembers class CustomConfig: Object {
-
     dynamic var id: String = ""
     dynamic var name: String = ""
     dynamic var serverAddress: String = ""
@@ -57,7 +57,8 @@ struct CustomConfigModel {
                      port: String,
                      username: String = "",
                      password: String = "",
-                     authRequired: Bool = false) {
+                     authRequired: Bool = false)
+    {
         self.init()
         self.id = id
         self.name = name

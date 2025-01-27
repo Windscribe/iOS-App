@@ -14,7 +14,7 @@ import RealmSwift
     dynamic var userIp: String = ""
     dynamic var isOurIp: Bool = false
     enum CodingKeys: String, CodingKey {
-        case data = "data"
+        case data
         case userIp = "user_ip"
         case ourIp = "our_ip"
     }
@@ -26,9 +26,11 @@ import RealmSwift
         userIp = try data.decode(String.self, forKey: .userIp)
         isOurIp = data.contains(.ourIp)
     }
+
     override var description: String {
         return "UserIp: \(userIp) isOurIp: \(isOurIp)"
     }
+
     override static func primaryKey() -> String? {
         return "id"
     }

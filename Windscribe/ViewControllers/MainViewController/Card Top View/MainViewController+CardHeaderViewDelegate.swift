@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import UIKit
 import Swinject
+import UIKit
 
 extension MainViewController {
     func addCardHeaderView() {
@@ -25,7 +25,7 @@ extension MainViewController {
             cardHeaderContainerView.topAnchor.constraint(equalTo: cardView.topAnchor),
             cardHeaderContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             cardHeaderContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cardHeaderContainerView.heightAnchor.constraint(equalToConstant: 50)
+            cardHeaderContainerView.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
 }
@@ -37,14 +37,14 @@ extension MainViewController: CardHeaderContainerViewDelegate {
         case .all:
             scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
         case .fav:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width, y: 0), animated: true)
         case .flix:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width*2, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width * 2, y: 0), animated: true)
         case .staticIP:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width*3, y: 0), animated: true)
+            scrollView.setContentOffset(CGPoint(x: view.frame.width * 3, y: 0), animated: true)
         case .config:
-            scrollView.setContentOffset(CGPoint(x: self.view.frame.width*4, y: 0), animated: true)
-        case.startSearch:
+            scrollView.setContentOffset(CGPoint(x: view.frame.width * 4, y: 0), animated: true)
+        case .startSearch:
             searchLocationsView.viewModel.toggleSearch()
         }
     }

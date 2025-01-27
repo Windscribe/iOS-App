@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 class RobertHeaderView: UIView {
     lazy var contentView: UIView = {

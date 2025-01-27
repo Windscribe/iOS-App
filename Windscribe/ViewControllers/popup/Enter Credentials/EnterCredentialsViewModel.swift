@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol EnterCredentialsViewModelType {
-    var title: BehaviorSubject<String> {get}
-    var username: BehaviorSubject<String> {get}
-    var password: BehaviorSubject<String> {get}
-    var isUpdating: BehaviorSubject<Bool> {get}
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var title: BehaviorSubject<String> { get }
+    var username: BehaviorSubject<String> { get }
+    var password: BehaviorSubject<String> { get }
+    var isUpdating: BehaviorSubject<Bool> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     func submit(title: String?, username: String?, password: String?)
     func setup(with customConfig: CustomConfigModel, isUpdating: Bool)
 }
@@ -38,45 +38,28 @@ class EnterCredentialsViewModel: EnterCredentialsViewModelType {
     }
 
     func setup(with customConfig: CustomConfigModel, isUpdating: Bool) {
-        self.displayingCustomConfig = customConfig
-        self.title.onNext(customConfig.name ?? "")
-        self.username.onNext(customConfig.username?.base64Decoded() ?? "")
-        self.password.onNext(customConfig.password?.base64Decoded() ?? "")
+        displayingCustomConfig = customConfig
+        title.onNext(customConfig.name ?? "")
+        username.onNext(customConfig.username?.base64Decoded() ?? "")
+        password.onNext(customConfig.password?.base64Decoded() ?? "")
         self.isUpdating.onNext(isUpdating)
     }
 
     func submit(title: String?, username: String?, password: String?) {
         guard let username = username?.base64Encoded(),
               let password = password?.base64Encoded(),
-              let customConfigId = displayingCustomConfig?.id,
-              let name = displayingCustomConfig?.name,
-              let serverAddress = displayingCustomConfig?.serverAddress
+              let customConfigId = displayingCustomConfig?.id
         else { return }
 
         if let configTitle = title {
             localDatabase.updateCustomConfigName(customConfigId: customConfigId, name: configTitle)
         }
 
-        vpnManager.selectedNode = SelectedNode(countryCode: Fields.configuredLocation,
-                                                      dnsHostname: serverAddress,
-                                                      hostname: serverAddress,
-                                                      serverAddress: serverAddress,
-                                                      nickName: name,
-                                                      cityName: TextsAsset.configuredLocation,
-                                                      customConfig: displayingCustomConfig,
-                                                      groupId: 0)
         guard let id = displayingCustomConfig?.id,
               let protocolType = displayingCustomConfig?.protocolType,
               let port = displayingCustomConfig?.port
         else { return }
 
-        vpnManager.selectedNode?.customConfig = CustomConfigModel(id: id,
-                                                                  name: name,
-                                                                  serverAddress: serverAddress,
-                                                                  protocolType: protocolType,
-                                                                  port: port,
-                                                                  username: username,
-                                                                  password: password)
         if !username.isEmpty {
             localDatabase.updateCustomConfigCredentials(customConfigId: customConfigId,
                                                         username: username,

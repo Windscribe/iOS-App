@@ -7,8 +7,9 @@
 //
 
 import Foundation
-import RxSwift
 import RealmSwift
+import RxSwift
+
 class CredentialsRepositoryImpl: CredentialsRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
@@ -18,8 +19,8 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private let logger: FileLogger
     private let preferences: Preferences
     private let disposeBag = DisposeBag()
-    let connectionMode: BehaviorSubject<String?>  = BehaviorSubject(value: nil)
-    let selectedProtocol: BehaviorSubject<String?>  = BehaviorSubject(value: nil)
+    let connectionMode: BehaviorSubject<String?> = BehaviorSubject(value: nil)
+    let selectedProtocol: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, fileDatabase: FileDatabase, vpnManager: VPNManager, wifiManager: WifiManager, preferences: Preferences, logger: FileLogger) {
         self.apiManager = apiManager
@@ -29,7 +30,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         self.wifiManager = wifiManager
         self.logger = logger
         self.preferences = preferences
-        self.loadData()
+        loadData()
     }
 
     private func loadData() {
@@ -87,14 +88,15 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         guard let result = wifiManager.getConnectedNetwork() else {
             return OpenVPNServerCredentials.self
         }
-        if result.preferredProtocolStatus == true && !VPNManager.shared.isFromProtocolFailover && !vpnManager.isFromProtocolChange {
+        if result.preferredProtocolStatus == true && !vpnManager.isFromProtocolFailover && !vpnManager.isFromProtocolChange {
             if result.preferredProtocol == TextsAsset.iKEv2 {
                 return IKEv2ServerCredentials.self
             }
             return OpenVPNServerCredentials.self
         } else {
             if let connection = try? connectionMode.value(),
-               let selectedprotocol = try? selectedProtocol.value() {
+               let selectedprotocol = try? selectedProtocol.value()
+            {
                 if connection == Fields.Values.manual {
                     if selectedprotocol == TextsAsset.iKEv2 {
                         return IKEv2ServerCredentials.self
@@ -107,8 +109,17 @@ class CredentialsRepositoryImpl: CredentialsRepository {
                     return OpenVPNServerCredentials.self
                 }
             }
-
         }
         return OpenVPNServerCredentials.self
+    }
+
+    func updateServerConfig() {
+        logger.logD(self, "Updating open vpn credentials.")
+        getUpdatedOpenVPNCrendentials().flatMap { _ in
+            self.logger.logD(self, "Updating open vpn server config.")
+            return self.getUpdatedServerConfig()
+        }.subscribe(onSuccess: { _ in
+            self.logger.logD(self, "Server config updated.")
+        }, onFailure: { _ in self.logger.logD(self, "Failed to update server config.") }).disposed(by: disposeBag)
     }
 }

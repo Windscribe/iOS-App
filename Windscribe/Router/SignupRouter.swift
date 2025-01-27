@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 class SignupRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from _: WSNavigationViewController) {
         switch to {

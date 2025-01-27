@@ -6,71 +6,59 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
-    private lazy var customConfigRepository: CustomConfigRepository = {
-        return Assembler.resolve(CustomConfigRepository.self)
-    }()
-    let disposeBag = DisposeBag()
-    private lazy var apiManager: APIManager = {
-        return Assembler.resolve(APIManager.self)
-    }()
-    private lazy var preferences: Preferences = {
-        return Assembler.resolve(Preferences.self)
-    }()
-    private lazy var logger: FileLogger = {
-        return Assembler.resolve(FileLogger.self)
-    }()
-    private lazy var vpnManager: VPNManager = {
-        return Assembler.resolve(VPNManager.self)
-    }()
-    private lazy var localDatabase: LocalDatabase = {
-        return Assembler.resolve(LocalDatabase.self)
-    }()
-    private lazy var purchaseManager: InAppPurchaseManager = {
-        return Assembler.resolve(InAppPurchaseManager.self)
-    }()
-    private lazy var latencyRepository: LatencyRepository = {
-        return Assembler.resolve(LatencyRepository.self)
-    }()
-    private lazy var languageManager: LanguageManagerV2 = {
-        return Assembler.resolve(LanguageManagerV2.self)
-    }()
-    private lazy var pushNotificationManager: PushNotificationManagerV2 = {
-        return Assembler.resolve(PushNotificationManagerV2.self)
-    }()
-    private lazy var themeManager: ThemeManager = {
-        return Assembler.resolve(ThemeManager.self)
-    }()
-    private lazy var connectivity: Connectivity = {
-        return Assembler.resolve(Connectivity.self)
-    }()
-    private lazy var connectionStateViewModel: ConnectionStateViewModelType = {
-        return Assembler.resolve(ConnectionStateViewModelType.self)
+    private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
-    }()
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    let disposeBag = DisposeBag()
+    private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
+
+    private lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
+
+    private lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
+
+    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+
+    private lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
+
+    private lazy var purchaseManager: InAppPurchaseManager = Assembler.resolve(InAppPurchaseManager.self)
+
+    private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
+
+    private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+
+    private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
+
+    private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
+
+    private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
+
+    private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
+
+    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         localDatabase.migrate()
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
         connectivity.refreshNetwork()
-        vpnManager.setup { [self] in
+        Task {
             recordInstallIfFirstLoad()
-            // registerForPushNotifications()
             resetCountryOverrideForServerList()
             purchaseManager.verifyPendingTransaction()
-            latencyRepository.loadLatency()
-            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in}).disposed(by: disposeBag)
+            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
             setApplicationWindow()
             UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+            if preferences.userSessionAuth() != nil {
+                delay(2) {
+                    self.latencyRepository.loadLatency()
+                }
+            }
         }
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
             localDatabase.saveOldSession()
@@ -79,8 +67,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             logger.logE(self, "Failed to get session from server with error \(error).")
         }).disposed(by: disposeBag)
         return true
-
     }
+
     /**
      Records app install.
      */
@@ -99,35 +87,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      If vpn state is disconnected on app launch reset country override for the server list.
      */
     private func resetCountryOverrideForServerList() {
-        if vpnManager.connectionStatus() == .disconnected {
+        if vpnManager.isDisconnected() {
             preferences.saveCountryOverrride(value: nil)
         }
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
+    func applicationWillResignActive(_: UIApplication) {
         logger.logD(self, "App state changed to WillResignActive")
     }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
+    func applicationDidEnterBackground(_: UIApplication) {
         logger.logD(self, "App state changed to DidEnterBackground")
     }
 
-    func applicationWillEnterForeground(_ application: UIApplication) {
+    func applicationWillEnterForeground(_: UIApplication) {
         logger.logD(self, "App state changed to WillEnterForeground.")
-        connectionStateViewModel.becameActive()
-        connectivity.refreshNetwork()
+        ProtocolManager.shared.resetGoodProtocol()
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
+    func applicationDidBecomeActive(_: UIApplication) {
         logger.logD(self, "App state changed to Active.")
-        connectionStateViewModel.becameActive()
+        livecycleManager.appEnteredForeground()
     }
+
     /**
      Prepares application window and launches first view controller
      */
     func setApplicationWindow() {
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        guard let window = self.window else { return }
+        guard let window = window else { return }
         window.backgroundColor = UIColor.black
         // Authenticated user
         if preferences.userSessionAuth() != nil {

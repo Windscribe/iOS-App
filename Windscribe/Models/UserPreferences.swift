@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 
 @objcMembers class UserPreferences: Object {
     dynamic var id: String = "1"
@@ -38,7 +38,8 @@ import Realm
                      allowLan: Bool,
                      autoSecureNewNetworks: Bool,
                      hapticFeedback: Bool,
-                     showServerHealth: Bool) {
+                     showServerHealth: Bool)
+    {
         self.init()
         self.connectionMode = connectionMode
         self.language = language
@@ -46,7 +47,7 @@ import Realm
         self.orderLocationsBy = orderLocationsBy
         self.appearance = appearance
         self.firewall = firewall
-        self.killSwitch = killSwiitch
+        killSwitch = killSwiitch
         self.allowLan = allowLan
         self.autoSecureNewNetworks = autoSecureNewNetworks
         self.hapticFeedback = hapticFeedback

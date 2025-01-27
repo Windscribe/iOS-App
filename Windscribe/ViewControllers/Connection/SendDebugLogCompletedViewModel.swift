@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 
 protocol SendDebugLogCompletedViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
 }
 
 class SendDebugLogCompletedViewModel: SendDebugLogCompletedViewModelType {

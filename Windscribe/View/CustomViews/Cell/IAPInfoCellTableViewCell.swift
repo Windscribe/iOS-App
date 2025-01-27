@@ -9,8 +9,7 @@
 import UIKit
 
 class IAPInfoCellTableViewCell: UITableViewCell {
-
-    var messageLabel =  UILabel()
+    var messageLabel = UILabel()
     var displayingSection: IAPInfoSection? {
         didSet {
             updateUI()
@@ -40,8 +39,8 @@ class IAPInfoCellTableViewCell: UITableViewCell {
         addConstraints([
             NSLayoutConstraint(item: messageLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: messageLabel, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 48),
-            NSLayoutConstraint(item: messageLabel, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -48)
-            ])
+            NSLayoutConstraint(item: messageLabel, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -48),
+        ])
     }
 
     func updateUI() {
@@ -49,5 +48,4 @@ class IAPInfoCellTableViewCell: UITableViewCell {
             messageLabel.text = message
         }
     }
-
 }

@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 import Swinject
 
 @objcMembers class AutomaticMode: Object, Decodable {
-    static let shared: AutomaticMode = AutomaticMode()
+    static let shared: AutomaticMode = .init()
     dynamic var SSID: String = ""
     dynamic var ikev2Failed: Int = 0
     dynamic var udpFailed: Int = 0
@@ -53,6 +53,5 @@ import Swinject
         wgFailed = 0
         wsTunnelFailed = 0
         stealthFailed = 0
-
     }
 }

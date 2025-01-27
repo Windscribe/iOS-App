@@ -6,8 +6,8 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class SwitchHeaderView: UIStackView {
     private(set) var title: String
@@ -45,6 +45,7 @@ class SwitchHeaderView: UIStackView {
         switchButton.addTarget(self, action: #selector(switchButtonTapped), for: .touchUpInside)
         return switchButton
     }()
+
     private lazy var wrapperView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -54,14 +55,15 @@ class SwitchHeaderView: UIStackView {
 
     init(title: String, icon: String?, isDarkMode: BehaviorSubject<Bool>) {
         self.title = title
-        self.imageAsset = icon
+        imageAsset = icon
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         setup()
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -81,7 +83,7 @@ class SwitchHeaderView: UIStackView {
         addArrangedSubviews([
             iconImage,
             titleLabel,
-            UIView()
+            UIView(),
         ])
         spacing = 16
         axis = .horizontal
@@ -108,7 +110,7 @@ class SwitchHeaderView: UIStackView {
         if !haveCorner {
             wrapperView.makeRoundCorners(corners: [.topLeft, .topRight], radius: 6)
         } else {
-            wrapperView.makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight,.bottomLeft], radius: 6)
+            wrapperView.makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight, .bottomLeft], radius: 6)
         }
     }
 }

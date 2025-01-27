@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+
 protocol NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController)
 }

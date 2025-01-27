@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 enum VPNErrors: Error, CustomStringConvertible {
     case credentialsFailure
     var description: String {

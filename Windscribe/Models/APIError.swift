@@ -1,5 +1,5 @@
 //
-//  Error.swift
+//  APIError.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-12-12.
@@ -9,19 +9,18 @@
 import Foundation
 
 struct APIError: Equatable {
-
     let errorCode: Int?
     let errorDescription: String?
     let errorMessage: String?
 
     init(data: [String: Any]) {
-        self.errorCode = data[APIParameters.Errors.errorCode] as? Int
-        self.errorDescription = data[APIParameters.Errors.errorDescription] as? String
-        self.errorMessage = data[APIParameters.Errors.errorMessage] as? String
+        errorCode = data[APIParameters.Errors.errorCode] as? Int
+        errorDescription = data[APIParameters.Errors.errorDescription] as? String
+        errorMessage = data[APIParameters.Errors.errorMessage] as? String
     }
 
     func resolve() -> Error? {
-        switch self.errorCode {
+        switch errorCode {
         case 501, 502:
             return Errors.validationFailure
         case 503, 600:
@@ -46,11 +45,12 @@ struct APIError: Equatable {
             return Errors.sandboxReceipt
         case 4008:
             return Errors.missingTransactionId
+        case 1313:
+            return Errors.wgLimitExceeded
         default:
             return nil
         }
     }
-
 }
 
 enum Errors: Error, CustomStringConvertible, Equatable {
@@ -83,6 +83,9 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case apiError(APIError)
     case datanotfound
     case handled
+    case ipNotAvailable
+    case missingRemoteAddress
+    case wgLimitExceeded
 
     public var description: String {
         switch self {
@@ -104,12 +107,22 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "The network appears to be offline."
         case .unknownError:
             return "Unable to reach the server. Please try again."
-        case .apiError(let error):
+        case let .apiError(error):
             return error.errorMessage ?? ""
         case .datanotfound:
             return "no data found."
         case .handled:
             return ""
+        case .ipNotAvailable:
+            return "Ip1 and ip3 are not avaialble to configure this profile."
+        case .missingRemoteAddress:
+            return "Missing remote address in selected location."
+        case .wgLimitExceeded:
+            return "You have reached your limit of WireGuard keys. Do you want to delete your oldest key?"
+        case .twoFactorRequired:
+            return "2FA code required to login."
+        case .invalid2FA:
+            return "Invalid 2FA Code provided."
         default:
             return "Unknown error."
         }

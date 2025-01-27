@@ -12,7 +12,10 @@ import UIKit
 extension MainViewController {
     func bindCustomConfigPickerModel() {
         customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: {
-            self.configureVPN()
+            self.enableVPNConnection()
+        }).disposed(by: disposeBag)
+        customConfigPickerViewModel.disableVPNTrigger.subscribe(onNext: {
+            self.disableVPNConnection()
         }).disposed(by: disposeBag)
 
         customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: {
@@ -29,7 +32,11 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
-            self.popupRouter?.routeTo(to: .enterCredentials(config: $0.customConfig, isUpdating: $0.isUpdating), from: self)
+            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: true), from: self)
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
+            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: false), from: self)
         }).disposed(by: disposeBag)
     }
 }
@@ -39,13 +46,13 @@ extension MainViewController: CustomConfigListViewDelegate {
         if customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
             customConfigsTableViewRefreshControl.removeFromSuperview()
         }
-        self.customConfigTableViewFooterView.isHidden = true
+        customConfigTableViewFooterView.isHidden = true
     }
 
     func showCustomConfigRefreshControl() {
         if !customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {
-            self.customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
+            customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
         }
-        self.customConfigTableViewFooterView.isHidden = false
+        customConfigTableViewFooterView.isHidden = false
     }
 }

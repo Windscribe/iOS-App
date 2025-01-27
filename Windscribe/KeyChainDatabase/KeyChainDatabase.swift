@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 protocol KeyChainDatabase {
     func save(username: String, password: String)
     func retrieve(username: String) -> Data?

@@ -23,10 +23,9 @@ extension Data {
 }
 
 extension Bool {
-
     var data: Data {
         var value = self
-        let nsdata =  NSData(bytes: &value, length: MemoryLayout.size(ofValue: self))
+        let nsdata = NSData(bytes: &value, length: MemoryLayout.size(ofValue: self))
         return Data(referencing: nsdata)
     }
 

@@ -6,12 +6,13 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import AVKit
 import RxSwift
+import UIKit
 
 class WelcomeViewController: WSUIViewController {
     // MARK: - UI properties
+
     var backgroundView: UIView!
     var logoButton: UIButton!
     var backgroundImageView, bottomGradientView: UIImageView!
@@ -22,11 +23,15 @@ class WelcomeViewController: WSUIViewController {
     var pageControl: UIPageControl!
     var infoLabel1, infoLabel2, infoLabel3, infoLabel4: UILabel!
     var scrollView: UIScrollView!
+
     // MARK: - State properties
+
     var router: WelcomeRouter!, viewmodal: WelcomeViewModal!, logger: FileLogger!
     var scrollOrder = 0
     var slideTimer: Timer?
+
     // MARK: - UI Events
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -36,7 +41,7 @@ class WelcomeViewController: WSUIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if #available(iOS 13.0, *) {
-            UIApplication.shared.windows.forEach { window in
+            for window in UIApplication.shared.windows {
                 window.overrideUserInterfaceStyle = .dark
             }
         }
@@ -54,6 +59,7 @@ class WelcomeViewController: WSUIViewController {
     }
 
     // MARK: - Setup and Bind views
+
     private func setupViews() {
         configureViews()
         addAutoLayoutConstraints()

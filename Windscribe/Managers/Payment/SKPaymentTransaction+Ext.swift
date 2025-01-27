@@ -15,9 +15,10 @@ extension SKPaymentTransaction {
     private var sharedSecret: String {
         return "952b4412f002315aa50751032fcaab03"
     }
+
     var signature: String? {
         guard let transactionID = transactionIdentifier,
-              let appleData = self.appleData,
+              let appleData = appleData,
               let sessionAuthHash = Assembler.resolve(Preferences.self).userSessionAuth()
         else {
             return nil

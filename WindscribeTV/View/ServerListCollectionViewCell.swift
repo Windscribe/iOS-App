@@ -9,9 +9,8 @@
 import UIKit
 
 class ServerListCollectionViewCell: UICollectionViewCell {
-
-    @IBOutlet weak var countryCode: UILabel!
-    @IBOutlet weak var flagImage: UIImageView!
+    @IBOutlet var countryCode: UILabel!
+    @IBOutlet var flagImage: UIImageView!
     var isShadow: Bool = true
 
     func setup(isShadow: Bool) {
@@ -29,15 +28,15 @@ class ServerListCollectionViewCell: UICollectionViewCell {
         countryCode.text = countryCode.text?.uppercased()
     }
 
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if self.isFocused {
-            self.flagImage.alpha = 1.0
+    override func didUpdateFocus(in _: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
+        if isFocused {
+            flagImage.alpha = 1.0
             flagImage.layer.shadowColor = isShadow ? UIColor.white.cgColor : UIColor.clear.cgColor
-            self.countryCode.textColor = .white
+            countryCode.textColor = .white
         } else {
-            self.flagImage.alpha = 0.40
+            flagImage.alpha = 0.40
             flagImage.layer.shadowColor = isShadow ? UIColor.whiteWithOpacity(opacity: 0.24).cgColor : UIColor.clear.cgColor
-            self.countryCode.textColor = .whiteWithOpacity(opacity: 0.40)
+            countryCode.textColor = .whiteWithOpacity(opacity: 0.40)
         }
     }
 }

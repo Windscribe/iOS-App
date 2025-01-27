@@ -7,17 +7,19 @@
 //
 
 import Foundation
-import UIKit
 import RealmSwift
 import RxSwift
+import UIKit
 
 class AccountViewController: WSNavigationViewController {
     // MARK: - State properties
+
     var viewModel: AccountViewModelType!
     var router: AccountRouter?
     var logger: FileLogger!
 
     // MARK: - UI properties
+
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +32,7 @@ class AccountViewController: WSNavigationViewController {
         }
         return tableView
     }()
+
     // MARK: - UI Events
 
     override func viewDidLoad() {
@@ -47,7 +50,7 @@ class AccountViewController: WSNavigationViewController {
         bindViews()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_: Bool) {
         viewModel.loadSession().observe(on: MainScheduler.instance)
             .subscribe(onSuccess: { [self] _ in
                 self.updateUI()
@@ -61,22 +64,21 @@ class AccountViewController: WSNavigationViewController {
         viewModel.cancelAccountState.subscribe(onNext: { state in
             self.logger.logD(self, "Cancel account state: \(state)")
             switch state {
-                case .initial:
-                    self.endLoading()
-                case .loading:
-                    self.showLoading()
-                case .error(let error):
-                    self.endLoading()
-                    self.viewModel.alertManager.showSimpleAlert(
-                        viewController: self,
-                        title: TextsAsset.error,
-                        message: error,
-                        buttonText: TextsAsset.okay
-                    )
-                case .success:
-                    self.endLoading()
-                    self.viewModel.logoutUser()
-
+            case .initial:
+                self.endLoading()
+            case .loading:
+                self.showLoading()
+            case let .error(error):
+                self.endLoading()
+                self.viewModel.alertManager.showSimpleAlert(
+                    viewController: self,
+                    title: TextsAsset.error,
+                    message: error,
+                    buttonText: TextsAsset.okay
+                )
+            case .success:
+                self.endLoading()
+                self.viewModel.logoutUser()
             }
         }).disposed(by: disposeBag)
     }
@@ -99,12 +101,13 @@ class AccountViewController: WSNavigationViewController {
 }
 
 // MARK: - Extensions
+
 extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         return viewModel.numberOfSections()
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.numberOfRowsInSection(in: section)
     }
 
@@ -165,22 +168,22 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = AccountHeaderView(isDarkMode: viewModel.isDarkMode)
         view.label.text = viewModel.titleForHeader(in: section)
         return view
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let data = viewModel.celldata(at: indexPath)
         switch data {
-            case .cancelAccount:
-                handleCancelAccount()
-            default: break
+        case .cancelAccount:
+            handleCancelAccount()
+        default: break
         }
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 {
             return 120
         }
@@ -190,50 +193,50 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func showEnterCodeDialog() {
         let alert = UIAlertController(title: NSLocalizedString(TextsAsset.Account.enterCode, comment: ""), message: nil, preferredStyle: .alert)
 
-            // Add a text field to the alert controller
-            alert.addTextField { textField in
-                textField.placeholder = NSLocalizedString(TextsAsset.Account.enterCodeHere, comment: "")
-                textField.autocapitalizationType = .allCharacters
-                textField.autocorrectionType = .no
-                textField.keyboardType = .default
-                textField.textAlignment = .center
-                textField.tag = 0
-                textField.delegate = self
-            }
-
-            // Add actions to the alert controller
-            let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
-                guard let textField = alert.textFields?.first else { return }
-                let code = textField.text ?? ""
-                print(code)
-                self?.showLoading()
-                self?.viewModel.verifyCodeEntered(code: code,
-                                                  success: { [weak self] in
-                                                      self?.endLoading()
-                                                      self?.viewModel.alertManager.showSimpleAlert(viewController: self,
-                                                                                                   title: TextsAsset.Account.lazyLogin,
-                                                                                                   message: TextsAsset.Account.lazyLoginSuccess,
-                                                                                                   buttonText: TextsAsset.okay)
-                                                  },
-                                                  failure: { [weak self] msg in
-                                                      self?.endLoading()
-                    self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
-                                                  })
-            }
-
-            let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
-                // No need to dismiss manually as the .cancel action will do it
-            }
-
-            alert.addAction(confirmAction)
-            alert.addAction(cancelAction)
-
-            // Show the alert
-            self.present(alert, animated: true) {
-                // Focus on the text field when the alert is presented
-                alert.textFields?.first?.becomeFirstResponder()
-            }
+        // Add a text field to the alert controller
+        alert.addTextField { textField in
+            textField.placeholder = NSLocalizedString(TextsAsset.Account.enterCodeHere, comment: "")
+            textField.autocapitalizationType = .allCharacters
+            textField.autocorrectionType = .no
+            textField.keyboardType = .default
+            textField.textAlignment = .center
+            textField.tag = 0
+            textField.delegate = self
         }
+
+        // Add actions to the alert controller
+        let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
+            guard let textField = alert.textFields?.first else { return }
+            let code = textField.text ?? ""
+            print(code)
+            self?.showLoading()
+            self?.viewModel.verifyCodeEntered(code: code,
+                                              success: { [weak self] in
+                                                  self?.endLoading()
+                                                  self?.viewModel.alertManager.showSimpleAlert(viewController: self,
+                                                                                               title: TextsAsset.Account.lazyLogin,
+                                                                                               message: TextsAsset.Account.lazyLoginSuccess,
+                                                                                               buttonText: TextsAsset.okay)
+                                              },
+                                              failure: { [weak self] msg in
+                                                  self?.endLoading()
+                                                  self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
+                                              })
+        }
+
+        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
+            // No need to dismiss manually as the .cancel action will do it
+        }
+
+        alert.addAction(confirmAction)
+        alert.addAction(cancelAction)
+
+        // Show the alert
+        present(alert, animated: true) {
+            // Focus on the text field when the alert is presented
+            alert.textFields?.first?.becomeFirstResponder()
+        }
+    }
 
     func showEnterVoucherCodeDialog() {
         let alert = UIAlertController(title: NSLocalizedString(TextsAsset.voucherCode, comment: ""), message: nil, preferredStyle: .alert)
@@ -256,26 +259,25 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
             self?.showLoading()
             self?.viewModel.verifyVoucherEntered(code: code,
                                                  success: { [weak self] response in
-                self?.logger.logD(self, "Claimed voucher code: \(code)")
-                self?.endLoading()
-                self?.handleClaimVoucherResponse(response)
-            },
+                                                     self?.logger.logD(self, "Claimed voucher code: \(code)")
+                                                     self?.endLoading()
+                                                     self?.handleClaimVoucherResponse(response)
+                                                 },
                                                  failure: { [weak self] msg in
-                self?.logger.logD(self, "claim voucher request failed with error: \(msg)")
-                self?.endLoading()
-                self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
-            })
+                                                     self?.logger.logD(self, "claim voucher request failed with error: \(msg)")
+                                                     self?.endLoading()
+                                                     self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
+                                                 })
         }
 
         let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel) { _ in
-
         }
 
         alert.addAction(confirmAction)
         alert.addAction(cancelAction)
 
         // Show the alert
-        self.present(alert, animated: true) {
+        present(alert, animated: true) {
             // Focus on the text field when the alert is presented
             alert.textFields?.first?.becomeFirstResponder()
         }
@@ -283,7 +285,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
 
     func handleClaimVoucherResponse(_ response: ClaimVoucherCodeResponse) {
         if response.isClaimed {
-            self.logger.logD(self, "voucher code is claimed")
+            logger.logD(self, "voucher code is claimed")
             DispatchQueue.main.async { [weak self] in
                 self?.viewModel.alertManager.showSimpleAlert(viewController: self!,
                                                              title: TextsAsset.voucherCode,
@@ -295,16 +297,15 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                     self.updateUI()
                 }, onFailure: { _ in }).disposed(by: disposeBag)
         } else if response.emailRequired == true {
-            self.logger.logD(self, "email is required for claiming voucher")
-            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.emailRequired, dismissAction: nil), from: self)
+            logger.logD(self, "email is required for claiming voucher")
+            router?.routeTo(to: .errorPopup(message: TextsAsset.Account.emailRequired, dismissAction: nil), from: self)
         } else if response.isUsed == true {
-            self.logger.logD(self, "voucher is already claimed")
-            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.voucherUsedMessage, dismissAction: nil), from: self)
+            logger.logD(self, "voucher is already claimed")
+            router?.routeTo(to: .errorPopup(message: TextsAsset.Account.voucherUsedMessage, dismissAction: nil), from: self)
         } else {
-            self.logger.logD(self, "invalid voucher")
-            self.router?.routeTo(to: .errorPopup(message: TextsAsset.Account.invalidVoucherCode, dismissAction: nil), from: self)
+            logger.logD(self, "invalid voucher")
+            router?.routeTo(to: .errorPopup(message: TextsAsset.Account.invalidVoucherCode, dismissAction: nil), from: self)
         }
-
     }
 }
 
@@ -367,7 +368,6 @@ extension AccountViewController {
 
     private func navigateUpgradeViewController() {
         router?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
-
     }
 
     private func handleCancelAccount() {
@@ -395,13 +395,12 @@ extension AccountViewController: AccountEmailCellDelegate, AccountTableViewCellD
         if data.needUpgradeAccount {
             navigateUpgradeViewController()
         }
-
     }
 }
 
 extension AccountViewController: ConfirmEmailViewControllerDelegate {
     func dismissWith(action: ConfirmEmailAction) {
-        router?.dismissPopup(action: action, navigationVC: self.navigationController)
+        router?.dismissPopup(action: action, navigationVC: navigationController)
     }
 }
 

@@ -1,5 +1,5 @@
 //
-//  APINotification.swift
+//  Notice.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2018-12-14.
@@ -22,7 +22,8 @@ struct NoticeModel {
          message: String,
          date: Int,
          popup: Bool,
-         action: NoticeAction?) {
+         action: NoticeAction?)
+    {
         self.id = id
         self.title = title
         self.message = message
@@ -33,7 +34,6 @@ struct NoticeModel {
 }
 
 @objcMembers class Notice: Object, Decodable {
-
     dynamic var id: Int = 0
     dynamic var title: String = ""
     dynamic var message: String = ""
@@ -72,21 +72,19 @@ struct NoticeModel {
     }
 
     func getModel() -> NoticeModel {
-       return NoticeModel(id: id,
-                          title: title,
-                          message: message,
-                          date: date,
-                          popup: popup,
-                          action: action)
+        return NoticeModel(id: id,
+                           title: title,
+                           message: message,
+                           date: date,
+                           popup: popup,
+                           action: action)
     }
-
 }
 
 @objcMembers class ReadNotice: Object {
-
     dynamic var id: Int = 0
 
-    convenience init (noticeID: Int) {
+    convenience init(noticeID: Int) {
         self.init()
         id = noticeID
     }
@@ -94,11 +92,9 @@ struct NoticeModel {
     override static func primaryKey() -> String? {
         return "id"
     }
-
 }
 
 @objcMembers class NoticeAction: Object, Decodable {
-
     dynamic var type: String?
     dynamic var pcpid: String?
     dynamic var promoCode: String?
@@ -122,8 +118,7 @@ struct NoticeModel {
 }
 
 struct NoticeList: Decodable {
-
-    let notices =  List<Notice>()
+    let notices = List<Notice>()
 
     enum CodingKeys: String, CodingKey {
         case data
@@ -134,7 +129,7 @@ struct NoticeList: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
         if let noticesArray = try data.decodeIfPresent([Notice].self, forKey: .notifications) {
-            self.setNotices(array: noticesArray)
+            setNotices(array: noticesArray)
         }
     }
 
@@ -142,5 +137,4 @@ struct NoticeList: Decodable {
         notices.removeAll()
         notices.append(objectsIn: array)
     }
-
 }

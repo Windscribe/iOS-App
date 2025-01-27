@@ -7,7 +7,8 @@
 //
 
 import Foundation
+
 enum APIResult<E, D> {
-  case apiError(E)
-  case success(D)
+    case apiError(E)
+    case success(D)
 }

@@ -6,12 +6,12 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class GhostAccountViewController: WSNavigationViewController {
-
     // MARK: - State properties
+
     var viewModel: GhostAccountViewModelType?
     var router: GhostAccountRouter?
     var logger: FileLogger!
@@ -52,5 +52,4 @@ class GhostAccountViewController: WSNavigationViewController {
             router?.routeTo(to: RouteID.login, from: self)
         }.disposed(by: disposeBag)
     }
-
 }

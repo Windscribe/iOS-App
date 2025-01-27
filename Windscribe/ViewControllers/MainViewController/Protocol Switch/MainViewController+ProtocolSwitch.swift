@@ -6,13 +6,13 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 extension MainViewController {
     func bindProtocolSwitchViewModel() {
-        protocolSwitchViewModel.configureVPNTrigger.subscribe({_ in
-            self.configureVPN()
-        }).disposed(by: disposeBag)
+        protocolSwitchViewModel.disableVPNTrigger.subscribe { _ in
+            self.disableVPNConnection()
+        }.disposed(by: disposeBag)
     }
 }

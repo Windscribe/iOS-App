@@ -34,75 +34,76 @@ extension MainViewController {
     }
 
     func loadNetworkOptions() {
-        guard let network =  (try? viewModel.wifiNetwork.value() ?? WifiManager.shared.getConnectedNetwork()) else {
+        guard let network = (try? viewModel.wifiNetwork.value() ?? WifiManager.shared.getConnectedNetwork()) else {
             print("no network detected.... ")
             return
         }
-        self.protocolDropdownButton.setTitle(network.preferredProtocol)
-        self.portDropdownButton.setTitle(network.preferredPort)
+        protocolDropdownButton.setTitle(network.preferredProtocol)
+        portDropdownButton.setTitle(network.preferredPort)
 
-        self.loadPreferredProtocolStatus()
-        self.loadTrustNetworkStatus()
+        loadPreferredProtocolStatus()
+        loadTrustNetworkStatus()
     }
 
     func updateNetworkOptions() {
         guard let network = (try? viewModel.wifiNetwork.value() ?? WifiManager.shared.getConnectedNetwork()) else {
             print("no network detected.... ")
-            return }
+            return
+        }
         trustedNetworkValueLabel.text = network.SSID
-        if network.preferredProtocolStatus == true &&
-            network.status == false {
+        if network.preferredProtocolStatus == true,
+           network.status == false
+        {
             showPreferredProtocolView()
             showProtocolSelectionView()
-        } else if network.preferredProtocolStatus == false &&
-                    network.status == false {
+        } else if network.preferredProtocolStatus == false,
+                  network.status == false
+        {
             hideProtocolSelectionView()
             showPreferredProtocolView()
         } else if network.status == true {
             hidePreferredProtocolView()
         } else if network.status == false {
-           showPreferredProtocolView()
+            showPreferredProtocolView()
         }
-        self.preferredProtocolSwitch.setStatus(network.preferredProtocolStatus)
-        self.trustNetworkSwitch.setStatus(!network.status)
+        preferredProtocolSwitch.setStatus(network.preferredProtocolStatus)
+        trustNetworkSwitch.setStatus(!network.status)
     }
 
     func loadTrustNetworkStatus() {
         guard let network = try? viewModel.wifiNetwork.value() else { return }
-        self.trustNetworkSwitch.setStatus(!network.status)
+        trustNetworkSwitch.setStatus(!network.status)
         if network.status == true {
-            self.hidePreferredProtocolView()
+            hidePreferredProtocolView()
         } else {
-            self.showPreferredProtocolView()
+            showPreferredProtocolView()
         }
     }
 
     func loadPreferredProtocolStatus() {
         guard let network = try? viewModel.wifiNetwork.value() else { return }
-        self.preferredProtocolSwitch.setStatus(network.preferredProtocolStatus)
-        if network.preferredProtocolStatus == true && network.status == false {
-            self.showProtocolSelectionView()
+        preferredProtocolSwitch.setStatus(network.preferredProtocolStatus)
+        if network.preferredProtocolStatus == true, network.status == false {
+            showProtocolSelectionView()
         } else {
-            self.hideProtocolSelectionView()
+            hideProtocolSelectionView()
         }
     }
 
     @objc func trustNetworkSwitchTapped() {
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         viewModel.updateTrustNetworkSwitch(network: network, status: !trustNetworkSwitch.status)
         viewModel.updatePreferredProtocolSwitch(network: network, preferredProtocolStatus: false)
-        VPNManager.shared.connectIntent = !trustNetworkSwitch.status
-        VPNManager.shared.updateOnDemandRules()
-        self.updateNetworkOptions()
+        updateNetworkOptions()
     }
 
     @objc func preferredProtocolSwitchTapped() {
         tappedOnScreen()
-        guard let network = self.displayingNetwork else { return }
+        guard let network = displayingNetwork else { return }
         if network.status == true { return }
         preferredProtocolSwitch.toggle()
         viewModel.updatePreferredProtocolSwitch(network: network, preferredProtocolStatus: preferredProtocolSwitch.status)
-        self.updateNetworkOptions()
+        updateNetworkOptions()
     }
 
     @objc func tappedOnScreen() {
@@ -110,17 +111,17 @@ extension MainViewController {
             protocolDropdownButton.remove()
         }
         if portDropdownButton != nil {
-           portDropdownButton.remove()
+            portDropdownButton.remove()
         }
     }
 
-    @objc func autoSecureInfoButtonTapped(sender: UIButton) {
+    @objc func autoSecureInfoButtonTapped(sender _: UIButton) {
         AlertManager.shared.showSimpleAlert(viewController: self, title: "",
                                             message: TextsAsset.Whitelist.description,
                                             buttonText: TextsAsset.okay)
     }
 
-    @objc func preferredProtocolInfoButtonTapped(sender: UIButton) {
+    @objc func preferredProtocolInfoButtonTapped(sender _: UIButton) {
         AlertManager.shared.showSimpleAlert(viewController: self, title: "",
                                             message: TextsAsset.PreferredProtocol.description,
                                             buttonText: TextsAsset.okay)

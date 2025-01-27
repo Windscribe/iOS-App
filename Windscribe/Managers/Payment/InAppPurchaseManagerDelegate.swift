@@ -8,6 +8,7 @@
 
 import Foundation
 import StoreKit
+
 protocol InAppPurchaseManagerDelegate: AnyObject {
     func readyToMakePurchase(price1: String, price2: String)
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct])

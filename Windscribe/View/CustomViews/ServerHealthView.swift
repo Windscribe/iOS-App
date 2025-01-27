@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-class ServerHealthView: UIProgressView {
 
+class ServerHealthView: UIProgressView {
     var health: Int? {
         didSet {
             updateHealth()
@@ -31,7 +31,7 @@ class ServerHealthView: UIProgressView {
 
     func updateHealth() {
         if let currentHealth = health {
-            let healthFloat = Float(currentHealth)/100
+            let healthFloat = Float(currentHealth) / 100
             progress = healthFloat
             progressTintColor = getColorFromHealth(health: healthFloat)
         }
@@ -46,5 +46,4 @@ class ServerHealthView: UIProgressView {
             return UIColor.red
         }
     }
-
 }

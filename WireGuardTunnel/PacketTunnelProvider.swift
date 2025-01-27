@@ -1,5 +1,5 @@
 //
-//  PacketTunnelProvider:.swift
+//  PacketTunnelProvider.swift
 //  WireGuardTunnel
 //
 //  Created by Yalcin on 2020-06-29.
@@ -10,47 +10,45 @@ import Foundation
 import Network
 import NetworkExtension
 import os.log
-import WireGuardKit
-import Swinject
 import RxSwift
+import Swinject
+import WireGuardKit
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 class PacketTunnelProvider: NEPacketTunnelProvider {
     // MARK: dependencies
+
     private lazy var container: Container = {
         let container = Container(isExt: true)
         return container
     }()
-    private lazy var wgCrendentials: WgCredentials = {
-        return container.resolve(WgCredentials.self)!
-    }()
-    private lazy var wgConfigRepository: WireguardConfigRepository = {
-        return container.resolve(WireguardConfigRepository.self)!
-    }()
-    private lazy var apiCallManager: WireguardAPIManager = {
-        return container.resolve(WireguardAPIManager.self)!
-    }()
-    private lazy var preferences: Preferences = {
-        return container.resolve(Preferences.self)!
-    }()
+
+    private lazy var wgCrendentials: WgCredentials = container.resolve(WgCredentials.self)!
+
+    private lazy var wgConfigRepository: WireguardConfigRepository = container.resolve(WireguardConfigRepository.self)!
+
+    private lazy var apiCallManager: WireguardAPIManager = container.resolve(WireguardAPIManager.self)!
+
+    private lazy var preferences: Preferences = container.resolve(Preferences.self)!
+
     private lazy var logger: FileLogger = {
         let logger = container.resolve(FileLogger.self)!
         return logger
     }()
+
     // MARK: Properties
+
     private var runningHealthCheck = false
     private var internetAvailable = true
     private let disposeBag = DisposeBag()
 
-    private lazy var adapter: WireGuardAdapter = {
-        return WireGuardAdapter(with: self) { logLevel, message in
-            if message.contains("Retrying handshake"){
-                self.onStaleConnection()
-            }
+    private lazy var adapter: WireGuardAdapter = .init(with: self) { _, message in
+        if message.contains("Retrying handshake") {
+            self.onStaleConnection()
         }
-    }()
+    }
 
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
@@ -59,25 +57,26 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         wgCrendentials.load()
         logger.logD(self, "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
-              apiCallManager.getSession().subscribe(onSuccess: { [weak self] session in
+            apiCallManager.getSession().subscribe(onSuccess: { [weak self] session in
                 guard let self = self else { return }
                 if session.status == 1 {
-                  self.logger.logD(self, "User status is Okay, attempt rebuilding credentials.")
-                  self.runningHealthCheck = true
-                  self.requestNewInterfaceIp(completionHandler: completionHandler)
+                    self.logger.logD(self, "User status is Okay, attempt rebuilding credentials.")
+                    self.runningHealthCheck = true
+                    self.requestNewInterfaceIp(completionHandler: completionHandler)
                 } else {
-                  self.logger.logD(self, "User status is \(session.status), do not reconnect.")
-                  self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
-                  completionHandler(nil)
+                    self.logger.logD(self, "User status is \(session.status), do not reconnect.")
+                    self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
+                    completionHandler(nil)
                 }
-              }, onFailure: { _ in
+            }, onFailure: { _ in
                 completionHandler(nil)
-              }).disposed(by: disposeBag)
-              return
-            }
+            }).disposed(by: disposeBag)
+            return
+        }
 
-        guard let tunnelProviderProtocol = self.protocolConfiguration as? NETunnelProviderProtocol,
-              var tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
+        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
+              var tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration()
+        else {
             errorNotifier.notify(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
             return
@@ -94,50 +93,50 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 tunnelConfiguration.dnsSettings = dnsSettings
             }
         }
-        self.adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
+        adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
                 self.logger.logD(self, "Tunnel interface is \(interfaceName)")
-            #if os(iOS)
-                if #available(iOSApplicationExtension 14.0, *) {
-                    WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-                }
-            #endif
+                #if os(iOS)
+                    if #available(iOSApplicationExtension 14.0, *) {
+                        WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
+                    }
+                #endif
                 completionHandler(nil)
                 return
             }
 
             switch adapterError {
-                case .cannotLocateTunnelFileDescriptor:
-                    self.logger.logE(self, "Starting tunnel failed: could not determine file descriptor")
-                    errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
-                    completionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+            case .cannotLocateTunnelFileDescriptor:
+                self.logger.logE(self, "Starting tunnel failed: could not determine file descriptor")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
+                completionHandler(PacketTunnelProviderError.couldNotDetermineFileDescriptor)
 
-                case .dnsResolution(let dnsErrors):
-                    let hostnamesWithDnsResolutionFailure = dnsErrors.map { $0.address }
-                        .joined(separator: ", ")
-                    self.logger.logE(self, "DNS resolution failed for the following hostnames: \(hostnamesWithDnsResolutionFailure)")
-                    errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
-                    completionHandler(PacketTunnelProviderError.dnsResolutionFailure)
+            case let .dnsResolution(dnsErrors):
+                let hostnamesWithDnsResolutionFailure = dnsErrors.map { $0.address }
+                    .joined(separator: ", ")
+                self.logger.logE(self, "DNS resolution failed for the following hostnames: \(hostnamesWithDnsResolutionFailure)")
+                errorNotifier.notify(PacketTunnelProviderError.dnsResolutionFailure)
+                completionHandler(PacketTunnelProviderError.dnsResolutionFailure)
 
-                case .setNetworkSettings(let error):
-                    self.logger.logE(self, "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
-                    errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
-                    completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
+            case let .setNetworkSettings(error):
+                self.logger.logE(self, "Starting tunnel failed with setTunnelNetworkSettings returning \(error.localizedDescription)")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotSetNetworkSettings)
+                completionHandler(PacketTunnelProviderError.couldNotSetNetworkSettings)
 
-                case .startWireGuardBackend(let errorCode):
-                    self.logger.logE(self, "Starting tunnel failed with wgTurnOn returning \(errorCode)")
-                    errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
-                    completionHandler(PacketTunnelProviderError.couldNotStartBackend)
+            case let .startWireGuardBackend(errorCode):
+                self.logger.logE(self, "Starting tunnel failed with wgTurnOn returning \(errorCode)")
+                errorNotifier.notify(PacketTunnelProviderError.couldNotStartBackend)
+                completionHandler(PacketTunnelProviderError.couldNotStartBackend)
 
-                case .invalidState:
-                    // Must never happen
-                    fatalError()
+            case .invalidState:
+                // Must never happen
+                fatalError()
             }
         }
     }
 
-    override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
+    override func stopTunnel(with _: NEProviderStopReason, completionHandler: @escaping () -> Void) {
         logger.logD(self, "Stopping WireGuard tunnel.")
         adapter.stop { error in
             ErrorNotifier.removeLastErrorFile()
@@ -147,12 +146,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             completionHandler()
 
-#if os(macOS)
-            // HACK: This is a filthy hack to work around Apple bug 32073323 (dup'd by us as 47526107).
-            // Remove it when they finally fix this upstream and the fix has been rolled out to
-            // sufficient quantities of users.
-            exit(0)
-#endif
+            #if os(macOS)
+                // HACK: This is a filthy hack to work around Apple bug 32073323 (dup'd by us as 47526107).
+                // Remove it when they finally fix this upstream and the fix has been rolled out to
+                // sufficient quantities of users.
+                exit(0)
+            #endif
         }
     }
 
@@ -201,14 +200,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Request new interface ip from wg init + wg connect
     /// Check if interface changed or peer changed (Account status change.)
     private func setNewTunnelInterfaceIp(updatedConfig: TunnelConfiguration) {
-        self.logger.logD(self, "Interface has address changed")
+        logger.logD(self, "Interface has address changed")
         reasserting = true
         replacePeer(tunnelConfiguration: updatedConfig)
-        reasserting = false
     }
 
     /// Check user session for change.
-    func getSession(){
+    func getSession() {
         logger.logD(self, "Requesting user session update.")
         apiCallManager.getSession()
             .subscribe(onSuccess: { [self] data in
@@ -219,7 +217,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     wgCrendentials.delete()
                     preferences.saveForceDisconnect(value: true)
                     self.logger.logD(self, "User status is banned/expired")
-                    self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
+                    self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
                 }
             }, onFailure: { error in
                 self.runningHealthCheck = false
@@ -228,8 +226,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     switch error {
                     case Errors.sessionIsInvalid:
                         self.wgCrendentials.delete()
-                        self.cancelTunnelWithError(NSError.init(domain: "com.windscribe", code: 50))
-                    case Errors.apiError(let e):
+                        self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
+                    case let Errors.apiError(e):
                         self.logger.logD(self, e.errorMessage ?? "")
                     default:
                         self.runningHealthCheck = false
@@ -241,14 +239,14 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Request new interface address to check if it has changed.
     private func requestNewInterfaceIp(completionHandler: ((Error?) -> Void)? = nil) {
         do {
-            self.logger.logD(self, "Catching existing configuration.")
+            logger.logD(self, "Catching existing configuration.")
             var tunnelConfig: TunnelConfiguration? = nil
-            if let config =  wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized()  {
+            if let config = wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized() {
                 tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
             }
             let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
-            self.logger.logD(self, "Requesting new interface address.")
+            logger.logD(self, "Requesting new interface address.")
             wgConfigRepository.getCredentials().subscribe(onCompleted: {
                 self.runningHealthCheck = false
                 // Restart extesnion if connection to apply new configuration.
@@ -257,9 +255,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     return
                 }
                 if let newAddress = self.wgCrendentials.address, let key = self.wgCrendentials.presharedKey {
-                    if(newAddress != lastIpAddress || oldKey != key) {
+                    if newAddress != lastIpAddress || oldKey != key {
                         do {
-                            let updatedConfig = try TunnelConfiguration(fromWgQuickConfig:  self.wgCrendentials.asWgCredentialsString()!)
+                            let updatedConfig = try TunnelConfiguration(fromWgQuickConfig: self.wgCrendentials.asWgCredentialsString()!)
                             if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
                                 let customDNSValue = self.preferences.getCustomDNSValue()
                                 self.logger.logD(self, "User DNS configuration: \(customDNSValue.description)")
@@ -301,6 +299,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             } else {
                 self.logger.logD(self, "PacketTunnelProvider: Successfully updated peer.")
             }
+            self.reasserting = false
         }
     }
 }

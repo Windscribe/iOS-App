@@ -17,7 +17,8 @@ extension RootRouter {
     func presentAsRoot(vc: UIViewController) {
         vc.modalPresentationStyle = .fullScreen
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-           let window = appDelegate.window {
+           let window = appDelegate.window
+        {
             window.rootViewController?.dismiss(animated: false,
                                                completion: nil)
             UIView.transition(with: window,

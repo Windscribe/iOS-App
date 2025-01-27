@@ -22,7 +22,6 @@ enum SharedKeys {
     static let serverPublicKey = "serverPublicKey"
     static let port = "port"
     static let wgPort = "wgPort"
-    static let isCustomConfigSelected = "isCustomConfigSelected"
     static let countryOverride = "countryOverride"
     static let circumventCensorship = "circumventCensorship"
     static let advanceParams = "AdvanceParams"
@@ -88,12 +87,17 @@ enum SharedKeys {
     // ReferAndShareManager
     static let referAndShareUserDefautsKeys = "referAndShareUserDefautsKeys"
     static let tvFavourites = "tvfavourites"
+
+    // Locations
+    static let savedLastLocation = "savedLastLocation"
+    static let savedBestLocation = "savedBestLocation"
 }
 
 /// Read value from plist file or not found returns empty string.
 func getValueFromPlistFile(key: String) -> String {
     if let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),
-       let plistData = FileManager.default.contents(atPath: plistPath) {
+       let plistData = FileManager.default.contents(atPath: plistPath)
+    {
         do {
             if let plistDictionary = try PropertyListSerialization.propertyList(from: plistData, options: [], format: nil) as? [String: Any] {
                 return plistDictionary[key] as? String ?? ""
@@ -101,4 +105,4 @@ func getValueFromPlistFile(key: String) -> String {
         } catch {}
     }
     return ""
-    }
+}

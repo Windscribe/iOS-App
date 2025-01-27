@@ -7,8 +7,7 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
-class PreferencePrivacyView: UIView {
+import UIKit
 
-}
+class PreferencePrivacyView: UIView {}

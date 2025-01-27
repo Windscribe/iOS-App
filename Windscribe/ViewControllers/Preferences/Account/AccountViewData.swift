@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import UIKit
-import Swinject
 import RxSwift
+import Swinject
+import UIKit
 
 enum AccountItemCell {
-    private var  localDatabase: LocalDatabase {
+    private var localDatabase: LocalDatabase {
         return Assembler.resolve(LocalDatabase.self)
     }
 
@@ -183,7 +183,7 @@ enum AccountItemCell {
 }
 
 enum AccountSectionItem {
-    private var  localDatabase: LocalDatabase {
+    private var localDatabase: LocalDatabase {
         return Assembler.resolve(LocalDatabase.self)
     }
 
@@ -232,7 +232,8 @@ enum AccountSectionItem {
             return [.username, .emailEmpty]
         }
         if session.email.isEmpty == false,
-           session.emailStatus == false {
+           session.emailStatus == false
+        {
             return [.username, .confirmEmail]
         }
         if session.isUserPro {
@@ -249,6 +250,6 @@ enum AccountSectionItem {
     }
 
     private func makeOtherItems() -> [AccountItemCell] {
-        return [.voucherCode,.lazyLogin]
+        return [.voucherCode, .lazyLogin]
     }
 }

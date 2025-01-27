@@ -37,22 +37,22 @@ extension ConnectionModeType {
     init(fieldValue: String) {
         self = switch fieldValue {
         case Fields.Values.auto:
-                .auto
+            .auto
         case Fields.Values.manual:
-                .manual
+            .manual
         default:
-                .auto
+            .auto
         }
     }
 
     init(titleValue: String) {
         self = switch titleValue {
         case TextsAsset.General.auto:
-                .auto
+            .auto
         case TextsAsset.General.manual:
-                .manual
+            .manual
         default:
-                .auto
+            .auto
         }
     }
 }
@@ -61,22 +61,22 @@ extension ConnectedDNSType {
     init(fieldValue: String) {
         self = switch fieldValue {
         case Fields.Values.auto:
-                .auto
+            .auto
         case Fields.Values.custom:
-                .custom
+            .custom
         default:
-                .auto
+            .auto
         }
     }
 
     init(titleValue: String) {
         self = switch titleValue {
         case TextsAsset.General.auto:
-                .auto
+            .auto
         case TextsAsset.General.custom:
-                .custom
+            .custom
         default:
-                .auto
+            .auto
         }
     }
 

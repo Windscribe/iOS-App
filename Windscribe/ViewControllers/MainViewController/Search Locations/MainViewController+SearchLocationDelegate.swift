@@ -17,7 +17,7 @@ extension MainViewController {
         view.addSubview(searchLocationsView)
         searchLocationsView.loadView()
 
-        self.addSearchViewConstraints()
+        addSearchViewConstraints()
     }
 
     private func addSearchViewConstraints() {
@@ -26,7 +26,7 @@ extension MainViewController {
             searchLocationsView.centerYAnchor.constraint(equalTo: cardTopView.centerYAnchor),
             searchLocationsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchLocationsView.heightAnchor.constraint(equalToConstant: 24)
+            searchLocationsView.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
 
@@ -42,63 +42,48 @@ extension MainViewController {
             reloadServerListForSearch()
         }
     }
-    func reloadServerListForSearch() {
+
+    func reloadServerListForSearch(reloadFinishedCompletion: (() -> Void)? = nil) {
         guard let results = try? viewModel.serverList.value() else { return }
         if results.count == 0 { return }
-        let serverModels = results.compactMap({ $0.getServerModel() })
-        let serverSections: [ServerSection] = serverModels.map({ ServerSection(server: $0, collapsed: true) })
-        let serverSectionsOrdered = self.sortServerListUsingUserPreferences(serverSections: serverSections)
-        self.serverListTableViewDataSource?.serverSections = serverSectionsOrdered
-        self.serverListTableViewDataSource?.bestLocation = nil
-        self.serverListTableView.reloadData()
+        loadServerTable(servers: results, shouldColapse: true, reloadFinishedCompletion: reloadFinishedCompletion)
     }
 }
 
 extension MainViewController: SearchCountryViewDelegate {
     func searchLocationUpdated(with text: String) {
-        reloadServerListForSearch()
-        guard let serverSections = serverListTableViewDataSource?.serverSections else { return }
-        if text.isEmpty {
-            for (index, _) in serverSections.enumerated() {
-                serverListTableView.collapse(index)
-            }
-            return
-        }
-        var resultServerSections = [ServerSection]()
-        let serverModels = serverSections.map {$0.server!}
-        let sortedModels = find(groupList: serverModels, keyword: text)
-        resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
-        serverListTableViewDataSource?.serverSections = resultServerSections
-        serverListTableView.reloadData()
-        for (index, serverSection) in resultServerSections.enumerated() {
-            if serverSection.collapsed == false {
-                serverListTableView.expand(index)
-            } else {
-                serverListTableView.collapse(index)
+        reloadServerListForSearch { [weak self] in
+            DispatchQueue.main.async {
+                guard let self = self,
+                      let serverSections = self.serverListTableViewDataSource?.serverSections
+                else { return }
+                if text.isEmpty {
+                    for (index, _) in serverSections.enumerated() {
+                        self.serverListTableView.collapse(index)
+                    }
+                    return
+                }
+                var resultServerSections = [ServerSection]()
+                let serverModels = serverSections.map {$0.server!}
+                let sortedModels = self.find(groupList: serverModels, keyword: text)
+                resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
+                self.serverListTableViewDataSource?.serverSections = resultServerSections
+                self.serverListTableView.reloadData()
+                for (index, serverSection) in resultServerSections.enumerated() {
+                    if serverSection.collapsed == false {
+                        self.serverListTableView.expand(index)
+                    } else {
+                        self.serverListTableView.collapse(index)
+                    }
+                }
             }
         }
     }
 
     private func find(groupList: [ServerModel], keyword: String) -> [ServerModel] {
-        // Sort server list by keyword
-        let sortedGroupList = groupList.sorted { o1, o2 in
-                let containsFirst = self.filterIfStartsWith(group: o1, keyword: keyword)
-                let containsSecond = self.filterIfStartsWith(group: o2, keyword: keyword)
-
-                if containsFirst && !containsSecond {
-                    return true // o1 should come before o2
-                }
-                if !containsFirst && containsSecond {
-                    return false// o2 should come before o1
-                }
-
-                return false // Maintain original order
-
-        }
-
         // Filter servers containing the keyword
         var updatedList: [ServerModel] = []
-        for group in sortedGroupList {
+        for group in groupList {
             if let filteredGroup = filterIfContains(group: group, keyword: keyword) {
                 updatedList.append(filteredGroup)
             }
@@ -163,10 +148,10 @@ extension MainViewController: SearchCountryViewDelegate {
 
     func showSearchLocation() {
         logger.logD(self, "User tapped to search locations.")
-        self.clearScrollHappened()
-        self.hideAutoSecureViews()
-        self.lastSelectedHeaderViewTab = self.selectedHeaderViewTab
-        self.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        clearScrollHappened()
+        hideAutoSecureViews()
+        lastSelectedHeaderViewTab = selectedHeaderViewTab
+        scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
         toggleSearchViews(to: true)
         serverListTableViewDataSource?.bestLocation = nil
         DispatchQueue.main.async { [weak self] in
@@ -196,6 +181,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 self?.cardHeaderContainerView.headerSelectorView.isHidden = false
                 self?.view.layoutIfNeeded()
             }, completion: { _ in
+                self?.serverListTableView?.collapseExpandedSections()
                 self?.reloadServerListOrder()
             })
         }

@@ -10,11 +10,11 @@ import Foundation
 import RxSwift
 
 protocol ShareWithFriendViewModelType {
-    var isDarkMode: BehaviorSubject<Bool> {get}
-    var referFriendManager: ReferAndShareManagerV2 {get}
+    var isDarkMode: BehaviorSubject<Bool> { get }
+    var referFriendManager: ReferAndShareManagerV2 { get }
     var themeManager: ThemeManager { get }
-    var appStoreLink: String {get}
-    var inviteMessage: String {get}
+    var appStoreLink: String { get }
+    var inviteMessage: String { get }
 }
 
 class ShareWithFriendViewModel: ShareWithFriendViewModelType {
@@ -31,6 +31,7 @@ class ShareWithFriendViewModel: ShareWithFriendViewModelType {
     private var username: String {
         return sessionManager.session?.username ?? "User"
     }
+
     private(set) var appStoreLink = "https://apps.apple.com/us/app/windscribe-vpn/id1129435228"
     var inviteMessage: String {
         return "\(username) \(TextsAsset.Refer.inviteMessage)"

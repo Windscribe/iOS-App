@@ -7,10 +7,11 @@
 //
 
 import Foundation
-import UIKit
 import RxSwift
+import UIKit
 
 // MARK: - ConnectionModeView
+
 protocol ConnectionModeViewDelegate: AnyObject {
     func connectionModeViewDidChangeMode(_ option: ConnectionModeType)
     func connectionModeViewDidChangeProtocol(_ value: String)
@@ -21,7 +22,7 @@ protocol ConnectionModeViewDelegate: AnyObject {
 
 enum ConnectionHeaderType {
     case `switch`
-    case `selection`
+    case selection
 }
 
 class ConnectionModeView: UIStackView {
@@ -84,7 +85,8 @@ class ConnectionModeView: UIStackView {
         let header = SwitchHeaderView(
             title: name,
             icon: iconAsset,
-            isDarkMode: isDarkMode)
+            isDarkMode: isDarkMode
+        )
         header.connectionSecureViewSwitchAction = { [weak self] in
             guard let self = self else { return }
             self.delegate?.connectionModeViewDidSwitch(self, value: header.switchButton.status)
@@ -109,18 +111,19 @@ class ConnectionModeView: UIStackView {
          listProtocolOption: [String],
          currentPort: String,
          listPortOption: [String],
-         isDarkMode: BehaviorSubject<Bool>) {
-        self.type = .selection
+         isDarkMode: BehaviorSubject<Bool>)
+    {
+        type = .selection
         self.optionMode = optionMode
         self.listOption = listOption
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
         self.listPortOption = listPortOption
         self.listProtocolOption = listProtocolOption
-        self.name = title
-        self.footerDescription = description
+        name = title
+        footerDescription = description
         self.iconAsset = iconAsset
-        self.currentSwitchOption = false
+        currentSwitchOption = false
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
         setup()
@@ -135,16 +138,17 @@ class ConnectionModeView: UIStackView {
          listProtocolOption: [String],
          currentPort: String,
          listPortOption: [String],
-         isDarkMode: BehaviorSubject<Bool>) {
-        self.type = .switch
-        self.optionMode = .auto
-        self.listOption = []
+         isDarkMode: BehaviorSubject<Bool>)
+    {
+        type = .switch
+        optionMode = .auto
+        listOption = []
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
         self.listPortOption = listPortOption
         self.listProtocolOption = listProtocolOption
-        self.name = title
-        self.footerDescription = description
+        name = title
+        footerDescription = description
         self.iconAsset = iconAsset
         self.currentSwitchOption = currentSwitchOption
         self.isDarkMode = isDarkMode
@@ -153,7 +157,8 @@ class ConnectionModeView: UIStackView {
         bindViews()
     }
 
-    required init(coder: NSCoder) {
+    @available(*, unavailable)
+    required init(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -170,7 +175,7 @@ class ConnectionModeView: UIStackView {
     private func setup() {
         switch type {
         case .switch:
-            self.switchHeader.switchButton.status = currentSwitchOption
+            switchHeader.switchButton.status = currentSwitchOption
             addArrangedSubview(switchHeader)
             updateUIForSwitch()
         case .selection:
@@ -180,7 +185,7 @@ class ConnectionModeView: UIStackView {
         addArrangedSubviews([
             protocolView,
             portView,
-            footer
+            footer,
         ])
         axis = .vertical
         addSubview(mainWrapperView)
@@ -210,18 +215,18 @@ class ConnectionModeView: UIStackView {
     }
 
     func updateListPortOption(_ ports: [String]) {
-        self.listPortOption = ports
+        listPortOption = ports
         if let defaultOption = ports.first {
-            self.portView.dropdownView.setTitle(defaultOption)
+            portView.dropdownView.setTitle(defaultOption)
         }
     }
 
     func updateCurrentProtocolOption(_ currentProtocol: String) {
-        self.protocolView.dropdownView.setTitle(currentProtocol)
+        protocolView.dropdownView.setTitle(currentProtocol)
     }
 
     func updateCurrentPortOption(_ currentPort: String) {
-        self.portView.dropdownView.setTitle(currentPort)
+        portView.dropdownView.setTitle(currentPort)
     }
 }
 
@@ -246,7 +251,7 @@ extension ConnectionModeView: SelectableHeaderViewDelegate {
 }
 
 extension ConnectionModeView: DropdownDelegate {
-    func optionSelected(dropdown: Dropdown, option: String, relatedIndex: Int) {
+    func optionSelected(dropdown: Dropdown, option: String, relatedIndex _: Int) {
         dismissDropdown()
         switch dropdown {
         case portView.dropdownView.dropdown:
@@ -262,8 +267,9 @@ extension ConnectionModeView: DropdownDelegate {
 }
 
 // MARK: - ConnectionModeItemViewDelegate
+
 extension ConnectionModeView: ConnectionModeItemViewDelegate {
-    func connectionModeItemViewDidSelectDropdownButton(_ sender: DropdownButton, _ view: ConnectionModeItemView) {
+    func connectionModeItemViewDidSelectDropdownButton(_: DropdownButton, _ view: ConnectionModeItemView) {
         showDropdown(view)
     }
 
@@ -273,8 +279,8 @@ extension ConnectionModeView: ConnectionModeItemViewDelegate {
             currentDropdownView = nil
         }
 
-        if let parentView = self.superview {
-            let frameToShowDropDown = self.frame
+        if let parentView = superview {
+            let frameToShowDropDown = frame
             let tmpView = UIView(frame: frameToShowDropDown)
             currentDropdownView = Dropdown(attachedView: tmpView)
             currentDropdownView?.dropDownDelegate = self
@@ -296,8 +302,8 @@ extension ConnectionModeView: ConnectionModeItemViewDelegate {
             parentView.addSubview(currentDropdownView ?? UIView())
             currentDropdownView?.bringToFront()
         }
-
     }
 }
+
 var currentDropdownView: Dropdown?
 let viewDismiss = UIView()

@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 import Foundation
-import RealmSwift
 import Realm
+import RealmSwift
 
 struct VPNConnectionModel {
     let id: String?
@@ -22,7 +22,8 @@ struct VPNConnectionModel {
          serverAddress: String,
          protocolType: String,
          port: String,
-         createdAt: Date) {
+         createdAt: Date)
+    {
         self.id = id
         self.hostname = hostname
         self.serverAddress = serverAddress
@@ -38,13 +39,14 @@ struct VPNConnectionModel {
     dynamic var serverAddress: String = ""
     dynamic var protocolType: String = ""
     dynamic var port: String = ""
-    dynamic var createdAt: Date = Date()
+    dynamic var createdAt: Date = .init()
 
     convenience init(id: String,
                      hostname: String,
                      serverAddress: String,
                      protocolType: String,
-                     port: String) {
+                     port: String)
+    {
         self.init()
         self.id = id
         self.hostname = hostname

@@ -7,45 +7,35 @@
 //
 
 import Foundation
-import RxSwift
-import Realm
-import RxRealm
-import Swinject
 import NetworkExtension
+import Realm
+import RxSwift
+import Swinject
+import RealmSwift
+
 class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnManager: VPNManager
+    private let locationsManager: LocationsManagerType
     private var sessionManager: SessionManagerV2 {
         return Assembler.resolve(SessionManagerV2.self)
     }
+
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
-    let bestLocation: BehaviorSubject <BestLocation?> = BehaviorSubject(value: nil)
     private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
 
-    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger) {
+    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManagerType) {
         self.pingManager = pingManager
         self.database = database
         self.vpnManager = vpnManager
         self.logger = logger
-        self.latency.onNext(self.database.getAllPingData())
-        observeBestLocation()
+        self.locationsManager = locationsManager
+        latency.onNext(self.database.getAllPingData())
         observeFavNodes()
-    }
-
-    private func observeBestLocation() {
-        observingBestLocation = true
-        database.getBestLocation().subscribe(onNext: { location in
-            self.logger.logD(self, "Updated best location to \(location?.cityName ?? "")")
-            self.bestLocation.onNext(location)
-        }, onError: { _ in
-            self.bestLocation.onNext(nil)
-        }, onCompleted: {
-            self.observingBestLocation = false
-        }).disposed(by: disposeBag)
     }
 
     private func observeFavNodes() {
@@ -58,7 +48,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     /// Returns latency data for ip.
     func getPingData(ip: String) -> PingData? {
         let value = try? latency.value()
-        return value?.first { !$0.isInvalidated  && $0.ip == ip }
+        return value?.first { !$0.isInvalidated && $0.ip == ip }
     }
 
     func loadLatency() {
@@ -66,184 +56,220 @@ class LatencyRepositoryImpl: LatencyRepository {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {})
-            .disposed(by: self.disposeBag)
+            .disposed(by: disposeBag)
     }
 
     func loadAllServerLatency() -> Completable {
-        self.logger.logE(self, "Attempting to update latency data.")
-        let pingServers = self.getServerPingAndHosts()
+        logger.logE(self, "Attempting to update latency data.")
+        let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {
-            self.logger.logE(self, "Server list not ready for latency update.")
+            logger.logE(self, "Server list not ready for latency update.")
             return Completable.empty()
         }
-        let latencySingles =  self.createLatencyTask(from: pingServers)
+        if vpnManager.isConnected() {
+            self.logger.logE(self, "Latency not updated as vpn is connected")
+            return Completable.empty()
+        }
+        let latencySingles =  createLatencyTask(from: pingServers)
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
-
         latencySingles.subscribe(
-            onFailure: { _ in
-                self.logger.logE(self, "Failure to update latency data.")
-                let pingData = self.database.getAllPingData()
-                self.latency.onNext(pingData)
-                self.pickBestLocation(pingData: pingData)
-            }
-        )
-        .disposed(by: self.disposeBag)
+                onSuccess: { _ in
+                    self.logger.logI(self, "Successfully updated latency data.")
+                    self.refreshBestLocation()
+                },
+                onFailure: { _ in
+                    self.logger.logE(self, "Failure to update latency data.")
+                    self.refreshBestLocation()
+                })
+            .disposed(by: self.disposeBag)
 
-        return latencySingles.do(onSuccess: { _ in
-            self.logger.logI(self, "Successfully updated latency data.")
-            let pingData = self.database.getAllPingData()
-            self.latency.onNext(pingData)
-            self.pickBestLocation(pingData: pingData)
-        }).asCompletable()
+        return latencySingles.asCompletable()
     }
 
     func loadFavouriteLatency() -> Completable {
-        let favourites = try? favNodes.value().map { p in ( p.pingIp, p.pingHost)}
-        return self.createLatencyTask(from: favourites ?? [])
+        let favourites = try? favNodes.value().map { p in (p.pingIp, p.pingHost) }
+        return createLatencyTask(from: favourites ?? [])
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData())})
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
             .asCompletable()
     }
 
     func loadStreamingServerLatency() -> Completable {
         let streamingServersToPing = database.getServers()?
-            .filter { $0.locType == "streaming"}
-            .compactMap { region in region.groups.toArray()}
+            .filter { $0.locType == "streaming" }
+            .compactMap { region in region.groups.toArray() }
             .reduce([], +)
-            .map { city in (city.pingIp, city.pingHost)}
-        return self.createLatencyTask(from: streamingServersToPing ?? [])
+            .map { city in (city.pingIp, city.pingHost) }
+        return createLatencyTask(from: streamingServersToPing ?? [])
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in  self.latency.onNext(self.database.getAllPingData())})
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
             .asCompletable()
     }
 
     func loadStaticIpLatency() -> Single<[PingData]> {
-        self.createLatencyTask(from: self.getStaticPingAndHosts())
+        createLatencyTask(from: getStaticPingAndHosts())
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in  self.latency.onNext(self.database.getAllPingData()) })
+            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
     }
 
     func loadCustomConfigLatency() -> Completable {
         getCustomConfigLatency()
             .observe(on: MainScheduler.instance)
-            .subscribe(on: MainScheduler.instance)
             .do(onSuccess: { _ in
                 let pingData = self.database.getAllPingData()
                 self.latency.onNext(pingData)
             }).asCompletable()
     }
 
-    func getCustomConfigLatency() -> Single<[PingData]> {
-        let tasks = database.getCustomConfigs().map { config in
-            return Single<PingData>.create { completion in
-                let pingData = PingData(ip: config.serverAddress, latency: -1)
-                self.getTCPLatency(pingIp: config.serverAddress) { minTime in
-                    if minTime != -1 {
-                        pingData.latency = minTime
-                        self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+    private func getCustomConfigLatency() -> Single<[PingData]> {
+        return Single<[PingData]>.create { completion in
+            autoreleasepool {
+                    let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
+                    var tasks: [Single<PingData>] = []
+                    for ref in threadSafeConfigs {
+                        let task = Single<PingData>.create { innerCompletion in
+                            autoreleasepool {
+                                do {
+                                    let realm = try Realm()
+                                    guard let config = realm.resolve(ref) else {
+                                        innerCompletion(.failure(Realm.Error(.fail)))
+                                        return Disposables.create()
+                                    }
+                                    let pingData = PingData(ip: config.serverAddress, latency: -1)
+                                    self.getTCPLatency(pingIp: config.serverAddress) { minTime in
+                                        if minTime != -1 {
+                                            pingData.latency = minTime
+                                            self.database.addPingData(pingData: pingData)
+                                        }
+                                        innerCompletion(.success(pingData))
+                                    }
+                                    return Disposables.create()
+                                } catch {
+                                    innerCompletion(.failure(error))
+                                    return Disposables.create()
+                                }
+                            }
+                        }
+                        tasks.append(task)
                     }
-                    completion(.success(pingData))
-                }
-                return Disposables.create()
+                    Observable.zip(tasks.map { $0.asObservable() })
+                        .asSingle()
+                        .subscribe(onSuccess: { result in
+                            completion(.success(result))
+                        }, onFailure: { error in
+                            completion(.failure(error))
+                        })
+                        .disposed(by: self.disposeBag)
             }
-        }.map { single in single.asObservable() }
-        return Observable.zip(tasks).asSingle()
+            return Disposables.create()
+        }
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
-        #if os(iOS)
-        if vpnManager.isConnected() {
-            completion(-1)
-        } else {
-            _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
-                QNNTcpPing.start(pingIp) { (result) in
-                    if let minTime = result?.minTime {
-                        completion(Int(minTime))
-                    } else {
-                        self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
-                        completion(-1)
+#if os(iOS)
+            if vpnManager.isConnected() {
+                completion(-1)
+            } else {
+                _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
+                    QNNTcpPing.start(pingIp) { result in
+                        if let minTime = result?.minTime {
+                            completion(Int(minTime))
+                        } else {
+                            self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
+                            completion(-1)
+                        }
                     }
                 }
             }
-        }
-        #endif
+#endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
         let pingIps = database.getServers()?
-        .compactMap { region in region.groups.toArray()}
-        .reduce([], +)
-        .filter {
-            if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
-                return false
-            } else {
-                return true
-            }
-        }.map {$0.pingIp} ?? []
-        let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip)}
+            .compactMap { region in region.groups.toArray()}
+            .reduce([], +)
+            .filter {
+                if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
+                    return false
+                } else {
+                    return true
+                }
+            }.map { $0.pingIp } ?? []
+        let validPingData = pingDataArray.filter { $0.latency != -1 && pingIps.contains($0.ip) }
         let minLatencyPingData = validPingData.min(by: { $0.latency < $1.latency })
         return minLatencyPingData?.ip
     }
 
     /// Returns single task built from list of ip and hosts.
     private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
-        let tasks = from.map { ip, host in
-            return Single<PingData>.create { completion in
+        let concurrentQueue = DispatchQueue(label: "com.windscribe.latencyTask", qos: .userInitiated, attributes: .concurrent)
+        let semaphore = DispatchSemaphore(value: 30)
+        var results: [PingData] = []
+        let resultLock = NSLock()
+        let group = DispatchGroup()
+        for (ip, host) in from {
+            group.enter()
+            semaphore.wait()
+            concurrentQueue.async {
                 self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
                     let pingData = PingData(ip: ip, latency: -1)
+                    resultLock.lock()
                     if success {
                         pingData.latency = Int(time)
-                        self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+                        self.database.addPingData(pingData: pingData)
                     }
-                    completion(.success(pingData))
+                    results.append(pingData)
+                    resultLock.unlock()
+                    semaphore.signal()
+                    group.leave()
                 }
-                return Disposables.create()
             }
-        }.map { single in single.asObservable() }
-        return Observable.zip(tasks).asSingle()
+        }
+        return Single<[PingData]>.create { single in
+            group.notify(queue: .main) {
+                single(.success(results))
+            }
+            return Disposables.create()
+        }
     }
 
     private func getStaticPingAndHosts() -> [(String, String)] {
-        return database.getStaticIPs()?.compactMap {$0}
-            .map { city in return (city.nodes.first?.ip ?? "", city.pingHost)} ?? []
+        return database.getStaticIPs()?.compactMap { $0 }
+            .map { city in (city.nodes.first?.ip ?? "", city.pingHost) } ?? []
     }
 
     /// Returns ping IP and Host array from database.
     private func getServerPingAndHosts() -> [(String, String)] {
         return database.getServers()?
-            .compactMap { region in region.groups.toArray()}
+            .compactMap { region in region.groups.toArray() }
             .reduce([], +)
-            .map { city in return (city.pingIp, city.pingHost) } ?? []
+            .map { city in (city.pingIp, city.pingHost) } ?? []
+    }
+
+    func refreshBestLocation() {
+        let pingData = self.database.getAllPingData()
+        self.latency.onNext(pingData)
+        self.pickBestLocation(pingData: pingData)
     }
 
     func pickBestLocation(pingData: [PingData]) {
         let servers = database.getServers()
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
-        outerLoop: for server in servers ?? [] {
-            for group in server.groups {
-                if group.pingIp == lowestPingIp,
-                   let bestNode = group.bestNode?.getNodeModel(),
-                   let serverModel = server.getServerModel() {
-                    let bestLocation = BestLocation(node: bestNode, group: group.getGroupModel(), server: serverModel)
-                    database.saveBestLocation(location: bestLocation).disposed(by: disposeBag)
-                    self.bestLocation.onNext(bestLocation)
-                    break outerLoop
+            outerLoop: for server in servers ?? [] {
+                for group in server.groups {
+                    if group.pingIp == lowestPingIp {
+                        locationsManager.saveBestLocation(with: "\(group.id)")
+                        break outerLoop
+                    }
                 }
             }
-        }
         } else {
             return
-        }
-        let lastBestLocation = try? bestLocation.value()
-        if !observingBestLocation || lastBestLocation == nil {
-            delay(2) {
-                self.observeBestLocation()
-            }
         }
     }
 
@@ -254,40 +280,37 @@ class LatencyRepositoryImpl: LatencyRepository {
             guard let countryCode = Locale.current.region?.identifier else { return }
             logger.logD(self, "User region: \(countryCode)")
             if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
-                logger.logD(self, "Selected best location based on region: \(regionBasedLocation.cityName)")
+                logger.logD(self, "Selected best location based on region: \(regionBasedLocation)")
                 return
             }
         }
         if let timeZoneBasedLocation = selectServerByTimeZone(servers: servers) {
-            logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation.cityName)")
+            logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation)")
         }
     }
 
     /// Select the best server based on the user's region
-    private func selectServerByRegion(servers: [Server], countryCode: String) -> BestLocation? {
+    private func selectServerByRegion(servers: [Server], countryCode: String) -> String? {
         for server in servers where server.countryCode == countryCode {
             let availableGroups = server.groups.filter { group in
                 guard !group.nodes.isEmpty else { return false }
-                if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
                     return false
                 }
                 return true
             }
 
-            if let selectedGroup = availableGroups.randomElement(),
-               let selectedNode = selectedGroup.nodes.randomElement() {
-                return buildAndSaveBestLocation(server: server, group: selectedGroup, node: selectedNode)
+            if let selectedGroup = availableGroups.randomElement() {
+                return buildAndSaveBestLocation(group: selectedGroup)
             }
         }
         return nil
     }
 
     /// Select the best server based on the timezon different
-    private func selectServerByTimeZone(servers: [Server]) -> BestLocation? {
+    private func selectServerByTimeZone(servers: [Server]) -> String? {
         let userTimeZone = TimeZone.current
-        var bestFallbackServer: Server?
         var bestFallbackGroup: Group?
-        var bestFallbackNode: Node?
         for server in servers {
             guard let serverTimeZone = TimeZone(identifier: server.timezone) else { continue }
 
@@ -296,43 +319,25 @@ class LatencyRepositoryImpl: LatencyRepository {
             if timeDifference <= 3600 {
                 let availableGroups = server.groups.filter { group in
                     guard !group.nodes.isEmpty else { return false }
-                    if !(self.sessionManager.session?.isUserPro ?? false) && server.premiumOnly {
+                    if !(self.sessionManager.session?.isPremium ?? false) && server.premiumOnly {
                         return false
                     }
                     return true
                 }
-                if let selectedGroup = availableGroups.randomElement(),
-                   let selectedNode = selectedGroup.nodes.randomElement() {
-                    bestFallbackServer = server
+                if let selectedGroup = availableGroups.randomElement() {
                     bestFallbackGroup = selectedGroup
-                    bestFallbackNode = selectedNode
                 }
             }
         }
-        if let bestServer = bestFallbackServer,
-           let bestGroup = bestFallbackGroup,
-           let bestNode = bestFallbackNode {
-            return buildAndSaveBestLocation(server: bestServer, group: bestGroup, node: bestNode)
+        if let bestGroup = bestFallbackGroup {
+            return buildAndSaveBestLocation(group: bestGroup)
         }
         return nil
     }
 
     /// Build and save the best location using the selected server, group, and node
-    private func buildAndSaveBestLocation(server: Server, group: Group, node: Node) -> BestLocation {
-        let updatedBestLocation = BestLocation(
-            node: node.getNodeModel(),
-            group: group.getGroupModel(),
-            server: server.getServerModel()!
-        )
-        self.database.saveBestLocation(location: updatedBestLocation)
-            .disposed(by: disposeBag)
-        self.bestLocation.onNext(updatedBestLocation)
-        let lastBestLocation = try? bestLocation.value()
-        if !observingBestLocation || lastBestLocation == nil {
-            delay(2) {
-                self.observeBestLocation()
-            }
-        }
-        return updatedBestLocation
+    private func buildAndSaveBestLocation(group: Group) -> String {
+        locationsManager.saveBestLocation(with: "\(group.id)")
+        return group.city
     }
 }

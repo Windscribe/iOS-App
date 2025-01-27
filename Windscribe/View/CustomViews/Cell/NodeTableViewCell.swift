@@ -6,11 +6,11 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
-import Swinject
-import RxSwift
 import Realm
 import RealmSwift
+import RxSwift
+import Swinject
+import UIKit
 
 class NodeTableViewCell: BaseNodeTableViewCell {
     var favButton: UIButton!
@@ -26,6 +26,7 @@ class NodeTableViewCell: BaseNodeTableViewCell {
             updateUI()
         }
     }
+
     var displayingNodeServer: ServerModel?
     var favourited: Bool = false
 
@@ -53,15 +54,14 @@ class NodeTableViewCell: BaseNodeTableViewCell {
             linkSpeedIcon.layer.opacity = 1
             latencyLabel.layer.opacity = 1
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3,
-                                          execute: { [weak self] in
-                    self?.cityNameLabel.layer.opacity = 0.4
-                    self?.nickNameLabel.layer.opacity = 0.4
-                    self?.favButton.layer.opacity = 0.4
-                    self?.signalBarsIcon.layer.opacity = 0.4
-                    self?.linkSpeedIcon.layer.opacity = 0.4
-                    self?.latencyLabel.layer.opacity = 0.4
-            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.cityNameLabel.layer.opacity = 0.4
+                self?.nickNameLabel.layer.opacity = 0.4
+                self?.favButton.layer.opacity = 0.4
+                self?.signalBarsIcon.layer.opacity = 0.4
+                self?.linkSpeedIcon.layer.opacity = 0.4
+                self?.latencyLabel.layer.opacity = 0.4
+            }
         }
     }
 
@@ -109,7 +109,7 @@ class NodeTableViewCell: BaseNodeTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe( onNext: { isDark in
+        isDarkMode.subscribe(onNext: { isDark in
             if !isDark {
                 self.backgroundColor = UIColor.white
                 self.cellDivider.backgroundColor = UIColor.midnight
@@ -117,7 +117,7 @@ class NodeTableViewCell: BaseNodeTableViewCell {
                 self.nickNameLabel.textColor = UIColor.midnight
                 self.latencyLabel.textColor = UIColor.midnight
                 self.latencyBackground.backgroundColor = UIColor.midnight
-                self.linkSpeedIcon.image =  self.tenGigIcon
+                self.linkSpeedIcon.image = self.tenGigIcon
             } else {
                 self.backgroundColor = UIColor.lightMidnight
                 self.cellDivider.backgroundColor = UIColor.white
@@ -125,7 +125,7 @@ class NodeTableViewCell: BaseNodeTableViewCell {
                 self.nickNameLabel.textColor = UIColor.white
                 self.latencyLabel.textColor = UIColor.white
                 self.latencyBackground.backgroundColor = UIColor.white
-                self.linkSpeedIcon.image =  self.tenGigIcon
+                self.linkSpeedIcon.image = self.tenGigIcon
             }
         }).disposed(by: disposeBag)
         preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
@@ -153,10 +153,6 @@ class NodeTableViewCell: BaseNodeTableViewCell {
         }).disposed(by: disposeBag)
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-
     func addAutoLayoutConstraints() {
         favButton.translatesAutoresizingMaskIntoConstraints = false
         cityNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -166,16 +162,16 @@ class NodeTableViewCell: BaseNodeTableViewCell {
             NSLayoutConstraint(item: favButton as Any, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: favButton as Any, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: favButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: favButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32)
-            ])
+            NSLayoutConstraint(item: favButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 32),
+        ])
         addConstraints([
             NSLayoutConstraint(item: cityNameLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: favButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: cityNameLabel as Any, attribute: .left, relatedBy: .equal, toItem: favButton, attribute: .right, multiplier: 1.0, constant: 16)
-            ])
+            NSLayoutConstraint(item: cityNameLabel as Any, attribute: .left, relatedBy: .equal, toItem: favButton, attribute: .right, multiplier: 1.0, constant: 16),
+        ])
         addConstraints([
             NSLayoutConstraint(item: nickNameLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: favButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: nickNameLabel as Any, attribute: .left, relatedBy: .equal, toItem: cityNameLabel, attribute: .right, multiplier: 1.0, constant: 5)
-            ])
+            NSLayoutConstraint(item: nickNameLabel as Any, attribute: .left, relatedBy: .equal, toItem: cityNameLabel, attribute: .right, multiplier: 1.0, constant: 5),
+        ])
     }
 
     func updateUI() {
@@ -191,26 +187,29 @@ class NodeTableViewCell: BaseNodeTableViewCell {
         }
 
         if let cityName = displayingGroup?.city,
-           let nickName = displayingGroup?.nick {
+           let nickName = displayingGroup?.nick
+        {
             cityNameLabel.text = cityName
             nickNameLabel.text = nickName
         }
 
         if let isGroupProOnly = displayingGroup?.premiumOnly,
-           let isUserPro = sessionManager.session?.isPremium {
+           let isUserPro = sessionManager.session?.isPremium
+        {
             if isGroupProOnly && !isUserPro {
                 favButton.setImage(proNodeIconImage, for: .normal)
             } else {
                 if let bestNode = displayingGroup?.bestNode,
                    let bestNodeHostname = displayingGroup?.bestNodeHostname,
                    bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
-                   bestNodeHostname != "" {
+                   bestNodeHostname != ""
+                {
                 } else {
                     nickNameLabel.isEnabled = false
                     cityNameLabel.isEnabled = false
                     favButton.isEnabled = false
-                    favButton.setImage(self.locationDownIcon, for: .normal)
-                    signalBarsIcon.image = self.cellSignalBarsDown
+                    favButton.setImage(locationDownIcon, for: .normal)
+                    signalBarsIcon.image = cellSignalBarsDown
                     latencyLabel.text = "  --  "
                     isUserInteractionEnabled = true
                 }
@@ -222,33 +221,35 @@ class NodeTableViewCell: BaseNodeTableViewCell {
         linkSpeedIcon.isHidden = displayingGroup?.linkSpeed != "10000"
     }
 
-    func isHostStillActive(hostname: String, isStaticIP: Bool = false) -> Bool {
+    func isHostStillActive(hostname: String, isStaticIP _: Bool = false) -> Bool {
         guard let nodesList = localDB.getServers()?.flatMap({ $0.groups }).map({ $0.nodes }),
-              let  staticIPNodes = localDB.getStaticIPs()?.flatMap({ $0.nodes }) else { return false }
-         for nodes in nodesList {
-             for node in nodes {
-                 if node.hostname == hostname && node.forceDisconnect == false {
-                     return true
-                 }
-             }
-         }
-         for node in staticIPNodes {
-             if node.hostname == hostname && node.forceDisconnect == false {
-                 return true
-             }
-         }
-         return false
-     }
+              let staticIPNodes = localDB.getStaticIPs()?.flatMap({ $0.nodes }) else { return false }
+        for nodes in nodesList {
+            for node in nodes {
+                if node.hostname == hostname && node.forceDisconnect == false {
+                    return true
+                }
+            }
+        }
+        for node in staticIPNodes {
+            if node.hostname == hostname && node.forceDisconnect == false {
+                return true
+            }
+        }
+        return false
+    }
 
     @objc func favButtonTapped() {
         if favButton.image(for: .normal) != proNodeIconImage {
             guard let group = displayingGroup, let server = displayingNodeServer else { return }
             if (favButton.imageView?.image?.cgImage == fullFavImage?.cgImage) || (favButton.imageView?.image == fullFavImage) {
                 let yesAction = UIAlertAction(title: TextsAsset.remove,
-                                              style: .destructive) { [weak self] _ in
+                                              style: .destructive)
+                { [weak self] _ in
                     self?.favButton.setImage(self?.emptyFavImage, for: .normal)
                     if let groupId = group.id,
-                       let favNodeHostname = self?.favNodes.filter({$0.groupId == "\(groupId)"}).first?.hostname {
+                       let favNodeHostname = self?.favNodes.filter({ $0.groupId == "\(groupId)" }).first?.hostname
+                    {
                         self?.localDB.removeFavNode(hostName: favNodeHostname)
                     }
                 }
@@ -285,108 +286,109 @@ class BaseNodeTableViewCell: WTableViewCell {
         latencyBackground.layer.opacity = 0.05
         latencyBackground.layer.cornerRadius = 8
         latencyBackground.clipsToBounds = true
-        self.addSubview(latencyBackground)
+        addSubview(latencyBackground)
 
         latencyLabel = UILabel()
         latencyLabel.font = UIFont.bold(size: 12)
         latencyLabel.layer.opacity = 0.4
         latencyLabel.textColor = UIColor.midnight
-        self.addSubview(latencyLabel)
+        addSubview(latencyLabel)
 
         linkSpeedIcon = UIImageView()
         linkSpeedIcon.image = tenGigIcon
         linkSpeedIcon.layer.opacity = 0.4
         linkSpeedIcon.isHidden = true
-        self.addSubview(linkSpeedIcon)
+        addSubview(linkSpeedIcon)
 
-        self.addSubview(serverHealthView)
+        addSubview(serverHealthView)
 
         signalBarsIcon = UIImageView()
         signalBarsIcon.layer.opacity = 0.4
         signalBarsIcon.image = UIImage(named: ImagesAsset.CellSignalBars.full)
-        self.addSubview(signalBarsIcon)
+        addSubview(signalBarsIcon)
 
         cellDivider.layer.opacity = 0.05
         cellDivider.backgroundColor = UIColor.black
-        self.addSubview(cellDivider)
+        addSubview(cellDivider)
     }
 
-    required init?(coder aDecoder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     override func layoutSubviews() {
-      super.layoutSubviews()
-      latencyBackground.translatesAutoresizingMaskIntoConstraints = false
-      latencyLabel.translatesAutoresizingMaskIntoConstraints = false
-      signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
-      cellDivider.translatesAutoresizingMaskIntoConstraints = false
-      linkSpeedIcon.translatesAutoresizingMaskIntoConstraints = false
-      serverHealthView.translatesAutoresizingMaskIntoConstraints = false
+        super.layoutSubviews()
+        latencyBackground.translatesAutoresizingMaskIntoConstraints = false
+        latencyLabel.translatesAutoresizingMaskIntoConstraints = false
+        signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
+        cellDivider.translatesAutoresizingMaskIntoConstraints = false
+        linkSpeedIcon.translatesAutoresizingMaskIntoConstraints = false
+        serverHealthView.translatesAutoresizingMaskIntoConstraints = false
 
-        self.addConstraints([
+        addConstraints([
             NSLayoutConstraint(item: latencyBackground as Any, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0),
-          NSLayoutConstraint(item: latencyBackground as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
-          NSLayoutConstraint(item: latencyBackground as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 24),
-          NSLayoutConstraint(item: latencyBackground as Any, attribute: .width, relatedBy: .equal, toItem: latencyLabel, attribute: .width, multiplier: 1.0, constant: 0)
-          ])
-        self.addConstraints([
-          NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: latencyBackground, attribute: .centerY, multiplier: 1.0, constant: 0),
-          NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: latencyBackground, attribute: .centerX, multiplier: 1.0, constant: 0)
-          ])
-        self.addConstraints([
-          NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .centerY, relatedBy: .equal, toItem: latencyBackground, attribute: .centerY, multiplier: 1.0, constant: 0),
-          NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .right, relatedBy: .equal, toItem: latencyBackground, attribute: .left, multiplier: 1.0, constant: -13),
-          NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-          NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
-          ])
-        self.addConstraints([
-          NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0),
-          NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
-          NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-          NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
-          ])
-        self.addConstraints([
-          NSLayoutConstraint(item: cellDivider as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
-          NSLayoutConstraint(item: cellDivider as Any, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
-          NSLayoutConstraint(item: cellDivider as Any, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
-          NSLayoutConstraint(item: cellDivider as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0)
-          ])
-        self.addConstraints([
+            NSLayoutConstraint(item: latencyBackground as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: latencyBackground as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: latencyBackground as Any, attribute: .width, relatedBy: .equal, toItem: latencyLabel, attribute: .width, multiplier: 1.0, constant: 0),
+        ])
+        addConstraints([
+            NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: latencyBackground, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: latencyBackground, attribute: .centerX, multiplier: 1.0, constant: 0),
+        ])
+        addConstraints([
+            NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .centerY, relatedBy: .equal, toItem: latencyBackground, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .right, relatedBy: .equal, toItem: latencyBackground, attribute: .left, multiplier: 1.0, constant: -13),
+            NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: linkSpeedIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+        ])
+        addConstraints([
+            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+        ])
+        addConstraints([
             NSLayoutConstraint(item: cellDivider as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
             NSLayoutConstraint(item: cellDivider as Any, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: cellDivider as Any, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: cellDivider as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0)
-            ])
-        self.addConstraints([
+            NSLayoutConstraint(item: cellDivider as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
+        ])
+        addConstraints([
+            NSLayoutConstraint(item: cellDivider as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
+            NSLayoutConstraint(item: cellDivider as Any, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
+            NSLayoutConstraint(item: cellDivider as Any, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: cellDivider as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
+        ])
+        addConstraints([
             NSLayoutConstraint(item: serverHealthView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
             NSLayoutConstraint(item: serverHealthView as Any, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: serverHealthView as Any, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: serverHealthView as Any, attribute: .right, relatedBy: .equal, toItem: signalBarsIcon, attribute: .left, multiplier: 1.0, constant: 0)
-            ])
-      }
+            NSLayoutConstraint(item: serverHealthView as Any, attribute: .right, relatedBy: .equal, toItem: signalBarsIcon, attribute: .left, multiplier: 1.0, constant: 0),
+        ])
+    }
 
     func displayLatencyValues(pingIp: String) {
         guard let minTime = latencyRepository.getPingData(ip: pingIp)?.latency else {
-            self.latencyLabel.text = "  --  "
-            self.signalBarsIcon.image = self.cellSignalBarsFull
+            latencyLabel.text = "  --  "
+            signalBarsIcon.image = cellSignalBarsFull
             return
         }
-        self.latencyLabel.text = "  \(minTime.description)  "
+        latencyLabel.text = "  \(minTime.description)  "
         if minTime <= 0 {
-            self.latencyLabel.text = "  --  "
+            latencyLabel.text = "  --  "
         }
         switch getSignalLevel(minTime: minTime) {
         case 1:
-            self.signalBarsIcon.image = self.cellSignalBarsLow
+            signalBarsIcon.image = cellSignalBarsLow
         case 2:
-            self.signalBarsIcon.image = self.cellSignalBarsMed
+            signalBarsIcon.image = cellSignalBarsMed
         case 3:
-            self.signalBarsIcon.image = self.cellSignalBarsFull
+            signalBarsIcon.image = cellSignalBarsFull
         default:
-            self.signalBarsIcon.image = self.cellSignalBarsFull
+            signalBarsIcon.image = cellSignalBarsFull
         }
-     }
+    }
 }
 
 class FavNodeTableViewCell: NodeTableViewCell {
@@ -397,13 +399,13 @@ class FavNodeTableViewCell: NodeTableViewCell {
     }
 
     func updateUIForFavNode() {
-        self.latencyLabel.text = ""
+        latencyLabel.text = ""
         favButton.setImage(fullFavImage, for: .normal)
         guard let cityName = displayingFavNode?.cityName, let nickName = displayingFavNode?.nickName else { return }
         cityNameLabel.text = cityName
         nickNameLabel.text = nickName
         guard let pingIp = displayingFavNode?.pingIp else { return }
-        self.displayLatencyValues(pingIp: pingIp)
+        displayLatencyValues(pingIp: pingIp)
         linkSpeedIcon.isHidden = displayingFavNode?.linkSpeed != "10000"
         preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
             if let serverHealth = serverHealth {
@@ -419,10 +421,12 @@ class FavNodeTableViewCell: NodeTableViewCell {
     @objc override func favButtonTapped() {
         guard let node = displayingFavNode else { return }
         let yesAction = UIAlertAction(title: TextsAsset.remove,
-                                      style: .destructive) { _ in
+                                      style: .destructive)
+        { _ in
             self.favButton.setImage(self.emptyFavImage, for: .normal)
             if let groupId = node.groupId,
-               let favNodeHostname = self.favNodes.filter({$0.groupId == "\(groupId)"}).first?.hostname {
+               let favNodeHostname = self.favNodes.filter({ $0.groupId == "\(groupId)" }).first?.hostname
+            {
                 self.localDB.removeFavNode(hostName: favNodeHostname)
             }
         }

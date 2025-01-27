@@ -7,7 +7,8 @@
 //
 
 import Foundation
-struct Proxy {
+
+enum Proxy {
     /// Proxy listens on all interfaces (0.0.0.0:port) using loopback adress does not work.
     static let localAddress = "localhost"
     static let mtu = 1280

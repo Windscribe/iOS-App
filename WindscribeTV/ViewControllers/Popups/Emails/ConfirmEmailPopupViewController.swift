@@ -6,8 +6,8 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
     var ceViewModel: ConfirmEmailViewModel!, router: HomeRouter!
@@ -17,6 +17,7 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     var closeButton = WSPillButton()
 
     // MARK: Overrides
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Confirm Email Popup Shown.")
@@ -24,13 +25,14 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     }
 
     // MARK: Setting up
+
     override func setup() {
         super.setup()
         resendButton.setTitle(TextsAsset.Account.resend, for: .normal)
         changeButton.setTitle(TextsAsset.EmailView.changeEmail, for: .normal)
         closeButton.setTitle(TextsAsset.EmailView.close, for: .normal)
 
-        [resendButton, changeButton, closeButton].forEach { roundbutton in
+        for roundbutton in [resendButton, changeButton, closeButton] {
             roundbutton.setup(withHeight: 96.0)
             mainStackView.addArrangedSubview(roundbutton)
         }
@@ -57,8 +59,8 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
         resendButton.layer.opacity = 0.35
         ceViewModel.apiManager.confirmEmail().subscribe(onSuccess: { _ in
             self.ceViewModel.alertManager.showSimpleAlert(viewController: self,
-                                                title: TextsAsset.ConfirmationEmailSentAlert.title, message: TextsAsset.ConfirmationEmailSentAlert.message,
-                                                buttonText: TextsAsset.okay)
-        }, onFailure: { _ in}).disposed(by: disposeBag)
+                                                          title: TextsAsset.ConfirmationEmailSentAlert.title, message: TextsAsset.ConfirmationEmailSentAlert.message,
+                                                          buttonText: TextsAsset.okay)
+        }, onFailure: { _ in }).disposed(by: disposeBag)
     }
 }

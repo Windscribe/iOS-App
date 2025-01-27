@@ -6,8 +6,8 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
-import UIKit
 import RxSwift
+import UIKit
 
 class AlertManager: AlertManagerV2 {
     static let shared = AlertManager()
@@ -36,13 +36,13 @@ class AlertManager: AlertManagerV2 {
                                           preferredStyle: .alert)
             let yesAction = UIAlertAction(title: TextsAsset.yes, style: .default,
                                           handler: { _ in
-                completion(true)
-            })
+                                              completion(true)
+                                          })
             let noAction = UIAlertAction(title: TextsAsset.no,
                                          style: .cancel,
                                          handler: { _ in
-                completion(false)
-            })
+                                             completion(false)
+                                         })
             alert.addAction(yesAction)
             alert.addAction(noAction)
             self.presentAlertOnViewController(alert: alert, viewController: viewController)
@@ -67,7 +67,7 @@ class AlertManager: AlertManagerV2 {
             alert.addAction(action)
         }
         alert.preferredAction = preferredAction
-        self.presentAlertOnViewController(alert: alert)
+        presentAlertOnViewController(alert: alert)
         return alert
     }
 
@@ -110,7 +110,7 @@ class AlertManager: AlertManagerV2 {
         }
     }
 
-    private func presentAlertOnViewController(alert: UIAlertController ,viewController: UIViewController? = nil) {
+    private func presentAlertOnViewController(alert: UIAlertController, viewController: UIViewController? = nil) {
         if viewController == nil {
             guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
             viewController.present(alert, animated: true, completion: nil)
@@ -129,33 +129,33 @@ class AlertManager: AlertManagerV2 {
 
     private func askPasswordToDeleteAccountDefault(viewController: UIViewController? = nil) -> Single<String?> {
         return Single<String?>.create { completion in
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: TextsAsset.Account.cancelAccount, message: TextsAsset.Account.deleteAccountMessage, preferredStyle: .alert)
-            alert.addTextField { field in
-                field.layer.cornerRadius = 3
-                field.clipsToBounds = true
-                field.font = UIFont.text(size: 16)
-                field.autocorrectionType = .no
-                field.autocapitalizationType = .none
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: TextsAsset.Account.cancelAccount, message: TextsAsset.Account.deleteAccountMessage, preferredStyle: .alert)
+                alert.addTextField { field in
+                    field.layer.cornerRadius = 3
+                    field.clipsToBounds = true
+                    field.font = UIFont.text(size: 16)
+                    field.autocorrectionType = .no
+                    field.autocapitalizationType = .none
+                }
+                let positiveAction = UIAlertAction(title: TextsAsset.okay, style: .default, handler: { _ in
+                    completion(.success(alert.textFields?[0].text ?? nil))
+                })
+                alert.addAction(positiveAction)
+                let negativeAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel, handler: { _ in
+                    completion(.success(nil))
+                })
+                alert.addAction(negativeAction)
+                var presentingController: UIViewController?
+                if let viewController = viewController {
+                    presentingController = viewController
+                } else {
+                    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
+                    presentingController = viewController
+                }
+                presentingController?.present(alert, animated: true, completion: nil)
             }
-            let positiveAction = UIAlertAction(title: TextsAsset.okay, style: .default, handler: { _ in
-                completion(.success(alert.textFields?[0].text ?? nil))
-            })
-            alert.addAction(positiveAction)
-            let negativeAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel, handler: { _ in
-                completion(.success(nil))
-            })
-            alert.addAction(negativeAction)
-            var presentingController: UIViewController?
-            if let viewController = viewController {
-                presentingController = viewController
-            } else {
-                guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
-                presentingController = viewController
-            }
-            presentingController?.present(alert, animated: true, completion: nil)
+            return Disposables.create()
         }
-        return Disposables.create()
-    }
     }
 }
