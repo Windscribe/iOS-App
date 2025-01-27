@@ -98,7 +98,7 @@ extension MainViewController {
         viewModel.customConfigs.subscribe(on: MainScheduler.instance).observe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
             var customConfigs = [CustomConfigModel]()
             guard let customconfigs = customconfigs else { return }
-            for result in customconfigs {
+            for result in customconfigs where !result.isInvalidated {
                 customConfigs.append(result.getModel())
             }
             self.customConfigListTableViewDataSource = CustomConfigListTableViewDataSource(customConfigs: customConfigs, viewModel: viewModel)
