@@ -18,7 +18,7 @@ protocol ProtocolManagerType {
     var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
     var connectionProtocolSubject: BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?> { get }
 
-    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async
+    func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool) async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]
     func getNextProtocol() async -> ProtocolPort
     func getProtocol() -> ProtocolPort
@@ -74,7 +74,7 @@ class ProtocolManager: ProtocolManagerType {
         logger.logI(self, "Starting connection manager.")
         bindData()
         Task {
-            await refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+            await refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
     }
 
@@ -94,7 +94,7 @@ class ProtocolManager: ProtocolManagerType {
         securedNetwork.networks.subscribe(onNext: { [weak self] networks in
             guard !networks.isEmpty else { return }
             Task {
-                await self?.refreshProtocols(shouldReset: false, shouldUpdate: true, shouldReconnect: false)
+                await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
             }
         }).disposed(by: disposeBag)
     }
@@ -106,7 +106,7 @@ class ProtocolManager: ProtocolManagerType {
     /// append port
     /// Priority order [Connected, User selected, Preferred, Manual, Good, Failed]
     @MainActor
-    func refreshProtocols(shouldReset: Bool, shouldUpdate: Bool, shouldReconnect: Bool) async {
+    func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             goodProtocol = nil
             userSelected = nil
@@ -173,14 +173,14 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
-        await refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
+        await refreshProtocols(shouldReset: false, shouldReconnect: false)
         return protocolsToConnectList
     }
 
     private var called = false
 
     func getNextProtocol() async -> ProtocolPort {
-        await refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
+        await refreshProtocols(shouldReset: false, shouldReconnect: false)
         return self.getFirstProtocol()
     }
 
@@ -274,7 +274,7 @@ class ProtocolManager: ProtocolManagerType {
         userSelected = nil
         goodProtocol = nil
         protocolsToConnectList.removeAll()
-        await refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+        await refreshProtocols(shouldReset: true, shouldReconnect: false)
         return
     }
 

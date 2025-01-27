@@ -181,7 +181,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         preferences.saveConnectionMode(mode: value.fieldValue)
         if value == .auto {
             Task {
-                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
             }
         }
     }
@@ -216,7 +216,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     func updatePort(value: String) {
         preferences.saveSelectedPort(port: value)
         Task {
-            await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
     }
 
@@ -226,7 +226,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             preferences.saveSelectedPort(port: port[0])
         }
         Task {
-            await protocolManager.refreshProtocols(shouldReset: false, shouldUpdate: false, shouldReconnect: false)
+            await protocolManager.refreshProtocols(shouldReset: false, shouldReconnect: false)
         }
     }
 

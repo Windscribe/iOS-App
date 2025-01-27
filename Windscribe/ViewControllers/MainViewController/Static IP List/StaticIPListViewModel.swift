@@ -58,7 +58,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
         if !vpnManager.isConnecting() {
             locationsManager.saveStaticIP(withID: staticIP.id)
             Task {
-                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
             presentAlertTrigger.onNext(.connecting)

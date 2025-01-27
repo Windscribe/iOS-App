@@ -81,7 +81,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         let data = try await buildConfiguration(configInfo: configInfo)
         let customConfig = saveConfiguration(data: data, configInfo: configInfo)
         locationsManager.saveCustomConfig(withID: customConfig.id)
-        await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: false)
+        await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         vpnManager.simpleEnableConnection(isEmergency: true)
     }
 
