@@ -498,7 +498,9 @@ class SignUpViewController: WSNavigationViewController {
             viewModel.setupLaterButtonTapped()
         }.disposed(by: disposeBag)
         viewModel.routeTo.bind { [self] route in
-            handleRoute(route: route)
+            DispatchQueue.main.async {
+                self.handleRoute(route: route)
+            }
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(usernameTextfield.rx.text.asObservable(),
