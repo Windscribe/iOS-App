@@ -181,6 +181,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 self?.cardHeaderContainerView.headerSelectorView.isHidden = false
                 self?.view.layoutIfNeeded()
             }, completion: { _ in
+                self?.serverListTableView?.collapseExpandedSections()
                 self?.reloadServerListOrder()
             })
         }
