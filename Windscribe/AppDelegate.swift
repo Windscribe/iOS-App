@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         purchaseManager.verifyPendingTransaction()
         setApplicationWindow()
         Task.detached { [unowned self] in
-            await latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
+            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
             await UIApplication.shared
                 .setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
             if await preferences.userSessionAuth() != nil {

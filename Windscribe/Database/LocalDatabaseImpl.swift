@@ -170,8 +170,13 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjects(type: PingData.self) ?? []
     }
 
-    func addPingData(pingData: PingData) -> Disposable {
-        return updateRealmObject(object: pingData)
+    func addPingData(pingData: PingData) {
+        autoreleasepool {
+            let realm = try? Realm()
+            try? realm?.write {
+                realm?.add(pingData, update: .modified)
+            }
+        }
     }
 
     func removeCustomConfig(fileId: String) {

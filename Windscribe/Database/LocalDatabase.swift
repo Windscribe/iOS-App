@@ -42,7 +42,7 @@ protocol LocalDatabase {
     func getNetworks() -> Observable<[WifiNetwork]>
     func saveNetwork(wifiNetwork: WifiNetwork) -> Disposable
     func removeNetwork(wifiNetwork: WifiNetwork)
-    func addPingData(pingData: PingData) -> Disposable
+    func addPingData(pingData: PingData)
     func getAllPingData() -> [PingData]
     func saveCustomConfig(customConfig: CustomConfig) -> Disposable
     func removeCustomConfig(fileId: String)

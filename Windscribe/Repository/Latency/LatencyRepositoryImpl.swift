@@ -9,9 +9,9 @@
 import Foundation
 import NetworkExtension
 import Realm
-import RxRealm
 import RxSwift
 import Swinject
+import RealmSwift
 
 class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
@@ -120,28 +120,54 @@ class LatencyRepositoryImpl: LatencyRepository {
     func loadCustomConfigLatency() -> Completable {
         getCustomConfigLatency()
             .observe(on: MainScheduler.instance)
-            .subscribe(on: MainScheduler.instance)
             .do(onSuccess: { _ in
                 let pingData = self.database.getAllPingData()
                 self.latency.onNext(pingData)
             }).asCompletable()
     }
 
-    func getCustomConfigLatency() -> Single<[PingData]> {
-        let tasks = database.getCustomConfigs().map { config in
-            Single<PingData>.create { completion in
-                let pingData = PingData(ip: config.serverAddress, latency: -1)
-                self.getTCPLatency(pingIp: config.serverAddress) { minTime in
-                    if minTime != -1 {
-                        pingData.latency = minTime
-                        self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+    private func getCustomConfigLatency() -> Single<[PingData]> {
+        return Single<[PingData]>.create { completion in
+            autoreleasepool {
+                    let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
+                    var tasks: [Single<PingData>] = []
+                    for ref in threadSafeConfigs {
+                        let task = Single<PingData>.create { innerCompletion in
+                            autoreleasepool {
+                                do {
+                                    let realm = try Realm()
+                                    guard let config = realm.resolve(ref) else {
+                                        innerCompletion(.failure(Realm.Error(.fail)))
+                                        return Disposables.create()
+                                    }
+                                    let pingData = PingData(ip: config.serverAddress, latency: -1)
+                                    self.getTCPLatency(pingIp: config.serverAddress) { minTime in
+                                        if minTime != -1 {
+                                            pingData.latency = minTime
+                                            self.database.addPingData(pingData: pingData)
+                                        }
+                                        innerCompletion(.success(pingData))
+                                    }
+                                    return Disposables.create()
+                                } catch {
+                                    innerCompletion(.failure(error))
+                                    return Disposables.create()
+                                }
+                            }
+                        }
+                        tasks.append(task)
                     }
-                    completion(.success(pingData))
-                }
-                return Disposables.create()
+                    Observable.zip(tasks.map { $0.asObservable() })
+                        .asSingle()
+                        .subscribe(onSuccess: { result in
+                            completion(.success(result))
+                        }, onFailure: { error in
+                            completion(.failure(error))
+                        })
+                        .disposed(by: self.disposeBag)
             }
-        }.map { single in single.asObservable() }
-        return Observable.zip(tasks).asSingle()
+            return Disposables.create()
+        }
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
@@ -195,7 +221,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                     resultLock.lock()
                     if success {
                         pingData.latency = Int(time)
-                        self.database.addPingData(pingData: pingData).disposed(by: self.disposeBag)
+                        self.database.addPingData(pingData: pingData)
                     }
                     results.append(pingData)
                     resultLock.unlock()

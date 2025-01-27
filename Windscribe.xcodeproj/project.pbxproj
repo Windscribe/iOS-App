@@ -811,6 +811,8 @@
 		C535D2A227E5136700C08345 /* URLRequestExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90E56A6275E4A02004E4AC0 /* URLRequestExtension.swift */; };
 		C5387E992CD46C18008A26EE /* VPNManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */; };
 		C5387E9A2CD46C18008A26EE /* VPNManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */; };
+		C545A0DC2D47639500F3333E /* Completable+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C545A0DB2D47638F00F3333E /* Completable+Ext.swift */; };
+		C545A0DD2D47639500F3333E /* Completable+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C545A0DB2D47638F00F3333E /* Completable+Ext.swift */; };
 		C54AE8722B8E5BEF00646529 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */; };
 		C55062BA2B6AD414007D6824 /* Pods_WireGuardTunnel.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88C116F79ED9C24091D3B53F /* Pods_WireGuardTunnel.framework */; };
 		C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; };
@@ -1736,6 +1738,7 @@
 		C535D29B27E4F96C00C08345 /* WireGuardTunnelProduction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardTunnelProduction.entitlements; sourceTree = "<group>"; };
 		C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+Connect.swift"; sourceTree = "<group>"; };
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
+		C545A0DB2D47638F00F3333E /* Completable+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Completable+Ext.swift"; sourceTree = "<group>"; };
 		C5481CF5C95B230B8691EB78 /* Pods_HomeWidgetExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HomeWidgetExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		C553E34D2C25ABE900A2C027 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
@@ -2984,6 +2987,7 @@
 		AF018E0721B0A32800B225FF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				C545A0DB2D47638F00F3333E /* Completable+Ext.swift */,
 				AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */,
 				AF018E0521B09FB300B225FF /* String+Ext.swift */,
 				AFFA716321C99B2F00349195 /* Date+Ext.swift */,
@@ -4963,6 +4967,7 @@
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
+				C545A0DC2D47639500F3333E /* Completable+Ext.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
 				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
 				59FC74362C515A5B00021CD1 /* keyChainKeys.swift in Sources */,
@@ -5488,6 +5493,7 @@
 				AF42802E22D793E9006761C5 /* ViewLogViewController.swift in Sources */,
 				AF8DA7B72204E37500885BD8 /* AccountTableViewCell.swift in Sources */,
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+Ext.swift in Sources */,
+				C545A0DD2D47639500F3333E /* Completable+Ext.swift in Sources */,
 				C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */,
 				AF36BF0C22FC969300FCC6F4 /* EnterCredentialsViewController.swift in Sources */,
