@@ -28,12 +28,9 @@ extension MainViewController {
 }
 
 extension MainViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel)
-    {
+    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
         searchLocationsView.viewModel.dismiss()
-        serverListViewModel.setSelectedServerAndGroup(server: server,
-                                                      group: group)
+        serverListViewModel.setSelectedServerAndGroup(server: server, group: group)
     }
 
     func connectToBestLocation() {

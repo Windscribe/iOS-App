@@ -52,8 +52,7 @@ class ServerListViewModel: ServerListViewModelType {
         self.protocolManager = protocolManager
     }
 
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel) {
+    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
         if !connectivity.internetConnectionAvailable() {
             return
         }
@@ -63,9 +62,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         }
 
-        if !sessionManager.canAccesstoProLocation() &&
-            group.premiumOnly ?? false
-        {
+        if !sessionManager.canAccesstoProLocation() && group.premiumOnly ?? false {
             showUpgradeTrigger.onNext(())
             return
         } else if !group.canConnect() {
