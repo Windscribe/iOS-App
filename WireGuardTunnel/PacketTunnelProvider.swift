@@ -203,7 +203,6 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         logger.logD(self, "Interface has address changed")
         reasserting = true
         replacePeer(tunnelConfiguration: updatedConfig)
-        reasserting = false
     }
 
     /// Check user session for change.
@@ -300,6 +299,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             } else {
                 self.logger.logD(self, "PacketTunnelProvider: Successfully updated peer.")
             }
+            self.reasserting = false
         }
     }
 }
