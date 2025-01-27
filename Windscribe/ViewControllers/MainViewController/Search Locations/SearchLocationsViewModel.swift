@@ -46,6 +46,7 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     func toggleSearch() {
         let isSearchActive = (try? isSearchActive.value()) ?? false
         if isSearchActive {
+            delegate?.searchLocationUpdated(with: "")
             delegate?.dismissSearchLocation()
         } else {
             delegate?.showSearchLocation()
