@@ -273,7 +273,6 @@ extension ConnectionViewModel {
             wifiManager.saveCurrentWifiNetworks()
             guard securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true else { return }
             await protocolManager.refreshProtocols(shouldReset: true,
-                                                   shouldUpdate: true,
                                                    shouldReconnect: isConnected())
         }
     }
@@ -295,15 +294,12 @@ extension ConnectionViewModel {
                     .sink { _ in
                         Task { @MainActor in
                             await self.protocolManager.refreshProtocols(shouldReset: true,
-                                                                        shouldUpdate: true,
                                                                         shouldReconnect: true)
                         }
                     } receiveValue: { _ in }
             } else if .connecting != info.status {
                 Task { @MainActor in
-                    await self.protocolManager.refreshProtocols(shouldReset: true,
-                                                                shouldUpdate: true,
-                                                                shouldReconnect: false)
+                    await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                 }
             }
         }
@@ -384,6 +380,9 @@ extension ConnectionViewModel {
                 case .finished:
                     self.logger.logD(self, "Finished disabling connection.")
                     self.displayLocalIPAddress()
+                    Task { @MainActor in
+                        await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                    }
                     if self.loadLatencyValuesOnDisconnect {
                         self.loadLatencyValuesOnDisconnect = false
                         Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(self.loadLatencyValues), userInfo: nil, repeats: false)

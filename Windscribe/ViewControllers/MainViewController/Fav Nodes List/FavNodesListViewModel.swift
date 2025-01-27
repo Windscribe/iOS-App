@@ -60,7 +60,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
             logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(groupId)")
             Task {
-                await protocolManager.refreshProtocols(shouldReset: true, shouldUpdate: true, shouldReconnect: true)
+                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
         } else {
             presentAlertTrigger.onNext(.connecting)
