@@ -148,7 +148,9 @@ class LoginViewController: WSNavigationViewController {
             }.disposed(by: disposeBag)
         viewModel.routeToMainView.bind { [self] _ in
             self.logger.logD(self, "Moving to home screen.")
-            router.routeTo(to: RouteID.home, from: self)
+            DispatchQueue.main.async {
+                self.router.routeTo(to: RouteID.home, from: self)
+            }
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(usernameTextfield.rx.text.asObservable(),
