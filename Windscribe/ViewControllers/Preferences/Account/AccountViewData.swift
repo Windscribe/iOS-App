@@ -71,7 +71,7 @@ enum AccountItemCell {
                 return "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)"
             }
         case .expiredDate:
-            if session.isUserPro {
+            if session.isPremium {
                 return TextsAsset.Account.expiryDate
             } else {
                 return TextsAsset.Account.resetDate
