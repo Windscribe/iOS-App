@@ -34,14 +34,12 @@ class SessionManager: SessionManagerV2 {
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
     func setSessionTimer() {
-//        logger.logD(MainViewController.self, "60 seconds fetch session timer scheduled.")
-//        sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
-//        keepSessionUpdated()
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.cancelTimers), name: Notifications.userLoggedOut, object: nil)
+        sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.cancelTimers), name: Notifications.userLoggedOut, object: nil)
     }
 
     @objc func cancelTimers() {
-        logger.logD(MainViewController.self, "Cancelled Session timer.")
+        logger.logD(self, "Cancelled Session timer.")
         sessionTimer?.invalidate()
         sessionTimer = nil
     }
@@ -52,7 +50,6 @@ class SessionManager: SessionManagerV2 {
             localDatabase.getSession().first()
                 .flatMap { savedSession in
                     if case let savedSession?? = savedSession {
-                        self.logger.logD(self, "Cached session for \(savedSession.username)")
                         self.localDatabase.saveOldSession()
                         return self.apiManager.getSession(nil)
                     } else {
@@ -95,7 +92,7 @@ class SessionManager: SessionManagerV2 {
                 self.checkForStatus()
                 self.checkForSessionChange()
             }, onError: { error in
-                self.logger.logD(SessionManager.self, "Realm user preferences notification error \(error.localizedDescription)")
+                self.logger.logD(self, "Realm user preferences notification error \(error.localizedDescription)")
             }
         ).disposed(by: disposeBag)
     }
@@ -106,7 +103,7 @@ class SessionManager: SessionManagerV2 {
         if let hoursPassed = timePassed.hour {
             if hoursPassed > 23 {
                 lastCheckForServerConfig = timeNow
-                logger.logD(SessionManager.self, "Updating server configs.")
+                logger.logD(self, "Updating server configs.")
                 credentialsRepo.getUpdatedOpenVPNCrendentials().flatMap { _ in
                     self.credentialsRepo.getUpdatedServerConfig()
                 }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
@@ -120,10 +117,10 @@ class SessionManager: SessionManagerV2 {
             wgCredentials.delete()
         }
         if session.status == 3 {
-            logger.logD(MainViewController.self, "User is banned.")
+            logger.logD(self, "User is banned.")
             vpnManager.simpleDisableConnection()
         } else if session.status == 2 && !locationsManager.isCustomConfigSelected() {
-            logger.logD(MainViewController.self, "User is out of data.")
+            logger.logD(self, "User is out of data.")
             vpnManager.simpleDisableConnection()
         }
     }
@@ -161,7 +158,7 @@ class SessionManager: SessionManagerV2 {
     }
 
     func checkForSessionChange() {
-        logger.logD(MainViewController.self, "Comparing new session with old session.")
+        logger.logD(self, "Comparing new session with old session.")
         guard let newSession = session, let oldSession = localDatabase.getOldSession() else {
             logger.logD(self, "No old session found")
             return
@@ -184,7 +181,7 @@ class SessionManager: SessionManagerV2 {
             }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if !newSession.isPremium && oldSession.isPremium {
-            logger.logD(MainViewController.self, "User's pro plan expired.")
+            logger.logD(self, "User's pro plan expired.")
             serverRepo.getUpdatedServers().delaySubscription(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance).subscribe(
                 onSuccess: { _ in
                     self.logger.logD(self, "Updated server list.")
