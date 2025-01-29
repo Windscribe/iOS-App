@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 class EmergencyRepositoryImpl: EmergencyRepository {
     private let wsnetEmergencyConnect: WSNetEmergencyConnect
@@ -57,11 +58,6 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         return vpnManager.isConnected()
     }
 
-    // Removes Emergency connect profile.
-    func removeProfile() async {
-        await vpnManager.removeEmergencyProfile()
-    }
-
     func cleansEmergencyConfigs() {
         locationsManager.clearLastSelectedLocation()
         localDatabase.getCustomConfigs().filter { config in
@@ -72,8 +68,8 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     // Stops tunnel
-    func disconnect() {
-        vpnManager.simpleDisableConnection()
+    func disconnect() -> AnyPublisher<State, Error> {
+        return vpnManager.disconnectFromViewModel()
     }
 
     /// Configures OpenVPN and attempts a connection.

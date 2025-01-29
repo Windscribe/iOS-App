@@ -49,9 +49,4 @@ extension VPNManager {
             return true
         }
     }
-
-    func removeEmergencyProfile() async {
-        await resetProfiles()
-        await configManager.removeProfile(with: .openVPN, userSettings: makeUserSettings())
-    }
 }
