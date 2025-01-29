@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import Combine
@@ -42,7 +43,6 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
             switch state {
             case .connected:
                 self?.state.onNext(EmergencyConnectState.connected)
-                self?.shouldRetry = false
             case .connecting:
                 self?.state.onNext(.connecting)
             case .disconnecting:
@@ -68,30 +68,34 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
             logger.logD(EmergencyConnectModalImpl.self, "Disconnecting from emergency connect.")
             emergencyRepository.disconnect().sink { _ in } receiveValue: { _ in }.store(in: &appCancellable)
         } else {
-            shouldRetry = true
-            logger.logD(EmergencyConnectModalImpl.self, "Getting emergency connect info.")
             Task { @MainActor in
+                logger.logD(EmergencyConnectModalImpl.self, "Getting emergency connect configuration.")
                 let ovpnInfo = await emergencyRepository.getConfig()
                 self.ovpnInfoList.append(contentsOf: ovpnInfo)
-                self.connect()
+                self.connect(ovpnInfoList: ovpnInfo)
             }
         }
     }
 
-    private func connect() {
-        if let ovpnInfo = ovpnInfoList.last, shouldRetry == true {
-            ovpnInfoList.removeLast()
-            logger.logD(EmergencyConnectModalImpl.self, "Connecting to emergency connect. \(ovpnInfo)")
-            Task { @MainActor in
-                do {
-                    try await emergencyRepository.connect(configInfo: ovpnInfo)
-                    logger.logD(self, "Successfully started OpenVPN.")
-                } catch {
-                    if let error = error as? RepositoryError {
-                        self.logger.logE(self, error.description)
-                    }
-                }
-            }
+    private func connect(ovpnInfoList: [OpenVPNConnectionInfo]) {
+        guard !ovpnInfoList.isEmpty else {
+            logger.logE(self, "Unable to get emergency connect configuration.")
+            return
         }
+        let firstAttempt = emergencyRepository.connect(configInfo: ovpnInfoList[0])
+        let secondAttempt: AnyPublisher<State, Error> =
+            ovpnInfoList.count > 1
+                ? emergencyRepository.connect(configInfo: ovpnInfoList[1]).eraseToAnyPublisher()
+                : Fail(error: NSError(domain: "OpenVPN", code: -1, userInfo: [NSLocalizedDescriptionKey: "No backup OpenVPN config available."])).eraseToAnyPublisher()
+        firstAttempt.catch { _ in secondAttempt }
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    self.logger.logD(self, "Successfully started OpenVPN.")
+                case let .failure(error):
+                    self.logger.logE(self, "Failed to start OpenVPN: \(error.localizedDescription)")
+                }
+            }, receiveValue: { _ in })
+            .store(in: &appCancellable)
     }
 }

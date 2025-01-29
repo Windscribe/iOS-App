@@ -92,7 +92,7 @@ extension VPNManager {
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
     private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
-        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: makeUserSettings(), connectionType: connectionType)
+        configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? NEVPNError {
