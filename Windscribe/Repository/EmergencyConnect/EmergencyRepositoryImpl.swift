@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import Combine
@@ -73,12 +74,37 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     /// Configures OpenVPN and attempts a connection.
-    func connect(configInfo: OpenVPNConnectionInfo) async throws {
-        let data = try await buildConfiguration(configInfo: configInfo)
-        let customConfig = saveConfiguration(data: data, configInfo: configInfo)
-        locationsManager.saveCustomConfig(withID: customConfig.id)
-        await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
-        vpnManager.simpleEnableConnection(isEmergency: true)
+    func connect(configInfo: OpenVPNConnectionInfo) -> AnyPublisher<State, Error> {
+        Future<Data, Error> { promise in
+            Task {
+                do {
+                    let data = try await self.buildConfiguration(configInfo: configInfo)
+                    promise(.success(data))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .map { data -> CustomConfig in
+            let customConfig = self.saveConfiguration(data: data, configInfo: configInfo)
+            self.locationsManager.saveCustomConfig(withID: customConfig.id)
+            return customConfig
+        }
+        .flatMap { _ -> AnyPublisher<State, Error> in
+            Future<Void, Never> { promise in
+                Task {
+                    await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                    promise(.success(()))
+                }
+            }
+            .flatMap { _ -> AnyPublisher<State, Error> in
+                let nextProtocol = self.protocolManager.getProtocol()
+                let locationID = self.locationsManager.getLastSelectedLocation()
+                return self.vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .emergency)
+            }
+            .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
 
     /// Saves configuration as file and custom config model

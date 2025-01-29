@@ -44,11 +44,12 @@ class LoginViewModelImpl: LoginViewModel {
     let userDataRepository: UserDataRepository
     let vpnManger: VPNManager
     let protocolManager: ProtocolManagerType
+    let latencyRepository: LatencyRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
     private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository,vpnManger: VPNManager, protocolManager: ProtocolManagerType, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository,vpnManger: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, themeManager: ThemeManager) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.connectivity = connectivity
@@ -57,6 +58,7 @@ class LoginViewModelImpl: LoginViewModel {
         self.userDataRepository = userDataRepository
         self.vpnManger = vpnManger
         self.protocolManager = protocolManager
+        self.latencyRepository = latencyRepository
         self.logger = logger
         isDarkMode = themeManager.darkTheme
         registerNetworkEventListener()
@@ -156,12 +158,17 @@ class LoginViewModelImpl: LoginViewModel {
 
     private func disconnectFromEmergencyConnect() {
         vpnManger.disconnectFromViewModel()
-            .sink { _ in
-                Task {
-                    await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+            .flatMap { _ in
+                return Future<Void, Error> { promise in
+                    Task {
+                        await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                        promise(.success(()))
+                    }
                 }
+            }.sink { _ in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    Assembler.resolve(LatencyRepository.self).loadLatency()
+                    self.latencyRepository.refreshBestLocation()
+                    self.latencyRepository.loadLatency()
                 }
                 self.showLoadingView.onNext(false)
                 self.routeToMainView.onNext(true)
