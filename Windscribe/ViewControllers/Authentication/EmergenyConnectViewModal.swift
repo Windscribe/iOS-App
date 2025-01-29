@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 enum EmergencyConnectState {
     case disconnected, disconnecting, connecting, connected
@@ -16,6 +17,7 @@ enum EmergencyConnectState {
 protocol EmergenyConnectViewModal {
     var state: BehaviorSubject<EmergencyConnectState> { get }
     func connectButtonTapped()
+    func appEnteredForeground()
 }
 
 class EmergencyConnectModalImpl: EmergenyConnectViewModal {
@@ -26,6 +28,7 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
     let disposeBag = DisposeBag()
     private var ovpnInfoList: [OpenVPNConnectionInfo] = []
     private var shouldRetry = false
+    private var appCancellable = [AnyCancellable]()
     init(vpnManager: VPNManager, emergencyRepository: EmergencyRepository, logger: FileLogger) {
         self.vpnManager = vpnManager
         self.emergencyRepository = emergencyRepository
@@ -46,9 +49,12 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
                 self?.state.onNext(.disconnecting)
             default:
                 self?.state.onNext(.disconnected)
-                self?.connect()
             }
         }).disposed(by: disposeBag)
+    }
+
+    func appEnteredForeground() {
+        vpnManager.connectionStateUpdatedTrigger.onNext(())
     }
 
     func connectButtonTapped() {
@@ -60,7 +66,7 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
         }
         if state == EmergencyConnectState.connected || state == .connecting {
             logger.logD(EmergencyConnectModalImpl.self, "Disconnecting from emergency connect.")
-            emergencyRepository.disconnect()
+            emergencyRepository.disconnect().sink { _ in } receiveValue: { _ in }.store(in: &appCancellable)
         } else {
             shouldRetry = true
             logger.logD(EmergencyConnectModalImpl.self, "Getting emergency connect info.")

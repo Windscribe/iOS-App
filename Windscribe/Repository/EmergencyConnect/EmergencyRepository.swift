@@ -8,12 +8,12 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol EmergencyRepository {
     func getConfig() async -> [OpenVPNConnectionInfo]
     func connect(configInfo: OpenVPNConnectionInfo) async throws
-    func disconnect()
+    func disconnect() -> AnyPublisher<State, Error>
     func isConnected() -> Bool
-    func removeProfile() async
     func cleansEmergencyConfigs()
 }

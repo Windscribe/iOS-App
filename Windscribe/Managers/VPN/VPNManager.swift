@@ -161,6 +161,17 @@ class VPNManager: VPNManagerProtocol {
                                isCircumventCensorshipEnabled: preferences.isCircumventCensorshipEnabled(),
                                onDemandRules: getOnDemandRules())
     }
+
+    func emergencyUserSettings() -> VPNUserSettings {
+        var onDemandRules: [NEOnDemandRule] = []
+        let ruleConnect = NEOnDemandRuleConnect()
+        onDemandRules.append(ruleConnect)
+        return VPNUserSettings(killSwitch: false,
+                               allowLan: true,
+                               isRFC: true,
+                               isCircumventCensorshipEnabled: false,
+                               onDemandRules: onDemandRules)
+    }
 }
 
 extension VPNManager {

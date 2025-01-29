@@ -84,6 +84,11 @@ class EmergencyConnectViewController: UIViewController {
         connectButton.rx.tap.bind {
             self.viewmodal.connectButtonTapped()
         }.disposed(by: disposeBag)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+
+    @objc func applicationWillEnterForeground() {
+        viewmodal.appEnteredForeground()
     }
 
     // MARK: - Helper

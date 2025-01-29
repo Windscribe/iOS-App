@@ -103,7 +103,7 @@ extension VPNManager {
                         return Just(())
                             .delay(for: .seconds(2), scheduler: DispatchQueue.main)
                             .flatMap { _ in
-                                self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
+                                self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings() : self.makeUserSettings(), connectionType: connectionType)
                             }.eraseToAnyPublisher()
                     }
                 }

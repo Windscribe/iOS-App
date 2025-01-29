@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Swinject
+import Combine
 
 enum LoginErrorState: Equatable {
     case username(String), network(String), twoFa(String), api(String), loginCode(String)
@@ -41,16 +42,21 @@ class LoginViewModelImpl: LoginViewModel {
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
     let userDataRepository: UserDataRepository
+    let vpnManger: VPNManager
+    let protocolManager: ProtocolManagerType
     let logger: FileLogger
     let disposeBag = DisposeBag()
+    private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository,vpnManger: VPNManager, protocolManager: ProtocolManagerType, logger: FileLogger, themeManager: ThemeManager) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.connectivity = connectivity
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
         self.userDataRepository = userDataRepository
+        self.vpnManger = vpnManger
+        self.protocolManager = protocolManager
         self.logger = logger
         isDarkMode = themeManager.darkTheme
         registerNetworkEventListener()
@@ -132,7 +138,7 @@ class LoginViewModelImpl: LoginViewModel {
                     }).disposed(by: self.disposeBag)
             })
 
-        dispose.insert(d)
+        _ = dispose.insert(d)
     }
 
     private func invalidateLoginCode(startTime: Date, loginCodeResponse: XPressLoginCodeResponse) {
@@ -148,21 +154,29 @@ class LoginViewModelImpl: LoginViewModel {
         failedState.onNext(.none)
     }
 
+    private func disconnectFromEmergencyConnect() {
+        vpnManger.disconnectFromViewModel()
+            .sink { _ in
+                Task {
+                    await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    Assembler.resolve(LatencyRepository.self).loadLatency()
+                }
+                self.showLoadingView.onNext(false)
+                self.routeToMainView.onNext(true)
+            } receiveValue: { _ in }.store(in: &appCancellable)
+    }
+
     private func prepareUserData() {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
             logger.logD(self, "User data is ready")
-            showLoadingView.onNext(false)
             emergencyConnectRepository.cleansEmergencyConfigs()
             if emergencyConnectRepository.isConnected() == true {
                 logger.logD(self, "Disconnecting emergency connect.")
-                Task {
-                    await emergencyConnectRepository.removeProfile()
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 3) {
-                        Assembler.resolve(LatencyRepository.self).loadLatency()
-                    }
-                    self.routeToMainView.onNext(true)
-                }
+                disconnectFromEmergencyConnect()
             } else {
+                showLoadingView.onNext(false)
                 routeToMainView.onNext(true)
             }
         }, onFailure: { [weak self] error in
