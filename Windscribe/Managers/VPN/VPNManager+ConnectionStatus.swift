@@ -57,22 +57,17 @@ extension VPNManager {
                 switch connectionStatus {
                 case .connecting:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connecting")
-                    WSNet.instance().setIsConnectedToVpnState(false)
                     self.checkIfUserIsOutOfData()
                 case .connected:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connected")
-                    WSNet.instance().setIsConnectedToVpnState(true)
                     untrustedOneTimeOnlySSID = ""
                 case .disconnecting:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnecting")
-                    WSNet.instance().setIsConnectedToVpnState(false)
                 case .disconnected:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnected")
                     handleConnectError()
-                    WSNet.instance().setIsConnectedToVpnState(false)
                 case .invalid:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Invalid")
-                    WSNet.instance().setIsConnectedToVpnState(false)
                 default:
                     return
                 }

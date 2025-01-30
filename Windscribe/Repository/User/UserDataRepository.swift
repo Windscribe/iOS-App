@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import Swinject
+import Combine
 
 protocol UserDataRepository {
     func prepareUserData() -> Single<Void>
@@ -63,7 +64,9 @@ class UserDataRepositoryImpl: UserDataRepository {
             return self.notificationsRepository.getUpdatedNotifications(pcpid: "").catchAndReturn([])
         }.map { _ in
             DispatchQueue.main.async {
-                self.latencyRepository.loadLatency()
+                if !self.emergencyRepository.isConnected() {
+                    self.latencyRepository.loadLatency()
+                }
             }
         }
     }
