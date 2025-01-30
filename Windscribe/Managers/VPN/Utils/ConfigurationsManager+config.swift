@@ -410,8 +410,13 @@ extension ConfigurationsManager {
                 switch locationType {
                 case .server:
                     let location = try self.locationsManager.getLocation(from: locationID)
-                    let isFreeUser = self.localDatabase.getSessionSync()?.isPremium == false
-                    if isFreeUser, location.1.premiumOnly {
+                    let session = self.localDatabase.getSessionSync()
+                    let isFreeUser = session?.isPremium == false
+                    if session?.status == 2 {
+                        promise(.failure(VPNConfigurationErrors.accountExpired))
+                    } else if session?.status == 3 {
+                        promise(.failure(VPNConfigurationErrors.accountBanned))
+                    } else if isFreeUser, location.1.premiumOnly {
                         promise(.failure(VPNConfigurationErrors.upgradeRequired))
                     } else {
                         promise(.success(()))
