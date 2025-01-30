@@ -78,7 +78,7 @@ class ConnectivityImpl: Connectivity {
                 logger.logD(self,  appNetwork.description)
                 self.network.onNext(appNetwork)
                 if !emergencyConnect.isConnected() {
-                    WSNet.instance().setIsConnectedToVpnState(false)
+                    WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
                 }
                 WSNet.instance().setConnectivityState(appNetwork.status == .connected)
                 NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
