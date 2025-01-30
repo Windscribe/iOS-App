@@ -102,7 +102,7 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
 extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     func setSelectedCustomConfig(customConfig: CustomConfigModel) {
         if !connectivity.internetConnectionAvailable() { return }
-        if vpnManager.isDisconnecting() {
+        if vpnManager.configurationState == ConfigurationState.disabling {
             displayAllertTrigger.onNext(.disconnecting)
             return
         }

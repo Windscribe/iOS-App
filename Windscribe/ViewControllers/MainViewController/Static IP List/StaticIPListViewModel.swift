@@ -50,12 +50,12 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         if !connectivity.internetConnectionAvailable() { return }
-        if vpnManager.isDisconnecting() {
+        if vpnManager.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
 
-        if !vpnManager.isConnecting() {
+        if vpnManager.configurationState == ConfigurationState.initial {
             locationsManager.saveStaticIP(withID: staticIP.id)
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

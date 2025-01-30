@@ -67,7 +67,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         } else if !group.canConnect() {
             reloadTrigger.onNext(())
-        } else if !vpnManager.isConnecting() {
+        } else if vpnManager.configurationState == ConfigurationState.initial {
             guard let bestNode = group.bestNode,
                   let bestNodeHostname = bestNode.hostname,
                   let groupId = group.id else { return }
