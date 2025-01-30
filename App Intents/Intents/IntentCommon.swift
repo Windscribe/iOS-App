@@ -19,10 +19,10 @@ enum AppIntentError: Error, LocalizedError {
 }
 
 @available(iOS 13.0.0, *)
-func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
+func getActiveManager(for protocolType: String, completionHandler: @escaping (Swift.Result<NEVPNManager, Error>) -> Void) {
     Task {
         do {
-            let manager = try await getActiveManager()
+            let manager = try await getNEVPNManager(for: protocolType)
             await MainActor.run {
                 completionHandler(.success(manager))
             }
@@ -35,40 +35,19 @@ func getActiveManager(completionHandler: @escaping (Swift.Result<NEVPNManager, E
 }
 
 @available(iOS 13.0.0, *)
-func getActiveManager() async throws -> NEVPNManager {
-    do {
-        return try await getNETunnelProvider()
-    } catch let e {
-        if let e = e as? AppIntentError, e == AppIntentError.VPNNotConfigured {
-            return try await getNEVPNManager()
-        } else {
-            throw e
-        }
-    }
-}
-
-// Open and wireguard
-@available(iOS 13.0.0, *)
-func getNETunnelProvider() async throws -> NEVPNManager {
+func getNEVPNManager(for protocolType: String) async throws -> NEVPNManager {
     let providers = try await NETunnelProviderManager.loadAllFromPreferences()
-    let providersFound = providers.map { $0.protocolConfiguration?.username ?? "" }.joined(separator: ", ")
-    print(providersFound)
-    if providers.count > 0 {
-        return providers[0]
+    let provider = providers.first { $0.protocolConfiguration?.username == protocolType }
+    if let provider = provider {
+        return provider
     } else {
-        throw AppIntentError.VPNNotConfigured
+        let provider = NEVPNManager.shared()
+        try await provider.loadFromPreferences()
+        guard provider.protocolConfiguration != nil else {
+            throw AppIntentError.VPNNotConfigured
+        }
+        return provider
     }
-}
-
-// iKEV2
-@available(iOS 13.0.0, *)
-func getNEVPNManager() async throws -> NEVPNManager {
-    let manager = NEVPNManager.shared()
-    try await manager.loadFromPreferences()
-    if manager.protocolConfiguration == nil {
-        throw AppIntentError.VPNNotConfigured
-    }
-    return manager
 }
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
@@ -98,7 +77,7 @@ extension IntentDialog {
     }
 
     static func responseSuccessWithNoConnection(ipAddress: String) -> Self {
-        "You are now connected to VPN. Your  IP address is \(ipAddress)."
+        "You are not connected to VPN. Your  IP address is \(ipAddress)."
     }
 
     static var responseFailureState: Self {

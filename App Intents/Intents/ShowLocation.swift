@@ -37,12 +37,17 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
 
     fileprivate let resolver = ContainerResolver()
 
+    var preferences: Preferences {
+        return resolver.getPreferences()
+    }
+
     func perform() async throws -> some IntentResult & ProvidesDialog {
         do {
             let ip = try await getMyIp()
             do {
-                let manager = try await getActiveManager()
-                if manager.connection.status == NEVPNStatus.connected {
+                let protocolType = preferences.getActiveManagerKey() ?? "Wireguard"
+                let activeManager = try await getNEVPNManager(for: protocolType)
+                if activeManager.connection.status == NEVPNStatus.connected {
                     let prefs = resolver.getPreferences()
                     if let serverName = prefs.getServerNameKey(),
                        let nickName = prefs.getNickNameKey()
