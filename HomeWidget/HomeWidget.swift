@@ -37,7 +37,8 @@ struct Provider: TimelineProvider {
         var entries: [SimpleEntry] = []
         entries.append(snapshotEntry)
         logger.logD(tag, "Getting widget timeline")
-        getActiveManager { result in
+        let protocolType = self.preferences.getActiveManagerKey() ?? "Wireguard"
+        getActiveManager(for: protocolType) { result in
             switch result {
             case let .success(manager):
                 if let entry = buildSimpleEntry(manager: manager) {

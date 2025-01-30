@@ -21,10 +21,13 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
     static var description = IntentDescription("Disconnects Windscribe from VPN.")
     let tag = "AppIntents"
     fileprivate let logger = ContainerResolver().getLogger()
+    fileprivate let preferences = ContainerResolver().getPreferences()
+
     func perform() async throws -> some IntentResult & ProvidesDialog {
         logger.logD(tag, "Disable VPN action called.")
         do {
-            let activeManager = try await getActiveManager()
+            let protocolType = preferences.getActiveManagerKey() ?? "Wireguard"
+            let activeManager = try await getNEVPNManager(for: protocolType)
             let vpnStatus = activeManager.connection.status
             // Already disconnected just update status.
             if [NEVPNStatus.disconnected, NEVPNStatus.disconnecting, NEVPNStatus.invalid].contains(vpnStatus) {
