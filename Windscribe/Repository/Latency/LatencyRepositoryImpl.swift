@@ -66,6 +66,10 @@ class LatencyRepositoryImpl: LatencyRepository {
             logger.logE(self, "Server list not ready for latency update.")
             return Completable.empty()
         }
+        if locationsManager.getBestLocation() == "0" {
+            let servers = database.getServers() ?? []
+            self.pickBestLocation(servers: servers)
+        }
         if vpnManager.isConnected() {
             self.logger.logE(self, "Latency not updated as vpn is connected")
             return Completable.empty()
@@ -278,7 +282,6 @@ class LatencyRepositoryImpl: LatencyRepository {
     func pickBestLocation(servers: [Server]) {
         if #available(iOS 16, tvOS 17, *) {
             guard let countryCode = Locale.current.region?.identifier else { return }
-            logger.logD(self, "User region: \(countryCode)")
             if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
                 logger.logD(self, "Selected best location based on region: \(regionBasedLocation)")
                 return

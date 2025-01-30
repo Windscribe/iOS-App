@@ -46,7 +46,7 @@ extension Container {
             #else
                 WSNet.initialize("ios", platformName: "ios", appVersion: Bundle.main.releaseVersionNumber ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "", openVpnVersion: APIParameterValues.openVPNVersion, sessionTypeId: "4", isUseStagingDomains: false, language: language, persistentSettings: preferences.getServerSettings())
             #endif
-            WSNet.instance().dnsResolver().setDnsServers(["76.76.2.0", "1.1.1.1", "9.9.9.9"])
+            WSNet.instance().dnsResolver().setDnsServers(["1.1.1.1", "9.9.9.9"])
             WSNet.instance().setConnectivityState(true)
             WSNet.instance().setIsConnectedToVpnState(false)
             WSNet.instance().advancedParameters().setAPIExtraTLSPadding(preferences.isCircumventCensorshipEnabled())

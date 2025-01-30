@@ -44,7 +44,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
 
     func setSelectedFavNode(favNode: FavNodeModel) {
         if !connectivity.internetConnectionAvailable() { return }
-        if vpnManager.isDisconnecting() {
+        if vpnManager.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
@@ -53,7 +53,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
         {
             showUpgradeTrigger.onNext(())
             return
-        } else if !vpnManager.isConnecting() {
+        } else if vpnManager.configurationState == ConfigurationState.initial {
             guard let hostname = favNode.hostname,
                   let cityName = favNode.cityName,
                   let groupId = Int(favNode.groupId ?? "1") else { return }

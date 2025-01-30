@@ -1,4 +1,5 @@
 import Combine
+import Swinject
 import Foundation
 import Network
 import RxSwift
@@ -16,6 +17,9 @@ class ConnectivityImpl: Connectivity {
     private var lastEvent: AppNetwork?
     private var debounceTimer: Timer?
     private var lastValidNetworkName: String?
+    lazy var emergencyConnect = {
+        Assembler.resolve(EmergencyRepository.self)
+    }()
 
     init(logger: FileLogger) {
         self.logger = logger
@@ -73,7 +77,9 @@ class ConnectivityImpl: Connectivity {
             if lastEvent != appNetwork {
                 logger.logD(self,  appNetwork.description)
                 self.network.onNext(appNetwork)
-                WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
+                if !emergencyConnect.isConnected() {
+                    WSNet.instance().setIsConnectedToVpnState(false)
+                }
                 WSNet.instance().setConnectivityState(appNetwork.status == .connected)
                 NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
             }

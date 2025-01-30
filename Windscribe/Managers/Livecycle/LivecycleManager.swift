@@ -95,7 +95,7 @@ class LivecycleManager: LivecycleManagerType {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
             return
         }
-        if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 {
+        if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && preferences.getSessionAuthHash() != nil {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
             notificationRepo.loadNotifications()
         }

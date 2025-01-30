@@ -114,6 +114,9 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     }
 
     func updateServerConfig() {
+        if preferences.getSessionAuthHash() == nil {
+            return
+        }
         logger.logD(self, "Updating open vpn credentials.")
         getUpdatedOpenVPNCrendentials().flatMap { _ in
             self.logger.logD(self, "Updating open vpn server config.")

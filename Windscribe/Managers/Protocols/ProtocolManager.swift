@@ -303,12 +303,22 @@ class ProtocolManager: ProtocolManagerType {
 
     /// Protocol list in app preferred order.
     private func getProtocolList() {
+        if localDatabase.getPortMap()?.isEmpty  ?? true {
+            protocolsToConnectList = [
+                DisplayProtocolPort(protocolPort: ProtocolPort("WireGuard", "443"), viewType: .normal),
+                DisplayProtocolPort(protocolPort: ProtocolPort("IKEv2", "500"), viewType: .normal),
+                DisplayProtocolPort(protocolPort: ProtocolPort("UDP", "443"), viewType: .normal),
+                DisplayProtocolPort(protocolPort: ProtocolPort("TCP", "443"), viewType: .normal),
+                DisplayProtocolPort(protocolPort: ProtocolPort("Stealth", "443"), viewType: .normal),
+                DisplayProtocolPort(protocolPort: ProtocolPort("WStunnel", "443"), viewType: .normal)
+            ]
+            return
+        }
         let listProtocol = getAppSupportedProtocol()
         var lstConnection: [ProtocolPort] = []
         for protocolName in listProtocol {
             if let lstPort = localDatabase.getPorts(protocolType: protocolName),
-               let firstPort = lstPort.first
-            {
+               let firstPort = lstPort.first {
                 lstConnection.append((protocolName, firstPort))
             }
         }

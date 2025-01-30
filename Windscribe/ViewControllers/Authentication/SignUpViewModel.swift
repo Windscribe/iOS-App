@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 enum SignUpErrorState {
     case username(String), password(String), email(String), api(String), network(String), none
@@ -41,21 +42,30 @@ class SignUpViewModelImpl: SignUpViewModel {
     let showLoadingView = BehaviorSubject(value: false)
     let failedState = BehaviorSubject(value: SignUpErrorState.none)
     var claimGhostAccount = false
+    private var appCancellable = [AnyCancellable]()
 
     let apiCallManager: APIManager
     let userRepository: UserRepository
     let userDataRepository: UserDataRepository
     let preferences: Preferences
+    let emergencyConnectRepository: EmergencyRepository
     let connectivity: Connectivity
+    let vpnManger: VPNManager
+    let protocolManager: ProtocolManagerType
+    let latencyRepository: LatencyRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: Connectivity, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: Connectivity,vpnManger: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, themeManager: ThemeManager) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.userDataRepository = userDataRepository
         self.preferences = preferences
         self.connectivity = connectivity
+        self.vpnManger = vpnManger
+        self.protocolManager = protocolManager
+        self.latencyRepository = latencyRepository
+        self.emergencyConnectRepository = emergencyConnectRepository
         self.logger = logger
         isDarkMode = themeManager.darkTheme
         registerNetworkEventListener()
@@ -160,12 +170,35 @@ class SignUpViewModelImpl: SignUpViewModel {
         }
     }
 
+    private func disconnectFromEmergencyConnect() {
+        vpnManger.disconnectFromViewModel()
+            .flatMap { _ in
+                return Future<Void, Error> { promise in
+                    Task {
+                        await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+                        promise(.success(()))
+                    }
+                }
+            }.sink { _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.latencyRepository.loadLatency()
+                }
+                self.showLoadingView.onNext(false)
+                self.routeTo.onNext(.main)
+            } receiveValue: { _ in }.store(in: &appCancellable)
+    }
+
     private func prepareUserData(ignoreError: Bool = false) {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
                 self?.logger.logD(SignUpViewModelImpl.self, "User data is ready")
-                self?.showLoadingView.onNext(false)
-                self?.routeTo.onNext(.main)
+                self?.emergencyConnectRepository.cleansEmergencyConfigs()
+                if self?.emergencyConnectRepository.isConnected() == true {
+                    self?.disconnectFromEmergencyConnect()
+                } else {
+                    self?.showLoadingView.onNext(false)
+                    self?.routeTo.onNext(.main)
+                }
             }
         }, onFailure: { [weak self] error in
             self?.showLoadingView.onNext(false)

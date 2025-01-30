@@ -14,6 +14,7 @@ import StoreKit
 import Swinject
 import UIKit
 import WidgetKit
+import BackgroundTasks
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -45,6 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
 
+    private lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         localDatabase.migrate()
@@ -58,8 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         setApplicationWindow()
         Task.detached { [unowned self] in
             try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
-            await UIApplication.shared
-                .setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
             if await preferences.userSessionAuth() != nil {
                     try? await Task.sleep(nanoseconds: 2_000_000_000)
                 await self.latencyRepository.loadLatency()
@@ -68,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         return true
     }
-
     /**
      Prepares application window and launches first view controller
      */
