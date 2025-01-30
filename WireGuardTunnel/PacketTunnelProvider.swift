@@ -50,6 +50,28 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
+    private func stopTunnel(completionHandler: @escaping (Error?) -> Void) {
+        let error = NSError(domain: "com.windscribe", code: 50)
+        NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
+            var wgTunnel: NETunnelProviderManager?
+            if let tunnels = tunnels {
+                for tunnel in tunnels {
+                    if tunnel.protocolConfiguration?.username == "WireGuard" {
+                        wgTunnel = tunnel
+                    }
+                }
+            }
+            if let wgTunnel = wgTunnel {
+                wgTunnel.isOnDemandEnabled = false
+                wgTunnel.saveToPreferences() { _ in
+                    completionHandler(error)
+                }
+            } else {
+                completionHandler(error)
+            }
+        }
+    }
+    
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
@@ -65,11 +87,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     self.requestNewInterfaceIp(completionHandler: completionHandler)
                 } else {
                     self.logger.logD(self, "User status is \(session.status), do not reconnect.")
-                    self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
-                    completionHandler(nil)
+                    stopTunnel(completionHandler: completionHandler)
                 }
-            }, onFailure: { _ in
-                completionHandler(nil)
+            }, onFailure: { error in
+                self.logger.logD(self, "Error getting user session: \(error)")
+                completionHandler(error)
             }).disposed(by: disposeBag)
             return
         }

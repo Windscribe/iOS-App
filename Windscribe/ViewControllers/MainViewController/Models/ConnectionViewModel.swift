@@ -470,6 +470,10 @@ extension ConnectionViewModel {
                 .connectionTimeout:
             logger.logE(self, error.description)
             return false
+        case .accountExpired:
+            showUpgradeRequiredTrigger.onNext(())
+        case .accountBanned:
+            logger.logE(self, error.description)
         case .locationNotFound(let id):
             reloadLocationsTrigger.onNext(id)
         case .networkIsOffline:

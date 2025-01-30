@@ -22,6 +22,8 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case allProtocolFailed
     case authFailure
     case upgradeRequired
+    case accountExpired
+    case accountBanned
     case networkIsOffline
     case privacyNotAccepted
     case customConfigMissingCredentials(CustomConfigModel)
@@ -60,6 +62,10 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "Privacy has not been accepted yet."
         case .customConfigMissingCredentials:
             return "Custom config is missing the credentials."
+        case .accountExpired:
+            return "You have used all your data."
+        case .accountBanned:
+            return "Your account is banned for misuse."
         }
     }
 }
