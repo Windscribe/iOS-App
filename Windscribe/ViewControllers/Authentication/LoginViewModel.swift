@@ -42,21 +42,21 @@ class LoginViewModelImpl: LoginViewModel {
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
     let userDataRepository: UserDataRepository
-    let vpnManger: VPNManager
+    let vpnManager: VPNManager
     let protocolManager: ProtocolManagerType
     let latencyRepository: LatencyRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
     private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository,vpnManger: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, themeManager: ThemeManager) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.connectivity = connectivity
         self.preferences = preferences
         self.emergencyConnectRepository = emergencyConnectRepository
         self.userDataRepository = userDataRepository
-        self.vpnManger = vpnManger
+        self.vpnManager = vpnManager
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.logger = logger
@@ -157,7 +157,7 @@ class LoginViewModelImpl: LoginViewModel {
     }
 
     private func disconnectFromEmergencyConnect() {
-        vpnManger.disconnectFromViewModel()
+        vpnManager.disconnectFromViewModel()
             .flatMap { _ in
                 return Future<Void, Error> { promise in
                     Task {
