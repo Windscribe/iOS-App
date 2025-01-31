@@ -28,6 +28,7 @@ protocol ConnectionViewModelType {
     var ipAddressSubject: PublishSubject<String> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
+    var trustedNetworkPopupTrigger: PublishSubject<Void> { get }
     var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
@@ -79,6 +80,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let ipAddressSubject = PublishSubject<String>()
     let showAutoModeScreenTrigger = PublishSubject<Void>()
     let openNetworkHateUsDialogTrigger = PublishSubject<Void>()
+    let trustedNetworkPopupTrigger = PublishSubject<Void>()
     let pushNotificationPermissionsTrigger = PublishSubject<Void>()
     let siriShortcutTrigger = PublishSubject<Void>()
     let requestLocationTrigger = PublishSubject<Void>()
@@ -329,6 +331,11 @@ extension ConnectionViewModel {
     }
 
     private func enableConnection(connectionType: ConnectionType) {
+
+        guard !WifiManager.shared.isConnectedWifiTrusted() else {
+            trustedNetworkPopupTrigger.onNext(())
+            return
+        }
         Task { @MainActor in
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()

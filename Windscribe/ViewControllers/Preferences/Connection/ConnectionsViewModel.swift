@@ -177,15 +177,6 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         return connectedDNS
     }
 
-    func updateConnectionMode(value: ConnectionModeType) {
-        preferences.saveConnectionMode(mode: value.fieldValue)
-        if value == .auto {
-            Task {
-                await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
-            }
-        }
-    }
-
     func updateConnectedDNS(type: ConnectedDNSType) {
         preferences.saveConnectedDNS(mode: type.fieldValue)
     }
@@ -213,8 +204,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         }, completion: { _ in })
     }
 
-    func updatePort(value: String) {
-        preferences.saveSelectedPort(port: value)
+    func updateConnectionMode(value: ConnectionModeType) {
+        preferences.saveConnectionMode(mode: value.fieldValue)
         Task {
             await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
@@ -226,7 +217,14 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             preferences.saveSelectedPort(port: port[0])
         }
         Task {
-            await protocolManager.refreshProtocols(shouldReset: false, shouldReconnect: false)
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
+    }
+
+    func updatePort(value: String) {
+        preferences.saveSelectedPort(port: value)
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
         }
     }
 

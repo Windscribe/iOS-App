@@ -24,6 +24,10 @@ extension MainViewController {
             self.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
 
+        vpnConnectionViewModel.trustedNetworkPopupTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.router?.routeTo(to: .trustedNetwork, from: self)
+        }).disposed(by: disposeBag)
+
         vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showPrivacyConfirmationPopup(willConnectOnAccepting: true)
         }).disposed(by: disposeBag)
