@@ -17,10 +17,5 @@
 		<string>EurostileExt-Bla.otf</string>
 		<string>IBMPlexSans-Medium.otf</string>
 	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>processing</string>
-	</array>
 </dict>
 </plist>
