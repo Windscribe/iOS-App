@@ -71,7 +71,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         }
     }
-    
+
     override func startTunnel(options: [String: NSObject]?, completionHandler: @escaping (Error?) -> Void) {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
