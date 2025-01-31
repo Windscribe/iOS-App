@@ -9,6 +9,13 @@
 import Foundation
 import Swinject
 
+private enum MatchType {
+    case groupPrefix
+    case cityPrefix
+    case groupContains
+    case cityContains
+}
+
 extension MainViewController {
     func addSearchViews() {
         var viewModel = Assembler.resolve(SearchLocationsViewModelType.self)
@@ -81,69 +88,74 @@ extension MainViewController: SearchCountryViewDelegate {
     }
 
     private func find(groupList: [ServerModel], keyword: String) -> [ServerModel] {
-        // Filter servers containing the keyword
-        var updatedList: [ServerModel] = []
-        for group in groupList {
-            if let filteredGroup = filterIfContains(group: group, keyword: keyword) {
-                updatedList.append(filteredGroup)
-            }
-        }
-        return updatedList
-    }
+        var groupNamePrefixMatches: [ServerModel] = []
+        var cityPrefixMatches: [ServerModel] = []
+        var groupNameContainsMatches: [ServerModel] = []
+        var cityContainsMatches: [ServerModel] = []
 
-    private func filterIfContains(group: ServerModel, keyword: String) -> ServerModel? {
-        var cities: [GroupModel] = []
-        // Filter server by keyword
-        if let items = group.groups {
-            for group in items {
-                if let nick = group.nick?.lowercased(), let city = group.city?.lowercased() {
-                    let lowerCaseKeyword = keyword.lowercased()
-                    if nick.contains(lowerCaseKeyword) ||
-                        city.contains(lowerCaseKeyword) {
-                        cities.append(group)
-                    }
-                }
-            }
-        }
-
-        // Return new server if cities match or title matches
-        if !cities.isEmpty {
-            return ServerModel(id: group.id, name: group.name, countryCode: group.countryCode, status: group.status, premiumOnly: group.premiumOnly, dnsHostname: group.dnsHostname, groups: cities, locType: group.locType, p2p: group.p2p)
-        }
-
-        if let name = group.name {
-            if name.lowercased().contains(keyword.lowercased()) {
-                return group
-            }
-        }
-        return nil
-    }
-
-    private func filterIfStartsWith(group: ServerModel, keyword: String) -> Bool {
         let lowerCaseKeyword = keyword.lowercased()
 
-        // Check if server title starts with keyword
-
-        if let name = group.name {
-            if name.lowercased().hasPrefix(lowerCaseKeyword) {
-                return true
+        for group in groupList {
+            if let (filteredGroup, matchType) = filterIfContains(group: group, keyword: lowerCaseKeyword) {
+                switch matchType {
+                case .groupPrefix:
+                    groupNamePrefixMatches.append(filteredGroup)
+                case .cityPrefix:
+                    cityPrefixMatches.append(filteredGroup)
+                case .groupContains:
+                    groupNameContainsMatches.append(filteredGroup)
+                case .cityContains:
+                        cityContainsMatches.append(filteredGroup)
+                }
             }
         }
+        return groupNamePrefixMatches + cityPrefixMatches + groupNameContainsMatches + cityContainsMatches
+    }
 
-        // Check if any group starts with keyword
 
+    private func filterIfContains(group: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
+        var cities: [GroupModel] = []
+        var bestMatch: MatchType?
+        if let name = group.name?.lowercased() {
+            if name.hasPrefix(keyword) {
+                bestMatch = .groupPrefix
+            } else if name.contains(keyword) {
+                bestMatch = .groupContains
+            }
+        }
         if let items = group.groups {
-            for group in items {
-                if let nick = group.nick?.lowercased(), let city = group.city?.lowercased() {
-                    let lowerCaseKeyword = keyword.lowercased()
-                    if nick.lowercased().hasPrefix(lowerCaseKeyword) ||
-                        city.lowercased().hasPrefix(lowerCaseKeyword) {
-                        return true
+            for cityGroup in items {
+                if let nick = cityGroup.nick?.lowercased(), let city = cityGroup.city?.lowercased() {
+                    if nick.hasPrefix(keyword) || city.hasPrefix(keyword) {
+                        bestMatch = bestMatch ?? .cityPrefix
+                        cities.append(cityGroup)
+                    } else if nick.contains(keyword) || city.contains(keyword) {
+                        if bestMatch == nil {
+                            bestMatch = .cityContains
+                        }
+                        cities.append(cityGroup)
                     }
                 }
             }
         }
-        return false
+        if let match = bestMatch, match == .groupPrefix || match == .groupContains {
+            cities = group.groups ?? []
+        }
+        if let match = bestMatch {
+            let newServer = ServerModel(
+                id: group.id,
+                name: group.name,
+                countryCode: group.countryCode,
+                status: group.status,
+                premiumOnly: group.premiumOnly,
+                dnsHostname: group.dnsHostname,
+                groups: cities,
+                locType: group.locType,
+                p2p: group.p2p
+            )
+            return (newServer, match)
+        }
+        return nil
     }
 
     func showSearchLocation() {
