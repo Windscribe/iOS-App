@@ -209,7 +209,7 @@ extension ConfigurationsManager {
         try await Task.sleep(nanoseconds :  delayBetweenConnectivityAttempts)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                let userIp = try await api.getIp().value.userIp
+                let userIp = try await ipRepository.getIp().value.userIp
                 return userIp
             } catch {
                 if checkIsTaskCancelled() {
