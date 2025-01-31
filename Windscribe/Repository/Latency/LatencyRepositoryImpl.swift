@@ -67,8 +67,7 @@ class LatencyRepositoryImpl: LatencyRepository {
             return Completable.empty()
         }
         if locationsManager.getBestLocation() == "0" {
-            let servers = database.getServers() ?? []
-            self.pickBestLocation(servers: servers)
+            self.pickBestLocation()
         }
         if vpnManager.isConnected() {
             self.logger.logE(self, "Latency not updated as vpn is connected")
@@ -279,16 +278,19 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Picks up Initial best location bast on user's region, status & availability..
     /// Only if we have servers in given region.
-    func pickBestLocation(servers: [Server]) {
-        if #available(iOS 16, tvOS 17, *) {
-            guard let countryCode = Locale.current.region?.identifier else { return }
-            if let regionBasedLocation = selectServerByRegion(servers: servers, countryCode: countryCode) {
-                logger.logD(self, "Selected best location based on region: \(regionBasedLocation)")
-                return
+    func pickBestLocation() {
+        DispatchQueue.main.async {
+            let servers = self.database.getServers() ?? []
+            if #available(iOS 16, tvOS 17, *) {
+                guard let countryCode = Locale.current.region?.identifier else { return }
+                if let regionBasedLocation = self.selectServerByRegion(servers: servers, countryCode: countryCode) {
+                    self.logger.logD(self, "Selected best location based on region: \(regionBasedLocation)")
+                    return
+                }
             }
-        }
-        if let timeZoneBasedLocation = selectServerByTimeZone(servers: servers) {
-            logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation)")
+            if let timeZoneBasedLocation = self.selectServerByTimeZone(servers: servers) {
+                self.logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation)")
+            }
         }
     }
 

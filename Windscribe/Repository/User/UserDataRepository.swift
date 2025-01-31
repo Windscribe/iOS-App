@@ -42,9 +42,7 @@ class UserDataRepositoryImpl: UserDataRepository {
     func prepareUserData() -> Single<Void> {
         logger.logD(UserDataRepositoryImpl.self, "Getting server list.")
         return serverRepository.getUpdatedServers().flatMap { servers in
-            DispatchQueue.main.async {
-                self.latencyRepository.pickBestLocation(servers: servers)
-            }
+            self.latencyRepository.pickBestLocation()
             self.logger.logD(UserDataRepositoryImpl.self, "Getting iKEv2 credentials.")
             return self.credentialsRepository.getUpdatedIKEv2Crendentials().catchAndReturn(nil)
         }.flatMap { _ in
