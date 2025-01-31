@@ -105,7 +105,8 @@ class Repository: Assembly {
                                   wgRepository: r.resolve(WireguardConfigRepository.self)!,
                                   wgCredentials: r.resolve(WgCredentials.self)!,
                                   preferences: r.resolve(Preferences.self)!,
-                                  locationsManager: r.resolve(LocationsManagerType.self)!)
+                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  ipRepository: r.resolve(IPRepository.self)!)
         }.inObjectScope(.userScope)
     }
 }

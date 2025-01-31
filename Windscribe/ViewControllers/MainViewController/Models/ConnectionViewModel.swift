@@ -99,6 +99,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let wifiManager: WifiManager
     let securedNetwork: SecuredNetworkRepository
     let credentialsRepository: CredentialsRepository
+    let ipRepository: IPRepository
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -114,7 +115,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          connectivity: Connectivity,
          wifiManager: WifiManager,
          securedNetwork: SecuredNetworkRepository,
-         credentialsRepository: CredentialsRepository) {
+         credentialsRepository: CredentialsRepository,
+         ipRepository: IPRepository) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -124,6 +126,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.connectivity = connectivity
         self.wifiManager = wifiManager
         self.securedNetwork = securedNetwork
+        self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
 
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
@@ -177,6 +180,16 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
                 self.currentNetwork = network
             }, onError: { _ in }).disposed(by: disposeBag)
+
+        ipRepository.currentIp
+            .filter{$0?.isInvalidated == false}
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { myIp in
+                guard let myIp = myIp else {
+                    return
+                }
+                self.ipAddressSubject.onNext(myIp.userIp)
+            }).disposed(by: disposeBag)
     }
 }
 
@@ -311,9 +324,8 @@ extension ConnectionViewModel {
         if !gettingIpAddress && !isConnecting() {
             logger.logD(self, "Displaying local IP Address.")
             gettingIpAddress = true
-            apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+            ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
                 self.gettingIpAddress = false
-                self.ipAddressSubject.onNext(myIp.userIp)
             }, onFailure: { _ in
                 self.gettingIpAddress = false
             }).disposed(by: disposeBag)
@@ -368,7 +380,6 @@ extension ConnectionViewModel {
                     case let .validated(ip):
                         self.logger.logD(self, "Enable connection validate IP: \(ip)")
                         self.updateState(with: .connected)
-                        self.ipAddressSubject.onNext(ip)
                         self.checkPreferencesForTriggers()
                     case let .vpn(status):
                         self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
@@ -433,9 +444,8 @@ extension ConnectionViewModel {
     private func updateToLocalIPAddress() {
         logger.logD(self, "Displaying local IP Address.")
         gettingIpAddress = true
-        apiManager.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+        ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
             self.gettingIpAddress = false
-            self.ipAddressSubject.onNext(myIp.userIp)
         }, onFailure: { _ in
             self.gettingIpAddress = false
         }).disposed(by: disposeBag)
