@@ -52,7 +52,6 @@ class ConnectedDNSView: UIStackView {
     private let cancelButton = ImageButton()
     private let acceptButton = ImageButton()
     private let valueTextField = UITextField()
-    private let valueLabel = UILabel()
     private let dnsValueView = UIStackView()
     private let mainWrapperView = UIView()
     private let editWrapperView = UIView()
@@ -68,8 +67,7 @@ class ConnectedDNSView: UIStackView {
 
     init(optionType: ConnectedDNSType,
          dnsValue: String,
-         isDarkMode: BehaviorSubject<Bool>)
-    {
+         isDarkMode: BehaviorSubject<Bool>) {
         self.optionType = optionType
         self.dnsValue = dnsValue
         self.isDarkMode = isDarkMode
@@ -91,13 +89,6 @@ class ConnectedDNSView: UIStackView {
     }
 
     private func setup() {
-        // Value Label
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.font = UIFont.text(size: 16)
-        valueLabel.text = dnsValue
-        valueLabel.layer.opacity = 0.5
-        valueLabel.makeHeightAnchor(equalTo: 30)
-
         // Text Field
         valueTextField.translatesAutoresizingMaskIntoConstraints = false
         valueTextField.font = UIFont.text(size: 16)
@@ -115,8 +106,10 @@ class ConnectedDNSView: UIStackView {
         dnsValueView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         dnsValueView.isLayoutMarginsRelativeArrangement = true
         dnsValueView.addArrangedSubviews([
-            valueLabel, editContainerView,
-            valueTextField, cancelContainerView, acceptContainerView,
+            valueTextField,
+            editContainerView,
+            cancelContainerView,
+            acceptContainerView
         ])
         dnsValueView.addSubview(editWrapperView)
         dnsValueView.makeHeightAnchor(equalTo: 48)
@@ -184,9 +177,8 @@ class ConnectedDNSView: UIStackView {
 
         // Edit Mode binding
         isEditMode.subscribe {
-            self.valueLabel.isHidden = $0
             self.editContainerView.isHidden = $0
-            self.valueTextField.isHidden = !$0
+            self.valueTextField.isHidden = false
             self.cancelContainerView.isHidden = !$0
             self.acceptContainerView.isHidden = !$0
         }.disposed(by: disposeBag)
@@ -194,11 +186,22 @@ class ConnectedDNSView: UIStackView {
         valueTextField.rx.controlEvent(.editingDidEndOnExit).subscribe { _ in
             self.submitValue()
         }.disposed(by: disposeBag)
+        valueTextField.rx.controlEvent(.editingDidBegin).subscribe { _ in
+            self.isEditMode.onNext(true)
+            self.delegate?.connectedDNSViewDidStartEditing()
+        }.disposed(by: disposeBag)
+    }
+
+    func shouldHideTextfield(isEditMode: Bool) -> Bool {
+        if dnsValue.isEmpty {
+            return false
+        }
+        return !isEditMode
     }
 
     func updateConnectedDNSValue(value: String) {
         dnsValue = value
-        valueLabel.text = dnsValue
+        valueTextField.text = dnsValue
         isEditMode.onNext(false)
         valueTextField.resignFirstResponder()
     }
