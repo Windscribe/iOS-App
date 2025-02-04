@@ -303,7 +303,7 @@ class MainViewController: PreferredFocusedViewController {
             self.setConnectionLabelValuesForSelectedNode()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.ipAddressSubject.subscribe(onNext: {
+        vpnConnectionViewModel.ipAddressSubject.bind(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
