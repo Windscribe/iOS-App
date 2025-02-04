@@ -28,7 +28,7 @@ class AboutViewModel: AboutViewModelType {
     init(themeManager: ThemeManager, preference: Preferences) {
         self.themeManager = themeManager
         preferences = preference
-        items = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses]
+        items = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses, .changelog]
         load()
     }
 

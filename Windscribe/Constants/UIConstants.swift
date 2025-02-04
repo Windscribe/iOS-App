@@ -1593,6 +1593,7 @@ enum Links {
     static let learMoreAboutRobert = "features/robert"
     static let softwareLicenses = "https://windscribe.com/terms/oss"
     static let support = "windscribe.com/support"
+    static let changelog = base + "changelog/ios"
 }
 
 enum Help {
@@ -1701,6 +1702,10 @@ enum About {
 
     static var softwareLicenses: String {
         return "Software Licenses".localize()
+    }
+
+    static var changelog: String {
+        return "Changelog".localize()
     }
 }
 

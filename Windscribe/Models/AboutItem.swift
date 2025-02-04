@@ -16,6 +16,7 @@ enum AboutItemCell {
     case blog
     case jobs
     case softwareLicenses
+    case changelog
 
     var title: String {
         switch self {
@@ -33,6 +34,8 @@ enum AboutItemCell {
             return About.softwareLicenses
         case .jobs:
             return About.jobs
+        case .changelog:
+            return About.changelog
         }
     }
 
@@ -52,6 +55,8 @@ enum AboutItemCell {
             return Links.jobs
         case .softwareLicenses:
             return Links.softwareLicenses
+        case .changelog:
+            return Links.changelog
         }
     }
 }
