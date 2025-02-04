@@ -82,7 +82,7 @@ extension AboutViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = AboutViewCell.dequeueReusableCell(in: tableView, for: indexPath)
         let data = viewModel.celldata(at: indexPath)
-        cell.cellDivider.isHidden = data == .softwareLicenses ? true : false
+        cell.cellDivider.isHidden = data == .changelog ? true : false
         cell.aboutItem = data
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
         return cell
