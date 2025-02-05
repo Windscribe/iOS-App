@@ -343,12 +343,12 @@ extension ConnectionViewModel {
     }
 
     private func enableConnection(connectionType: ConnectionType) {
-
-        guard !WifiManager.shared.isConnectedWifiTrusted() else {
-            trustedNetworkPopupTrigger.onNext(())
-            return
-        }
         Task { @MainActor in
+            guard !WifiManager.shared.isConnectedWifiTrusted() else {
+                trustedNetworkPopupTrigger.onNext(())
+                return
+            }
+
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
