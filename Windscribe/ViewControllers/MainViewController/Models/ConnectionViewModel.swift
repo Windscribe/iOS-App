@@ -100,11 +100,13 @@ class ConnectionViewModel: ConnectionViewModelType {
     let securedNetwork: SecuredNetworkRepository
     let credentialsRepository: CredentialsRepository
     let ipRepository: IPRepository
+    let localDB: LocalDatabase
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
     private var loadLatencyValuesOnDisconnect = false
     private var currentNetwork: AppNetwork?
+    private var currentWifiAutoSecured = false
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -116,7 +118,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          wifiManager: WifiManager,
          securedNetwork: SecuredNetworkRepository,
          credentialsRepository: CredentialsRepository,
-         ipRepository: IPRepository) {
+         ipRepository: IPRepository,
+         localDB: LocalDatabase) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -128,6 +131,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.securedNetwork = securedNetwork
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
+        self.localDB = localDB
 
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
 
@@ -182,13 +186,26 @@ class ConnectionViewModel: ConnectionViewModelType {
             }, onError: { _ in }).disposed(by: disposeBag)
 
         ipRepository.currentIp
-            .filter{$0?.isInvalidated == false}
+            .filter{ $0?.isInvalidated == false }
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { myIp in
                 guard let myIp = myIp else {
                     return
                 }
                 self.ipAddressSubject.onNext(myIp.userIp)
+            }).disposed(by: disposeBag)
+
+        localDB.getNetworks()
+            .subscribe(onNext: {
+                guard let matchingNetwork = $0.first(where: { network in
+                    network.isInvalidated == false && network.SSID == self.currentNetwork?.name
+                }) else { return }
+                if matchingNetwork.status == true, !self.currentWifiAutoSecured {
+                    if self.isConnected() || self.isConnecting() {
+                        self.disableConnection()
+                    }
+                }
+                self.currentWifiAutoSecured = matchingNetwork.status
             }).disposed(by: disposeBag)
     }
 }
@@ -298,7 +315,7 @@ extension ConnectionViewModel {
                 return
             }
 
-            let network = vpnManager.localDB.getNetworksSync()?.filter {$0.SSID == connectivity.getNetwork().name}.first
+            let network = localDB.getNetworksSync()?.filter {$0.SSID == connectivity.getNetwork().name}.first
             if .connected == info.status {
                 wifiManager.saveCurrentWifiNetworks()
                 if network?.preferredProtocol == info.selectedProtocol  && network?.preferredPort == info.selectedPort {

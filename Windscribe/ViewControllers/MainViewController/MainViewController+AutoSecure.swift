@@ -93,7 +93,6 @@ extension MainViewController {
     @objc func trustNetworkSwitchTapped() {
         guard let network = displayingNetwork else { return }
         viewModel.updateTrustNetworkSwitch(network: network, status: !trustNetworkSwitch.status)
-        viewModel.updatePreferredProtocolSwitch(network: network, preferredProtocolStatus: false)
         updateNetworkOptions()
     }
 

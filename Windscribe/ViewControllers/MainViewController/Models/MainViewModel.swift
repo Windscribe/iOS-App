@@ -431,7 +431,7 @@ class MainViewModel: MainViewModelType {
         localDatabase.updateWifiNetwork(network: network,
                                         properties: [
                                             Fields.WifiNetwork.preferredProtocol: proto,
-                                            Fields.WifiNetwork.preferredPort: port,
+                                            Fields.WifiNetwork.preferredPort: port
                                         ])
     }
 
@@ -440,7 +440,11 @@ class MainViewModel: MainViewModelType {
     }
 
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool) {
-        localDatabase.updateTrustNetwork(network: network, status: status)
+            localDatabase.updateWifiNetwork(network: network,
+                                            properties: [
+                                                Fields.WifiNetwork.trustStatus: !status,
+                                                Fields.WifiNetwork.preferredProtocolStatus: false
+                                            ])
     }
 
     func loadServerList() {
