@@ -10,6 +10,6 @@ import Foundation
 import RxSwift
 
 protocol IPRepository {
-    var currentIp: ReplaySubject<MyIP?> { get }
+    var ipState: BehaviorSubject<IPState?> { get }
     func getIp() -> Single<MyIP>
 }

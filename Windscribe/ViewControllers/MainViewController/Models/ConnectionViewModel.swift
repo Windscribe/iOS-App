@@ -185,14 +185,17 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.currentNetwork = network
             }, onError: { _ in }).disposed(by: disposeBag)
 
-        ipRepository.currentIp
-            .filter{ $0?.isInvalidated == false }
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { myIp in
-                guard let myIp = myIp else {
-                    return
+        ipRepository.ipState
+            .compactMap { state -> MyIP? in
+                guard case .available(let ip) = state, !ip.isInvalidated else {
+                    return nil
                 }
-                self.ipAddressSubject.onNext(myIp.userIp)
+                return ip
+            }
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: { myip in
+                self.ipAddressSubject.onNext(myip.userIp)
             }).disposed(by: disposeBag)
 
         localDB.getNetworks()

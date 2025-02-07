@@ -61,6 +61,9 @@ extension VPNManager {
                 case .connected:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connected")
                     untrustedOneTimeOnlySSID = ""
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
+                        self?.updateUserIpIfRequired()
+                    }
                 case .disconnecting:
                     self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnecting")
                 case .disconnected:
@@ -72,6 +75,27 @@ extension VPNManager {
                     return
                 }
             })
+        }
+    }
+
+    /// If connected state was not pushed as result of app connecting (On demand mode) and we have non VPN IP,
+    /// push an update.
+    private func updateUserIpIfRequired() {
+        // State changed from background or on demand mode.
+        guard let ipState = try? ipRepository.ipState.value(), configurationState == .initial else {
+            return
+        }
+        if ipState == .updating {
+            return
+        }
+        switch ipState {
+        case .available(let ip):
+            // Ip is available but its a NON VPN IP.
+            if !ip.isInvalidated && !ip.isOurIp {
+                logger.logI(self, "Updating non VPN IP after connection update from on demand mode.")
+                ipRepository.getIp().subscribe().disposed(by: disposeBag)
+            }
+        default: ()
         }
     }
 }
