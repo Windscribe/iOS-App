@@ -57,6 +57,7 @@ class VPNManager: VPNManagerProtocol {
     var connectionTaskPublisher: AnyCancellable?
 
     lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
+    lazy var ipRepository: IPRepository =  Assembler.resolve(IPRepository.self)
     lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
     lazy var protocolManager: ProtocolManagerType =  Assembler.resolve(ProtocolManagerType.self)
 
