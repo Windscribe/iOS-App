@@ -33,7 +33,7 @@ class WifiManager {
     private var connectedSecuredNetwork: WifiNetwork?
     private var autoSecureNewNetworks = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
     private var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
-    private var securedNetworks = BehaviorSubject<[WifiNetwork]>(value: [])
+    private var securedNetworksStatus = BehaviorSubject<[[String: Bool]]>(value: [])
     private var observingNetworks = false
     private var initialNetworkFetch = true
 
@@ -53,12 +53,12 @@ class WifiManager {
     }
 
     func isConnectedWifiTrusted() -> Bool {
-        let results = try? securedNetworks.value()
-        let SSIDs = results?.filter { $0.status == true }.map { $0.SSID }
-        guard let connectedNetwork = connectivity.getWifiSSID() else {
+        guard let results = try? securedNetworksStatus.value(),
+              let connectedNetwork = connectivity.getWifiSSID() else {
             return false
         }
-        return SSIDs?.contains(connectedNetwork) ?? false
+        let trustedSSIDs = results.flatMap { $0.filter { $0.value }.keys }
+        return trustedSSIDs.contains(connectedNetwork)
     }
 
     func saveCurrentWifiNetworks() {
@@ -109,7 +109,7 @@ class WifiManager {
             networks.allSatisfy { !$0.isInvalidated }
         }
         .subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
-            self.securedNetworks.onNext(networks)
+            self.securedNetworksStatus.onNext(networks.map{[$0.SSID: $0.status]})
             guard !networks.isEmpty else {
                 self.connectedSecuredNetwork = nil
                 return
