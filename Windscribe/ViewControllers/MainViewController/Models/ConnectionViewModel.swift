@@ -397,8 +397,8 @@ extension ConnectionViewModel {
                     switch state {
                     case let .update(message):
                         self.logger.logD(self, "Enable connection had an update: \(message)")
-                    case let .validated(ip):
-                        self.logger.logD(self, "Enable connection validate IP: \(ip)")
+                    case .validated:
+                        self.logger.logD(self, "Enable connection validate")
                         self.updateState(with: .connected)
                         self.checkPreferencesForTriggers()
                     case let .vpn(status):

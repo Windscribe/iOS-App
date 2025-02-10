@@ -11,7 +11,7 @@ import NetworkExtension
 import Swinject
 
 enum State {
-    case update(String), vpn(NEVPNStatus), validating, validated(String)
+    case update(String), vpn(NEVPNStatus), validating, validated
 }
 
 extension ConfigurationsManager {
@@ -109,14 +109,14 @@ extension ConfigurationsManager {
                         }
                         Task {
                             do {
-                                let userIp = try await self.testConnectivityWithRetries(nextManager: nextManager) {
+                                try await self.testConnectivityWithRetries(nextManager: nextManager) {
                                     return isCancelled
                                 }
                                 if isCancelled {
                                     progressPublisher.send(.update("Task cancelled"))
                                 }
-                                progressPublisher.send(.update("Connectivity test successful, IP: \(userIp)"))
-                                progressPublisher.send(.validated(userIp))
+                                progressPublisher.send(.update("Connectivity test successful"))
+                                progressPublisher.send(.validated)
                                 progressPublisher.send(completion: .finished)
 
                                 self.preferences.increaseConnectionCount()
@@ -205,12 +205,12 @@ extension ConfigurationsManager {
     }
 
     /// Test VPN connection for network connectivity.
-    private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws -> String {
-        try await Task.sleep(nanoseconds :  delayBetweenConnectivityAttempts)
+    private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws {
+        try await Task.sleep(nanoseconds:  delayBetweenConnectivityAttempts)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                let userIp = try await ipRepository.getIp().value.userIp
-                return userIp
+                _ = try await ipRepository.getIp().value
+                return
             } catch {
                 if checkIsTaskCancelled() {
                     throw VPNConfigurationErrors.connectivityTestFailed
