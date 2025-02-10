@@ -157,6 +157,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
             self?.layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
             if self?.viewModel.type == .fail {
                 self?.headerLabel.text = self?.viewModel.failHeaderString
+                self?.subHeaderLabel.text = self?.viewModel.failMessage
                 self?.sendDebugLogButton.isHidden = false
                 self?.setPreferredButton.isHidden = true
             } else {
