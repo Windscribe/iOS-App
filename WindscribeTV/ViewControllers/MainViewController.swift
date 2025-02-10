@@ -310,7 +310,11 @@ class MainViewController: PreferredFocusedViewController {
         vpnConnectionViewModel.connectedState.subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
-
+        
+        vpnConnectionViewModel.showPrivacyTrigger.subscribe(onNext: {
+            self.showPrivacyConfirmationPopup()
+        }).disposed(by: disposeBag)
+        
         latencyViewModel.loadAllServerLatency(
             onAllServerCompletion: {
                 self.configureBestLocation()
@@ -523,7 +527,6 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     private func showPrivacyConfirmationPopup() {
-
         if !viewModel.isPrivacyPopupAccepted() {
             router?.routeTo(to: .privacyView(completionHandler: {
                 self.enableVPNConnection()
@@ -543,8 +546,7 @@ class MainViewController: PreferredFocusedViewController {
 
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel)
-    {
+                                   group: GroupModel) {
         if let premiumOnly = group.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
             if premiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
