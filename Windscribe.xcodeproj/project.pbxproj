@@ -6295,7 +6295,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/scapix/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -6359,7 +6359,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -6385,7 +6385,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -6397,7 +6397,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Windscribe/Environments/Plists/Development.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6434,7 +6434,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -6451,7 +6451,7 @@
 					"DEBUG=1",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Windscribe/Environments/Plists/Staging.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6492,7 +6492,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6526,7 +6526,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6563,7 +6563,7 @@
 					"COCOAPODS=1",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6602,7 +6602,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6640,7 +6640,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6671,7 +6671,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6703,7 +6703,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6743,7 +6743,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -6974,7 +6974,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "\"HeaderPath/scapix/1.0.36/source\"";
 				"HEADER_SEARCH_PATHS[arch=*]" = "\"HeaderPath/scapix/1.0.36/source\"";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "";
@@ -7000,7 +7000,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 13;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -7011,7 +7011,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Windscribe/Environments/Plists/Production.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7051,7 +7051,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = WindscribeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7084,7 +7084,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7122,7 +7122,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = SiriIntents/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -7153,7 +7153,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				INFOPLIST_FILE = WireGuardTunnel/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
