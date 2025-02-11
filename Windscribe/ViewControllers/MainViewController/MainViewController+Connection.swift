@@ -51,9 +51,12 @@ extension MainViewController {
     }
 
     func showSecureIPAddressState(ipAddress: String) {
-        UIView.animate(withDuration: 0.25) { [weak self] in
-            guard let self = self else { return }
-            self.yourIPValueLabel.text = ipAddress.formatIpAddress().maxLength(length: 15)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let label = self.yourIPValueLabel else { return }
+            let formattedIP = ipAddress.formatIpAddress().maxLength(length: 15)
+            UIView.animate(withDuration: 0.25) {
+                label.text = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
+            }
         }
     }
 

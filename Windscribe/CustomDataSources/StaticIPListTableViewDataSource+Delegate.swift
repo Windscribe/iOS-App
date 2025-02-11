@@ -28,16 +28,16 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
     var viewModel: MainViewModelType
     let disposeBag = DisposeBag()
     lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
-    var label: UILabel
+    var label: UILabel?
 
     init(staticIPs: [StaticIPModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
-        label = UILabel()
         super.init()
+        label = UILabel()
         scrollViewDelegate = self
         self.staticIPs = staticIPs
         languageManager.activelanguage.subscribe(onNext: { [self] _ in
-            label.text = TextsAsset.noStaticIPs
+            label?.text = TextsAsset.noStaticIPs
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
@@ -79,13 +79,15 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
     func showEmptyView(tableView: UITableView) {
         let emptyView = UIView(frame: tableView.bounds)
         label = UILabel(frame: CGRect(x: 0, y: emptyView.frame.midY - 42, width: emptyView.frame.width, height: 32))
-        label.textAlignment = .center
-        label.font = UIFont.text(size: 19)
-        label.text = TextsAsset.noStaticIPs
+        label?.textAlignment = .center
+        label?.font = UIFont.text(size: 19)
+        label?.text = TextsAsset.noStaticIPs
         let isDarkMode = (try? viewModel.isDarkMode.value()) ?? true
-        label.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        label.layer.opacity = 0.4
-        emptyView.addSubview(label)
+        label?.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+        label?.layer.opacity = 0.4
+        if let label = label {
+            emptyView.addSubview(label)
+        }
         tableView.backgroundView = emptyView
     }
 

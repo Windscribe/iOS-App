@@ -115,9 +115,12 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     func loadStaticIpLatency() -> Single<[PingData]> {
         createLatencyTask(from: getStaticPingAndHosts())
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
+            .observe(on: MainScheduler.instance)
+            .do(onSuccess: { _ in
+                DispatchQueue.main.async {
+                    self.latency.onNext(self.database.getAllPingData())
+                }
+            })
     }
 
     func loadCustomConfigLatency() -> Completable {

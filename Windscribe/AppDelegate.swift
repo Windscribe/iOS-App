@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
 
-    private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
 
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 

@@ -382,7 +382,7 @@ class MainViewModel: MainViewModelType {
         logger.logD(MainViewController.self, "Checking for unread notifications.")
         DispatchQueue.main.async {
             guard let readNotices = self.localDatabase.getReadNotices(), let notices = self.retrieveNotifications(), let notice = notices.first, let noticeId = notice.id, let noticePopup = notice.popup else { return }
-            let readNoticeIds = Set(readNotices.map { $0.id })
+            let readNoticeIds = Set(readNotices.filter{ $0.isInvalidated == false }.map { $0.id })
             let noticeIds = Set(notices.compactMap { $0.id })
 
             if noticePopup && !readNoticeIds.contains(noticeId) {
@@ -403,6 +403,9 @@ class MainViewModel: MainViewModelType {
 
     func retrieveNotifications() -> [NoticeModel]? {
         guard let notices = try? notices.value() else { return nil }
+        if notices.filter({$0.isInvalidated}).count > 0 {
+            return nil
+        }
         let noticeModels = Array(notices.compactMap { $0.getModel() }.reversed().sorted(by: { $0.id! > $1.id! }).prefix(5))
         return noticeModels
     }

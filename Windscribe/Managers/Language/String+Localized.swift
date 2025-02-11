@@ -11,13 +11,16 @@ import Swinject
 
 extension String {
     func localize(comment: String = "") -> String {
-        let languageCode = Assembler.resolve(LanguageManagerV2.self).getCurrentLanguage().rawValue
-        guard let bundle = Bundle.main.path(forResource: languageCode,
-                                            ofType: "lproj")
-        else {
-            return NSLocalizedString(self, comment: comment)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
+            let languageCode = appDelegate.languageManager.getCurrentLanguage().rawValue
+            guard let bundle = Bundle.main.path(forResource: languageCode,
+                                                ofType: "lproj")
+            else {
+                return NSLocalizedString(self, comment: comment)
+            }
+            let langBundle = Bundle(path: bundle)
+            return NSLocalizedString(self, tableName: nil, bundle: langBundle!, comment: comment)
         }
-        let langBundle = Bundle(path: bundle)
-        return NSLocalizedString(self, tableName: nil, bundle: langBundle!, comment: comment)
+        return self
     }
 }
