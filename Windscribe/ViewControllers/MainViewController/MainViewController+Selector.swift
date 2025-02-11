@@ -103,10 +103,10 @@ extension MainViewController {
     }
 
     func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
-        if network?.isInvalidated == true {
-            return
-        }
         DispatchQueue.main.async {
+            if network?.isInvalidated == true {
+                return
+            }
             guard let protoPort = protoPort else {
                 self.setPreferredProtocolBadgeVisibility(hidden: true)
                 return

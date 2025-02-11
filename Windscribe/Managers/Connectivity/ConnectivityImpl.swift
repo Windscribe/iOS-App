@@ -75,13 +75,15 @@ class ConnectivityImpl: Connectivity {
                 isVPN: self.isVPN(path: path)
             )
             if lastEvent != appNetwork {
-                logger.logD(self,  appNetwork.description)
-                self.network.onNext(appNetwork)
-                if !emergencyConnect.isConnected() {
-                    WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
+                DispatchQueue.main.async {
+                    self.logger.logD(self,  appNetwork.description)
+                    self.network.onNext(appNetwork)
+                    if !self.emergencyConnect.isConnected() {
+                        WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
+                    }
+                    WSNet.instance().setConnectivityState(appNetwork.status == .connected)
+                    NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
                 }
-                WSNet.instance().setConnectivityState(appNetwork.status == .connected)
-                NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
             }
             lastEvent = appNetwork
         }

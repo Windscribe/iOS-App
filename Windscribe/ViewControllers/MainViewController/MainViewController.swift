@@ -359,7 +359,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func reloadServerList() {
         let results = (try? viewModel.serverList.value()) ?? []
-        if results.count == 0 { return }
+        if results.count == 0, results.map({$0.isInvalidated}).count > 0 { return }
 
         if let oldSession = viewModel.oldSession,
            let newSession = sessionManager.session {

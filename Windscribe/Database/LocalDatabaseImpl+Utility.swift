@@ -110,7 +110,8 @@ extension LocalDatabaseImpl {
                 return !changeset.deleted.isEmpty || !changeset.inserted.isEmpty || !changeset.updated.isEmpty
             }
             .map { results, _ in
-                Array(results)
+                guard !results.isInvalidated else { return [] }
+                return Array(results)
             }
             .catch { _ in
                 Observable.just((try? Realm().objects(T.self).toArray()) ?? [])

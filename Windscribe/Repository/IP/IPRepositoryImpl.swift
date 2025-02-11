@@ -31,6 +31,8 @@ class IPRepositoryImpl: IPRepository {
     /// Loads the last known IP from the local database
     private func load() {
         localDatabase.getIp()
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] data in
                 if let data = data {
                     self?.updateState(.available(data))

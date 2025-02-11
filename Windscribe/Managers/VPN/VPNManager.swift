@@ -236,7 +236,12 @@ struct VPNConnectionInfo: CustomStringConvertible {
     var killSwitch: Bool
     var onDemand: Bool
     var description: String {
-        "Protocol: \(selectedProtocol) Port: \(selectedPort) Status: \(status) Server: \(server ?? "") KillSwitch: \(killSwitch) OnDemand: \(onDemand)"
+        "Protocol: \(selectedProtocol) " +
+        "Port: \(selectedPort) " +
+        "Status: \(status.rawValue) " +
+        "Server: \(server ?? "N/A") " +
+        "KillSwitch: \(killSwitch) " +
+        "OnDemand: \(onDemand)"
     }
 }
 
