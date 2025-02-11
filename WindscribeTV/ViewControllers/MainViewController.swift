@@ -310,11 +310,11 @@ class MainViewController: PreferredFocusedViewController {
         vpnConnectionViewModel.connectedState.subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
-        
+
         vpnConnectionViewModel.showPrivacyTrigger.subscribe(onNext: {
             self.showPrivacyConfirmationPopup()
         }).disposed(by: disposeBag)
-        
+
         latencyViewModel.loadAllServerLatency(
             onAllServerCompletion: {
                 self.configureBestLocation()
