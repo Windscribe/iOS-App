@@ -12,6 +12,7 @@ import Realm
 import RxSwift
 import Swinject
 import RealmSwift
+import Combine
 
 class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
@@ -27,6 +28,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
     private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
+    private var cancellables = Set<AnyCancellable>()
 
     init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManagerType) {
         self.pingManager = pingManager
@@ -211,36 +213,44 @@ class LatencyRepositoryImpl: LatencyRepository {
         return minLatencyPingData?.ip
     }
 
-    /// Returns single task built from list of ip and hosts.
     private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
-        let concurrentQueue = DispatchQueue(label: "com.windscribe.latencyTask", qos: .userInitiated, attributes: .concurrent)
-        let semaphore = DispatchSemaphore(value: 30)
-        var results: [PingData] = []
-        let resultLock = NSLock()
-        let group = DispatchGroup()
-        for (ip, host) in from {
-            group.enter()
-            semaphore.wait()
-            concurrentQueue.async {
-                self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
-                    let pingData = PingData(ip: ip, latency: -1)
-                    resultLock.lock()
-                    if success {
-                        pingData.latency = Int(time)
-                        self.database.addPingData(pingData: pingData)
+        let maxConcurrentTasks = 30
+        return Single.create { single in
+            let pingPublishers = from.map { (ip, host) in
+                Future<PingData, Never> { promise in
+                    var hasDeliveredResult = false
+                    let timeoutCancellable = Just(PingData(ip: ip, latency: -1))
+                        .delay(for: .seconds(1), scheduler: DispatchQueue.global(qos: .userInitiated))
+                        .sink {
+                            if !hasDeliveredResult {
+                                hasDeliveredResult = true
+                                promise(.success($0))
+                            }
+                        }
+                    self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
+                        if !hasDeliveredResult {
+                            hasDeliveredResult = true
+                            timeoutCancellable.cancel() // Cancel timeout if we get a response
+                            let pingData = PingData(ip: ip, latency: success ? Int(time) : -1)
+                            if success {
+                                self.database.addPingData(pingData: pingData)
+                            }
+                            promise(.success(pingData))
+                        }
                     }
-                    results.append(pingData)
-                    resultLock.unlock()
-                    semaphore.signal()
-                    group.leave()
                 }
             }
-        }
-        return Single<[PingData]>.create { single in
-            group.notify(queue: .main) {
-                single(.success(results))
+            let cancellable = pingPublishers
+                .publisher
+                .flatMap(maxPublishers: .max(maxConcurrentTasks)) { $0 }
+                .collect()
+                .sink(receiveCompletion: { _ in }, receiveValue: { results in
+                    single(.success(results))
+                })
+            self.cancellables.insert(cancellable)
+            return Disposables.create {
+                self.cancellables.removeAll()
             }
-            return Disposables.create()
         }
     }
 
