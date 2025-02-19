@@ -20,7 +20,7 @@ func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T? {
     }
 }
 
-func mapToAPIError(error: String?) -> Error {
+func mapToAPIError(error: String?) -> Errors {
     if let error = error,
        let errorData = error.data(using: .utf8),
        let jsonResponse = try? JSONSerialization.jsonObject(with: errorData, options: .allowFragments),
