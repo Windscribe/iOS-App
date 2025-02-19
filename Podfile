@@ -1,6 +1,6 @@
 is_tvos = false
 target_platform = is_tvos ? :tvos : :ios
-platform_version = is_tvos ? '17.0' : '12.0'
+platform_version = is_tvos ? '17.0' : '15.0'
 # Core app dependecies.
 def core
   pod 'CocoaLumberjack/Swift', '3.8.2'
@@ -19,7 +19,7 @@ def realm
 end
 # Main App container dependencies.
 target 'Windscribe' do
-  platform :ios, '12.0'
+  platform :ios, '15.0'
   use_frameworks!
   pod 'IQKeyboardManagerSwift', '6.5.0'
   pod 'ExpyTableView', '1.1'
@@ -31,7 +31,7 @@ target 'Windscribe' do
 end
 # Apps tests.
 target 'WindscribeTests' do
-  platform :ios, '12.0'
+  platform :ios, '15.0'
   inherit! :search_paths
   use_frameworks!
   pod 'MockingbirdFramework', '~> 0.20'
@@ -57,7 +57,7 @@ target 'PacketTunnel' do
 end
 # Home widget extension
 target 'HomeWidgetExtension' do
-  platform :ios, '12.0'
+  platform :ios, '15.0'
   pod 'SimpleKeychain', '~> 1.0'
   use_frameworks!
   pod 'SimpleKeychain', '~> 1.0'
@@ -65,7 +65,7 @@ target 'HomeWidgetExtension' do
 end
 # SiriIntents extension.
 target 'SiriIntents' do
- platform :ios, '12.0'
+ platform :ios, '15.0'
   use_frameworks!
   pod 'SimpleKeychain', '~> 1.0'
   core
@@ -83,7 +83,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
     end
   end
 end
