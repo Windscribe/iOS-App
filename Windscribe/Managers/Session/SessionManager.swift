@@ -60,7 +60,8 @@ class SessionManager: SessionManagerV2 {
                     self?.logger.logD("SessionManager", "Session updated for \(session.username)")
                     self?.sessionFetchInProgress = false
                 }, onFailure: { [weak self] error in
-                    if case Errors.sessionIsInvalid = error {
+                    if let errors = error as? Errors,
+                       errors == .sessionIsInvalid {
                         self?.logoutUser()
                     } else {
                         self?.logger.logD("SessionManager", "Failed to update error")

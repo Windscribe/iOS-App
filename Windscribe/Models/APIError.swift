@@ -19,7 +19,7 @@ struct APIError: Equatable {
         errorMessage = data[APIParameters.Errors.errorMessage] as? String
     }
 
-    func resolve() -> Error? {
+    func resolve() -> Errors? {
         switch errorCode {
         case 501, 502:
             return Errors.validationFailure
