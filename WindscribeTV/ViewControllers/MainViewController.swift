@@ -53,7 +53,6 @@ class MainViewController: PreferredFocusedViewController {
     let disposeBag = DisposeBag()
     var logger: FileLogger!
     var isFromServer: Bool = false
-    var bestLocation: BestLocationModel?
     lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
     private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
 
@@ -72,6 +71,9 @@ class MainViewController: PreferredFocusedViewController {
         logger.logD(self, "Main view will appear")
         sessionManager.keepSessionUpdated()
         super.viewWillAppear(animated)
+        myPreferredFocusedView = connectionButton
+        setNeedsFocusUpdate()
+        updateFocusIfNeeded()
     }
 
     @objc func appEnteredForeground() {
@@ -80,6 +82,8 @@ class MainViewController: PreferredFocusedViewController {
 
     private func setupUI() {
         myPreferredFocusedView = connectionButton
+        setNeedsFocusUpdate()
+        updateFocusIfNeeded()
         view.backgroundColor = UIColor.clear
         backgroundView.backgroundColor = UIColor.clear
 
@@ -176,7 +180,7 @@ class MainViewController: PreferredFocusedViewController {
                     myPreferredFocusedView = connectionButton
                     setNeedsFocusUpdate()
                     updateFocusIfNeeded()
-                    router.routeTo(to: .serverList(bestLocation: bestLocation), from: self)
+                    router.routeTo(to: .serverList(bestLocation: vpnConnectionViewModel.getBestLocation()), from: self)
                 }
             } else if press.type == .upArrow {
                 if connectionButton.isFocused {
@@ -237,13 +241,18 @@ class MainViewController: PreferredFocusedViewController {
 
     @objc private func handleSwipeDown(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if connectionButton.isFocused {
+            if preferredFocusedView == notificationButton || preferredFocusedView == settingsButton || settingsButton.isFocused || preferredFocusedView == helpButton {
                 myPreferredFocusedView = connectionButton
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
+            } else if connectionButton.isFocused {
                 DispatchQueue.main.async {
-                    self.router.routeTo(to: .serverList(bestLocation: self.bestLocation), from: self)
+                    self.router.routeTo(to: .serverList(bestLocation: self.vpnConnectionViewModel.getBestLocation()), from: self)
                 }
+            } else {
+                myPreferredFocusedView = connectionButton
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -299,20 +308,32 @@ class MainViewController: PreferredFocusedViewController {
         vpnConnectionViewModel.displayLocalIPAddress()
         setFlagImages()
 
-        vpnConnectionViewModel.selectedLocationUpdatedSubject.subscribe(onNext: {
+        vpnConnectionViewModel.selectedLocationUpdatedSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.setConnectionLabelValuesForSelectedNode()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.ipAddressSubject.bind(onNext: {
+        vpnConnectionViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.connectedState.subscribe(onNext: {
+        vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showPrivacyTrigger.subscribe(onNext: {
+        vpnConnectionViewModel.showPrivacyTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showPrivacyConfirmationPopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showUpgradeRequiredTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showOutOfDataPopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showAuthFailureTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showAuthFailurePopup()
+        }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showNoConnectionAlertTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.displayInternetConnectionLostAlert()
         }).disposed(by: disposeBag)
 
         latencyViewModel.loadAllServerLatency(
@@ -345,11 +366,6 @@ class MainViewController: PreferredFocusedViewController {
             .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] session, _ in
                 self?.setUpgradeButton(session: session)
             }).disposed(by: disposeBag)
-
-        Observable.combineLatest(viewModel.wifiNetwork,
-                                 vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
-                self.refreshProtocol(from: network, with: protocolPort)
-        }.disposed(by: disposeBag)
     }
 
     func localisation() {
@@ -415,12 +431,14 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func setUpgradeButton(session: Session?) {
-        if let session = session {
-            if session.isUserPro {
-                upgradeButton.isHidden = true
-            } else {
-                upgradeButton.isHidden = false
-                upgradeButton.dataLeft.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
+        DispatchQueue.main.async {
+            if let session = session {
+                if session.isUserPro {
+                    self.upgradeButton.isHidden = true
+                } else {
+                    self.upgradeButton.isHidden = false
+                    self.upgradeButton.dataLeft.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
+                }
             }
         }
     }
@@ -539,6 +557,22 @@ class MainViewController: PreferredFocusedViewController {
             viewController: self,
             title: TextsAsset.ConnectingAlert.title,
             message: TextsAsset.ConnectingAlert.message,
+            buttonText: TextsAsset.okay
+        )
+    }
+
+    private func showAuthFailurePopup() {
+        AlertManager.shared.showSimpleAlert(viewController: self,
+                                            title: TextsAsset.AuthFailure.title,
+                                            message: TextsAsset.AuthFailure.message,
+                                            buttonText: TextsAsset.okay)
+    }
+
+    private func displayInternetConnectionLostAlert() {
+        AlertManager.shared.showSimpleAlert(
+            viewController: self,
+            title: TextsAsset.NoInternetAlert.title,
+            message: TextsAsset.NoInternetAlert.message,
             buttonText: TextsAsset.okay
         )
     }
