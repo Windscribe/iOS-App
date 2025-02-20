@@ -52,9 +52,7 @@ class SubmitTicketViewController: WSNavigationViewController {
         IQKeyboardManager.shared.keyboardDistanceFromTextField = 150
     }
 
-    func showAlertDialog(title: String,
-                         message: String)
-    {
+    func showAlertDialog(title: String, message: String) {
         DispatchQueue.main.async { [weak self] in
             self?.hideProgressView()
             self?.viewModel.alertManager.showSimpleAlert(viewController: self, title: title, message: message, buttonText: "Ok")

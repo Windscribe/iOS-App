@@ -121,8 +121,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
 
                 if let configurationFileURL = Bundle.main.url(forResource: "cert", withExtension: "file"),
                    let configurationFileContent = try? Data(contentsOf: configurationFileURL),
-                   !containsCert
-                {
+                   !containsCert {
                     data.append(configurationFileContent)
                 }
 

@@ -82,13 +82,13 @@ class StaticIPListFooterView: WSView {
             addConstraints([
                 NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10),
                 NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10),
-                NSLayoutConstraint(item: deviceNameLabel, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10),
+                NSLayoutConstraint(item: deviceNameLabel, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10)
             ])
         } else {
             addConstraints([
                 NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0),
                 NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-                NSLayoutConstraint(item: deviceNameLabel, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0),
+                NSLayoutConstraint(item: deviceNameLabel, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0)
             ])
         }
 
@@ -96,20 +96,20 @@ class StaticIPListFooterView: WSView {
             NSLayoutConstraint(item: actionButton, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0)
         ])
         addConstraints([
             NSLayoutConstraint(item: deviceNameLabel, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: deviceNameLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: deviceNameLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
         addConstraints([
             NSLayoutConstraint(item: label, attribute: .right, relatedBy: .equal, toItem: iconView, attribute: .left, multiplier: 1.0, constant: -10),
-            NSLayoutConstraint(item: label, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: label, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
         addConstraints([
             NSLayoutConstraint(item: iconView, attribute: .right, relatedBy: .equal, toItem: actionButton, attribute: .right, multiplier: 1.0, constant: -12),
             NSLayoutConstraint(item: iconView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
     }
 }

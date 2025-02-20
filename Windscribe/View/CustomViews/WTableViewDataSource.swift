@@ -22,17 +22,14 @@ class WTableViewDataSource: NSObject, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if UIDevice.isIphone6orLess() {
             if canRefresh &&
-                (scrollView.contentOffset.y < -scrollView.frame.height / 3.5) &&
-                scrollView.isDecelerating &&
-                beginDragging == 0.0
-            {
+           (scrollView.contentOffset.y < -scrollView.frame.height / 3.5) &&
+            scrollView.isDecelerating &&
+            beginDragging == 0.0 {
                 canRefresh = false
                 scrollViewDelegate?.handleRefresh()
             }
 
-            if !canRefresh &&
-                (scrollView.contentOffset.y >= 0)
-            {
+            if !canRefresh && (scrollView.contentOffset.y >= 0) {
                 canRefresh = true
             }
         }
@@ -53,10 +50,7 @@ protocol WExpyTableViewDataSourceDelegate: AnyObject {
 class WExpyTableViewDataSource: WTableViewDataSource, ExpyTableViewDelegate {
     weak var expyDelegate: WExpyTableViewDataSourceDelegate?
 
-    func tableView(_ tableView: ExpyTableView,
-                   expyState state: ExpyState,
-                   changeForSection section: Int)
-    {
+    func tableView(_ tableView: ExpyTableView, expyState state: ExpyState, changeForSection section: Int) {
         expyDelegate?.changeForSection(tableView: tableView, state: state, section: section)
     }
 }

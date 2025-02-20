@@ -67,18 +67,11 @@ class LocationManagingViewModel: NSObject, LocationManagingViewModelType {
     }
 
     func getStatus() -> CLAuthorizationStatus {
-        if #available(iOS 15.0, *) {
-            return locationManager.authorizationStatus
-        } else {
-            return CLLocationManager.authorizationStatus()
-        }
+        return locationManager.authorizationStatus
     }
 
     func getAccuracyIsOff() -> Bool {
-        if #available(iOS 14.0, *) {
-            return locationManager.accuracyAuthorization == .reducedAccuracy
-        }
-        return true
+        return locationManager.accuracyAuthorization == .reducedAccuracy
     }
 }
 
@@ -87,13 +80,11 @@ extension LocationManagingViewModel: CLLocationManagerDelegate {
 
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         connectivity.refreshNetwork()
-        if #available(iOS 15.0, *) {
-            if manager.authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse {
-                locationCallback?()
-                // The SSID can only be otained after there are location permissions
-                // We need to update the networks now
-                connectivityManager.saveCurrentWifiNetworks()
-            }
+        if manager.authorizationStatus == CLAuthorizationStatus.authorizedWhenInUse {
+            locationCallback?()
+            // The SSID can only be otained after there are location permissions
+            // We need to update the networks now
+            connectivityManager.saveCurrentWifiNetworks()
         }
     }
 

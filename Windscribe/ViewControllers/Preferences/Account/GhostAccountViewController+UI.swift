@@ -37,18 +37,18 @@ extension GhostAccountViewController {
         view.addConstraints([
             NSLayoutConstraint(item: infoLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: infoLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 50),
-            NSLayoutConstraint(item: infoLabel as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -50),
+            NSLayoutConstraint(item: infoLabel as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -50)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: signUpButton as Any, attribute: .bottom, relatedBy: .equal, toItem: loginButton, attribute: .top, multiplier: 1.0, constant: -24),
             NSLayoutConstraint(item: signUpButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
             NSLayoutConstraint(item: signUpButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 28),
-            NSLayoutConstraint(item: signUpButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28),
+            NSLayoutConstraint(item: signUpButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: loginButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 24),
             NSLayoutConstraint(item: loginButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -24),
-            NSLayoutConstraint(item: loginButton as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: loginButton as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24)
         ])
     }
 }

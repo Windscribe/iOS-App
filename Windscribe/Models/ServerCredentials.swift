@@ -28,9 +28,7 @@ import RealmSwift
         self.init(username: username, password: password)
     }
 
-    convenience init(username: String,
-                     password: String)
-    {
+    convenience init(username: String, password: String) {
         self.init()
         self.username = username
         self.password = password
@@ -41,9 +39,7 @@ struct StaticIPCredentialsModel {
     let username: String?
     let password: String?
 
-    init(username: String,
-         password: String)
-    {
+    init(username: String, password: String) {
         self.username = username
         self.password = password
     }
@@ -53,9 +49,7 @@ struct StaticIPCredentialsModel {
     dynamic var username: String = ""
     dynamic var password: String = ""
 
-    convenience init(username: String,
-                     password: String)
-    {
+    convenience init(username: String, password: String) {
         self.init()
         self.username = username
         self.password = password

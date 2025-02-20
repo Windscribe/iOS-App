@@ -83,7 +83,7 @@ class SwitchHeaderView: UIStackView {
         addArrangedSubviews([
             iconImage,
             titleLabel,
-            UIView(),
+            UIView()
         ])
         spacing = 16
         axis = .horizontal

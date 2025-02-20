@@ -9,16 +9,12 @@
 import Foundation
 import StoreKit
 
-extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
-    SKPaymentTransactionObserver
-{
+extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransactionObserver {
     func request(_: SKRequest, didFailWithError _: Error) {
         delegate?.failedToLoadProducts()
     }
 
-    func productsRequest(_: SKProductsRequest,
-                         didReceive response: SKProductsResponse)
-    {
+    func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
         let products = response.products
         guard products.isEmpty == false else {
             delegate?.failedToLoadProducts()
@@ -35,9 +31,7 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
         delegate?.didFetchAvailableProducts(windscribeProducts: iapProducts)
     }
 
-    private func formatterCurrency(number: NSNumber,
-                                   locale: Locale) -> String?
-    {
+    private func formatterCurrency(number: NSNumber, locale: Locale) -> String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale
@@ -53,7 +47,10 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate,
         let group = DispatchGroup()
         for transaction in transactions {
             group.enter()
-            apiManager.verifyApplePayment(appleID: transaction.transactionID, appleData: transaction.appleData, appleSIG: transaction.signature).subscribe(onSuccess: { _ in
+            apiManager.verifyApplePayment(
+                appleID: transaction.transactionID,
+                appleData: transaction.appleData,
+                appleSIG: transaction.signature).subscribe(onSuccess: { _ in
                 defer { group.leave() }
                 if firstVerifiedTransaction == nil {
                     firstVerifiedTransaction = transaction

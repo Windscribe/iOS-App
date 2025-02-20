@@ -10,9 +10,7 @@ struct PreferenceItem {
     let icon: String!
     let title: String!
 
-    init(icon: String,
-         title: String)
-    {
+    init(icon: String, title: String) {
         self.icon = icon
         self.title = title
     }

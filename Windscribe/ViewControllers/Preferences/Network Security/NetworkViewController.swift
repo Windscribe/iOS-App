@@ -107,7 +107,7 @@ class NetworkViewController: WSNavigationViewController {
         layoutView.stackView.addArrangedSubviews([
             secureView,
             preferredProtocolView,
-            forgetNetworkView,
+            forgetNetworkView
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(inset: 16))
         layoutView.stackView.spacing = 16

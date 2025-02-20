@@ -67,7 +67,7 @@ class DropdownButton: UIView {
                                toItem: nil,
                                attribute: .height,
                                multiplier: 1.0,
-                               constant: 20),
+                               constant: 20)
         ])
 
         addConstraints([
@@ -98,7 +98,7 @@ class DropdownButton: UIView {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 16),
+                               constant: 16)
         ])
         bindViews()
     }

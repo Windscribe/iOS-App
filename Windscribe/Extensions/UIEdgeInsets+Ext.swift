@@ -23,12 +23,9 @@ public extension UIEdgeInsets {
         right = inset
     }
 
-    // swiftlint:disable shorthand_operator
     static func += (lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
         lhs = lhs + rhs
     }
-
-    // swiftlint:enable shorthand_operator
 
     static func -= (lhs: inout UIEdgeInsets, rhs: UIEdgeInsets) {
         lhs = lhs - rhs

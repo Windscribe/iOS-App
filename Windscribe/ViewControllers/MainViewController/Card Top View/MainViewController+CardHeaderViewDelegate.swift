@@ -25,7 +25,7 @@ extension MainViewController {
             cardHeaderContainerView.topAnchor.constraint(equalTo: cardView.topAnchor),
             cardHeaderContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             cardHeaderContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            cardHeaderContainerView.heightAnchor.constraint(equalToConstant: 50),
+            cardHeaderContainerView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

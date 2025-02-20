@@ -38,8 +38,7 @@ import RealmSwift
                      allowLan: Bool,
                      autoSecureNewNetworks: Bool,
                      hapticFeedback: Bool,
-                     showServerHealth: Bool)
-    {
+                     showServerHealth: Bool) {
         self.init()
         self.connectionMode = connectionMode
         self.language = language

@@ -43,7 +43,7 @@ extension ConfigurationsManager {
 
     /// Gets the protocol type from the stored configuration based on location ID.
     func getProtoFromConfig(locationId: String) -> String? {
-        if let _ = try? wgConfigFromCustomConfig(locationID: locationId) {
+        if (try? wgConfigFromCustomConfig(locationID: locationId)) != nil {
             return TextsAsset.wireGuard
         }
         if let config = try? openConfigFromCustomConfig(locationID: locationId) {

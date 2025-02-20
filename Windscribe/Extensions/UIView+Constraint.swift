@@ -10,8 +10,7 @@ public extension UIView {
                                 bottom: NSLayoutYAxisAnchor? = nil,
                                 right: NSLayoutXAxisAnchor? = nil,
                                 width: CGFloat? = nil,
-                                height: CGFloat? = nil)
-    {
+                                height: CGFloat? = nil) {
         anchor(top: top,
                left: left,
                bottom: bottom,
@@ -29,8 +28,7 @@ public extension UIView {
                                bottom: NSLayoutYAxisAnchor? = nil,
                                right: NSLayoutXAxisAnchor? = nil,
                                width: CGFloat? = nil,
-                               height: CGFloat? = nil)
-    {
+                               height: CGFloat? = nil) {
         anchor(top: top,
                left: left,
                bottom: bottom,
@@ -53,8 +51,7 @@ public extension UIView {
                 paddingBottom: CGFloat = 0,
                 paddingRight: CGFloat = 0,
                 width: CGFloat? = nil,
-                height: CGFloat? = nil)
-    {
+                height: CGFloat? = nil) {
         translatesAutoresizingMaskIntoConstraints = false
 
         if let top = top {
@@ -92,8 +89,7 @@ public extension UIView {
     }
 
     func centerY(inView view: UIView, leftAnchor: NSLayoutXAxisAnchor? = nil,
-                 paddingLeft: CGFloat = 0, constant: CGFloat = 0)
-    {
+                 paddingLeft: CGFloat = 0, constant: CGFloat = 0) {
         translatesAutoresizingMaskIntoConstraints = false
         centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant).isActive = true
 
@@ -114,8 +110,7 @@ public extension UIView {
                 bottom: NSLayoutYAxisAnchor?,
                 trailing: NSLayoutXAxisAnchor?,
                 padding: UIEdgeInsets = .zero,
-                size: CGSize = .zero) -> AnchoredConstraints
-    {
+                size: CGSize = .zero) -> AnchoredConstraints {
         translatesAutoresizingMaskIntoConstraints = false
         var anchoredConstraints = AnchoredConstraints()
 

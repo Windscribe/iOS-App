@@ -95,9 +95,7 @@ class UpgradeViewController: WSNavigationViewController {
         }
     }
 
-    override func viewWillTransition(to size: CGSize,
-                                     with coordinator: UIViewControllerTransitionCoordinator)
-    {
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         addAutoLayoutConstraints()
     }
@@ -342,7 +340,7 @@ extension UpgradeViewController: InAppPurchaseManagerDelegate {
             self.endLoading()
             if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
                 self.popupRouter.routeTo(to: .errorPopup(message: Errors.noNetwork.description, dismissAction: {}), from: self)
-            } else if let _ = error as? URLError {
+            } else error as? URLError  != nil {
                 self.popupRouter.routeTo(to: .errorPopup(message: Errors.unknownError.description, dismissAction: {}), from: self)
             } else {
                 self.popupRouter.routeTo(to: .errorPopup(message: TextsAsset.PurchaseRestoredAlert.error, dismissAction: {}), from: self)

@@ -109,7 +109,7 @@ class LoginViewController: PreferredFocusedViewController {
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
         passwordTextField.isSecureTextEntry = true
         loginTitle.font = UIFont.bold(size: 35)
@@ -185,18 +185,22 @@ class LoginViewController: PreferredFocusedViewController {
         }
         DispatchQueue.main.async {
             if context.nextFocusedView == self.usernameTextField {
-                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.username,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
-                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.username,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
             if context.nextFocusedView == self.passwordTextField {
-                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.password,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
-                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.password,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
         }
 

@@ -212,9 +212,7 @@ extension PreferencesMainViewController: ConfirmEmailViewControllerDelegate {
 }
 
 extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_: UITableView,
-                   numberOfRowsInSection _: Int) -> Int
-    {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         if viewModel?.isUserGhost() ?? false {
             return 7
         }
@@ -228,9 +226,7 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
         return 48
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: preferencesCellReuseIdentifier, for: indexPath) as?
             PreferencesTableViewCell
         else {

@@ -51,7 +51,7 @@ class WelcomeViewController: UIViewController {
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
 
         loginButton.hasBorder = true

@@ -62,7 +62,7 @@ class LeaderboardTableViewCell: UITableViewCell {
             cellDivider.bottomAnchor.constraint(equalTo: bottomAnchor),
             cellDivider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             cellDivider.trailingAnchor.constraint(equalTo: trailingAnchor),
-            cellDivider.heightAnchor.constraint(equalToConstant: 2),
+            cellDivider.heightAnchor.constraint(equalToConstant: 2)
         ])
     }
 

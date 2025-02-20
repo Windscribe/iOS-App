@@ -19,7 +19,7 @@ class PopupRouter: BaseRouter, RootRouter {
         case .outOfDataAccountPopup:
             vc = Assembler.resolve(OutOfDataAccountPopupViewController.self)
         case .proPlanExpireddAccountPopup:
-            vc = Assembler.resolve(ProPlanExpireddAccountPopupViewController.self)
+            vc = Assembler.resolve(ProPlanExpiredPopupViewController.self)
         case let .errorPopup(message, dismissAction):
             let errorVC = Assembler.resolve(ErrorPopupViewController.self)
             errorVC.viewModel.setDismissAction(with: dismissAction)

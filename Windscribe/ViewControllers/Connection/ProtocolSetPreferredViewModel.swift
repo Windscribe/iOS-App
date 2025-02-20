@@ -29,7 +29,7 @@ protocol ProtocolSetPreferredViewModelV2 {
 
     func submitLog()
     func getSubHeader() -> String
-    func getProtocolName() async  -> String
+    func getProtocolName() async -> String
 }
 
 class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {

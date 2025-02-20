@@ -57,14 +57,15 @@ class ServerRepositoryImpl: ServerRepository {
         DispatchQueue.main.async {
             for favourite in self.localDatabase.getFavNodeSync() {
                 for server in serverList {
-                    for group in server.groups {
-                        if String(group.id) == favourite.groupId {
-                            if let lastSelectedNode = self.getLastSelectedNode(group: group, server: server, favourite: favourite) {
-                                let favNode = FavNode(node: lastSelectedNode,
-                                                      group: group,
-                                                      server: server)
-                                self.localDatabase.saveFavNode(favNode: favNode).disposed(by: self.disposeBag)
-                            }
+                    for group in server.groups where String(group.id) == favourite.groupId {
+                        if let lastSelectedNode = self.getLastSelectedNode(
+                                group: group,
+                                server: server,
+                                favourite: favourite) {
+                            let favNode = FavNode(node: lastSelectedNode,
+                                                  group: group,
+                                                  server: server)
+                            self.localDatabase.saveFavNode(favNode: favNode).disposed(by: self.disposeBag)
                         }
                     }
                 }

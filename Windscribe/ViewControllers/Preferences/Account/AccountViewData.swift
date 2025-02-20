@@ -231,9 +231,7 @@ enum AccountSectionItem {
         if session.email.isEmpty {
             return [.username, .emailEmpty]
         }
-        if session.email.isEmpty == false,
-           session.emailStatus == false
-        {
+        if session.email.isEmpty == false, session.emailStatus == false {
             return [.username, .confirmEmail]
         }
         if session.isUserPro {

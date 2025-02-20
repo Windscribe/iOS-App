@@ -39,8 +39,6 @@ class WSTextFieldTv: UITextField {
         tintColor = .clear
         layer.addSublayer(textLayer)
     }
-
-
 }
 
 class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
@@ -130,7 +128,7 @@ class PasswordTextFieldTv: UITextField, UITextFieldDelegate {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 35),
+                               constant: 35)
         ])
     }
 

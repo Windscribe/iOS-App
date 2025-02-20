@@ -63,21 +63,21 @@ struct RateUsPopupView: View {
                     Button(action: {
                         onDismiss?()
                         viewModel.setRateUsActionCompleted()
-                    }) {
+                    }, label: {
                         Text(TextsAsset.RateUs.maybeLater)
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Color.white.opacity(0.5))
-                    }
+                    })
 
                     Spacer()
                     Button(action: {
                         onDismiss?()
                         viewModel.setRateUsActionCompleted()
-                    }) {
+                    }, label: {
                         Text(TextsAsset.RateUs.goAway)
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Color.white.opacity(0.5))
-                    }
+                    })
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

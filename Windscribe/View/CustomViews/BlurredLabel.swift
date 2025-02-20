@@ -76,8 +76,7 @@ class BlurredLabel: UILabel {
                 blurFilter?.setValue(CIImage(cgImage: cgImage), forKey: kCIInputImageKey)
                 let ciContext = CIContext(cgContext: ctx, options: nil)
                 if let blurOutputImage = blurFilter?.outputImage,
-                   let cgImage = ciContext.createCGImage(blurOutputImage, from: blurOutputImage.extent)
-                {
+                   let cgImage = ciContext.createCGImage(blurOutputImage, from: blurOutputImage.extent) {
                     image = cgImage
                 }
             }

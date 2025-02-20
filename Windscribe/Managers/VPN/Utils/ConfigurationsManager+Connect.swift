@@ -75,7 +75,7 @@ extension ConfigurationsManager {
                 self.logger.logD("VPNConfiguration", "Saving configuration.")
                 progressPublisher.send(.update("Saving configuration."))
                 try await self.saveToPreferences(manager: nextManager)
-                cacheTunnelManager(manager:  nextManager)
+                cacheTunnelManager(manager: nextManager)
                 self.logger.logD("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()
@@ -170,7 +170,7 @@ extension ConfigurationsManager {
     private func checkForCustomConfig(config: VPNConfiguration, proto: String, port: String) -> ProtocolPort {
         if let config = config as? OpenVPNConfiguration {
             return ProtocolPort(protocolName: config.proto, portName: proto == TextsAsset.iKEv2 ? "443" : port)
-        } else if let config = config as? WireguardVPNConfiguration {
+        } else if config is WireguardVPNConfiguration {
             return ProtocolPort(protocolName: TextsAsset.wireGuard, portName: proto == TextsAsset.iKEv2 ? "443" : port)
         }
         return ProtocolPort(protocolName: proto, portName: port)
@@ -206,7 +206,7 @@ extension ConfigurationsManager {
 
     /// Test VPN connection for network connectivity.
     private func testConnectivityWithRetries(nextManager: NEVPNManager, checkIsTaskCancelled: () -> Bool) async throws {
-        try await Task.sleep(nanoseconds:  delayBetweenConnectivityAttempts)
+        try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
                 _ = try await ipRepository.getIp().value

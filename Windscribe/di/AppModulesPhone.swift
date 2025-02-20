@@ -394,8 +394,8 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(OutOfDataAccountPopupModelType.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        container.register(ProPlanExpireddAccountPopupViewController.self) { _ in
-            ProPlanExpireddAccountPopupViewController()
+        container.register(ProPlanExpiredPopupViewController.self) { _ in
+            ProPlanExpiredPopupViewController()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ProPlanExpiredAccountPopupModelType.self)
             c.logger = r.resolve(FileLogger.self)
@@ -505,8 +505,8 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(SendDebugLogCompletedViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(LocationPermissionDisclosureViewController.self) { _ in
-            LocationPermissionDisclosureViewController()
+        container.register(LocationPermissionInfoViewController.self) { _ in
+            LocationPermissionInfoViewController()
         }.inObjectScope(.transient)
         container.register(GhostAccountViewController.self) { _ in
             GhostAccountViewController()

@@ -31,8 +31,7 @@ import RealmSwift
                      port: String,
                      preferredProtocol: String,
                      preferredPort: String,
-                     preferredProtocolStatus: Bool = false)
-    {
+                     preferredProtocolStatus: Bool = false) {
         self.init()
         self.SSID = SSID
         self.status = status

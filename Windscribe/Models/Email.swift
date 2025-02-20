@@ -12,9 +12,7 @@ import RealmSwift
 @objcMembers class Email: Object, Decodable {
     dynamic var email: String = ""
 
-    enum CodingKeys: String,
-        CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case data
         case email
     }

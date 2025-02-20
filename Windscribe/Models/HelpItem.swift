@@ -14,11 +14,7 @@ class HelpItem {
     var subTitle: String
     var hideDivider: Bool
 
-    init(icon: String = "",
-         title: String,
-         subTitle: String = "",
-         hideDivider: Bool = false)
-    {
+    init(icon: String = "", title: String, subTitle: String = "", hideDivider: Bool = false) {
         self.icon = icon
         self.title = title
         self.subTitle = subTitle

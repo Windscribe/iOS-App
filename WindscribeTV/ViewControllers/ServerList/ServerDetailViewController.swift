@@ -127,7 +127,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
         tableView.reloadData()
         if let indexPath = focusServerDetailCellPath {
             tableView.scrollToRow(at: indexPath, at: .none, animated: false)
-            if let _ = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
+            if tableView.cellForRow(at: indexPath) is ServerDetailTableViewCell {
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
             }
@@ -137,8 +137,7 @@ extension ServerDetailViewController: ServerListTableViewDelegate {
     /// Bring focus back to last focused cell if required
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         if let indexPath = focusServerDetailCellPath,
-           let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell
-        {
+           let cell = tableView.cellForRow(at: indexPath) as? ServerDetailTableViewCell {
             return [cell.favButton]
         }
         return super.preferredFocusEnvironments

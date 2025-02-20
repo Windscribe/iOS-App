@@ -55,24 +55,24 @@ class IAPInfoSectionCell: UITableViewCell {
             NSLayoutConstraint(item: checkMarkIconView, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: checkMarkIconView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: checkMarkIconView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: checkMarkIconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: checkMarkIconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: titleLabel, attribute: .centerY, relatedBy: .equal, toItem: checkMarkIconView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: titleLabel, attribute: .height, relatedBy: .equal, toItem: self, attribute: .height, multiplier: 1.0, constant: 18),
-            NSLayoutConstraint(item: titleLabel, attribute: .left, relatedBy: .equal, toItem: checkMarkIconView, attribute: .right, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: titleLabel, attribute: .left, relatedBy: .equal, toItem: checkMarkIconView, attribute: .right, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: expandIconView, attribute: .centerY, relatedBy: .equal, toItem: checkMarkIconView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: expandIconView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: expandIconView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: expandIconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: expandIconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: bottomSeperatorView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: bottomSeperatorView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: bottomSeperatorView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: bottomSeperatorView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
+            NSLayoutConstraint(item: bottomSeperatorView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
         ])
     }
 

@@ -65,26 +65,22 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
     func getActionButtonDisplay() {
         if sessionManager.session?.isUserPro == true &&
             sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == false
-        {
+            sessionManager.session?.isUserGhost == false {
             actionDisplay.onNext(.email)
             return
         } else if sessionManager.session?.isUserPro == false &&
             sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == false
-        {
+            sessionManager.session?.isUserGhost == false {
             actionDisplay.onNext(.emailGet10GB)
             return
         } else if sessionManager.session?.isUserPro == false &&
             sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == true
-        {
+            sessionManager.session?.isUserGhost == true {
             actionDisplay.onNext(.setupAccountAndLogin)
             return
         } else if sessionManager.session?.isUserPro == true &&
             sessionManager.session?.hasUserAddedEmail == false &&
-            sessionManager.session?.isUserGhost == true
-        {
+            sessionManager.session?.isUserGhost == true {
             actionDisplay.onNext(.setupAccount)
             return
         } else if sessionManager.session?.userNeedsToConfirmEmail == true {

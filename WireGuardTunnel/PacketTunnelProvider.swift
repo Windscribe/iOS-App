@@ -120,9 +120,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
                 self.logger.logD(self, "Tunnel interface is \(interfaceName)")
                 #if os(iOS)
-                    if #available(iOSApplicationExtension 14.0, *) {
-                        WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-                    }
+                    WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")     
                 #endif
                 completionHandler(nil)
                 return

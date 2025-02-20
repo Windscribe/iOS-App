@@ -60,7 +60,7 @@ class UpgradePopViewController: UIViewController {
                                                          attributes: [
                                                              .font: UIFont.bold(size: 32),
                                                              .foregroundColor: UIColor.white.withAlphaComponent(0.5),
-                                                             .kern: 4,
+                                                             .kern: 4
                                                          ])
     }
 

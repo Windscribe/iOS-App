@@ -45,7 +45,7 @@ public class WSFillLayoutView: UIView {
 
         rootStackView.addArrangedSubviews([
             scrollView,
-            bottomStackView,
+            bottomStackView
         ])
         scrollView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
 

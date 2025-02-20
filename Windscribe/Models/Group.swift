@@ -37,8 +37,7 @@ struct GroupModel {
          pingIp: String?,
          linkSpeed: String?,
          health: Int?,
-         pingHost: String?)
-    {
+         pingHost: String?) {
         self.id = id
         self.city = city
         self.nick = nick
@@ -63,10 +62,8 @@ struct GroupModel {
         guard let nodes = nodes else {
             return false
         }
-        for node in nodes {
-            if !node.forceDisconnect {
-                return true
-            }
+        for node in nodes where !node.forceDisconnect {
+            return true
         }
         return false
     }

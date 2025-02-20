@@ -34,18 +34,12 @@ extension URLRequest {
         print(requestLog)
     }
 
-    func log(data: Data?,
-             response: HTTPURLResponse?,
-             error: Error?)
-    {
+    func log(data: Data?, response: HTTPURLResponse?, error: Error?) {
         log()
         logResponse(data: data, response: response, error: error)
     }
 
-    private func logResponse(data: Data?,
-                             response: HTTPURLResponse?,
-                             error: Error?)
-    {
+    private func logResponse(data: Data?, response: HTTPURLResponse?, error: Error?) {
         let urlString = response?.url?.absoluteString
         let components = NSURLComponents(string: urlString ?? "")
 

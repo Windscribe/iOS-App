@@ -15,7 +15,8 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
 
     var tableView: DynamicSizeTableView!
     var robertFilters: [RobertFilter]?
-    var buttonToggled: Int? = nil
+    var buttonToggled: Int?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Robert View")
@@ -93,21 +94,15 @@ class RobertViewController: WSNavigationViewController, UIScrollViewDelegate {
 }
 
 extension RobertViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_: UITableView,
-                   numberOfRowsInSection _: Int) -> Int
-    {
+    func tableView(_: UITableView,  numberOfRowsInSection _: Int) -> Int {
         return robertFilters?.count ?? 0
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = RobertFilterCell.dequeueReusableCell(in: tableView, for: indexPath)
         cell.setupSubviews(isDarkMode: viewModel.isDarkMode)
         cell.robertFilter = robertFilters?[indexPath.row]

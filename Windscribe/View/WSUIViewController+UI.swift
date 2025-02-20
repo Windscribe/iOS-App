@@ -38,18 +38,18 @@ extension WSUIViewController {
 
         if UIScreen.hasTopNotch {
             view.addConstraints([
-                NSLayoutConstraint(item: getMoreDataView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
+                NSLayoutConstraint(item: getMoreDataView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50)
             ])
         } else {
             view.addConstraints([
-                NSLayoutConstraint(item: getMoreDataLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .bottom, multiplier: 1.0, constant: -8),
+                NSLayoutConstraint(item: getMoreDataLabel as Any, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .bottom, multiplier: 1.0, constant: -8)
             ])
         }
         view.addConstraints([
             NSLayoutConstraint(item: getMoreDataLabel as Any, attribute: .top, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: 8),
             NSLayoutConstraint(item: getMoreDataButton as Any, attribute: .top, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: 8),
             NSLayoutConstraint(item: getMoreDataLabel as Any, attribute: .left, relatedBy: .equal, toItem: getMoreDataView, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: getMoreDataButton as Any, attribute: .right, relatedBy: .equal, toItem: getMoreDataView, attribute: .right, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: getMoreDataButton as Any, attribute: .right, relatedBy: .equal, toItem: getMoreDataView, attribute: .right, multiplier: 1.0, constant: -16)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: getMoreDataView as Any, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0),
@@ -57,7 +57,7 @@ extension WSUIViewController {
             NSLayoutConstraint(item: getMoreDataView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: getMoreDataView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: getMoreDataLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: getMoreDataButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: getMoreDataButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
         ])
     }
 

@@ -31,11 +31,7 @@ class InfoPromptViewModel: InfoPromptViewModelType {
     let actionValue = BehaviorSubject<String>(value: "")
     let title = BehaviorSubject<String>(value: "")
 
-    func setInfo(title: String,
-                 actionValue: String,
-                 justDismissOnAction: Bool,
-                 delegate: InfoPromptViewDelegate?)
-    {
+    func setInfo(title: String, actionValue: String, justDismissOnAction: Bool, delegate: InfoPromptViewDelegate?) {
         self.justDismissOnAction = justDismissOnAction
         self.delegate = delegate
         self.title.onNext(title)

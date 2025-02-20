@@ -17,9 +17,7 @@ class LoginRouter: RootRouter {
             vc.modalPresentationStyle = .fullScreen
             // vc.appJustStarted = true
             // vc.userJustLoggedIn = true
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-               let window = appDelegate.window
-            {
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
                 window.rootViewController?.dismiss(animated: false,
                                                    completion: nil)
                 UIView.transition(with: window,

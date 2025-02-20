@@ -78,7 +78,7 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
             topImage,
             subHeaderLabel,
             contactSupportButton,
-            cancelButton,
+            cancelButton
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
         layoutView.stackView.setCustomSpacing(32, after: topImage)

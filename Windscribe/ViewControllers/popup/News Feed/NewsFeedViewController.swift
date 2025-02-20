@@ -26,9 +26,7 @@ class NewsFeedViewController: WSNavigationViewController {
         logger.logD("NewsFeed", "Displaying Newsfeed View")
         addViews()
         addAutoLayoutConstraints()
-        if #available(iOS 13.0, *) {
-            self.overrideUserInterfaceStyle = .dark
-        }
+        overrideUserInterfaceStyle = .dark
         setupViews()
         bindView()
     }

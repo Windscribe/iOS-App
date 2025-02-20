@@ -73,7 +73,7 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
             headerLabel,
             subHeaderLabel,
             checkStatusButton,
-            cancelButton,
+            cancelButton
         ])
         view.backgroundColor = UIColor.midnight
         view.layer.opacity = 0.97

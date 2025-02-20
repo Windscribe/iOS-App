@@ -185,11 +185,9 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
 
     func openVPNAdapter(_: OpenVPNAdapter, handleEvent event: OpenVPNAdapterEvent, message _: String?) {
         #if os(iOS)
-
-            if #available(iOSApplicationExtension 14.0, *) {
-                WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-            }
+        WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
         #endif
+    
         switch event {
         case .connected:
             if reasserting {
@@ -244,4 +242,4 @@ extension PacketTunnelProvider: OpenVPNAdapterPacketFlow {
     }
 }
 
-extension NEPacketTunnelFlow: OpenVPNAdapterPacketFlow {}
+extension NEPacketTunnelFlow: @retroactive OpenVPNAdapterPacketFlow {}

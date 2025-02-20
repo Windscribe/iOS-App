@@ -32,7 +32,7 @@ extension ViewLogViewController {
             NSLayoutConstraint(item: logView as Any, attribute: .top, relatedBy: .equal, toItem: backButton, attribute: .bottom, multiplier: 1.0, constant: 32),
             NSLayoutConstraint(item: logView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: logView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: logView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
+            NSLayoutConstraint(item: logView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16)
         ])
     }
 

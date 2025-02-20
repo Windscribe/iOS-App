@@ -43,7 +43,7 @@ class UpgradeButton: UIButton {
             divider.widthAnchor.constraint(equalToConstant: 2),
             divider.heightAnchor.constraint(equalToConstant: 50),
             divider.centerXAnchor.constraint(equalTo: centerXAnchor),
-            divider.centerYAnchor.constraint(equalTo: centerYAnchor),
+            divider.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
 
         dataLeft.text = "10 GB LEFT"
@@ -58,7 +58,7 @@ class UpgradeButton: UIButton {
                                            constant: 35),
             dataLeft.rightAnchor.constraint(equalTo: divider.leftAnchor,
                                             constant: -10),
-            dataLeft.centerYAnchor.constraint(equalTo: centerYAnchor),
+            dataLeft.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
 
         upgrade.text = TextsAsset.upgrade.uppercased()
@@ -74,7 +74,7 @@ class UpgradeButton: UIButton {
                                            constant: -10),
             upgrade.leftAnchor.constraint(equalTo: divider.rightAnchor,
                                           constant: 10),
-            upgrade.centerYAnchor.constraint(equalTo: centerYAnchor),
+            upgrade.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
 
         setborder()

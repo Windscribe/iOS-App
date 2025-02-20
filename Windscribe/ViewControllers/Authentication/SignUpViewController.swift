@@ -337,7 +337,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referralTitle,
             referralArrowIcon,
-            UIView(),
+            UIView()
         ])
         stack.isUserInteractionEnabled = true
         stack.spacing = 8
@@ -349,7 +349,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referralTitleWithIcon,
             referral1View,
-            referral2View,
+            referral2View
         ])
         stack.spacing = 4
         stack.axis = .vertical
@@ -359,7 +359,7 @@ class SignUpViewController: WSNavigationViewController {
 
     lazy var referralInfoView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            referralInfoLabel,
+            referralInfoLabel
         ])
         stack.isHidden = true
         stack.axis = .vertical
@@ -371,7 +371,7 @@ class SignUpViewController: WSNavigationViewController {
         let stack = UIStackView(arrangedSubviews: [
             referredIntroView,
             referralUsernameTextfield,
-            referralInfoView,
+            referralInfoView
         ])
         stack.axis = .vertical
         stack.spacing = 12
@@ -457,12 +457,12 @@ class SignUpViewController: WSNavigationViewController {
             passwordView,
             emailView,
             voucherView,
-            viewReferral,
+            viewReferral
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(top: 24, left: 16, bottom: 0, right: 16))
         layoutView.bottomStackView.addArrangedSubviews([
             continueButton,
-            setupLaterButton,
+            setupLaterButton
         ])
         layoutView.bottomStackView.spacing = 24
         layoutView.bottomStackView.setPadding(UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16))

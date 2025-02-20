@@ -9,9 +9,7 @@
 import Foundation
 
 enum LinkProvider {
-    static func getWindscribeLinkWithAutoLogin(path: String,
-                                               tempSession: String) -> String
-    {
+    static func getWindscribeLinkWithAutoLogin(path: String, tempSession: String) -> String {
         return Links.base + path + "?temp_session=\(tempSession)"
     }
 

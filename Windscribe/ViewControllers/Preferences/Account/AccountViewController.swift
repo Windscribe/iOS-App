@@ -27,9 +27,8 @@ class AccountViewController: WSNavigationViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.isScrollEnabled = true
         tableView.separatorStyle = .none
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
-        }
+        tableView.sectionHeaderTopPadding = 0
+
         return tableView
     }()
 
@@ -253,21 +252,27 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
 
         // Add actions to the alert controller
         let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
-            guard let textField = alert.textFields?.first else { return }
+            guard let self, let textField = alert.textFields?.first else { return }
             let code = textField.text ?? ""
             print(code)
-            self?.showLoading()
-            self?.viewModel.verifyVoucherEntered(code: code,
-                                                 success: { [weak self] response in
-                                                     self?.logger.logD(self, "Claimed voucher code: \(code)")
-                                                     self?.endLoading()
-                                                     self?.handleClaimVoucherResponse(response)
-                                                 },
-                                                 failure: { [weak self] msg in
-                                                     self?.logger.logD(self, "claim voucher request failed with error: \(msg)")
-                                                     self?.endLoading()
-                                                     self?.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self!)
-                                                 })
+
+            self.showLoading()
+            self.viewModel.verifyVoucherEntered(
+                code: code,
+                success: { [weak self] response in
+                    guard let self else { return }
+
+                    self.logger.logD(self, "Claimed voucher code: \(code)")
+                    self.endLoading()
+                    self.handleClaimVoucherResponse(response)
+                },
+                failure: { [weak self] msg in
+                    guard let self else { return }
+
+                    self.logger.logD(self, "claim voucher request failed with error: \(msg)")
+                    self.endLoading()
+                    self.router?.routeTo(to: .errorPopup(message: msg, dismissAction: nil), from: self)
+                })
         }
 
         let cancelAction = UIAlertAction(title: TextsAsset.cancel, style: .cancel) { _ in

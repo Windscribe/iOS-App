@@ -22,8 +22,7 @@ protocol ServerListTableViewDelegate: AnyObject {
 class ServerListTableViewDataSource: WExpyTableViewDataSource,
     ExpyTableViewDataSource,
     WExpyTableViewDataSourceDelegate,
-    WTableViewDataSourceDelegate
-{
+    WTableViewDataSourceDelegate {
     var hapticFeedbackCounter = 0
     let disposeBag = DisposeBag()
     var bestLocation: BestLocationModel? {
@@ -75,9 +74,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         return serverSections.count
     }
 
-    func tableView(_: UITableView,
-                   numberOfRowsInSection section: Int) -> Int
-    {
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 && bestLocation != nil { return 1 }
         if serverSections.indices.contains(section) {
             guard let count = serverSections[section].server?.groups?.count else { return 0 }
@@ -87,9 +84,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         }
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell ?? NodeTableViewCell(style: .default, reuseIdentifier: nodeCellReuseIdentifier)
         if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups?.count ?? 0) > indexPath.row - 1) {
             let group = serverSections[indexPath.section].server?.groups?[indexPath.row - 1]
@@ -113,9 +108,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
 
-    func tableView(_ tableView: ExpyTableView,
-                   expandableCellForSection section: Int) -> UITableViewCell
-    {
+    func tableView(_ tableView: ExpyTableView, expandableCellForSection section: Int) -> UITableViewCell {
         if section == 0 && bestLocation != nil {
             let bestLocationCell = tableView.dequeueReusableCell(withIdentifier: bestLocationCellReuseIdentifier)! as? BestLocationCell ?? BestLocationCell(style: .default, reuseIdentifier: bestLocationCellReuseIdentifier)
             bestLocationCell.displayingBestLocation = bestLocation
@@ -135,16 +128,11 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         }
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView,  heightForRowAt _: IndexPath) -> CGFloat {
         return 50
     }
 
-    func changeForSection(tableView: UITableView,
-                          state: ExpyState,
-                          section: Int)
-    {
+    func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {
         guard let cell = tableView.cellForRow(at: IndexPath(item: 0, section: section)) as? ServerSectionCell else { return }
         switch state {
         case .willExpand:

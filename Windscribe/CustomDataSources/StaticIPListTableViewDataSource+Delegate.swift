@@ -18,10 +18,7 @@ protocol StaticIPListTableViewDelegate: AnyObject {
     func tableViewScrolled(toTop: Bool)
 }
 
-class StaticIPListTableViewDataSource: WTableViewDataSource,
-    UITableViewDataSource,
-    WTableViewDataSourceDelegate
-{
+class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
     var staticIPs: [StaticIPModel]?
     weak var delegate: StaticIPListTableViewDelegate?
     var scrollHappened = false
@@ -41,9 +38,7 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection _: Int) -> Int
-    {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
         guard let count = staticIPs?.count else { return 0 }
         if count == 0 {
             delegate?.hideStaticIPRefreshControl()
@@ -55,19 +50,17 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
         return count
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let cell = tableView.dequeueReusableCell(withIdentifier: staticIPCellReuseIdentifier, for: indexPath) as? StaticIPTableViewCell ?? StaticIPTableViewCell(style: .default, reuseIdentifier: staticIPCellReuseIdentifier)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: staticIPCellReuseIdentifier, for: indexPath) as? StaticIPTableViewCell
+            ?? StaticIPTableViewCell(style: .default, reuseIdentifier: staticIPCellReuseIdentifier)
         let staticIP = staticIPs?[indexPath.row]
         cell.displayingStaticIP = staticIP
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
         return cell
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 50
     }
 
@@ -103,9 +96,7 @@ class StaticIPListTableViewDataSource: WTableViewDataSource,
         scrollHappened = true
     }
 
-    func tableView(_: UITableView,
-                   willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath)
-    {
+    func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 && scrollHappened {
             HapticFeedbackGenerator.shared.run(level: .light)
         }

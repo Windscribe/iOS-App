@@ -111,8 +111,7 @@ class ConnectionModeView: UIStackView {
          listProtocolOption: [String],
          currentPort: String,
          listPortOption: [String],
-         isDarkMode: BehaviorSubject<Bool>)
-    {
+         isDarkMode: BehaviorSubject<Bool>) {
         type = .selection
         self.optionMode = optionMode
         self.listOption = listOption
@@ -138,8 +137,7 @@ class ConnectionModeView: UIStackView {
          listProtocolOption: [String],
          currentPort: String,
          listPortOption: [String],
-         isDarkMode: BehaviorSubject<Bool>)
-    {
+         isDarkMode: BehaviorSubject<Bool>) {
         type = .switch
         optionMode = .auto
         listOption = []
@@ -185,7 +183,7 @@ class ConnectionModeView: UIStackView {
         addArrangedSubviews([
             protocolView,
             portView,
-            footer,
+            footer
         ])
         axis = .vertical
         addSubview(mainWrapperView)

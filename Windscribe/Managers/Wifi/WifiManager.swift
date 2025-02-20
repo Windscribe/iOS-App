@@ -108,25 +108,26 @@ class WifiManager {
         .filter { networks, _ in
             networks.allSatisfy { !$0.isInvalidated }
         }
-        .subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
-            self.securedNetworksStatus.onNext(networks.map{[$0.SSID: $0.status]})
-            guard !networks.isEmpty else {
-                self.connectedSecuredNetwork = nil
-                return
-            }
-            if self.initialNetworkFetch {
-                self.setSelectedPreferences()
-            } else {
-                self.updateSelectedPreferences()
-            }
-            self.initialNetworkFetch = false
-            self.connectedSecuredNetwork = networks.filter {
-                !$0.isInvalidated && $0.SSID == network.name
-            }.first
-            if self.connectedSecuredNetwork == nil {
-                guard let networkName = network.name else { return }
-                self.saveNewNetwork(wifiSSID: networkName)
-            }
+        .subscribe(on: MainScheduler.asyncInstance).observe(
+            on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, network) in
+                self.securedNetworksStatus.onNext(networks.map { [$0.SSID: $0.status] })
+                guard !networks.isEmpty else {
+                    self.connectedSecuredNetwork = nil
+                    return
+                }
+                if self.initialNetworkFetch {
+                    self.setSelectedPreferences()
+                } else {
+                    self.updateSelectedPreferences()
+                }
+                self.initialNetworkFetch = false
+                self.connectedSecuredNetwork = networks.filter {
+                    !$0.isInvalidated && $0.SSID == network.name
+                }.first
+                if self.connectedSecuredNetwork == nil {
+                    guard let networkName = network.name else { return }
+                    self.saveNewNetwork(wifiSSID: networkName)
+                }
         }, onError: { e in
             self.logger.logE(self, "Error getting network list. \(e)")
         }, onCompleted: {
@@ -206,7 +207,7 @@ class WifiManager {
                     localDb.updateWifiNetwork(network: network,
                                               properties: [
                                                   Fields.protocolType: defaultProtocol,
-                                                  Fields.port: defaultPort,
+                                                  Fields.port: defaultPort
                                               ])
                     selectedProtocol = defaultProtocol
                     selectedPort = defaultPort

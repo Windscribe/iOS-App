@@ -26,7 +26,7 @@ class AccountSectionView: UIView {
                                                        attributes: [
                                                            .font: UIFont.bold(size: 32),
                                                            .foregroundColor: UIColor.white.withAlphaComponent(0.3),
-                                                           .kern: 4,
+                                                           .kern: 4
                                                        ])
 
         for item in sectionData.items {

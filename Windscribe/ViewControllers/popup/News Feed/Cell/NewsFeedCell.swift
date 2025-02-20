@@ -118,12 +118,12 @@ class NewsFeedCell: UITableViewCell {
         NSLayoutConstraint.activate([
             titleLabel.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor, constant: 0),
             titleLabel.leftAnchor.constraint(equalTo: wrapperView.leftAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: iconView.leftAnchor, constant: -16),
+            titleLabel.rightAnchor.constraint(equalTo: iconView.leftAnchor, constant: -16)
         ])
 
         wrapperView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            wrapperView.heightAnchor.constraint(equalToConstant: 48),
+            wrapperView.heightAnchor.constraint(equalToConstant: 48)
         ])
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -131,7 +131,7 @@ class NewsFeedCell: UITableViewCell {
             iconView.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor),
             iconView.trailingAnchor.constraint(equalTo: wrapperView.trailingAnchor, constant: -16),
             iconView.widthAnchor.constraint(equalToConstant: 16),
-            iconView.heightAnchor.constraint(equalToConstant: 16),
+            iconView.heightAnchor.constraint(equalToConstant: 16)
         ])
 
         readStatusDot.translatesAutoresizingMaskIntoConstraints = false
@@ -139,7 +139,7 @@ class NewsFeedCell: UITableViewCell {
             readStatusDot.centerYAnchor.constraint(equalTo: wrapperView.centerYAnchor),
             readStatusDot.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16 - readStatusDot.frame.width / 2),
             readStatusDot.widthAnchor.constraint(equalToConstant: 8),
-            readStatusDot.heightAnchor.constraint(equalToConstant: 8),
+            readStatusDot.heightAnchor.constraint(equalToConstant: 8)
         ])
 
         // MARK: - Body
@@ -152,7 +152,7 @@ class NewsFeedCell: UITableViewCell {
             backgroundShowView.topAnchor.constraint(equalTo: mainStackView.topAnchor),
             backgroundShowView.leadingAnchor.constraint(equalTo: mainStackView.leadingAnchor, constant: 4),
             backgroundShowView.trailingAnchor.constraint(equalTo: mainStackView.trailingAnchor),
-            backgroundShowView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor),
+            backgroundShowView.bottomAnchor.constraint(equalTo: mainStackView.bottomAnchor)
         ])
 
         actionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -160,7 +160,7 @@ class NewsFeedCell: UITableViewCell {
             actionLabel.topAnchor.constraint(equalTo: actionView.topAnchor),
             actionLabel.leadingAnchor.constraint(equalTo: actionView.leadingAnchor, constant: 16),
             actionLabel.bottomAnchor.constraint(equalTo: actionView.bottomAnchor, constant: -10),
-            actionLabel.heightAnchor.constraint(equalToConstant: 20),
+            actionLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
 
         actionIconView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,7 +170,7 @@ class NewsFeedCell: UITableViewCell {
             actionIconView.centerYAnchor.constraint(equalTo: actionLabel.centerYAnchor),
             actionIconView.widthAnchor.constraint(equalToConstant: 16),
             actionIconView.heightAnchor.constraint(equalToConstant: 16),
-            actionView.heightAnchor.constraint(equalToConstant: 30),
+            actionView.heightAnchor.constraint(equalToConstant: 30)
         ])
 
         textStackView.layoutIfNeeded()

@@ -111,7 +111,7 @@ class GeneralViewController: WSNavigationViewController {
 
     private lazy var versionRow: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            versionLabel, UIView(), currentVersionLabel,
+            versionLabel, UIView(), currentVersionLabel
         ])
         stack.setPadding(UIEdgeInsets(inset: 16))
         stack.axis = .horizontal
@@ -153,12 +153,11 @@ class GeneralViewController: WSNavigationViewController {
         .when(.recognized)
         .subscribe(onNext: { _ in
             self.logger.logD(self, "Tried showing rate dialog manually")
-            if #available(iOS 14.0, *) {
-                let scenes = UIApplication.shared.connectedScenes
-                if let windowScene = scenes.first as? UIWindowScene {
-                    self.logger.logD(self, "Attempting show rate popup.")
-                    SKStoreReviewController.requestReview(in: windowScene)
-                }
+            let scenes = UIApplication.shared.connectedScenes
+            
+            if let windowScene = scenes.first as? UIWindowScene {
+                self.logger.logD(self, "Attempting show rate popup.")
+                SKStoreReviewController.requestReview(in: windowScene)
             }
         })
         .disposed(by: disposeBag)
@@ -179,7 +178,7 @@ class GeneralViewController: WSNavigationViewController {
                 appearanceRow,
                 locationLoadRow,
                 notificationRow,
-                versionRow,
+                versionRow
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
@@ -190,7 +189,7 @@ class GeneralViewController: WSNavigationViewController {
                 locationLoadRow,
                 hapticFeedbackRow,
                 notificationRow,
-                versionRow,
+                versionRow
             ])
         }
 

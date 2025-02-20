@@ -33,7 +33,7 @@ extension ViewLeaderboardViewController {
             tableView.topAnchor.constraint(equalTo: backButton.bottomAnchor, constant: 24),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 }

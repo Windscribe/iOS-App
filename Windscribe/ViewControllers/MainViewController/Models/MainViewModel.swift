@@ -104,7 +104,7 @@ class MainViewModel: MainViewModelType {
     let showNetworkSecurityTrigger: PublishSubject<Void>
     let showNotificationsTrigger: PublishSubject<Void>
     let becameActiveTrigger: PublishSubject<Void>
-    let updateSSIDTrigger = PublishSubject<Void> ()
+    let updateSSIDTrigger = PublishSubject<Void>()
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
@@ -347,7 +347,7 @@ class MainViewModel: MainViewModelType {
     }
 
     func updateCustomConfigLatency() {
-        self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: { } ).disposed(by: self.disposeBag)
+        self.latencyRepo.loadCustomConfigLatency().subscribe(onCompleted: {}).disposed(by: self.disposeBag)
     }
 
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
@@ -382,7 +382,7 @@ class MainViewModel: MainViewModelType {
         logger.logD(MainViewController.self, "Checking for unread notifications.")
         DispatchQueue.main.async {
             guard let readNotices = self.localDatabase.getReadNotices(), let notices = self.retrieveNotifications(), let notice = notices.first, let noticeId = notice.id, let noticePopup = notice.popup else { return }
-            let readNoticeIds = Set(readNotices.filter{ $0.isInvalidated == false }.map { $0.id })
+            let readNoticeIds = Set(readNotices.filter { $0.isInvalidated == false }.map {  $0.id })
             let noticeIds = Set(notices.compactMap { $0.id })
 
             if noticePopup && !readNoticeIds.contains(noticeId) {

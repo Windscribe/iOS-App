@@ -35,9 +35,7 @@ struct WindscribeInAppProduct {
         }
     }
 
-    private func formatterCurrency(number: NSNumber,
-                                   locale: Locale) -> String?
-    {
+    private func formatterCurrency(number: NSNumber, locale: Locale) -> String? {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale

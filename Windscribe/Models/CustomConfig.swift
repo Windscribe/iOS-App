@@ -27,8 +27,7 @@ struct CustomConfigModel: Equatable {
          port: String,
          username: String = "",
          password: String = "",
-         authRequired: Bool = false)
-    {
+         authRequired: Bool = false) {
         self.id = id
         self.name = name
         self.serverAddress = serverAddress
@@ -57,8 +56,7 @@ struct CustomConfigModel: Equatable {
                      port: String,
                      username: String = "",
                      password: String = "",
-                     authRequired: Bool = false)
-    {
+                     authRequired: Bool = false) {
         self.init()
         self.id = id
         self.name = name

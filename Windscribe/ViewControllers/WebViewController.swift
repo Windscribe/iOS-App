@@ -40,9 +40,7 @@ class WebViewController: WSNavigationViewController {
         displayElementsForPrefferedAppearence()
     }
 
-    func createUrlRequest(path: String,
-                          autoLogin: Bool) -> URLRequest?
-    {
+    func createUrlRequest(path: String, autoLogin: Bool) -> URLRequest? {
         let urlPath = Links.base + path
         guard let url = URL(string: urlPath) else { return nil }
         var urlRequest = URLRequest(url: url)

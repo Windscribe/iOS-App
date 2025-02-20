@@ -79,7 +79,7 @@ class BestLocationCell: UITableViewCell {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 32),
+                               constant: 32)
         ])
         addConstraints([
             NSLayoutConstraint(item: serverNameLabel,
@@ -95,7 +95,7 @@ class BestLocationCell: UITableViewCell {
                                toItem: flagIcon,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: 16),
+                               constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: cellDivider,
@@ -125,7 +125,7 @@ class BestLocationCell: UITableViewCell {
                                toItem: self,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: 0),
+                               constant: 0)
         ])
 
         addConstraints([
@@ -156,7 +156,7 @@ class BestLocationCell: UITableViewCell {
                                toItem: self,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: -32),
+                               constant: -32)
         ])
     }
 

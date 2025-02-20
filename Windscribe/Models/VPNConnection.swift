@@ -22,8 +22,7 @@ struct VPNConnectionModel {
          serverAddress: String,
          protocolType: String,
          port: String,
-         createdAt: Date)
-    {
+         createdAt: Date) {
         self.id = id
         self.hostname = hostname
         self.serverAddress = serverAddress
@@ -45,8 +44,7 @@ struct VPNConnectionModel {
                      hostname: String,
                      serverAddress: String,
                      protocolType: String,
-                     port: String)
-    {
+                     port: String) {
         self.init()
         self.id = id
         self.hostname = hostname

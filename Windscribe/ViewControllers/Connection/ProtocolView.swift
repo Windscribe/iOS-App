@@ -59,7 +59,7 @@ class ProtocolView: UIView {
             protocolLabel,
             protocolSeparateLine,
             portLabel,
-            UIView(),
+            UIView()
         ])
         stack.spacing = 8
         return stack
@@ -95,7 +95,7 @@ class ProtocolView: UIView {
         let vw = UIView()
         let stack = UIStackView(arrangedSubviews: [
             connectedLabel,
-            nextInLabel,
+            nextInLabel
         ])
         vw.addSubview(stack)
         stack.fillSuperview()
@@ -161,7 +161,7 @@ class ProtocolView: UIView {
         mainstackView.fillSuperview()
         mainstackView.addArrangedSubviews([
             protocolStack,
-            descriptionLabel,
+            descriptionLabel
         ])
         mainstackView.addSubview(wrapperView)
         wrapperView.fillSuperview()

@@ -10,6 +10,7 @@ import Foundation
 import MobileCoreServices
 import RxSwift
 import UIKit
+import UniformTypeIdentifiers
 
 enum ConfigAlertType {
     case connecting
@@ -55,8 +56,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          localDataBase: LocalDatabase,
          connectivity: Connectivity,
          locationsManager: LocationsManagerType,
-         protocolManager: ProtocolManagerType)
-    {
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.alertManager = alertManager
         self.customConfigRepository = customConfigRepository
@@ -92,8 +92,14 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
     func addCustomConfig() {
         logger.logD(self, "User tapped to Add Custom Config")
 
-        let documentTypes = ["com.windscribe.wireguard.config.quick", "org.openvpn.config", "public.data", String(kUTTypeText)]
-        let filePicker = UIDocumentPickerViewController(documentTypes: documentTypes, in: .import)
+        let documentTypes: [UTType] = [
+            UTType("com.windscribe.wireguard.config.quick") ?? .data,
+            UTType("org.openvpn.config") ?? .data,
+            UTType.data,
+            UTType.text
+        ]
+
+        let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: documentTypes)
         filePicker.delegate = self
         presentDocumentPickerTrigger.onNext(filePicker)
     }

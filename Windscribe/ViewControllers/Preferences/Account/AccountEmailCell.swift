@@ -77,7 +77,7 @@ class AccountEmailCell: UITableViewCell {
 
     private lazy var mainStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            viewEmail, viewDescription, viewConfirm,
+            viewEmail, viewDescription, viewConfirm
         ])
         stack.spacing = 16
         stack.axis = .vertical
@@ -86,7 +86,7 @@ class AccountEmailCell: UITableViewCell {
 
     private lazy var viewEmail: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            iconView, leftLabel, rightButton,
+            iconView, leftLabel, rightButton
         ])
         stack.axis = .horizontal
         stack.spacing = 4
@@ -144,7 +144,7 @@ class AccountEmailCell: UITableViewCell {
     ///
     private lazy var viewConfirm: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            confirmLabel, UIView(), resendEmailButton,
+            confirmLabel, UIView(), resendEmailButton
         ])
         stack.axis = .horizontal
         stack.addSubview(confirmWrapper)

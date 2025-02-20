@@ -59,11 +59,11 @@ class ShakeForDataResultViewModel: ShakeForDataResultViewModelType {
         if isShakeForDataUnlocked {
             completion()
         } else {
-            let unlockAction = UIAlertAction(title: TextsAsset.ShakeForData.leaveAlertUnlock,
-                                             style: .default)
-            { _ in
-                self.preferences.saveUnlockShakeForData(bool: true)
-                completion()
+            let unlockAction = UIAlertAction(
+                title: TextsAsset.ShakeForData.leaveAlertUnlock,
+                style: .default) { [weak self ]_ in
+                    self?.preferences.saveUnlockShakeForData(bool: true)
+                    completion()
             }
             let leaveAction = UIAlertAction(title: TextsAsset.ShakeForData.leaveAlertLeave,
                                             style: .default) { _ in completion() }

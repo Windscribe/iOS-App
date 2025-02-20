@@ -1,5 +1,5 @@
 //
-//  LocationPermissionDisclosureViewController+UI.swift
+//  LocationPermissionInfoViewController+UI.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2021-09-14.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension LocationPermissionDisclosureViewController {
+extension LocationPermissionInfoViewController {
     func addViews() {
         view.backgroundColor = UIColor.clear
 
@@ -93,7 +93,7 @@ extension LocationPermissionDisclosureViewController {
                 multiplier: 1.0,
                 constant: 0
             ),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0)
         ])
         let titleLabelConstraints = [
             NSLayoutConstraint(
@@ -122,7 +122,7 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: 0
-            ),
+            )
         ]
 
         let infoIconConstraints = [
@@ -161,7 +161,7 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .height,
                 multiplier: 1.0,
                 constant: 48
-            ),
+            )
         ]
 
         let descriptionLabelConstraints = [
@@ -191,7 +191,7 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            ),
+            )
         ]
 
         let cancelButtonConstraints = [
@@ -221,7 +221,7 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            ),
+            )
         ]
 
         let actionButtonConstraints = [
@@ -260,7 +260,7 @@ extension LocationPermissionDisclosureViewController {
                 attribute: .right,
                 multiplier: 1.0,
                 constant: -16
-            ),
+            )
         ]
 
         NSLayoutConstraint.activate(infoIconConstraints)

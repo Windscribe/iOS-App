@@ -48,9 +48,7 @@ class FavNodesListViewModel: FavNodesListViewModelType {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
-        if !canAccesstoProLocation() &&
-            favNode.isPremiumOnly ?? false
-        {
+        if !canAccesstoProLocation() && favNode.isPremiumOnly ?? false {
             showUpgradeTrigger.onNext(())
             return
         } else if vpnManager.configurationState == ConfigurationState.initial {

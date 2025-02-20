@@ -94,9 +94,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
             }
             return OpenVPNServerCredentials.self
         } else {
-            if let connection = try? connectionMode.value(),
-               let selectedprotocol = try? selectedProtocol.value()
-            {
+            if let connection = try? connectionMode.value(), let selectedprotocol = try? selectedProtocol.value() {
                 if connection == Fields.Values.manual {
                     if selectedprotocol == TextsAsset.iKEv2 {
                         return IKEv2ServerCredentials.self

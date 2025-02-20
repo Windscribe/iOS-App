@@ -33,7 +33,7 @@ extension MainViewController {
             searchLocationsView.centerYAnchor.constraint(equalTo: cardTopView.centerYAnchor),
             searchLocationsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchLocationsView.heightAnchor.constraint(equalToConstant: 24),
+            searchLocationsView.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
 
@@ -111,7 +111,6 @@ extension MainViewController: SearchCountryViewDelegate {
         }
         return groupNamePrefixMatches + cityPrefixMatches + groupNameContainsMatches + cityContainsMatches
     }
-
 
     private func filterIfContains(group: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
         var cities: [GroupModel] = []

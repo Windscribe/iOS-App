@@ -81,7 +81,7 @@ class LanguageManager: LanguageManagerV2 {
     }
 
     func setAppLanguage() {
-        if let currentLanguage = preference.getLanguageManagerLanguage() {
+        if (preference.getLanguageManagerLanguage()) != nil {
             return
         }
         if currentLanguage != Languages.english {
@@ -93,13 +93,18 @@ class LanguageManager: LanguageManagerV2 {
                 return
             }
         }
-        guard let systemLanguage = Locale.current.languageCode else {
+        let systemLanguage: String?
+        if #available(iOS 16.0, *) {
+            systemLanguage = Locale.current.language.languageCode?.identifier
+        } else {
+            systemLanguage = Locale.current.languageCode
+        }
+
+        guard let systemLanguage = systemLanguage else {
             setLanguage(language: Languages.english)
             return
         }
-        if let language = preference.getAppleLanguage(),
-           language.uppercased() == systemLanguage.uppercased()
-        {
+        if let language = preference.getAppleLanguage(), language.uppercased() == systemLanguage.uppercased() {
             if let language = Languages(rawValue: language.lowercased()) {
                 setLanguage(language: language)
             }

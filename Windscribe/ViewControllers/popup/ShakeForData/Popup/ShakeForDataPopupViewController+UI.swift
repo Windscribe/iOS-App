@@ -126,7 +126,7 @@ extension ShakeForDataPopupViewController {
             viewLeaderboardButton.topAnchor.constraint(equalTo: divider.bottomAnchor, constant: 16),
             viewLeaderboardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
             viewLeaderboardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
-            viewLeaderboardButton.heightAnchor.constraint(equalToConstant: 48),
+            viewLeaderboardButton.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
 }

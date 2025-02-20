@@ -86,31 +86,31 @@ class StaticIPTableViewCell: BaseNodeTableViewCell {
             NSLayoutConstraint(item: serverIcon, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 13),
             NSLayoutConstraint(item: serverIcon, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: serverIcon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: serverIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: serverIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: serverNameLabel, attribute: .centerY, relatedBy: .equal, toItem: serverIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: serverNameLabel, attribute: .left, relatedBy: .equal, toItem: serverIcon, attribute: .right, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: serverNameLabel, attribute: .left, relatedBy: .equal, toItem: serverIcon, attribute: .right, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: ipAddressLabel, attribute: .centerY, relatedBy: .equal, toItem: serverIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: ipAddressLabel, attribute: .right, relatedBy: .equal, toItem: signalBarsIcon, attribute: .left, multiplier: 1.0, constant: -24),
+            NSLayoutConstraint(item: ipAddressLabel, attribute: .right, relatedBy: .equal, toItem: signalBarsIcon, attribute: .left, multiplier: 1.0, constant: -24)
         ])
         addConstraints([
             NSLayoutConstraint(item: latencyBackground as Any, attribute: .centerY, relatedBy: .equal, toItem: ipAddressLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: latencyBackground as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: latencyBackground as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: latencyBackground as Any, attribute: .width, relatedBy: .equal, toItem: latencyLabel, attribute: .width, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: latencyBackground as Any, attribute: .width, relatedBy: .equal, toItem: latencyLabel, attribute: .width, multiplier: 1.0, constant: 0)
         ])
         addConstraints([
             NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: latencyBackground, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: latencyBackground, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: latencyLabel as Any, attribute: .centerX, relatedBy: .equal, toItem: latencyBackground, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
         addConstraints([
             NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .centerY, relatedBy: .equal, toItem: ipAddressLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: signalBarsIcon as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
     }
 

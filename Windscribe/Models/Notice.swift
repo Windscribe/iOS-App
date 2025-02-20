@@ -22,8 +22,7 @@ struct NoticeModel {
          message: String,
          date: Int,
          popup: Bool,
-         action: NoticeAction?)
-    {
+         action: NoticeAction?) {
         self.id = id
         self.title = title
         self.message = message

@@ -47,17 +47,16 @@ class StreamingListTableViewDataSource: WExpyTableViewDataSource, ExpyTableViewD
         return streamingSections.count
     }
 
-    func tableView(_: UITableView,
-                   numberOfRowsInSection section: Int) -> Int
-    {
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let count = streamingSections[section].server?.groups?.count else { return 0 }
         return count + 1
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let cell = tableView.dequeueReusableCell(withIdentifier: nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell ?? NodeTableViewCell(style: .default, reuseIdentifier: nodeCellReuseIdentifier)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
+            ?? NodeTableViewCell(style: .default, reuseIdentifier: nodeCellReuseIdentifier)
+
         let group = streamingSections[indexPath.section].server?.groups?[indexPath.row - 1]
         if let groupId = group?.id {
             cell.favourited = favNodes?.map { $0.groupId }.contains("\(groupId)") ?? false
@@ -68,22 +67,20 @@ class StreamingListTableViewDataSource: WExpyTableViewDataSource, ExpyTableViewD
         return cell
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 50
     }
 
-    func tableView(_: UITableView,
-                   didSelectRowAt indexPath: IndexPath)
-    {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 { return }
         guard let server = streamingSections[indexPath.section].server, let group = server.groups?[indexPath.row - 1] else { return }
         delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
 
     func tableView(_ tableView: ExpyTableView, expandableCellForSection section: Int) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: serverSectionCellReuseIdentifier)! as? ServerSectionCell ?? ServerSectionCell(style: .default, reuseIdentifier: serverSectionCellReuseIdentifier)
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: serverSectionCellReuseIdentifier)! as? ServerSectionCell
+            ?? ServerSectionCell(style: .default, reuseIdentifier: serverSectionCellReuseIdentifier)
         if let expanded = tableView.expandedSections[section] {
             streamingSections[section].collapsed = !expanded
         }

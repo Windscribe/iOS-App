@@ -55,9 +55,9 @@ class EnterCredentialsViewModel: EnterCredentialsViewModelType {
             localDatabase.updateCustomConfigName(customConfigId: customConfigId, name: configTitle)
         }
 
-        guard let id = displayingCustomConfig?.id,
-              let protocolType = displayingCustomConfig?.protocolType,
-              let port = displayingCustomConfig?.port
+        guard displayingCustomConfig?.id != nil,
+              displayingCustomConfig?.protocolType != nil,
+              displayingCustomConfig?.port != nil
         else { return }
 
         if !username.isEmpty {

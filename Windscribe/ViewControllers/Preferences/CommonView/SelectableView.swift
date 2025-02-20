@@ -72,8 +72,7 @@ class SelectableView: UIStackView {
          icon: String?,
          isDarkMode: BehaviorSubject<Bool>,
          subTitle: String? = nil,
-         delegate: SelectableViewDelegate? = nil)
-    {
+         delegate: SelectableViewDelegate? = nil) {
         self.header = header
         self.currentOption = currentOption
         self.listOption = listOption
@@ -101,7 +100,7 @@ class SelectableView: UIStackView {
     private func setup() {
         addArrangedSubviews([
             headerView,
-            footer,
+            footer
         ])
         setPadding(UIEdgeInsets(inset: 2))
         axis = .vertical

@@ -67,28 +67,28 @@ class HelpViewCell: UITableViewCell {
             arrowIcon.centerYAnchor.constraint(equalTo: iconImage.centerYAnchor, constant: 0),
             arrowIcon.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -12),
             arrowIcon.widthAnchor.constraint(equalToConstant: 16),
-            arrowIcon.heightAnchor.constraint(equalToConstant: 16),
+            arrowIcon.heightAnchor.constraint(equalToConstant: 16)
         ]
         let titleLabelContraints = [
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 40),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 40)
         ]
         let iconImageContraints = [
             iconImage.centerYAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             iconImage.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
             iconImage.widthAnchor.constraint(equalToConstant: 16),
-            iconImage.heightAnchor.constraint(equalToConstant: 16),
+            iconImage.heightAnchor.constraint(equalToConstant: 16)
         ]
         let subTitleLabelContraints = [
             subTitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             subTitleLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor),
-            subTitleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -32),
+            subTitleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -32)
         ]
         var cellDividerContraints = [
             cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
             cellDivider.leftAnchor.constraint(equalTo: iconImage.leftAnchor, constant: 8),
             cellDivider.rightAnchor.constraint(equalTo: rightAnchor),
-            cellDivider.heightAnchor.constraint(equalToConstant: 2),
+            cellDivider.heightAnchor.constraint(equalToConstant: 2)
         ]
 
         NSLayoutConstraint.activate(titleLabelContraints)

@@ -33,7 +33,7 @@ protocol ConnectionViewModelType {
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
     var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
-    var reloadLocationsTrigger:  PublishSubject<String> { get }
+    var reloadLocationsTrigger: PublishSubject<String> { get }
 
     var vpnManager: VPNManager { get }
 
@@ -344,7 +344,7 @@ extension ConnectionViewModel {
         if !gettingIpAddress && !isConnecting() {
             logger.logD(self, "Displaying local IP Address.")
             gettingIpAddress = true
-            ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { myIp in
+            ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
                 self.gettingIpAddress = false
             }, onFailure: { _ in
                 self.gettingIpAddress = false
@@ -484,12 +484,8 @@ extension ConnectionViewModel {
             preferences.setServerCredentialTypeKey(typeKey: TextsAsset.openVPN)
         }
 
-#if os(iOS)
-        if #available(iOS 14.0, *) {
-#if arch(arm64) || arch(i386) || arch(x86_64)
-            WidgetCenter.shared.reloadAllTimelines()
-#endif
-        }
+#if os(iOS) && (arch(arm64) || arch(i386) || arch(x86_64))
+        WidgetCenter.shared.reloadAllTimelines()
 #endif
     }
 }

@@ -60,13 +60,14 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
         viewModel.viewToLaunch.bind(onNext: { view in
             switch view {
-                case let .safari(url):
-                    self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
-                    self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
-                case let .payment(promo, pcpid):
-                    self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
-                    self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
-                default: ()
+            case let .safari(url):
+                self.logger.logD("NewsFeed", "Opening url in safari: \(url)")
+                self.alertManager.showSimpleAlert(viewController: self, title: "", message: "No browser found to open URL. Use iOS app instead.", buttonText: TextsAsset.okay)
+
+            case let .payment(promo, pcpid):
+                self.logger.logD("NewsFeed", "Launching payment plans with promo: \(promo)")
+                self.router.routeTo(to: .upgrade(promoCode: promo, pcpID: pcpid), from: self)
+            default: ()
             }
         }).disposed(by: disposeBag)
     }
