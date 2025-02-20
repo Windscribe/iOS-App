@@ -45,7 +45,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
         do {
             let ip = try await getMyIp()
             do {
-                let protocolType = preferences.getActiveManagerKey() ?? "Wireguard"
+                let protocolType = preferences.getActiveManagerKey() ?? "WireGuard"
                 let activeManager = try await getNEVPNManager(for: protocolType)
                 if activeManager.connection.status == NEVPNStatus.connected {
                     let prefs = resolver.getPreferences()
