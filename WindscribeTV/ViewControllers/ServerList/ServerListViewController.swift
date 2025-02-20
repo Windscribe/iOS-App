@@ -138,14 +138,29 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         swipeLeft.direction = .left
         view.addGestureRecognizer(swipeLeft)
 
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+        
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
         swipeUp.direction = .up
         view.addGestureRecognizer(swipeUp)
     }
+    
 
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            if focusedItem is UIButton {
+                optionWasSelected(with: selectionOption)
+            }
+        }
+    }
+    
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            if let focusedCell = focusedItem as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
                     print("IndexPath is \(indexPath)")
                     if indexPath.row == 0 && selectedRow == 0 {
@@ -156,8 +171,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     }
                     selectedRow = indexPath.row
                 }
-            }
-            if UIScreen.main.focusedView is UIButton {
+            } else if focusedItem is UIButton {
                 myPreferredFocusedView = optionViews.first?.button
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
@@ -167,10 +181,11 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
     @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
-            if UIScreen.main.focusedView is UIButton {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            if let focusedButton = focusedItem as? UIButton,
+               focusedButton == optionViews.first?.button {
                 navigationController?.popToRootViewController(animated: true)
-            }
-            if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
+            } else if let focusedCell = focusedItem as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
                     if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow) {
                         navigationController?.popToRootViewController(animated: true)
@@ -225,8 +240,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
             viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
                 self.serverSectionsOrdered = serverSectionsOrdered
-
-               if  self.bestLocation != nil {
+                
+                if  self.bestLocation != nil {
                     let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
                     if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
                         self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
@@ -273,31 +288,55 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }
         switch value {
         case .all:
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
-            toggleView(viewToToggle: favTableView, isViewVisible: true)
-            selectionOption = .all
-            hideEmptyFavView()
-            bindData(isStreaming: false)
+            if value != selectionOption {
+                toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
+                toggleView(viewToToggle: favTableView, isViewVisible: true)
+                selectionOption = .all
+                hideEmptyFavView()
+                bindData(isStreaming: false)
+            }
+            myPreferredFocusedView = serverListCollectionView
+            setNeedsFocusUpdate()
+            updateFocusIfNeeded()
         case .fav:
-            staticIpSelected = false
-            toggleView(viewToToggle: favTableView, isViewVisible: false)
-            selectionOption = .fav
-            hideEmptyFavView()
-            favTableView.reloadData()
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
+            if value != selectionOption {
+                staticIpSelected = false
+                toggleView(viewToToggle: favTableView, isViewVisible: false)
+                toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
+                selectionOption = .fav
+                hideEmptyFavView()
+                favTableView.reloadData()
+            }
+            if favGroups.count != 0 {
+                myPreferredFocusedView = favTableView
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
+            }
         case .windflix:
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
-            toggleView(viewToToggle: favTableView, isViewVisible: true)
-            selectionOption = .windflix
-            hideEmptyFavView()
-            bindData(isStreaming: true)
+            if value != selectionOption {
+                toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
+                toggleView(viewToToggle: favTableView, isViewVisible: true)
+                selectionOption = .windflix
+                hideEmptyFavView()
+                bindData(isStreaming: true)
+            }
+            myPreferredFocusedView = serverListCollectionView
+            setNeedsFocusUpdate()
+            updateFocusIfNeeded()
         case .staticIp:
-            staticIpSelected = true
-            toggleView(viewToToggle: favTableView, isViewVisible: false)
-            selectionOption = .staticIp
-            hideEmptyFavView()
-            favTableView.reloadData()
-            toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
+            if value != selectionOption {
+                staticIpSelected = true
+                toggleView(viewToToggle: favTableView, isViewVisible: false)
+                toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
+                selectionOption = .staticIp
+                hideEmptyFavView()
+                favTableView.reloadData()
+            }
+            if staticIPModels.count != 0 {
+                myPreferredFocusedView = favTableView
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
+            }
         }
         UIView.animate(withDuration: 0.3) {
             self.sideMenuWidthConstraint.constant = 90

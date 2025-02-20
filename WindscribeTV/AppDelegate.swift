@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
 
-    private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
 
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 
@@ -40,6 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
+    
+    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -47,17 +48,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         logger.logDeviceInfo()
         languageManager.setAppLanguage()
         connectivity.refreshNetwork()
-        Task {
-            recordInstallIfFirstLoad()
-            resetCountryOverrideForServerList()
-            purchaseManager.verifyPendingTransaction()
-            latencyRepository.loadCustomConfigLatency().subscribe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {}, onError: { _ in }).disposed(by: disposeBag)
-            setApplicationWindow()
-            UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
-            if preferences.userSessionAuth() != nil {
-                delay(2) {
-                    self.latencyRepository.loadLatency()
-                }
+        recordInstallIfFirstLoad()
+        resetCountryOverrideForServerList()
+        purchaseManager.verifyPendingTransaction()
+        setApplicationWindow()
+        UIApplication.shared.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalMinimum)
+        if preferences.userSessionAuth() != nil {
+            delay(2) {
+                self.latencyRepository.loadLatency()
             }
         }
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
@@ -66,6 +64,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }, onFailure: { [self] error in
             logger.logE(self, "Failed to get session from server with error \(error).")
         }).disposed(by: disposeBag)
+               
+        Task.detached { [unowned self] in
+            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
+            if await preferences.userSessionAuth() != nil {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                await self.latencyRepository.loadLatency()
+                }
+        }
+        
         return true
     }
 

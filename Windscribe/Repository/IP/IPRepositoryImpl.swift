@@ -19,6 +19,7 @@ class IPRepositoryImpl: IPRepository {
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
+    private var wasObserved = false
     let ipState: BehaviorSubject<IPState?> = BehaviorSubject(value: nil)
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
@@ -30,10 +31,9 @@ class IPRepositoryImpl: IPRepository {
 
     /// Loads the last known IP from the local database
     private func load() {
-        localDatabase.getIp()
-            .subscribe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
+        localDatabase.getIp().observe(on:MainScheduler.asyncInstance)
             .subscribe(onNext: { [weak self] data in
+                self?.wasObserved = true
                 if let data = data {
                     self?.updateState(.available(data))
                 } else {
@@ -52,6 +52,10 @@ class IPRepositoryImpl: IPRepository {
         return apiManager.getIp()
             .flatMap { [weak self] data -> Single<MyIP> in
                 guard let self = self else { return Single.just(data) }
+                if !self.wasObserved {
+                    self.load()
+                    self.updateState(.available(data))
+                }
                 self.localDatabase.saveIp(myip: data)
                     .disposed(by: self.disposeBag)
                 return Single.just(data)

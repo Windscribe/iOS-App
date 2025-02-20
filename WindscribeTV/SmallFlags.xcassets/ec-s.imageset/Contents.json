@@ -1,15 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "ecuador.svg",
+      "filename" : "ec-l.svg",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
   }
 }
