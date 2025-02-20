@@ -9,7 +9,6 @@
 import Combine
 import Foundation
 import RxSwift
-import Combine
 
 enum EmergencyConnectState {
     case disconnected, disconnecting, connecting, connected

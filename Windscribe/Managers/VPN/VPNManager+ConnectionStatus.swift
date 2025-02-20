@@ -119,7 +119,7 @@ extension VPNManager {
                     self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
                     try await Task.sleep(nanoseconds: 2_000_000_000)
                     self.logger.logI(self, "Getting new session.")
-                    self.sessionManager.getUppdatedSession().subscribe(onSuccess: { session in
+                    self.sessionManager.getUppdatedSession().subscribe(onSuccess: { _ in
                         self.awaitingConnectionCheck = false
                     }, onFailure: { _ in
                         self.logger.logE(self, "Failure to update session after disabling VPN profile.")
@@ -149,10 +149,8 @@ extension VPNManager {
         // Refresh and load all VPN Managers from system preferrances.
         let priorityStates = [NEVPNStatus.connecting, NEVPNStatus.connected, NEVPNStatus.disconnecting]
         var priorityManagers: [NEVPNManager] = []
-        for manager in configManager.managers {
-            if priorityStates.contains(manager.connection.status) {
-                priorityManagers.append(manager)
-            }
+        for manager in configManager.managers where priorityStates.contains(manager.connection.status) {
+            priorityManagers.append(manager)
         }
         if priorityManagers.count == 1 {
             if configManager.isIKEV2(manager: priorityManagers[0]) {

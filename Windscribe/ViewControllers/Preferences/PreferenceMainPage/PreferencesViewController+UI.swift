@@ -37,7 +37,7 @@ extension PreferencesMainViewController {
             actionButtonBottomConstraint,
             NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
             NSLayoutConstraint(item: actionButton, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 28),
-            NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28),
+            NSLayoutConstraint(item: actionButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28)
         ])
         if actionButton.isHidden == false {
             loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: actionButton, attribute: .top, multiplier: 1.0, constant: -24)
@@ -48,7 +48,7 @@ extension PreferencesMainViewController {
             loginButtonBottomConstraint,
             NSLayoutConstraint(item: loginButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
             NSLayoutConstraint(item: loginButton, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 28),
-            NSLayoutConstraint(item: loginButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28),
+            NSLayoutConstraint(item: loginButton, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -28)
         ])
     }
 

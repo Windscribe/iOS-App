@@ -14,7 +14,7 @@ extension APIManagerImpl {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)
         }
-        guard let deviceID = UIDevice.current.identifierForVendor?.uuidString else {
+        guard UIDevice.current.identifierForVendor?.uuidString != nil else {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: StaticIPList.self) { completion in

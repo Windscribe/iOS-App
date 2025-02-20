@@ -14,16 +14,13 @@ extension UITextView {
         return Assembler.resolve(FileLogger.self)
     }
 
-    func htmlText(htmlData: Data,
-                  font: UIFont = UIFont.text(size: 16),
-                  foregroundColor: UIColor = .white)
-    {
+    func htmlText(htmlData: Data, font: UIFont = UIFont.text(size: 16), foregroundColor: UIColor = .white) {
         do {
             let attrString = try NSAttributedString(
                 data: htmlData,
                 options: [
                     NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html,
-                    .characterEncoding: String.Encoding.utf8.rawValue,
+                    .characterEncoding: String.Encoding.utf8.rawValue
                 ],
                 documentAttributes: nil
             )

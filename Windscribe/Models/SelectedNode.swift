@@ -37,24 +37,20 @@ struct SelectedNode {
          staticIPCredentials: StaticIPCredentialsModel? = nil,
          autoPicked: Bool = false,
          customConfig: CustomConfigModel? = nil,
-         groupId: Int)
-    {
+         groupId: Int) {
         self.countryCode = countryCode
         self.dnsHostname = dnsHostname
         self.hostname = hostname
         self.serverAddress = serverAddress
         self.nickName = nickName
         self.cityName = cityName
-        if let username = staticIPCredentials?.username,
-           let password = staticIPCredentials?.password
-        {
+        if let username = staticIPCredentials?.username, let password = staticIPCredentials?.password {
             self.staticIPCredentials = StaticIPCredentialsModel(username: username, password: password)
         }
         self.autoPicked = autoPicked
         self.customConfig = customConfig
         if let groups = localDb.getGroups(),
-           let node = groups.filter({ $0.nodes.contains(where: { $0.hostname == hostname }) }).first
-        {
+           let node = groups.filter({ $0.nodes.contains(where: { $0.hostname == hostname }) }).first {
             wgPublicKey = node.wgPublicKey
             ovpnX509 = node.ovpnX509
             let selectedNode = node.nodes.first { $0.hostname == hostname }

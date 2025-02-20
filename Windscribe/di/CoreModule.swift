@@ -55,8 +55,7 @@ extension Container {
                 return pair.count == 2 && pair[0] == wsServerOverrride
             })?.splitToArray(separator: "=")
                 .dropFirst()
-                .joined(separator: "=")
-            {
+                .joined(separator: "=") {
                 WSNet.instance().advancedParameters().setCountryOverrideValue(countryOverride)
             }
             return WSNet.instance().serverAPI()

@@ -36,7 +36,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
     lazy var currentNetworkView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             currentNetworkTitle,
-            currentNetworkStackView,
+            currentNetworkStackView
         ])
         stack.axis = .vertical
         return stack
@@ -48,7 +48,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
     lazy var otherNetworkView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
             otherNetworkTitle,
-            otherNetworkStackView,
+            otherNetworkStackView
         ])
         stack.axis = .vertical
         return stack
@@ -99,7 +99,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
             headerView,
             autoSecureView,
             currentNetworkView,
-            otherNetworkView,
+            otherNetworkView
         ])
         layoutView.stackView.setPadding(UIEdgeInsets(inset: 16))
         layoutView.stackView.spacing = 16
@@ -224,7 +224,7 @@ class NetworkCellView: UIStackView {
             lblName,
             UIView(),
             lblSecureStatus,
-            iconArrow,
+            iconArrow
         ])
         axis = .horizontal
         setPadding(UIEdgeInsets(inset: 16))

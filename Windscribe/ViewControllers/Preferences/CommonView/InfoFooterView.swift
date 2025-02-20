@@ -56,7 +56,7 @@ class FooterView: UIStackView {
         axis = .vertical
         setPadding(UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 36))
         addArrangedSubviews([
-            contentLabel,
+            contentLabel
         ])
         addSubview(iconImage)
         iconImage.anchor(top: topAnchor, right: rightAnchor, paddingTop: 16, paddingRight: 16)

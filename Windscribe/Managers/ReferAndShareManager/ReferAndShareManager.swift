@@ -37,10 +37,7 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
                 guard let regDate = session?.regDate else { return }
                 let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
                 let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
-                if !(session?.isUserPro ?? false)
-                    && !(session?.isUserGhost ?? false)
-                    && daysRegisteredSince > 30
-                {
+                if !(session?.isUserPro ?? false) && !(session?.isUserGhost ?? false) && daysRegisteredSince > 30 {
                     self.setShowedShareDialog()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                         completion()

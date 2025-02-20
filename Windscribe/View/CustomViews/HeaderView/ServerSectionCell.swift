@@ -104,47 +104,47 @@ class ServerSectionCell: UITableViewCell {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 32),
+                               constant: 32)
         ])
         addConstraints([
             NSLayoutConstraint(item: proIcon, attribute: .top, relatedBy: .equal, toItem: flagIcon, attribute: .top, multiplier: 1.0, constant: -8),
             NSLayoutConstraint(item: proIcon, attribute: .left, relatedBy: .equal, toItem: flagIcon, attribute: .left, multiplier: 1.0, constant: -8),
             NSLayoutConstraint(item: proIcon, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: proIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: proIcon, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 18)
         ])
         addConstraints([
             NSLayoutConstraint(item: serverNameLabel, attribute: .centerY, relatedBy: .equal, toItem: flagIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: serverNameLabel, attribute: .left, relatedBy: .equal, toItem: flagIcon, attribute: .right, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: serverNameLabel, attribute: .left, relatedBy: .equal, toItem: flagIcon, attribute: .right, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: flagIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: iconView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: iconView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: iconView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: p2pImage, attribute: .centerY, relatedBy: .equal, toItem: flagIcon, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: p2pImage, attribute: .right, relatedBy: .equal, toItem: iconView, attribute: .left, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: p2pImage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: p2pImage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: p2pImage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         addConstraints([
             NSLayoutConstraint(item: serverHealthView, attribute: .height, relatedBy: .equal, toItem: cellDivider, attribute: .height, multiplier: 1.0, constant: 1),
             NSLayoutConstraint(item: serverHealthView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: serverHealthView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: serverHealthView, attribute: .right, relatedBy: .equal, toItem: iconView, attribute: .left, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: serverHealthView, attribute: .right, relatedBy: .equal, toItem: iconView, attribute: .left, multiplier: 1.0, constant: 0)
         ])
 
         addConstraints([
             NSLayoutConstraint(item: cellDivider, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
             NSLayoutConstraint(item: cellDivider, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
             NSLayoutConstraint(item: cellDivider, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: cellDivider, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: cellDivider, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0)
         ])
         addConstraints([
             NSLayoutConstraint(item: cellDividerFull, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
             NSLayoutConstraint(item: cellDividerFull, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: -2),
-            NSLayoutConstraint(item: cellDividerFull, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24),
+            NSLayoutConstraint(item: cellDividerFull, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 24)
         ])
     }
 
@@ -154,7 +154,11 @@ class ServerSectionCell: UITableViewCell {
 
     func updateUI() {
         proIcon.image = nil
-        if let serverName = displayingServer?.name, let countryCode = displayingServer?.countryCode, let premiumOnly = displayingServer?.premiumOnly, let isUserPro = sessionManager.session?.isPremium, let isP2p = displayingServer?.p2p {
+        if let serverName = displayingServer?.name,
+           let countryCode = displayingServer?.countryCode,
+           let premiumOnly = displayingServer?.premiumOnly,
+           let isUserPro = sessionManager.session?.isPremium,
+           let isP2p = displayingServer?.p2p {
             serverNameLabel.text = serverName
             flagIcon.image = UIImage(named: "\(countryCode)-s")
             if premiumOnly && !isUserPro {
@@ -217,15 +221,18 @@ class ServerSectionCell: UITableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        preferences.getShowServerHealth().subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
-            if let serverHealth = serverHealth {
-                if serverHealth {
-                    self.serverHealthView.health = self.displayingServer?.getServerHealth()
-                } else {
-                    self.serverHealthView.health = 0
+        preferences.getShowServerHealth()
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance).subscribe(onNext: { serverHealth in
+                if let serverHealth = serverHealth {
+                    if serverHealth {
+                        self.serverHealthView.health = self.displayingServer?.getServerHealth()
+                    } else {
+                        self.serverHealthView.health = 0
+                    }
                 }
-            }
-        }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
         isDarkMode.subscribe(onNext: { isDark in
             if !isDark {
                 self.backgroundColor = UIColor.white

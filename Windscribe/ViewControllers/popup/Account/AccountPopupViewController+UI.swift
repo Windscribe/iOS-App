@@ -70,49 +70,49 @@ extension AccountPopupViewController {
             NSLayoutConstraint(item: backgroundView as Any, attribute: .top, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: backgroundView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: backgroundView as Any, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: backgroundView as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0)
         ])
         if UIScreen.hasTopNotch {
             view.addConstraints([
-                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 175),
+                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 175)
             ])
         } else if UIScreen.main.nativeBounds.height <= 1136 {
             view.addConstraints([
-                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 90),
+                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 90)
             ])
         } else {
             view.addConstraints([
-                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 120),
+                NSLayoutConstraint(item: imageView as Any, attribute: .top, relatedBy: .equal, toItem: backgroundView, attribute: .top, multiplier: 1.0, constant: 120)
             ])
         }
         view.addConstraints([
             NSLayoutConstraint(item: imageView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: imageView as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 150),
-            NSLayoutConstraint(item: imageView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 150),
+            NSLayoutConstraint(item: imageView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 150)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: titleLabel as Any, attribute: .top, relatedBy: .equal, toItem: imageView, attribute: .bottom, multiplier: 1.0, constant: 40),
             NSLayoutConstraint(item: titleLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 75),
             NSLayoutConstraint(item: titleLabel as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -75),
-            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32),
+            NSLayoutConstraint(item: titleLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 32)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: descriptionLabel as Any, attribute: .top, relatedBy: .equal, toItem: titleLabel, attribute: .bottom, multiplier: 1.0, constant: 16),
             NSLayoutConstraint(item: descriptionLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 55),
             NSLayoutConstraint(item: descriptionLabel as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -55),
-            NSLayoutConstraint(item: descriptionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 51),
+            NSLayoutConstraint(item: descriptionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 51)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: actionButton as Any, attribute: .top, relatedBy: .equal, toItem: descriptionLabel, attribute: .bottom, multiplier: 1.0, constant: 32),
             NSLayoutConstraint(item: actionButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 68),
             NSLayoutConstraint(item: actionButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -68),
-            NSLayoutConstraint(item: actionButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 48),
+            NSLayoutConstraint(item: actionButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 48)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: cancelButton as Any, attribute: .top, relatedBy: .equal, toItem: actionButton, attribute: .bottom, multiplier: 1.0, constant: 32),
             NSLayoutConstraint(item: cancelButton as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 68),
             NSLayoutConstraint(item: cancelButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -68),
-            NSLayoutConstraint(item: cancelButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: cancelButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
     }
 }

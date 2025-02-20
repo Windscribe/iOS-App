@@ -24,8 +24,7 @@ func mapToAPIError(error: String?) -> Error {
     if let error = error,
        let errorData = error.data(using: .utf8),
        let jsonResponse = try? JSONSerialization.jsonObject(with: errorData, options: .allowFragments),
-       let data = jsonResponse as? [String: Any]
-    {
+       let data = jsonResponse as? [String: Any] {
         let apiData = APIError(data: data)
         return apiData.resolve() ?? Errors.apiError(apiData)
     }

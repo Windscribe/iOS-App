@@ -59,28 +59,26 @@ extension ShakeForDataViewModel {
         var xInPositiveDirection = 0.0
         var xInNegativeDirection = 0.0
         motionManager.deviceMotionUpdateInterval = 0.01
-        motionManager.startDeviceMotionUpdates(to: OperationQueue.main,
-                                               withHandler: { [weak self] data, _ in
-                                                   if data!.userAcceleration.y > 3.0 || data!.userAcceleration.y < -3.0 {
-                                                       if data!.userAcceleration.y > 3.0 {
-                                                           xInNegativeDirection = 0.0
-                                                           xInPositiveDirection = data!.userAcceleration.y
-                                                       }
-
-                                                       if data!.userAcceleration.y < -3.0 {
-                                                           xInNegativeDirection = data!.userAcceleration.y
-                                                       }
-
-                                                       if xInPositiveDirection != 0.0, xInNegativeDirection != 0.0,
-                                                          let prevValue = try? self?.shakeCount.value()
-                                                       {
-                                                           self?.shakeCount.onNext(prevValue + 1)
-                                                           impactFeedbackgenerator.impactOccurred()
-                                                           xInPositiveDirection = 0.0
-                                                           xInNegativeDirection = 0.0
-                                                       }
-                                                   }
-                                               })
+        motionManager.startDeviceMotionUpdates(
+            to: OperationQueue.main,
+            withHandler: { [weak self] data, _ in
+                if data!.userAcceleration.y > 3.0 || data!.userAcceleration.y < -3.0 {
+                    if data!.userAcceleration.y > 3.0 {
+                        xInNegativeDirection = 0.0
+                        xInPositiveDirection = data!.userAcceleration.y
+                    }
+                    if data!.userAcceleration.y < -3.0 {
+                        xInNegativeDirection = data!.userAcceleration.y
+                    }
+                    if xInPositiveDirection != 0.0, xInNegativeDirection != 0.0,
+                       let prevValue = try? self?.shakeCount.value() {
+                        self?.shakeCount.onNext(prevValue + 1)
+                        impactFeedbackgenerator.impactOccurred()
+                        xInPositiveDirection = 0.0
+                        xInNegativeDirection = 0.0
+                    }
+                }
+            })
     }
 
     private func start() {

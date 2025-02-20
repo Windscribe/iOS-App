@@ -84,7 +84,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             headerLabel,
             subHeaderLabel,
             protocolStack,
-            cancelButton,
+            cancelButton
         ])
         createProtocolView()
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))

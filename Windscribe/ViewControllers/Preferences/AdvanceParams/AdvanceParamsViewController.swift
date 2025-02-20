@@ -53,7 +53,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
         setupFillLayoutView()
         layoutView.stackView.addArrangedSubviews([
             inputBox,
-            saveButton,
+            saveButton
         ])
         layoutView.stackView.spacing = 16
         let paddingTop = UIScreen.hasTopNotch ? 48.0 : 16.0

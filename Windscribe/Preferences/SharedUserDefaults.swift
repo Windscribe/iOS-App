@@ -475,7 +475,15 @@ class SharedSecretDefaults: Preferences {
     }
 
     func isRestrictedCountry() -> Bool {
-        return ["be", "fa", "ru", "tr", "zh"].contains(Locale.current.languageCode)
+        let languageCode: String?
+
+        if #available(iOS 16.0, *) {
+            languageCode = Locale.current.language.languageCode?.identifier
+        } else {
+            languageCode = Locale.current.languageCode
+        }
+
+        return ["be", "fa", "ru", "tr", "zh"].contains(languageCode ?? "")
     }
 
     func getServerSettings() -> String {
@@ -642,18 +650,14 @@ class SharedSecretDefaults: Preferences {
 extension UserDefaults {
     func rx_observe<T: Codable>(_: T.Type, forKey key: String) -> Observable<T?> {
         return Observable.create { observer in
-            if let data = self.data(forKey: key),
-               let value = try? JSONDecoder().decode(T.self, from: data)
-            {
+            if let data = self.data(forKey: key), let value = try? JSONDecoder().decode(T.self, from: data) {
                 observer.onNext(value)
             } else {
                 observer.onNext(nil)
             }
             let notificationName = UserDefaults.didChangeNotification
             let notificationObserver = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
-                if let data = self.data(forKey: key),
-                   let value = try? JSONDecoder().decode(T.self, from: data)
-                {
+                if let data = self.data(forKey: key), let value = try? JSONDecoder().decode(T.self, from: data) {
                     observer.onNext(value)
                 } else {
                     observer.onNext(nil)

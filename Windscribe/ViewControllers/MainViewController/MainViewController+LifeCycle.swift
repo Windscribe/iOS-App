@@ -40,9 +40,7 @@ extension MainViewController {
         setupIntentsForSiri()
         configureNotificationListeners()
         loadLatencyWhenReady()
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .dark
-        }
+        overrideUserInterfaceStyle = .dark
         bindViewModels()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         locationManagerViewModel.shouldPresentLocationPopUp.subscribe {
@@ -53,9 +51,7 @@ extension MainViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if #available(iOS 13.0, *) {
-            overrideUserInterfaceStyle = .dark
-        }
+        overrideUserInterfaceStyle = .dark
         viewModel.updateSSID()
         checkForInternetConnection()
         hideAutoSecureViews()

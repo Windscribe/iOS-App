@@ -9,9 +9,7 @@
 import Foundation
 import RealmSwift
 
-@objcMembers class MobilePlan: Object,
-    Decodable
-{
+@objcMembers class MobilePlan: Object, Decodable {
     dynamic var active: Bool = false
     dynamic var extId: String = ""
     dynamic var name: String = ""
@@ -51,9 +49,7 @@ import RealmSwift
 struct MobilePlanList: Decodable {
     let mobilePlans = List<MobilePlan>()
 
-    enum CodingKeys: String,
-        CodingKey
-    {
+    enum CodingKeys: String, CodingKey {
         case data
         case plans
     }

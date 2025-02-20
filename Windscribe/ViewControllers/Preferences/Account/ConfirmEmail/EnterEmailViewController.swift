@@ -112,7 +112,7 @@ class EnterEmailViewController: WSNavigationViewController {
                         buttonText: "Ok"
                     )
                     self?.navigationController?.popToRootViewController(animated: true)
-                } else if error.localizedDescription == Errors.noNetwork.localizedDescription{
+                } else if error.localizedDescription == Errors.noNetwork.localizedDescription {
                     self?.viewModel.alertManager.showSimpleAlert(
                         viewController: self,
                         title: TextsAsset.error,

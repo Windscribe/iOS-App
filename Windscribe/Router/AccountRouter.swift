@@ -60,6 +60,6 @@ class AccountRouter: BaseRouter, NavigationRouter {
                 from.present(vc, animated: true, completion: nil)
             }
         default: ()
-      }
+        }
     }
 }

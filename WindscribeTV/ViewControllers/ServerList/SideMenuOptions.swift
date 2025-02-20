@@ -53,7 +53,7 @@ class SideMenuOptions: UIView {
         // Create a gradient layer
         gradient.colors = [
             UIColor.whiteWithOpacity(opacity: 0.16).cgColor,
-            UIColor.whiteWithOpacity(opacity: 0).cgColor,
+            UIColor.whiteWithOpacity(opacity: 0).cgColor
         ]
 
         // Set the frame of the gradient layer to match the view's bounds
@@ -64,7 +64,7 @@ class SideMenuOptions: UIView {
         if layer.sublayers?.contains(gradient) ?? false {
             gradient.colors = [
                 UIColor.clear.cgColor,
-                UIColor.clear.cgColor,
+                UIColor.clear.cgColor
             ]
         } else {
             layer.insertSublayer(gradient, at: 0)

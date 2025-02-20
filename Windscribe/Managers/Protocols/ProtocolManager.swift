@@ -154,9 +154,13 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         let locationID = locationManager.getId()
-        if !locationID.isEmpty, let locationType = try? locationManager.getLocationType(), locationType == .custom, let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(), let protocolName = config.protocolType, let portName = config.port {
-            appendPort(proto: protocolName, port: portName)
-            setPriority(proto: protocolName, type: .normal)
+        if !locationID.isEmpty,
+            let locationType = locationManager.getLocationType(),
+            locationType == .custom,
+            let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(),
+            let protocolName = config.protocolType, let portName = config.port {
+                appendPort(proto: protocolName, port: portName)
+                setPriority(proto: protocolName, type: .normal)
         }
 
         if !shouldReconnect, let info = try? vpnManager.vpnInfo.value(), info.status == .connected {

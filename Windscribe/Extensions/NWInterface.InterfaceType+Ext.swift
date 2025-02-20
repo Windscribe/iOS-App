@@ -67,13 +67,11 @@ extension String {
         let rfc1918Ranges: [ClosedRange<UInt32>] = [
             0x0A00_0000 ... 0x0AFF_FFFF, // 10.0.0.0 - 10.255.255.255
             0xAC10_0000 ... 0xAC1F_FFFF, // 172.16.0.0 - 172.31.255.255
-            0xC0A8_0000 ... 0xC0A8_FFFF, // 192.168.0.0 - 192.168.255.255
+            0xC0A8_0000 ... 0xC0A8_FFFF  // 192.168.0.0 - 192.168.255.255
         ]
         if let ipAddressNumeric = ipToInt {
-            for range in rfc1918Ranges {
-                if range.contains(UInt32(ipAddressNumeric)) {
-                    return true
-                }
+            for range in rfc1918Ranges where range.contains(UInt32(ipAddressNumeric)) {
+                return true
             }
         }
         return false

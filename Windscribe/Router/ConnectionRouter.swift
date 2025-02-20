@@ -16,7 +16,7 @@ class ConnectionRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(NetworkSecurityViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
         case let RouteID.locationPermission(delegate, denied):
-            let vc = Assembler.resolve(LocationPermissionDisclosureViewController.self)
+            let vc = Assembler.resolve(LocationPermissionInfoViewController.self)
             vc.delegate = delegate
             vc.denied = denied
             vc.modalPresentationStyle = .fullScreen

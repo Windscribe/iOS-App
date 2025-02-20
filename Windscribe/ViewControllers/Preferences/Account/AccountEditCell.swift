@@ -160,7 +160,7 @@ class ArrowRowView: WSTouchStackView {
         addArrangedSubviews([
             titleLabel,
             UIView(),
-            arrowImage,
+            arrowImage
         ])
         setPadding(UIEdgeInsets(inset: 16))
         spacing = 4

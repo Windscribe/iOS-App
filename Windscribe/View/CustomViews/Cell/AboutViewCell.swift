@@ -60,7 +60,7 @@ class AboutViewCell: WSTouchTableViewCell {
                                             constant: 16),
             titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor,
                                              constant: 16),
-            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ]
 
         let arrowIconConstraints = [
@@ -69,7 +69,7 @@ class AboutViewCell: WSTouchTableViewCell {
             arrowIcon.rightAnchor.constraint(equalTo: rightAnchor,
                                              constant: -12),
             arrowIcon.widthAnchor.constraint(equalToConstant: 16),
-            arrowIcon.heightAnchor.constraint(equalToConstant: 16),
+            arrowIcon.heightAnchor.constraint(equalToConstant: 16)
         ]
 
         let cellDividerContraints = [
@@ -77,7 +77,7 @@ class AboutViewCell: WSTouchTableViewCell {
                                                  constant: 16),
             cellDivider.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             cellDivider.heightAnchor.constraint(equalToConstant: 2),
-            cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            cellDivider.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ]
 
         NSLayoutConstraint.activate(titleLabelContraints)

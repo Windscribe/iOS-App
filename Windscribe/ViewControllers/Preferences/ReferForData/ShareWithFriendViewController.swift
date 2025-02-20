@@ -49,7 +49,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
         let vw = UIStackView(arrangedSubviews: [
             headerTitle,
             referral1View,
-            referral2View,
+            referral2View
         ])
         vw.axis = .vertical
         vw.setCustomSpacing(38, after: headerTitle)
@@ -69,7 +69,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
 
     private lazy var bottomView: UIStackView = {
         let vw = UIStackView(arrangedSubviews: [
-            descriptionLabel,
+            descriptionLabel
         ])
         vw.axis = .vertical
         vw.setCustomSpacing(38, after: headerTitle)
@@ -136,7 +136,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
             imageWind,
             topView,
             shareButton,
-            bottomView,
+            bottomView
         ])
         layoutView.stackView.spacing = 16
         let paddingTop = UIScreen.hasTopNotch ? 75.0 : 40.0

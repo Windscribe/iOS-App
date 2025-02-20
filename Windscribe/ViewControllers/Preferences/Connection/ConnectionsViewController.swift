@@ -70,20 +70,14 @@ class ConnectionViewController: WSNavigationViewController {
                 makeConnectionSecureView(type: .killSwitch),
                 connectedDNSView,
                 makeConnectionSecureView(type: .allowLan),
-                circumventCensorshipView,
-            ])
-        } else if #available(iOS 14.0, *) {
-            layoutView.stackView.addArrangedSubviews([
-                networkWhiteListRow,
-                connectionModeViewV2,
-                connectedDNSView,
-                circumventCensorshipView,
+                circumventCensorshipView
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
                 networkWhiteListRow,
                 connectionModeViewV2,
-                circumventCensorshipView,
+                connectedDNSView,
+                circumventCensorshipView
             ])
         }
         bindViews()

@@ -170,8 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      */
     func application(_: UIApplication,
                      performActionFor shortcutItem: UIApplicationShortcutItem,
-                     completionHandler _: @escaping (Bool) -> Void)
-    {
+                     completionHandler _: @escaping (Bool) -> Void) {
         if preferences.userSessionAuth() != nil {
             if shortcutItem.type.contains("Notifications") {
                 shortcutType = .notifications
@@ -228,26 +227,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                     fetchCompletionHandler _: @escaping (UIBackgroundFetchResult) -> Void)
-    {
+                     fetchCompletionHandler _: @escaping (UIBackgroundFetchResult) -> Void) {
         logger.logD(self, "Push notification received [didReceiveRemoteNotification].")
         if let userInfo = userInfo as? [String: AnyObject] {
             logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
             pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
         }
-        if #available(iOS 14.0, *) {
-            #if arch(arm64) || arch(i386) || arch(x86_64)
-                WidgetCenter.shared.reloadAllTimelines()
-            #endif
-        }
+        #if arch(arm64) || arch(i386) || arch(x86_64)
+            WidgetCenter.shared.reloadAllTimelines()
+        #endif
     }
 
     /**
      Called when registerForRemoteNotification is successful. Sends device token to the server.
      */
-    func application(_: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data)
-    {
+    func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("") { $0 + String(format: "%02.2hhX", $1) }
         logger.logD(self, "Sending notifcation token to server.")
         apiManager.getSession(token)
@@ -265,9 +259,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     /**
      Called when registerForRemoteNotification calls fails. App will retry on next app launch.
      */
-    func application(_: UIApplication,
-                     didFailToRegisterForRemoteNotificationsWithError error: Error)
-    {
+    func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         logger.logE(self, "Fail to register for remote notifications. \(error.localizedDescription)")
     }
 
@@ -276,14 +268,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      */
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 willPresent response: UNNotification,
-                                withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void)
-    {
+                                withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         logger.logD(self, "Push notification received [willPresent].")
         if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
             pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
         }
-        withCompletionHandler([.alert, .sound, .badge])
+        withCompletionHandler([.banner, .list, .sound, .badge])
     }
 
     /**
@@ -291,8 +282,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      */
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
-                                withCompletionHandler: @escaping () -> Void)
-    {
+                                withCompletionHandler: @escaping () -> Void) {
         logger.logD(self, "Push notification received [didReiceive].")
         if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "User clicked on push notification: \(userInfo)")

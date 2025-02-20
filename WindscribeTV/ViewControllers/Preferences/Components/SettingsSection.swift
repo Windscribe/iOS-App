@@ -48,7 +48,7 @@ class SettingsSection: UIView {
                                                            attributes: [
                                                                .font: UIFont.bold(size: 32),
                                                                .foregroundColor: UIColor.white.withAlphaComponent(0.2),
-                                                               .kern: 4,
+                                                               .kern: 4
                                                            ])
             contentViewTop.constant = 24
         } else {
@@ -73,8 +73,7 @@ class SettingsSection: UIView {
             }
         }
         if let index = listOfOptions.map({ $0.localize() }).firstIndex(of: option.localize()),
-           let optionView = contentStackView.arrangedSubviews[index] as? SettingOption
-        {
+           let optionView = contentStackView.arrangedSubviews[index] as? SettingOption {
             optionView.updateSelection(with: true)
             scrollView.delegate = self
             scrollToView(view: optionView, index: index, animated: animated)

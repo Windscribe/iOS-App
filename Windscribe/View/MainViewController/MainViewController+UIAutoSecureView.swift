@@ -112,70 +112,70 @@ extension MainViewController {
 
         view.addConstraints([
             NSLayoutConstraint(item: autoSecureLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: autoSecureLabel as Any, attribute: .top, relatedBy: .equal, toItem: trustedNetworkValueLabel, attribute: .bottom, multiplier: 1.0, constant: 23),
+            NSLayoutConstraint(item: autoSecureLabel as Any, attribute: .top, relatedBy: .equal, toItem: trustedNetworkValueLabel, attribute: .bottom, multiplier: 1.0, constant: 23)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoSecureInfoButton as Any, attribute: .centerY, relatedBy: .equal, toItem: autoSecureLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoSecureInfoButton as Any, attribute: .left, relatedBy: .equal, toItem: autoSecureLabel, attribute: .right, multiplier: 1.0, constant: 8),
             NSLayoutConstraint(item: autoSecureInfoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: autoSecureInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: autoSecureInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: trustNetworkSwitch as Any, attribute: .centerY, relatedBy: .equal, toItem: autoSecureLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: trustNetworkSwitch as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: trustNetworkSwitch as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: trustNetworkSwitch as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 45),
+            NSLayoutConstraint(item: trustNetworkSwitch as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 45)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: cellDivider1 as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 24),
             NSLayoutConstraint(item: cellDivider1 as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: cellDivider1 as Any, attribute: .top, relatedBy: .equal, toItem: trustNetworkSwitch, attribute: .bottom, multiplier: 1.0, constant: 13),
-            NSLayoutConstraint(item: cellDivider1 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
+            NSLayoutConstraint(item: cellDivider1 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: preferredProtocolLabel as Any, attribute: .top, relatedBy: .equal, toItem: cellDivider1, attribute: .bottom, multiplier: 1.0, constant: 18),
             NSLayoutConstraint(item: preferredProtocolLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: preferredProtocolLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: preferredProtocolLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: preferredProtocolInfoButton as Any, attribute: .centerY, relatedBy: .equal, toItem: preferredProtocolLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: preferredProtocolInfoButton as Any, attribute: .left, relatedBy: .equal, toItem: preferredProtocolLabel, attribute: .right, multiplier: 1.0, constant: 8),
             NSLayoutConstraint(item: preferredProtocolInfoButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: preferredProtocolInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: preferredProtocolInfoButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: preferredProtocolSwitch as Any, attribute: .centerY, relatedBy: .equal, toItem: preferredProtocolLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: preferredProtocolSwitch as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: preferredProtocolSwitch as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 24),
-            NSLayoutConstraint(item: preferredProtocolSwitch as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 45),
+            NSLayoutConstraint(item: preferredProtocolSwitch as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 45)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: protocolSelectionLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 40),
             NSLayoutConstraint(item: protocolSelectionLabel as Any, attribute: .top, relatedBy: .equal, toItem: preferredProtocolLabel, attribute: .bottom, multiplier: 1.0, constant: 18),
-            NSLayoutConstraint(item: protocolSelectionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: protocolSelectionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: protocolDropdownButton as Any, attribute: .centerY, relatedBy: .equal, toItem: protocolSelectionLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: protocolDropdownButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: protocolDropdownButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: protocolDropdownButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 90),
+            NSLayoutConstraint(item: protocolDropdownButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 90)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: manualViewDivider1 as Any, attribute: .left, relatedBy: .equal, toItem: protocolSelectionLabel, attribute: .left, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: manualViewDivider1 as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: manualViewDivider1 as Any, attribute: .top, relatedBy: .equal, toItem: protocolSelectionLabel, attribute: .bottom, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: manualViewDivider1 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2),
+            NSLayoutConstraint(item: manualViewDivider1 as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 2)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: portSelectionLabel as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 40),
             NSLayoutConstraint(item: portSelectionLabel as Any, attribute: .top, relatedBy: .equal, toItem: manualViewDivider1, attribute: .bottom, multiplier: 1.0, constant: 14),
-            NSLayoutConstraint(item: portSelectionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
+            NSLayoutConstraint(item: portSelectionLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: portDropdownButton as Any, attribute: .centerY, relatedBy: .equal, toItem: portSelectionLabel, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: portDropdownButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -16),
             NSLayoutConstraint(item: portDropdownButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 20),
-            NSLayoutConstraint(item: portDropdownButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 70),
+            NSLayoutConstraint(item: portDropdownButton as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 70)
         ])
     }
 

@@ -261,10 +261,9 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
         for optionView in optionViews {
             optionView.updateSelection(with: optionView == sender)
         }
-        for item in [generalView, accountView, connnectionsView, privacyView, logView] {
-            if ![PreferencesType.sendLog, PreferencesType.signOut].contains(value) {
+        for item in [generalView, accountView, connnectionsView, privacyView, logView]
+            where ![PreferencesType.sendLog, PreferencesType.signOut].contains(value) {
                 item.isHidden = true
-            }
         }
 
         logger.logD(self, "Preference of type \(value) selected.")

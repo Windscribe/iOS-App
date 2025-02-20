@@ -14,10 +14,7 @@ struct BestNodeModel {
     let minTime: Int?
     let pingIp: String?
 
-    init(hostname: String,
-         minTime: Int,
-         pingIp: String)
-    {
+    init(hostname: String, minTime: Int, pingIp: String) {
         self.hostname = hostname
         self.minTime = minTime
         self.pingIp = pingIp
@@ -29,10 +26,7 @@ struct BestNodeModel {
     dynamic var pingIp: String = ""
     dynamic var minTime: Int = 0
 
-    convenience init(hostname: String,
-                     minTime: Int,
-                     pingIp: String)
-    {
+    convenience init(hostname: String, minTime: Int, pingIp: String) {
         self.init()
         if hostname == "" {
             self.hostname = pingIp

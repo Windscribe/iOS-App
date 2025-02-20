@@ -51,8 +51,7 @@ class LivecycleManager: LivecycleManagerType {
          ipRepository: IPRepository,
          configManager: ConfigurationsManager,
          connectivityManager: ProtocolManagerType,
-         locationsManager: LocationsManagerType)
-    {
+         locationsManager: LocationsManagerType) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences
@@ -156,7 +155,7 @@ class LivecycleManager: LivecycleManagerType {
 
     private func connectToVPN(updatedLocationId: String) async throws {
         let settings = vpnManager.makeUserSettings()
-        let proto = ProtocolPort(TextsAsset.wireGuard, "443")//TODO: vpnManager  - await vpnManager.getProtocolPort()
+        let proto = ProtocolPort(TextsAsset.wireGuard, "443") // TODO: vpnManager  - await vpnManager.getProtocolPort()
 
         try await withCheckedThrowingContinuation { continuation in
             self.connectTask = configManager.connectAsync(

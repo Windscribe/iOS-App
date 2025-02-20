@@ -51,14 +51,10 @@ extension MainViewController {
             return
         }
         trustedNetworkValueLabel.text = network.SSID
-        if network.preferredProtocolStatus == true,
-           network.status == false
-        {
+        if network.preferredProtocolStatus == true, network.status == false {
             showPreferredProtocolView()
             showProtocolSelectionView()
-        } else if network.preferredProtocolStatus == false,
-                  network.status == false
-        {
+        } else if network.preferredProtocolStatus == false, network.status == false {
             hideProtocolSelectionView()
             showPreferredProtocolView()
         } else if network.status == true {

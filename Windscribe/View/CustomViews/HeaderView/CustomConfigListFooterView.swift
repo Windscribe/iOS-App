@@ -69,12 +69,12 @@ class CustomConfigListFooterView: WSView {
         if UIScreen.hasTopNotch {
             addConstraints([
                 NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10),
-                NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10),
+                NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: -10)
             ])
         } else {
             addConstraints([
                 NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0),
-                NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0),
+                NSLayoutConstraint(item: iconView, attribute: .centerY, relatedBy: .equal, toItem: actionButton, attribute: .centerY, multiplier: 1.0, constant: 0)
             ])
         }
 
@@ -106,7 +106,7 @@ class CustomConfigListFooterView: WSView {
                                toItem: self,
                                attribute: .right,
                                multiplier: 1.0,
-                               constant: 0),
+                               constant: 0)
         ])
         addConstraints([
             NSLayoutConstraint(item: label,
@@ -122,7 +122,7 @@ class CustomConfigListFooterView: WSView {
                                toItem: nil,
                                attribute: .height,
                                multiplier: 1.0,
-                               constant: 20),
+                               constant: 20)
         ])
         addConstraints([
             NSLayoutConstraint(item: iconView,
@@ -145,7 +145,7 @@ class CustomConfigListFooterView: WSView {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 16),
+                               constant: 16)
         ])
     }
 }

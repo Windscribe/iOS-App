@@ -141,7 +141,8 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(continueButton)
         disableContinueButton()
 
-        loadingView = UIActivityIndicatorView(style: .gray)
+        loadingView = UIActivityIndicatorView(style: .medium)
+        loadingView.color = .gray
         view.addSubview(loadingView)
 
         successMessageView = UILabel()
@@ -226,7 +227,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         let descriptionViewConstraints = [
             descriptionContentView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
             descriptionContentView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
-            descriptionContentView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
+            descriptionContentView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
         ]
         categoryContentView.anchor(top: categoryView.topAnchor,
                                    left: view.leftAnchor,
@@ -238,88 +239,86 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
 
         let categoryViewConstraints = [
             categoryView.topAnchor.constraint(equalTo: descriptionContentView.bottomAnchor, constant: 38),
-            categoryView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            categoryView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
         ]
         let categoryDropDownViewConstraints = [
             catergoryDropDownView.topAnchor.constraint(equalTo: descriptionContentView.bottomAnchor, constant: 38),
             catergoryDropDownView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -32),
             catergoryDropDownView.widthAnchor.constraint(equalToConstant: 60),
-            catergoryDropDownView.heightAnchor.constraint(equalToConstant: 20),
+            catergoryDropDownView.heightAnchor.constraint(equalToConstant: 20)
         ]
         let yourEmailConstraints = [
             yourEmailView.topAnchor.constraint(equalTo: categoryContentView.bottomAnchor, constant: 24),
-            yourEmailView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            yourEmailView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
         ]
         let emailRequiredViewConstraints = [
             emailRequiredView.topAnchor.constraint(equalTo: categoryContentView.bottomAnchor, constant: 24),
-//            emailRequiredView.rightAnchor.constraint(equalTo: self.view.rightAnchor, constant: -16)
-            emailRequiredView.leftAnchor.constraint(equalTo: yourEmailView.rightAnchor, constant: 4),
+            emailRequiredView.leftAnchor.constraint(equalTo: yourEmailView.rightAnchor, constant: 4)
         ]
         let emailInputViewConstraints = [
             emailInputView.topAnchor.constraint(equalTo: yourEmailView.bottomAnchor, constant: 8),
             emailInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
             emailInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
-            emailInputView.heightAnchor.constraint(equalToConstant: 48),
+            emailInputView.heightAnchor.constraint(equalToConstant: 48)
         ]
         let emailExplainerViewConstraints = [
             emailExplainerView.topAnchor.constraint(equalTo: emailInputView.bottomAnchor, constant: 10),
             emailExplainerView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 32),
-            emailExplainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            emailExplainerView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
         ]
         let subjectTitleViewConstraints = [
             subjectTitleView.topAnchor.constraint(equalTo: emailExplainerView.bottomAnchor, constant: 24),
-            subjectTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            subjectTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
         ]
         let subjectRequiredViewConstraints = [
             subjectRequiredView.topAnchor.constraint(equalTo: subjectTitleView.topAnchor, constant: 0),
-            subjectRequiredView.leftAnchor.constraint(equalTo: subjectTitleView.rightAnchor, constant: 4),
+            subjectRequiredView.leftAnchor.constraint(equalTo: subjectTitleView.rightAnchor, constant: 4)
         ]
         let subjectInputViewConstraints = [
             subjectInputView.topAnchor.constraint(equalTo: subjectRequiredView.bottomAnchor, constant: 8),
             subjectInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
             subjectInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
-            subjectInputView.heightAnchor.constraint(equalToConstant: 48),
+            subjectInputView.heightAnchor.constraint(equalToConstant: 48)
         ]
         let messageTitleViewContraints = [
             messageTitleView.topAnchor.constraint(equalTo: subjectInputView.bottomAnchor, constant: 24),
-            messageTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32),
+            messageTitleView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 32)
         ]
         let messageRequiredViewContraints = [
             messageRequiredView.topAnchor.constraint(equalTo: messageTitleView.topAnchor, constant: 0),
-            messageRequiredView.leftAnchor.constraint(equalTo: messageTitleView.rightAnchor, constant: 4),
+            messageRequiredView.leftAnchor.constraint(equalTo: messageTitleView.rightAnchor, constant: 4)
         ]
         let messageInputViewContraints = [
             messageInputView.topAnchor.constraint(equalTo: messageTitleView.bottomAnchor, constant: 8),
             messageInputView.bottomAnchor.constraint(equalTo: continueButton.topAnchor, constant: -16),
             messageInputView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
-            messageInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
+            messageInputView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16)
         ]
         let continueButtonViewContraints = [
             continueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
             continueButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
             continueButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
-            continueButton.heightAnchor.constraint(equalToConstant: 48),
+            continueButton.heightAnchor.constraint(equalToConstant: 48)
         ]
         let loadingViewContraints = [
             loadingView.centerXAnchor.constraint(equalTo: continueButton.centerXAnchor),
             loadingView.centerYAnchor.constraint(equalTo: continueButton.centerYAnchor),
-            loadingView.heightAnchor.constraint(equalToConstant: 48),
+            loadingView.heightAnchor.constraint(equalToConstant: 48)
         ]
         let successIconViewConstraints = [
             successIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             successIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             successIconView.heightAnchor.constraint(equalToConstant: 48),
-            successIconView.widthAnchor.constraint(equalToConstant: 48),
+            successIconView.widthAnchor.constraint(equalToConstant: 48)
         ]
         let successMessageViewConstraints = [
             successMessageView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 75),
             successMessageView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -75),
-            successMessageView.topAnchor.constraint(equalTo: successIconView.bottomAnchor, constant: 16),
+            successMessageView.topAnchor.constraint(equalTo: successIconView.bottomAnchor, constant: 16)
         ]
         NSLayoutConstraint.activate(descriptionViewConstraints)
         NSLayoutConstraint.activate(categoryViewConstraints)
         NSLayoutConstraint.activate(categoryDropDownViewConstraints)
-//        NSLayoutConstraint.activate(divider1Constraints)
         NSLayoutConstraint.activate(yourEmailConstraints)
         NSLayoutConstraint.activate(emailRequiredViewConstraints)
         NSLayoutConstraint.activate(emailInputViewConstraints)

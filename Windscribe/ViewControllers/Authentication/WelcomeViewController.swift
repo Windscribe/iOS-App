@@ -40,8 +40,9 @@ class WelcomeViewController: WSUIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if #available(iOS 13.0, *) {
-            for window in UIApplication.shared.windows {
+
+        if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+            for window in scene.windows {
                 window.overrideUserInterfaceStyle = .dark
             }
         }

@@ -38,13 +38,11 @@ class SignUpViewController: PreferredFocusedViewController {
 
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         super.pressesBegan(presses, with: event)
-        for press in presses {
-            if passwordTextField.isFocused {
-                if press.type == .rightArrow {
-                    myPreferredFocusedView = passwordTextField.showHidePasswordButton
-                    setNeedsFocusUpdate()
-                    updateFocusIfNeeded()
-                }
+        for press in presses where passwordTextField.isFocused {
+            if press.type == .rightArrow {
+                myPreferredFocusedView = passwordTextField.showHidePasswordButton
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
             }
         }
     }
@@ -73,7 +71,7 @@ class SignUpViewController: PreferredFocusedViewController {
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
             NSLayoutConstraint(item: loadingView as Any, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0),
+            NSLayoutConstraint(item: loadingView as Any, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
         ])
         usernameTextField.delegate = self
         passwordTextField.delegate = self
@@ -145,18 +143,22 @@ class SignUpViewController: PreferredFocusedViewController {
     override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {
         DispatchQueue.main.async {
             if context.nextFocusedView == self.usernameTextField {
-                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.username,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
-                self.usernameTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.username,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+                self.usernameTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.username,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
             if context.nextFocusedView == self.passwordTextField {
-                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.password,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
-                self.passwordTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.password,
-                                                                                  attributes:  [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
+                self.passwordTextField.attributedPlaceholder = NSAttributedString(
+                    string: TextsAsset.password,
+                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
         }
     }

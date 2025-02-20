@@ -88,8 +88,7 @@ extension UIView {
     func fitToSuperView(top: CGFloat = 0.0,
                         leading: CGFloat = 0.0,
                         bottom: CGFloat = 0.0,
-                        trailing: CGFloat = 0.0)
-    {
+                        trailing: CGFloat = 0.0) {
         guard let parentView = superview else {
             return
         }
@@ -148,9 +147,7 @@ extension UIView {
         bottomAnchor.constraint(equalTo: view.topAnchor, constant: constant).isActive = true
     }
 
-    func makeTrailingAnchor(with view: UIView,
-                            constant: CGFloat = 0)
-    {
+    func makeTrailingAnchor(with view: UIView, constant: CGFloat = 0) {
         trailingAnchor.constraint(equalTo: view.leadingAnchor, constant: -constant).isActive = true
     }
 
@@ -194,9 +191,7 @@ extension UIView {
         widthAnchor.constraint(equalToConstant: constant).isActive = true
     }
 
-    func makeCenter(xConstant: CGFloat = 0,
-                    yConstant: CGFloat = 0)
-    {
+    func makeCenter(xConstant: CGFloat = 0, yConstant: CGFloat = 0) {
         guard let superview = superview else {
             return
         }
@@ -211,9 +206,7 @@ extension UIView {
         centerYAnchor.constraint(equalTo: superview.centerYAnchor, constant: constant).isActive = true
     }
 
-    func makeCenterYAnchor(with view: UIView,
-                           constant: CGFloat = 0)
-    {
+    func makeCenterYAnchor(with view: UIView, constant: CGFloat = 0) {
         centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: constant).isActive = true
     }
 

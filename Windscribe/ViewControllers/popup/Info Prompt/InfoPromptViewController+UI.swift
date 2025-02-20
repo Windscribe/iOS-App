@@ -77,7 +77,7 @@ extension InfoPromptViewController {
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
             cancelButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -24),
-            cancelButton.heightAnchor.constraint(equalToConstant: 55),
+            cancelButton.heightAnchor.constraint(equalToConstant: 55)
         ])
     }
 }

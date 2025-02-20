@@ -18,10 +18,7 @@ protocol FavNodesListTableViewDelegate: AnyObject {
     func tableViewScrolled(toTop: Bool)
 }
 
-class FavNodesListTableViewDataSource: WTableViewDataSource,
-    UITableViewDataSource,
-    WTableViewDataSourceDelegate
-{
+class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
     var favNodes: [FavNodeModel]?
     weak var delegate: FavNodesListTableViewDelegate?
     var scrollHappened = false
@@ -40,9 +37,7 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
-    func tableView(_ tableView: UITableView,
-                   numberOfRowsInSection _: Int) -> Int
-    {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
         guard let count = favNodes?.count else { return 0 }
         if count == 0 {
             delegate?.hideFavNodeRefreshControl()
@@ -54,9 +49,7 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
         return count
     }
 
-    func tableView(_ tableView: UITableView,
-                   cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: favNodeCellReuseIdentifier, for: indexPath) as? FavNodeTableViewCell ?? FavNodeTableViewCell(style: .default, reuseIdentifier: favNodeCellReuseIdentifier)
         let node = favNodes?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
@@ -64,15 +57,11 @@ class FavNodesListTableViewDataSource: WTableViewDataSource,
         return cell
     }
 
-    func tableView(_: UITableView,
-                   heightForRowAt _: IndexPath) -> CGFloat
-    {
+    func tableView(_: UITableView,  heightForRowAt _: IndexPath) -> CGFloat {
         return 50
     }
 
-    func tableView(_: UITableView,
-                   didSelectRowAt indexPath: IndexPath)
-    {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let favNode = favNodes?[indexPath.row] else { return }
         delegate?.setSelectedFavNode(favNode: favNode)
     }

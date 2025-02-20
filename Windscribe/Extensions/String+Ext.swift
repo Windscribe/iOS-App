@@ -28,17 +28,6 @@ extension String {
         return ""
     }
 
-    func SHA1() -> String {
-        var digestData = Data(count: Int(CC_SHA1_DIGEST_LENGTH))
-        _ = digestData.withUnsafeMutableBytes { digestBytes in
-            messageData?.withUnsafeBytes { messageBytes in
-                CC_SHA1(messageBytes, CC_LONG(messageData!.count), digestBytes)
-            }
-        }
-        let hex = digestData.map { String(format: "%02hhx", $0) }.joined()
-        return hex
-    }
-
     func MD5() -> String {
         var digestData = Data(count: Int(CC_MD5_DIGEST_LENGTH))
         _ = digestData.withUnsafeMutableBytes { digestBytes in
@@ -140,10 +129,7 @@ extension StringProtocol {
     func ranges<S: StringProtocol>(of string: S, options: String.CompareOptions = []) -> [Range<Index>] {
         var result: [Range<Index>] = []
         var startIndex = self.startIndex
-        while startIndex < endIndex,
-              let range = self[startIndex...]
-              .range(of: string, options: options)
-        {
+        while startIndex < endIndex, let range = self[startIndex...].range(of: string, options: options) {
             result.append(range)
             startIndex = range.lowerBound < range.upperBound ? range.upperBound :
                 index(range.lowerBound, offsetBy: 1, limitedBy: endIndex) ?? endIndex

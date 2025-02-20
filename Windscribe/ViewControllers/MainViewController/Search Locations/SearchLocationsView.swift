@@ -96,7 +96,7 @@ class SearchLocationsView: UIView {
             clearSearchButton.widthAnchor.constraint(equalToConstant: 16),
 
             // exitSearchButton
-            exitSearchButton.widthAnchor.constraint(equalToConstant: 24),
+            exitSearchButton.widthAnchor.constraint(equalToConstant: 24)
         ])
     }
 

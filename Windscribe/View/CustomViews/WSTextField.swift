@@ -162,7 +162,7 @@ class PasswordTextField: LoginTextField {
                                toItem: nil,
                                attribute: .width,
                                multiplier: 1.0,
-                               constant: 24),
+                               constant: 24)
         ])
     }
 }

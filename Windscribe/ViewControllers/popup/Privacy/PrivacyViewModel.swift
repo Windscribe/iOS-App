@@ -25,8 +25,7 @@ class PrivacyViewModel: PrivacyViewModelType {
     init(preferences: Preferences,
          networkRepository: SecuredNetworkRepository,
          localDatabase: LocalDatabase,
-         logger: FileLogger)
-    {
+         logger: FileLogger) {
         self.preferences = preferences
         self.networkRepository = networkRepository
         self.localDatabase = localDatabase
@@ -46,16 +45,17 @@ class PrivacyViewModel: PrivacyViewModelType {
         NotificationCenter.default.post(Notification(name: Notifications.reachabilityChanged))
         var defaultProtocol = TextsAsset.General.protocols[0]
         var defaultPort = localDatabase.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+
         if let suggestedProtocol = localDatabase.getSuggestedPorts()?.first,
            suggestedProtocol.protocolType != "",
-           suggestedProtocol.port != ""
-        {
+           suggestedProtocol.port != "" {
             defaultProtocol = suggestedProtocol.protocolType
             defaultPort = suggestedProtocol.port
             logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
         } else {
             logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
+
         localDatabase.updateConnectionMode(value: Fields.Values.manual)
         networkRepository.updateNetworkPreferredProtocol(with: defaultProtocol, andPort: defaultPort)
         completionHandler?()

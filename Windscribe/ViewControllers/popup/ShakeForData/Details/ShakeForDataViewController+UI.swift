@@ -154,7 +154,7 @@ extension ShakeForDataViewController {
             // quitButton
             quitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -18),
             quitButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            quitButton.heightAnchor.constraint(equalToConstant: 20),
+            quitButton.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 }

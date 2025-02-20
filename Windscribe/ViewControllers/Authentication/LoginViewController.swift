@@ -128,7 +128,7 @@ class LoginViewController: WSNavigationViewController {
                 self?.infoLabel.isHidden = true
                 self?.infoLabel.text = ""
             default:
-                self?.logger.logD(self, "default case")
+                self?.logger.logD(self ?? "Unknown", "default case")
             }
         }.disposed(by: disposeBag)
         continueButton.rx.tap.bind { [weak self] in

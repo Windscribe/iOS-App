@@ -115,7 +115,7 @@ class HelpView: UIStackView {
     private func setup() {
         axis = .vertical
         addArrangedSubviews([
-            contentStack,
+            contentStack
         ])
 
         if !item.subTitle.isEmpty {
@@ -235,7 +235,7 @@ class HelpHeaderView: WSTouchStackView {
         axis = .horizontal
         spacing = 16
         addArrangedSubviews([
-            iconImage, titleLabel, UIView(), statusLabel, loadingIndicator,
+            iconImage, titleLabel, UIView(), statusLabel, loadingIndicator
         ])
         if type == .navigation {
             addArrangedSubview(arrowImage)
@@ -321,7 +321,7 @@ class HelpSubRowView: WSTouchStackView {
         axis = .horizontal
         spacing = 16
         addArrangedSubviews([
-            titleLabel, UIView(), arrowImage,
+            titleLabel, UIView(), arrowImage
         ])
         setPadding(UIEdgeInsets(horizontalInset: 16, verticalInset: 16))
         isUserInteractionEnabled = true

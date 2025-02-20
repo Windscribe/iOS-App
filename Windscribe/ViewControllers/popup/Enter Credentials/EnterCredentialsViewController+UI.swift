@@ -207,7 +207,7 @@ extension EnterCredentialsViewController {
             submitButton.topAnchor.constraint(equalTo: saveCredentialsLabel.bottomAnchor, constant: 32),
             submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 48),
             submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -48),
-            submitButton.heightAnchor.constraint(equalToConstant: 48),
+            submitButton.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
 }

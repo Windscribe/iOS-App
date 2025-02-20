@@ -50,7 +50,8 @@ class SelectableHeaderView: UIStackView {
 
     private lazy var dropdownView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [
-            optionLabel, iconDropdown,
+            optionLabel,
+            iconDropdown
         ])
         stack.axis = .horizontal
         stack.spacing = 8
@@ -117,7 +118,7 @@ class SelectableHeaderView: UIStackView {
             iconImage,
             titleLabel,
             UIView(),
-            dropdownView,
+            dropdownView
         ])
         spacing = 16
         axis = .horizontal
@@ -163,9 +164,7 @@ extension SelectableHeaderView {
             currentDropdownView = nil
         }
 
-        if let parentView = superview,
-           let grandParentView = parentView.superview
-        {
+        if let parentView = superview, let grandParentView = parentView.superview {
             let frameToShowDropDown = parentView.frame
             let displayFrame = CGRect(x: frameToShowDropDown.origin.x - 16,
                                       y: frameToShowDropDown.origin.y + 16,

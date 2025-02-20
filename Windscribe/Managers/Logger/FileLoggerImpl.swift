@@ -99,7 +99,7 @@ class FileLoggerImpl: FileLogger {
             "[Release]: \(Bundle.main.buildVersionNumber ?? "")",
             "[App Release Version]: \(Bundle.main.releaseVersionNumber ?? "")",
             "[Start of log]:",
-            "------------------------------------------------------",
+            "------------------------------------------------------"
         ]
         logD(self, deviceInfo.joined(separator: "\n"))
     }

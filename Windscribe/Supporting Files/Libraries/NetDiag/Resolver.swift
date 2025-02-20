@@ -8,7 +8,6 @@
 
 import Foundation
 
-// swiftlint:disable all
 open class Resolver {
     fileprivate var state = __res_9_state()
 
@@ -36,7 +35,7 @@ public extension Resolver {
         var hostBuffer = [CChar](repeating: 0, count: Int(NI_MAXHOST))
 
         let sinlen = socklen_t(s.sin.sin_len)
-        let _ = withUnsafePointer(to: &s) {
+        _ = withUnsafePointer(to: &s) {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
                 Darwin.getnameinfo($0, sinlen,
                                    &hostBuffer, socklen_t(hostBuffer.count),

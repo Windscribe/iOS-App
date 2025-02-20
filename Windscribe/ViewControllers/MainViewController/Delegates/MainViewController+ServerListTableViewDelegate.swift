@@ -10,9 +10,7 @@ import Foundation
 import UIKit
 
 extension MainViewController: ServerListTableViewDelegate {
-    func setSelectedServerAndGroup(server: ServerModel,
-                                   group: GroupModel)
-    {
+    func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
         searchLocationsView.viewModel.dismiss()
         if !ReachabilityManager.shared.internetConnectionAvailable() {
             return
@@ -26,9 +24,7 @@ extension MainViewController: ServerListTableViewDelegate {
             return
         }
 
-        if !canAccesstoProLocation() &&
-            group.premiumOnly ?? false
-        {
+        if !canAccesstoProLocation() && group.premiumOnly ?? false {
             showUpgradeView()
             return
         } else if !group.canConnect() {

@@ -83,43 +83,43 @@ extension MainViewController {
             NSLayoutConstraint(item: autoModeSelectorInfoIconView as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoModeSelectorInfoIconView as Any, attribute: .left, relatedBy: .equal, toItem: view, attribute: .left, multiplier: 1.0, constant: 32),
             NSLayoutConstraint(item: autoModeSelectorInfoIconView as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 16),
-            NSLayoutConstraint(item: autoModeSelectorInfoIconView as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16),
+            NSLayoutConstraint(item: autoModeSelectorInfoIconView as Any, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1.0, constant: 16)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoModeInfoLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoModeInfoLabel as Any, attribute: .left, relatedBy: .equal, toItem: autoModeSelectorInfoIconView, attribute: .right, multiplier: 1.0, constant: 8),
-            NSLayoutConstraint(item: autoModeInfoLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: autoModeInfoLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoModeSelectorCounterLabel as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoModeSelectorCounterLabel as Any, attribute: .left, relatedBy: .equal, toItem: autoModeInfoLabel, attribute: .right, multiplier: 1.0, constant: 4),
-            NSLayoutConstraint(item: autoModeSelectorCounterLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: autoModeSelectorCounterLabel as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .left, relatedBy: .greaterThanOrEqual, toItem: autoModeSelectorCounterLabel, attribute: .right, multiplier: 1.0, constant: 10),
-            NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoModeSelectorUDPButton as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
-            NSLayoutConstraint(item: autoModeSelectorUDPButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: autoModeSelectorUDPButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18)
         ])
         view.addConstraints([
             NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .centerY, relatedBy: .equal, toItem: autoModeSelectorView, attribute: .centerY, multiplier: 1.0, constant: 0),
             NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -36),
-            NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18),
+            NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 18)
         ])
         if UIDevice.current.isIphone5orLess() {
             view.addConstraints([
                 NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -12),
                 NSLayoutConstraint(item: autoModeSelectorUDPButton as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorTCPButton, attribute: .left, multiplier: 1.0, constant: -12),
-                NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorUDPButton, attribute: .left, multiplier: 1.0, constant: -12),
+                NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorUDPButton, attribute: .left, multiplier: 1.0, constant: -12)
             ])
         } else {
             view.addConstraints([
                 NSLayoutConstraint(item: autoModeSelectorTCPButton as Any, attribute: .right, relatedBy: .equal, toItem: view, attribute: .right, multiplier: 1.0, constant: -36),
                 NSLayoutConstraint(item: autoModeSelectorUDPButton as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorTCPButton, attribute: .left, multiplier: 1.0, constant: -32),
-                NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorUDPButton, attribute: .left, multiplier: 1.0, constant: -32),
+                NSLayoutConstraint(item: autoModeSelectorIkev2Button as Any, attribute: .right, relatedBy: .equal, toItem: autoModeSelectorUDPButton, attribute: .left, multiplier: 1.0, constant: -32)
             ])
         }
     }

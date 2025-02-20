@@ -104,7 +104,7 @@ extension PushNotificationViewController {
             cancelButton.topAnchor.constraint(equalTo: actionButton.bottomAnchor, constant: 32),
             cancelButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
             cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
-            cancelButton.heightAnchor.constraint(equalToConstant: 20),
+            cancelButton.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
 }

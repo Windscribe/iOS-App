@@ -61,10 +61,8 @@ struct IKEv2VPNConfiguration: VPNConfiguration {
         ikeV2Protocol.username = username
         ikeV2Protocol.sharedSecretReference = auth
         #if os(iOS)
-            if #available(iOS 13.0, *) {
-                // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
-                ikeV2Protocol.enableFallback = true
-            }
+            // changing enableFallback to true for https://gitlab.int.windscribe.com/ws/client/iosapp/-/issues/362
+            ikeV2Protocol.enableFallback = true
         #endif
         ikeV2Protocol.ikeSecurityAssociationParameters.encryptionAlgorithm = NEVPNIKEv2EncryptionAlgorithm.algorithmAES256GCM
         ikeV2Protocol.ikeSecurityAssociationParameters.diffieHellmanGroup = NEVPNIKEv2DiffieHellmanGroup.group21

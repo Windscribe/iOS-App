@@ -20,9 +20,7 @@ extension UIButton {
 }
 
 class ImageButton: UIButton {
-    override func point(inside point: CGPoint,
-                        with _: UIEvent?) -> Bool
-    {
+    override func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
         return extendedArea(by: 10.0).contains(point)
     }
 
@@ -37,9 +35,7 @@ class ImageButton: UIButton {
 }
 
 class LargeTapAreaImageButton: UIButton {
-    override func point(inside point: CGPoint,
-                        with _: UIEvent?) -> Bool
-    {
+    override func point(inside point: CGPoint, with _: UIEvent?) -> Bool {
         return extendedArea(by: 30.0).contains(point)
     }
 

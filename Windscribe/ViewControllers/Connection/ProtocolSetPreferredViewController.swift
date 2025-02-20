@@ -146,7 +146,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
                     s.subHeaderLabel,
                     s.setPreferredButton,
                     s.sendDebugLogButton,
-                    s.cancelButton,
+                    s.cancelButton
                 ])
                 s.layoutView.stackView.setCustomSpacing(32, after: s.topImage)
                 s.layoutView.stackView.setCustomSpacing(s.viewModel.type == .fail ? 64 : 32, after: s.subHeaderLabel)
@@ -181,7 +181,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
                                                   properties: [
                                                       Fields.WifiNetwork.preferredProtocol: protocolName,
                                                       Fields.WifiNetwork.preferredPort: defaultPort,
-                                                      Fields.WifiNetwork.preferredProtocolStatus: true,
+                                                      Fields.WifiNetwork.preferredProtocolStatus: true
                                                   ])
         DispatchQueue.main.async {
             self.dismiss(animated: true)

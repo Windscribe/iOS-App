@@ -38,8 +38,7 @@ struct StaticIPModel {
          wgPublicKey: String,
          ovpnX509: String,
          wgIp: String,
-         pingHost: String)
-    {
+         pingHost: String) {
         self.id = id
         self.staticIP = staticIP
         self.connectIP = connectIP

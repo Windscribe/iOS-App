@@ -75,8 +75,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
     func matchInAppPurchaseWithWindscribeData(transaction: SKPaymentTransaction) {
         if let appleData = transaction.appleData,
            let transactionID = transaction.transactionIdentifier,
-           let signature = transaction.signature
-        {
+           let signature = transaction.signature {
             delegate?.purchasedSuccessfully(transaction: transaction,
                                             appleID: transactionID,
                                             appleData: appleData,
@@ -88,8 +87,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
         // replace below code with SharedUserDefaults methods
         if let appleID = preferences.getActiveAppleID(),
            let appleData = preferences.getActiveAppleData(),
-           let appleSIG = preferences.getActiveAppleSig()
-        {
+           let appleSIG = preferences.getActiveAppleSig() {
             apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
                 self.apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: self.dispose)
                 self.logger.logD(self, "Sending Apple purchase data successful.")

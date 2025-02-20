@@ -49,9 +49,7 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
                 let activeManager = try await getNEVPNManager(for: protocolType)
                 if activeManager.connection.status == NEVPNStatus.connected {
                     let prefs = resolver.getPreferences()
-                    if let serverName = prefs.getServerNameKey(),
-                       let nickName = prefs.getNickNameKey()
-                    {
+                    if let serverName = prefs.getServerNameKey(), let nickName = prefs.getNickNameKey() {
                         return .result(dialog: .responseSuccess(cityName: serverName, nickName: nickName, ipAddress: ip))
                     } else {
                         return .result(dialog: .responseSuccessWithNoConnection(ipAddress: ip))

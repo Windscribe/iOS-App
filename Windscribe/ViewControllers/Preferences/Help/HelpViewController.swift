@@ -89,7 +89,7 @@ class HelpViewController: WSNavigationViewController {
                 communitySupportRow,
                 advanceParams,
                 viewDebugLogRow,
-                sendDebugLogRow,
+                sendDebugLogRow
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
@@ -98,7 +98,7 @@ class HelpViewController: WSNavigationViewController {
                 communitySupportRow,
                 advanceParams,
                 viewDebugLogRow,
-                sendDebugLogRow,
+                sendDebugLogRow
             ])
         }
 

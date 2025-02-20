@@ -108,8 +108,7 @@ struct FavNodeModel {
          pingIp: String,
          linkSpeed: String,
          health: Int,
-         isPremiumOnly: Bool)
-    {
+         isPremiumOnly: Bool) {
         self.groupId = groupId
         self.serverName = serverName
         self.countryCode = countryCode
@@ -124,10 +123,7 @@ struct FavNodeModel {
         self.isPremiumOnly = isPremiumOnly
     }
 
-    init(node: NodeModel,
-         group: GroupModel,
-         server: ServerModel)
-    {
+    init(node: NodeModel, group: GroupModel, server: ServerModel) {
         if let groupId = group.id {
             self.groupId = "\(groupId)"
         } else {
@@ -163,10 +159,7 @@ struct FavNodeModel {
     dynamic var linkSpeed: String = ""
     dynamic var health: Int = 0
 
-    convenience init(node: Node,
-                     group: Group,
-                     server: Server)
-    {
+    convenience init(node: Node, group: Group, server: Server) {
         self.init()
         groupId = "\(group.id)"
         serverName = server.name
@@ -183,10 +176,7 @@ struct FavNodeModel {
         isPremiumOnly = group.premiumOnly
     }
 
-    convenience init(node: NodeModel,
-                     group: GroupModel,
-                     server: ServerModel)
-    {
+    convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
         self.init()
         guard let groupId = group.id else { return }
         self.groupId = "\(groupId)"
@@ -269,8 +259,7 @@ struct BestLocationModel {
          ipAddress: String,
          groupId: Int,
          linkSpeed: String,
-         health: Int)
-    {
+         health: Int) {
         self.serverName = serverName
         self.countryCode = countryCode
         self.hostname = hostname
@@ -283,10 +272,7 @@ struct BestLocationModel {
         self.health = health
     }
 
-    init(node: NodeModel,
-         group: GroupModel,
-         server: ServerModel)
-    {
+    init(node: NodeModel, group: GroupModel, server: ServerModel) {
         serverName = group.city
         countryCode = server.countryCode
         hostname = node.hostname
@@ -313,10 +299,7 @@ struct BestLocationModel {
     dynamic var health: Int = 0
     dynamic var id = "BestLocation"
 
-    convenience init(node: NodeModel,
-                     group: GroupModel,
-                     server: ServerModel)
-    {
+    convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
         self.init()
         serverName = group.city ?? ""
         countryCode = server.countryCode ?? ""

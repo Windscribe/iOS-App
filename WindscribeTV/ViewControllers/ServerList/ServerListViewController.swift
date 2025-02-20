@@ -303,10 +303,8 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             self.sideMenuWidthConstraint.constant = 90
             self.view.layoutIfNeeded()
         }
-        for optionView in optionViews {
-            if optionView.sideMenuType == selectionOption {
-                optionView.setHorizontalGradientBackground()
-            }
+        for optionView in optionViews where optionView.sideMenuType == selectionOption {
+            optionView.setHorizontalGradientBackground()
         }
     }
 
@@ -354,7 +352,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             serverListCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             serverListCollectionView.topAnchor.constraint(equalTo: view.topAnchor, constant: 48),
             serverListCollectionView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100),
+            serverListCollectionView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 100)
         ])
 
         favTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -363,7 +361,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             favTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             favTableView.topAnchor.constraint(equalTo: view.topAnchor, constant: -130),
             favTableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: 0),
-            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130),
+            favTableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 130)
         ])
     }
 }
@@ -426,7 +424,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
             label.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
             label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
             label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 0),
-            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
         ])
 
         // Set a fixed height for the header view

@@ -23,5 +23,11 @@ var topSpace: CGFloat {
     if UIScreen.hasTopNotch {
         return 0
     }
-    return UIApplication.shared.statusBarFrame.height
+
+    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+       let statusBarHeight = windowScene.statusBarManager?.statusBarFrame.height {
+        return statusBarHeight
+    }
+
+    return 0
 }

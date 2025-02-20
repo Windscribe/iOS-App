@@ -267,11 +267,9 @@ class LatencyRepositoryImpl: LatencyRepository {
         let servers = database.getServers()
         if let lowestPingIp = findLowestLatencyIP(from: pingData) {
             outerLoop: for server in servers ?? [] {
-                for group in server.groups {
-                    if group.pingIp == lowestPingIp {
-                        locationsManager.saveBestLocation(with: "\(group.id)")
-                        break outerLoop
-                    }
+                for group in server.groups where group.pingIp == lowestPingIp {
+                    locationsManager.saveBestLocation(with: "\(group.id)")
+                    break outerLoop
                 }
             }
         } else {

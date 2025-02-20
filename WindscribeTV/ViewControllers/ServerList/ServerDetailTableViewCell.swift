@@ -358,8 +358,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         if let bestNode = displayingGroup?.bestNode,
            let bestNodeHostname = displayingGroup?.bestNodeHostname,
            bestNode.forceDisconnect == false && isHostStillActive(hostname: bestNodeHostname),
-           bestNodeHostname != ""
-        {
+           bestNodeHostname != "" {
             return true
         } else {
             return false

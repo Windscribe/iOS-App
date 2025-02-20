@@ -77,7 +77,7 @@ extension MainViewController {
             logger.logD(self, "User is banned.")
             var animated = true
             if let topVc = navigationController?.topViewController as? AccountPopupViewController {
-                if topVc as? BannedAccountPopupViewController != nil {
+                if topVc is BannedAccountPopupViewController {
                     return
                 }
                 topVc.dismiss(animated: false)

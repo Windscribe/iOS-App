@@ -36,8 +36,7 @@ extension MainViewController: UIScrollViewDelegate {
 
     func scrollViewWillEndDragging(_: UIScrollView,
                                    withVelocity _: CGPoint,
-                                   targetContentOffset _: UnsafeMutablePointer<CGPoint>)
-    {
+                                   targetContentOffset _: UnsafeMutablePointer<CGPoint>) {
         HapticFeedbackGenerator.shared.run(level: .medium)
         enableTableViewScrolls()
     }

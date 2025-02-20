@@ -1,5 +1,5 @@
 //
-//  LocationPermissionDisclosureViewController.swift
+//  LocationPermissionInfoViewController.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2021-09-14.
@@ -14,8 +14,7 @@ protocol DisclosureAlertDelegate: AnyObject {
     func openLocationSettingsClicked()
 }
 
-// swiftlint:disable next type_name
-class LocationPermissionDisclosureViewController: WSUIViewController {
+class LocationPermissionInfoViewController: WSUIViewController {
     var logger: FileLogger = Assembler.resolve(FileLogger.self)
 
     var backgroundView: UIView!
