@@ -144,14 +144,13 @@ class VPNManager: VPNManagerProtocol {
     // Replace below with SharedUserDefaults
     var activeVPNManager: VPNManagerType {
         get {
-            VPNManagerType(rawValue: preferences.getActiveManagerKey() ?? "") ?? VPNManagerType.wg
+            VPNManagerType(from: preferences.getActiveManagerKey() ?? "")
         }
         set(value) {
             if value != activeVPNManager {
                 logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
-                preferences.saveActiveManagerKey(key: value.rawValue)
-                UserDefaults.standard.setValue(value.rawValue, forKey: activeManagerKey)
             }
+            preferences.saveActiveManagerKey(key: value.username)
         }
     }
 
@@ -213,7 +212,7 @@ enum VPNManagerType: String {
         switch self {
         case .wg: return TextsAsset.wireGuard
         case .openVPN: return TextsAsset.openVPN
-        default: return ""
+        default: return TextsAsset.iKEv2
         }
     }
 

@@ -26,7 +26,7 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
     func perform() async throws -> some IntentResult & ProvidesDialog {
         logger.logD(tag, "Disable VPN action called.")
         do {
-            let protocolType = preferences.getActiveManagerKey() ?? "Wireguard"
+            let protocolType = preferences.getActiveManagerKey() ?? "WireGuard"
             let activeManager = try await getNEVPNManager(for: protocolType)
             let vpnStatus = activeManager.connection.status
             // Already disconnected just update status.
