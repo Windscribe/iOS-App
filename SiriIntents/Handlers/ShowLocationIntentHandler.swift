@@ -24,7 +24,7 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
 
     func handle(intent _: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
         getIPAddress().subscribe(onSuccess: { ip in
-            let protocolType = self.preferences.getActiveManagerKey() ?? "Wireguard"
+            let protocolType = self.preferences.getActiveManagerKey() ?? "WireGuard"
             getActiveManager(for: protocolType) { result in
                 switch result {
                 case let .success(manager):
