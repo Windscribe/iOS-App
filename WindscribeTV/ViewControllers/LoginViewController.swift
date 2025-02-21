@@ -131,12 +131,12 @@ class LoginViewController: PreferredFocusedViewController {
     }
 
     func setupLocalized() {
-        titleLabel.text = TvAssets.lazyLogin
-        description1.text = TvAssets.lazyLoginDescription
-        orLabel.text = TvAssets.or
-        description2.text = TvAssets.lazyLoginDescription2
-        generateCodeButton.setTitle(TvAssets.generateCode, for: .normal)
-        loginTitle.text = TvAssets.manualLogin
+        titleLabel.text = TextsAsset.TVAsset.lazyLogin
+        description1.text = TextsAsset.TVAsset.lazyLoginDescription
+        orLabel.text = TextsAsset.TVAsset.or
+        description2.text = TextsAsset.TV.lazyLoginDescription2
+        generateCodeButton.setTitle(TextsAsset.TV.generateCode, for: .normal)
+        loginTitle.text = TextsAsset.TVAsset.manualLogin
         usernameTextField.placeholder = TextsAsset.username
         passwordTextField.placeholder = TextsAsset.password
         loginButton.setTitle(TextsAsset.login.uppercased(), for: .normal)
@@ -167,8 +167,8 @@ class LoginViewController: PreferredFocusedViewController {
         welcomeLabel.font = UIFont.bold(size: 60)
         description2FA.font = UIFont.text(size: 35)
         description2FA.textColor = .whiteWithOpacity(opacity: 0.50)
-        description2FA.text = TvAssets.twofaDescription
-        description2FA.text = TvAssets.twofaDescription
+        description2FA.text = TextsAsset.TVAsset.twofaDescription
+        description2FA.text = TextsAsset.TVAsset.twofaDescription
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with _: UIFocusAnimationCoordinator) {

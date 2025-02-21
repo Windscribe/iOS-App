@@ -59,10 +59,11 @@ class PopupRouter: BaseRouter, RootRouter {
         case .maintenanceLocation:
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
         case let .upgrade(promoCode, pcpID):
-            let upgradeVC = Assembler.resolve(UpgradeViewController.self)
-            upgradeVC.promoCode = promoCode
-            upgradeVC.pcpID = pcpID
-            vc = upgradeVC
+            let upgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
+                $0.promoCode = promoCode
+                $0.pcpID = pcpID
+            }
+            vc = UINavigationController(rootViewController: upgradeVC)
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
@@ -85,6 +86,8 @@ class PopupRouter: BaseRouter, RootRouter {
                  .shakeForDataResult:
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = .coverVertical
+            case .upgrade:
+                vc.modalPresentationStyle = .fullScreen
             default:
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = .crossDissolve
@@ -107,6 +110,8 @@ class PopupRouter: BaseRouter, RootRouter {
                      .shakeForDataResult:
                     from.navigationController?.pushViewController(vc, animated: true)
                     from.navigationController?.viewControllers = [vc]
+                case .upgrade:
+                    from.present(vc, animated: true)
                 default:
                     from.navigationController?.pushViewController(vc, animated: true)
                 }

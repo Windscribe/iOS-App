@@ -110,8 +110,7 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
 
             case .failed:
                 logger.logD(InAppPurchaseManager.self, "Failed to purchase")
-
-                delegate?.failedToPurchase()
+                handleTransactionError(transaction: transaction)
                 SKPaymentQueue.default().finishTransaction(transaction)
 
             default:
@@ -119,4 +118,92 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
             }
         }
     }
+
+    private func handleTransactionError(transaction: SKPaymentTransaction) {
+            if let error = transaction.error as? SKError {
+                switch error.code {
+                case .paymentCancelled:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user canceled the transaction.")
+                    delegate?.failedCanceledByUser()
+                case .clientInvalid:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user is not allowed to make the payment.")
+                    delegate?.failedToPurchase()
+                case .paymentNotAllowed:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Payments are disabled on this device.")
+                    delegate?.failedToPurchase()
+                case .paymentInvalid:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The purchase identifier was invalid.")
+                    delegate?.failedToPurchase()
+                case .storeProductNotAvailable:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The requested product is not available in the current storefront.")
+                    delegate?.failedToPurchase()
+                case .cloudServicePermissionDenied:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user has not allowed access to cloud service information.")
+                    delegate?.failedToPurchase()
+                case .cloudServiceNetworkConnectionFailed:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Cloud service network connection failed.")
+                    delegate?.failedToPurchase()
+                case .cloudServiceRevoked:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user has revoked permission to use this cloud service.")
+                    delegate?.failedToPurchase()
+                case .privacyAcknowledgementRequired:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user has not acknowledged Apple's privacy policy.")
+                    delegate?.failedToPurchase()
+                case .unauthorizedRequestData:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The app is attempting to use unauthorized request data.")
+                    delegate?.failedToPurchase()
+                case .invalidOfferIdentifier:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The specified promotional offer identifier is invalid.")
+                    delegate?.failedToPurchase()
+                case .invalidOfferPrice:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The specified promotional offer price is invalid.")
+                    delegate?.failedToPurchase()
+                case .overlayCancelled:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The user dismissed the overlay.")
+                    delegate?.failedCanceledByUser()
+                case .overlayTimeout:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The overlay did not load in time.")
+                    delegate?.failedToPurchase()
+                case .overlayPresentedInBackgroundScene:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The overlay was presented while the app was in the background.")
+                    delegate?.failedToPurchase()
+                case .unknown:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: An unknown error occurred.")
+                    delegate?.failedToPurchase()
+                default:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: \(error.localizedDescription)")
+                    delegate?.failedToPurchase()
+                }
+            } else if let error = transaction.error as NSError?, error.domain == NSURLErrorDomain {
+                switch error.code {
+                case NSURLErrorNotConnectedToInternet:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: No internet connection. Please check your connection and try again.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorNetworkConnectionLost:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Network connection was lost. Please try again.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorTimedOut:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: The request timed out. Please check your connection and try again.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorCannotFindHost:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Cannot find the server. Please check your internet connection.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorCannotConnectToHost:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Unable to connect to the server. Try again later.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorDNSLookupFailed:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: DNS lookup failed. Check your network settings.")
+                    delegate?.failedDueToNetworkIssue()
+                case NSURLErrorHTTPTooManyRedirects:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: Too many redirects occurred. Try again later.")
+                    delegate?.failedToPurchase()
+                default:
+                    logger.logD(InAppPurchaseManager.self, "Failed to purchase: \(error.localizedDescription)")
+                    delegate?.failedToPurchase()
+                }
+            } else {
+                logger.logD(InAppPurchaseManager.self, "Failed to purchase: An unexpected error occurred.")
+                delegate?.failedToPurchase()
+            }
+        }
 }

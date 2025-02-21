@@ -107,7 +107,7 @@ class LoginViewModelImpl: LoginViewModel {
                 self?.startXPressLoginCodeVerifier(response: xpressResponse)
             }, onFailure: { [self] _ in
                 self.logger.logE(self, "Unable to generate Login code. Check you network connection.")
-                self.failedState.onNext(.loginCode(TvAssets.loginCodeError))
+                self.failedState.onNext(.loginCode(TextsAsset.TVAsset.loginCodeError))
             }).disposed(by: disposeBag)
     }
 

@@ -154,7 +154,7 @@ class GeneralViewController: WSNavigationViewController {
         .subscribe(onNext: { _ in
             self.logger.logD(self, "Tried showing rate dialog manually")
             let scenes = UIApplication.shared.connectedScenes
-            
+
             if let windowScene = scenes.first as? UIWindowScene {
                 self.logger.logD(self, "Attempting show rate popup.")
                 SKStoreReviewController.requestReview(in: windowScene)

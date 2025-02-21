@@ -1,5 +1,5 @@
 {
-  "originHash" : "a5591a6ef525127c2a5ab4a6878e13752c73a8d05de89e4b1e88e611211b7537",
+  "originHash" : "380ad18ee893bb715120dc575889818b2119c54b6fca554be77bbdd45748dcaa",
   "pins" : [
     {
       "identity" : "dns",
@@ -17,6 +17,15 @@
       "state" : {
         "branch" : "windscribe",
         "revision" : "106d9b0b2b3ee6119a4d411bc037cad26d006577"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit.git",
+      "state" : {
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
       }
     },
     {
@@ -42,7 +51,6 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Windscribe/wireguard-apple.git",
       "state" : {
-        "branch" : "windscribe",
         "revision" : "7bb0d1aabc0d2f1542ebc074cf4dd1ecdd269004"
       }
     }

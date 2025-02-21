@@ -255,3 +255,35 @@ extension UIView {
         layer.cornerRadius = cornerRadius
     }
 }
+
+extension UIView {
+    func addSubviews(_ subviews: [UIView]) {
+        subviews.forEach { addSubview($0) }
+    }
+}
+
+extension UIView {
+
+    /// Checks if the current device has a regular size class (typically iPads).
+    var isRegularSizeClass: Bool {
+        return self.traitCollection.horizontalSizeClass == .regular
+    }
+
+    /// Checks if the device is in Portrait mode.
+    var isPortrait: Bool {
+        return currentInterfaceOrientation?.isPortrait ?? false
+    }
+
+    /// Checks if the device is in Landscape mode.
+    var isLandscape: Bool {
+        return currentInterfaceOrientation?.isLandscape ?? false
+    }
+
+    /// Gets the current interface orientation safely
+    private var currentInterfaceOrientation: UIInterfaceOrientation? {
+        return window?.windowScene?.interfaceOrientation ??
+               UIApplication.shared.connectedScenes
+                   .compactMap { ($0 as? UIWindowScene)?.interfaceOrientation }
+                   .first
+    }
+}

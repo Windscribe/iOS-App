@@ -24,7 +24,7 @@ class RobertHeaderView: UIView {
     lazy var descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        descriptionLabel.text = Robert.description
+        descriptionLabel.text = TextsAsset.Robert.description
         descriptionLabel.font = UIFont.text(size: 12)
         descriptionLabel.layer.opacity = 0.5
         descriptionLabel.numberOfLines = 0

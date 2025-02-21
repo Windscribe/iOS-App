@@ -10,10 +10,11 @@ import Foundation
 import StoreKit
 
 protocol InAppPurchaseManagerDelegate: AnyObject {
-    func readyToMakePurchase(price1: String, price2: String)
     func didFetchAvailableProducts(windscribeProducts: [WindscribeInAppProduct])
     func purchasedSuccessfully(transaction: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String)
     func failedToPurchase()
+    func failedCanceledByUser()
+    func failedDueToNetworkIssue()
     func unableToMakePurchase()
     func setVerifiedTransaction(transaction: UncompletedTransactions?, error: String?)
     func failedToLoadProducts()

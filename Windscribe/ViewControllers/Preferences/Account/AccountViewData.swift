@@ -91,7 +91,7 @@ enum AccountItemCell {
         case .emailPro:
             return TextsAsset.email
         case .lazyLogin:
-            return TvAssets.lazyLogin
+            return TextsAsset.TVAsset.lazyLogin
         case .voucherCode:
             return TextsAsset.voucherCode
         }

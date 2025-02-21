@@ -9,8 +9,23 @@
 import Foundation
 import Swinject
 
-class UpgradeRouter: BaseRouter, NavigationRouter {
+class UpgradeRouter: BaseRouter, NavigationRouter, RootRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {
+        switch to {
+        case RouteID.enterEmail:
+            let vc = Assembler.resolve(EnterEmailViewController.self)
+            from.navigationController?.pushViewController(vc, animated: true)
+        case let RouteID.confirmEmail(delegate):
+            let vc = Assembler.resolve(ConfirmEmailViewController.self)
+            vc.dismissDelegate = delegate
+            from.present(vc, animated: true)
+        case let RouteID.signup(claimGhostAccount):
+            goToSignUp(viewController: from, claimGhostAccount: claimGhostAccount)
+        default: ()
+        }
+    }
+
+    func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case RouteID.enterEmail:
             let vc = Assembler.resolve(EnterEmailViewController.self)

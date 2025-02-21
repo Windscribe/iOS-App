@@ -23,7 +23,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
 
     func addViews() {
         descriptionView = UILabel()
-        descriptionView.text = SubmitTicket.fillInTheFields
+        descriptionView.text = TextsAsset.SubmitTicket.fillInTheFields
         descriptionView.font = UIFont.text(size: 12)
         descriptionView.layer.opacity = 0.5
         descriptionView.textColor = UIColor.white
@@ -41,14 +41,14 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(categoryContentView)
 
         categoryView = UILabel()
-        categoryView.text = SubmitTicket.category
+        categoryView.text = TextsAsset.SubmitTicket.category
         categoryView.font = UIFont.bold(size: 16)
         categoryView.textColor = UIColor.white
         view.addSubview(categoryView)
 
         catergoryDropDownView = DropdownButton(isDarkMode: viewModel.isDarkMode)
         catergoryDropDownView.delegate = self
-        catergoryDropDownView.setTitle(SubmitTicket.categories[0])
+        catergoryDropDownView.setTitle(TextsAsset.SubmitTicket.categories[0])
         catergoryDropDownView.isUserInteractionEnabled = true
         view.addSubview(catergoryDropDownView)
 
@@ -58,13 +58,13 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(divider1)
 
         yourEmailView = UILabel()
-        yourEmailView.text = SubmitTicket.email
+        yourEmailView.text = TextsAsset.SubmitTicket.email
         yourEmailView.font = UIFont.bold(size: 16)
         yourEmailView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
         view.addSubview(yourEmailView)
 
         emailRequiredView = UILabel()
-        emailRequiredView.text = "(\(SubmitTicket.required))"
+        emailRequiredView.text = "(\(TextsAsset.SubmitTicket.required))"
         emailRequiredView.layer.opacity = 0.5
         emailRequiredView.textColor = UIColor.white
         emailRequiredView.font = UIFont.text(size: 16)
@@ -78,7 +78,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(emailInputView)
 
         emailExplainerView = UILabel()
-        emailExplainerView.text = SubmitTicket.soWeCanContactYou
+        emailExplainerView.text = TextsAsset.SubmitTicket.soWeCanContactYou
         emailExplainerView.font = UIFont.text(size: 12)
         emailExplainerView.layer.opacity = 0.5
         emailExplainerView.numberOfLines = 2
@@ -86,13 +86,13 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(emailExplainerView)
 
         subjectTitleView = UILabel()
-        subjectTitleView.text = SubmitTicket.subject
+        subjectTitleView.text = TextsAsset.SubmitTicket.subject
         subjectTitleView.font = UIFont.bold(size: 16)
         subjectTitleView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
         view.addSubview(subjectTitleView)
 
         subjectRequiredView = UILabel()
-        subjectRequiredView.text = "(\(SubmitTicket.required))"
+        subjectRequiredView.text = "(\(TextsAsset.SubmitTicket.required))"
         subjectRequiredView.layer.opacity = 0.5
         subjectRequiredView.textColor = UIColor.white
         subjectRequiredView.font = UIFont.text(size: 16)
@@ -106,13 +106,13 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(subjectInputView)
 
         messageTitleView = UILabel()
-        messageTitleView.text = SubmitTicket.whatsTheIssue
+        messageTitleView.text = TextsAsset.SubmitTicket.whatsTheIssue
         messageTitleView.font = UIFont.bold(size: 16)
         messageTitleView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
         view.addSubview(messageTitleView)
 
         messageRequiredView = UILabel()
-        messageRequiredView.text = "(\(SubmitTicket.required))"
+        messageRequiredView.text = "(\(TextsAsset.SubmitTicket.required))"
         messageRequiredView.layer.opacity = 0.5
         messageRequiredView.textColor = UIColor.white
         messageRequiredView.font = UIFont.text(size: 16)
@@ -148,7 +148,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         successMessageView = UILabel()
         successMessageView.isHidden = true
         successMessageView.numberOfLines = 3
-        successMessageView.text = SubmitTicket.weWillGetBackToYou
+        successMessageView.text = TextsAsset.SubmitTicket.weWillGetBackToYou
         successMessageView.font = UIFont.text(size: 16)
         successMessageView.textColor = UIColor.white
         successMessageView.layer.opacity = 0.5
@@ -446,7 +446,7 @@ extension SubmitTicketViewController: DropdownButtonDelegate {
         dropdown.dropDownDelegate = self
         switch sender {
         case catergoryDropDownView:
-            dropdown.options = SubmitTicket.categories
+            dropdown.options = TextsAsset.SubmitTicket.categories
         default:
             return
         }

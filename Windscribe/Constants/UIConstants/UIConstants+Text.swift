@@ -1,14 +1,16 @@
 //
-//  swift
+//  TextsAsset.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-18.
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+// swiftlint:disable file_length
+// swiftlint:disable type_body_length
+
 import Foundation
 
-// swiftlint:disable file_length
 enum TextsAsset {
     static var slogan: String {
         return "Keep Your Secrets.".localize()
@@ -485,6 +487,10 @@ enum TextsAsset {
         static var allowing: String {
             return "Allowing".localize()
         }
+
+        static var description: String {
+            return "R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch.".localize()
+        }
     }
 
     static var unlimited: String {
@@ -923,6 +929,131 @@ enum TextsAsset {
 
         static var promoNotValid: String {
             return "Promo is not valid anymore.".localize()
+        }
+
+        // TODO: Need to add localizable languages
+        static var yearly: String {
+            return "Yearly".localize()
+        }
+
+        static var billedAnnually: String {
+            return "Billed Annually".localize()
+        }
+
+        static var monthly: String {
+            return "Monthly".localize()
+        }
+
+        static var billedMonthly: String {
+            return "Billed Monthly".localize()
+        }
+
+        static var subscribe: String {
+            return "Subscribe".localize()
+        }
+
+        static var details: String {
+            return "Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes.".localize()
+        }
+
+        static var restore: String {
+            return "Restore".localize()
+        }
+
+        static var planBenefitUnlimitedTitle: String {
+            return "Unlimited Everything".localize()
+        }
+
+        static var planBenefitUnlimitedDescription: String {
+            return "Use on all devices, with no data limits".localize()
+        }
+
+        static var planBenefitAllLocationsTitle: String {
+            return "All VPN Locations".localize()
+        }
+
+        static var planBenefitAllLocationsDescription: String {
+            return "Servers in 130 cities, more than any other VPN".localize()
+        }
+
+        static var planBenefitSpeedSecurityTitle: String {
+            return "Increased Speed and Security".localize()
+        }
+
+        static var planBenefitSpeedSecurityDescription: String {
+            return "Blocks 99.9% of malicious websites and trackers".localize()
+        }
+
+        static var planBenefitUnableConnectAppStore: String {
+            return "Unable to connect to app store services. Please try again.".localize()
+        }
+
+        static var planBenefitSuccessfullPurchaseTitle: String {
+            return "You're all set".localize()
+        }
+
+        static var planBenefitSuccessfullPurchase: String {
+            return "Your purchase is successful.".localize()
+        }
+
+        static var planBenefitSuccessScreenTitle: String {
+            return "Welcome to Windscribe Pro!".localize()
+        }
+
+        static var planBenefitSuccessScreenDescription: String {
+            return "Thanks for upgrading to Windscribe Pro! You now have access to even more powerful features.".localize()
+        }
+
+        static var planBenefitSuccessShareTitle: String {
+            return "Share".localize()
+        }
+
+        static var planBenefitSuccessStartTitle: String {
+            return "Start using pro".localize()
+        }
+
+        static var planBenefitTransactionFailedAlertTitle: String {
+            return "Failed to complete transaction.".localize()
+        }
+
+        static var planBenefitTransactionFailedAlert: String {
+            return "Something went wrong. Please try another payment method or contact our customer support.".localize()
+        }
+
+        static var planBenefitTransactionFailedRestoreTitle: String {
+            return "Failed to restore transaction.".localize()
+        }
+
+        static var planBenefitNetworkProblemTitle: String {
+            return "Failed to load products. Check your internet connection and try again.".localize()
+        }
+
+        static var planBenefitSuccessShareDevices: String {
+            return "Set Up on All Your Devices".localize()
+        }
+
+        static var planBenefitSuccessShareLocation: String {
+            return "Connect to Any Location".localize()
+        }
+
+        static var planBenefitSuccessShareBandwidth: String {
+            return "Unlimited Bandwidth".localize()
+        }
+
+        static var planBenefitJoinDiscord: String {
+            return "Join our Discord community".localize()
+        }
+
+        static var planBenefitJoinReddit: String {
+            return "Join our Reddit community".localize()
+        }
+
+        static var planBenefitFindUsYoutube: String {
+            return "Find us on YouTube".localize()
+        }
+
+        static var planBenefitFollowUsX: String {
+            return "Follow us on X".localize()
         }
     }
 
@@ -1571,277 +1702,223 @@ enum TextsAsset {
             return "Back".localize()
         }
     }
-}
 
-enum Links {
-    static var base: String = "https://windscribe.com/"
-    static let acccount = "myaccount"
-    static let helpMe = "help"
-    static let portForwarding = "myaccount#portforwards"
-    static let staticIPs = "staticips"
-    static let terms = "terms"
-    static let knowledge = "support/knowledgebase"
-    static let garry = "support?garry=1"
-    static let reddit = "https://www.reddit.com/r/Windscribe/"
-    static let discord = "https://discord.com/invite/vpn"
-    static let status = base + "status"
-    static let about = base + "about"
-    static let termsWindscribe = base + "terms"
-    static let privacy = base + "privacy"
-    static let blog = "https://blog.windscribe.com/"
-    static let jobs = base + "jobs"
-    static let learMoreAboutRobert = "features/robert"
-    static let softwareLicenses = "https://windscribe.com/terms/oss"
-    static let support = "windscribe.com/support"
-    static let changelog = base + "changelog/ios"
-}
+    enum Help {
+        static var helpMe: String {
+            return "Help Me!".localize()
+        }
 
-enum Help {
-    static var helpMe: String {
-        return "Help Me!".localize()
+        static var knowledgeBase: String {
+            return "Knowledge Base".localize()
+        }
+
+        static var allYouNeedToknowIsHere: String {
+            return "All you need to know about Windscribe.".localize()
+        }
+
+        static var talkToGarry: String {
+            return "Talk to Garry".localize()
+        }
+
+        static var notAsSmartAsSiri: String {
+            return "Need help? Garry can help you with most issues, go talk to him.".localize()
+        }
+
+        static var sendTicket: String {
+            return "Contact Humans".localize()
+        }
+
+        static var sendUsATicket: String {
+            return "Have a Problem that Garry can't resolve? Contact human support".localize()
+        }
+
+        static var communitySupport: String {
+            return "Community Support".localize()
+        }
+
+        static var bestPlacesTohelp: String {
+            return "Best places to help and get help from other users.".localize()
+        }
+
+        static var reddit: String {
+            return "Reddit".localize()
+        }
+
+        static var discord: String {
+            return "Discord".localize()
+        }
+
+        static var advanceParamDescription: String {
+            return "Make advanced tweaks to the way the app functions".localize()
+        }
     }
 
-    static var knowledgeBase: String {
-        return "Knowledge Base".localize()
+    enum About {
+        static var about: String {
+            return "About".localize()
+        }
+
+        static var status: String {
+            return "Status".localize()
+        }
+
+        static var aboutUs: String {
+            return "About Us".localize()
+        }
+
+        static var privacyPolicy: String {
+            return "Privacy Policy".localize()
+        }
+
+        static var terms: String {
+            return "Terms".localize()
+        }
+
+        static var blog: String {
+            return "Blog".localize()
+        }
+
+        static var jobs: String {
+            return "Jobs".localize()
+        }
+
+        static var softwareLicenses: String {
+            return "Software Licenses".localize()
+        }
+
+        static var changelog: String {
+            return "Changelog".localize()
+        }
     }
 
-    static var allYouNeedToknowIsHere: String {
-        return "All you need to know about Windscribe.".localize()
-    }
+    enum SubmitTicket {
+        static var submitTicket: String {
+            return "Send Ticket".localize()
+        }
 
-    static var talkToGarry: String {
-        return "Talk to Garry".localize()
-    }
+        static var fillInTheFields: String {
+            return "Fill in the fields bellow and one of our support agents will personally get back to you very soon™".localize()
+        }
 
-    static var notAsSmartAsSiri: String {
-        return "Need help? Garry can help you with most issues, go talk to him.".localize()
-    }
+        static var category: String {
+            return "Category".localize()
+        }
 
-    static var sendTicket: String {
-        return "Contact Humans".localize()
-    }
+        static var email: String {
+            return "Email".localize()
+        }
 
-    static var sendUsATicket: String {
-        return "Have a Problem that Garry can't resolve? Contact human support".localize()
-    }
+        static var required: String {
+            return "Required".localize()
+        }
 
-    static var communitySupport: String {
-        return "Community Support".localize()
-    }
+        static var soWeCanContactYou: String {
+            return "So we can contact you, we won’t use it for anything else".localize()
+        }
 
-    static var bestPlacesTohelp: String {
-        return "Best places to help and get help from other users.".localize()
-    }
+        static var subject: String {
+            return "Subject".localize()
+        }
 
-    static var reddit: String {
-        return "Reddit".localize()
-    }
+        static var whatsTheIssue: String {
+            return "What’s the issue?".localize()
+        }
 
-    static var discord: String {
-        return "Discord".localize()
-    }
+        static var message: String {
+            return "Message".localize()
+        }
 
-    static var advanceParamDescription: String {
-        return "Make advanced tweaks to the way the app functions".localize()
-    }
-}
+        static let `continue` = "Continue"
+        static let acount = "Account"
+        static let sales = "Sales"
+        static let technical = "Technical"
+        static let feedback = "Feedback"
+        static let categories = [acount, technical, sales, feedback]
+        static let categoryValues = [acount: 1, technical: 2, sales: 3, feedback: 4]
+        static var weWillGetBackToYou: String {
+            return "Sweet, we’ll get back to you as soon as one of our agents is back from lunch.".localize()
+        }
 
-enum PopupsTV {
-    static var support: String {
-        return "Support".localize()
-    }
-
-    static var supportBody: String {
-        return "Go to the address above on your phone or computer for all support related inquiries.".localize()
-    }
-}
-
-enum Robert {
-    static let robert = "R.O.B.E.R.T"
-    static var description: String {
-        return "R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch.".localize()
-    }
-
-    static var learnMore: String {
-        return "Learn more".localize()
-    }
-}
-
-enum Web {
-    static let Windscribe = "Windscribe"
-}
-
-enum About {
-    static var about: String {
-        return "About".localize()
-    }
-
-    static var status: String {
-        return "Status".localize()
-    }
-
-    static var aboutUs: String {
-        return "About Us".localize()
-    }
-
-    static var privacyPolicy: String {
-        return "Privacy Policy".localize()
-    }
-
-    static var terms: String {
-        return "Terms".localize()
-    }
-
-    static var blog: String {
-        return "Blog".localize()
-    }
-
-    static var jobs: String {
-        return "Jobs".localize()
-    }
-
-    static var softwareLicenses: String {
-        return "Software Licenses".localize()
-    }
-
-    static var changelog: String {
-        return "Changelog".localize()
-    }
-}
-
-enum SubmitTicket {
-    static var submitTicket: String {
-        return "Send Ticket".localize()
-    }
-
-    static var fillInTheFields: String {
-        return "Fill in the fields bellow and one of our support agents will personally get back to you very soon™".localize()
-    }
-
-    static var category: String {
-        return "Category".localize()
-    }
-
-    static var email: String {
-        return "Email".localize()
-    }
-
-    static var required: String {
-        return "Required".localize()
-    }
-
-    static var soWeCanContactYou: String {
-        return "So we can contact you, we won’t use it for anything else".localize()
-    }
-
-    static var subject: String {
-        return "Subject".localize()
-    }
-
-    static var whatsTheIssue: String {
-        return "What’s the issue?".localize()
-    }
-
-    static var message: String {
-        return "Message".localize()
-    }
-
-    static let `continue` = "Continue"
-    static let acount = "Account"
-    static let sales = "Sales"
-    static let technical = "Technical"
-    static let feedback = "Feedback"
-    static let categories = [acount, technical, sales, feedback]
-    static let categoryValues = [acount: 1, technical: 2, sales: 3, feedback: 4]
-    static var weWillGetBackToYou: String {
-        return "Sweet, we’ll get back to you as soon as one of our agents is back from lunch.".localize()
-    }
-
-    static var failedToSendTicket: String {
-        return "Failed to send support ticket. Please check your network and try again.".localize()
+        static var failedToSendTicket: String {
+            return "Failed to send support ticket. Please check your network and try again.".localize()
+        }
     }
 }
 
-enum TvAssets {
-    static var loginCodeError: String {
-        return "Unable to generate Login code. Check you network connection.".localize()
-    }
+extension TextsAsset {
+    enum TVAsset {
+        static var loginCodeError: String {
+            return "Unable to generate Login code. Check you network connection.".localize()
+        }
 
-    static var addToFav: String {
-        return "Add to fav".localize()
-    }
+        static var addToFav: String {
+            return "Add to fav".localize()
+        }
 
-    static var removeFromFav: String {
-        return "Remove from fav".localize()
-    }
+        static var removeFromFav: String {
+            return "Remove from fav".localize()
+        }
 
-    static var favTitle: String {
-        return "Favourites".localize()
-    }
+        static var favTitle: String {
+            return "Favourites".localize()
+        }
 
-    static var staticIPTitle: String {
-        return "Static IP".localize()
-    }
+        static var staticIPTitle: String {
+            return "Static IP".localize()
+        }
 
-    static var allTitle: String {
-        return "All".localize()
-    }
+        static var allTitle: String {
+            return "All".localize()
+        }
 
-    static var windflixTitle: String {
-        return "Windflix".localize()
-    }
+        static var windflixTitle: String {
+            return "Windflix".localize()
+        }
 
-    static var welcomeDescription: String {
-        return "If you already have an account.".localize()
-    }
+        static var welcomeDescription: String {
+            return "If you already have an account.".localize()
+        }
 
-    static var lazyLogin: String {
-        return "Lazy Login".localize()
-    }
+        static var lazyLogin: String {
+            return "Lazy Login".localize()
+        }
 
-    static var lazyLoginDescription: String {
-        return "Go to https://windscribe.com/lazy on any device and enter the code below.".localize()
-    }
+        static var lazyLoginDescription: String {
+            return "Go to https://windscribe.com/lazy on any device and enter the code below.".localize()
+        }
 
-    static var or: String {
-        return "OR".localize()
-    }
+        static var or: String {
+            return "OR".localize()
+        }
 
-    static var lazyLoginDescription2: String {
-        return "Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below.".localize()
-    }
+        static var lazyLoginDescription2: String {
+            return "Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below.".localize()
+        }
 
-    static var generateCode: String {
-        return "Generate Code".localize().uppercased()
-    }
+        static var generateCode: String {
+            return "Generate Code".localize().uppercased()
+        }
 
-    static var manualLogin: String {
-        return "Manual Login".localize()
-    }
+        static var manualLogin: String {
+            return "Manual Login".localize()
+        }
 
-    static var forgotPasswordInfo: String {
-        return "Please visit windscribe.com to reset your password".localize()
-    }
+        static var forgotPasswordInfo: String {
+            return "Please visit windscribe.com to reset your password".localize()
+        }
 
-    static var twofaDescription: String {
-        return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
-    }
+        static var twofaDescription: String {
+            return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
+        }
 
-    static var locationMaintenanceDescription: String {
-        return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status"
-    }
+        static var locationMaintenanceDescription: String {
+            return "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status"
+        }
 
-    static var locationMaintenanceTitle: String {
-        return "Location Maintenance"
+        static var locationMaintenanceTitle: String {
+            return "Location Maintenance"
+        }
     }
 }
 
-enum AccessibilityIdentifier {
-    static var favouriteButton: String {
-        return "favourite"
-    }
-
-    static var connectButton: String {
-        return "connect"
-    }
-}
+// swiftlint:enable type_body_length
