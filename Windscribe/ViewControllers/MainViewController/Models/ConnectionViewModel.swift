@@ -101,6 +101,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let credentialsRepository: CredentialsRepository
     let ipRepository: IPRepository
     let localDB: LocalDatabase
+    let appReviewManager: AppReviewManager
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -134,6 +135,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.localDB = localDB
 
         selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
+        appReviewManager = DefaultAppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnManager.getStatus().subscribe(onNext: { state in
             self.updateState(with: ConnectionState.state(from: state))
@@ -450,13 +452,27 @@ extension ConnectionViewModel {
     }
 
     private func checkPreferencesForTriggers() {
-        if preferences.getConnectionCount() == 2 {
+        let connectionCount = preferences.getConnectionCount()
+
+        if connectionCount == 2 {
             logger.logD(self, "Displaying push notifications permission popup to user.")
             pushNotificationPermissionsTrigger.onNext(())
         }
-        if preferences.getConnectionCount() == 5 {
+        if connectionCount == 5 {
             logger.logD(self, "Displaying Siri shortcut popup.")
             siriShortcutTrigger.onNext(())
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            guard let count = connectionCount, count % 3 == 0 else {
+                logger.logD(self, "Rate Dialog: Connection count is not a multiple of 3. Skipping...")
+                return
+            }
+
+            let activeSession = self.localDB.getSessionSync()
+            self.appReviewManager.requestReviewIfAvailable(session: activeSession)
         }
     }
 

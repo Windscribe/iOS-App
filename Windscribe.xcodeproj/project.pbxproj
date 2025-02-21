@@ -265,8 +265,6 @@
 		5986AB562C47422800167023 /* EurostileExt-Bla.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF914A6B23CCF35D002D3041 /* EurostileExt-Bla.otf */; };
 		5986AB572C47422B00167023 /* IBMPlexSans-Text.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925421EF8EC500A3F584 /* IBMPlexSans-Text.otf */; };
 		5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925321EF8EC500A3F584 /* IBMPlexSans-Medium.otf */; };
-		5986AB5C2C47569E00167023 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986AB5B2C47569E00167023 /* UIImage+Ext.swift */; };
-		5986AB5D2C47569E00167023 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986AB5B2C47569E00167023 /* UIImage+Ext.swift */; };
 		5986AB602C485A2300167023 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986AB5E2C485A2300167023 /* SignUpViewController.swift */; };
 		598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */; };
 		598F173929F05723007137A4 /* EmergencyConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173729F05723007137A4 /* EmergencyConnectViewController.swift */; };
@@ -1104,6 +1102,9 @@
 		E9DF548E274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF548D274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift */; };
 		E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */; };
 		E9F9EF0B27BC071E00E6C548 /* CustomConfigEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */; };
+		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
+		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
+		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
 		F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */; };
 		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */; };
@@ -1112,6 +1113,11 @@
 		F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */; };
 		F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */; };
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
+		F465A6372D5D37EF00579B5F /* DefaultAppReviewManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A6362D5D37EF00579B5F /* DefaultAppReviewManagerTests.swift */; };
+		F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A6382D5D3B6000579B5F /* MockPreferences.swift */; };
+		F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A63A2D5D3B7F00579B5F /* MockLogger.swift */; };
+		F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */; };
+		F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A6402D5D3E1400579B5F /* MockSession.swift */; };
 		F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */; };
 		F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */; };
 		F46C286C2D4C0AB30073207E /* PlanUpgradeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */; };
@@ -1146,6 +1152,9 @@
 		F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5F52D564F300077C132 /* ImageCache.swift */; };
 		F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */; };
 		F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */; };
+		F4F29E502D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
+		F4F29E512D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
+		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1452,7 +1461,6 @@
 		597DDE022BA229EC00F19F3F /* GeneralRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralRouter.swift; sourceTree = "<group>"; };
 		5986AB422C45605F00167023 /* wstnet_tv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = wstnet_tv.framework; sourceTree = "<group>"; };
 		5986AB592C47432D00167023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5986AB5B2C47569E00167023 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 		5986AB5E2C485A2300167023 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenVPNConnectionInfo.swift; sourceTree = "<group>"; };
 		598F173729F05723007137A4 /* EmergencyConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewController.swift; sourceTree = "<group>"; };
@@ -1989,6 +1997,8 @@
 		E9DF548D274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+UIPreferredProtocolView.swift"; sourceTree = "<group>"; };
 		E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+ConnectionStatus.swift"; sourceTree = "<group>"; };
 		E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigEmptyView.swift; sourceTree = "<group>"; };
+		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
+		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
 		F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradePromoView.swift; sourceTree = "<group>"; };
 		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessModels.swift; sourceTree = "<group>"; };
@@ -1997,6 +2007,11 @@
 		F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessLogoView.swift; sourceTree = "<group>"; };
 		F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessBenefitView.swift; sourceTree = "<group>"; };
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
+		F465A6362D5D37EF00579B5F /* DefaultAppReviewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAppReviewManagerTests.swift; sourceTree = "<group>"; };
+		F465A6382D5D3B6000579B5F /* MockPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPreferences.swift; sourceTree = "<group>"; };
+		F465A63A2D5D3B7F00579B5F /* MockLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogger.swift; sourceTree = "<group>"; };
+		F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalDatabase.swift; sourceTree = "<group>"; };
+		F465A6402D5D3E1400579B5F /* MockSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSession.swift; sourceTree = "<group>"; };
 		F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewController.swift; sourceTree = "<group>"; };
 		F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewModel.swift; sourceTree = "<group>"; };
 		F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeModels.swift; sourceTree = "<group>"; };
@@ -2013,6 +2028,7 @@
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
+		F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3046,6 +3062,7 @@
 				C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */,
 				C57BDE3C29B93E9900337E63 /* NSDate+Ext.swift */,
 				5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */,
+				F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3068,6 +3085,7 @@
 				1AF57D44280FCF25004E8082 /* Language */,
 				59C3115D2BC5BFF9004B16B3 /* Protocols */,
 				591CF9A72BB47951004DEB48 /* ReferAndShareManager */,
+				F42ADD1E2D5BB47F0021AF6E /* AppReview */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3163,7 +3181,7 @@
 				C5D983C52B34E5690069FF3A /* API */,
 				C55AF09D2B3B8A2A0011EF56 /* Repository */,
 				C55AF09C2B3B76060011EF56 /* Other */,
-				C55AF09E2B3B8AA40011EF56 /* ViewModal */,
+				F4EF7A092D5D31A200E4EB9F /* Mocks */,
 			);
 			path = WindscribeTests;
 			sourceTree = "<group>";
@@ -3590,6 +3608,7 @@
 		C55AF0902B3A686E0011EF56 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				F465A6362D5D37EF00579B5F /* DefaultAppReviewManagerTests.swift */,
 				C55AF0912B3A68820011EF56 /* PreferencesTests.swift */,
 				C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */,
 			);
@@ -3619,13 +3638,6 @@
 				C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */,
 			);
 			path = Repository;
-			sourceTree = "<group>";
-		};
-		C55AF09E2B3B8AA40011EF56 /* ViewModal */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModal;
 			sourceTree = "<group>";
 		};
 		C56615F72C4D883E008AA993 /* libs */ = {
@@ -4092,6 +4104,14 @@
 			path = MainViewController;
 			sourceTree = "<group>";
 		};
+		F42ADD1E2D5BB47F0021AF6E /* AppReview */ = {
+			isa = PBXGroup;
+			children = (
+				F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */,
+			);
+			path = AppReview;
+			sourceTree = "<group>";
+		};
 		F45BA5932D53F96000CFDB82 /* PlanUpgrade */ = {
 			isa = PBXGroup;
 			children = (
@@ -4170,12 +4190,12 @@
 		F485CBC32D4D67630063EA3A /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
+				F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */,
 				AF914A7723D611DA002D3041 /* UIButton+Ext.swift */,
 				AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */,
 				AF54C6BB228215A700DAAB07 /* UIDevice+Ext.swift */,
 				AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */,
 				AF4E926C21F235D600A3F584 /* UIFont+Ext.swift */,
-				5986AB5B2C47569E00167023 /* UIImage+Ext.swift */,
 				AF7F3087237B38670097C6D6 /* UIImageView+Ext.swift */,
 				AFD593D421F8EC0A00A47546 /* UILabel+Ext.swift */,
 				E9219FF02885AFB90026E544 /* UIStackView+Ext.swift */,
@@ -4199,6 +4219,17 @@
 				F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */,
 			);
 			path = ImageLoader;
+			sourceTree = "<group>";
+		};
+		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */,
+				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
+				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
+				F465A6402D5D3E1400579B5F /* MockSession.swift */,
+			);
+			path = Mocks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -4990,6 +5021,7 @@
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
 				59FC74282C5155B000021CD1 /* Proxy.swift in Sources */,
 				59FC745D2C51641D00021CD1 /* PushNotificationManagerV2.swift in Sources */,
+				F4F29E512D68D6D500933633 /* UIImage+Ext.swift in Sources */,
 				59C96D692C69C55F00546C72 /* ServerListViewController.swift in Sources */,
 				59FC73DC2C514BC600021CD1 /* Connectivity.swift in Sources */,
 				59FC74682C5167D300021CD1 /* BillingRepositoryImpl.swift in Sources */,
@@ -5068,6 +5100,7 @@
 				59FC745E2C51642100021CD1 /* PushNotificationManagerV2Impl.swift in Sources */,
 				599BA2AA2C5D202A00F0D1E4 /* LocalDatabaseImpl+Migration.swift in Sources */,
 				59FC73E92C51507800021CD1 /* APIManagerImpl+Account.swift in Sources */,
+				F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */,
 				59FC74122C51541300021CD1 /* AboutItem.swift in Sources */,
 				59DF45882C59C30400EB6DC1 /* SignupRouter.swift in Sources */,
 				59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */,
@@ -5172,6 +5205,7 @@
 				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
 				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
+				F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
 				C561237E2C5F257A0090EB5A /* Resolver.swift in Sources */,
 				5998C6242C86AB2B00558233 /* FavNodesListViewModel.swift in Sources */,
@@ -5244,7 +5278,6 @@
 				59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */,
 				59A218682C3C8011000D89FA /* MainViewController.swift in Sources */,
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,
-				5986AB5D2C47569E00167023 /* UIImage+Ext.swift in Sources */,
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
@@ -5473,6 +5506,7 @@
 				AF914A7223CD0C7D002D3041 /* PromptBackgroundView.swift in Sources */,
 				C5A930D02B43C5880001CFA0 /* BillingRepository.swift in Sources */,
 				AF4B92F2221DCBEC0054580D /* Email.swift in Sources */,
+				F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */,
 				AF36BF1222FC975600FCC6F4 /* WSActionButton.swift in Sources */,
 				1AE6D2B82837D33800276C7D /* AccountViewData.swift in Sources */,
 				AF4E927621F8D17500A3F584 /* MainViewController+UI.swift in Sources */,
@@ -5505,6 +5539,7 @@
 				C5A930D22B43C5950001CFA0 /* BillingRepositoryImpl.swift in Sources */,
 				AF2199612270B147009B42E5 /* Socket.swift in Sources */,
 				1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
+				F4F29E502D68D6D500933633 /* UIImage+Ext.swift in Sources */,
 				C56FCBF62B2CD180008DE7D4 /* LoginRouter.swift in Sources */,
 				E97ABD6228F91ABA00B38587 /* ProtocolManager.swift in Sources */,
 				591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */,
@@ -5626,6 +5661,7 @@
 				1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				C5D0F2FE27E1959D00DB3E49 /* WgErrorCodes.swift in Sources */,
+				F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */,
 				1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
 				C5BF384E2B91735100AA725C /* keyChainKeys.swift in Sources */,
 				1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */,
@@ -5686,7 +5722,6 @@
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
 				C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */,
 				AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */,
-				5986AB5C2C47569E00167023 /* UIImage+Ext.swift in Sources */,
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,
@@ -5787,15 +5822,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
+				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,
 				C56F5DB129537C2C008CD223 /* ConcurrentDictionary.swift in Sources */,
 				C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */,
 				C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
+				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C5592B802B388B2800F2F110 /* APISampleData.swift in Sources */,
+				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				C56F5DB029537B8C008CD223 /* ConcurrentDictionaryTest.swift in Sources */,
+				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
+				F465A6372D5D37EF00579B5F /* DefaultAppReviewManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

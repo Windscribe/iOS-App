@@ -60,9 +60,6 @@ extension MainViewController {
         logger.logD(self, "Looking for account state changes.")
         guard let session = session else { return }
 
-        // Check and shows Rate dialog if it is possible
-        viewModel.checkRateDialogStatus()
-
         // check for ghost account and present account completion screen
         if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
             didCheckForGhostAccount = true

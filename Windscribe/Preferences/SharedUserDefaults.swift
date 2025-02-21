@@ -263,14 +263,6 @@ class SharedSecretDefaults: Preferences {
         setDate(date, forKey: SharedKeys.rateUsPopupDisplayed)
     }
 
-    func getWhenRateUsPopupWasAttempted() -> Date? {
-        return getDate(forKey: SharedKeys.rateUsPopupWasAttempted)
-    }
-
-    func saveWhenRateUsPopupWasAttempted(date: Date) {
-        setDate(date, forKey: SharedKeys.rateUsPopupWasAttempted)
-    }
-
     func getLoginDate() -> Date? {
         return getDate(forKey: SharedKeys.lastLoginDate)
     }

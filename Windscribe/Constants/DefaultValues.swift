@@ -17,6 +17,7 @@ enum DefaultValues {
     static let port = "443"
     static let connectedDNS = "Auto"
     static let connectionMode = "Auto"
+    static let appID = "1129435228"
     static let customDNSValue = DNSValue(type: .empty, value: "", servers: [])
     static let darkMode = true
     static let serverHealth = false
