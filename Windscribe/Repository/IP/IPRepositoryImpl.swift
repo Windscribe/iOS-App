@@ -53,8 +53,10 @@ class IPRepositoryImpl: IPRepository {
             .flatMap { [weak self] data -> Single<MyIP> in
                 guard let self = self else { return Single.just(data) }
                 if !self.wasObserved {
-                    self.load()
-                    self.updateState(.available(data))
+                    DispatchQueue.main.async { [weak self] in
+                        self?.load()
+                        self?.updateState(.available(data))
+                    }
                 }
                 self.localDatabase.saveIp(myip: data)
                     .disposed(by: self.disposeBag)
