@@ -1,8 +1,14 @@
 {
   "images" : [
     {
-      "filename" : "ec-l.svg",
-      "idiom" : "universal"
+      "filename" : "ec-l.png",
+      "idiom" : "tv",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "ec-l@2x.png",
+      "idiom" : "tv",
+      "scale" : "2x"
     }
   ],
   "info" : {
