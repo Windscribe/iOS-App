@@ -214,13 +214,13 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func createLatencyTask(from: [(String, String)]) -> Single<[PingData]> {
-        let maxConcurrentTasks = 30
+        let maxConcurrentTasks = 20
         return Single.create { single in
             let pingPublishers = from.map { (ip, host) in
                 Future<PingData, Never> { promise in
                     var hasDeliveredResult = false
                     let timeoutCancellable = Just(PingData(ip: ip, latency: -1))
-                        .delay(for: .seconds(1), scheduler: DispatchQueue.global(qos: .userInitiated))
+                        .delay(for: .seconds(3), scheduler: DispatchQueue.global(qos: .userInitiated))
                         .sink {
                             if !hasDeliveredResult {
                                 hasDeliveredResult = true
@@ -355,6 +355,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Build and save the best location using the selected server, group, and node
     private func buildAndSaveBestLocation(group: Group) -> String {
+        logger.logD(self, "Saving best location: \(group.id)")
         locationsManager.saveBestLocation(with: "\(group.id)")
         return group.city
     }
