@@ -280,9 +280,9 @@ class ServerDetailTableViewCell: UITableViewCell {
 
             } else if favButton.isFocused {
                 if isFavourited {
-                    descriptionLabel.text = TvAssets.removeFromFav
+                    descriptionLabel.text = TextsAsset.TVAsset.removeFromFav
                 } else {
-                    descriptionLabel.text = TvAssets.addToFav
+                    descriptionLabel.text = TextsAsset.TVAsset.addToFav
                 }
             }
         } else {
@@ -386,7 +386,10 @@ class ServerDetailTableViewCell: UITableViewCell {
             return
         }
         if !canAccessServer() {
-            AlertManager.shared.showSimpleAlert(viewController: delegate as? UIViewController, title: TvAssets.locationMaintenanceTitle, message: TvAssets.locationMaintenanceDescription, buttonText: TextsAsset.okay)
+            AlertManager.shared.showSimpleAlert(viewController: delegate as? UIViewController,
+                                                title: TextsAsset.TVAsset.locationMaintenanceTitle,
+                                                message: TextsAsset.TVAsset.locationMaintenanceDescription,
+                                                buttonText: TextsAsset.okay)
             return
         }
         if favButton.isHidden {

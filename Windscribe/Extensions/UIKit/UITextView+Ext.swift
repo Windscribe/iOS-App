@@ -16,26 +16,30 @@ extension UITextView {
 
     func htmlText(htmlData: Data, font: UIFont = UIFont.text(size: 16), foregroundColor: UIColor = .white) {
         do {
-            let attrString = try NSAttributedString(
+            let attributedString = try NSAttributedString(
                 data: htmlData,
                 options: [
-                    NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html,
+                    .documentType: NSAttributedString.DocumentType.html,
                     .characterEncoding: String.Encoding.utf8.rawValue
                 ],
                 documentAttributes: nil
             )
-            let htmlString = NSMutableAttributedString(attributedString: attrString)
-            htmlString.addAttribute(.foregroundColor,
-                                    value: foregroundColor,
-                                    range: NSRange(location: 0,
-                                                   length: attrString.length))
-            htmlString.addAttribute(.font,
-                                    value: font,
-                                    range: NSRange(location: 0,
-                                                   length: attrString.length))
+
+            let htmlString = NSMutableAttributedString(attributedString: attributedString).then {
+                $0.addAttribute(.foregroundColor,
+                                        value: foregroundColor,
+                                        range: NSRange(location: 0,
+                                                       length: attributedString.length))
+                $0.addAttribute(.font,
+                                        value: font,
+                                        range: NSRange(location: 0,
+                                                       length: attributedString.length))
+            }
+
             attributedText = htmlString
         } catch {
-            logger.logE("HTMLTextView", "Error occured when converting notifications HTML string. \(error.localizedDescription)")
+            logger.logE(
+                "HTMLTextView", "Error occured when converting notifications HTML string. \(error.localizedDescription)")
             return
         }
     }

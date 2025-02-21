@@ -57,9 +57,16 @@ class WSUIViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.isNavigationBarHidden = true
-        navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        changeNavigationBarStyle(isHidden: true)
         setupLocalized()
+    }
+
+    func changeNavigationBarStyle(isHidden: Bool) {
+        navigationController?.isNavigationBarHidden = isHidden
+
+        if isHidden {
+            navigationController?.interactivePopGestureRecognizer?.delegate = nil
+        }
     }
 
     func showSplashView() {
@@ -142,8 +149,10 @@ class WSUIViewController: UIViewController {
     }
 
     @objc func getMoreDataButtonTapped() {
-        let vc = Assembler.resolve(UpgradeViewController.self)
-        navigationController?.pushViewController(vc, animated: true)
+        let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self)
+        let navigationController = UINavigationController(rootViewController: planUpgradeVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
     }
 
     func addPromptBackgroundView() {

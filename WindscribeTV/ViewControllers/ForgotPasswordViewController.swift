@@ -42,7 +42,7 @@ class ForgotPasswordViewController: UIViewController {
 
     func setupLocalized() {
         welcomeLabel.text = TextsAsset.slogan
-        infoLabel.text = TvAssets.forgotPasswordInfo
+        infoLabel.text = TextsAsset.TVAsset.forgotPasswordInfo
         backButton.titleLabel?.text = TextsAsset.back
     }
 }

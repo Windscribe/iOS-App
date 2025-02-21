@@ -20,8 +20,13 @@ class AccountRouter: BaseRouter, NavigationRouter {
             vc.dismissDelegate = delegate
             from.present(vc, animated: true)
         case .upgrade:
-            let vc = Assembler.resolve(UpgradeViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+            let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self)
+            let navigationController = UINavigationController(rootViewController: planUpgradeVC)
+
+            DispatchQueue.main.async {
+                navigationController.modalPresentationStyle = .fullScreen
+                from.present(navigationController, animated: true, completion: nil)
+            }
         case let .errorPopup(message, dismissAction):
             let errorVC = Assembler.resolve(ErrorPopupViewController.self)
             errorVC.viewModel.setDismissAction(with: dismissAction)
@@ -37,13 +42,16 @@ class AccountRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case let .upgrade(promoCode, pcpID):
-            let vc = Assembler.resolve(UpgradeViewController.self)
-            vc.promoCode = promoCode
-            vc.pcpID = pcpID
-            if let navigationVC = from.navigationController {
-                navigationVC.pushViewController(vc, animated: true)
-            } else {
-                from.present(vc, animated: true)
+            let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
+                $0.promoCode = promoCode
+                $0.pcpID = pcpID
+            }
+
+            let navigationController = UINavigationController(rootViewController: planUpgradeVC)
+
+            DispatchQueue.main.async {
+                navigationController.modalPresentationStyle = .fullScreen
+                from.present(navigationController, animated: true, completion: nil)
             }
         default: ()
         }
@@ -52,12 +60,16 @@ class AccountRouter: BaseRouter, NavigationRouter {
     func routeToPayments(to: RouteID, from: WSNavigationViewController) {
         switch to {
         case let .upgrade(promoCode, pcpID):
-            let vc = Assembler.resolve(UpgradeViewController.self)
-            vc.promoCode = promoCode
-            vc.pcpID = pcpID
+            let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
+                $0.promoCode = promoCode
+                $0.pcpID = pcpID
+            }
+
+            let navigationController = UINavigationController(rootViewController: planUpgradeVC)
+
             DispatchQueue.main.async {
-             vc.modalPresentationStyle = .fullScreen
-                from.present(vc, animated: true, completion: nil)
+                navigationController.modalPresentationStyle = .fullScreen
+                from.present(navigationController, animated: true, completion: nil)
             }
         default: ()
         }

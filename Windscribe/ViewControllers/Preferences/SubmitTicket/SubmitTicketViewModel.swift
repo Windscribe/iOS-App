@@ -34,7 +34,7 @@ class SubmitTicketViewModelImpl: SubmitTicketViewModel {
     }
 
     func sendTicket(email: String, subject: String, message: String, category: Int) -> Single<APIMessage> {
-        let categoryLabel = SubmitTicket.categories[category - 1]
+        let categoryLabel = TextsAsset.SubmitTicket.categories[category - 1]
         let currentDevice = UIDevice.current
         let deviceInfo = "Brand: Apple | Os: \(currentDevice.systemVersion) | Model: \(UIDevice.modelName)"
         let name = sessionManager.session?.userId ?? ""

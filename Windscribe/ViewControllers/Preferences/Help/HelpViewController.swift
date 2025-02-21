@@ -7,19 +7,19 @@ class HelpViewController: WSNavigationViewController {
     // MARK: UI elements
 
     private lazy var knowledgeBaseRow = HelpView(item: HelpItem(icon: ImagesAsset.Help.apple,
-                                                                title: Help.knowledgeBase,
-                                                                subTitle: Help.allYouNeedToknowIsHere),
+                                                                title: TextsAsset.Help.knowledgeBase,
+                                                                subTitle: TextsAsset.Help.allYouNeedToknowIsHere),
                                                  type: .navigation,
                                                  delegate: self, isDarkMode: viewModel.isDarkMode)
     private lazy var talkToGarryRow = HelpView(item: HelpItem(icon: ImagesAsset.Help.garry,
-                                                              title: Help.talkToGarry,
-                                                              subTitle: Help.notAsSmartAsSiri),
+                                                              title: TextsAsset.Help.talkToGarry,
+                                                              subTitle: TextsAsset.Help.notAsSmartAsSiri),
                                                type: .navigation,
                                                delegate: self, isDarkMode: viewModel.isDarkMode)
 
     private lazy var sendTicketRow = HelpView(item: HelpItem(icon: ImagesAsset.Help.ticket,
-                                                             title: Help.sendTicket,
-                                                             subTitle: Help.sendUsATicket),
+                                                             title: TextsAsset.Help.sendTicket,
+                                                             subTitle: TextsAsset.Help.sendUsATicket),
                                               type: .navigation,
                                               delegate: self, isDarkMode: viewModel.isDarkMode)
 
@@ -29,7 +29,7 @@ class HelpViewController: WSNavigationViewController {
                                                 delegate: self, isDarkMode: viewModel.isDarkMode)
     private lazy var advanceParams = HelpView(item: HelpItem(icon: ImagesAsset.Preferences.advanceParams,
                                                              title: TextsAsset.Preferences.advanceParameters,
-                                                             subTitle: Help.advanceParamDescription),
+                                                             subTitle: TextsAsset.Help.advanceParamDescription),
                                               type: .navigation,
                                               delegate: self, isDarkMode: viewModel.isDarkMode)
 
@@ -44,8 +44,8 @@ class HelpViewController: WSNavigationViewController {
 
     private lazy var communitySupportRow: HelpView = {
         let row = HelpView(item: HelpItem(icon: ImagesAsset.Help.community,
-                                          title: Help.communitySupport,
-                                          subTitle: Help.bestPlacesTohelp),
+                                          title: TextsAsset.Help.communitySupport,
+                                          subTitle: TextsAsset.Help.bestPlacesTohelp),
                            type: .navigation,
                            delegate: self, isDarkMode: viewModel.isDarkMode)
         redditRow.addTopDivider()
@@ -55,13 +55,17 @@ class HelpViewController: WSNavigationViewController {
         return row
     }()
 
-    private lazy var redditRow = HelpSubRowView(header: Help.reddit, isDarkMode: viewModel.isDarkMode, delegate: self)
-    private lazy var discordRow = HelpSubRowView(header: Help.discord, isDarkMode: viewModel.isDarkMode, delegate: self)
+    private lazy var redditRow = HelpSubRowView(header: TextsAsset.Help.reddit,
+                                                isDarkMode: viewModel.isDarkMode,
+                                                delegate: self)
+    private lazy var discordRow = HelpSubRowView(header: TextsAsset.Help.discord,
+                                                 isDarkMode: viewModel.isDarkMode,
+                                                 delegate: self)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Help View")
-        titleLabel.text = Help.helpMe
+        titleLabel.text = TextsAsset.Help.helpMe
 
         viewModel.isDarkMode.subscribe { data in
             self.setupViews(isDark: data)

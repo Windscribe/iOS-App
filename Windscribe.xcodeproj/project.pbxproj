@@ -183,7 +183,6 @@
 		1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF43D512CF897B000B56C01 /* LocationsManager.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
-		1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */; };
 		1EF7BB2D2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */; };
 		1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */; };
 		1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB302C6D0D750032A4DF /* UpgradePricingView.swift */; };
@@ -209,7 +208,6 @@
 		591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */; };
 		591CF9B12BBB3ED1004DEB48 /* EmailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */; };
 		591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
-		591CF9B52BBDC3F6004DEB48 /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */; };
 		591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */; };
 		591CF9B92BBF1160004DEB48 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
 		59215B462B6051AC0086CBF6 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B452B6051AC0086CBF6 /* ThemeManager.swift */; };
@@ -340,7 +338,7 @@
 		59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
 		59FC73D22C514AF000021CD1 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
 		59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927021F26A1400A3F584 /* AlertManager.swift */; };
-		59FC73D42C514B1300021CD1 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants.swift */; };
+		59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D52C514B2400021CD1 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB35A2817F53400C3EC1C /* String+Localized.swift */; };
 		59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
@@ -505,7 +503,7 @@
 		AF018E0621B09FB300B225FF /* String+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Ext.swift */; };
 		AF018E0D21B1921600B225FF /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0C21B1921600B225FF /* Session.swift */; };
 		AF02A9EB22B14D4700A9F44B /* SelectedNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF02A9EA22B14D4700A9F44B /* SelectedNode.swift */; };
-		AF038CC825640754008F34A6 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants.swift */; };
+		AF038CC825640754008F34A6 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		AF038CC9256409C2008F34A6 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */; };
 		AF038CCF257FAC6C008F34A6 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF038CCE257FAC6B008F34A6 /* WelcomeViewController.swift */; };
 		AF038CD1257FAD9C008F34A6 /* WelcomeViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF038CD0257FAD9C008F34A6 /* WelcomeViewController+UI.swift */; };
@@ -538,8 +536,6 @@
 		AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA112226F53F00997A2A /* WSUIViewController.swift */; };
 		AF16CA1622272EAB00997A2A /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF16CA1522272EAB00997A2A /* StoreKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF16CA1822272EBE00997A2A /* InAppPurchaseManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1722272EBE00997A2A /* InAppPurchaseManagerImpl.swift */; };
-		AF16CA1A2227343300997A2A /* UpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA192227343300997A2A /* UpgradeViewController.swift */; };
-		AF16CA1C2228454F00997A2A /* UpgradeViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1B2228454F00997A2A /* UpgradeViewController+UI.swift */; };
 		AF16CA1E222847B700997A2A /* IAPInfoCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1D222847B700997A2A /* IAPInfoCellTableViewCell.swift */; };
 		AF16CA202228488700997A2A /* IAPInfoSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1F2228488700997A2A /* IAPInfoSectionCell.swift */; };
 		AF16CA22222884E700997A2A /* UITextView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA21222884E700997A2A /* UITextView+Ext.swift */; };
@@ -602,7 +598,6 @@
 		AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */; };
 		AF4C000623DB78CE00F07F06 /* AppIcon-Light@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF4C000423DB78CD00F07F06 /* AppIcon-Light@3x.png */; };
 		AF4C000723DB78CE00F07F06 /* AppIcon-Light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AF4C000523DB78CE00F07F06 /* AppIcon-Light@2x.png */; };
-		AF4C9ACF22F4995B004A9FA6 /* UIInputViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9ACE22F4995B004A9FA6 /* UIInputViewController+Ext.swift */; };
 		AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */; };
 		AF4C9AD322F4A1AD004A9FA6 /* CustomConfigTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD222F4A1AD004A9FA6 /* CustomConfigTableViewCell.swift */; };
 		AF4C9AD522F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */; };
@@ -623,7 +618,7 @@
 		AF4E926521EF8F5900A3F584 /* IBMPlexSans-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E924A21EF8EC400A3F584 /* IBMPlexSans-Thin.otf */; };
 		AF4E926621EF8F5900A3F584 /* IBMPlexSans-ThinItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E924B21EF8EC400A3F584 /* IBMPlexSans-ThinItalic.otf */; };
 		AF4E926821EFC6EC00A3F584 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */; };
-		AF4E926B21F2309000A3F584 /* UIConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants.swift */; };
+		AF4E926B21F2309000A3F584 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		AF4E926D21F235D600A3F584 /* UIFont+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926C21F235D600A3F584 /* UIFont+Ext.swift */; };
 		AF4E927121F26A1400A3F584 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927021F26A1400A3F584 /* AlertManager.swift */; };
 		AF4E927621F8D17500A3F584 /* MainViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927521F8D17500A3F584 /* MainViewController+UI.swift */; };
@@ -682,7 +677,7 @@
 		AFBD01A022946F6C00FED749 /* LogType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD019F22946F6C00FED749 /* LogType.swift */; };
 		AFBD01A122947B9700FED749 /* LogType.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBD019F22946F6C00FED749 /* LogType.swift */; };
 		AFC75F7F24BD9FCD00897C18 /* WireGuardConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFC75F7E24BD9FCD00897C18 /* WireGuardConfig.swift */; };
-		AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView.swift */; };
+		AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView+Ext.swift */; };
 		AFD16F1122775E9F00E9FAD3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD16F1022775E9F00E9FAD3 /* Notifications.swift */; };
 		AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD16F1022775E9F00E9FAD3 /* Notifications.swift */; };
 		AFD24CA421C179DF00BBCE1E /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
@@ -1109,6 +1104,48 @@
 		E9DF548E274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF548D274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift */; };
 		E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */; };
 		E9F9EF0B27BC071E00E6C548 /* CustomConfigEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */; };
+		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
+		F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */; };
+		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */; };
+		F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */; };
+		F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */; };
+		F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */; };
+		F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */; };
+		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
+		F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */; };
+		F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */; };
+		F46C286C2D4C0AB30073207E /* PlanUpgradeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */; };
+		F47D8E6E2D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E6F2D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E702D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E712D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E722D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E732D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */; };
+		F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F47D8E762D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F47D8E772D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F47D8E782D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F47D8E792D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F47D8E7A2D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
+		F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBBD2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBBE2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBBF2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
+		F485CBC12D4D672D0063EA3A /* UIWindow+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBC02D4D672D0063EA3A /* UIWindow+Ext.swift */; };
+		F485CBC22D4D672D0063EA3A /* UIWindow+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBC02D4D672D0063EA3A /* UIWindow+Ext.swift */; };
+		F485CBC62D4D76BA0063EA3A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F485CBC52D4D76BA0063EA3A /* SnapKit */; };
+		F485CBCA2D51411B0063EA3A /* PlanUpgradeBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBC92D51411B0063EA3A /* PlanUpgradeBenefitView.swift */; };
+		F485CBCC2D5146E30063EA3A /* PlanUpgradeLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBCB2D5146E30063EA3A /* PlanUpgradeLogoView.swift */; };
+		F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */; };
+		F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */; };
+		F4A156FB2D5FE49300FDBD7C /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Ext.swift */; };
+		F4A156FC2D5FE49300FDBD7C /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Ext.swift */; };
+		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
+		F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5F52D564F300077C132 /* ImageCache.swift */; };
+		F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */; };
+		F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1383,7 +1420,6 @@
 		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRouter.swift; sourceTree = "<group>"; };
 		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
-		591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeViewModel.swift; sourceTree = "<group>"; };
 		591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTicketViewModel.swift; sourceTree = "<group>"; };
 		591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewModel.swift; sourceTree = "<group>"; };
 		59215B452B6051AC0086CBF6 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
@@ -1514,8 +1550,6 @@
 		AF16CA112226F53F00997A2A /* WSUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSUIViewController.swift; sourceTree = "<group>"; };
 		AF16CA1522272EAB00997A2A /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		AF16CA1722272EBE00997A2A /* InAppPurchaseManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManagerImpl.swift; sourceTree = "<group>"; };
-		AF16CA192227343300997A2A /* UpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeViewController.swift; sourceTree = "<group>"; };
-		AF16CA1B2228454F00997A2A /* UpgradeViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UpgradeViewController+UI.swift"; sourceTree = "<group>"; };
 		AF16CA1D222847B700997A2A /* IAPInfoCellTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPInfoCellTableViewCell.swift; sourceTree = "<group>"; };
 		AF16CA1F2228488700997A2A /* IAPInfoSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPInfoSectionCell.swift; sourceTree = "<group>"; };
 		AF16CA21222884E700997A2A /* UITextView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Ext.swift"; sourceTree = "<group>"; };
@@ -1585,7 +1619,6 @@
 		AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountPopupViewController+UI.swift"; sourceTree = "<group>"; };
 		AF4C000423DB78CD00F07F06 /* AppIcon-Light@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-Light@3x.png"; sourceTree = "<group>"; };
 		AF4C000523DB78CE00F07F06 /* AppIcon-Light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-Light@2x.png"; sourceTree = "<group>"; };
-		AF4C9ACE22F4995B004A9FA6 /* UIInputViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIInputViewController+Ext.swift"; sourceTree = "<group>"; };
 		AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfig.swift; sourceTree = "<group>"; };
 		AF4C9AD222F4A1AD004A9FA6 /* CustomConfigTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigTableViewCell.swift; sourceTree = "<group>"; };
 		AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigListTableViewDataSource.swift; sourceTree = "<group>"; };
@@ -1607,7 +1640,7 @@
 		AF4E925621EF8EC600A3F584 /* IBMPlexSans-Italic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSans-Italic.otf"; sourceTree = "<group>"; };
 		AF4E925721EF8EC600A3F584 /* IBMPlexSans-TextItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSans-TextItalic.otf"; sourceTree = "<group>"; };
 		AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
-		AF4E926A21F2309000A3F584 /* UIConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIConstants.swift; sourceTree = "<group>"; };
+		AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+Text.swift"; sourceTree = "<group>"; };
 		AF4E926C21F235D600A3F584 /* UIFont+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Ext.swift"; sourceTree = "<group>"; };
 		AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITextField+Ext.swift"; sourceTree = "<group>"; };
 		AF4E927021F26A1400A3F584 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
@@ -1671,7 +1704,7 @@
 		AFBBAD14250A674A000B6750 /* HapticFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackGenerator.swift; sourceTree = "<group>"; };
 		AFBD019F22946F6C00FED749 /* LogType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogType.swift; sourceTree = "<group>"; };
 		AFC75F7E24BD9FCD00897C18 /* WireGuardConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardConfig.swift; sourceTree = "<group>"; };
-		AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIScrollView.swift; sourceTree = "<group>"; };
+		AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Ext.swift"; sourceTree = "<group>"; };
 		AFD16F1022775E9F00E9FAD3 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		AFD24CA321C179DF00BBCE1E /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		AFD29A1722D530AF007F08C9 /* ConnectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsViewController.swift; sourceTree = "<group>"; };
@@ -1956,6 +1989,30 @@
 		E9DF548D274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+UIPreferredProtocolView.swift"; sourceTree = "<group>"; };
 		E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+ConnectionStatus.swift"; sourceTree = "<group>"; };
 		E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigEmptyView.swift; sourceTree = "<group>"; };
+		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
+		F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradePromoView.swift; sourceTree = "<group>"; };
+		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessModels.swift; sourceTree = "<group>"; };
+		F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewModel.swift; sourceTree = "<group>"; };
+		F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewController.swift; sourceTree = "<group>"; };
+		F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessLogoView.swift; sourceTree = "<group>"; };
+		F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessBenefitView.swift; sourceTree = "<group>"; };
+		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
+		F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewController.swift; sourceTree = "<group>"; };
+		F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewModel.swift; sourceTree = "<group>"; };
+		F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeModels.swift; sourceTree = "<group>"; };
+		F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+Links.swift"; sourceTree = "<group>"; };
+		F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+Accessibility.swift"; sourceTree = "<group>"; };
+		F485CBB92D4D52D40063EA3A /* Then.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Then.swift; sourceTree = "<group>"; };
+		F485CBC02D4D672D0063EA3A /* UIWindow+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Ext.swift"; sourceTree = "<group>"; };
+		F485CBC92D51411B0063EA3A /* PlanUpgradeBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeBenefitView.swift; sourceTree = "<group>"; };
+		F485CBCB2D5146E30063EA3A /* PlanUpgradeLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeLogoView.swift; sourceTree = "<group>"; };
+		F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlanUgradeViewController+UI.swift"; sourceTree = "<group>"; };
+		F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSelectionView.swift; sourceTree = "<group>"; };
+		F4A156FA2D5FE49300FDBD7C /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
+		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
+		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
+		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1977,6 +2034,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AF27852C22E6431700430C32 /* CoreTelephony.framework in Frameworks */,
+				F485CBC62D4D76BA0063EA3A /* SnapKit in Frameworks */,
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
@@ -2484,16 +2542,6 @@
 			path = Windscribe/ViewControllers/popup/Upgrade;
 			sourceTree = SOURCE_ROOT;
 		};
-		1EA876D82BCEE3AC00F0DD25 /* Upgrade */ = {
-			isa = PBXGroup;
-			children = (
-				AF16CA192227343300997A2A /* UpgradeViewController.swift */,
-				AF16CA1B2228454F00997A2A /* UpgradeViewController+UI.swift */,
-				591CF9B42BBDC3F6004DEB48 /* UpgradeViewModel.swift */,
-			);
-			path = Upgrade;
-			sourceTree = "<group>";
-		};
 		1EA876D92BCEE3BF00F0DD25 /* Privacy */ = {
 			isa = PBXGroup;
 			children = (
@@ -2983,36 +3031,21 @@
 		AF018E0721B0A32800B225FF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				F485CBC32D4D67630063EA3A /* UIKit */,
 				C545A0DB2D47638F00F3333E /* Completable+Ext.swift */,
-				AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */,
 				AF018E0521B09FB300B225FF /* String+Ext.swift */,
 				AFFA716321C99B2F00349195 /* Date+Ext.swift */,
-				AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */,
-				AF4E926C21F235D600A3F584 /* UIFont+Ext.swift */,
-				AFD593D421F8EC0A00A47546 /* UILabel+Ext.swift */,
-				AF04982A21FA22530046D33B /* UIView+Ext.swift */,
-				AF16CA21222884E700997A2A /* UITextView+Ext.swift */,
 				AF0CA558223C49020048D71C /* Array.swift */,
 				AFED9A3E226E5286000E9EE2 /* Data+Ext.swift */,
 				AF97EFDA2280E70300378058 /* Realm+Extension.swift */,
 				AF97EFDE2281F1DD00378058 /* Bundle+Ext.swift */,
-				AF54C6BB228215A700DAAB07 /* UIDevice+Ext.swift */,
-				AF4C9ACE22F4995B004A9FA6 /* UIInputViewController+Ext.swift */,
 				AF2A752E230DAF6300548088 /* URLRequest+Ext.swift */,
-				AF7F3087237B38670097C6D6 /* UIImageView+Ext.swift */,
-				AF914A7723D611DA002D3041 /* UIButton+Ext.swift */,
-				AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView.swift */,
 				E90E56A6275E4A02004E4AC0 /* URLRequestExtension.swift */,
-				1A9DB35328168E8500C3EC1C /* UITableViewCell.swift */,
-				E9219FEC2885A3AE0026E544 /* UIView+Constraint.swift */,
 				E9219FEE2885AF900026E544 /* UIEdgeInsets+Ext.swift */,
-				E9219FF02885AFB90026E544 /* UIStackView+Ext.swift */,
 				C5A0CBB228D3FCA000F13B8E /* DispatchQueue+Ext.swift */,
 				C56F5DAD2953739C008CD223 /* ConcurrentDictionary.swift */,
 				C57BDE3C29B93E9900337E63 /* NSDate+Ext.swift */,
-				C57BDE3E29B93ED700337E63 /* UIScreen+Ext.swift */,
 				5947B4B12A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift */,
-				5986AB5B2C47569E00167023 /* UIImage+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -3298,7 +3331,7 @@
 				AF36A207237DE8FF00BDDCDB /* MainViewController */,
 				AFB83C2723C7BC3600607881 /* Authentication */,
 				1AE6DA1C2833CF9C00593495 /* Preferences */,
-				C57BDE3429B9390A00337E63 /* popup */,
+				C57BDE3429B9390A00337E63 /* Popup */,
 				E97ABD4E28DC477B00B38587 /* Connection */,
 			);
 			path = ViewControllers;
@@ -3340,6 +3373,7 @@
 		AF4E926921F2307C00A3F584 /* Constants */ = {
 			isa = PBXGroup;
 			children = (
+				F47D8E6C2D5A809600B3FA5A /* UIConstants */,
 				5993396A2B4CD26600EC615D /* DefaultValues.swift */,
 				AF018E0221B09B6400B225FF /* VPNProtocols.swift */,
 				AF018E0021B09A6100B225FF /* Constants.swift */,
@@ -3347,9 +3381,6 @@
 				E9425BA127437064008B8786 /* FilePaths.swift */,
 				E9425B9B2743703D008B8786 /* APIParameterValues.swift */,
 				E9425B9827437024008B8786 /* APIParameters.swift */,
-				AF4E926A21F2309000A3F584 /* UIConstants.swift */,
-				E90FD02427394FA800721874 /* UIConstants+Fields.swift */,
-				E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */,
 				E94E34F628B2816F00E76D14 /* FeatureExplainer.swift */,
 				C59C074329424CF300D6C3C1 /* Proxy.swift */,
 				C57BDE3629B93D7500337E63 /* Enums.swift */,
@@ -3666,7 +3697,7 @@
 			path = AdvanceParams;
 			sourceTree = "<group>";
 		};
-		C57BDE3429B9390A00337E63 /* popup */ = {
+		C57BDE3429B9390A00337E63 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
 				1E24AB862BD1436E0004D17D /* Info Prompt */,
@@ -3676,7 +3707,7 @@
 				1EE74F742BD67B1D0031185F /* Push Notifications */,
 				1EA876D32BCEA37A00F0DD25 /* Error View */,
 				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
-				1EA876D82BCEE3AC00F0DD25 /* Upgrade */,
+				F46C285C2D4C041D0073207E /* PlanUpgrade */,
 				1E2366CB2BC5766E000DF098 /* News Feed */,
 				59E63A0B2BCEBFF3002E566F /* Maintenance Location */,
 				1E2366CE2BC587BF000DF098 /* Set Prefered Protocol */,
@@ -3684,14 +3715,16 @@
 				59E63A1B2BD002E0002E566F /* Trusted Network */,
 				AF36A208237DE90F00BDDCDB /* ShakeForData */,
 			);
-			path = popup;
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		C57BDE4029B93F6D00337E63 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				F4ADA5F42D564F110077C132 /* ImageLoader */,
 				C57BDE4129B93FBB00337E63 /* LinkProvider.swift */,
 				C56123732C5F23A80090EB5A /* DNSUtil.swift .swift */,
+				F485CBB92D4D52D40063EA3A /* Then.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -4059,6 +4092,115 @@
 			path = MainViewController;
 			sourceTree = "<group>";
 		};
+		F45BA5932D53F96000CFDB82 /* PlanUpgrade */ = {
+			isa = PBXGroup;
+			children = (
+				F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */,
+				F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */,
+				F485CBCB2D5146E30063EA3A /* PlanUpgradeLogoView.swift */,
+				F485CBC92D51411B0063EA3A /* PlanUpgradeBenefitView.swift */,
+				F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */,
+				F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */,
+				F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */,
+				F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */,
+			);
+			path = PlanUpgrade;
+			sourceTree = "<group>";
+		};
+		F45BA5942D53F9A600CFDB82 /* UpgradeSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */,
+				F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */,
+				F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */,
+				F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */,
+			);
+			path = UpgradeSuccess;
+			sourceTree = "<group>";
+		};
+		F46C285C2D4C041D0073207E /* PlanUpgrade */ = {
+			isa = PBXGroup;
+			children = (
+				F46C28612D4C09AA0073207E /* Views */,
+			);
+			path = PlanUpgrade;
+			sourceTree = "<group>";
+		};
+		F46C28612D4C09AA0073207E /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F45BA5932D53F96000CFDB82 /* PlanUpgrade */,
+				F45BA5942D53F9A600CFDB82 /* UpgradeSuccess */,
+				F46C28622D4C09B30073207E /* ViewModels */,
+				F46C28652D4C09D50073207E /* Models */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F46C28622D4C09B30073207E /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */,
+				F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F46C28652D4C09D50073207E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */,
+				F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F47D8E6C2D5A809600B3FA5A /* UIConstants */ = {
+			isa = PBXGroup;
+			children = (
+				AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */,
+				F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */,
+				F47D8E6D2D5A817F00B3FA5A /* UIConstants+Links.swift */,
+				E90FD02427394FA800721874 /* UIConstants+Fields.swift */,
+				E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */,
+			);
+			path = UIConstants;
+			sourceTree = "<group>";
+		};
+		F485CBC32D4D67630063EA3A /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				AF914A7723D611DA002D3041 /* UIButton+Ext.swift */,
+				AF4E926721EFC6EC00A3F584 /* UIColor+Ext.swift */,
+				AF54C6BB228215A700DAAB07 /* UIDevice+Ext.swift */,
+				AF4E926E21F24E0D00A3F584 /* UITextField+Ext.swift */,
+				AF4E926C21F235D600A3F584 /* UIFont+Ext.swift */,
+				5986AB5B2C47569E00167023 /* UIImage+Ext.swift */,
+				AF7F3087237B38670097C6D6 /* UIImageView+Ext.swift */,
+				AFD593D421F8EC0A00A47546 /* UILabel+Ext.swift */,
+				E9219FF02885AFB90026E544 /* UIStackView+Ext.swift */,
+				E9219FEC2885A3AE0026E544 /* UIView+Constraint.swift */,
+				AF04982A21FA22530046D33B /* UIView+Ext.swift */,
+				F4A156FA2D5FE49300FDBD7C /* UIViewController+Ext.swift */,
+				AF16CA21222884E700997A2A /* UITextView+Ext.swift */,
+				1A9DB35328168E8500C3EC1C /* UITableViewCell.swift */,
+				C57BDE3E29B93ED700337E63 /* UIScreen+Ext.swift */,
+				AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView+Ext.swift */,
+				F485CBC02D4D672D0063EA3A /* UIWindow+Ext.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
+		F4ADA5F42D564F110077C132 /* ImageLoader */ = {
+			isa = PBXGroup;
+			children = (
+				F4ADA5F52D564F300077C132 /* ImageCache.swift */,
+				F4ADA5FC2D564F790077C132 /* ImageLoader.swift */,
+				F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */,
+			);
+			path = ImageLoader;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
@@ -4149,6 +4291,7 @@
 				C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */,
 				C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */,
 				C56D5AF42C4DFF300069DB6E /* WireGuardKit */,
+				F485CBC52D4D76BA0063EA3A /* SnapKit */,
 			);
 			productName = Windscribe;
 			productReference = AF018DE921B0866600B225FF /* Windscribe.app */;
@@ -4385,6 +4528,7 @@
 				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
 				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
 				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
+				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -4896,7 +5040,7 @@
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				59FC74102C51540C00021CD1 /* HelpItem.swift in Sources */,
 				1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */,
-				59FC73D42C514B1300021CD1 /* UIConstants.swift in Sources */,
+				59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */,
 				1E9F2C332C665FC600607BAA /* PreferencesViewLogView.swift in Sources */,
 				59DF45892C59C58600EB6DC1 /* SignUpViewModel.swift in Sources */,
 				1E0D9D792C61049D008AFF2D /* UIView+Nib.swift in Sources */,
@@ -4939,6 +5083,7 @@
 				1E7918C02CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */,
 				59FC744D2C515E3800021CD1 /* UIView+Constraint.swift in Sources */,
 				59FC74322C515A3700021CD1 /* LocalDatabase.swift in Sources */,
+				F485CBBE2D4D52D40063EA3A /* Then.swift in Sources */,
 				59FC745C2C5161DD00021CD1 /* UIImageView+Ext.swift in Sources */,
 				59FC740A2C5153E800021CD1 /* SelectedNode.swift in Sources */,
 				59DF45842C54209100EB6DC1 /* XPressLoginVerifyResponse.swift in Sources */,
@@ -4958,7 +5103,6 @@
 				59DA7FB82C3D897100042E57 /* FileLogFormater.swift in Sources */,
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
 				5998C6252C8807C000558233 /* StaticIPListViewModel.swift in Sources */,
-				1EF7BB2B2C6BA00A0032A4DF /* UpgradeViewModel.swift in Sources */,
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
@@ -5044,6 +5188,7 @@
 				59FC74342C515A4C00021CD1 /* KeyChainDatabase.swift in Sources */,
 				59FC73E42C51505100021CD1 /* APIManagerImpl+Session.swift in Sources */,
 				599BA2A82C5D1E5300F0D1E4 /* DNSValue.swift in Sources */,
+				F485CBC22D4D672D0063EA3A /* UIWindow+Ext.swift in Sources */,
 				59FC74512C515E6200021CD1 /* ThemeManager.swift in Sources */,
 				59A218722C3C9EC5000D89FA /* Language.swift in Sources */,
 				59FC747C2C52987600021CD1 /* URLs.swift in Sources */,
@@ -5054,6 +5199,7 @@
 				59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */,
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
+				F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
@@ -5062,6 +5208,7 @@
 				59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */,
 				1E0D9D6F2C6103A3008AFF2D /* SettingsSection.swift in Sources */,
 				59FC74712C516D9000021CD1 /* InAppPurchaseManager.swift in Sources */,
+				F47D8E732D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				5986AB512C473FBC00167023 /* UIFont+Ext.swift in Sources */,
 				59FC74652C5167B700021CD1 /* IPRepository.swift in Sources */,
 				59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */,
@@ -5120,6 +5267,7 @@
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
+				F4A156FC2D5FE49300FDBD7C /* UIViewController+Ext.swift in Sources */,
 				C56A4BB22CE7FB5A0097ACDB /* NewsFeedDataCell.swift in Sources */,
 				1EA9D7042C77A46100566A93 /* PreferencesMainViewModel.swift in Sources */,
 				1E79CA5C2C63D32F006D4DE7 /* AccountViewModel.swift in Sources */,
@@ -5142,6 +5290,7 @@
 				1A9DB34B28115D8500C3EC1C /* LanguageViewController.swift in Sources */,
 				AF36A1FD237DC02200BDDCDB /* APIMessage.swift in Sources */,
 				C5A930F42B45A3880001CFA0 /* FileLogger.swift in Sources */,
+				F47D8E722D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				AF0CA559223C49020048D71C /* Array.swift in Sources */,
 				E90FD03327397A6600721874 /* MainViewController+AutoSecure.swift in Sources */,
 				C50F20C62B61760000266B23 /* CoreModule.swift in Sources */,
@@ -5159,11 +5308,12 @@
 				C571C6742C135C3600786DA5 /* UserScope.swift in Sources */,
 				AF21995A2270B147009B42E5 /* QNNNslookup.m in Sources */,
 				C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */,
+				F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */,
 				AF16CA202228488700997A2A /* IAPInfoSectionCell.swift in Sources */,
 				C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */,
 				E9F9EF0B27BC071E00E6C548 /* CustomConfigEmptyView.swift in Sources */,
 				E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */,
-				AF16CA1C2228454F00997A2A /* UpgradeViewController+UI.swift in Sources */,
+				F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */,
 				59EB6D1B2B3286E600616414 /* PreferencesMainViewController.swift in Sources */,
 				AFA804262209F13100F8E379 /* WifiNetwork.swift in Sources */,
 				AF97EFDB2280E70300378058 /* Realm+Extension.swift in Sources */,
@@ -5179,12 +5329,14 @@
 				E96AFFF22896856300B53EEE /* GeneralHelper.swift in Sources */,
 				AFFA716421C99B2F00349195 /* Date+Ext.swift in Sources */,
 				AF16CA1822272EBE00997A2A /* InAppPurchaseManagerImpl.swift in Sources */,
+				F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */,
 				1AE6D2C12838BBF900276C7D /* AccountEditCell.swift in Sources */,
 				C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */,
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
 				C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				C5592B7E2B38838500F2F110 /* MyIP.swift in Sources */,
-				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView.swift in Sources */,
+				F4A156FB2D5FE49300FDBD7C /* UIViewController+Ext.swift in Sources */,
+				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Ext.swift in Sources */,
 				AF0420EE21C1A0FD002132DE /* Node.swift in Sources */,
 				1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */,
 				AFD24CA421C179DF00BBCE1E /* APIError.swift in Sources */,
@@ -5201,8 +5353,10 @@
 				C5FA3E8A2684E303001D03A7 /* SubmitTicketViewController+UI.swift in Sources */,
 				E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
+				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
 				C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */,
 				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
+				F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */,
 				C5D0E3EE29BB85460091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
 				E9DF548C274BD8FE00E9C672 /* MainViewController+UILayout.swift in Sources */,
 				C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */,
@@ -5217,6 +5371,7 @@
 				AF914A7C23D63E7C002D3041 /* GhostAccountViewController+UI.swift in Sources */,
 				C580FDEA2B4D70EE004FA857 /* KeyChainDatabase.swift in Sources */,
 				1AE6D2BD2837E46100276C7D /* AccountViewModel.swift in Sources */,
+				F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */,
 				C56FCC062B2CF358008DE7D4 /* NetworkSecurityRouter.swift in Sources */,
 				AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */,
 				E9219FF32885BD4D0026E544 /* WSFillLayoutView.swift in Sources */,
@@ -5229,6 +5384,7 @@
 				C5A930CD2B4332AA0001CFA0 /* User.swift in Sources */,
 				AFF410D8234F473D0089F1D1 /* SetPreferredProtocolPopupViewController.swift in Sources */,
 				C5A930E92B44A1580001CFA0 /* FileDatabaseImpl.swift in Sources */,
+				F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */,
 				AF21995F2270B147009B42E5 /* Result.swift in Sources */,
 				1EE74F7E2BD6C0DE0031185F /* ShakeForDataViewModel.swift in Sources */,
 				1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */,
@@ -5239,7 +5395,7 @@
 				AF60571B236897D900986BA7 /* DropdownButton.swift in Sources */,
 				C57B5930276B8ADF00228B2F /* RobertViewController.swift in Sources */,
 				5947B4B22A2638BA00C95CF2 /* NWInterface.InterfaceType+Ext.swift in Sources */,
-				AF16CA1A2227343300997A2A /* UpgradeViewController.swift in Sources */,
+				F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessModels.swift in Sources */,
 				1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */,
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
@@ -5247,6 +5403,7 @@
 				1E2CBFEC2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */,
 				1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */,
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
+				F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */,
 				C5BF384C2B916B3D00AA725C /* WelcomeViewModal.swift in Sources */,
 				C535D29927E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				C5D0E40729BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
@@ -5277,7 +5434,9 @@
 				AF935E9522FCA13800327837 /* CheckMarkButton.swift in Sources */,
 				591CF9B92BBF1160004DEB48 /* HelpViewModel.swift in Sources */,
 				C51F8DA62CE3193800281B01 /* NewsfeedDataSource.swift in Sources */,
+				F485CBCC2D5146E30063EA3A /* PlanUpgradeLogoView.swift in Sources */,
 				C5D983B92B34A1C40069FF3A /* APIManagerImpl.swift in Sources */,
+				F485CBC12D4D672D0063EA3A /* UIWindow+Ext.swift in Sources */,
 				E97ABD6028EB33F700B38587 /* ProtocolSetPreferredViewModel.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
 				AF4C9AD322F4A1AD004A9FA6 /* CustomConfigTableViewCell.swift in Sources */,
@@ -5288,11 +5447,13 @@
 				1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */,
 				E998651528A5683A0091B6A3 /* NetworkViewModel.swift in Sources */,
 				1EA876C52BC6E1C900F0DD25 /* NewsFeedViewController.swift in Sources */,
+				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
 				AF443D6D22C170FD004986DA /* ImageButton.swift in Sources */,
 				C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */,
 				AF2531B42209FE830001CF96 /* Dropdown.swift in Sources */,
 				C5D0E40D29BB8BE70091FB14 /* FileManager+Extension.swift in Sources */,
 				C5035A122CBE272B00A46B6D /* ShowLocation.swift in Sources */,
+				F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */,
 				1A9DB35B2817F53400C3EC1C /* String+Localized.swift in Sources */,
 				1E7918C32CDE2FD100C20723 /* LivecycleManager.swift in Sources */,
 				AF16C98F2225EB8A00997A2A /* LoadingSplashView.swift in Sources */,
@@ -5302,6 +5463,7 @@
 				AF36A1A9237C7C9B00BDDCDB /* ViewLeaderboardViewController+UI.swift in Sources */,
 				E90FD04527397DA800721874 /* MainViewController+StreamingListTableViewDelegate.swift in Sources */,
 				AF2AB9F022F333F600DC0604 /* SwitchButton.swift in Sources */,
+				F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */,
 				C56123742C5F23A80090EB5A /* DNSUtil.swift .swift in Sources */,
 				597DDE032BA229EC00F19F3F /* GeneralRouter.swift in Sources */,
 				C52DA5292B63902B00E5C571 /* CustomConfigRepositoryImpl.swift in Sources */,
@@ -5317,6 +5479,7 @@
 				1ABEA50F283F7279004D5765 /* ConnectionsViewModel.swift in Sources */,
 				C5FA3E802684BA56001D03A7 /* HelpViewController.swift in Sources */,
 				C56FCBF02B2B9F11008DE7D4 /* Assembler.swift in Sources */,
+				F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Ext.swift in Sources */,
 				AF038CD1257FAD9C008F34A6 /* WelcomeViewController+UI.swift in Sources */,
 				C57668EE2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift in Sources */,
@@ -5325,9 +5488,11 @@
 				E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */,
 				C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Ext.swift in Sources */,
 				1EC6C77E2BE136190036248B /* MainViewController+SearchLocationDelegate.swift in Sources */,
+				F485CBCA2D51411B0063EA3A /* PlanUpgradeBenefitView.swift in Sources */,
 				AF2531B6220A27FB0001CF96 /* WifiManager.swift in Sources */,
 				E998651328A565130091B6A3 /* NetworkViewController.swift in Sources */,
 				C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
+				F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */,
 				E90FD02D2739782A00721874 /* MainViewController+UIAutoSecureView.swift in Sources */,
 				AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */,
 				E96FEB26276CE78700D0BC54 /* ErrorPopupViewController.swift in Sources */,
@@ -5383,6 +5548,7 @@
 				C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */,
 				1E2696C82BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift in Sources */,
 				AF914A6A23CCDE86002D3041 /* InfoPromptViewController+UI.swift in Sources */,
+				F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */,
 				AF36A20A237DEA2600BDDCDB /* ShakeForDataResultViewController+UI.swift in Sources */,
 				C5BF38502B917EF300AA725C /* UserDataRepository.swift in Sources */,
 				C580FDF62B4DB735004FA857 /* ConnectivityImpl.swift in Sources */,
@@ -5416,7 +5582,7 @@
 				AFC75F7F24BD9FCD00897C18 /* WireGuardConfig.swift in Sources */,
 				E9DF548E274BDAC600E9C672 /* MainViewController+UIPreferredProtocolView.swift in Sources */,
 				AF16CA1E222847B700997A2A /* IAPInfoCellTableViewCell.swift in Sources */,
-				AF4E926B21F2309000A3F584 /* UIConstants.swift in Sources */,
+				AF4E926B21F2309000A3F584 /* UIConstants+Text.swift in Sources */,
 				C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */,
 				AF16CA22222884E700997A2A /* UITextView+Ext.swift in Sources */,
 				AF7F30842376099C0097C6D6 /* ShakeForDataViewController+UI.swift in Sources */,
@@ -5445,6 +5611,7 @@
 				AF914A7423CE2012002D3041 /* Token.swift in Sources */,
 				C580FE022B4F2536004FA857 /* PushNotificationManagerV2.swift in Sources */,
 				C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */,
+				F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */,
 				C5592B892B394BF100F2F110 /* LocalDatabase.swift in Sources */,
 				AF4E927121F26A1400A3F584 /* AlertManager.swift in Sources */,
 				C5D0E40129BB8BE70091FB14 /* ringlogger.c in Sources */,
@@ -5453,7 +5620,6 @@
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C56FCC042B2CF304008DE7D4 /* ConnectionRouter.swift in Sources */,
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
-				AF4C9ACF22F4995B004A9FA6 /* UIInputViewController+Ext.swift in Sources */,
 				C5790A672B93184C00D24495 /* SignUpViewModel.swift in Sources */,
 				E9219FFA289050BD0026E544 /* HelpView.swift in Sources */,
 				AF443D7122C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift in Sources */,
@@ -5507,6 +5673,7 @@
 				C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */,
 				1A9DB34E28167B8800C3EC1C /* LanguageTableViewCell.swift in Sources */,
 				AF914A7A23D63DFC002D3041 /* GhostAccountViewController.swift in Sources */,
+				F46C286C2D4C0AB30073207E /* PlanUpgradeModels.swift in Sources */,
 				1AF57D43280FCBE2004E8082 /* LanguageManager.swift in Sources */,
 				C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */,
 				1A0FD3C8283D106D00148E39 /* ConnectionSecureView.swift in Sources */,
@@ -5578,11 +5745,12 @@
 				AF36A1FF237DC3FE00BDDCDB /* MainViewController+Motion.swift in Sources */,
 				AFA0D7C0243CA9F2007C912E /* SuggestedPorts.swift in Sources */,
 				1EE74F842BD81DC30031185F /* ViewLeaderboardViewModel.swift in Sources */,
+				F47D8E762D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				AFED9A3F226E5286000E9EE2 /* Data+Ext.swift in Sources */,
 				591CF9B12BBB3ED1004DEB48 /* EmailRouter.swift in Sources */,
 				AF2A752F230DAF6400548088 /* URLRequest+Ext.swift in Sources */,
-				591CF9B52BBDC3F6004DEB48 /* UpgradeViewModel.swift in Sources */,
 				C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */,
+				F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */,
 				AF0AED382203549000039CAF /* ServerListTableViewDataSource+Delegate.swift in Sources */,
 				C5A930D72B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift in Sources */,
 				AF4B92F0221DB3290054580D /* EnterEmailViewController+UI.swift in Sources */,
@@ -5657,12 +5825,15 @@
 				596E60062B8F77EC00D51E20 /* Language.swift in Sources */,
 				C50F20D02B62110400266B23 /* Bundle+Ext.swift in Sources */,
 				AF0B9EEC226E0C4500DCD026 /* PacketTunnelProvider.swift in Sources */,
+				F47D8E792D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				C52DA5122B63821100E5C571 /* RepositoryErrors.swift in Sources */,
 				AFBD01A122947B9700FED749 /* LogType.swift in Sources */,
 				C50F20B62B61734400266B23 /* FileLoggerImpl.swift in Sources */,
 				C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */,
+				F485CBBF2D4D52D40063EA3A /* Then.swift in Sources */,
 				AFBD019222946AF400FED749 /* Date+Ext.swift in Sources */,
 				E9425B9D2743703D008B8786 /* APIParameterValues.swift in Sources */,
+				F47D8E6E2D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				C51EEDCC2C1779B500B01F8F /* LanguageManagerV2.swift in Sources */,
 				C52DA52E2B63913100E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
@@ -5686,6 +5857,7 @@
 				C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */,
 				596E60072B8F77ED00D51E20 /* Language.swift in Sources */,
 				C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */,
+				F47D8E7A2D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				C5DD96072CA7257500FFABBC /* Data+Ext.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
@@ -5715,6 +5887,8 @@
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C59FF1A52CBB8DC70072EF70 /* String+Ext.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
+				F485CBBD2D4D52D40063EA3A /* Then.swift in Sources */,
+				F47D8E702D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				C59FF1A82CBB8E0D0072EF70 /* WSNetErrors.swift in Sources */,
 				C56123782C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C59FF1A22CBB8B090072EF70 /* IntentCommon.swift in Sources */,
@@ -5732,10 +5906,12 @@
 				C50F20762B606B1D00266B23 /* WireguardConfigRepository.swift in Sources */,
 				C52DA5242B638EA400E5C571 /* CustomConfig.swift in Sources */,
 				C50F20822B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
+				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,
 				C535D29A27E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
 				C585F3E42C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
+				F47D8E712D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
 				C535D29327E2EF3700C08345 /* FilePaths.swift in Sources */,
 				C5D0E40429BB8BE70091FB14 /* test_ringlogger.c in Sources */,
@@ -5769,6 +5945,7 @@
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
+				F47D8E782D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				C56123772C5F24040090EB5A /* DNSUtil.swift .swift in Sources */,
 				C535D28C27E2E39100C08345 /* String+Ext.swift in Sources */,
 				C535D2A027E5127F00C08345 /* LogType.swift in Sources */,
@@ -5814,6 +5991,7 @@
 				596E60052B8F774000D51E20 /* LanguageManagerV2.swift in Sources */,
 				1A9DB35C2817F63A00C3EC1C /* UIView+Swizzling.swift in Sources */,
 				5986AB4A2C4563C400167023 /* APIParameterValues.swift in Sources */,
+				F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */,
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
@@ -5823,11 +6001,12 @@
 				1E01D9002C5164EA00B679E9 /* (null) in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
+				F47D8E6F2D5A817F00B3FA5A /* UIConstants+Links.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,
 				1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */,
 				C52DA5312B63913600E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C5035A172CBE2BE900A46B6D /* String+Ext.swift in Sources */,
-				AF038CC825640754008F34A6 /* UIConstants.swift in Sources */,
+				AF038CC825640754008F34A6 /* UIConstants+Text.swift in Sources */,
 				C5035A132CBE272B00A46B6D /* ShowLocation.swift in Sources */,
 				1EDFA0EA2CB5559F00F778E5 /* Data+Ext.swift in Sources */,
 				C5035A162CBE2BD000A46B6D /* APIUtil.swift in Sources */,
@@ -5845,6 +6024,7 @@
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
 				C50F20DB2B62293600266B23 /* LogType.swift in Sources */,
 				C5035A182CBE2BF600A46B6D /* APIError.swift in Sources */,
+				F47D8E772D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7364,6 +7544,14 @@
 				revision = 7bb0d1aabc0d2f1542ebc074cf4dd1ecdd269004;
 			};
 		};
+		F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -7402,6 +7590,11 @@
 		C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WireGuardKit;
+		};
+		F485CBC52D4D76BA0063EA3A /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

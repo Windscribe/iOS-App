@@ -70,8 +70,19 @@ class ViewModels: Assembly {
         container.register(ConfirmEmailViewModel.self) { r in
             ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-        container.register(UpgradeViewModel.self) { r in
-            UpgradeViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, preferences: r.resolve(Preferences.self)!, inAppManager: r.resolve(InAppPurchaseManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!, billingRepository: r.resolve(BillingRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
+        container.register(PlanUpgradeViewModel.self) { r in
+            DefaultUpgradePlanViewModel(
+                alertManager: r.resolve(AlertManagerV2.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                upgradeRouter: r.resolve(UpgradeRouter.self)!,
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                inAppPurchaseManager: r.resolve(InAppPurchaseManager.self)!,
+                pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!,
+                billingRepository: r.resolve(BillingRepository.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(SubmitTicketViewModel.self) { r in
             SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -368,13 +379,10 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ConfirmEmailViewModel.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        container.register(UpgradeViewController.self) { _ in
-            UpgradeViewController()
+        container.register(PlanUpgradeViewController.self) { _ in
+            PlanUpgradeViewController()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(UpgradeViewModel.self)
-            c.router = r.resolve(UpgradeRouter.self)
-            c.alertManager = r.resolve(AlertManagerV2.self)
-            c.logger = r.resolve(FileLogger.self)
+            c.viewModel = r.resolve(PlanUpgradeViewModel.self)
         }.inObjectScope(.transient)
         container.register(SubmitTicketViewController.self) { _ in
             SubmitTicketViewController()

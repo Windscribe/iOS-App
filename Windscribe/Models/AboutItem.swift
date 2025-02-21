@@ -21,21 +21,21 @@ enum AboutItemCell {
     var title: String {
         switch self {
         case .status:
-            return About.status
+            return TextsAsset.About.status
         case .aboutUs:
-            return About.aboutUs
+            return TextsAsset.About.aboutUs
         case .privacyPolicy:
-            return About.privacyPolicy
+            return TextsAsset.About.privacyPolicy
         case .terms:
-            return About.terms
+            return TextsAsset.About.terms
         case .blog:
-            return About.blog
+            return TextsAsset.About.blog
         case .softwareLicenses:
-            return About.softwareLicenses
+            return TextsAsset.About.softwareLicenses
         case .jobs:
-            return About.jobs
+            return TextsAsset.About.jobs
         case .changelog:
-            return About.changelog
+            return TextsAsset.About.changelog
         }
     }
 

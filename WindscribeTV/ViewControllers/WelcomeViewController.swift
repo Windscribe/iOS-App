@@ -61,7 +61,7 @@ class WelcomeViewController: UIViewController {
     func setupLocalized() {
         loginButton.setTitle(TextsAsset.login.uppercased(), for: .normal)
         welcomeLabel.text = TextsAsset.slogan
-        loginDescription.text = TvAssets.welcomeDescription
+        loginDescription.text = TextsAsset.TVAsset.welcomeDescription
         getStartedButton.setTitle(TextsAsset.getStarted.uppercased(), for: .normal)
     }
 

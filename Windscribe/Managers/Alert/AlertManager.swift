@@ -21,6 +21,26 @@ class AlertManager: AlertManagerV2 {
         }
     }
 
+    func showSimpleAlert(viewController: UIViewController?,
+                         title: String,
+                         message: String,
+                         buttonText: String,
+                         completion: @escaping () -> Void) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title,
+                                          message: message,
+                                          preferredStyle: .alert)
+            let action = UIAlertAction(title: buttonText,
+                                       style: .default,
+                                       handler: { _ in
+                                            completion()
+                                       })
+
+            alert.addAction(action)
+            self.presentAlertOnViewController(alert: alert, viewController: viewController)
+        }
+    }
+
     func showYesNoAlert(viewController: UIViewController, title: String, message: String, completion: @escaping (_ result: Bool) -> Void) {
         showYesNoAlertDefault(viewController: viewController, title: title, message: message, completion: completion)
     }
@@ -112,7 +132,11 @@ class AlertManager: AlertManagerV2 {
 
     private func presentAlertOnViewController(alert: UIAlertController, viewController: UIViewController? = nil) {
         if viewController == nil {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window, let viewController = window.rootViewController else { return }
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let window = appDelegate.window,
+                let viewController = window.activeViewController else {
+                    return
+            }
             viewController.present(alert, animated: true, completion: nil)
         } else {
             viewController?.present(alert, animated: true, completion: nil)

@@ -217,9 +217,7 @@
 "R.O.B.E.R.T" = "R.O.B.E.R.T";
 "Best malware and ad-blocker you will ever use. Seriously." = "過去最高のマルウェアと広告ブロック機能を利用できます。真剣に。";
 "Choose Plan" = "プランを選択";
-"Yearly" = "年間";
-"Monthly" = "月々";
-"Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes." = "月額プランは、月や年単位で管理することも、購入後にApp Storeのアカウント設定から無効化することもできます。価格はすべて税込みです。";
+
 "Terms of Use" = "利用規約";
 "Privacy Policy" = "プライバシーポリシー";
 "Restore Purchase" = "購入を復元";
@@ -375,3 +373,35 @@
 "Sweet, you should be all good to go now" = "スイート、もう大丈夫ですよ";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "この場所はメンテナンス中です。しばらくしてからもう一度お試しいただくか、ステータスページで詳細をご確認ください。https://windscribe.com/status";
 "Location Maintenance" = "ロケーションのメンテナンス";
+
+"Yearly" = "年間";
+"Monthly" = "月間";
+"Billed Annually" = "年間請求";
+"Billed Monthly" = "月間請求";
+"Subscribe" = "購読する";
+"Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes." = "購入後、サブスクリプションは月間、年間で管理するか、App Storeのアカウント設定でオフにできます。すべての価格には適用される税金が含まれています。";
+"Restore" = "復元する";
+"Unlimited Everything" = "すべて無制限";
+"Use on all devices, with no data limits" = "すべてのデバイスでデータ制限なしで使用可能";
+"All VPN Locations" = "すべてのVPNロケーション";
+"Servers in 130 cities, more than any other VPN" = "130都市にサーバーを設置、他のVPNよりも多い";
+"Increased Speed and Security" = "高速化とセキュリティ強化";
+"Blocks 99.9% of malicious websites and trackers" = "悪意のあるウェブサイトとトラッカーを99.9%ブロック";
+"Unable to connect to app store services. Please try again." = "App Storeのサービスに接続できません。もう一度お試しください。";
+"You're all set" = "準備完了です。";
+"Your purchase is successful." = "購入が成功しました。";
+"Welcome to Windscribe Pro!" = "Windscribe Proへようこそ！";
+"Thanks for upgrading to Windscribe Pro! You now have access to even more powerful features." = "Windscribe Proにアップグレードしていただきありがとうございます！ さらに強力な機能を利用できるようになりました。";
+"Share" = "共有する";
+"Start using pro" = "Proを使い始める";
+"Failed to complete transaction." = "取引を完了できませんでした。";
+"Something went wrong. Please try another payment method or contact our customer support." = "問題が発生しました。別の支払い方法を試すか、カスタマーサポートにお問い合わせください。";
+"Failed to restore transaction." = "取引の復元に失敗しました。";
+"Failed to load products. Check your internet connection and try again." = "製品を読み込めませんでした。インターネット接続を確認して、もう一度お試しください。";
+"Set Up on All Your Devices" = "すべてのデバイスで設定";
+"Connect to Any Location" = "どのロケーションにも接続";
+"Unlimited Bandwidth" = "無制限の帯域幅";
+"Join our Discord community" = "Discordコミュニティに参加";
+"Join our Reddit community" = "Redditコミュニティに参加";
+"Find us on YouTube" = "YouTubeで探す";
+"Follow us on X" = "Xでフォロー";

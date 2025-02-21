@@ -187,7 +187,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         #if os(iOS)
         WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
         #endif
-    
+
         switch event {
         case .connected:
             if reasserting {

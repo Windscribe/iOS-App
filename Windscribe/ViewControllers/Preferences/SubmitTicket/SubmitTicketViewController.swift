@@ -42,7 +42,7 @@ class SubmitTicketViewController: WSNavigationViewController {
         view.backgroundColor = UIColor.darkGray
         addViews()
         addAutoLayoutContraints()
-        titleLabel.text = SubmitTicket.submitTicket
+        titleLabel.text = TextsAsset.SubmitTicket.submitTicket
         bindViews()
     }
 
@@ -62,7 +62,7 @@ class SubmitTicketViewController: WSNavigationViewController {
     @objc func continueSendTicketTapped() {
         guard let email = emailInputView.text else { return }
         let category = catergoryDropDownView.button.title(for: .normal)
-        guard let categoryValue = SubmitTicket.categoryValues[category!] else { return }
+        guard let categoryValue = TextsAsset.SubmitTicket.categoryValues[category!] else { return }
         guard let subject = subjectInputView.text else { return }
         guard let message = messageInputView.text else { return }
 
@@ -80,7 +80,7 @@ class SubmitTicketViewController: WSNavigationViewController {
             if error.localizedDescription != "" {
                 self.showAlertDialog(title: "Error", message: error.localizedDescription)
             } else {
-                self.showAlertDialog(title: "Error", message: SubmitTicket.failedToSendTicket)
+                self.showAlertDialog(title: "Error", message: TextsAsset.SubmitTicket.failedToSendTicket)
             }
         })
         .disposed(by: disposeBag)

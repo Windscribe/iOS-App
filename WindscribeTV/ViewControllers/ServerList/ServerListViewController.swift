@@ -450,7 +450,7 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
 
         // Create the label
         let label = PageTitleLabel()
-        label.text = staticIpSelected ? TvAssets.staticIPTitle : TvAssets.favTitle
+        label.text = staticIpSelected ? TextsAsset.TVAsset.staticIPTitle : TextsAsset.TVAsset.favTitle
         label.textAlignment = .left
 
         label.translatesAutoresizingMaskIntoConstraints = false

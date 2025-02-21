@@ -31,7 +31,10 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     func goToSignUp(viewController: WSUIViewController, claimGhostAccount: Bool = false) {
         let vc = Assembler.resolve(SignUpViewController.self)
         vc.claimGhostAccount = claimGhostAccount
-        viewController.navigationController?.pushViewController(vc, animated: true)
+
+        DispatchQueue.main.async {
+            viewController.navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     func goToWeb(url: String, viewController: WSNavigationViewController, parameters _: [String: Any]?) {
