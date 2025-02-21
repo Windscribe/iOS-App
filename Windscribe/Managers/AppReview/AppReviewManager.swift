@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import StoreKit
@@ -15,7 +16,11 @@ protocol AppReviewManager {
     var localDatabase: LocalDatabase { get }
     var logger: FileLogger { get }
 
+    var reviewRequestTrigger: PublishSubject<Void> { get }
+
     func requestReviewIfAvailable(session: Session?)
+    func promptReviewWithConfirmation()
+    func openAppStoreForReview()
 }
 
 class DefaultAppReviewManager: AppReviewManager {
@@ -32,6 +37,8 @@ class DefaultAppReviewManager: AppReviewManager {
     let localDatabase: LocalDatabase
     let logger: FileLogger
     var reviewCriteria: [AppReviewCriteriaType]
+    private var cancellables = Set<AnyCancellable>()
+    let reviewRequestTrigger = PublishSubject<Void>()
 
     init (preferences: Preferences, localDatabase: LocalDatabase, logger: FileLogger) {
         self.preferences = preferences
@@ -182,53 +189,75 @@ extension DefaultAppReviewManager {
 // MARK: Review Display Helper
 
 extension DefaultAppReviewManager {
+
     private func promptReview() {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
             logger.logD(self, "Rate Dialog: No active UIWindowScene found.")
             return
         }
-#if os(iOS)
-        // Capture the current window count before calling requestReview
-        let windowCountBefore = UIApplication.shared.windowCount
-        requestReview(scene: scene)
 
+        SKStoreReviewController.requestReview(in: scene)
+
+        #if os(iOS)
+        // Observe if the SKStoreReviewPresentationWindow appears
+        let reviewPromptDetected = observeReviewWindow()
+
+        // Request the system review prompt
+        SKStoreReviewController.requestReview(in: scene)
+
+        // Wait for 0.5 seconds to allow the system to display the review prompt
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self else { return }
 
+            // Save review prompt display timestamp and completion state
             self.preferences.saveWhenRateUsPopupDisplayed(date: Date())
             self.preferences.saveRateUsActionCompleted(bool: true)
 
-            // Capture the current window count after calling requestReview
-            let windowCountAfter = UIApplication.shared.windowCount
-            // And check if rate dialog is shown
-            let isRateDialogShown = windowCountAfter > windowCountBefore
-
-            guard !isRateDialogShown else {
+            // If a review prompt was shown, do nothing further
+            if reviewPromptDetected.value {
                 logger.logD(self, "Rate Dialog: Review prompt was likely SHOWN (new window detected).")
                 return
             }
 
+            // If no review prompt was detected, open the App Store review page
             logger.logD(self, "Rate Dialog: Review prompt was NOT shown (no new window appeared).")
-            self.openAppStoreForReview()
+            self.promptReviewWithConfirmation()
         }
-#elseif os(tvOS)
+
+        #elseif os(tvOS)
+        // SKStoreReviewController is not available on tvOS, so redirect to the App Store review page
         logger.logD(self, "Rate Dialog: SKStoreReviewController is not available on tvOS, opening App Store review page.")
-        openAppStoreForReview()
-#endif
+        promptReviewWithConfirmation()
+        #endif
     }
 
-    private func requestReview(scene: UIWindowScene) {
-        if #available(iOS 14.0, *) {
-            SKStoreReviewController.requestReview(in: scene)
-        } else {
-            SKStoreReviewController.requestReview()
-        }
+    private func observeReviewWindow() -> CurrentValueSubject<Bool, Never> {
+        let reviewPromptDetected = CurrentValueSubject<Bool, Never>(false)
+
+        // Listen for any new windows becoming visible
+        NotificationCenter.default.publisher(for: UIWindow.didBecomeVisibleNotification)
+            .compactMap { $0.object as? UIWindow }
+            // Filter only SKStoreReviewPresentationWindow instances
+            .filter { $0.isKind(of: NSClassFromString("SKStoreReviewPresentationWindow")!) }
+            .sink { _ in
+                // If detected, mark that the review prompt was shown
+                reviewPromptDetected.send(true)
+                self.logger.logD(self, "Rate Dialog: Review prompt was SHOWN - SKStoreReviewPresentationWindow detected.")
+            }
+            .store(in: &cancellables)
+
+        return reviewPromptDetected
     }
 
-    private func openAppStoreForReview() {
+    internal func promptReviewWithConfirmation() {
+         reviewRequestTrigger.onNext(())
+     }
+
+    func openAppStoreForReview() {
         let appID = DefaultValues.appID
         let urlString = "itms-apps://itunes.apple.com/app/id\(appID)?action=write-review"
 
+        // Open the App Store review page if the URL is valid and can be opened
         if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }

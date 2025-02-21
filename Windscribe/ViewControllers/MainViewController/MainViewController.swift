@@ -234,6 +234,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             }
         }).disposed(by: disposeBag)
 
+        vpnConnectionViewModel.reviewRequestTrigger
+             .observe(on: MainScheduler.instance)
+             .subscribe(onNext: { [weak self] in
+                 self?.displayReviewConfirmationAlert()
+             })
+             .disposed(by: disposeBag)
+
         setNetworkSsid()
     }
 

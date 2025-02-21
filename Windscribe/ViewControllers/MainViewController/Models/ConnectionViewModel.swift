@@ -34,8 +34,10 @@ protocol ConnectionViewModelType {
     var requestLocationTrigger: PublishSubject<Void> { get }
     var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
     var reloadLocationsTrigger: PublishSubject<String> { get }
+    var reviewRequestTrigger: PublishSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
+    var appReviewManager: AppReviewManager { get }
 
     // Check State
     func isConnected() -> Bool
@@ -87,6 +89,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
     let showNoConnectionAlertTrigger = PublishSubject<Void>()
     let reloadLocationsTrigger = PublishSubject<String>()
+    let reviewRequestTrigger = PublishSubject<Void>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -212,6 +215,13 @@ class ConnectionViewModel: ConnectionViewModelType {
                 }
                 self.currentWifiAutoSecured = matchingNetwork.status
             }).disposed(by: disposeBag)
+
+        appReviewManager.reviewRequestTrigger
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.reviewRequestTrigger.onNext(())
+            })
+            .disposed(by: disposeBag)
     }
 }
 
