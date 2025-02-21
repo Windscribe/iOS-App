@@ -59,7 +59,11 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     func cleansEmergencyConfigs() {
-        locationsManager.clearLastSelectedLocation()
+        if locationsManager.getLocationType() == .custom {
+            locationsManager.clearLastSelectedLocation()
+            let bestLocation = locationsManager.getBestLocation()
+            locationsManager.saveBestLocation(with: bestLocation)
+        }
         localDatabase.getCustomConfigs().filter { config in
             config.name == configuationName && config.isInvalidated == false
         }.forEach {
