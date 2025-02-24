@@ -16,7 +16,7 @@ extension LocalDatabaseImpl {
 
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
-            schemaVersion: 52,
+            schemaVersion: 53,
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 1 {
                     migration.enumerateObjects(ofType: Session.className()) { _, _ in }
@@ -255,6 +255,12 @@ extension LocalDatabaseImpl {
                         if let groupId = oldObject?["groupId"] as? String {
                             self.preferences.saveBestLocation(with: groupId)
                         }
+                    }
+                } else if oldSchemaVersion < 53 {
+                    migration.enumerateObjects(ofType: StaticIP.className()) { _, newObject in
+                        newObject!["expiry"] = nil
+                        newObject!["isActive"] = true
+                        newObject!["pingIP"] = ""
                     }
                 }
             }, deleteRealmIfMigrationNeeded: false

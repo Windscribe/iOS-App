@@ -13,6 +13,7 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
     // MARK: - PROPERTIES
 
     var viewModel: PopUpMaintenanceLocationModelType!
+    var isStaticIp = false
 
     // MARK: - UI ELEMENTs
 
@@ -109,10 +110,7 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
             )
             self.checkStatusButton.setAttributedTitle(attributeString, for: .normal)
         }).disposed(by: disposeBag)
-        viewModel.isDarkMode.subscribe(onNext: { [self] in
-            self.headerLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.subHeaderLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-        }).disposed(by: disposeBag)
+        checkStatusButton.isHidden = isStaticIp
     }
 
     // MARK: - Actions

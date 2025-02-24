@@ -314,8 +314,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         accountRouter?.routeTo(to: RouteID.upgrade(promoCode: nil, pcpID: nil), from: self)
     }
 
-    func showMaintenanceLocationView() {
-        popupRouter?.routeTo(to: .maintenanceLocation, from: self)
+    func showMaintenanceLocationView(isStaticIp: Bool = false) {
+        popupRouter?.routeTo(to: .maintenanceLocation(isStaticIp: isStaticIp), from: self)
     }
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {

@@ -15,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(uint16_t)port;
 -(void)setUseDnsCache:(BOOL)isUseDnsCache;
 -(BOOL)isUseDnsCache;
--(void)setContentTypeHeader:(NSString*)header;
--(NSString*)contentTypeHeader;
+-(void)addHttpHeader:(NSString*)header;
+-(NSArray<NSString*>*)httpHeaders;
 -(void)setIgnoreSslErrors:(BOOL)isIgnore;
 -(BOOL)isIgnoreSslErrors;
 -(void)setRemoveFromWhitelistIpsAfterFinish:(BOOL)isRemove;

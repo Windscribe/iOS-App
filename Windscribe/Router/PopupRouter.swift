@@ -56,8 +56,9 @@ class PopupRouter: BaseRouter, RootRouter {
                                            justDismissOnAction: justDismissOnAction,
                                            delegate: delegate)
             vc = infoPromptVC
-        case .maintenanceLocation:
+        case .maintenanceLocation(let isStaticIp):
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
+            (vc as? PopUpMaintenanceLocationVC)?.isStaticIp = isStaticIp
         case let .upgrade(promoCode, pcpID):
             let upgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
                 $0.promoCode = promoCode

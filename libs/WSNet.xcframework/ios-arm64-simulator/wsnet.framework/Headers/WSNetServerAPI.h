@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)setApiResolutionsSettings:(BOOL)isAutomatic manualAddress:(NSString*)manualAddress;
 -(void)setIgnoreSslErrors:(BOOL)bIgnore;
+-(void)resetFailover;
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
 -(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId callback:(void(^)(int, NSString*))callback;
@@ -28,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)checkUpdate:(int)updateChannel appVersion:(NSString*)appVersion appBuild:(NSString*)appBuild osVersion:(NSString*)osVersion osBuild:(NSString*)osBuild callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)debugLog:(NSString*)username strLog:(NSString*)strLog callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)speedRating:(NSString*)authHash hostname:(NSString*)hostname ip:(NSString*)ip rating:(int32_t)rating callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)staticIps:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)staticIps:(NSString*)authHash version:(uint32_t)version callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)pingTest:(uint32_t)timeoutMs callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)notifications:(NSString*)authHash pcpid:(NSString*)pcpid callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)getRobertFilters:(NSString*)authHash callback:(void(^)(int, NSString*))callback;

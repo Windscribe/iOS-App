@@ -18,7 +18,7 @@ extension APIManagerImpl {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: StaticIPList.self) { completion in
-            self.api.staticIps(sessionAuth, callback: completion)
+            self.api.staticIps(sessionAuth, version: 2, callback: completion)
         }
     }
 

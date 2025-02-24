@@ -149,30 +149,41 @@ class StaticIPTableViewCell: BaseNodeTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(onNext: { isDarkMode in
-            if !isDarkMode {
-                self.cellDivider.backgroundColor = UIColor.midnight
-                self.serverNameLabel.textColor = UIColor.midnight
-                self.ipAddressLabel.textColor = UIColor.midnight
-                self.latencyLabel.textColor = UIColor.midnight
-                self.latencyBackground.backgroundColor = UIColor.midnight
-                if self.displayingStaticIP?.type == "dc" {
-                    self.serverIcon.image = UIImage(named: ImagesAsset.staticIPdc)
+        isDarkMode.subscribe(
+            onNext: { isDarkMode in
+                if !isDarkMode {
+                    self.cellDivider.backgroundColor = UIColor.midnight
+                    self.serverNameLabel.textColor = UIColor.midnight
+                    self.ipAddressLabel.textColor = UIColor.midnight
+                    self.latencyLabel.textColor = UIColor.midnight
+                    self.latencyBackground.backgroundColor = UIColor.midnight
+                    
+                    if self.displayingStaticIP?.isActive == false {
+                        self.serverIcon.image = self.locationDownIcon
+                    } else {
+                        if self.displayingStaticIP?.type == "dc" {
+                            self.serverIcon.image = UIImage(named: ImagesAsset.staticIPdc)
+                        } else {
+                            self.serverIcon.image = UIImage(named: ImagesAsset.staticIPres)
+                        }
+                    }
                 } else {
-                    self.serverIcon.image = UIImage(named: ImagesAsset.staticIPres)
+                    self.cellDivider.backgroundColor = UIColor.white
+                    self.serverNameLabel.textColor = UIColor.white
+                    self.ipAddressLabel.textColor = UIColor.white
+                    self.latencyLabel.textColor = UIColor.white
+                    self.latencyBackground.backgroundColor = UIColor.white
+                    if self.displayingStaticIP?.isActive == false {
+                        self.serverIcon.image = self.locationDownIcon
+                    } else {
+                        if self.displayingStaticIP?.type == "dc" {
+                            self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPdc)
+                        } else {
+                            self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPres)
+                        }
+                    }
                 }
-            } else {
-                self.cellDivider.backgroundColor = UIColor.white
-                self.serverNameLabel.textColor = UIColor.white
-                self.ipAddressLabel.textColor = UIColor.white
-                self.latencyLabel.textColor = UIColor.white
-                self.latencyBackground.backgroundColor = UIColor.white
-                if self.displayingStaticIP?.type == "dc" {
-                    self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPdc)
-                } else {
-                    self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPres)
-                }
-            }
-        }).disposed(by: disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 }

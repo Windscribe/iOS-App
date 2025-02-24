@@ -10,6 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSArray<NSString*>*)ips;
 -(uint32_t)elapsedMs;
 -(BOOL)isError;
+-(BOOL)isConnectionRefusedError;
 -(NSString*)errorString;
 
 @end
