@@ -164,6 +164,7 @@
 		1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7822BE268E30036248B /* CardHeaderContainerView.swift */; };
 		1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */; };
 		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
+		1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */; };
 		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
@@ -1389,6 +1390,7 @@
 		1EC6C7822BE268E30036248B /* CardHeaderContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHeaderContainerView.swift; sourceTree = "<group>"; };
 		1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CardHeaderViewDelegate.swift"; sourceTree = "<group>"; };
 		1EC6C7892BE293690036248B /* LocationMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMainViewModel.swift; sourceTree = "<group>"; };
+		1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeViewModel.swift; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -2724,6 +2726,7 @@
 		1EF7BB2F2C6D0D5F0032A4DF /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */,
 				1EF7BB302C6D0D750032A4DF /* UpgradePricingView.swift */,
 				1EF7BB322C6D0D8F0032A4DF /* UpgradePricingView.xib */,
 				1EF7BB342C6D0DAE0032A4DF /* UpgradePlanDetailView.swift */,
@@ -5237,6 +5240,7 @@
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
+				1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */,
 				59FC74542C51605600021CD1 /* ProtocolView.swift in Sources */,
 				59FC742B2C51564700021CD1 /* Constants.swift in Sources */,
 				59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */,

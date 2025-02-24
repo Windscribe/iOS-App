@@ -19,7 +19,7 @@ enum PopupTypes {
 
     var title: String {
         switch self {
-        case .support: PopupsTV.support
+        case .support: TextsAsset.TVAsset.supportTitle
         case .error: TextsAsset.error
         case .getMoreData: TextsAsset.getMoreData
         case .confirmEmail: TextsAsset.EmailView.confirmEmail
@@ -39,7 +39,7 @@ enum PopupTypes {
 
     var body: String {
         switch self {
-        case .support: PopupsTV.supportBody
+        case .support: TextsAsset.TVAsset.supportBody
         case .rateUs: TextsAsset.RateUs.description
         case let .error(body): body
         case .getMoreData: "Either sign up to increase it to 10GB/Month, or upgrade it and get rid of the limits completely."
