@@ -42,9 +42,7 @@ class WTableViewDataSource: NSObject, UITableViewDelegate {
 }
 
 protocol WExpyTableViewDataSourceDelegate: AnyObject {
-    func changeForSection(tableView: UITableView,
-                          state: ExpyState,
-                          section: Int)
+    func changeForSection(tableView: UITableView, state: ExpyState, section: Int)
 }
 
 class WExpyTableViewDataSource: WTableViewDataSource, ExpyTableViewDelegate {

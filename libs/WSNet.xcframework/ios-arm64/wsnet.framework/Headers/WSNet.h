@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class WSNetPingManager;
 @class WSNetAdvancedParameters;
 @class WSNetApiResourcesManager;
+@class WSNetDecoyTraffic;
 @class WSNetUtils;
 
 @interface WSNet : BridgeObject
@@ -34,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetApiResourcesManager*)apiResourcersManager;
 -(WSNetEmergencyConnect*)emergencyConnect;
 -(WSNetPingManager*)pingManager;
+-(WSNetDecoyTraffic*)decoyTraffic;
 -(WSNetAdvancedParameters*)advancedParameters;
 -(WSNetUtils*)utils;
 

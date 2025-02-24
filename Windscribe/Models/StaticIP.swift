@@ -18,6 +18,8 @@ struct StaticIPModel {
     let countryCode: String?
     let deviceName: String?
     let cityName: String?
+    let expiry: Date?
+    let isActive: Bool
     let credentials: [StaticIPCredentialsModel]?
     let bestNode: NodeModel?
     let wgPublicKey: String?
@@ -33,6 +35,8 @@ struct StaticIPModel {
          countryCode: String,
          deviceName: String,
          cityName: String,
+         expiry: Date?,
+         isActive: Bool,
          credentials: [StaticIPCredentialsModel],
          bestNode: NodeModel,
          wgPublicKey: String,
@@ -46,6 +50,8 @@ struct StaticIPModel {
         self.name = name
         self.countryCode = countryCode
         self.deviceName = deviceName
+        self.expiry = expiry
+        self.isActive = isActive
         self.cityName = cityName
         self.credentials = credentials
         self.bestNode = bestNode
@@ -60,18 +66,22 @@ struct StaticIPModel {
     dynamic var id: Int = 0
     dynamic var ipId: Int = 0
     dynamic var staticIP: String = ""
-    dynamic var connectIP: String = ""
     dynamic var type: String = ""
     dynamic var name: String = ""
     dynamic var countryCode: String = ""
-    dynamic var deviceName: String = ""
     dynamic var shortName: String = ""
     dynamic var cityName: String = ""
     dynamic var serverId: Int = 0
+    dynamic var expiry: Date?
+    dynamic var isActive: Bool = true
+    dynamic var connectIP: String = ""
+    dynamic var wgIp: String = ""
     dynamic var wgPublicKey: String = ""
     dynamic var ovpnX509: String = ""
-    dynamic var wgIp: String = ""
+    dynamic var pingIP: String = ""
     dynamic var pingHost: String = ""
+    dynamic var deviceName: String = ""
+
     var nodes = List<StaticIPNode>()
     var ports = List<PortDetails>()
     var credentials = List<StaticIPCredentials>()
@@ -94,21 +104,24 @@ struct StaticIPModel {
         case id
         case ipId = "ip_id"
         case staticIP = "static_ip"
-        case connectIP = "connect_ip"
         case type
         case name
         case countryCode = "country_code"
-        case deviceName = "device_name"
         case shortName = "short_name"
         case cityName = "city_name"
         case serverId = "server_id"
+        case expiry
+        case isActive = "status"
+        case connectIP = "connect_ip"
+        case wgIp = "wg_ip"
+        case wgPublicKey = "wg_pubkey"
+        case ovpnX509 = "ovpn_x509"
+        case pingIP = "ping_ip"
+        case pingHost = "ping_host"
+        case deviceName = "device_name"
         case node
         case ports
         case credentials
-        case wgPublicKey = "wg_pubkey"
-        case ovpnX509 = "ovpn_x509"
-        case wgIp = "wg_ip"
-        case pingHost = "ping_host"
     }
 
     override static func primaryKey() -> String? {
@@ -118,21 +131,29 @@ struct StaticIPModel {
     required convenience init(from decoder: Decoder) throws {
         self.init()
         let data = try decoder.container(keyedBy: CodingKeys.self)
+
         id = try data.decodeIfPresent(Int.self, forKey: .id) ?? 0
         ipId = try data.decodeIfPresent(Int.self, forKey: .ipId) ?? 0
         staticIP = try data.decodeIfPresent(String.self, forKey: .staticIP) ?? ""
-        connectIP = try data.decodeIfPresent(String.self, forKey: .connectIP) ?? ""
         type = try data.decodeIfPresent(String.self, forKey: .type) ?? ""
         name = try data.decodeIfPresent(String.self, forKey: .name) ?? ""
         countryCode = try data.decodeIfPresent(String.self, forKey: .countryCode) ?? ""
-        deviceName = try data.decodeIfPresent(String.self, forKey: .deviceName) ?? ""
         shortName = try data.decodeIfPresent(String.self, forKey: .shortName) ?? ""
         cityName = try data.decodeIfPresent(String.self, forKey: .cityName) ?? ""
         serverId = try data.decodeIfPresent(Int.self, forKey: .serverId) ?? 0
+        if let expiryString = try data.decodeIfPresent(String.self, forKey: .expiry) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            expiry = dateFormatter.date(from: expiryString)
+        }
+        isActive = (try data.decodeIfPresent(Int.self, forKey: .isActive) ?? 0) == 1
+        connectIP = try data.decodeIfPresent(String.self, forKey: .connectIP) ?? ""
+        wgIp = try data.decodeIfPresent(String.self, forKey: .wgIp) ?? ""
         wgPublicKey = try data.decodeIfPresent(String.self, forKey: .wgPublicKey) ?? ""
         ovpnX509 = try data.decodeIfPresent(String.self, forKey: .ovpnX509) ?? ""
-        wgIp = try data.decodeIfPresent(String.self, forKey: .wgIp) ?? ""
+        pingIP = try data.decodeIfPresent(String.self, forKey: .pingIP) ?? ""
         pingHost = try data.decodeIfPresent(String.self, forKey: .pingHost) ?? ""
+        deviceName = try data.decodeIfPresent(String.self, forKey: .deviceName) ?? ""
         if let staticIPNode = try data.decodeIfPresent(StaticIPNode.self, forKey: .node) {
             setStaticIPNodes(object: staticIPNode)
         }
@@ -164,6 +185,7 @@ struct StaticIPModel {
               let password = credentials.first?.password,
               let bestNodeModel = bestNode?.getNodeModel() else { return nil }
         let credentialsModel = StaticIPCredentialsModel(username: username, password: password)
+
         return StaticIPModel(id: id,
                              staticIP: staticIP,
                              connectIP: connectIP,
@@ -172,6 +194,8 @@ struct StaticIPModel {
                              countryCode: countryCode,
                              deviceName: deviceName,
                              cityName: cityName,
+                             expiry: expiry,
+                             isActive: isActive,
                              credentials: [credentialsModel],
                              bestNode: bestNodeModel,
                              wgPublicKey: wgPublicKey,

@@ -16,8 +16,12 @@ extension MainViewController {
         }.disposed(by: disposeBag)
         staticIPListViewModel.presentAlertTrigger.subscribe {
             switch $0 {
-            case .connecting: self.displayConnectingAlert()
-            case .disconnecting: self.displayDisconnectingAlert()
+            case .connecting:
+                self.displayConnectingAlert()
+            case .disconnecting:
+                self.displayDisconnectingAlert()
+            case .underMaintananence:
+                self.showMaintenanceLocationView(isStaticIp: true)
             }
         }.disposed(by: disposeBag)
     }

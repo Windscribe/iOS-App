@@ -62,7 +62,7 @@ enum RouteID {
 
     case sendDebugLogCompleted(delegate: SendDebugLogCompletedVCDelegate)
     case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String = "")
-    case maintenanceLocation
+    case maintenanceLocation(isStaticIp: Bool)
     case protocolSwitchVC(delegate: ProtocolSwitchVCDelegate?, type: ProtocolFallbacksType)
     case rateUsPopUp
 }

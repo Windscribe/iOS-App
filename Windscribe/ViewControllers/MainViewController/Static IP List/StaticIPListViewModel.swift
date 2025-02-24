@@ -13,7 +13,11 @@ import UIKit
 #endif
 import RxSwift
 
-enum StaticIPAlertType { case connecting; case disconnecting }
+enum StaticIPAlertType {
+    case connecting
+    case disconnecting
+    case underMaintananence
+}
 
 protocol StaticIPListFooterViewDelegate: AnyObject {
     func addStaticIP()
@@ -50,6 +54,12 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         if !connectivity.internetConnectionAvailable() { return }
+
+        if !staticIP.isActive {
+            presentAlertTrigger.onNext(.underMaintananence)
+            return
+        }
+
         if vpnManager.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
