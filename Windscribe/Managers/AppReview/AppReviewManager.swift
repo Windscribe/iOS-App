@@ -195,10 +195,7 @@ extension DefaultAppReviewManager {
             logger.logD(self, "Rate Dialog: No active UIWindowScene found.")
             return
         }
-
-        SKStoreReviewController.requestReview(in: scene)
-
-        #if os(iOS)
+#if os(iOS)
         // Observe if the SKStoreReviewPresentationWindow appears
         let reviewPromptDetected = observeReviewWindow()
 

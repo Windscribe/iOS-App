@@ -134,8 +134,8 @@ class LoginViewController: PreferredFocusedViewController {
         titleLabel.text = TextsAsset.TVAsset.lazyLogin
         description1.text = TextsAsset.TVAsset.lazyLoginDescription
         orLabel.text = TextsAsset.TVAsset.or
-        description2.text = TextsAsset.TV.lazyLoginDescription2
-        generateCodeButton.setTitle(TextsAsset.TV.generateCode, for: .normal)
+        description2.text = TextsAsset.TVAsset.lazyLoginDescription2
+        generateCodeButton.setTitle(TextsAsset.TVAsset.generateCode, for: .normal)
         loginTitle.text = TextsAsset.TVAsset.manualLogin
         usernameTextField.placeholder = TextsAsset.username
         passwordTextField.placeholder = TextsAsset.password

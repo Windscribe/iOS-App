@@ -40,6 +40,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
         titleLabel.text = TextsAsset.NewsFeed.title
         titleLabel.font = UIFont.bold(size: 72)
         titleLabel.textColor = .white
+        newsBodyText.textColor = .white
     }
 
     private func bindViews() {

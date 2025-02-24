@@ -17,14 +17,23 @@ extension UIViewController {
 
     /// Checks if the device is in Portrait mode.
     var isPortrait: Bool {
+#if os(iOS)
         return currentInterfaceOrientation?.isPortrait ?? false
+#elseif os(tvOS)
+        return false
+#endif
     }
 
     /// Checks if the device is in Landscape mode.
     var isLandscape: Bool {
+#if os(iOS)
         return currentInterfaceOrientation?.isLandscape ?? false
+#elseif os(tvOS)
+        return true
+#endif
     }
-
+    
+#if os(iOS)
     /// Gets the current interface orientation safely
     private var currentInterfaceOrientation: UIInterfaceOrientation? {
         return view.window?.windowScene?.interfaceOrientation ??
@@ -32,4 +41,5 @@ extension UIViewController {
                    .compactMap { ($0 as? UIWindowScene)?.interfaceOrientation }
                    .first
     }
+#endif
 }

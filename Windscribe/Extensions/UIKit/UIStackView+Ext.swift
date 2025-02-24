@@ -21,7 +21,8 @@ public extension UIStackView {
         layoutMargins = inset
         isLayoutMarginsRelativeArrangement = true
     }
-
+    
+#if os(iOS)
     func setBackgroundColor(_ color: UIColor) {
         let backgroundView = UIView()
         backgroundView.backgroundColor = color
@@ -31,4 +32,5 @@ public extension UIStackView {
             make.edges.equalToSuperview()
         }
     }
+#endif
 }
