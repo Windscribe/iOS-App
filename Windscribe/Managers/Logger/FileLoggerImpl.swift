@@ -64,8 +64,9 @@ class FileLoggerImpl: FileLogger {
                     guard components.count >= 2 else {
                         return nil
                     }
-                    if let timestamp = dateFormatter.date(from: "\(components[0]) \(components[1])") {
-                        return (timestamp, entry)
+                    if let timestamp = dateFormatter.date(from: "\(components[0]) \(components[1])"),
+                       let jsonEntry = self.logEntryToJSON(entry) {
+                        return (timestamp, jsonEntry)
                     }
                     return nil
                 }
@@ -89,6 +90,30 @@ class FileLoggerImpl: FileLogger {
         }
     }
 
+    private func logEntryToJSON(_ logEntry: String) -> String? {
+        let values = logEntry.split(separator: " ")
+        guard values.count >= 5 else { return nil }
+        var message = Array(values[5..<values.endIndex]).reduce("") { result, value in
+            let middle = result.isEmpty ? result : " "
+            return result + middle + String(value)
+        }
+        if !message.contains("DeviceInfo") {
+            message.removeLast()
+        }
+
+        let lvl = removeBrackets(String(values[2]))
+        let mod = removeBrackets(String(values[3]))
+
+        return "{\"tm\": \"\(values[0]) \(values[1])\"," +
+        " \"lvl\": \"\(lvl)\"," +
+        " \"mod\": \"\(mod)\"," +
+        " \"msg\": \"\(message)\"}\n"
+    }
+
+    private func removeBrackets(_ input: String) -> String {
+        return input.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
+    }
+
     func logDeviceInfo() {
         let currentDevice = UIDevice.current
         let deviceInfo = [
@@ -101,7 +126,8 @@ class FileLoggerImpl: FileLogger {
             "[Start of log]:",
             "------------------------------------------------------"
         ]
-        logD(self, deviceInfo.joined(separator: "\n"))
+        let fullInfo = deviceInfo.joined(separator: "\n")
+        logD(self, fullInfo)
     }
 
     private func setupLogger() {
@@ -133,8 +159,6 @@ class FileLoggerImpl: FileLogger {
     private func buildLogEntries(from fileContent: String) -> [String] {
         var logEntries: [String] = []
         var currentLogEntry = ""
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         let regexPattern = #"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}"#
         do {
             let regex = try NSRegularExpression(pattern: regexPattern, options: [])
