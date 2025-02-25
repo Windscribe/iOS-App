@@ -169,7 +169,7 @@ class ProtocolManager: ProtocolManagerType {
         } else {
             protocolsToConnectList.first?.viewType = .nextUp
         }
-        let log = protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
+        let log = "Protocols to connect List: " + protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI(self, log)
 
         currentProtocolSubject.onNext(getFirstProtocol())
