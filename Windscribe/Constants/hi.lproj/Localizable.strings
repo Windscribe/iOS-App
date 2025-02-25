@@ -335,7 +335,6 @@
 "Arrange locations alphabetically, geographically, or by latency." = "स्थानों को वर्णानुक्रम में, भौगोलिक रूप से, या विलंबता द्वारा व्यवस्थित करें।";
 "Display latency as signal strength bars or in milliseconds." = "विलंबता को सिग्नल शक्ति सलाखों के रूप में या मिलीसेकंड में प्रदर्शित करें।";
 "Localize Windscribe to supported languages." = "विंडस्क्राइब को समर्थित भाषाओं में स्थानीयकृत करें।";
-"Light or Dark. Choose a side, and choose wisely." = "प्रकाश या अंधकार। एक पक्ष चुनें, और समझदारी से चुनें।";
 "Customize the background of the main app screen." = "मुख्य ऐप स्क्रीन की पृष्ठभूमि अनुकूलित करें।";
 "Display a location’s load. Shorter bars mean lesser load (usage)" = "किसी स्थान का लोड प्रदर्शित करें. छोटी सलाखों का मतलब कम लोड (उपयोग) है।";
 "Vibrate the device based on user actions." = "उपयोगकर्ता की क्रियाओं के आधार पर उपकरण को कंपन करें।";
@@ -444,3 +443,12 @@
 "Join our Reddit community" = "हमारे Reddit समुदाय में शामिल हों";
 "Find us on YouTube" = "हमें YouTube पर खोजें";
 "Follow us on X" = "हमें X पर फॉलो करें";
+
+"Apply voucher code to your account" = "अपने खाते में वाउचर कोड लागू करें।";
+"Sweet, Voucher code is applied successfully" = "शानदार, वाउचर कोड सफलतापूर्वक लागू किया गया।";
+"Voucher code is used already" = "वाउचर कोड पहले ही उपयोग किया जा चुका है।";
+"Voucher provided is invalid or expired." = "प्रदान किया गया वाउचर अमान्य है या समाप्त हो चुका है।";
+"Confirmed email is required." = "पुष्ट ईमेल आवश्यक है।";
+"Make advanced tweaks to the way the app functions" = "ऐप के कार्य करने के तरीके में उन्नत समायोजन करें।";
+"Changelog" = "परिवर्तन लॉग";
+"Edit Credentials" = "क्रेडेंशियल संपादित करें";

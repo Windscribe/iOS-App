@@ -402,3 +402,26 @@
 "Join our Reddit community" = "Bergabung dengan komunitas Reddit kami";
 "Find us on YouTube" = "Temukan kami di YouTube";
 "Follow us on X" = "Ikuti kami di X";
+
+"Arrange locations alphabetically, geographically, or by latency." = "Atur lokasi berdasarkan abjad, geografis, atau latensi.";
+"Display latency as signal strength bars or in milliseconds." = "Tampilkan latensi sebagai batang kekuatan sinyal atau dalam milidetik.";
+"Localize Windscribe to supported languages." = "Sesuaikan Windscribe dengan bahasa yang didukung.";
+"Light or Dark. Choose a side, and choose wisely." = "Terang atau Gelap. Pilih sisi, dan pilih dengan bijak.";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Tampilkan beban lokasi. Batang yang lebih pendek berarti beban lebih rendah (penggunaan).";
+"Vibrate the device based on user actions." = "Buat perangkat bergetar berdasarkan tindakan pengguna.";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Pilih protokol VPN secara otomatis, atau pilih secara manual. CATATAN: \"Protokol yang Disukai\" akan menggantikan pengaturan ini.";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "Terowongkan semua lalu lintas melalui Windscribe setiap saat. Direkomendasikan hanya untuk kasus penggunaan berisiko tinggi dan dapat menyebabkan masalah dengan beberapa layanan Apple.";
+"Allow access to local services and printers while connected to Windscribe." = "Izinkan akses ke layanan lokal dan printer saat terhubung ke Windscribe.";
+"Connect to the VPN even in hostile environment." = "Terhubung ke VPN bahkan dalam lingkungan yang tidak aman.";
+"Need help? Garry can help you with most issues, go talk to him." = "Butuh bantuan? Garry dapat membantu Anda dengan sebagian besar masalah, bicaralah dengannya.";
+"Have a problem that Garry can't resolve? Contact human support." = "Punya masalah yang tidak bisa diselesaikan oleh Garry? Hubungi dukungan manusia.";
+
+"Apply voucher code to your account" = "Terapkan kode voucher ke akun Anda.";
+"Sweet, Voucher code is applied successfully" = "Mantap, kode voucher berhasil diterapkan.";
+"Voucher code is used already" = "Kode voucher sudah digunakan.";
+"Voucher provided is invalid or expired." = "Kode voucher yang diberikan tidak valid atau sudah kedaluwarsa.";
+"Confirmed email is required." = "Email yang dikonfirmasi diperlukan.";
+"Make advanced tweaks to the way the app functions" = "Lakukan penyesuaian lanjutan pada cara aplikasi berfungsi.";
+"Advanced Parameters" = "Parameter Lanjutan";
+"Changelog" = "Catatan Perubahan";
+"Edit Credentials" = "Edit Kredensial";

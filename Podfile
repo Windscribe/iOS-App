@@ -1,4 +1,4 @@
-is_tvos = true
+is_tvos = false
 target_platform = is_tvos ? :tvos : :ios
 platform_version = is_tvos ? '17.0' : '15.0'
 # Core app dependecies.

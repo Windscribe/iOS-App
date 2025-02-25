@@ -402,3 +402,26 @@
 "Join our Reddit community" = "加入我们的 Reddit 社区";
 "Find us on YouTube" = "在 YouTube 上找到我们";
 "Follow us on X" = "在 X 上关注我们";
+
+"Arrange locations alphabetically, geographically, or by latency." = "按字母顺序、地理位置或延迟排列位置。";
+"Display latency as signal strength bars or in milliseconds." = "将延迟显示为信号强度条或毫秒。";
+"Localize Windscribe to supported languages." = "将 Windscribe 本地化为支持的语言。";
+"Light or Dark. Choose a side, and choose wisely." = "浅色或深色模式。选择您的风格，并明智决策。";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "显示位置负载情况。较短的条表示较低的负载（使用量）。";
+"Vibrate the device based on user actions." = "根据用户操作使设备振动。";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "自动选择 VPN 协议，或手动选择一个。注意：“首选协议”将覆盖此设置。";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "始终通过 Windscribe 隧道传输所有流量。仅建议用于高风险场景，可能会影响部分 Apple 服务。";
+"Allow access to local services and printers while connected to Windscribe." = "连接 Windscribe 时允许访问本地服务和打印机。";
+"Connect to the VPN even in hostile environment." = "即使在恶劣环境中，也连接到 VPN。";
+"Need help? Garry can help you with most issues, go talk to him." = "需要帮助？Garry 可以帮您解决大部分问题，快去找他吧。";
+"Have a problem that Garry can't resolve? Contact human support." = "Garry 无法解决您的问题？请联系客服支持。";
+
+"Apply voucher code to your account" = "将优惠券代码应用到您的账户。";
+"Sweet, Voucher code is applied successfully" = "太棒了，优惠券代码已成功应用！";
+"Voucher code is used already" = "优惠券代码已被使用。";
+"Voucher provided is invalid or expired." = "提供的优惠券代码无效或已过期。";
+"Confirmed email is required." = "需要确认的电子邮件。";
+"Make advanced tweaks to the way the app functions" = "对应用功能进行高级调整。";
+"Advanced Parameters" = "高级参数";
+"Changelog" = "更新日志";
+"Edit Credentials" = "编辑凭据";

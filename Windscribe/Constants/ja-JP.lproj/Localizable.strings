@@ -405,3 +405,26 @@
 "Join our Reddit community" = "Redditコミュニティに参加";
 "Find us on YouTube" = "YouTubeで探す";
 "Follow us on X" = "Xでフォロー";
+
+"Arrange locations alphabetically, geographically, or by latency." = "ロケーションをアルファベット順、地理的順、または遅延時間順に並べ替えます。";
+"Display latency as signal strength bars or in milliseconds." = "遅延時間を信号強度のバーまたはミリ秒で表示します。";
+"Localize Windscribe to supported languages." = "Windscribe を対応言語にローカライズします。";
+"Light or Dark. Choose a side, and choose wisely." = "ライトまたはダーク。どちらかを選び、賢く決めましょう。";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "ロケーションの負荷を表示します。バーが短いほど負荷（使用量）が少ないことを示します。";
+"Vibrate the device based on user actions." = "ユーザーの操作に基づいてデバイスを振動させます。";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPNプロトコルを自動で選択するか、手動で選択します。注意：「優先プロトコル」がこの設定を上書きします。";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "常にすべてのトラフィックを Windscribe 経由でトンネルします。高リスクの使用ケースにのみ推奨され、一部の Apple サービスで問題が発生する可能性があります。";
+"Allow access to local services and printers while connected to Windscribe." = "Windscribe に接続中でもローカルサービスやプリンターへのアクセスを許可します。";
+"Connect to the VPN even in hostile environment." = "危険な環境でもVPNに接続します。";
+"Need help? Garry can help you with most issues, go talk to him." = "お困りですか？Garry がほとんどの問題を解決できます。彼に相談してみてください。";
+"Have a problem that Garry can't resolve? Contact human support." = "Garry でも解決できない問題がありますか？サポート担当者にお問い合わせください。";
+
+"Apply voucher code to your account" = "バウチャーコードをアカウントに適用します。";
+"Sweet, Voucher code is applied successfully" = "バウチャーコードが正常に適用されました！";
+"Voucher code is used already" = "このバウチャーコードはすでに使用されています。";
+"Voucher provided is invalid or expired." = "提供されたバウチャーコードは無効または期限切れです。";
+"Confirmed email is required." = "確認済みのメールアドレスが必要です。";
+"Make advanced tweaks to the way the app functions" = "アプリの動作を高度にカスタマイズします。";
+"Advanced Parameters" = "高度なパラメーター";
+"Changelog" = "変更履歴";
+"Edit Credentials" = "認証情報を編集";

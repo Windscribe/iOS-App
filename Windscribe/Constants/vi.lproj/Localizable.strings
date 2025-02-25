@@ -412,3 +412,26 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Join our Reddit community" = "Tham gia cộng đồng Reddit của chúng tôi";
 "Find us on YouTube" = "Tìm chúng tôi trên YouTube";
 "Follow us on X" = "Theo dõi chúng tôi trên X";
+
+"Arrange locations alphabetically, geographically, or by latency." = "Sắp xếp vị trí theo thứ tự bảng chữ cái, địa lý hoặc độ trễ.";
+"Display latency as signal strength bars or in milliseconds." = "Hiển thị độ trễ dưới dạng thanh tín hiệu hoặc mili giây.";
+"Localize Windscribe to supported languages." = "Bản địa hóa Windscribe sang các ngôn ngữ được hỗ trợ.";
+"Light or Dark. Choose a side, and choose wisely." = "Sáng hay Tối. Hãy chọn một bên và chọn một cách khôn ngoan.";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Hiển thị mức tải của vị trí. Thanh ngắn hơn có nghĩa là tải thấp hơn (sử dụng ít hơn).";
+"Vibrate the device based on user actions." = "Rung thiết bị dựa trên hành động của người dùng.";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Tự động chọn giao thức VPN hoặc chọn thủ công. LƯU Ý: \"Giao thức ưu tiên\" sẽ ghi đè cài đặt này.";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "Định tuyến tất cả lưu lượng truy cập qua Windscribe mọi lúc. Chỉ khuyến nghị cho các trường hợp rủi ro cao và có thể gây ra sự cố với một số dịch vụ của Apple.";
+"Allow access to local services and printers while connected to Windscribe." = "Cho phép truy cập các dịch vụ và máy in cục bộ khi kết nối với Windscribe.";
+"Connect to the VPN even in hostile environment." = "Kết nối với VPN ngay cả trong môi trường không an toàn.";
+"Need help? Garry can help you with most issues, go talk to him." = "Cần giúp đỡ? Garry có thể giúp bạn với hầu hết các vấn đề, hãy nói chuyện với anh ấy.";
+"Have a problem that Garry can't resolve? Contact human support." = "Gặp vấn đề mà Garry không thể giải quyết? Hãy liên hệ với bộ phận hỗ trợ trực tiếp.";
+
+"Apply voucher code to your account" = "Áp dụng mã giảm giá vào tài khoản của bạn.";
+"Sweet, Voucher code is applied successfully" = "Tuyệt vời, mã giảm giá đã được áp dụng thành công.";
+"Voucher code is used already" = "Mã giảm giá đã được sử dụng.";
+"Voucher provided is invalid or expired." = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
+"Confirmed email is required." = "Yêu cầu xác nhận email.";
+"Make advanced tweaks to the way the app functions" = "Tùy chỉnh nâng cao cách ứng dụng hoạt động.";
+"Advanced Parameters" = "Tham số nâng cao";
+"Changelog" = "Nhật ký thay đổi";
+"Edit Credentials" = "Chỉnh sửa thông tin đăng nhập";

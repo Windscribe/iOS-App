@@ -402,3 +402,26 @@
 "Join our Reddit community" = "Reddit 커뮤니티에 참여하기";
 "Find us on YouTube" = "YouTube에서 찾아보기";
 "Follow us on X" = "X에서 팔로우하기";
+
+"Arrange locations alphabetically, geographically, or by latency." = "위치를 알파벳순, 지리적 순서 또는 지연 시간별로 정렬하세요.";
+"Display latency as signal strength bars or in milliseconds." = "지연 시간을 신호 강도 막대 또는 밀리초 단위로 표시하세요.";
+"Localize Windscribe to supported languages." = "Windscribe를 지원되는 언어로 현지화하세요.";
+"Light or Dark. Choose a side, and choose wisely." = "밝음 또는 어두움. 한쪽을 선택하고 신중하게 결정하세요.";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "위치의 부하를 표시합니다. 막대가 짧을수록 부하(사용량)가 적습니다.";
+"Vibrate the device based on user actions." = "사용자의 동작에 따라 기기를 진동하게 합니다.";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN 프로토콜을 자동으로 선택하거나 수동으로 선택하세요. 참고: \"선호하는 프로토콜\"이 이 설정을 무시할 수 있습니다.";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "모든 트래픽을 항상 Windscribe를 통해 터널링합니다. 고위험 사용 사례에서만 권장되며 일부 Apple 서비스와 충돌할 수 있습니다.";
+"Allow access to local services and printers while connected to Windscribe." = "Windscribe에 연결된 동안 로컬 서비스 및 프린터에 대한 액세스를 허용하세요.";
+"Connect to the VPN even in hostile environment." = "위험한 환경에서도 VPN에 연결하세요.";
+"Need help? Garry can help you with most issues, go talk to him." = "도움이 필요하신가요? Garry가 대부분의 문제를 도와줄 수 있습니다. 그와 대화해 보세요.";
+"Have a problem that Garry can't resolve? Contact human support." = "Garry가 해결할 수 없는 문제가 있나요? 고객 지원팀에 문의하세요.";
+
+"Apply voucher code to your account" = "계정에 바우처 코드를 적용하세요.";
+"Sweet, Voucher code is applied successfully" = "좋아요! 바우처 코드가 성공적으로 적용되었습니다.";
+"Voucher code is used already" = "이 바우처 코드는 이미 사용되었습니다.";
+"Voucher provided is invalid or expired." = "제공된 바우처 코드가 유효하지 않거나 만료되었습니다.";
+"Confirmed email is required." = "확인된 이메일이 필요합니다.";
+"Make advanced tweaks to the way the app functions" = "앱 작동 방식을 고급 설정으로 조정하세요.";
+"Advanced Parameters" = "고급 매개변수";
+"Changelog" = "변경 로그";
+"Edit Credentials" = "자격 증명 편집";

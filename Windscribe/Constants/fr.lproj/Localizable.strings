@@ -402,3 +402,26 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Join our Reddit community" = "Rejoignez notre communauté sur Reddit";
 "Find us on YouTube" = "Retrouvez-nous sur YouTube";
 "Follow us on X" = "Suivez-nous sur X";
+
+"Arrange locations alphabetically, geographically, or by latency." = "Organisez les emplacements par ordre alphabétique, géographique ou par latence.";
+"Display latency as signal strength bars or in milliseconds." = "Affichez la latence sous forme de barres de force du signal ou en millisecondes.";
+"Localize Windscribe to supported languages." = "Traduisez Windscribe dans les langues prises en charge.";
+"Light or Dark. Choose a side, and choose wisely." = "Clair ou sombre. Choisissez un côté, et choisissez judicieusement.";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Affichez la charge d'un emplacement. Des barres plus courtes signifient une charge plus faible (utilisation).";
+"Vibrate the device based on user actions." = "Faites vibrer l’appareil en fonction des actions de l’utilisateur.";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "Choisissez automatiquement le protocole VPN ou sélectionnez-en un manuellement. REMARQUE : Le \"Protocole préféré\" remplacera ce paramètre.";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "Faites transiter tout le trafic via Windscribe en permanence. Recommandé uniquement pour les cas à haut risque et peut causer des problèmes avec certains services Apple.";
+"Allow access to local services and printers while connected to Windscribe." = "Autoriser l’accès aux services locaux et aux imprimantes lorsque Windscribe est connecté.";
+"Connect to the VPN even in hostile environment." = "Se connecter au VPN même dans un environnement hostile.";
+"Need help? Garry can help you with most issues, go talk to him." = "Besoin d'aide ? Garry peut vous aider avec la plupart des problèmes, allez lui parler.";
+"Have a problem that Garry can't resolve? Contact human support." = "Un problème que Garry ne peut pas résoudre ? Contactez le support humain.";
+
+"Apply voucher code to your account" = "Appliquez le code de bon à votre compte.";
+"Sweet, Voucher code is applied successfully" = "Super, le code de bon a été appliqué avec succès.";
+"Voucher code is used already" = "Le code de bon a déjà été utilisé.";
+"Voucher provided is invalid or expired." = "Le code de bon fourni est invalide ou expiré.";
+"Confirmed email is required." = "Un e-mail confirmé est requis.";
+"Make advanced tweaks to the way the app functions" = "Apportez des ajustements avancés au fonctionnement de l’application.";
+"Advanced Parameters" = "Paramètres avancés";
+"Changelog" = "Journal des modifications";
+"Edit Credentials" = "Modifier les identifiants";

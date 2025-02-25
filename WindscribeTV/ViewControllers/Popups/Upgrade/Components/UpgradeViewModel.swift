@@ -172,7 +172,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             }
         }
     }
-    
+
     func failedCanceledByUser() {
         logger.logE(self, "Failed to complete transaction. Purchase canceled by user.")
         // Upgrade state will not send an error here so dismiss screen will not show alert

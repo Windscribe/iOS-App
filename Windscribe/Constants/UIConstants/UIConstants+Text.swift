@@ -1918,11 +1918,11 @@ extension TextsAsset {
         static var locationMaintenanceTitle: String {
             return "Location Maintenance"
         }
-        
+
         static var supportTitle: String {
             return "Support".localize()
         }
-        
+
         static var supportBody: String {
             return "Go to the address above on your phone or computer for all support related inquiries.".localize()
         }
