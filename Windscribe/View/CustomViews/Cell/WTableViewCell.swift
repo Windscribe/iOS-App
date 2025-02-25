@@ -79,6 +79,22 @@ class WTableViewCell: SwipeTableViewCell {
         }
     }
 
+    var staticIPDc: UIImage? {
+        if !themeManager.getIsDarkTheme() {
+            return UIImage(named: ImagesAsset.staticIPdc)
+        } else {
+            return UIImage(named: ImagesAsset.DarkMode.staticIPdc)
+        }
+    }
+
+    var staticIPResidential: UIImage? {
+        if !themeManager.getIsDarkTheme() {
+            return UIImage(named: ImagesAsset.staticIPres)
+        } else {
+            return UIImage(named: ImagesAsset.DarkMode.staticIPres)
+        }
+    }
+
     var tenGigIcon: UIImage? {
         if !themeManager.getIsDarkTheme() {
             return UIImage(named: ImagesAsset.tenGig)
