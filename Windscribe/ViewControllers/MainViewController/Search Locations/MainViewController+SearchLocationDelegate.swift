@@ -61,15 +61,12 @@ extension MainViewController: SearchCountryViewDelegate {
     func searchLocationUpdated(with text: String) {
         reloadServerListForSearch { [weak self] in
             DispatchQueue.main.async {
-                guard let self = self,
-                      let serverSections = self.serverListTableViewDataSource?.serverSections
-                else { return }
+                guard let self = self else { return }
                 if text.isEmpty {
-                    for (index, _) in serverSections.enumerated() {
-                        self.serverListTableView.collapse(index)
-                    }
+                    self.serverListTableView.collapseExpandedSections()
                     return
                 }
+                guard let serverSections = self.serverListTableViewDataSource?.serverSections else { return }
                 var resultServerSections = [ServerSection]()
                 let serverModels = serverSections.map {$0.server!}
                 let sortedModels = self.find(groupList: serverModels, keyword: text)
