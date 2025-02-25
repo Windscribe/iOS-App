@@ -44,15 +44,15 @@ extension MainViewController {
     }
 
     func displayReviewConfirmationAlert() {
-        let cancelAction = UIAlertAction(title: "Not Now", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: TextsAsset.RateUs.maybeLater, style: .cancel, handler: nil)
 
-        let showAction = UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+        let showAction = UIAlertAction(title: TextsAsset.RateUs.action, style: .default, handler: { [weak self] _ in
             self?.vpnConnectionViewModel.appReviewManager.openAppStoreForReview()
         })
 
         AlertManager.shared.showAlert(
-            title: "Enjoying Windscribe?",
-            message: "Do you want to rate it on the App Store? Your feedback is very important to us!",
+            title: TextsAsset.RateUs.title,
+            message: TextsAsset.RateUs.description,
             actions: [showAction, cancelAction])
     }
 }
