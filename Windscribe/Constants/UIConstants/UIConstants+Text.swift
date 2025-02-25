@@ -1009,7 +1009,7 @@ enum TextsAsset {
         }
 
         static var planBenefitSuccessStartTitle: String {
-            return "Start using pro".localize()
+            return "Start using Pro".localize()
         }
 
         static var planBenefitTransactionFailedAlertTitle: String {

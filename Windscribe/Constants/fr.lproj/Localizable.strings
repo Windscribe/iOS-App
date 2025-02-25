@@ -390,7 +390,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Welcome to Windscribe Pro!" = "Bienvenue sur Windscribe Pro !";
 "Thanks for upgrading to Windscribe Pro! You now have access to even more powerful features." = "Merci d'avoir mis à niveau vers Windscribe Pro ! Vous avez désormais accès à des fonctionnalités encore plus puissantes.";
 "Share" = "Partager";
-"Start using pro" = "Commencer à utiliser Pro";
+"Start using Pro" = "Commencer à utiliser Pro";
 "Failed to complete transaction." = "Échec de la transaction.";
 "Something went wrong. Please try another payment method or contact our customer support." = "Un problème est survenu. Veuillez essayer un autre mode de paiement ou contacter notre support client.";
 "Failed to restore transaction." = "Échec de la restauration de la transaction.";
