@@ -10,7 +10,7 @@ import Foundation
 import Swinject
 
 class LoginRouter: RootRouter {
-    func routeTo(to: RouteID, from from: UIViewController) {
+    func routeTo(to: RouteID, from: UIViewController) {
         switch to {
         case RouteID.home:
             let vc = Assembler.resolve(MainViewController.self)

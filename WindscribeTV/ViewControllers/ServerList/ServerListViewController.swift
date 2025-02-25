@@ -48,7 +48,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @IBOutlet var favTableView: UITableView!
     @IBOutlet var sideMenuWidthConstraint: NSLayoutConstraint!
     @IBOutlet var nothingToSeeLabel: UILabel!
-    @IBOutlet var emptyFavView: UIView!
+    @IBOutlet var emptyDataView: EmptyListView!
 
     weak var delegate: ServerListTableViewDelegate?
     weak var favDelegate: FavNodesListTableViewDelegate?
@@ -81,7 +81,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         toggleView(viewToToggle: favTableView, isViewVisible: true)
         serverListCollectionView.contentInsetAdjustmentBehavior = .never
         setupSwipeDownGesture()
-        hideEmptyFavView()
+        changeEmptyViewVisibility()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -89,18 +89,24 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         logger.logD(self, "Displaying Server List View")
     }
 
-    private func hideEmptyFavView() {
-        if selectionOption == .fav {
-            if favGroups.count > 0 {
-                emptyFavView.isHidden = true
-                emptyFavView.subviews.forEach { $0.isHidden = true }
-            } else {
-                emptyFavView.isHidden = false
-                emptyFavView.subviews.forEach { $0.isHidden = false }
-            }
-        } else {
-            emptyFavView.isHidden = true
-            emptyFavView.subviews.forEach { $0.isHidden = true }
+    private func changeEmptyViewVisibility() {
+        switch selectionOption {
+        case .fav:
+            print("Test Group count is \(favGroups.count)")
+            
+            emptyDataView.isHidden = favGroups.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
+            emptyDataView.configure(image: UIImage(named: "fav-empty-white"), text: TextsAsset.nothingToSeeHere)
+        case .staticIp:
+            print("Test Group count is \(staticIPModels.count)")
+            
+            emptyDataView.isHidden = staticIPModels.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
+            emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
+
+        default:
+            emptyDataView.isHidden = true
+            emptyDataView.subviews.forEach { $0.isHidden = true }
         }
     }
 
@@ -237,7 +243,9 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     }
 
     func bindData(isStreaming: Bool) {
-        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
+        self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] results in
+            guard let self else { return }
+            
             viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
                 self.serverSectionsOrdered = serverSectionsOrdered
                 
@@ -251,16 +259,20 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
         }).disposed(by: self.disposeBag)
 
-        viewModel.staticIPs.subscribe(onNext: { [self] _ in
+        viewModel.staticIPs.subscribe(onNext: { [weak self] _ in
+            guard let self else { return }
+
             let staticips = self.viewModel.getStaticIp()
             staticIPModels.removeAll()
             for result in staticips {
                 guard let staticIPModel = result.getStaticIPModel() else { return }
                 staticIPModels.append(staticIPModel)
             }
-
+            self.changeEmptyViewVisibility()
         }).disposed(by: disposeBag)
-        viewModel.favouriteGroups.subscribe(onNext: { [self] favourites in
+        viewModel.favouriteGroups.subscribe(onNext: { [weak self] favourites in
+            guard let self else { return }
+
             favGroups.removeAll()
             favGroups.append(contentsOf: favourites)
             self.favTableView.reloadSections(IndexSet(integer: 0), with: .automatic)
@@ -270,7 +282,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 self.updateFocusIfNeeded()
                 self.view.layoutIfNeeded()
             }
-            self.hideEmptyFavView()
+            self.changeEmptyViewVisibility()
         }, onError: { error in
             self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
@@ -292,7 +304,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
                 toggleView(viewToToggle: favTableView, isViewVisible: true)
                 selectionOption = .all
-                hideEmptyFavView()
+                changeEmptyViewVisibility()
                 bindData(isStreaming: false)
             }
             myPreferredFocusedView = serverListCollectionView
@@ -304,7 +316,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 toggleView(viewToToggle: favTableView, isViewVisible: false)
                 toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
                 selectionOption = .fav
-                hideEmptyFavView()
+                changeEmptyViewVisibility()
                 favTableView.reloadData()
             }
             if favGroups.count != 0 {
@@ -317,7 +329,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 toggleView(viewToToggle: serverListCollectionView, isViewVisible: false)
                 toggleView(viewToToggle: favTableView, isViewVisible: true)
                 selectionOption = .windflix
-                hideEmptyFavView()
+                changeEmptyViewVisibility()
                 bindData(isStreaming: true)
             }
             myPreferredFocusedView = serverListCollectionView
@@ -329,7 +341,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 toggleView(viewToToggle: favTableView, isViewVisible: false)
                 toggleView(viewToToggle: serverListCollectionView, isViewVisible: true)
                 selectionOption = .staticIp
-                hideEmptyFavView()
+                changeEmptyViewVisibility()
                 favTableView.reloadData()
             }
             if staticIPModels.count != 0 {
@@ -529,5 +541,16 @@ extension ServerListViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         navigationController?.popToRootViewController(animated: true)
         staticIpDelegate?.setSelectedStaticIP(staticIP: staticIP)
+    }
+}
+
+
+class EmptyListView: UIView {
+    @IBOutlet weak var emptyImageView: UIImageView!
+    @IBOutlet weak var emptyLabel: UILabel!
+    
+    func configure(image: UIImage?, text: String) {
+        emptyImageView.image = image
+        emptyLabel.text = text
     }
 }
