@@ -132,6 +132,7 @@ class StaticIPTableViewCell: BaseNodeTableViewCell {
         ipAddressLabel.text = displayingStaticIP?.staticIP
 
         showForLatencySelection()
+        updateStatusIcon(isActive: displayingStaticIP?.isActive == true)
     }
 
     func showForLatencySelection() {
@@ -149,41 +150,33 @@ class StaticIPTableViewCell: BaseNodeTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(
-            onNext: { isDarkMode in
-                if !isDarkMode {
-                    self.cellDivider.backgroundColor = UIColor.midnight
-                    self.serverNameLabel.textColor = UIColor.midnight
-                    self.ipAddressLabel.textColor = UIColor.midnight
-                    self.latencyLabel.textColor = UIColor.midnight
-                    self.latencyBackground.backgroundColor = UIColor.midnight
-                    
-                    if self.displayingStaticIP?.isActive == false {
-                        self.serverIcon.image = self.locationDownIcon
-                    } else {
-                        if self.displayingStaticIP?.type == "dc" {
-                            self.serverIcon.image = UIImage(named: ImagesAsset.staticIPdc)
-                        } else {
-                            self.serverIcon.image = UIImage(named: ImagesAsset.staticIPres)
-                        }
-                    }
-                } else {
-                    self.cellDivider.backgroundColor = UIColor.white
-                    self.serverNameLabel.textColor = UIColor.white
-                    self.ipAddressLabel.textColor = UIColor.white
-                    self.latencyLabel.textColor = UIColor.white
-                    self.latencyBackground.backgroundColor = UIColor.white
-                    if self.displayingStaticIP?.isActive == false {
-                        self.serverIcon.image = self.locationDownIcon
-                    } else {
-                        if self.displayingStaticIP?.type == "dc" {
-                            self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPdc)
-                        } else {
-                            self.serverIcon.image = UIImage(named: ImagesAsset.DarkMode.staticIPres)
-                        }
-                    }
-                }
+        isDarkMode
+            .subscribe(onNext: { [weak self] isDarkMode in
+                guard let self = self else { return }
+
+                let themeColor: UIColor = isDarkMode ? .white : .midnight
+
+                self.cellDivider.backgroundColor = themeColor
+                self.serverNameLabel.textColor = themeColor
+                self.ipAddressLabel.textColor = themeColor
+                self.latencyLabel.textColor = themeColor
+                self.latencyBackground.backgroundColor = themeColor
+
+                self.updateStatusIcon(isActive: self.displayingStaticIP?.isActive == true)
             })
             .disposed(by: disposeBag)
     }
+
+    func updateStatusIcon(isActive: Bool) {
+        if !isActive {
+            serverIcon.image = locationDownIcon
+        } else {
+            if displayingStaticIP?.type == "dc" {
+                serverIcon.image = staticIPDc
+            } else {
+                serverIcon.image = staticIPResidential
+            }
+        }
+    }
+
 }
