@@ -353,8 +353,8 @@
 "Jobs" = "İşler";
 "Software Licenses" = "Yazılım Lisansları";
 "Connected DNS" = "Bağlı DNS";
-"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe&apos; a bağlıyken DNS sunucusunu seçin.";
-"Custom" = "Töre";
+"Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe'a bağlıyken DNS sunucusunu seçin.";
+"Custom" = "Özel";
 "Pro" = "Lehinde";
 "Enabled" = "aktif";
 "Disabled" = "Engelli";
@@ -419,3 +419,26 @@
 "Join our Reddit community" = "Reddit topluluğumuza katılın";
 "Find us on YouTube" = "Bizi YouTube'da bulun";
 "Follow us on X" = "Bizi X'te takip edin";
+
+"Arrange locations alphabetically, geographically, or by latency." = "Konumları alfabetik, coğrafi olarak veya gecikmeye göre sıralayın.";
+"Display latency as signal strength bars or in milliseconds." = "Gecikmeyi sinyal gücü çubukları veya milisaniye cinsinden gösterin.";
+"Localize Windscribe to supported languages." = "Windscribe'ı desteklenen dillere uyarlayın.";
+"Light or Dark. Choose a side, and choose wisely." = "Aydınlık veya Karanlık. Bir taraf seçin ve akıllıca seçin.";
+"Display a location’s load. Shorter bars mean lesser load (usage)" = "Bir konumun yükünü gösterin. Kısa çubuklar daha az yük (kullanım) anlamına gelir.";
+"Vibrate the device based on user actions." = "Kullanıcı eylemlerine göre cihazı titreştirin.";
+"Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting." = "VPN protokolünü otomatik olarak seçin veya manuel olarak belirleyin. NOT: \"Tercih Edilen Protokol\" bu ayarın üzerine yazacaktır.";
+"Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "Tüm trafiği her zaman Windscribe üzerinden tünelleyin. Yalnızca yüksek riskli kullanım senaryoları için önerilir ve bazı Apple hizmetleriyle sorunlara neden olabilir.";
+"Allow access to local services and printers while connected to Windscribe." = "Windscribe'a bağlıyken yerel hizmetlere ve yazıcılara erişime izin verin.";
+"Connect to the VPN even in hostile environment" = "Düşmanca ortamlarda bile VPN'e bağlanın.";
+"Need help? Garry can help you with most issues, go talk to him." = "Yardıma mı ihtiyacınız var? Garry, çoğu sorununuzda size yardımcı olabilir, onunla konuşun.";
+"Have a problem that Garry can't resolve? Contact human support" = "Garry'nin çözemediği bir sorununuz mu var? İnsan destek ekibiyle iletişime geçin.";
+
+"Apply voucher code to your account" = "Kupon kodunu hesabınıza uygulayın";
+"Sweet, Voucher code is applied successfully" = "Harika, kupon kodu başarıyla uygulandı";
+"Voucher code is used already" = "Kupon kodu zaten kullanılmış";
+"Voucher provided is invalid or expired." = "Sağlanan kupon geçersiz veya süresi dolmuş.";
+"Confirmed email is required." = "Onaylanmış e-posta gereklidir.";
+"Make advanced tweaks to the way the app functions" = "Uygulamanın çalışma şeklini gelişmiş ayarlarla özelleştirin";
+"Advanced Parameters" = "Gelişmiş Parametreler";
+"Changelog" = "Değişiklik Günlüğü";
+"Edit Credentials" = "Kimlik Bilgilerini Düzenle";

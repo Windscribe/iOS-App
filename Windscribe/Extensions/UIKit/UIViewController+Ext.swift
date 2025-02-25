@@ -32,7 +32,7 @@ extension UIViewController {
         return true
 #endif
     }
-    
+
 #if os(iOS)
     /// Gets the current interface orientation safely
     private var currentInterfaceOrientation: UIInterfaceOrientation? {

@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
-    
+
     lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -64,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }, onFailure: { [self] error in
             logger.logE(self, "Failed to get session from server with error \(error).")
         }).disposed(by: disposeBag)
-               
+
         Task.detached { [unowned self] in
             try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
             if await preferences.userSessionAuth() != nil {
@@ -72,7 +72,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 await self.latencyRepository.loadLatency()
                 }
         }
-        
+
         return true
     }
 

@@ -147,12 +147,12 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
         swipeRight.direction = .right
         view.addGestureRecognizer(swipeRight)
-        
+
         let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
         swipeUp.direction = .up
         view.addGestureRecognizer(swipeUp)
     }
-    
+
 
     @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
@@ -162,7 +162,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
         }
     }
-    
+
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
@@ -248,7 +248,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             
             viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
                 self.serverSectionsOrdered = serverSectionsOrdered
-                
+
                 if  self.bestLocation != nil {
                     let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
                     if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {

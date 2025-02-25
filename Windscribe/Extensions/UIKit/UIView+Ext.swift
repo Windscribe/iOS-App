@@ -266,7 +266,7 @@ extension UIView {
 
     /// Checks if the current device has a regular size class (typically iPads).
     var isRegularSizeClass: Bool {
-        
+
 #if os(iOS)
         return self.traitCollection.horizontalSizeClass == .regular
 #elseif os(tvOS)
@@ -291,7 +291,7 @@ extension UIView {
         return true
 #endif
     }
-    
+
 #if os(iOS)
     /// Gets the current interface orientation safely
     private var currentInterfaceOrientation: UIInterfaceOrientation? {
