@@ -200,7 +200,9 @@ class ConnectionViewModel: ConnectionViewModelType {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.asyncInstance)
             .subscribe(onNext: { myip in
-                self.ipAddressSubject.onNext(myip.userIp)
+                if !myip.isInvalidated {
+                    self.ipAddressSubject.onNext(myip.userIp)
+                }
             }).disposed(by: disposeBag)
 
         localDB.getNetworks()
