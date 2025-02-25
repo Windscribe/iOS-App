@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="32700.99.1234" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="23504" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="appleTV" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -604,18 +604,18 @@ Secrets.</string>
                                 <rect key="frame" x="180" y="0.0" width="1740" height="1080"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oHG-FT-WDR">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oHG-FT-WDR" customClass="EmptyListView" customModule="WindscribeTV" customModuleProvider="target">
                                 <rect key="frame" x="750" y="409" width="420" height="262"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="fav-empty-white" translatesAutoresizingMaskIntoConstraints="NO" id="06o-ob-0Ub">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="06o-ob-0Ub">
                                         <rect key="frame" x="185" y="106" width="50" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="Dvq-GB-xUQ"/>
                                             <constraint firstAttribute="height" constant="50" id="Uxo-qT-uwj"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nothing to see here" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYU-dd-aiK">
-                                        <rect key="frame" x="47" y="196" width="326" height="46"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VYU-dd-aiK">
+                                        <rect key="frame" x="210" y="196" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -630,6 +630,10 @@ Secrets.</string>
                                     <constraint firstItem="VYU-dd-aiK" firstAttribute="centerX" secondItem="oHG-FT-WDR" secondAttribute="centerX" id="eKe-c7-4w6"/>
                                     <constraint firstAttribute="height" constant="262" id="hu9-sZ-rxW"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="emptyImageView" destination="06o-ob-0Ub" id="YUJ-L1-rbs"/>
+                                    <outlet property="emptyLabel" destination="VYU-dd-aiK" id="f7q-gB-WCZ"/>
+                                </connections>
                             </view>
                             <collectionView multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="SY1-Ra-Oqh">
                                 <rect key="frame" x="100" y="48" width="1820" height="1008"/>
@@ -699,7 +703,7 @@ Secrets.</string>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="emptyFavView" destination="oHG-FT-WDR" id="cRz-tl-3dw"/>
+                        <outlet property="emptyDataView" destination="oHG-FT-WDR" id="b4T-sr-FWK"/>
                         <outlet property="favTableView" destination="6ft-YL-OlT" id="cxO-GN-ZqQ"/>
                         <outlet property="nothingToSeeLabel" destination="VYU-dd-aiK" id="feb-Jo-1b1"/>
                         <outlet property="serverListCollectionView" destination="SY1-Ra-Oqh" id="CdY-mG-Ko4"/>
@@ -1031,29 +1035,11 @@ Secrets.</string>
             <point key="canvasLocation" x="-846" y="3034"/>
         </scene>
     </scenes>
-    <designables>
-        <designable name="9bK-pw-zAm">
-            <size key="intrinsicContentSize" width="80" height="86"/>
-        </designable>
-        <designable name="DTL-6M-nB9">
-            <size key="intrinsicContentSize" width="80" height="85"/>
-        </designable>
-        <designable name="IgO-T0-k3z">
-            <size key="intrinsicContentSize" width="173" height="86"/>
-        </designable>
-        <designable name="by7-6d-YD3">
-            <size key="intrinsicContentSize" width="226" height="86"/>
-        </designable>
-        <designable name="y2b-Xf-tBa">
-            <size key="intrinsicContentSize" width="380" height="86"/>
-        </designable>
-    </designables>
     <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
         <image name="badge" width="224" height="224"/>
         <image name="bestloc_icon" width="200" height="104"/>
         <image name="disconnected_ring" width="200" height="200"/>
-        <image name="fav-empty-white" width="16" height="14"/>
         <image name="logo" width="64" height="64"/>
         <image name="unsecure" width="32" height="32"/>
     </resources>
