@@ -165,6 +165,8 @@
 		1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */; };
 		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
 		1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */; };
+		1ECBC2522D72239500347A4F /* QNNTcpPing.m in Sources */ = {isa = PBXBuildFile; fileRef = AF21994C2270B146009B42E5 /* QNNTcpPing.m */; };
+		1ECBC2532D7223DF00347A4F /* QNNUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2199472270B146009B42E5 /* QNNUtil.m */; };
 		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
@@ -5207,6 +5209,7 @@
 				1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */,
 				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
 				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
+				1ECBC2522D72239500347A4F /* QNNTcpPing.m in Sources */,
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
 				F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
@@ -5257,6 +5260,7 @@
 				59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */,
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
+				1ECBC2532D7223DF00347A4F /* QNNUtil.m in Sources */,
 				59FC743E2C515B9E00021CD1 /* SessionManager.swift in Sources */,
 				C59CA1602CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
 				1EF7BB352C6D0DAE0032A4DF /* UpgradePlanDetailView.swift in Sources */,
