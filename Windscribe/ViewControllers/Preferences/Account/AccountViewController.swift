@@ -204,7 +204,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         // Add actions to the alert controller
-        let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
+        let confirmAction = UIAlertAction(title: NSLocalizedString(TextsAsset.Account.enter, comment: ""), style: .default) { [weak self] _ in
             guard let textField = alert.textFields?.first else { return }
             let code = textField.text ?? ""
             print(code)
@@ -223,7 +223,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
                                               })
         }
 
-        let cancelAction = UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel) { _ in
+        let cancelAction = UIAlertAction(title: NSLocalizedString(TextsAsset.cancel, comment: ""), style: .cancel) { _ in
             // No need to dismiss manually as the .cancel action will do it
         }
 
@@ -251,7 +251,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         // Add actions to the alert controller
-        let confirmAction = UIAlertAction(title: NSLocalizedString("Enter", comment: ""), style: .default) { [weak self] _ in
+        let confirmAction = UIAlertAction(title: NSLocalizedString(TextsAsset.Account.enter, comment: ""), style: .default) { [weak self] _ in
             guard let self, let textField = alert.textFields?.first else { return }
             let code = textField.text ?? ""
             print(code)

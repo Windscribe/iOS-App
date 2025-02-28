@@ -344,7 +344,6 @@
 "other network" = "other network";
 "Select the preferred protocol for this network. This overrides global connection preferences." = "Select the preferred protocol for this network. This overrides global connection preferences.";
 "Advance Parameters" = "Advance Parameters";
-"About Us" = "About Us";
 "Can’t access Windscribe? Connect to our servers to unblock your restrictive network." = "Can’t access Windscribe? Connect to our servers to unblock your restrictive network.";
 "Referred by someone?" = "Referred by someone?";
 "You will both get an additional 1GB per month when they sign up." = "You will both get an additional 1GB per month when they sign up.";
@@ -362,7 +361,6 @@
 "Windscribe will auto-disconnect when you join a network tagged \"Unsecured\"." = "Windscribe will auto-disconnect when you join a network tagged \\\"Unsecured\\\".";
 "Reddit" = "Reddit";
 "Discord" = "Discord";
-"Contact Humans" = "Contact Humans";
 "Save" = "Save";
 "Refer for Data" = "Refer for Data";
 "Share Invite Link" = "Share Invite Link";
@@ -449,7 +447,7 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Allow access to local services and printers while connected to Windscribe." = "Windscribe से कनेक्ट रहते हुए स्थानीय सेवाओं और प्रिंटर तक पहुंच की अनुमति दें।";
 "Connect to the VPN even in hostile environment." = "कठिन परिस्थितियों में भी वीपीएन से कनेक्ट करें।";
 "Need help? Garry can help you with most issues, go talk to him." = "मदद चाहिए? गैरी आपकी अधिकांश समस्याओं को हल कर सकते हैं, उनसे बात करें।";
-"Have a problem that Garry can't resolve? Contact human support." = "कोई समस्या है जिसे गैरी हल नहीं कर सकते? मानव सहायता से संपर्क करें।";
+"Have a problem that Garry can't resolve? Contact human support" = "कोई समस्या है जिसे गैरी हल नहीं कर सकते? मानव सहायता से संपर्क करें।";
 
 "Apply voucher code to your account" = "अपने खाते में वाउचर कोड लागू करें।";
 "Sweet, Voucher code is applied successfully" = "शानदार, वाउचर कोड सफलतापूर्वक लागू किया गया।";
@@ -460,3 +458,9 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Advanced Parameters" = "उन्नत पैरामीटर";
 "Changelog" = "परिवर्तन लॉग";
 "Edit Credentials" = "क्रेडेंशियल संपादित करें";
+
+"Other" = "অন্যান্য";
+"Voucher Code" = "ভাউচার কোড";
+"Enter" = "প্রবেশ করুন";
+"Connect to the VPN even in hostile environment" = "প্রতিকূল পরিবেশেও VPN এর সাথে সংযুক্ত হন";
+"Contact Humans" = "মানব সহায়তার সাথে যোগাযোগ করুন";

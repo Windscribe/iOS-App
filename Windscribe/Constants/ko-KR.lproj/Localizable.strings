@@ -414,7 +414,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "Windscribe에 연결된 동안 로컬 서비스 및 프린터에 대한 액세스를 허용하세요.";
 "Connect to the VPN even in hostile environment." = "위험한 환경에서도 VPN에 연결하세요.";
 "Need help? Garry can help you with most issues, go talk to him." = "도움이 필요하신가요? Garry가 대부분의 문제를 도와줄 수 있습니다. 그와 대화해 보세요.";
-"Have a problem that Garry can't resolve? Contact human support." = "Garry가 해결할 수 없는 문제가 있나요? 고객 지원팀에 문의하세요.";
+"Have a problem that Garry can't resolve? Contact human support" = "Garry가 해결할 수 없는 문제가 있나요? 고객 지원팀에 문의하세요.";
 
 "Apply voucher code to your account" = "계정에 바우처 코드를 적용하세요.";
 "Sweet, Voucher code is applied successfully" = "좋아요! 바우처 코드가 성공적으로 적용되었습니다.";
@@ -425,3 +425,10 @@
 "Advanced Parameters" = "고급 매개변수";
 "Changelog" = "변경 로그";
 "Edit Credentials" = "자격 증명 편집";
+
+"Other" = "기타";
+"Voucher Code" = "바우처 코드";
+"Enter" = "입력";
+"Connect to the VPN even in hostile environment" = "위험한 환경에서도 VPN에 연결하세요";
+"Contact Humans" = "사람 상담원에게 문의하기";
+"About us" = "회사 소개";

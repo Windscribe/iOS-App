@@ -570,7 +570,7 @@ enum TextsAsset {
         static var appearance: String { return "Light or Dark. Choose a side, and choose wisely.".localize() }
         static var background: String { return "Customize the background of the main app screen.".localize() }
         static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localize() }
-        static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage)".localize() }
+        static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localize() }
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localize() }
         static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localize() }
         static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localize() }
@@ -646,7 +646,7 @@ enum TextsAsset {
         }
 
         static var other: String {
-            return "other"
+            return "Other".localize()
         }
 
         static var enterCode: String {
@@ -655,6 +655,10 @@ enum TextsAsset {
 
         static var enterCodeHere: String {
             return "Enter code here".localize()
+        }
+
+        static var enter: String {
+            return "Enter".localize()
         }
 
         static var lazyLogin: String {
@@ -1763,7 +1767,7 @@ enum TextsAsset {
         }
 
         static var aboutUs: String {
-            return "About Us".localize()
+            return "About us".localize()
         }
 
         static var privacyPolicy: String {
