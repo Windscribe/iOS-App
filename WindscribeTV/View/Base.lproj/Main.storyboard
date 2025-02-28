@@ -529,6 +529,7 @@ Secrets.</string>
                                     <constraint firstItem="88c-KR-24M" firstAttribute="leading" secondItem="Jtg-mF-KcA" secondAttribute="leading" constant="70" id="dua-IO-uUH"/>
                                     <constraint firstAttribute="trailing" secondItem="XO8-L1-cLI" secondAttribute="trailing" id="grz-fH-4ke"/>
                                     <constraint firstAttribute="trailing" secondItem="mBO-lD-w1h" secondAttribute="trailing" constant="70" id="ioP-p8-sE6"/>
+                                    <constraint firstItem="mBO-lD-w1h" firstAttribute="leading" secondItem="88c-KR-24M" secondAttribute="trailing" constant="-41" id="roM-MJ-12M"/>
                                     <constraint firstItem="evW-0J-whC" firstAttribute="top" secondItem="Jtg-mF-KcA" secondAttribute="top" constant="172" id="smd-6B-pOX"/>
                                 </constraints>
                             </view>
@@ -832,6 +833,7 @@ Secrets.</string>
                                     <constraint firstAttribute="width" constant="642" id="I6m-1P-ViB"/>
                                     <constraint firstAttribute="trailing" secondItem="ezs-3U-Ga9" secondAttribute="trailing" constant="70" id="QYk-23-zsp"/>
                                     <constraint firstItem="OkN-q4-vWr" firstAttribute="centerY" secondItem="28H-Ir-xTd" secondAttribute="centerY" id="SLH-Te-dPO"/>
+                                    <constraint firstItem="ezs-3U-Ga9" firstAttribute="leading" secondItem="bq2-zW-Rna" secondAttribute="trailing" constant="-41" id="URu-b8-RwK"/>
                                     <constraint firstAttribute="bottom" secondItem="bq2-zW-Rna" secondAttribute="bottom" constant="70" id="dXX-ZP-Fyp"/>
                                     <constraint firstItem="DEu-xj-847" firstAttribute="leading" secondItem="28H-Ir-xTd" secondAttribute="leading" id="dtT-H4-eOz"/>
                                     <constraint firstItem="tWk-Ce-Bu3" firstAttribute="top" secondItem="28H-Ir-xTd" secondAttribute="top" constant="172" id="jyQ-qI-suA"/>

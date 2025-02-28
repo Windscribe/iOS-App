@@ -58,12 +58,16 @@ class SignUpViewController: PreferredFocusedViewController {
         signUpTitle.font = UIFont.bold(size: 35)
 
         forgotButton.titleLabel?.font = UIFont.text(size: 35)
-        backButton.titleLabel?.font = UIFont.text(size: 35)
+        forgotButton.titleLabel?.minimumScaleFactor = 0.5
+        forgotButton.titleLabel?.numberOfLines = 1
+        forgotButton.titleLabel?.adjustsFontSizeToFitWidth = true
         forgotButton.setTitleColor(.whiteWithOpacity(opacity: 0.50), for: .normal)
         forgotButton.setTitleColor(.white, for: .focused)
-
+        
+        backButton.titleLabel?.font = UIFont.text(size: 35)
         backButton.setTitleColor(.whiteWithOpacity(opacity: 0.50), for: .normal)
         backButton.setTitleColor(.white, for: .focused)
+        
         loadingView = UIActivityIndicatorView(style: .large)
         loadingView.isHidden = true
         view.addSubview(loadingView)
