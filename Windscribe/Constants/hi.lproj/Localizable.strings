@@ -344,7 +344,6 @@
 "Always on VPN" = "हमेशा चालू VPN";
 "Allow LAN Traffic" = "LAN ट्रैफ़िक की अनुमति दें";
 "Circumvent Censorship" = "सेंसरशिप को दरकिनार करें";
-"Connect to the VPN even in hostile environment" = "शत्रुतापूर्ण वातावरण में भी वीपीएन से कनेक्ट करें.";
 "Allow access to local services and printers while connected to Windscribe." = "विंडस्क्राइब से कनेक्ट होने के दौरान स्थानीय सेवाओं और प्रिंटर तक पहुंच की अनुमति दें।";
 "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services." = "सभी ट्रैफिक को हर समय Windscribe के माध्यम से टनल करें। यह केवल उच्च-जोखिम वाले मामलों के लिए अनुशंसित है और इससे कुछ Apple सेवाओं में समस्याएँ हो सकती हैं।";
 "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location." = "स्थान अनुमति अस्वीकार की गई है। सेटिंग्स > गोपनीयता > स्थान सेवाएं > Windscribe > उपयोग में होने पर जांचें और सटीक स्थान.";
@@ -353,7 +352,6 @@
 "other network" = "अन्य नेटवर्क";
 "Select the preferred protocol for this network. This overrides global connection preferences." = "इस नेटवर्क के लिए सर्वोत्तम प्रोटोकॉल चुनें। यह सभी वैश्विक कनेक्शन सेटिंग्स को ओवरराइड करता है।";
 "Advanced Parameters" = "एडवांस्ड पैरामीटर";
-"About Us" = "हमारे बारे में";
 "Can’t access Windscribe? Connect to our servers to unblock your restrictive network." = "Windscribe तक पहुँचने में असमर्थ हैं? अपने प्रतिबंधक नेटवर्क को अनब्लॉक करने के लिए हमारे सर्वर से जुड़ें।";
 "Referred by someone?" = "किसी द्वारा रेफर किया गया?";
 "You will both get an additional 1GB per month when they sign up." = "वे जब साइन अप करेंगे तब आप दोनों को प्रति माह 1GB अतिरिक्त मिलेगा।";
@@ -374,7 +372,6 @@
 "Have a Problem that Garry can't resolve? Contact human support" = "क्या आपकी कोई समस्या है जो गैरी हल नहीं कर सकता? मानव सहायता से संपर्क करें।";
 "Reddit" = "रेडिट";
 "Discord" = "असहमति";
-"Contact Humans" = "मानव से संपर्क करें";
 "Save" = "सेव";
 "Refer for Data" = "डेटा के लिए संदर्भित करें";
 "Share Invite Link" = "आमंत्रण लिंक साझा करें";
@@ -452,3 +449,10 @@
 "Make advanced tweaks to the way the app functions" = "ऐप के कार्य करने के तरीके में उन्नत समायोजन करें।";
 "Changelog" = "परिवर्तन लॉग";
 "Edit Credentials" = "क्रेडेंशियल संपादित करें";
+
+"Connect to the VPN even in hostile environment" = "शत्रुतापूर्ण वातावरण में भी वीपीएन से कनेक्ट करें.";
+"Contact Humans" = "मानव से संपर्क करें";
+
+"Other" = "अन्य";
+"Voucher Code" = "वाउचर कोड";
+"Enter" = "दर्ज करें";

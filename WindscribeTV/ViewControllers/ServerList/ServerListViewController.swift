@@ -93,13 +93,13 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         switch selectionOption {
         case .fav:
             print("Test Group count is \(favGroups.count)")
-            
+
             emptyDataView.isHidden = favGroups.count > 0
             emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
             emptyDataView.configure(image: UIImage(named: "fav-empty-white"), text: TextsAsset.nothingToSeeHere)
         case .staticIp:
             print("Test Group count is \(staticIPModels.count)")
-            
+
             emptyDataView.isHidden = staticIPModels.count > 0
             emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
             emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
@@ -245,7 +245,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     func bindData(isStreaming: Bool) {
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] results in
             guard let self else { return }
-            
+
             viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
                 self.serverSectionsOrdered = serverSectionsOrdered
 
@@ -548,7 +548,7 @@ extension ServerListViewController: StaticIPListTableViewDelegate {
 class EmptyListView: UIView {
     @IBOutlet weak var emptyImageView: UIImageView!
     @IBOutlet weak var emptyLabel: UILabel!
-    
+
     func configure(image: UIImage?, text: String) {
         emptyImageView.image = image
         emptyLabel.text = text

@@ -414,7 +414,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Allow access to local services and printers while connected to Windscribe." = "Autoriser l’accès aux services locaux et aux imprimantes lorsque Windscribe est connecté.";
 "Connect to the VPN even in hostile environment." = "Se connecter au VPN même dans un environnement hostile.";
 "Need help? Garry can help you with most issues, go talk to him." = "Besoin d'aide ? Garry peut vous aider avec la plupart des problèmes, allez lui parler.";
-"Have a problem that Garry can't resolve? Contact human support." = "Un problème que Garry ne peut pas résoudre ? Contactez le support humain.";
+"Have a problem that Garry can't resolve? Contact human support" = "Un problème que Garry ne peut pas résoudre ? Contactez le support humain.";
 
 "Apply voucher code to your account" = "Appliquez le code de bon à votre compte.";
 "Sweet, Voucher code is applied successfully" = "Super, le code de bon a été appliqué avec succès.";
@@ -425,3 +425,10 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Advanced Parameters" = "Paramètres avancés";
 "Changelog" = "Journal des modifications";
 "Edit Credentials" = "Modifier les identifiants";
+
+"Other" = "Autre";
+"Voucher Code" = "Code de bon";
+"Enter" = "Entrer";
+"Connect to the VPN even in hostile environment" = "Se connecter au VPN même dans un environnement hostile";
+"Contact Humans" = "Contacter le support humain";
+"About us" = "À propos de nous";

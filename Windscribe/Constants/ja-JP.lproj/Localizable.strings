@@ -417,7 +417,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "Windscribe に接続中でもローカルサービスやプリンターへのアクセスを許可します。";
 "Connect to the VPN even in hostile environment." = "危険な環境でもVPNに接続します。";
 "Need help? Garry can help you with most issues, go talk to him." = "お困りですか？Garry がほとんどの問題を解決できます。彼に相談してみてください。";
-"Have a problem that Garry can't resolve? Contact human support." = "Garry でも解決できない問題がありますか？サポート担当者にお問い合わせください。";
+"Have a problem that Garry can't resolve? Contact human support" = "Garry でも解決できない問題がありますか？サポート担当者にお問い合わせください。";
 
 "Apply voucher code to your account" = "バウチャーコードをアカウントに適用します。";
 "Sweet, Voucher code is applied successfully" = "バウチャーコードが正常に適用されました！";
@@ -428,3 +428,10 @@
 "Advanced Parameters" = "高度なパラメーター";
 "Changelog" = "変更履歴";
 "Edit Credentials" = "認証情報を編集";
+
+"Other" = "その他";
+"Voucher Code" = "バウチャーコード";
+"Enter" = "入力";
+"Connect to the VPN even in hostile environment" = "危険な環境でもVPNに接続";
+"Contact Humans" = "サポートに問い合わせる";
+"About us" = "私たちについて";

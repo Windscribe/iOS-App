@@ -416,7 +416,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "Permitir acesso a serviços locais e impressoras enquanto estiver ligado ao Windscribe.";
 "Connect to the VPN even in hostile environment." = "Ligar à VPN mesmo em ambientes hostis.";
 "Need help? Garry can help you with most issues, go talk to him." = "Precisa de ajuda? O Garry pode ajudá-lo com a maioria dos problemas, fale com ele.";
-"Have a problem that Garry can't resolve? Contact human support." = "Tem um problema que o Garry não consegue resolver? Contacte o suporte humano.";
+"Have a problem that Garry can't resolve? Contact human support" = "Tem um problema que o Garry não consegue resolver? Contacte o suporte humano.";
 
 "Apply voucher code to your account" = "Aplicar código de voucher à sua conta.";
 "Sweet, Voucher code is applied successfully" = "Ótimo, o código de voucher foi aplicado com sucesso.";
@@ -427,3 +427,10 @@
 "Advanced Parameters" = "Parâmetros Avançados";
 "Changelog" = "Registo de Alterações";
 "Edit Credentials" = "Editar Credenciais";
+
+"Other" = "Outro";
+"Voucher Code" = "Código do voucher";
+"Enter" = "Inserir";
+"Connect to the VPN even in hostile environment" = "Conectar à VPN mesmo em um ambiente hostil";
+"Contact Humans" = "Contactar suporte humano";
+"About us" = "Sobre nós";

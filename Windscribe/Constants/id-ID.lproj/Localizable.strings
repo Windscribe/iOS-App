@@ -414,7 +414,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "Izinkan akses ke layanan lokal dan printer saat terhubung ke Windscribe.";
 "Connect to the VPN even in hostile environment." = "Terhubung ke VPN bahkan dalam lingkungan yang tidak aman.";
 "Need help? Garry can help you with most issues, go talk to him." = "Butuh bantuan? Garry dapat membantu Anda dengan sebagian besar masalah, bicaralah dengannya.";
-"Have a problem that Garry can't resolve? Contact human support." = "Punya masalah yang tidak bisa diselesaikan oleh Garry? Hubungi dukungan manusia.";
+"Have a problem that Garry can't resolve? Contact human support" = "Punya masalah yang tidak bisa diselesaikan oleh Garry? Hubungi dukungan manusia.";
 
 "Apply voucher code to your account" = "Terapkan kode voucher ke akun Anda.";
 "Sweet, Voucher code is applied successfully" = "Mantap, kode voucher berhasil diterapkan.";
@@ -425,3 +425,10 @@
 "Advanced Parameters" = "Parameter Lanjutan";
 "Changelog" = "Catatan Perubahan";
 "Edit Credentials" = "Edit Kredensial";
+
+"Other" = "Lainnya";
+"Voucher Code" = "Kode voucher";
+"Enter" = "Masukkan";
+"Connect to the VPN even in hostile environment" = "Hubungkan ke VPN bahkan di lingkungan yang berbahaya";
+"Contact Humans" = "Hubungi dukungan manusia";
+"About us" = "Tentang kami";

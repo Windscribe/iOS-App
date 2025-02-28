@@ -412,7 +412,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "السماح بالوصول إلى الخدمات المحلية والطابعات أثناء الاتصال بـ Windscribe.";
 "Connect to the VPN even in hostile environment." = "الاتصال بـ VPN حتى في بيئات غير آمنة.";
 "Need help? Garry can help you with most issues, go talk to him." = "تحتاج مساعدة؟ يمكن لـ Garry مساعدتك في معظم المشكلات، تحدث معه.";
-"Have a problem that Garry can't resolve? Contact human support." = "لديك مشكلة لا يستطيع Garry حلها؟ تواصل مع الدعم البشري.";
+"Have a problem that Garry can't resolve? Contact human support" = "لديك مشكلة لا يستطيع Garry حلها؟ تواصل مع الدعم البشري.";
 
 "Apply voucher code to your account" = "قم بتطبيق رمز القسيمة على حسابك.";
 "Sweet, Voucher code is applied successfully" = "رائع، تم تطبيق رمز القسيمة بنجاح!";
@@ -423,3 +423,10 @@
 "Advanced Parameters" = "الإعدادات المتقدمة";
 "Changelog" = "سجل التغييرات";
 "Edit Credentials" = "تحرير بيانات الاعتماد";
+
+"Other" = "أخرى";
+"Voucher Code" = "رمز القسيمة";
+"Enter" = "أدخل";
+"Connect to the VPN even in hostile environment" = "الاتصال بشبكة VPN حتى في بيئة معادية";
+"Contact Humans" = "تواصل مع الدعم البشري";
+"About us" = "معلومات عنا";

@@ -415,7 +415,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "Дозволити доступ до локальних сервісів і принтерів під час підключення до Windscribe.";
 "Connect to the VPN even in hostile environment." = "Підключатися до VPN навіть у ворожому середовищі.";
 "Need help? Garry can help you with most issues, go talk to him." = "Потрібна допомога? Гаррі може допомогти з більшістю проблем, зверніться до нього.";
-"Have a problem that Garry can't resolve? Contact human support." = "Є проблема, яку Гаррі не може вирішити? Зверніться до служби підтримки.";
+"Have a problem that Garry can't resolve? Contact human support" = "Є проблема, яку Гаррі не може вирішити? Зверніться до служби підтримки.";
 
 "Apply voucher code to your account" = "Застосувати ваучер-код до вашого облікового запису.";
 "Sweet, Voucher code is applied successfully" = "Чудово, ваучер-код успішно застосовано.";
@@ -426,3 +426,10 @@
 "Advanced Parameters" = "Розширені параметри";
 "Changelog" = "Журнал змін";
 "Edit Credentials" = "Редагувати облікові дані";
+
+"Other" = "Інше";
+"Voucher Code" = "Код ваучера";
+"Enter" = "Введіть";
+"Connect to the VPN even in hostile environment" = "Підключайтеся до VPN навіть у ворожому середовищі";
+"Contact Humans" = "Зв’язатися з підтримкою";
+"About us" = "Про нас";

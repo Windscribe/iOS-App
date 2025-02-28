@@ -424,7 +424,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Allow access to local services and printers while connected to Windscribe." = "Cho phép truy cập các dịch vụ và máy in cục bộ khi kết nối với Windscribe.";
 "Connect to the VPN even in hostile environment." = "Kết nối với VPN ngay cả trong môi trường không an toàn.";
 "Need help? Garry can help you with most issues, go talk to him." = "Cần giúp đỡ? Garry có thể giúp bạn với hầu hết các vấn đề, hãy nói chuyện với anh ấy.";
-"Have a problem that Garry can't resolve? Contact human support." = "Gặp vấn đề mà Garry không thể giải quyết? Hãy liên hệ với bộ phận hỗ trợ trực tiếp.";
+"Have a problem that Garry can't resolve? Contact human support" = "Gặp vấn đề mà Garry không thể giải quyết? Hãy liên hệ với bộ phận hỗ trợ trực tiếp.";
 
 "Apply voucher code to your account" = "Áp dụng mã giảm giá vào tài khoản của bạn.";
 "Sweet, Voucher code is applied successfully" = "Tuyệt vời, mã giảm giá đã được áp dụng thành công.";
@@ -435,3 +435,10 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Advanced Parameters" = "Tham số nâng cao";
 "Changelog" = "Nhật ký thay đổi";
 "Edit Credentials" = "Chỉnh sửa thông tin đăng nhập";
+
+"Other" = "Khác";
+"Voucher Code" = "Mã voucher";
+"Enter" = "Nhập";
+"Connect to the VPN even in hostile environment" = "Kết nối với VPN ngay cả trong môi trường không an toàn";
+"Contact Humans" = "Liên hệ với hỗ trợ con người";
+"About us" = "Về chúng tôi";

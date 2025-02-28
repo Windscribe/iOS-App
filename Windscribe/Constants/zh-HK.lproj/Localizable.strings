@@ -414,7 +414,7 @@
 "Allow access to local services and printers while connected to Windscribe." = "連接 Windscribe 時允許訪問本地服務和打印機。";
 "Connect to the VPN even in hostile environment." = "即使在不安全的環境中，也連接到 VPN。";
 "Need help? Garry can help you with most issues, go talk to him." = "需要幫助？Garry 可以幫助解決大部分問題，快去找他吧。";
-"Have a problem that Garry can't resolve? Contact human support." = "Garry 無法解決您的問題？請聯絡人工支援。";
+"Have a problem that Garry can't resolve? Contact human support" = "Garry 無法解決您的問題？請聯絡人工支援。";
 
 "Apply voucher code to your account" = "將優惠券代碼應用到您的帳戶。";
 "Sweet, Voucher code is applied successfully" = "太好了，優惠券代碼已成功應用！";
@@ -425,3 +425,10 @@
 "Advanced Parameters" = "進階參數";
 "Changelog" = "更新日誌";
 "Edit Credentials" = "編輯憑據";
+
+"Other" = "其他";
+"Voucher Code" = "優惠券代碼";
+"Enter" = "輸入";
+"Connect to the VPN even in hostile environment" = "即使在惡劣環境中也連接 VPN";
+"Contact Humans" = "聯絡人工客服";
+"About us" = "關於我們";
