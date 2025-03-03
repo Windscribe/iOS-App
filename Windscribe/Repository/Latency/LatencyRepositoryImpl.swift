@@ -62,7 +62,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadAllServerLatency() -> Completable {
-        logger.logI(self, "Attempting to update latency data.")
+        logger.logE(self, "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {
             logger.logE(self, "Server list not ready for latency update.")
@@ -179,7 +179,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
-//#if os(iOS)
+#if os(iOS)
             if vpnManager.isConnected() {
                 completion(-1)
             } else {
@@ -194,7 +194,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                     }
                 }
             }
-//#endif
+#endif
     }
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
@@ -227,8 +227,6 @@ class LatencyRepositoryImpl: LatencyRepository {
                                 promise(.success($0))
                             }
                         }
-                    
-#if os(iOS)
                     self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
                         if !hasDeliveredResult {
                             hasDeliveredResult = true
@@ -240,17 +238,6 @@ class LatencyRepositoryImpl: LatencyRepository {
                             promise(.success(pingData))
                         }
                     }
-#else
-                    self.getTCPLatency(pingIp: ip) { minTime in
-                        if !hasDeliveredResult {
-                            hasDeliveredResult = true
-                            timeoutCancellable.cancel()
-                            let pingData = PingData(ip: ip, latency: minTime)
-                            self.database.addPingData(pingData: pingData)
-                            promise(.success(pingData))
-                        }
-                    }
-#endif
                 }
             }
             let cancellable = pingPublishers

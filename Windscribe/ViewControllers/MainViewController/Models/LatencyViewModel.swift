@@ -55,7 +55,7 @@ class LatencyViewModelImpl: LatencyViewModel {
                 onExitCompletion()
             })
             .disposed(by: self.disposeBag)
-        }, onError: { error in
+        }, onError: { _ in
             onExitCompletion()
         })
         .disposed(by: disposeBag)
