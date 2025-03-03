@@ -33,37 +33,52 @@ class LatencyViewModelImpl: LatencyViewModel {
                               onStaticCompletion: @escaping () -> Void,
                               onCustomConfigCompletion: @escaping () -> Void,
                               onExitCompletion: @escaping () -> Void) {
-        updateServerList().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-            self.latencyRepo.loadAllServerLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-                onAllServerCompletion()
-                onExitCompletion()
-            }, onError: { _ in
+
+        updateServerList()
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onSuccess: { _ in
+                self.latencyRepo.loadStaticIpLatency()
+                    .asCompletable()
+                    .observe(on: MainScheduler.asyncInstance)
+                    .subscribe(onCompleted: {
+                        onStaticCompletion()
+                        onExitCompletion()
+                    }, onError: { _ in
+                        onExitCompletion()
+                    })
+                    .disposed(by: self.disposeBag)
+
+                self.latencyRepo.loadAllServerLatency()
+                    .observe(on: MainScheduler.asyncInstance)
+                    .subscribe(onCompleted: {
+                        onAllServerCompletion()
+                        onExitCompletion()
+                    }, onError: { _ in
+                        onExitCompletion()
+                    })
+                    .disposed(by: self.disposeBag)
+
+                self.latencyRepo.loadCustomConfigLatency()
+                    .observe(on: MainScheduler.asyncInstance)
+                    .subscribe(onCompleted: {
+                        onCustomConfigCompletion()
+                        onExitCompletion()
+                    }, onError: { _ in
+                        onExitCompletion()
+                    })
+                    .disposed(by: self.disposeBag)
+
+            }, onFailure: { _ in
                 onExitCompletion()
             })
-            .disposed(by: self.disposeBag)
-            self.latencyRepo.loadStaticIpLatency().asCompletable().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-                onStaticCompletion()
-                onExitCompletion()
-            }, onError: { _ in
-                onExitCompletion()
-            })
-            .disposed(by: self.disposeBag)
-            self.latencyRepo.loadCustomConfigLatency().observe(on: MainScheduler.asyncInstance).subscribe(onCompleted: {
-                onCustomConfigCompletion()
-                onExitCompletion()
-            }, onError: { _ in
-                onExitCompletion()
-            })
-            .disposed(by: self.disposeBag)
-        }, onError: { _ in
-            onExitCompletion()
-        })
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
     }
 
-    private func updateServerList() -> Completable {
-        return serverRepository.getUpdatedServers().flatMap { _ in
-            self.staticIpRepository.getStaticServers()
-        }.asCompletable()
+    private func updateServerList() -> Single<[StaticIP]> {
+        return serverRepository.getUpdatedServers()
+            .flatMap { _ in
+                self.staticIpRepository.getStaticServers()
+            }
     }
+
 }

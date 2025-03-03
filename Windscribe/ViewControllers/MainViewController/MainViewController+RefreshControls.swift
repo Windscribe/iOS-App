@@ -24,19 +24,27 @@ extension MainViewController {
                 hideTextOnRefreshControls()
 
                 latencyViewModel.loadAllServerLatency(
-                    onAllServerCompletion: {
+                    onAllServerCompletion: { [weak self] in
+                        guard let self else { return }
+
                         self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
                         self.favTableView.reloadData()
                         self.endRefreshControls(update: false)
-                    }, onStaticCompletion: {
+                    }, onStaticCompletion: { [weak self] in
+                        guard let self else { return }
+
+                        self.loadStaticIPs()
                         self.staticIpTableView.reloadData()
                         self.endRefreshControls(update: false)
-                    }, onCustomConfigCompletion: {
+                    }, onCustomConfigCompletion: {  [weak self] in
+                        guard let self else { return }
+
                         self.customConfigTableView.reloadData()
                         self.endRefreshControls(update: false)
                     },
-                    onExitCompletion: {
-                        guard self.isRefreshing else { return }
+                    onExitCompletion: { [weak self] in
+                        guard let self, self.isRefreshing else { return }
+
                         self.isRefreshing = false
                         self.isLoadingLatencyValues = false
                     })

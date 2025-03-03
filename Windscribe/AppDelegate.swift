@@ -260,7 +260,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
      Called when registerForRemoteNotification calls fails. App will retry on next app launch.
      */
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        logger.logE(self, "Fail to register for remote notifications. \(error.localizedDescription)")
+        logger.logE("app", "Fail to register for remote notifications. \(error.localizedDescription)")
     }
 
     /**

@@ -22,6 +22,8 @@ class BestLocationCell: UITableViewCell {
     }
 
     lazy var preferences = Assembler.resolve(Preferences.self)
+    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+
     var disposeBag = DisposeBag()
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -186,6 +188,7 @@ class BestLocationCell: UITableViewCell {
                 }
             }
         }).disposed(by: disposeBag)
+
         isDarkMode.subscribe(onNext: { isDark in
             self.backgroundColor = ThemeUtils.backgroundColor(isDarkMode: isDark)
             self.cellDivider.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
@@ -193,5 +196,9 @@ class BestLocationCell: UITableViewCell {
             self.flagIcon.backgroundColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             self.flagIcon.layer.shadowColor = ThemeUtils.primaryTextColor(isDarkMode: isDark).cgColor
         }).disposed(by: disposeBag)
+
+        languageManager.activelanguage.subscribe { _ in
+            self.updateUI()
+        }.disposed(by: disposeBag)
     }
 }

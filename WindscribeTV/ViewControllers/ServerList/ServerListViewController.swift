@@ -66,6 +66,10 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
 
+    var isWindflixLocationSelected: Bool {
+        selectionOption == .windflix
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         serverListCollectionView.delegate = self
@@ -89,6 +93,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         logger.logD(self, "Displaying Server List View")
     }
     
+
     override func viewWillDisappear(_: Bool) {
         if let vc = presentingViewController as? MainViewController {
             vc.isFromServer = true
@@ -440,7 +445,8 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     func collectionView(_: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = serverListCollectionView.dequeueReusableCell(withReuseIdentifier: "ServerListCollectionViewCell", for: indexPath) as? ServerListCollectionViewCell else { return ServerListCollectionViewCell() }
         let serverSection = serverSectionsOrdered[indexPath.item]
-        if indexPath.item == 0 && bestLocation != nil {
+
+        if indexPath.item == 0 && !isWindflixLocationSelected && bestLocation != nil {
             cell.flagImage.image = UIImage(named: "bestLocation_cell")
             cell.setup(isShadow: false)
         } else {
@@ -454,7 +460,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
     }
 
     func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.row == 0 && bestLocation != nil {
+        if indexPath.row == 0 && !isWindflixLocationSelected && bestLocation != nil {
             navigationController?.popToRootViewController(animated: true)
             bestLocDelegate?.connectToBestLocation()
             return

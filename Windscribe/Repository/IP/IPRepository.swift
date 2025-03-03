@@ -11,5 +11,5 @@ import RxSwift
 
 protocol IPRepository {
     var ipState: BehaviorSubject<IPState?> { get }
-    func getIp() -> Single<MyIP>
+    func getIp() -> Single<Void>
 }

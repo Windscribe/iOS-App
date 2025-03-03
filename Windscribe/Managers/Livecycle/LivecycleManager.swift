@@ -36,7 +36,7 @@ class LivecycleManager: LivecycleManagerType {
     let showNetworkSecurityTrigger = PublishSubject<Void>()
     let showNotificationsTrigger = PublishSubject<Void>()
     let becameActiveTrigger = PublishSubject<Void>()
-    let dispose = DisposeBag()
+    let disposeBag = DisposeBag()
     var disconnectTask: AnyCancellable?
     var connectTask: AnyCancellable?
     var testTask: Task<Void, Error>?
@@ -74,7 +74,7 @@ class LivecycleManager: LivecycleManagerType {
         vpnManager.configureForConnectionState()
         let info = try? vpnManager.vpnInfo.value()
         if connectivity.internetConnectionAvailable() {
-            if info?.killSwitch == true && vpnManager.isDisconnected() {
+            if info?.killSwitch == true && vpnManager.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
                 logger.logD("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
                 vpnManager.simpleDisableConnection()
             } else if vpnManager.isConnected() && testTask == nil {
@@ -107,8 +107,16 @@ class LivecycleManager: LivecycleManagerType {
             do {
                 let network = connectivity.getNetwork()
                 self.logger.logD("LivecycleManager", "Network: \(network)")
-                let userIp = try await ipRepository.getIp().retry(3).value
-                self.logger.logD("LivecycleManager", "Internet connectivity validated with user ip: \(userIp.userIp) Windscribe IP: \(userIp.isOurIp)")
+
+                try await withCheckedThrowingContinuation { continuation in
+                    ipRepository.getIp().retry(3).subscribe(onSuccess: { _ in
+                        continuation.resume(with: .success(()))
+                    }, onFailure: { _ in
+                        continuation.resume(with: .failure(VPNConfigurationErrors.connectivityTestFailed))
+                    }).disposed(by: disposeBag)
+                }
+
+                self.logger.logI("LivecycleManager", "Internet connectivity validated!")
                 testTask = nil
             } catch {
                 testTask = nil

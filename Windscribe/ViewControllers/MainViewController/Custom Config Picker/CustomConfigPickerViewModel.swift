@@ -79,11 +79,17 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
                 self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
                 return
             }
+            guard url.startAccessingSecurityScopedResource() else {
+                self.logger.logI("CustomConfigPickerViewModel", "Error when accessing config file")
+                return
+            }
             if url.isFileURL, url.pathExtension == "ovpn" {
                 _ = self.customConfigRepository.saveOpenVPNConfig(url: url)
             } else if url.isFileURL, url.pathExtension == "conf" {
                 _ = self.customConfigRepository.saveWgConfig(url: url)
             }
+
+            url.stopAccessingSecurityScopedResource()
         }).disposed(by: disposeBag)
     }
 }

@@ -9,6 +9,7 @@
 import Combine
 import NetworkExtension
 import Swinject
+import RxSwift
 
 enum State {
     case update(String), vpn(NEVPNStatus), validating, validated
@@ -209,7 +210,13 @@ extension ConfigurationsManager {
         try await Task.sleep(nanoseconds: delayBetweenConnectivityAttempts)
         for attempt in 1 ... maxConnectivityTestAttempts {
             do {
-                _ = try await ipRepository.getIp().value
+                try await withCheckedThrowingContinuation { continuation in
+                    ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
+                        continuation.resume(with: .success(()))
+                    }, onFailure: { _ in
+                        continuation.resume(with: .failure(VPNConfigurationErrors.connectivityTestFailed))
+                    }).disposed(by: disposeBag)
+                }
                 return
             } catch {
                 if checkIsTaskCancelled() {
