@@ -1153,6 +1153,8 @@
 		F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5F52D564F300077C132 /* ImageCache.swift */; };
 		F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */; };
 		F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */; };
+		F4B4F3402D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
+		F4B4F3412D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4F29E502D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
 		F4F29E512D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -2030,6 +2032,7 @@
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
+		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -3247,6 +3250,7 @@
 				AF20AE2F22DE4E5B00375489 /* SiriIntents.entitlements */,
 				AF20AE2622DE4DB000375489 /* IntentHandler.swift */,
 				AF20AE2822DE4DB000375489 /* Info.plist */,
+				F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */,
 			);
 			path = SiriIntents;
 			sourceTree = "<group>";
@@ -4641,6 +4645,7 @@
 				AF0AED342200DACE00039CAF /* Flags.xcassets in Resources */,
 				AF038CD52581438B008F34A6 /* welcome-gradient.png in Resources */,
 				AF4E926221EF8F5900A3F584 /* IBMPlexSans-SemiBoldItalic.otf in Resources */,
+				F4B4F3402D761A45001AF143 /* SiriIntents.xcstrings in Resources */,
 				AF4E925821EF8F5900A3F584 /* IBMPlexSans-Bold.otf in Resources */,
 				AF4E925C21EF8F5900A3F584 /* IBMPlexSans-Light.otf in Resources */,
 				AF4E926421EF8F5900A3F584 /* IBMPlexSans-TextItalic.otf in Resources */,
@@ -4689,6 +4694,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4B4F3412D761A45001AF143 /* SiriIntents.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6526,6 +6532,7 @@
 				OTHER_SWIFT_FLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Windscribe/Supporting Files/Windscribe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TVOS_DEPLOYMENT_TARGET = 17.5;
@@ -6590,6 +6597,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STAGING;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Windscribe/Supporting Files/Windscribe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 17.5;
@@ -7205,6 +7213,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PRODUCTION;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Windscribe/Supporting Files/Windscribe-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 17.5;
