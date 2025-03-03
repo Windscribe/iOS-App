@@ -88,148 +88,13 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         super.viewDidAppear(animated)
         logger.logD(self, "Displaying Server List View")
     }
-
-    private func changeEmptyViewVisibility() {
-        switch selectionOption {
-        case .fav:
-            print("Test Group count is \(favGroups.count)")
-
-            emptyDataView.isHidden = favGroups.count > 0
-            emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
-            emptyDataView.configure(image: UIImage(named: "fav-empty-white"), text: TextsAsset.nothingToSeeHere)
-        case .staticIp:
-            print("Test Group count is \(staticIPModels.count)")
-
-            emptyDataView.isHidden = staticIPModels.count > 0
-            emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
-            emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
-
-        default:
-            emptyDataView.isHidden = true
-            emptyDataView.subviews.forEach { $0.isHidden = true }
+    
+    override func viewWillDisappear(_: Bool) {
+        if let vc = presentingViewController as? MainViewController {
+            vc.isFromServer = true
         }
     }
-
-    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        for press in presses {
-            super.pressesBegan(presses, with: event)
-            if let focusedCell = UIScreen.main.focusedView as? UICollectionViewCell {
-                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                    if indexPath.row == 0 && selectedRow == 0 {
-                        if press.type == .leftArrow {
-                            myPreferredFocusedView = optionViews.first?.button
-                            setNeedsFocusUpdate()
-                            updateFocusIfNeeded()
-                            break
-                        }
-                    }
-                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow), press.type == .upArrow {
-                        navigationController?.popToRootViewController(animated: true)
-                    }
-                    selectedRow = indexPath.row
-                }
-            }
-            if UIScreen.main.focusedView is UIButton {
-                if press.type == .leftArrow && preferredFocusedView?.accessibilityIdentifier == AccessibilityIdentifier.connectButton {
-                    myPreferredFocusedView = optionViews.first?.button
-                    setNeedsFocusUpdate()
-                    updateFocusIfNeeded()
-                }
-            }
-        }
-    }
-
-    private func setupSwipeDownGesture() {
-        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
-        swipeLeft.direction = .left
-        view.addGestureRecognizer(swipeLeft)
-
-        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
-        swipeRight.direction = .right
-        view.addGestureRecognizer(swipeRight)
-
-        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
-        swipeUp.direction = .up
-        view.addGestureRecognizer(swipeUp)
-    }
-
-
-    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
-        if sender.state == .ended {
-            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
-            if focusedItem is UIButton {
-                optionWasSelected(with: selectionOption)
-            }
-        }
-    }
-
-    @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
-        if sender.state == .ended {
-            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
-            if let focusedCell = focusedItem as? UICollectionViewCell {
-                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                    print("IndexPath is \(indexPath)")
-                    if indexPath.row == 0 && selectedRow == 0 {
-                        myPreferredFocusedView = optionViews.first?.button
-                        setNeedsFocusUpdate()
-                        updateFocusIfNeeded()
-                        return
-                    }
-                    selectedRow = indexPath.row
-                }
-            } else if focusedItem is UIButton {
-                myPreferredFocusedView = optionViews.first?.button
-                setNeedsFocusUpdate()
-                updateFocusIfNeeded()
-            }
-        }
-    }
-
-    @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
-        if sender.state == .ended {
-            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
-            if let focusedButton = focusedItem as? UIButton,
-               focusedButton == optionViews.first?.button {
-                navigationController?.popToRootViewController(animated: true)
-            } else if let focusedCell = focusedItem as? UICollectionViewCell {
-                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
-                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow) {
-                        navigationController?.popToRootViewController(animated: true)
-                    }
-                    selectedRow = indexPath.row
-                }
-            }
-        }
-    }
-
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        if context.nextFocusedItem is UIButton {
-            let view = context.nextFocusedView as? UIButton
-            if view?.superview?.superview is UITableViewCell {
-                UIView.animate(withDuration: 0.3) {
-                    self.sideMenuWidthConstraint.constant = 90
-                    self.view.layoutIfNeeded()
-                }
-            } else {
-                UIView.animate(withDuration: 0.3) {
-                    self.sideMenuWidthConstraint.constant = 400
-                    self.view.layoutIfNeeded()
-                }
-            }
-        } else {
-            UIView.animate(withDuration: 0.3) {
-                self.sideMenuWidthConstraint.constant = 90
-                self.view.layoutIfNeeded()
-            }
-        }
-        if context.nextFocusedItem === serverListCollectionView || context.nextFocusedItem === favTableView {
-            UIView.animate(withDuration: 0.3) {
-                self.sideMenuWidthConstraint.constant = 90
-                self.view.layoutIfNeeded()
-            }
-        }
-    }
-
+    
     private func setup() {
         sideMenu.distribution = .fillEqually
         for sideOption in sideOptions {
@@ -288,9 +153,159 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }).disposed(by: disposeBag)
     }
 
-    override func viewWillDisappear(_: Bool) {
-        if let vc = presentingViewController as? MainViewController {
-            vc.isFromServer = true
+    private func changeEmptyViewVisibility() {
+        switch selectionOption {
+        case .fav:
+            emptyDataView.isHidden = favGroups.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
+            emptyDataView.configure(image: UIImage(named: "fav-empty-white"), text: TextsAsset.nothingToSeeHere)
+        case .staticIp:
+            emptyDataView.isHidden = staticIPModels.count > 0
+            emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
+            emptyDataView.configure(image: UIImage(named: "static_ip"), text: TextsAsset.noStaticIPs)
+        default:
+            emptyDataView.isHidden = true
+            emptyDataView.subviews.forEach { $0.isHidden = true }
+        }
+    }
+
+    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
+        for press in presses {
+            super.pressesBegan(presses, with: event)
+            if let focusedCell = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.focusSystem?.focusedItem as? UICollectionViewCell {
+                
+                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+                    if indexPath.row == 0 && selectedRow == 0 {
+                        if press.type == .leftArrow {
+                            focusSelectedMenuOption()
+
+                            setNeedsFocusUpdate()
+                            updateFocusIfNeeded()
+                            break
+                        }
+                    }
+                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow), press.type == .upArrow {
+                        navigationController?.popToRootViewController(animated: true)
+                    }
+                    selectedRow = indexPath.row
+                }
+            }
+            
+            if let focusedItem = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first?.focusSystem?.focusedItem, focusedItem is UIButton {
+
+                if press.type == .leftArrow && preferredFocusedView?.accessibilityIdentifier == AccessibilityIdentifier.connectButton {
+                    focusSelectedMenuOption()
+                    
+                    setNeedsFocusUpdate()
+                    updateFocusIfNeeded()
+                }
+            }
+        }
+    }
+
+    private func setupSwipeDownGesture() {
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeLeft(_:)))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeRight(_:)))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipeUp(_:)))
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
+    }
+
+
+    @objc private func handleSwipeRight(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            if focusedItem is UIButton {
+                optionWasSelected(with: selectionOption)
+            }
+        }
+    }
+
+    @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            
+            if let focusedCell = focusedItem as? UICollectionViewCell {
+                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+
+                    if indexPath.row == 0 && selectedRow == 0 {
+                        focusSelectedMenuOption()
+
+                        setNeedsFocusUpdate()
+                        updateFocusIfNeeded()
+                        return
+                    }
+                    selectedRow = indexPath.row
+                }
+            } else if focusedItem is UIButton {
+                
+                focusSelectedMenuOption()
+                    
+                setNeedsFocusUpdate()
+                updateFocusIfNeeded()
+                
+                changeSideMenuVisibility(isExpanded: true)
+            }
+        }
+    }
+
+    @objc private func handleSwipeUp(_ sender: UISwipeGestureRecognizer) {
+        if sender.state == .ended {
+            guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
+            if let focusedButton = focusedItem as? UIButton,
+               focusedButton == optionViews.first?.button {
+                navigationController?.popToRootViewController(animated: true)
+            } else if let focusedCell = focusedItem as? UICollectionViewCell {
+                if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
+                    if (0 ... 3).contains(indexPath.row), (0 ... 3).contains(selectedRow) {
+                        navigationController?.popToRootViewController(animated: true)
+                    }
+                    selectedRow = indexPath.row
+                }
+            }
+        }
+    }
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        if context.nextFocusedItem is UIButton {
+            let view = context.nextFocusedView as? UIButton
+            
+            if view?.superview?.superview is UITableViewCell {
+                changeSideMenuVisibility(isExpanded: false)
+            } else {
+                changeSideMenuVisibility(isExpanded: true)
+            }
+        } else {
+            changeSideMenuVisibility(isExpanded: false)
+        }
+            
+        if context.nextFocusedItem === serverListCollectionView || context.nextFocusedItem === favTableView {
+            changeSideMenuVisibility(isExpanded: false)
+        }
+    }
+
+    private func changeSideMenuVisibility(isExpanded: Bool) {
+        UIView.animate(withDuration: 0.3) {
+            self.sideMenuWidthConstraint.constant = isExpanded ? 400 : 90
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    private func focusSelectedMenuOption() {
+        if let selectedIndex = sideOptions.firstIndex(of: selectionOption) {
+            myPreferredFocusedView = optionViews[selectedIndex].button
+        } else {
+            myPreferredFocusedView = optionViews.first?.button
         }
     }
 
