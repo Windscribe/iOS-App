@@ -1,6 +1,691 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Connect.intentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يتصل بـ Windscribe VPN"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN-এ সংযোগ করে"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindet mit Windscribe VPN"
+          }
+        },
+        "de-DE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindet mit Windscribe VPN"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connects Windscribe VPN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectar a Windscribe VPN"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connecte Windscribe VPN"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN से कनेक्ट करें"
+          }
+        },
+        "id-ID" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menghubungkan Windscribe VPN"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connette Windscribe VPN"
+          }
+        },
+        "it-IT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connette Windscribe VPN"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNに接続します"
+          }
+        },
+        "ja-JP" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNに接続します"
+          }
+        },
+        "ko-KR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN에 연결"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Łączy z Windscribe VPN"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conectar ao Windscribe VPN"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Подключает Windscribe VPN"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN'e Bağlanır"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Підключає Windscribe VPN"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kết nối Windscribe VPN"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "连接 Windscribe VPN"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連接 Windscribe VPN"
+          }
+        }
+      }
+    },
+    "Connect.intentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تمكين Windscribe VPN"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN সক্ষম করুন"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN aktivieren"
+          }
+        },
+        "de-DE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN aktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Windscribe VPN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar Windscribe VPN"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer Windscribe VPN"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN सक्षम करें"
+          }
+        },
+        "id-ID" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktifkan Windscribe VPN"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abilita Windscribe VPN"
+          }
+        },
+        "it-IT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abilita Windscribe VPN"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNを有効にする"
+          }
+        },
+        "ja-JP" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNを有効にする"
+          }
+        },
+        "ko-KR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN 활성화"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Włącz Windscribe VPN"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativar Windscribe VPN"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Включить Windscribe VPN"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN'i Etkinleştir"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Увімкнути Windscribe VPN"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bật Windscribe VPN"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "启用 Windscribe VPN"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟用 Windscribe VPN"
+          }
+        }
+      }
+    },
+    "Disconnect.intentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يفصل Windscribe عن VPN."
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN সংযোগ বিচ্ছিন্ন করে।"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trennt Windscribe vom VPN."
+          }
+        },
+        "de-DE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trennt Windscribe vom VPN."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnects Windscribe from VPN."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconectar Windscribe del VPN."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Déconnecte Windscribe du VPN."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN से डिस्कनेक्ट करें।"
+          }
+        },
+        "id-ID" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Memutus koneksi Windscribe dari VPN."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnette Windscribe dal VPN."
+          }
+        },
+        "it-IT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disconnette Windscribe dal VPN."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNの接続を解除します。"
+          }
+        },
+        "ja-JP" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNの接続を解除します。"
+          }
+        },
+        "ko-KR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN 연결 해제"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rozłącza Windscribe z VPN."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desconectar Windscribe do VPN."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отключает Windscribe от VPN."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN bağlantısını keser."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Відключає Windscribe від VPN."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngắt kết nối Windscribe khỏi VPN."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "断开 Windscribe VPN"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "斷開 Windscribe VPN"
+          }
+        }
+      }
+    },
+    "Disconnect.intentTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعطيل Windscribe VPN"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN নিষ্ক্রিয় করুন"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN deaktivieren"
+          }
+        },
+        "de-DE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN deaktivieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disable Windscribe VPN"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivar Windscribe VPN"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactiver Windscribe VPN"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN अक्षम करें"
+          }
+        },
+        "id-ID" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nonaktifkan Windscribe VPN"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disabilita Windscribe VPN"
+          }
+        },
+        "it-IT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disabilita Windscribe VPN"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNを無効にする"
+          }
+        },
+        "ja-JP" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPNを無効にする"
+          }
+        },
+        "ko-KR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN 비활성화"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wyłącz Windscribe VPN"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desativar Windscribe VPN"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отключить Windscribe VPN"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Windscribe VPN'i Devre Dışı Bırak"
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Вимкнути Windscribe VPN"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tắt Windscribe VPN"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "禁用 Windscribe VPN"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "停用 Windscribe VPN"
+          }
+        }
+      }
+    },
+    "ShowLocation.intentDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عرض الموقع المتصل وعنوان IP"
+          }
+        },
+        "bn" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "সংযুক্ত অবস্থান এবং IP ঠিকানা দেখুন।"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbundenen Standort und IP-Adresse anzeigen."
+          }
+        },
+        "de-DE" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbundenen Standort und IP-Adresse anzeigen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View connected location and ip address."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver ubicación conectada y dirección IP."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Afficher l’emplacement connecté et l’adresse IP."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कनेक्टेड स्थान और आईपी पता देखें।"
+          }
+        },
+        "id-ID" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lihat lokasi yang terhubung dan alamat IP."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualizza la posizione connessa e l'indirizzo IP."
+          }
+        },
+        "it-IT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visualizza la posizione connessa e l'indirizzo IP."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続された場所とIPアドレスを表示"
+          }
+        },
+        "ja-JP" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "接続された場所とIPアドレスを表示"
+          }
+        },
+        "ko-KR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "연결된 위치 및 IP 주소 보기"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zobacz połączoną lokalizację i adres IP."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver localização conectada e endereço IP."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Просмотр подключенного местоположения и IP-адреса."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bağlı konumu ve IP adresini görüntüle."
+          }
+        },
+        "uk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Переглянути підключене місцезнаходження та IP-адресу."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem vị trí kết nối và địa chỉ IP."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看已连接位置和 IP 地址"
+          }
+        },
+        "zh-HK" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看已连接位置和IP地址"
+          }
+        }
+      }
+    },
     "ShowLocation.intentTitle" : {
       "extractionState" : "manual",
       "localizations" : {

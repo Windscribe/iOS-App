@@ -16,8 +16,8 @@ import WidgetKit
 extension Connect: ForegroundContinuableIntent {}
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Connect: AppIntent, WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Enable Windscribe VPN"
-    static var description = IntentDescription("Connects Windscribe VPN")
+    static var title: LocalizedStringResource = LocalizedStringResource("Connect.intentTitle")
+    static var description = IntentDescription(LocalizedStringResource("Connect.intentDescription"))
     let tag = "AppIntents"
     static var parameterSummary: some ParameterSummary {
         Summary("Connect to VPN")

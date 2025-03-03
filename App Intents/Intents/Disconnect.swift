@@ -17,8 +17,8 @@ extension Disconnect: ForegroundContinuableIntent {}
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Disconnect: AppIntent, WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = "Disable Windscribe VPN"
-    static var description = IntentDescription("Disconnects Windscribe from VPN.")
+    static var title: LocalizedStringResource = LocalizedStringResource("Disconnect.intentTitle")
+    static var description = IntentDescription(LocalizedStringResource("Disconnect.intentDescription"))
     let tag = "AppIntents"
     fileprivate let logger = ContainerResolver().getLogger()
     fileprivate let preferences = ContainerResolver().getPreferences()

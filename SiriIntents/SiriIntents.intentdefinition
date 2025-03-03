@@ -9,11 +9,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>PpKCzm</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>23F79</string>
+	<string>24D70</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>16A242d</string>
+	<string>16C5032a</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>16.0</string>
+	<string>16.2</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -131,7 +131,7 @@
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Connection State</string>
+			<string>ShowLocation.intentTitle</string>
 			<key>INIntentTitleID</key>
 			<string>1gHj39</string>
 			<key>INIntentType</key>

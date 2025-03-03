@@ -2450,6 +2450,7 @@
 		1E60DFE92CA4719E00623CD5 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
+				AF20AE2622DE4DB000375489 /* IntentHandler.swift */,
 				1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */,
 			);
 			path = Handlers;
@@ -3248,9 +3249,8 @@
 				1E60DFE92CA4719E00623CD5 /* Handlers */,
 				1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */,
 				AF20AE2F22DE4E5B00375489 /* SiriIntents.entitlements */,
-				AF20AE2622DE4DB000375489 /* IntentHandler.swift */,
-				AF20AE2822DE4DB000375489 /* Info.plist */,
 				F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */,
+				AF20AE2822DE4DB000375489 /* Info.plist */,
 			);
 			path = SiriIntents;
 			sourceTree = "<group>";
