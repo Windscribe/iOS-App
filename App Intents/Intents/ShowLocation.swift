@@ -19,18 +19,17 @@ extension ShowLocation: ForegroundContinuableIntent {}
 struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     static let intentClassName = "ShowLocationIntent"
 
-    static var title: LocalizedStringResource = "Connection State"
-    static var description = IntentDescription("View connected location and IP address.")
+    static var title: LocalizedStringResource = LocalizedStringResource("ShowLocation.intentTitle")
+    static var description = IntentDescription(LocalizedStringResource("ShowLocation.intentDescription"))
 
     static var parameterSummary: some ParameterSummary {
         Summary("Connection State")
     }
-
     static var predictionConfiguration: some IntentPredictionConfiguration {
         IntentPrediction {
             DisplayRepresentation(
-                title: "Connection State",
-                subtitle: "View connected location and IP address"
+                title: LocalizedStringResource("ShowLocation.intentTitle"),
+                subtitle: LocalizedStringResource("ShowLocation.intentDescription")
             )
         }
     }
