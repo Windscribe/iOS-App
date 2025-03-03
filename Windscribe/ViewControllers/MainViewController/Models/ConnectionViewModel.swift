@@ -358,7 +358,7 @@ extension ConnectionViewModel {
         if !gettingIpAddress && !isConnecting() {
             logger.logD(self, "Displaying local IP Address.")
             gettingIpAddress = true
-            ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
+            ipRepository.getIp().subscribe(onSuccess: { _ in
                 self.gettingIpAddress = false
             }, onFailure: { _ in
                 self.gettingIpAddress = false
@@ -492,7 +492,7 @@ extension ConnectionViewModel {
     private func updateToLocalIPAddress() {
         logger.logD(self, "Displaying local IP Address.")
         gettingIpAddress = true
-        ipRepository.getIp().observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
+        ipRepository.getIp().subscribe(onSuccess: { _ in
             self.gettingIpAddress = false
         }, onFailure: { _ in
             self.gettingIpAddress = false

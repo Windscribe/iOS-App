@@ -77,7 +77,7 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
             cancelButton
         ])
         view.backgroundColor = UIColor.midnight
-        view.layer.opacity = 0.97
+        view.layer.opacity = 0.95
         layoutView.stackView.setPadding(UIEdgeInsets(top: 54, left: 48, bottom: 16, right: 48))
         layoutView.stackView.setCustomSpacing(32, after: topImage)
         layoutView.stackView.setCustomSpacing(32, after: subHeaderLabel)
@@ -94,10 +94,11 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
         viewModel.subHeaderLabelTitle.subscribe(onNext: { [self] in
             subHeaderLabel.text = $0
         }).disposed(by: disposeBag)
-        viewModel.cancelButtonTitle.subscribe(onNext: { title in
+        Observable.combineLatest(viewModel.cancelButtonTitle, viewModel.isDarkMode).subscribe(onNext: { title, isDarkMode in
+            let textColor = isDarkMode ? UIColor.white.withAlphaComponent(0.5) : UIColor.midnight.withAlphaComponent(0.5)
             let attributeString = NSAttributedString(
                 string: title,
-                attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5),
+                attributes: [NSAttributedString.Key.foregroundColor: textColor,
                              .font: UIFont.text(size: 16)]
             )
             self.cancelButton.setAttributedTitle(attributeString, for: .normal)
@@ -109,6 +110,17 @@ class PopUpMaintenanceLocationVC: WSNavigationViewController {
                              .font: UIFont.text(size: 16)]
             )
             self.checkStatusButton.setAttributedTitle(attributeString, for: .normal)
+        }).disposed(by: disposeBag)
+        self.viewModel.isDarkMode.subscribe(onNext: { [weak self] in
+            if $0 {
+                self?.view.backgroundColor = UIColor.midnight
+                self?.headerLabel.textColor = .white
+                self?.subHeaderLabel.textColor = .white
+            } else {
+                self?.view.backgroundColor = UIColor.white
+                self?.headerLabel.textColor = .midnight
+                self?.subHeaderLabel.textColor = .midnight
+            }
         }).disposed(by: disposeBag)
         checkStatusButton.isHidden = isStaticIp
     }

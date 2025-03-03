@@ -247,9 +247,9 @@ class LatencyRepositoryImpl: LatencyRepository {
                 .sink(receiveCompletion: { _ in }, receiveValue: { results in
                     single(.success(results))
                 })
-            self.cancellables.insert(cancellable)
+            cancellable.store(in: &self.cancellables)
             return Disposables.create {
-                self.cancellables.removeAll()
+                cancellable.cancel()
             }
         }
     }
