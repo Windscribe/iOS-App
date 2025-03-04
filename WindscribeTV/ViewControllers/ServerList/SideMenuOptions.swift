@@ -80,6 +80,20 @@ class SideMenuOptions: UIView {
             layer.sublayers?.remove(at: 0)
         }
     }
+    
+    func highlightSelectedOption(_ highLight: Bool) {
+        if highLight {
+            gradient.colors = [
+                UIColor.whiteWithOpacity(opacity: 0.16).cgColor,
+                UIColor.whiteWithOpacity(opacity: 0).cgColor
+            ]
+        } else {
+            gradient.colors = [
+                UIColor.clear.cgColor,
+                UIColor.clear.cgColor
+            ]
+        }
+    }
 
     func isType(of type: SideMenuType) -> Bool {
         return type == sideMenuType

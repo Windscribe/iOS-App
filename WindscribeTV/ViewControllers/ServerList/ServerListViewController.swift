@@ -116,16 +116,13 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] results in
             guard let self else { return }
 
-            viewModel.sortServerListUsingUserPreferences(isForStreaming: isStreaming, servers: results) { serverSectionsOrdered in
-                self.serverSectionsOrdered = serverSectionsOrdered
-
-                if  self.bestLocation != nil {
-                    let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
-                    if self.serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
-                        self.serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
-                    }
-                }
-                self.serverListCollectionView.reloadData()
+            viewModel.sortServerListUsingUserPreferences(
+                isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
+                    guard let self else { return }
+                    
+                    self.serverSectionsOrdered = serverSectionsOrdered
+                    self.addBestLocation()
+                    self.serverListCollectionView.reloadData()
             }
         }).disposed(by: self.disposeBag)
 
@@ -156,6 +153,22 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         }, onError: { error in
             self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
+    }
+    
+    private func addBestLocation() {
+        guard !isWindflixLocationSelected else {
+            if serverSectionsOrdered.first?.server?.name == Fields.Values.bestLocation {
+                serverSectionsOrdered.removeFirst()
+            }
+            return
+        }
+        
+        if  bestLocation != nil {
+            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+            if serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
+                serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
+            }
+        }
     }
 
     private func changeEmptyViewVisibility() {
@@ -260,6 +273,10 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 updateFocusIfNeeded()
                 
                 changeSideMenuVisibility(isExpanded: true)
+            }
+            
+            for optionView in optionViews {
+                optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
             }
         }
     }
@@ -370,12 +387,11 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 updateFocusIfNeeded()
             }
         }
-        UIView.animate(withDuration: 0.3) {
-            self.sideMenuWidthConstraint.constant = 90
-            self.view.layoutIfNeeded()
-        }
-        for optionView in optionViews where optionView.sideMenuType == selectionOption {
-            optionView.setHorizontalGradientBackground()
+        
+        changeSideMenuVisibility(isExpanded: false)
+        
+        for optionView in optionViews {
+            optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
         }
     }
 
