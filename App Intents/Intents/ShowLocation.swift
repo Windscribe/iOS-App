@@ -19,8 +19,8 @@ extension ShowLocation: ForegroundContinuableIntent {}
 struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedAppIntent, PredictableIntent {
     static let intentClassName = "ShowLocationIntent"
 
-    static var title: LocalizedStringResource = LocalizedStringResource("ShowLocation.intentTitle")
-    static var description = IntentDescription(LocalizedStringResource("ShowLocation.intentDescription"))
+    static var title: LocalizedStringResource = LocalizedStringResource("ShowLocation.intentTitle", table: "SiriIntents")
+    static var description = IntentDescription(LocalizedStringResource("ShowLocation.intentDescription", table: "SiriIntents"))
 
     static var parameterSummary: some ParameterSummary {
         Summary("Connection State")

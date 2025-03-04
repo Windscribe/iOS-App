@@ -120,7 +120,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) needs the location permission in order to make the &quot;Network Whitelist&quot; feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.</string>
+	<string>$(PRODUCT_NAME) needs the location permission in order to make the "Network Whitelist" feature work.  This permission is required to access Wifi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.</string>
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>ShowLocationIntent</string>
