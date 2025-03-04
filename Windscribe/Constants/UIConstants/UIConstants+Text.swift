@@ -1733,7 +1733,7 @@ enum TextsAsset {
         }
 
         static var sendUsATicket: String {
-            return "Have a Problem that Garry can't resolve? Contact human support".localize()
+            return "Have a problem that Garry can't resolve? Contact human support".localize()
         }
 
         static var communitySupport: String {
