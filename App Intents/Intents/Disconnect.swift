@@ -17,8 +17,9 @@ extension Disconnect: ForegroundContinuableIntent {}
 
 @available(iOS 16.0, macOS 13.0, watchOS 9.0, tvOS 16.0, *)
 struct Disconnect: AppIntent, WidgetConfigurationIntent {
-    static var title: LocalizedStringResource = LocalizedStringResource("Disconnect.intentTitle")
-    static var description = IntentDescription(LocalizedStringResource("Disconnect.intentDescription"))
+    static var title: LocalizedStringResource = LocalizedStringResource("Disconnect.intentTitle", table: "SiriIntents")
+    static var description = IntentDescription(LocalizedStringResource("Disconnect.intentDescription", table: "SiriIntents"))
+
     let tag = "AppIntents"
     fileprivate let logger = ContainerResolver().getLogger()
     fileprivate let preferences = ContainerResolver().getPreferences()

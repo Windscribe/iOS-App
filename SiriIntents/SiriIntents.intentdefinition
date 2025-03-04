@@ -24,7 +24,7 @@
 			<key>INIntentDefaultImageName</key>
 			<string>location_load_ic_white</string>
 			<key>INIntentDescription</key>
-			<string>View connected location and ip address.</string>
+			<string>ShowLocation.intentDescription</string>
 			<key>INIntentDescriptionID</key>
 			<string>4LgglN</string>
 			<key>INIntentLastParameterTag</key>

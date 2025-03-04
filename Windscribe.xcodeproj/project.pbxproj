@@ -1155,6 +1155,8 @@
 		F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */; };
 		F4B4F3402D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3412D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
+		F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
+		F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4F29E502D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
 		F4F29E512D68D6D500933633 /* UIImage+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Ext.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -4598,6 +4600,7 @@
 				5986AB532C47420400167023 /* IBMPlexSans-Bold.otf in Resources */,
 				5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */,
 				1EF7BB332C6D0D8F0032A4DF /* UpgradePricingView.xib in Resources */,
+				F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */,
 				5986AB572C47422B00167023 /* IBMPlexSans-Text.otf in Resources */,
 				1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */,
 				1E8C8F362C64FC7D00CBFDC5 /* IBMPlexSans-Regular.otf in Resources */,
@@ -4713,6 +4716,7 @@
 				AFDF9352255EB940002B1FBA /* Assets.xcassets in Resources */,
 				593607FA2B02A18E0052913C /* IBMPlexSans-Italic.otf in Resources */,
 				AFDF935D2562B7CA002B1FBA /* Assets.xcassets in Resources */,
+				F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */,
 				AFDF935C255EC191002B1FBA /* Flags.xcassets in Resources */,
 				593607F92B02A16D0052913C /* IBMPlexSans-Bold.otf in Resources */,
 				593607FB2B02A3B90052913C /* IBMPlexSans-BoldItalic.otf in Resources */,
