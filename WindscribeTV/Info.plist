@@ -6,6 +6,8 @@
 	<string>$(APP_BUNDLE_ID)</string>
 	<key>CFAccountID</key>
 	<string>$(APP_TEAM_ID)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSExtensionPointIdentifier</key>
 	<string>com.apple.tv-top-shelf</string>
 	<key>UIAppFonts</key>
