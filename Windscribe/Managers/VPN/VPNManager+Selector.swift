@@ -14,11 +14,11 @@ import RxSwift
 import Swinject
 
 extension VPNManager {
-    func simpleEnableConnection(isEmergency: Bool = false) {
+    func simpleEnableConnection() {
         let nextProtocol = protocolManager.getProtocol()
         let locationID = locationsManager.getLastSelectedLocation()
         connectionTaskPublisher?.cancel()
-        connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .emergency)
+        connectionTaskPublisher = connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .user)
             .sink { _ in } receiveValue: { _ in }
     }
 
