@@ -62,19 +62,15 @@ extension MainViewController: SearchCountryViewDelegate {
         reloadServerListForSearch { [weak self] in
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                if text.isEmpty {
-                    self.serverListTableView.collapseExpandedSections()
-                    return
-                }
                 guard let serverSections = self.serverListTableViewDataSource?.serverSections else { return }
                 var resultServerSections = [ServerSection]()
                 let serverModels = serverSections.map {$0.server!}
                 let sortedModels = self.find(groupList: serverModels, keyword: text)
-                resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: false)}
+                resultServerSections = sortedModels.map {ServerSection(server: $0, collapsed: text.isEmpty)}
                 self.serverListTableViewDataSource?.serverSections = resultServerSections
                 self.serverListTableView.reloadData()
                 for (index, serverSection) in resultServerSections.enumerated() {
-                    if serverSection.collapsed == false {
+                    if serverSection.collapsed == false, !text.isEmpty {
                         self.serverListTableView.expand(index)
                     } else {
                         self.serverListTableView.collapse(index)
@@ -189,7 +185,6 @@ extension MainViewController: SearchCountryViewDelegate {
                 self?.cardHeaderContainerView.headerSelectorView.isHidden = false
                 self?.view.layoutIfNeeded()
             }, completion: { _ in
-                self?.serverListTableView?.collapseExpandedSections()
                 self?.reloadServerListOrder()
             })
         }
