@@ -130,7 +130,7 @@ class Managers: Assembly {
             AlertManager()
         }.inObjectScope(.userScope)
         container.register(LocationsManagerType.self) { r in
-            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
+            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManagerV2.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
             VPNManager(logger: r.resolve(FileLogger.self)!,

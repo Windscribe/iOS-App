@@ -41,13 +41,21 @@ class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
     private let logger: FileLogger
+    private let languageManager: LanguageManagerV2
+
+    private let disposeBag = DisposeBag()
 
     let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
 
-    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger) {
+    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManagerV2) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.logger = logger
+        self.languageManager = languageManager
+
+        languageManager.activelanguage.subscribe { [weak self] _ in
+            self?.selectedLocationUpdatedSubject.onNext(())
+        }.disposed(by: disposeBag)
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
