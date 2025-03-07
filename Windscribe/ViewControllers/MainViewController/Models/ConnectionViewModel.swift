@@ -72,7 +72,7 @@ protocol ConnectionViewModelType {
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
-    var selectedLocationUpdatedSubject: BehaviorSubject<Void>
+    let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
 
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
@@ -136,8 +136,6 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
         self.localDB = localDB
-
-        selectedLocationUpdatedSubject = locationsManager.selectedLocationUpdatedSubject
         appReviewManager = DefaultAppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -168,11 +166,12 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.enableConnection(connectionType: value.connectionType)
             }.disposed(by: disposeBag)
 
-        locationsManager.selectedLocationUpdatedSubject.subscribe { _ in
+        locationsManager.selectedLocationUpdatedSubject.subscribe { canReconnect in
             let locationID = locationsManager.getLastSelectedLocation()
-            if !locationID.isEmpty, locationID != "0", self.isConnected() {
+            if canReconnect, !locationID.isEmpty, locationID != "0", self.isConnected() {
                 self.enableConnection()
             }
+            self.selectedLocationUpdatedSubject.onNext(())
         }.disposed(by: disposeBag)
 
         connectivity.network
