@@ -304,7 +304,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     func bindViews() {
-        configureBestLocation(selectBestLocation: true)
+        configureBestLocation(selectBestLocation: false)
         vpnConnectionViewModel.displayLocalIPAddress()
         setFlagImages()
 
