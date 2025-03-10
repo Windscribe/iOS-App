@@ -34,7 +34,7 @@ protocol LocationsManagerType {
     func checkLocationValidity(checkProAccess: () -> Bool)
     func checkForForceDisconnect() -> Bool
 
-    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
+    var selectedLocationUpdatedSubject: BehaviorSubject<Bool> { get }
 }
 
 class LocationsManager: LocationsManagerType {
@@ -45,7 +45,7 @@ class LocationsManager: LocationsManagerType {
 
     private let disposeBag = DisposeBag()
 
-    let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
+    let selectedLocationUpdatedSubject = BehaviorSubject<Bool>(value: (false))
 
     init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManagerV2) {
         self.localDatabase = localDatabase
@@ -54,7 +54,7 @@ class LocationsManager: LocationsManagerType {
         self.languageManager = languageManager
 
         languageManager.activelanguage.subscribe { [weak self] _ in
-            self?.selectedLocationUpdatedSubject.onNext(())
+            self?.selectedLocationUpdatedSubject.onNext(false)
         }.disposed(by: disposeBag)
     }
 
@@ -117,7 +117,7 @@ class LocationsManager: LocationsManagerType {
     func saveLastSelectedLocation(with locationID: String) {
         guard locationID != getLastSelectedLocation() else { return }
         preferences.saveLastSelectedLocation(with: locationID)
-        selectedLocationUpdatedSubject.onNext(())
+        selectedLocationUpdatedSubject.onNext(true)
     }
     func saveStaticIP(withID staticID: Int?) {
         saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
