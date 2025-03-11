@@ -121,6 +121,7 @@
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		1E5553982D8098FD00F16AF0 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB35A2817F53400C3EC1C /* String+Localized.swift */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -1783,7 +1784,7 @@
 		C535D29B27E4F96C00C08345 /* WireGuardTunnelProduction.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WireGuardTunnelProduction.entitlements; sourceTree = "<group>"; };
 		C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+Connect.swift"; sourceTree = "<group>"; };
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
-		C545A0DB2D47638F00F3333E /* Completable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Completable+Extension.swift"; sourceTree = "<group>"; };
+		C545A0DB2D47638F00F3333E /* Completable+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Completable+Ext.swift"; sourceTree = "<group>"; };
 		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		C553E34D2C25ABE900A2C027 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		C5592B752B37F3F200F2F110 /* WSNetErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetErrors.swift; sourceTree = "<group>"; };
@@ -5007,7 +5008,8 @@
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
-				C545A0DC2D47639500F3333E /* Completable+Extension.swift in Sources */,
+				C545A0DC2D47639500F3333E /* Completable+Ext.swift in Sources */,
+				1E5553982D8098FD00F16AF0 /* String+Localized.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
 				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
@@ -6057,7 +6059,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 12;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -6153,7 +6155,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 12;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -6247,7 +6249,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 12;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -7389,7 +7391,7 @@
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
 				kind = exactVersion;
-				version = 10.33.0;
+				version = 10.46.0;
 			};
 		};
 		1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */ = {
@@ -7461,7 +7463,7 @@
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
 				kind = exactVersion;
-				version = 6.6.0;
+				version = 6.8.0;
 			};
 		};
 		1ED33DCC2D7B38A200B980D3 /* XCRemoteSwiftPackageReference "RxDataSources" */ = {

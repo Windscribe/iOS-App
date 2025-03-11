@@ -51,8 +51,11 @@ class HelpViewModelImpl: HelpViewModel {
     }
 
     func submitDebugLog(username: String? = nil, completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
-        logger.getLogData().flatMap { fileData in
-            var debugUsername = "user435"
+        logger.getLogData()
+            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+            .observe(on: MainScheduler.asyncInstance)
+            .flatMap { fileData in
+            var debugUsername = ""
             if let session = self.sessionManager.session {
                 debugUsername = session.username
             }

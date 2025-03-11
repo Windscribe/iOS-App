@@ -97,9 +97,9 @@ class FileLoggerImpl: FileLogger {
             let middle = result.isEmpty ? result : " "
             return result + middle + String(value)
         }
-        
+
         guard !message.isEmpty else { return nil }
-        
+
         if !message.contains("DeviceInfo") {
             message.removeLast()
         }

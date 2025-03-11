@@ -31,7 +31,10 @@ class ViewLogViewModelImpl: ViewLogViewModel {
 
     private func load() {
         showProgress.onNext(true)
-        logger.getLogData().subscribe(onSuccess: { [weak self] content in
+        logger.getLogData()
+            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onSuccess: { [weak self] content in
             guard let self = self else { return }
             self.showProgress.onNext(false)
             self.logContent.onNext(content)
