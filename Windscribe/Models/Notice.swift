@@ -117,7 +117,7 @@ struct NoticeModel {
 }
 
 struct NoticeList: Decodable {
-    let notices = List<Notice>()
+    let notices: List<Notice>
 
     enum CodingKeys: String, CodingKey {
         case data
@@ -127,13 +127,9 @@ struct NoticeList: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        notices = List<Notice>()
         if let noticesArray = try data.decodeIfPresent([Notice].self, forKey: .notifications) {
-            setNotices(array: noticesArray)
+            notices.append(objectsIn: noticesArray)
         }
-    }
-
-    func setNotices(array: [Notice]) {
-        notices.removeAll()
-        notices.append(objectsIn: array)
     }
 }

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxDataSources
 
 struct ServerSection {
     var server: ServerModel?

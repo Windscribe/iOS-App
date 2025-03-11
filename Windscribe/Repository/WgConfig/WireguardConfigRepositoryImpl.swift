@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     private let apiCallManager: WireguardAPIManager

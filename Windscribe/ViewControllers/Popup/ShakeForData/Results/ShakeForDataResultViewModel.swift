@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol ShakeForDataResultViewModelType {
     var shakeCount: BehaviorSubject<Int> { get }

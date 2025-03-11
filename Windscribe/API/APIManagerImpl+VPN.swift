@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 extension APIManagerImpl {
     func getStaticIpList() -> Single<StaticIPList> {

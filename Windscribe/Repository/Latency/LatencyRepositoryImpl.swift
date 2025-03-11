@@ -105,7 +105,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     func loadStreamingServerLatency() -> Completable {
         let streamingServersToPing = database.getServers()?
             .filter { $0.locType == "streaming" }
-            .compactMap { region in region.groups.toArray() }
+            .compactMap { region in Array(region.groups) }
             .reduce([], +)
             .map { city in (city.pingIp, city.pingHost) }
         return createLatencyTask(from: streamingServersToPing ?? [])
@@ -199,7 +199,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private func findLowestLatencyIP(from pingDataArray: [PingData]) -> String? {
         let pingIps = database.getServers()?
-            .compactMap { region in region.groups.toArray()}
+            .compactMap { region in Array(region.groups)}
             .reduce([], +)
             .filter {
                 if sessionManager.session?.isPremium == false && $0.premiumOnly == true {
@@ -262,7 +262,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     /// Returns ping IP and Host array from database.
     private func getServerPingAndHosts() -> [(String, String)] {
         return database.getServers()?
-            .compactMap { region in region.groups.toArray() }
+            .compactMap { region in Array(region.groups) }
             .reduce([], +)
             .map { city in (city.pingIp, city.pingHost) } ?? []
     }

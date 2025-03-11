@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol HapticFeedbackGeneratorV2 {
     func run(level: UIImpactFeedbackGenerator.FeedbackStyle)

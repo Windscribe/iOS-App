@@ -10,6 +10,7 @@ import Foundation
 import RealmSwift
 import RxSwift
 import Swinject
+import UIKit
 
 class SessionManager: SessionManagerV2 {
     var session: Session?

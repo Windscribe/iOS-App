@@ -137,6 +137,8 @@ class AccountViewModel: AccountViewModelType {
             guard let self = self else { return }
             self.localDatabase.saveOldSession()
             self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
+            let oldSession = self.localDatabase.getOldSession()
+            let sessionSync = self.localDatabase.getSessionSync()
             if self.localDatabase.getOldSession() != self.localDatabase.getSessionSync() {
                 self.sessionUpdatedTrigger.onNext(())
             }

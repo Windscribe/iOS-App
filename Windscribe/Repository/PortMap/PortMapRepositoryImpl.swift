@@ -22,11 +22,11 @@ class PortMapRepositoryImpl: PortMapRepository {
 
     func getUpdatedPortMap() -> Single<[PortMap]> {
         return apiManager.getPortMap(version: APIParameterValues.portMapVersion, forceProtocols: APIParameterValues.forceProtocols).map { portList in
-            self.localDatabase.savePortMap(portMap: portList.portMaps.toArray())
+            self.localDatabase.savePortMap(portMap: Array(portList.portMaps))
             if let suggested = portList.suggested {
                 self.localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
             }
-            return portList.portMaps.toArray()
+            return Array(portList.portMaps)
         }.catch { error in
             if let portMaps = self.localDatabase.getPortMap() {
                 return Single.just(portMaps)

@@ -27,8 +27,8 @@ class NotificationRepositoryImpl: NotificationRepository {
     func getUpdatedNotifications(pcpid: String) -> Single<[Notice]> {
         logger.logD(self, "Getting notifications from API.")
         return apiManager.getNotifications(pcpid: pcpid).map {
-            self.localDatabase.saveNotifications(notifications: $0.notices.toArray())
-            return $0.notices.toArray()
+            self.localDatabase.saveNotifications(notifications: Array($0.notices))
+            return Array($0.notices)
         }.flatMap { notifications in
             Single.just(notifications)
         }
