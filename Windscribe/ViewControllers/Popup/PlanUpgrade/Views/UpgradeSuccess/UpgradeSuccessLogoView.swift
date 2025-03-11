@@ -43,7 +43,7 @@ class UpgradeSuccessLogoView: UIView {
         }
 
         logoImageView.do {
-            $0.image = UIImage(named: "success-logo")
+            $0.image = UIImage(named: ImagesAsset.Subscriptions.successLogo)
             $0.contentMode = .scaleAspectFit
         }
 

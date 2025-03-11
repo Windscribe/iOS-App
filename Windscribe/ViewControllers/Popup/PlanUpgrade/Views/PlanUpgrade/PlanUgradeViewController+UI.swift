@@ -41,7 +41,7 @@ extension PlanUpgradeViewController {
         containerStarBackground.do {
             $0.contentMode = isRegularSizeClass ? .scaleToFill : .scaleAspectFill
             $0.clipsToBounds = isRegularSizeClass ? true : false
-            $0.image = UIImage(named: isRegularSizeClass ? "hero-stars-large" : "hero-stars")
+            $0.image = UIImage(named: isRegularSizeClass ? ImagesAsset.Subscriptions.heroStarsLarge : ImagesAsset.Subscriptions.heroStars)
         }
 
         backgroundView.addSubview(containerStarBackground)
@@ -209,21 +209,21 @@ extension PlanUpgradeViewController {
             PlanUpgradeBenefitView(
                 title: TextsAsset.UpgradeView.planBenefitUnlimitedTitle,
                 subtitle: TextsAsset.UpgradeView.planBenefitUnlimitedDescription,
-                imageName: "checkbox-terms"
+                imageName: ImagesAsset.Subscriptions.checkTerms
             )
         )
         benefitsStackView.addArrangedSubview(
             PlanUpgradeBenefitView(
                 title: TextsAsset.UpgradeView.planBenefitAllLocationsTitle,
                 subtitle: TextsAsset.UpgradeView.planBenefitAllLocationsDescription,
-                imageName: "checkbox-terms"
+                imageName: ImagesAsset.Subscriptions.checkTerms
             )
         )
         benefitsStackView.addArrangedSubview(
             PlanUpgradeBenefitView(
                 title: TextsAsset.UpgradeView.planBenefitSpeedSecurityTitle,
                 subtitle: TextsAsset.UpgradeView.planBenefitSpeedSecurityDescription,
-                imageName: "checkbox-terms"
+                imageName: ImagesAsset.Subscriptions.checkTerms
             )
         )
 

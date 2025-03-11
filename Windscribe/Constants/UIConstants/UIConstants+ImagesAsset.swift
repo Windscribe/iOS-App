@@ -10,7 +10,6 @@ import Foundation
 
 enum ImagesAsset {
     static let logoOnLogin = "logo-login"
-    static let mainBackground = "main-background"
     static let logoText = "logo-text"
     static let failExIcon = "fail-ex"
     static let rightArrow = "right-arrow"
@@ -61,7 +60,6 @@ enum ImagesAsset {
     static let dropDownIcon = "dropdown-icon"
     static let closeIcon = "close-icon"
     static let newsIcon = "news-icon"
-    static let addEmail = "add-email"
     static let enterCredentials = "enter-credentials"
     static let checkMark = "check-mark"
     static let powerCheckMark = "power-checkmark"
@@ -80,19 +78,35 @@ enum ImagesAsset {
     static let checkCircleGreen = "check_circle_green"
     static let closeIconMidnight = "close_ico_midnight"
     static let connectedArrow = "connected_arrow"
-    static let emergencyConnectIcon = "Emergency-connect"
-    static let emergencyConnectOn = "Emergency-connect-on"
-    static let emergencyConnectOff = "Emergency-connect-off"
+    static let emergencyConnectIcon = "emergency-connect"
+    static let emergencyConnectOn = "emergency-connect-on"
+    static let emergencyConnectOff = "emergency-connect-off"
     static let circumventCensorship = "circumvent-censorship"
     static let customDns = "custom-dns"
     static let closeCross = "close-cross"
-
-    enum Slides {
-        static let first = "scope"
-        static let second = "bug"
-        static let third = "barbed"
-        static let fourth = "psy"
-    }
+    static let locationDown = "location-down"
+    static let attention = "attention"
+    static let clear = "clear"
+    static let search = "search"
+    static let exitSearch = "exit-search"
+    static let delete = "delete-black"
+    static let edit = "edit-black"
+    static let autoModeSelectorInfoIcon = "auto-mode-selector-info-icon"
+    static let promptInfo = "prompt-info"
+    static let upgradeInfo = "upgrade-info"
+    static let showPassword = "show-password"
+    static let hidePassword = "hide-password"
+    static let getMoreDataBackground = "get-more-data-background"
+    static let getMoreDataBackgroundSmall = "get-more-data-background-small"
+    static let radioPriceNotSelected = "radio-price-notselected"
+    static let radioPriceSelected = "radio-price-selected"
+    static let warningBlack = "warning-black"
+    static let preferredProtocolBadgeOff = "preferred-protocol-badge-off"
+    static let preferredProtocolBadgeOn = "preferred-protocol-badge-on"
+    static let rightArrowBold = "right-arrow-bold"
+    static let preferredProtocolBadgeConnecting = "preferred-protocol-badge-connecting"
+    static let customConfigIcon = "add-custom-config"
+    static let learnMoreIcon = "learn-more-ic"
 
     enum Servers {
         static let all = "servers-all"
@@ -114,6 +128,15 @@ enum ImagesAsset {
         static let about = "about"
         static let logoutRed = "pref-logout-red"
         static let advanceParams = "advance-params"
+    }
+
+    enum ShakeForData {
+        static let icon = "shake-for-data"
+        static let arrowTopLeft = "arrow-top-left"
+        static let arrowTopRight = "arrow-top-right"
+        static let arrowBottomLeft = "arrow-bottom-left"
+        static let arrowBottomRight = "arrow-bottom-right"
+        static let dataTimer = "shake-for-data-timer"
     }
 
     enum Help {
@@ -175,12 +198,6 @@ enum ImagesAsset {
         static let con = "garry-con"
     }
 
-    static let locationDown = "location-down"
-    static let attention = "attention"
-    static let clear = "clear"
-    static let search = "search"
-    static let exitSearch = "exit-search"
-
     enum DarkMode {
         static let serversAll = "servers-all-white"
         static let serversFav = "servers-fav-white"
@@ -228,38 +245,26 @@ enum ImagesAsset {
         static let off = "check-mark-off"
     }
 
-    static let delete = "delete-black"
-    static let edit = "edit-black"
-
     enum ProtocolBadges {
         static let iKEV2 = "badge-ikev2"
         static let udp = "badge-udp"
         static let tcp = "badge-tcp"
     }
 
-    static let autoModeSelectorInfoIcon = "auto-mode-selector-info-icon"
-
-    static let shakeForDataIcon = "shake-for-data"
-    static let shakeForDataArrowTopLeft = "arrow-top-left"
-    static let shakeForDataArrowTopRight = "arrow-top-right"
-    static let shakeForDataArrowBottomLeft = "arrow-bottom-left"
-    static let shakeForDataArrowBottomRight = "arrow-bottom-right"
-    static let shakeForDataTimer = "shake-for-data-timer"
-
-    static let promptInfo = "prompt-info"
-    static let upgradeInfo = "upgrade-info"
-    static let showPassword = "show-password"
-    static let hidePassword = "hide-password"
-    static let getMoreDataBackground = "get-more-data-background"
-    static let getMoreDataBackgroundSmall = "get-more-data-background-small"
-    static let radioPriceNotSelected = "radio-price-notselected"
-    static let radioPriceSelected = "radio-price-selected"
-    static let warningBlack = "warning-black"
-    static let blur = "blur.png"
-    static let preferredProtocolBadgeOff = "preferred-protocol-badge-off"
-    static let preferredProtocolBadgeOn = "preferred-protocol-badge-on"
-    static let rightArrowBold = "right-arrow-bold"
-    static let preferredProtocolBadgeConnecting = "preferred-protocol-badge-connecting"
+    enum Subscriptions {
+        static let glare = "subscription-button-glare"
+        static let checkTerms = "subscription-checkbox-terms"
+        static let heroGraphic = "subscription-hero-graphic"
+        static let heroGrid = "subscription-hero-grid"
+        static let heroStars = "subscription-hero-stars"
+        static let heroStarsLarge = "subscription-hero-stars-large"
+        static let proLogo = "subscription-pro-logo"
+        static let successLogo = "subscription-success-logo"
+        static let discordIcon = "share-discord-icon"
+        static let redditIcon = "share-reddit-icon"
+        static let xIcon = "share-x-icon"
+        static let youtubeIcon = "share-youtube-icon"
+    }
 
     enum TvAsset {
         static let settingsButton = "settingButton"

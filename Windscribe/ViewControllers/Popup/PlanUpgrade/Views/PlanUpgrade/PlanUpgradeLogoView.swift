@@ -14,7 +14,6 @@ class PlanUpgradeLogoView: UIView {
     // MARK: UI Components
 
     private let container = UIView()
-//    private let containerBackground = PlanUpgradeStarsBackgroundView()
     private let logoStackView = UIStackView()
     private let logoImageView = UIImageView()
     private let graphicLogoImageView: AsyncImageView?
@@ -25,7 +24,7 @@ class PlanUpgradeLogoView: UIView {
     init(urlString: String? = nil, placeHolder: UIImage) {
         self.graphicLogoImageView = AsyncImageView(
             urlString: urlString,
-            placeholder: UIImage(named: "hero-graphic")
+            placeholder: UIImage(named: ImagesAsset.Subscriptions.heroGraphic)
         )
 
         super.init(frame: .zero)
@@ -47,11 +46,6 @@ class PlanUpgradeLogoView: UIView {
             $0.layer.masksToBounds = false
         }
 
-//        containerBackground.do {
-//            $0.clipsToBounds = isRegularSizeClass ? false : true
-//            $0.isHidden = isRegularSizeClass
-//        }
-
         logoStackView.do {
             $0.axis = .vertical
             $0.spacing = isRegularSizeClass ? (isPortrait ? 40 : 30) : 20
@@ -61,7 +55,7 @@ class PlanUpgradeLogoView: UIView {
 
         logoImageView.do {
             $0.contentMode = .scaleAspectFit
-            $0.image = UIImage(named: "pro-logo")
+            $0.image = UIImage(named: ImagesAsset.Subscriptions.proLogo)
         }
 
         graphicLogoImageView?.do {
@@ -70,7 +64,7 @@ class PlanUpgradeLogoView: UIView {
 
         graphicLogoGridImageView.do {
             $0.contentMode = isRegularSizeClass ? .scaleToFill : .scaleAspectFit
-            $0.image = UIImage(named: "hero-grid")
+            $0.image = UIImage(named: ImagesAsset.Subscriptions.heroGrid)
         }
     }
 

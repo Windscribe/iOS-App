@@ -33,7 +33,7 @@ class RobertHeaderView: UIView {
 
     lazy var iconView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "learn-more-ic")
+        view.image = UIImage(named: ImagesAsset.learnMoreIcon)
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
         view.makeHeightAnchor(equalTo: 16)

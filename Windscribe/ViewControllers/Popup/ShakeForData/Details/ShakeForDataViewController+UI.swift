@@ -22,27 +22,27 @@ extension ShakeForDataViewController {
         view.addSubview(fillView)
 
         arrowViewTopLeft = UIImageView()
-        arrowViewTopLeft.image = UIImage(named: ImagesAsset.shakeForDataArrowTopLeft)
+        arrowViewTopLeft.image = UIImage(named: ImagesAsset.ShakeForData.arrowTopLeft)
         arrowViewTopLeft.contentMode = .scaleAspectFit
         view.addSubview(arrowViewTopLeft)
 
         arrowViewTopRight = UIImageView()
-        arrowViewTopRight.image = UIImage(named: ImagesAsset.shakeForDataArrowTopRight)
+        arrowViewTopRight.image = UIImage(named: ImagesAsset.ShakeForData.arrowTopRight)
         arrowViewTopRight.contentMode = .scaleAspectFit
         view.addSubview(arrowViewTopRight)
 
         arrowViewBottomLeft = UIImageView()
-        arrowViewBottomLeft.image = UIImage(named: ImagesAsset.shakeForDataArrowBottomLeft)
+        arrowViewBottomLeft.image = UIImage(named: ImagesAsset.ShakeForData.arrowBottomLeft)
         arrowViewBottomLeft.contentMode = .scaleAspectFit
         view.addSubview(arrowViewBottomLeft)
 
         arrowViewBottomRight = UIImageView()
-        arrowViewBottomRight.image = UIImage(named: ImagesAsset.shakeForDataArrowBottomRight)
+        arrowViewBottomRight.image = UIImage(named: ImagesAsset.ShakeForData.arrowBottomRight)
         arrowViewBottomRight.contentMode = .scaleAspectFit
         view.addSubview(arrowViewBottomRight)
 
         timerIcon = UIImageView()
-        timerIcon.image = UIImage(named: ImagesAsset.shakeForDataTimer)
+        timerIcon.image = UIImage(named: ImagesAsset.ShakeForData.dataTimer)
         timerIcon.contentMode = .scaleAspectFit
         view.addSubview(timerIcon)
 

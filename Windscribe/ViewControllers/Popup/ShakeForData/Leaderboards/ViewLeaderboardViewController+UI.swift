@@ -21,7 +21,9 @@ extension ViewLeaderboardViewController {
         tableView.isScrollEnabled = false
         tableView.backgroundColor = UIColor.clear
         tableView.rowHeight = 50
-        tableView.register(LeaderboardTableViewCell.self, forCellReuseIdentifier: leaderboardCellReuseIdentifier)
+        tableView.register(
+            LeaderboardTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.leaderboardCellReuseIdentifier)
         view.addSubview(tableView)
     }
 

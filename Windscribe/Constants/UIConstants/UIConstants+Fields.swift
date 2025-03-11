@@ -46,3 +46,14 @@ enum Fields {
         static let bestLocation = "Best Location"
     }
 }
+
+enum ReuseIdentifiers {
+    static let serverSectionCellReuseIdentifier = "server-section-cell"
+    static let nodeCellReuseIdentifier = "node-cell"
+    static let favNodeCellReuseIdentifier = "fav-node-cell"
+    static let staticIPCellReuseIdentifier = "static-ip-cell"
+    static let customConfigCellReuseIdentifier = "custom-config-cell"
+    static let preferencesCellReuseIdentifier = "preferences-cell"
+    static let bestLocationCellReuseIdentifier = "best-location-cell"
+    static let leaderboardCellReuseIdentifier = "leaderboard-cell"
+}

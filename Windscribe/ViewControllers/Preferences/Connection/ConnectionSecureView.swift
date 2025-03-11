@@ -107,7 +107,7 @@ class ConnectionSecureView: UIView {
         subTitleLabel.font = UIFont.text(size: 14)
 
         iconView.translatesAutoresizingMaskIntoConstraints = false
-        iconView.image = UIImage(named: "learn-more-ic")
+        iconView.image = UIImage(named: ImagesAsset.learnMoreIcon)
         iconView.layer.opacity = 0.5
         iconView.isUserInteractionEnabled = true
         iconView.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)

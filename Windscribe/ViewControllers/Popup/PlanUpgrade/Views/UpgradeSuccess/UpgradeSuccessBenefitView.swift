@@ -80,7 +80,7 @@ class UpgradeSuccessBenefitView: UIView {
         }
 
         iconImageView.do {
-            $0.image = UIImage(named: "checkbox-terms")
+            $0.image = UIImage(named: ImagesAsset.Subscriptions.checkTerms)
             $0.contentMode = .scaleAspectFit
         }
 

@@ -80,7 +80,7 @@ class SideMenuOptions: UIView {
             layer.sublayers?.remove(at: 0)
         }
     }
-    
+
     func highlightSelectedOption(_ highLight: Bool) {
         if highLight {
             gradient.colors = [

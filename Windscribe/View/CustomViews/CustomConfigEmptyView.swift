@@ -25,7 +25,7 @@ class CustomConfigEmptyView: UIView {
 
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "add-custom-config")?.withRenderingMode(.alwaysTemplate)
+        imageView.image = UIImage(named: ImagesAsset.customConfigIcon)?.withRenderingMode(.alwaysTemplate)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.makeWidthAnchor(equalTo: 34)
         imageView.makeHeightAnchor(equalTo: 34)
