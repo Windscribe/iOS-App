@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 import Swinject
 
 class GhostAccountRouter: BaseRouter, NavigationRouter {

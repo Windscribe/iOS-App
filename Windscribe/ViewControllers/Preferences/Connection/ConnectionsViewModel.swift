@@ -9,6 +9,7 @@
 import Foundation
 import Network
 import RxSwift
+import UIKit
 
 protocol ConnectionsViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }

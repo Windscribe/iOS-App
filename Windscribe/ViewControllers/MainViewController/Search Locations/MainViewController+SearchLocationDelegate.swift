@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+import UIKit
 
 private enum MatchType {
     case groupPrefix

@@ -11,6 +11,7 @@ import Foundation
 import RxCocoa
 import RxSwift
 import SwiftSoup
+
 enum NewsFeedViewToLaunch {
     case safari(URL)
     case payment(String, String?)

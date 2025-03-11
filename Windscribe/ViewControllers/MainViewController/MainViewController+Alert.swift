@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Swinject
+import UIKit
 
 extension MainViewController {
     func displayConnectingAlert() {

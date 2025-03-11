@@ -19,6 +19,10 @@ protocol StreamingListTableViewDelegate: AnyObject {
 }
 
 class StreamingListTableViewDataSource: WExpyTableViewDataSource, ExpyTableViewDataSource, WExpyTableViewDataSourceDelegate, WTableViewDataSourceDelegate {
+    func tableView(_ tableView: ExpyTableView, canExpandSection section: Int) -> Bool {
+        true
+    }
+
     var streamingSections: [ServerSection] = []
     var favNodes: [FavNode]? {
         didSet {

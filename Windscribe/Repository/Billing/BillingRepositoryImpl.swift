@@ -22,8 +22,8 @@ class BillingRepositoryImpl: BillingRepository {
 
     func getMobilePlans(promo: String?) -> Single<[MobilePlan]> {
         return apiManager.getMobileBillingPlans(promo: promo).flatMap { plans in
-            self.localDatabase.saveMobilePlans(mobilePlansList: plans.mobilePlans.toArray())
-            return Single.just(plans.mobilePlans.toArray())
+            self.localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
+            return Single.just(Array(plans.mobilePlans))
         }.catch { error in
             self.loadFromDatabase(error: error)
         }

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol AccountPopupModelType {
     var imageName: BehaviorSubject<String> { get }

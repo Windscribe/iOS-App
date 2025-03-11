@@ -9,8 +9,8 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxRealm
 import RxSwift
+import UIKit
 
 extension MainViewController {
     @objc func checkForUnreadNotifications() {

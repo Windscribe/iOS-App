@@ -9,12 +9,17 @@
 import Foundation
 import Realm
 import RealmSwift
-import RxRealm
 import RxSwift
 
 extension LocalDatabaseImpl {
     func getRealmObject<T: Object>(type: T.Type) -> T? {
-        return try? Realm().objects(type).first
+        do {
+            let realm = try Realm()
+            return realm.objects(type).first
+        } catch let error {
+            logger.logE("LocalDatabaseImpl", "Getting Realm was not possible, with error \(error.localizedDescription)")
+            return nil
+        }
     }
 
     func getRealmObject<T: Object>(type: T.Type, primaryKey: String) -> T? {
@@ -22,7 +27,7 @@ extension LocalDatabaseImpl {
     }
 
     func getRealmObjects<T: Object>(type: T.Type) -> [T]? {
-        return try? Realm().objects(type).toArray()
+        return try? Array(Realm().objects(type))
     }
 
     func updateRealmObject<T: Object>(object: T) -> Disposable {
@@ -114,7 +119,7 @@ extension LocalDatabaseImpl {
                 return Array(results)
             }
             .catch { _ in
-                Observable.just((try? Realm().objects(T.self).toArray()) ?? [])
+                Observable.just((try? Array(Realm().objects(T.self))) ?? [])
             }
             .subscribe(on: MainScheduler.instance)
             .observe(on: MainScheduler.instance)

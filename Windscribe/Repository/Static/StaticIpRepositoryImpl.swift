@@ -22,9 +22,9 @@ class StaticIpRepositoryImpl: StaticIpRepository {
 
     func getStaticServers() -> Single<[StaticIP]> {
         return apiManager.getStaticIpList().map {
-            self.localDatabase.deleteStaticIps(ignore: $0.staticIPs.toArray().map { $0.staticIP })
-            self.localDatabase.saveStaticIPs(staticIps: $0.staticIPs.toArray())
-            return $0.staticIPs.toArray()
+            self.localDatabase.deleteStaticIps(ignore: Array($0.staticIPs).map { $0.staticIP })
+            self.localDatabase.saveStaticIPs(staticIps: Array($0.staticIPs))
+            return Array($0.staticIPs)
         }.catch { error in
             if let ips = self.localDatabase.getStaticIPs() {
                 return Single.just(ips)

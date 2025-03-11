@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Swinject
+import UIKit
 
 extension String {
     func localize(comment: String = "") -> String {

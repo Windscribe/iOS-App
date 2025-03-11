@@ -10,6 +10,7 @@ import AudioToolbox
 import CoreMotion
 import Foundation
 import RxSwift
+import UIKit
 
 protocol ShakeForDataViewModelType {
     var shakeCount: BehaviorSubject<Int> { get }

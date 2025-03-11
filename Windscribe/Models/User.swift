@@ -21,7 +21,7 @@ struct User {
         username = session.username
         locationHash = session.locHash
         planType = isPro ? "1" : "0"
-        alcList = session.alc.toArray()
+        alcList = Array(session.alc)
         allAccessPlan = session.isPremium
     }
 }

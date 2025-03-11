@@ -425,7 +425,10 @@ class MainViewModel: MainViewModelType {
 
     func getPortList(protocolName: String) -> [String]? {
         let portMap = (try? portMap.value()) ?? []
-        return portMap.first(where: { $0.heading == protocolName })?.ports.toArray()
+        if let ports = portMap.first(where: { $0.heading == protocolName })?.ports {
+            return Array(ports)
+        }
+        return nil
     }
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork) {

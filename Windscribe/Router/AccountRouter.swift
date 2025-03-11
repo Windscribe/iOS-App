@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+import UIKit
 
 class AccountRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {

@@ -9,11 +9,10 @@
 import Foundation
 import Realm
 import RealmSwift
-import RxRealm
 import RxSwift
 
 class LocalDatabaseImpl: LocalDatabase {
-    private let logger: FileLogger
+    let logger: FileLogger
     let disposeBag = DisposeBag()
     let cleanTrigger = PublishSubject<Void>()
     let preferences: Preferences

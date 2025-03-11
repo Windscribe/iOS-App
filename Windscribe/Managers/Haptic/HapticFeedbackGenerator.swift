@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 class HapticFeedbackGenerator: HapticFeedbackGeneratorV2 {
     private let disposeBag = DisposeBag()

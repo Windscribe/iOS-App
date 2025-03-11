@@ -6,7 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import CocoaLumberjack
+import CocoaLumberjackSwift
 import Foundation
 import RxSwift
 

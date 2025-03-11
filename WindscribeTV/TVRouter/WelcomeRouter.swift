@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+import UIKit
 
 class WelcomeRouter: RootRouter {
     func routeTo(to: RouteID, from: UIViewController) {

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxDataSources
+import UIKit
 
 class Score: Decodable {
     var score: Int = 0

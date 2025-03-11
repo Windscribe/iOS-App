@@ -34,7 +34,7 @@ class ServerRepositoryImpl: ServerRepository {
         let countryCode = advanceRepository.getCountryOverride() ?? ""
         return apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
             .map { serverList in
-                let servers = serverList.servers.toArray()
+                let servers = Array(serverList.servers)
                 for s in servers {
                     for g in s.groups {
                         g.setBestNode(advanceRepository: self.advanceRepository)

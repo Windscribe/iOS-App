@@ -173,4 +173,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             HapticFeedbackGenerator.shared.run(level: .light)
         }
     }
+
+    func tableView(_ tableView: ExpyTableView, canExpandSection section: Int) -> Bool {
+        true
+    }
 }

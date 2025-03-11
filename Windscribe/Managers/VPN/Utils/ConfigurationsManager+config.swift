@@ -86,7 +86,7 @@ extension ConfigurationsManager {
         switch locationType {
         case .server:
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: location.1.nodes.toArray())
+            let node = try getRandomNode(nodes: Array(location.1.nodes))
             let ip = node.ip3
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
@@ -95,7 +95,7 @@ extension ConfigurationsManager {
 
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
-            guard let node = location.nodes.toArray().randomElement() else {
+            guard let node = Array(location.nodes).randomElement() else {
                 throw VPNConfigurationErrors.noValidNodeFound
             }
             let ip = location.wgIp
@@ -130,7 +130,7 @@ extension ConfigurationsManager {
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: location.1.nodes.toArray())
+            let node = try getRandomNode(nodes: Array(location.1.nodes))
             let ip = node.ip
             let hostname = node.hostname
             guard let auth = keychainDb.retrieve(username: username) else {
@@ -139,7 +139,7 @@ extension ConfigurationsManager {
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
-            let node = try getRandomNode(nodes: location.nodes.toArray())
+            let node = try getRandomNode(nodes: Array(location.nodes))
             let ip = node.ip
             let hostname = node.hostname
             guard let credentials = location.credentials.last else {
@@ -170,14 +170,14 @@ extension ConfigurationsManager {
             let password = credentials.password.base64Decoded()
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
-            let node = try getRandomNode(nodes: location.1.nodes.toArray())
+            let node = try getRandomNode(nodes: Array(location.1.nodes))
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
             let hostname = node.ip2
             let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
             let location = try getStaticIPLocation(id: locationID)
-            let node = try getRandomNode(nodes: location.nodes.toArray())
+            let node = try getRandomNode(nodes: Array(location.nodes))
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
             }
@@ -348,11 +348,11 @@ extension ConfigurationsManager {
                 if isFreeUser, location.1.premiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
-                _ = try getRandomNode(nodes: location.1.nodes.toArray())
+                _ = try getRandomNode(nodes: Array(location.1.nodes))
                 return lastLocation
             case .staticIP:
                 let location = try getStaticIPLocation(id: locationID)
-                _ = try getRandomNode(nodes: location.nodes.toArray())
+                _ = try getRandomNode(nodes: Array(location.nodes))
                 return lastLocation
             case .custom:
                 do {
