@@ -32,7 +32,7 @@ enum PopupTypes {
     var header: String {
         switch self {
         case .support: Links.support
-        case .rateUs: Constants.appName
+        case .rateUs: AppConstants.appName
         default: ""
         }
     }

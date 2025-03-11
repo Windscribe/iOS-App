@@ -183,15 +183,15 @@ struct HomeWidgetEntryView: View {
 struct ConnectButtonImage: View {
     var body: some View {
         ZStack {
-            Image("connect-button").resizable().frame(width: 64, height: 64)
-            Image("connect-button-ring").resizable().frame(width: 75, height: 75)
+            Image(ImagesAsset.connectButton).resizable().frame(width: 64, height: 64)
+            Image(ImagesAsset.connectButtonRing).resizable().frame(width: 75, height: 75)
         }
     }
 }
 
 struct DisconnectButtonImage: View {
     var body: some View {
-        Image("disconnected-button").resizable().frame(width: 64, height: 64)
+        Image(ImagesAsset.disconnectedButton).resizable().frame(width: 64, height: 64)
             .padding(5)
     }
 }

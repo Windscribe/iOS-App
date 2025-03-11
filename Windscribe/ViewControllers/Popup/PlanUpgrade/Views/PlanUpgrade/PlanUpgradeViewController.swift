@@ -89,7 +89,7 @@ class PlanUpgradeViewController: WSUIViewController {
     }
 
     private func createViews() {
-        guard let placeholderImage =  UIImage(named: "hero-graphic") else {
+        guard let placeholderImage =  UIImage(named: ImagesAsset.Subscriptions.heroGraphic) else {
             return
         }
 

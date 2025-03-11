@@ -30,9 +30,11 @@ class ViewLeaderboardViewController: WSNavigationViewController {
     private func bindViews() {
         let dataSource = RxTableViewSectionedReloadDataSource<ScoreSection>(
             configureCell: { _, tableView, indexPath, item in
-                let cell = tableView.dequeueReusableCell(withIdentifier: leaderboardCellReuseIdentifier, for: indexPath)
-                    as? LeaderboardTableViewCell
-                    ?? LeaderboardTableViewCell(style: .default, reuseIdentifier: leaderboardCellReuseIdentifier)
+                let cell = tableView.dequeueReusableCell(
+                    withIdentifier: ReuseIdentifiers.leaderboardCellReuseIdentifier, for: indexPath) as? LeaderboardTableViewCell
+                    ?? LeaderboardTableViewCell(
+                        style: .default,
+                        reuseIdentifier: ReuseIdentifiers.leaderboardCellReuseIdentifier)
                 cell.bindViews(isDarkMode: self.viewModel.isDarkMode)
                 cell.setScore(with: item)
                 return cell

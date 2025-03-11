@@ -137,7 +137,7 @@ class LoginViewController: WSNavigationViewController {
             self?.viewModel.continueButtonTapped(username: username, password: password, twoFactorCode: self?.twoFactorCodeTextfield.text)
         }.disposed(by: disposeBag)
         forgotPasswordButton.rx.tap.bind { [weak self] in
-            self?.openLink(url: URLs.forgotPassword)
+            self?.openLink(url: Links.forgotPassword)
         }.disposed(by: disposeBag)
         twoFactorCodeButton.rx.tap.bind { [self] in
             setTwoFactorCodeVisibility(forceShow: false)

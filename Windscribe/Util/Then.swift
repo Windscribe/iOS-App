@@ -41,7 +41,6 @@ extension Then where Self: AnyObject {
 }
 
 extension NSObject: Then {}
-
 extension Array: Then {}
 extension Dictionary: Then {}
 extension Set: Then {}

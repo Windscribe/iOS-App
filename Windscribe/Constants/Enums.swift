@@ -18,3 +18,11 @@ enum PopupType {
     case banned
     case proPlanExpired
 }
+
+enum LogType {
+    case verbose
+    case debug
+    case info
+    case warn
+    case error
+}

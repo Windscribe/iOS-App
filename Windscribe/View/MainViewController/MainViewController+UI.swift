@@ -100,14 +100,22 @@ extension MainViewController {
 
         serverListTableView = PlainExpyTableView()
         serverListTableView.tag = 0
-        serverListTableView.register(NodeTableViewCell.self, forCellReuseIdentifier: nodeCellReuseIdentifier)
-        serverListTableView.register(ServerSectionCell.self, forCellReuseIdentifier: serverSectionCellReuseIdentifier)
-        serverListTableView.register(BestLocationCell.self, forCellReuseIdentifier: bestLocationCellReuseIdentifier)
+        serverListTableView.register(
+            NodeTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
+        serverListTableView.register(
+            ServerSectionCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
+        serverListTableView.register(
+            BestLocationCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
         scrollView.addSubview(serverListTableView)
 
         favTableView = PlainTableView()
         favTableView.tag = 1
-        favTableView.register(FavNodeTableViewCell.self, forCellReuseIdentifier: favNodeCellReuseIdentifier)
+        favTableView.register(
+            FavNodeTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         scrollView.addSubview(favTableView)
 
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
@@ -116,8 +124,12 @@ extension MainViewController {
 
         streamingTableView = PlainExpyTableView()
         streamingTableView.tag = 2
-        streamingTableView.register(NodeTableViewCell.self, forCellReuseIdentifier: nodeCellReuseIdentifier)
-        streamingTableView.register(ServerSectionCell.self, forCellReuseIdentifier: serverSectionCellReuseIdentifier)
+        streamingTableView.register(
+            NodeTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
+        streamingTableView.register(
+            ServerSectionCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
         scrollView.addSubview(streamingTableView)
 
         streamingTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
@@ -129,7 +141,9 @@ extension MainViewController {
         staticIPTableViewFooterView = StaticIPListFooterView()
         staticIPTableViewFooterView.viewModel = viewModel
         staticIpTableView.tableFooterView = staticIPTableViewFooterView
-        staticIpTableView.register(StaticIPTableViewCell.self, forCellReuseIdentifier: staticIPCellReuseIdentifier)
+        staticIpTableView.register(
+            StaticIPTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.staticIPCellReuseIdentifier)
         scrollView.addSubview(staticIpTableView)
 
         staticIpTableView.addSubview(staticIPTableViewFooterView)
@@ -143,7 +157,9 @@ extension MainViewController {
         customConfigTableViewFooterView = CustomConfigListFooterView()
         customConfigTableViewFooterView.delegate = customConfigPickerViewModel
         customConfigTableView.tableFooterView = customConfigTableViewFooterView
-        customConfigTableView.register(CustomConfigTableViewCell.self, forCellReuseIdentifier: customConfigCellReuseIdentifier)
+        customConfigTableView.register(
+            CustomConfigTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier)
         customConfigTableView.allowsMultipleSelectionDuringEditing = false
         scrollView.addSubview(customConfigTableView)
         customConfigTableView.addSubview(customConfigTableViewFooterView)

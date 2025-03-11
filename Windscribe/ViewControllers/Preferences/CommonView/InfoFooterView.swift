@@ -26,7 +26,7 @@ class FooterView: UIStackView {
     }()
 
     private lazy var iconImage: UIImageView = {
-        let image = UIImageView(image: UIImage(named: "learn-more-ic")?.withRenderingMode(.alwaysTemplate))
+        let image = UIImageView(image: UIImage(named: ImagesAsset.learnMoreIcon)?.withRenderingMode(.alwaysTemplate))
         image.anchor(width: 16, height: 16)
         image.layer.opacity = 0.5
         return image

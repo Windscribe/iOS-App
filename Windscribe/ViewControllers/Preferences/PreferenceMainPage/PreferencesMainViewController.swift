@@ -227,8 +227,8 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: preferencesCellReuseIdentifier, for: indexPath) as?
-            PreferencesTableViewCell
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: ReuseIdentifiers.preferencesCellReuseIdentifier, for: indexPath) as? PreferencesTableViewCell
         else {
             return UITableViewCell()
         }

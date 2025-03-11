@@ -12,18 +12,16 @@ import RealmSwift
 import RxSwift
 import StoreKit
 import Swinject
+import SwiftUI
 import UIKit
 import WidgetKit
 import BackgroundTasks
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
-    var window: UIWindow?
-    var shortcutType = ShortcutType.none
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var customConfigRepository: CustomConfigRepository = Assembler.resolve(CustomConfigRepository.self)
 
-    let disposeBag = DisposeBag()
     private lazy var apiManager: APIManager = Assembler.resolve(APIManager.self)
 
     private lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
@@ -38,8 +36,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
 
-    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
-
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
@@ -48,6 +44,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     private lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
 
+    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+
+    var window: UIWindow?
+
+    var shortcutType = ShortcutType.none
+
+    private let disposeBag = DisposeBag()
+
     func application(_: UIApplication,
                      didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         localDatabase.migrate()
@@ -55,50 +59,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         languageManager.setAppLanguage()
         livecycleManager.onAppStart()
         recordInstallIfFirstLoad()
-        registerForPushNotifications()
         resetCountryOverrideForServerList()
         purchaseManager.verifyPendingTransaction()
         setApplicationWindow()
-        Task.detached { [unowned self] in
-            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
-            if await preferences.userSessionAuth() != nil {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                await self.latencyRepository.loadLatency()
-                }
-        }
 
         return true
     }
-    /**
-     Prepares application window and launches first view controller
-     */
-    func setApplicationWindow() {
-        self.window = UIWindow(frame: UIScreen.main.bounds)
-        guard let window = window else { return }
-        window.backgroundColor = UIColor.black
-        // Authenticated user
-        if preferences.userSessionAuth() != nil {
-            if preferences.getLoginDate() == nil {
-                preferences.saveLoginDate(date: Date())
-            }
-            let mainViewController = Assembler.resolve(MainViewController.self)
-            mainViewController.appJustStarted = true
-            let viewController = UINavigationController(rootViewController: mainViewController)
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.window?.rootViewController = viewController
-            }, completion: nil)
-        } else {
-            let firstViewController = Assembler.resolve(WelcomeViewController.self)
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                self.window?.rootViewController = UINavigationController(rootViewController: firstViewController)
-            }, completion: nil)
-        }
-        self.window?.makeKeyAndVisible()
+
+    func applicationWillResignActive(_: UIApplication) {
+        logger.logD(self, "App state changed to WillResignActive.")
     }
 
-    /**
-     Records app install.
-     */
+    func applicationDidEnterBackground(_: UIApplication) {
+        // Once user have left the app remove last push notification payload.
+        logger.logD(self, "App state changed to EnterBackground.")
+        pushNotificationManager.addPushNotification(notificationPayload: nil)
+        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
+    }
+
+    func applicationWillEnterForeground(_: UIApplication) {
+        logger.logD(self, "App state changed to WillEnterForeground.")
+        ProtocolManager.shared.resetGoodProtocol()
+    }
+
+    func applicationDidBecomeActive(_: UIApplication) {
+        logger.logD(self, "App state changed to Active.")
+        registerForPushNotifications()
+        AutomaticMode.shared.resetFailCounts()
+        livecycleManager.appEnteredForeground()
+    }
+
+    func applicationWillTerminate(_: UIApplication) {
+        logger.logD(self, "App state changed to WillTerminate.")
+    }
+
+    /// Records app install.
     private func recordInstallIfFirstLoad() {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
@@ -110,21 +105,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
     }
 
-    /**
-     If vpn state is disconnected on app launch reset country override for the server list.
-     */
+    /// Load Latency Information
+    private func loadLatencyConfiguration() {
+        Task.detached { [unowned self] in
+            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
+            if await preferences.userSessionAuth() != nil {
+                    try? await Task.sleep(nanoseconds: 2_000_000_000)
+                await self.latencyRepository.loadLatency()
+                }
+        }
+    }
+
+    /// If vpn state is disconnected on app launch reset country override for the server list.
     private func resetCountryOverrideForServerList() {
         if vpnManager.isDisconnected() {
             preferences.saveCountryOverrride(value: nil)
         }
     }
+}
 
-    // MARK: App actions and urls
+// MARK: Shortcut Actions and User Activity
 
-    /**
-     Called when app receives connect and disconnect vpn events from siri.
-     */
-    func application(_: UIApplication, continue userActivity: NSUserActivity, restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+extension AppDelegate {
+
+    /// Called when app receives connect and disconnect vpn events from siri.
+    func application(_: UIApplication,
+                     continue userActivity: NSUserActivity,
+                     restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         if preferences.userSessionAuth() != nil {
             if userActivity.activityType == SiriIdentifiers.connect {
                 NotificationCenter.default.post(Notification(name: Notifications.connectToVPN))
@@ -135,9 +142,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
-    /**
-     Called when url is loaded in to app.
-     */
+    /// Called when url is loaded in to app.
     func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
         if preferences.userSessionAuth() != nil {
             if url.isFileURL && url.pathExtension == "ovpn" {
@@ -165,9 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
-    /**
-     Called when app is launched from a shorcut.
-     */
+    /// Called when app is launched from a shorcut.
     func application(_: UIApplication,
                      performActionFor shortcutItem: UIApplicationShortcutItem,
                      completionHandler _: @escaping (Bool) -> Void) {
@@ -179,51 +182,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
         }
     }
+}
 
-    // MARK: App life cycle events
+// MARK: - Push notifications
 
-    func applicationWillResignActive(_: UIApplication) {
-        logger.logD(self, "App state changed to WillResignActive.")
-    }
-
-    func applicationDidEnterBackground(_: UIApplication) {
-        // Once user have left the app remove last push notification payload.
-        logger.logD(self, "App state changed to EnterBackground.")
-        pushNotificationManager.addPushNotification(notificationPayload: nil)
-        preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
-    }
-
-    func applicationWillEnterForeground(_: UIApplication) {
-        logger.logD(self, "App state changed to WillEnterForeground.")
-        ProtocolManager.shared.resetGoodProtocol()
-    }
-
-    func applicationDidBecomeActive(_: UIApplication) {
-        logger.logD(self, "App state changed to Active.")
-        AutomaticMode.shared.resetFailCounts()
-        livecycleManager.appEnteredForeground()
-    }
-
-    func applicationWillTerminate(_: UIApplication) {
-        logger.logD(self, "App state changed to WillTerminate.")
-    }
-
-    // MARK: Push notifications
-
-    /**
-     Checks for notification permission . if avaialble register for push notification on each app launch to make sure server has updated device token for this device.
-     */
-    private func registerForPushNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        pushNotificationManager.isAuthorizedForPushNotifications { result in
-            if result {
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-            }
-        }
-    }
+extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func application(_: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
@@ -231,16 +194,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         logger.logD(self, "Push notification received [didReceiveRemoteNotification].")
         if let userInfo = userInfo as? [String: AnyObject] {
             logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
-            pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
+            pushNotificationManager.handleSilentPushNotificationActions(
+                payload: PushNotificationPayload(userInfo: userInfo))
         }
         #if arch(arm64) || arch(i386) || arch(x86_64)
             WidgetCenter.shared.reloadAllTimelines()
         #endif
     }
 
-    /**
-     Called when registerForRemoteNotification is successful. Sends device token to the server.
-     */
+    /// Called when registerForRemoteNotification is successful. Sends device token to the server.
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("") { $0 + String(format: "%02.2hhX", $1) }
         logger.logD(self, "Sending notifcation token to server.")
@@ -256,38 +218,88 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }).disposed(by: disposeBag)
     }
 
-    /**
-     Called when registerForRemoteNotification calls fails. App will retry on next app launch.
-     */
+    /// Called when registerForRemoteNotification calls fails. App will retry on next app launch.
     func application(_: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         logger.logE("app", "Fail to register for remote notifications. \(error.localizedDescription)")
     }
 
-    /**
-     Called if a new push notification is received while app was in foreground.
-     */
+    /// Called if a new push notification is received while app was in foreground.
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 willPresent response: UNNotification,
                                 withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         logger.logD(self, "Push notification received [willPresent].")
         if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
-            pushNotificationManager.handleSilentPushNotificationActions(payload: PushNotificationPayload(userInfo: userInfo))
+            pushNotificationManager.handleSilentPushNotificationActions(
+                payload: PushNotificationPayload(userInfo: userInfo))
         }
         withCompletionHandler([.banner, .list, .sound, .badge])
     }
 
-    /**
-     Called when user clicks on push notification. Save its payload in memory for later use.
-     */
+    /// Called when user clicks on push notification. Save its payload in memory for later use.
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler: @escaping () -> Void) {
         logger.logD(self, "Push notification received [didReiceive].")
         if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
             logger.logD(self, "User clicked on push notification: \(userInfo)")
-            pushNotificationManager.addPushNotification(notificationPayload: PushNotificationPayload(userInfo: userInfo))
+            pushNotificationManager.addPushNotification(
+                notificationPayload: PushNotificationPayload(userInfo: userInfo))
         }
         withCompletionHandler()
     }
+
+    /// Checks for notification permission . if avaialble register for push notification on each app launch to make sure server has updated device token for this device.
+    private func registerForPushNotifications() {
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        pushNotificationManager.isAuthorizedForPushNotifications { result in
+            if result {
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        }
+    }
+}
+
+// MARK: Main Content View
+
+extension AppDelegate {
+
+    /// Setting up main application window
+    /// Checking if there is user session or login should be executed
+    func setApplicationWindow() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            _ = try? Realm() // Ensure Realm is ready before proceeding so it will not block I/O
+
+            DispatchQueue.main.async {
+                self.presentMainView()
+            }
+        }
+    }
+
+    private func presentMainView() {
+
+        let window = UIWindow(frame: UIScreen.main.bounds).then {
+            $0.backgroundColor = .black
+        }
+
+        let rootViewController: UIViewController
+
+        if self.preferences.userSessionAuth() != nil {
+            let mainViewController = Assembler.resolve(MainViewController.self).then {
+                $0.appJustStarted = true
+            }
+            rootViewController = UINavigationController(rootViewController: mainViewController)
+        } else {
+            let welcomeViewController = Assembler.resolve(WelcomeViewController.self)
+            rootViewController = UINavigationController(rootViewController: welcomeViewController)
+        }
+
+        window.rootViewController = rootViewController
+        window.makeKeyAndVisible()
+        self.window = window
+    }
+
 }

@@ -62,7 +62,9 @@ extension PreferencesMainViewController {
         tableView.isScrollEnabled = false
         tableView.backgroundColor = UIColor.clear
         tableView.rowHeight = 50
-        tableView.register(PreferencesTableViewCell.self, forCellReuseIdentifier: preferencesCellReuseIdentifier)
+        tableView.register(
+            PreferencesTableViewCell.self,
+            forCellReuseIdentifier: ReuseIdentifiers.preferencesCellReuseIdentifier)
         tableViewContenSizeObserve = tableView.observe(\.contentSize, options: [.new], changeHandler: { [weak self] tableView, _ in
             self?.tableViewHeightConstraint?.constant = tableView.contentSize.height
         })

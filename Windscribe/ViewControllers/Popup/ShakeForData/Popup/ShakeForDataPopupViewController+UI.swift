@@ -17,7 +17,7 @@ extension ShakeForDataPopupViewController {
         view.addSubview(backgroundView)
 
         imageView = UIImageView()
-        imageView.image = UIImage(named: ImagesAsset.shakeForDataIcon)
+        imageView.image = UIImage(named: ImagesAsset.ShakeForData.icon)
         imageView.contentMode = .scaleAspectFit
         view.addSubview(imageView)
 

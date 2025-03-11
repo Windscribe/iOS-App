@@ -92,14 +92,14 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         super.viewDidAppear(animated)
         logger.logD(self, "Displaying Server List View")
     }
-    
+
 
     override func viewWillDisappear(_: Bool) {
         if let vc = presentingViewController as? MainViewController {
             vc.isFromServer = true
         }
     }
-    
+
     private func setup() {
         sideMenu.distribution = .fillEqually
         for sideOption in sideOptions {
@@ -119,7 +119,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             viewModel.sortServerListUsingUserPreferences(
                 isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
                     guard let self else { return }
-                    
+
                     self.serverSectionsOrdered = serverSectionsOrdered
                     self.addBestLocation()
                     self.serverListCollectionView.reloadData()
@@ -154,7 +154,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
-    
+
     private func addBestLocation() {
         guard !isWindflixLocationSelected else {
             if serverSectionsOrdered.first?.server?.name == Fields.Values.bestLocation {
@@ -162,7 +162,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             return
         }
-        
+
         if  bestLocation != nil {
             let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
             if serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
@@ -176,7 +176,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         case .fav:
             emptyDataView.isHidden = favGroups.count > 0
             emptyDataView.subviews.forEach { $0.isHidden = favGroups.count > 0 }
-            emptyDataView.configure(image: UIImage(named: "fav-empty-white"), text: TextsAsset.nothingToSeeHere)
+            emptyDataView.configure(image: UIImage(named: ImagesAsset.favEmpty), text: TextsAsset.nothingToSeeHere)
         case .staticIp:
             emptyDataView.isHidden = staticIPModels.count > 0
             emptyDataView.subviews.forEach { $0.isHidden = staticIPModels.count > 0 }
@@ -193,7 +193,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             if let focusedCell = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .first?.focusSystem?.focusedItem as? UICollectionViewCell {
-                
+
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
                     if indexPath.row == 0 && selectedRow == 0 {
                         if press.type == .leftArrow {
@@ -210,14 +210,14 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     selectedRow = indexPath.row
                 }
             }
-            
+
             if let focusedItem = UIApplication.shared.connectedScenes
                 .compactMap({ $0 as? UIWindowScene })
                 .first?.focusSystem?.focusedItem, focusedItem is UIButton {
 
                 if press.type == .leftArrow && preferredFocusedView?.accessibilityIdentifier == AccessibilityIdentifier.connectButton {
                     focusSelectedMenuOption()
-                    
+
                     setNeedsFocusUpdate()
                     updateFocusIfNeeded()
                 }
@@ -252,7 +252,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @objc private func handleSwipeLeft(_ sender: UISwipeGestureRecognizer) {
         if sender.state == .ended {
             guard let focusedItem = view.window?.windowScene?.focusSystem?.focusedItem else { return }
-            
+
             if let focusedCell = focusedItem as? UICollectionViewCell {
                 if let indexPath = serverListCollectionView.indexPath(for: focusedCell) {
 
@@ -266,15 +266,15 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                     selectedRow = indexPath.row
                 }
             } else if focusedItem is UIButton {
-                
+
                 focusSelectedMenuOption()
-                    
+
                 setNeedsFocusUpdate()
                 updateFocusIfNeeded()
-                
+
                 changeSideMenuVisibility(isExpanded: true)
             }
-            
+
             for optionView in optionViews {
                 optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
             }
@@ -301,7 +301,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
         if context.nextFocusedItem is UIButton {
             let view = context.nextFocusedView as? UIButton
-            
+
             if view?.superview?.superview is UITableViewCell {
                 changeSideMenuVisibility(isExpanded: false)
             } else {
@@ -310,7 +310,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         } else {
             changeSideMenuVisibility(isExpanded: false)
         }
-            
+
         if context.nextFocusedItem === serverListCollectionView || context.nextFocusedItem === favTableView {
             changeSideMenuVisibility(isExpanded: false)
         }
@@ -322,7 +322,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             self.view.layoutIfNeeded()
         }
     }
-    
+
     private func focusSelectedMenuOption() {
         if let selectedIndex = sideOptions.firstIndex(of: selectionOption) {
             myPreferredFocusedView = optionViews[selectedIndex].button
@@ -387,9 +387,9 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
                 updateFocusIfNeeded()
             }
         }
-        
+
         changeSideMenuVisibility(isExpanded: false)
-        
+
         for optionView in optionViews {
             optionView.highlightSelectedOption(optionView.isType(of: selectionOption))
         }

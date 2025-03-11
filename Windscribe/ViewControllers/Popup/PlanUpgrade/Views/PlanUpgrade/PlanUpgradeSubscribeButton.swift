@@ -11,7 +11,7 @@ import SnapKit
 
 class PlanUpgradeGradientButton: UIButton {
     private let gradientLayer = CAGradientLayer()
-    private let glareImageView = UIImageView(image: UIImage(named: "button-subscribe-glare"))
+    private let glareImageView = UIImageView(image: UIImage(named: ImagesAsset.Subscriptions.glare))
     private var animator: UIViewPropertyAnimator?
 
     private var animationStarted = false
