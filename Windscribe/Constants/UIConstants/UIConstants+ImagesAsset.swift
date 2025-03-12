@@ -79,8 +79,6 @@ enum ImagesAsset {
     static let closeIconMidnight = "close_ico_midnight"
     static let connectedArrow = "connected_arrow"
     static let emergencyConnectIcon = "emergency-connect"
-    static let emergencyConnectOn = "emergency-connect-on"
-    static let emergencyConnectOff = "emergency-connect-off"
     static let circumventCensorship = "circumvent-censorship"
     static let customDns = "custom-dns"
     static let closeCross = "close-cross"
