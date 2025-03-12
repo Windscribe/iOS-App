@@ -274,12 +274,16 @@ extension AppDelegate {
             _ = try? Realm() // Ensure Realm is ready before proceeding so it will not block I/O
 
             DispatchQueue.main.async {
-                self.presentMainView()
+                let welcomeView = self.setUpWelcomeView()
+                self.presentMainView(with: welcomeView)
             }
         }
     }
 
-    private func presentMainView() {
+    /// Method to present a SwiftUI view on top a window
+    /// - Parameters:
+    ///   - contentView: The main  view that will be presented
+    private func presentMainView<T: View>(with view: T) {
 
         let window = UIWindow(frame: UIScreen.main.bounds).then {
             $0.backgroundColor = .black
@@ -293,13 +297,17 @@ extension AppDelegate {
             }
             rootViewController = UINavigationController(rootViewController: mainViewController)
         } else {
-            let welcomeViewController = Assembler.resolve(WelcomeViewController.self)
-            rootViewController = UINavigationController(rootViewController: welcomeViewController)
+            let hostingController = UIHostingController(rootView: view)
+            rootViewController = UINavigationController(rootViewController: hostingController)
         }
 
         window.rootViewController = rootViewController
         window.makeKeyAndVisible()
         self.window = window
+    }
+
+    private func setUpWelcomeView() -> any View {
+        return Assembler.resolve(WelcomeView.self)
     }
 
 }

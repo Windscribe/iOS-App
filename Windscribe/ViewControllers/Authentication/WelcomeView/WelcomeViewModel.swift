@@ -8,12 +8,15 @@
 
 import Foundation
 import Combine
+import UIKit
 
 protocol WelcomeViewModelProtocol: ObservableObject {
-    var scrollOrder: Int { get set }  // ✅ Add back scrollOrder
+    var scrollOrder: Int { get set }
     var showLoadingView: Bool { get }
     var routeToMainView: PassthroughSubject<Bool, Never> { get }
     var routeToSignup: PassthroughSubject<Bool, Never> { get }
+    var routeToLogin: PassthroughSubject<Void, Never> { get }
+    var routeToEmergency: PassthroughSubject<Void, Never> { get}
     var emergencyConnectStatus: Bool { get }
     var failedState: String? { get }
 
@@ -21,15 +24,36 @@ protocol WelcomeViewModelProtocol: ObservableObject {
 }
 
 class WelcomeViewModel: WelcomeViewModelProtocol {
-    @Published var scrollOrder = 0  // ✅ Add scrollOrder back
+    @Published var scrollOrder = 0
     @Published var showLoadingView = false
     @Published var emergencyConnectStatus = false
-    @Published var failedState: String? = nil
+    @Published var failedState: String?
 
     let routeToSignup = PassthroughSubject<Bool, Never>()
     let routeToMainView = PassthroughSubject<Bool, Never>()
-    let routeToLogin = PassthroughSubject<Bool, Never>()
-    let routeToEmergency = PassthroughSubject<Bool, Never>()
+    let routeToLogin = PassthroughSubject<Void, Never>()
+    let routeToEmergency = PassthroughSubject<Void, Never>()
+
+    // Image Assets
+    let backgroundImage = ImagesAsset.Welcome.background
+    let iconImage = ImagesAsset.Welcome.icon
+    let tabInfoImages = [
+        ImagesAsset.Welcome.tabInfo1,
+        ImagesAsset.Welcome.tabInfo2,
+        ImagesAsset.Welcome.tabInfo3,
+        ImagesAsset.Welcome.tabInfo4
+    ]
+
+    // Text Assets
+    let tabInfoTexts = [
+        TextsAsset.Welcome.tabInfo1.localize(),
+        TextsAsset.Welcome.tabInfo2,
+        TextsAsset.Welcome.tabInfo3,
+        TextsAsset.Welcome.tabInfo4
+    ]
+    let getStartedText = TextsAsset.Welcome.getStarted
+    let loginText = TextsAsset.Welcome.login
+    let connectionFaultText = TextsAsset.Welcome.connectionFault
 
     private var cancellables = Set<AnyCancellable>()
     private let userRepository: UserRepository
@@ -37,14 +61,18 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
     private let userDataRepository: UserDataRepository
     private let apiManager: APIManager
     private let preferences: Preferences
+    private let router: WelcomeRouter
     private let vpnManager: VPNManager
     private let logger: FileLogger
+
+    private var presentingController: UIViewController?
 
     init(userRepository: UserRepository,
          keyChainDatabase: KeyChainDatabase,
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
          preferences: Preferences,
+         router: WelcomeRouter,
          vpnManager: VPNManager,
          logger: FileLogger) {
         self.userRepository = userRepository
@@ -52,6 +80,7 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
         self.preferences = preferences
+        self.router = router
         self.vpnManager = vpnManager
         self.logger = logger
 
@@ -75,6 +104,7 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
                     return Fail(error: NSError(domain: "APIManagerError", code: -1, userInfo: nil) as Error)
                         .eraseToAnyPublisher()
                 }
+
                 return self.apiManager.signUpUsingToken(token: token.token).asPublisher()
             }
             .sink(receiveCompletion: { [weak self] completion in
@@ -82,8 +112,12 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
                 if case .failure(let error) = completion {
                     self.handleError(error)
                 }
+
+                self.showLoadingView = false
+                self.routeToSignup.send(true)
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
+
                 self.keyChainDatabase.setGhostAccountCreated()
                 self.userRepository.login(session: session)
                 self.logger.logI(WelcomeViewModel.self, "Ghost account registration successful")
@@ -112,7 +146,6 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
     private func handleError(_ error: Error) {
         self.logger.logE(WelcomeViewModel.self, "Error: \(error.localizedDescription)")
-        self.routeToSignup.send(true)
     }
 
     private func listenForVPNStateChange() {
@@ -128,5 +161,38 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
     func slideScrollView() {
         scrollOrder = (scrollOrder + 1) % 4
+    }
+}
+
+// MARK: Navigation type action
+
+extension WelcomeViewModel {
+
+    func setPresentingController(_ controller: UIViewController) {
+        self.presentingController = controller
+    }
+
+    func navigateToSignUp() {
+        guard let presentingController = presentingController else { return }
+
+        router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: presentingController)
+    }
+
+    func navigateToLogin() {
+        guard let presentingController = presentingController else { return }
+
+        router.routeTo(to: RouteID.login, from: presentingController)
+    }
+
+    func navigateToMain() {
+        guard let presentingController = presentingController else { return }
+
+        router.routeTo(to: RouteID.home, from: presentingController)
+    }
+
+    func navigateToEmergency() {
+        guard let presentingController = presentingController else { return }
+
+        router.routeTo(to: RouteID.emergency, from: presentingController)
     }
 }

@@ -266,6 +266,15 @@ enum ImagesAsset {
         static let youtubeIcon = "share-youtube-icon"
     }
 
+    enum Welcome {
+        static let icon = "welcome-icon"
+        static let background = "welcome-background"
+        static let tabInfo1 = "welcome-info-tab-1"
+        static let tabInfo2 = "welcome-info-tab-2"
+        static let tabInfo3 = "welcome-info-tab-3"
+        static let tabInfo4 = "welcome-info-tab-4"
+    }
+
     enum TvAsset {
         static let settingsButton = "settingButton"
         static let notificationsIcon = "notifications_icon"

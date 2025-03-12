@@ -11,7 +11,7 @@ import NetworkExtension
 import Swinject
 import RxSwift
 
-enum State {
+enum VPNConnectionState {
     case update(String), vpn(NEVPNStatus), validating, validated
 }
 
@@ -32,8 +32,8 @@ extension ConfigurationsManager {
     /// - Returns: An `AnyPublisher<State, Error>` publisher that emits values of type `State` over time, providing updates
     ///   on the current state of the connection (e.g., connecting, validating, connected). In the event of an error, the
     ///   publisher terminates with an `VPNConnectionErrors`.
-    func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
-        let progressPublisher = PassthroughSubject<State, Error>()
+    func connectAsync(locationID: String, proto: String, port: String, vpnSettings: VPNUserSettings, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
+        let progressPublisher = PassthroughSubject<VPNConnectionState, Error>()
         var nextManager: NEVPNManager?
         var isCancelled = false
         let task = Task { [weak self] in
@@ -249,8 +249,8 @@ extension ConfigurationsManager {
     ///
     /// - Throws: This function emits errors for disconnection failures, which are passed to the publisher's error handler.
     ///
-    func disconnectAsync() -> AnyPublisher<State, Error> {
-        let progressPublisher = PassthroughSubject<State, Error>()
+    func disconnectAsync() -> AnyPublisher<VPNConnectionState, Error> {
+        let progressPublisher = PassthroughSubject<VPNConnectionState, Error>()
         Task {
             progressPublisher.send(.update("Retrieving active VPN manager..."))
             do {
@@ -278,7 +278,7 @@ extension ConfigurationsManager {
 
     /// Disconnect all connected managers except one being used for next protocol.
     /// Remove any on demand rules to avoid reconnect from this protocol after disconnect.
-    private func disconnectExistingConnections(proto: String, progressPublisher: PassthroughSubject<State, Error>) async throws {
+    private func disconnectExistingConnections(proto: String, progressPublisher: PassthroughSubject<VPNConnectionState, Error>) async throws {
         let managers = await getOtherManagers(proto: proto)
         for other in managers {
             try await other.loadFromPreferences()
@@ -297,7 +297,7 @@ extension ConfigurationsManager {
     }
 
     /// Load vpn manager for the protocol, stop any existing connection and disable it.
-    private func prepareNextManager(proto: String, progressPublisher: PassthroughSubject<State, Error>) async throws -> NEVPNManager {
+    private func prepareNextManager(proto: String, progressPublisher: PassthroughSubject<VPNConnectionState, Error>) async throws -> NEVPNManager {
         progressPublisher.send(.update("Fetching next VPN manager for \(proto)"))
         let nextManager = await getNextManager(proto: proto)
         try await nextManager.loadFromPreferences()

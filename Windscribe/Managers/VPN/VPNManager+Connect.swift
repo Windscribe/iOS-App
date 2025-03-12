@@ -24,7 +24,7 @@ extension VPNManager {
     ///
     /// Usage:
     /// Call this function to start the disconnection process. See more: DisconnectTask
-    func disconnectFromViewModel() -> AnyPublisher<State, Error> {
+    func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
                 self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to configuring")
@@ -49,7 +49,7 @@ extension VPNManager {
     /// 2. Validate the current state and ensure the conditions are met to start a connection.
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
-    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
+    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
         return disableKillSwitchIfRequired()
             .flatMap { _ in
@@ -57,7 +57,7 @@ extension VPNManager {
             }.flatMap { () in
             let status = self.connectivity.getNetwork().status
             if [NetworkStatus.disconnected].contains(status) {
-                return Fail<State, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
+                return Fail<VPNConnectionState, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
             }
             return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
         }.handleEvents(receiveSubscription: { _ in
@@ -91,7 +91,7 @@ extension VPNManager {
     ///   - proto: The protocol to be used for the connection (e.g., OpenVPN, IKEv2).
     ///   - port: The port number for the protocol.
     /// - Returns: An `AnyPublisher` that emits `State` updates or an `Error` if the connection fails after retries.
-    private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<State, Error> {
+    private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
             .catch { error in
                 self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")

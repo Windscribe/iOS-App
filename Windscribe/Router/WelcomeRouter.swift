@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import UIKit
 import Swinject
 
-class WelcomeRouter: BaseRouter, RootRouter {
-    func routeTo(to: RouteID, from: WSUIViewController) {
+class WelcomeRouter: BaseRouter {
+    func routeTo(to: RouteID, from: UIViewController) {
         switch to {
         case RouteID.login:
             let vc = Assembler.resolve(LoginViewController.self)

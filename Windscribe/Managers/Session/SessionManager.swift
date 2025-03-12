@@ -11,6 +11,7 @@ import RealmSwift
 import RxSwift
 import Swinject
 import UIKit
+import SwiftUI
 
 class SessionManager: SessionManagerV2 {
     var session: Session?
@@ -217,10 +218,11 @@ class SessionManager: SessionManagerV2 {
         Task { @MainActor in
             if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
                 window.rootViewController?.dismiss(animated: false, completion: nil)
-                let firstViewController = Assembler.resolve(WelcomeViewController.self)
+                let welcomeView = Assembler.resolve(WelcomeView.self)
                 DispatchQueue.main.async {
                     UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                        window.rootViewController = UINavigationController(rootViewController: firstViewController)
+                        window.rootViewController = UINavigationController(
+                            rootViewController: UIHostingController(rootView: welcomeView))
                     }, completion: nil)
                 }
             }

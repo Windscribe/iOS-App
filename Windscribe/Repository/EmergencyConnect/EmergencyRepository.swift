@@ -12,8 +12,8 @@ import Combine
 
 protocol EmergencyRepository {
     func getConfig() async -> [OpenVPNConnectionInfo]
-    func connect(configInfo: OpenVPNConnectionInfo) -> AnyPublisher<State, Error>
-    func disconnect() -> AnyPublisher<State, Error>
+    func connect(configInfo: OpenVPNConnectionInfo) -> AnyPublisher<VPNConnectionState, Error>
+    func disconnect() -> AnyPublisher<VPNConnectionState, Error>
     func isConnected() -> Bool
     func cleansEmergencyConfigs()
 }

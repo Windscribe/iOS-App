@@ -22,8 +22,17 @@ class ViewModels: Assembly {
         container.register(SignUpViewModel.self) { r in
             SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
-        container.register(WelcomeViewModal.self) { r in
-            WelcomeViewModelImpl(userRepository: r.resolve(UserRepository.self)!, keyChainDatabase: r.resolve(KeyChainDatabase.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, apiManager: r.resolve(APIManager.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
+        container.register((any WelcomeViewModelProtocol).self) { r in
+            WelcomeViewModel(
+                userRepository: r.resolve(UserRepository.self)!,
+                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
+                userDataRepository: r.resolve(UserDataRepository.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                router: r.resolve(WelcomeRouter.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
         }.inObjectScope(.transient)
         container.register(EmergenyConnectViewModal.self) { r in
             EmergencyConnectModalImpl(vpnManager: r.resolve(VPNManager.self)!, emergencyRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
@@ -262,13 +271,17 @@ class ViewControllerModule: Assembly {
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
             vc.rateViewModel = r.resolve(RateUsPopupModelType.self)
         }.inObjectScope(.transient)
-
-        container.register(WelcomeViewController.self) { _ in
-            WelcomeViewController()
-        }.initCompleted { r, vc in
-            vc.router = r.resolve(WelcomeRouter.self)
-            vc.viewmodal = r.resolve(WelcomeViewModal.self)
-            vc.logger = r.resolve(FileLogger.self)
+        container.register(WelcomeView.self) { r in
+            WelcomeView(viewModel: WelcomeViewModel(
+                userRepository: r.resolve(UserRepository.self)!,
+                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
+                userDataRepository: r.resolve(UserDataRepository.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                router: r.resolve(WelcomeRouter.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                logger: r.resolve(FileLogger.self)!
+            ))
         }.inObjectScope(.transient)
         container.register(LoginViewController.self) { _ in
             LoginViewController()
