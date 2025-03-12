@@ -12,104 +12,105 @@ struct WelcomeView: View {
 
     @StateObject private var viewModel: WelcomeViewModel
 
+    private let dynamicTypeRange = (...DynamicTypeSize.large)
+
     init(viewModel: WelcomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
 
     var body: some View {
-        ZStack {
-            // Background
-            Color(UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0))
-                .ignoresSafeArea()
-
-            Image(viewModel.backgroundImage)
-                .resizable()
-                .scaledToFill()
-                .ignoresSafeArea()
-
+        GeometryReader { geometry in
             VStack {
-                // Logo
+                Image(viewModel.iconImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 54, height: 54)
+
                 VStack {
-                    Image(viewModel.iconImage)
-                        .resizable()
-                        .frame(width: 54, height: 54)
-                        .padding(.top, 48)
-                }
-
-                Spacer()
-
-                // Info Pages
-                TabView(selection: $viewModel.scrollOrder) {
-                    ForEach(0..<viewModel.tabInfoImages.count, id: \.self) { index in
-                        InfoPageView(
-                            imageName: viewModel.tabInfoImages[index],
-                            text: viewModel.tabInfoTexts[index]
-                        )
-                        .tag(index)
+                    TabView(selection: $viewModel.scrollOrder) {
+                        ForEach(0..<viewModel.tabInfoImages.count, id: \.self) { index in
+                            InfoPageView(
+                                imageName: viewModel.tabInfoImages[index],
+                                text: viewModel.tabInfoTexts[index]
+                            )
+                            .tag(index)
+                        }
                     }
-                }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                .frame(height: 300)
-                .onReceive(Timer.publish(every: 2, on: .main, in: .common).autoconnect()) { _ in
-                    withAnimation {
-                        viewModel.slideScrollView()
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    .frame(maxHeight: geometry.size.height * 0.3)
+                    .onReceive(Timer.publish(every: 4, on: .main, in: .common).autoconnect()) { _ in
+                        withAnimation {
+                            viewModel.slideScrollView()
+                        }
                     }
+
+                    PageIndicator(currentPage: viewModel.scrollOrder)
+                        .padding(.top, 8)
                 }
+                .frame(maxHeight: .infinity)
 
-                PageIndicator(currentPage: viewModel.scrollOrder)
-                    .padding(.top, 8)
-
-                Spacer()
-
-                // Buttons
-                VStack(spacing: 22) {
+                VStack(spacing: 12) {
                     Button(action: viewModel.continueButtonTapped) {
                         if viewModel.showLoadingView {
                             ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(1.5)
+                                .padding()
                         } else {
                             Text(viewModel.getStartedText)
                                 .font(.headline)
+                                .font(.semiBold(.body))
+                                .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.black)
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.white)
-                                .cornerRadius(23)
+                                .clipShape(Capsule())
                         }
                     }
-                    .frame(height: 48)
 
                     Button(action: {
                         viewModel.routeToLogin.send(())
                     }, label: {
                         Text(viewModel.loginText)
-                            .font(.headline)
+                            .font(.semiBold(.body))
+                            .dynamicTypeSize(dynamicTypeRange)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.white.opacity(0.1))
-                            .cornerRadius(23)
+                            .clipShape(Capsule())
                     })
-                    .frame(height: 48)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
 
                     Button(action: {
                         viewModel.routeToEmergency.send(())
                     }, label: {
                         Text(viewModel.connectionFaultText)
-                            .font(.footnote)
+                            .font(.medium(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
                             .foregroundColor(.white)
                             .opacity(0.5)
                     })
-                    .padding(.top, 8)
-                    .safeAreaInset(edge: .bottom) {
-                        Color.clear.frame(height: 45)
-                    }
+                    .padding(.vertical, 4)
                 }
+                .padding([.horizontal, .bottom], 24)
             }
-            .padding([.trailing, .leading], 32)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background {
+                Color(UIColor(red: 0.12, green: 0.12, blue: 0.12, alpha: 1.0))
+                    .ignoresSafeArea()
+
+                Image(viewModel.backgroundImage)
+                    .resizable()
+                    .scaledToFill()
+                    .ignoresSafeArea()
+
+            }
         }
         .getPresentingController { controller in
             guard let presentingController = controller else { return }
-
             viewModel.setPresentingController(presentingController)
         }
         .onReceive(viewModel.routeToSignup) { _ in
@@ -133,17 +134,21 @@ struct InfoPageView: View {
     let imageName: String
     let text: String
 
+    private let dynamicTypeRange = (...DynamicTypeSize.large)
+
     var body: some View {
         VStack(spacing: 12) {
             Image(imageName)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 150, height: 150)
+                .frame(maxWidth: 200, maxHeight: 300)
 
             Text(text)
                 .font(.text(.title1))
+                .dynamicTypeSize(dynamicTypeRange)
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
                 .padding(.horizontal, 20)
         }
     }
@@ -163,4 +168,19 @@ struct PageIndicator: View {
             }
         }
     }
+}
+
+#Preview {
+    PageIndicator(currentPage: 2)
+}
+
+#Preview {
+    TabView(selection: .constant(1)) {
+        ForEach(0..<4, id: \.self) { index in
+            InfoPageView(imageName: "welcome-info-tab-1", text: "Lorem ipsum dolor sit amet")
+            .tag(index)
+        }
+    }
+    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+    .frame(height: 300)
 }
