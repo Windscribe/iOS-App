@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Skip this script when running SwiftUI previews
+if [ "$XCODE_RUNNING_FOR_PREVIEWS" == "1" ]; then
+    echo "Skipping WireGuardTunnel for SwiftUI Previews"
+    exit 0
+fi
+
 # build_wireguard_go_bridge.sh - Builds WireGuardKitGo
 #
 # Figures out the directory where the wireguard-apple SPM package
@@ -35,21 +41,31 @@ install_go() {
     export PATH="${TEMP_DIR}/go/bin:$PATH"
 
     # Verify the Go installation
-    go version
+    go version || {
+        echo "Error: Failed to install Go."
+        exit 1
+    }
 
     # Clean up by removing the downloaded tarball
     rm -rf "${TEMP_DIR}/go.tar.gz"
 }
 
-# Check if Go is installed
-goPath=$(which go)
+# Check if Go is installed and has the correct version
+current_go_version=$(go version 2>/dev/null | awk '{print $3}' | sed 's/go//')
 
-# If Go is not installed, install it
-if [ -z "$goPath" ]; then
-    echo "Go is not installed. Installing version ${GO_VERSION}..."
-    install_go
+if [ "$current_go_version" == "$GO_VERSION" ]; then
+    echo "Correct Go version (${GO_VERSION}) is already installed. Skipping installation."
 else
-    echo "Go is already installed at ${goPath}."
+    echo "Go version mismatch (found: $current_go_version, expected: $GO_VERSION). Installing correct version..."
+    install_go
+fi
+
+# Prevent redundant builds by adding a caching marker
+BUILD_ARTIFACT="$BUILD_DIR/WireGuardGoBridge.artifact"
+
+if [ -f "$BUILD_ARTIFACT" ]; then
+    echo "WireGuardGoBridge already built. Skipping build step..."
+    exit 0
 fi
 
 # Proceed with the WireGuard build process
@@ -87,3 +103,8 @@ cd "$wireguard_go_dir" && /usr/bin/make || {
     echo "Error: Make failed in $wireguard_go_dir"
     exit 1
 }
+
+# Create marker file to prevent redundant builds
+touch "$BUILD_ARTIFACT"
+
+echo "WireGuardGoBridge successfully built."
