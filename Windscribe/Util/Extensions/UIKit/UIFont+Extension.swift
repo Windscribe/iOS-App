@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UIFont {
     static func bold(size: CGFloat) -> UIFont {
@@ -58,5 +59,31 @@ extension UIFont {
         }
 
         return UIFontMetrics(forTextStyle: textStyle).scaledFont(for: customFont)
+    }
+}
+
+extension Font {
+    static func bold(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func medium(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func semiBold(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func text(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Text", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func regular(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+    }
+
+    static func light(_ textStyle: UIFont.TextStyle) -> Font {
+        return Font.custom("IBMPlexSans-Light", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
     }
 }

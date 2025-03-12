@@ -72,12 +72,12 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     // Stops tunnel
-    func disconnect() -> AnyPublisher<State, Error> {
+    func disconnect() -> AnyPublisher<VPNConnectionState, Error> {
         return vpnManager.disconnectFromViewModel()
     }
 
     /// Configures OpenVPN and attempts a connection.
-    func connect(configInfo: OpenVPNConnectionInfo) -> AnyPublisher<State, Error> {
+    func connect(configInfo: OpenVPNConnectionInfo) -> AnyPublisher<VPNConnectionState, Error> {
         Future<Data, Error> { promise in
             Task {
                 do {
@@ -93,14 +93,14 @@ class EmergencyRepositoryImpl: EmergencyRepository {
             self.locationsManager.saveCustomConfig(withID: customConfig.id)
             return customConfig
         }
-        .flatMap { _ -> AnyPublisher<State, Error> in
+        .flatMap { _ -> AnyPublisher<VPNConnectionState, Error> in
             Future<Void, Never> { promise in
                 Task {
                     await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
                     promise(.success(()))
                 }
             }
-            .flatMap { _ -> AnyPublisher<State, Error> in
+            .flatMap { _ -> AnyPublisher<VPNConnectionState, Error> in
                 let nextProtocol = self.protocolManager.getProtocol()
                 let locationID = self.locationsManager.getLastSelectedLocation()
                 return self.vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: .emergency)

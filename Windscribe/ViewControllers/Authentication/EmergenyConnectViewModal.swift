@@ -82,7 +82,7 @@ class EmergencyConnectModalImpl: EmergenyConnectViewModal {
             return
         }
         let firstAttempt = emergencyRepository.connect(configInfo: ovpnInfoList[0])
-        let secondAttempt: AnyPublisher<State, Error> =
+        let secondAttempt: AnyPublisher<VPNConnectionState, Error> =
             ovpnInfoList.count > 1
                 ? emergencyRepository.connect(configInfo: ovpnInfoList[1]).eraseToAnyPublisher()
                 : Fail(error: NSError(domain: "OpenVPN", code: -1, userInfo: [NSLocalizedDescriptionKey: "No backup OpenVPN config available."])).eraseToAnyPublisher()
