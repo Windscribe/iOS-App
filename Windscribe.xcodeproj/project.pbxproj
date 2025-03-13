@@ -57,10 +57,8 @@
 		1E09749B2D7F354D003F7AA7 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E09749A2D7F354D003F7AA7 /* CocoaLumberjackSwift */; };
 		1E09749D2D807615003F7AA7 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 1E09749C2D807615003F7AA7 /* SwiftSoup */; };
 		1E0974A02D8077DE003F7AA7 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1E09749F2D8077DE003F7AA7 /* RxDataSources */; };
-		1E0A6D9E2D7882080075B8F5 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6D9D2D7882080075B8F5 /* Realm */; };
 		1E0A6DA22D78823A0075B8F5 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA12D78823A0075B8F5 /* Realm */; };
 		1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA32D78823A0075B8F5 /* RealmSwift */; };
-		1E0A6DA62D7882580075B8F5 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA52D7882580075B8F5 /* Realm */; };
 		1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA72D7882580075B8F5 /* RealmSwift */; };
 		1E0A6DAA2D7882630075B8F5 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA92D7882630075B8F5 /* Realm */; };
 		1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAB2D7882630075B8F5 /* RealmSwift */; };
@@ -119,6 +117,9 @@
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
 		1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933522BF50BC200C853AF /* ServerListViewModel.swift */; };
+		1E55539F2D81F93C00F16AF0 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 1E55539E2D81F93C00F16AF0 /* Logging */; };
+		1E5553A42D81FABF00F16AF0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; };
+		1E5553A52D81FABF00F16AF0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -206,12 +207,8 @@
 		1ED33DC92D7B384C00B980D3 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DC82D7B384C00B980D3 /* RxRelay */; };
 		1ED33DCE2D7B38A200B980D3 /* RxDataSources in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DCD2D7B38A200B980D3 /* RxDataSources */; };
 		1ED33DD12D7B391100B980D3 /* RxGesture in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DD02D7B391100B980D3 /* RxGesture */; };
-		1ED33DD92D7B3D0B00B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DD82D7B3D0B00B980D3 /* RealmSwift */; };
-		1ED33DDB2D7B3D4500B980D3 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DDA2D7B3D4500B980D3 /* Realm */; };
 		1ED33DDD2D7B3D4500B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DDC2D7B3D4500B980D3 /* RealmSwift */; };
-		1ED33DDF2D7B3D5300B980D3 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DDE2D7B3D5300B980D3 /* Realm */; };
 		1ED33DE12D7B3D5300B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE02D7B3D5300B980D3 /* RealmSwift */; };
-		1ED33DE32D7B3D7300B980D3 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE22D7B3D7300B980D3 /* Realm */; };
 		1ED33DE52D7B3D7300B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE42D7B3D7300B980D3 /* RealmSwift */; };
 		1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE62D7B3DAD00B980D3 /* RxBlocking */; };
 		1ED33DE92D7B3DAD00B980D3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE82D7B3DAD00B980D3 /* RxCocoa */; };
@@ -1285,6 +1282,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1E5553A52D81FABF00F16AF0 /* RealmSwift in Embed Frameworks */,
 				59532A142CB852700069CC8F /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -2062,9 +2060,9 @@
 				1ED33E072D7B3E5700B980D3 /* RxSwift in Frameworks */,
 				C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */,
 				1E0974832D7F34E2003F7AA7 /* CocoaLumberjackSwift in Frameworks */,
+				1E5553A42D81FABF00F16AF0 /* RealmSwift in Frameworks */,
 				1ED33DC52D7B384C00B980D3 /* RxBlocking in Frameworks */,
 				1E0A6E042D79ECDE0075B8F5 /* Swinject in Frameworks */,
-				1ED33DD92D7B3D0B00B980D3 /* RealmSwift in Frameworks */,
 				1E0A6E1D2D79F4500075B8F5 /* SwiftSoup in Frameworks */,
 				1E0A6DC32D7894280075B8F5 /* ExpyTableView in Frameworks */,
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
@@ -2077,10 +2075,10 @@
 				AFF410D3234636AC0089F1D1 /* IntentsUI.framework in Frameworks */,
 				AFF410D1234636AA0089F1D1 /* Intents.framework in Frameworks */,
 				AF87DB592214AAFF001A3F24 /* libresolv.9.tbd in Frameworks */,
-				1E0A6D9E2D7882080075B8F5 /* Realm in Frameworks */,
 				C56D5AF52C4DFF300069DB6E /* WireGuardKit in Frameworks */,
 				AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */,
 				1ED33DD12D7B391100B980D3 /* RxGesture in Frameworks */,
+				1E55539F2D81F93C00F16AF0 /* Logging in Frameworks */,
 				AF87DB522214A8BC001A3F24 /* libresolv.tbd in Frameworks */,
 				AF16CA1622272EAB00997A2A /* StoreKit.framework in Frameworks */,
 				C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */,
@@ -2108,7 +2106,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ED33DDD2D7B3D4500B980D3 /* RealmSwift in Frameworks */,
-				1ED33DDB2D7B3D4500B980D3 /* Realm in Frameworks */,
 				AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */,
 				C56123812C5F25C80090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0974892D7F3530003F7AA7 /* CocoaLumberjack in Frameworks */,
@@ -2139,7 +2136,6 @@
 				1ED33DFD2D7B3DD300B980D3 /* RxSwift in Frameworks */,
 				1ED33DFB2D7B3DD300B980D3 /* RxCocoa in Frameworks */,
 				1ED33DF92D7B3DD300B980D3 /* RxBlocking in Frameworks */,
-				1ED33DDF2D7B3D5300B980D3 /* Realm in Frameworks */,
 				59532A0F2CB852670069CC8F /* WSNet.xcframework in Frameworks */,
 				1ED33DE12D7B3D5300B980D3 /* RealmSwift in Frameworks */,
 				1E0A6E002D79ECD20075B8F5 /* Swinject in Frameworks */,
@@ -2153,7 +2149,6 @@
 			files = (
 				1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */,
 				1ED33DF32D7B3DC800B980D3 /* RxBlocking in Frameworks */,
-				1E0A6DA62D7882580075B8F5 /* Realm in Frameworks */,
 				1E0974912D7F353D003F7AA7 /* CocoaLumberjack in Frameworks */,
 				1ED33DF52D7B3DC800B980D3 /* RxCocoa in Frameworks */,
 				C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */,
@@ -2173,7 +2168,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ED33DE52D7B3D7300B980D3 /* RealmSwift in Frameworks */,
-				1ED33DE32D7B3D7300B980D3 /* Realm in Frameworks */,
 				AFDF934C255EB93C002B1FBA /* SwiftUI.framework in Frameworks */,
 				AF2A4A652562D9C2003682E7 /* NetworkExtension.framework in Frameworks */,
 				1E0974952D7F3544003F7AA7 /* CocoaLumberjack in Frameworks */,
@@ -4360,7 +4354,6 @@
 				C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */,
 				C56D5AF42C4DFF300069DB6E /* WireGuardKit */,
 				F485CBC52D4D76BA0063EA3A /* SnapKit */,
-				1E0A6D9D2D7882080075B8F5 /* Realm */,
 				1E0A6DAE2D7884530075B8F5 /* SimpleKeychain */,
 				1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */,
 				1E0A6DC22D7894280075B8F5 /* ExpyTableView */,
@@ -4371,11 +4364,12 @@
 				1ED33DC82D7B384C00B980D3 /* RxRelay */,
 				1ED33DCD2D7B38A200B980D3 /* RxDataSources */,
 				1ED33DD02D7B391100B980D3 /* RxGesture */,
-				1ED33DD82D7B3D0B00B980D3 /* RealmSwift */,
 				1ED33E042D7B3E5700B980D3 /* RxCocoa */,
 				1ED33E062D7B3E5700B980D3 /* RxSwift */,
 				1E0974802D7F34E2003F7AA7 /* CocoaLumberjack */,
 				1E0974822D7F34E2003F7AA7 /* CocoaLumberjackSwift */,
+				1E55539E2D81F93C00F16AF0 /* Logging */,
+				1E5553A32D81FABF00F16AF0 /* RealmSwift */,
 			);
 			productName = Windscribe;
 			productReference = AF018DE921B0866600B225FF /* Windscribe.app */;
@@ -4416,7 +4410,6 @@
 			packageProductDependencies = (
 				C56615F52C4D84BC008AA993 /* OpenVPNAdapter */,
 				1E0A6DFD2D79ECBC0075B8F5 /* Swinject */,
-				1ED33DDA2D7B3D4500B980D3 /* Realm */,
 				1ED33DDC2D7B3D4500B980D3 /* RealmSwift */,
 				1ED33DFE2D7B3DE100B980D3 /* RxBlocking */,
 				1ED33E002D7B3DE100B980D3 /* RxCocoa */,
@@ -4464,7 +4457,6 @@
 			name = WireGuardTunnel;
 			packageProductDependencies = (
 				C598706A2C63210B00DA4DB1 /* WireGuardKit */,
-				1E0A6DA52D7882580075B8F5 /* Realm */,
 				1E0A6DA72D7882580075B8F5 /* RealmSwift */,
 				1E0A6DB02D7884C50075B8F5 /* SimpleKeychain */,
 				1E0A6E0B2D79ECF60075B8F5 /* Swinject */,
@@ -4621,7 +4613,6 @@
 			mainGroup = AF018DE021B0866600B225FF;
 			packageReferences = (
 				AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */,
-				1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */,
 				C56615F42C4D84BC008AA993 /* XCRemoteSwiftPackageReference "OpenVPNAdapter" */,
 				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
@@ -4637,6 +4628,7 @@
 				1ED33DCC2D7B38A200B980D3 /* XCRemoteSwiftPackageReference "RxDataSources" */,
 				1ED33DCF2D7B391100B980D3 /* XCRemoteSwiftPackageReference "RxGesture" */,
 				1E09747F2D7F34E2003F7AA7 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+				1E55539D2D81F93C00F16AF0 /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			productRefGroup = AF018DEA21B0866600B225FF /* Products */;
 			projectDirPath = "";
@@ -7378,16 +7370,16 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack.git";
 			requirement = {
-				kind = exactVersion;
-				version = 3.8.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.8.5;
 			};
 		};
 		1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
-				kind = exactVersion;
-				version = 10.33.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.54.3;
 			};
 		};
 		1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */ = {
@@ -7418,8 +7410,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/okhanokbay/ExpyTableView.git";
 			requirement = {
-				kind = exactVersion;
-				version = 1.2.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.2;
 			};
 		};
 		1E0A6DC42D7894520075B8F5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */ = {
@@ -7446,36 +7438,36 @@
 				version = 1.7.4;
 			};
 		};
-		1EA876C62BC8294500F0DD25 /* XCRemoteSwiftPackageReference "DNS" */ = {
+		1E55539D2D81F93C00F16AF0 /* XCRemoteSwiftPackageReference "swift-log" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Bouke/DNS.git";
+			repositoryURL = "https://github.com/apple/swift-log";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				minimumVersion = 1.6.2;
 			};
 		};
 		1ED33DC32D7B384C00B980D3 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
-				kind = exactVersion;
-				version = 6.6.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.9.0;
 			};
 		};
 		1ED33DCC2D7B38A200B980D3 /* XCRemoteSwiftPackageReference "RxDataSources" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RxSwiftCommunity/RxDataSources.git";
 			requirement = {
-				kind = exactVersion;
-				version = 5.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
 			};
 		};
 		1ED33DCF2D7B391100B980D3 /* XCRemoteSwiftPackageReference "RxGesture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RxSwiftCommunity/RxGesture.git";
 			requirement = {
-				kind = exactVersion;
-				version = 4.0.4;
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
 			};
 		};
 		AF9E08A225E6B1BF00A0E372 /* XCRemoteSwiftPackageReference "swift-resolver" */ = {
@@ -7593,11 +7585,6 @@
 			package = 1ED33DCC2D7B38A200B980D3 /* XCRemoteSwiftPackageReference "RxDataSources" */;
 			productName = RxDataSources;
 		};
-		1E0A6D9D2D7882080075B8F5 /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
-		};
 		1E0A6DA12D78823A0075B8F5 /* Realm */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
@@ -7607,11 +7594,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
-		};
-		1E0A6DA52D7882580075B8F5 /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
 		};
 		1E0A6DA72D7882580075B8F5 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -7723,6 +7705,16 @@
 			package = 1E0A6E1B2D79F4500075B8F5 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
 		};
+		1E55539E2D81F93C00F16AF0 /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E55539D2D81F93C00F16AF0 /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
+		};
+		1E5553A32D81FABF00F16AF0 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
 		1ED33DC42D7B384C00B980D3 /* RxBlocking */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1ED33DC32D7B384C00B980D3 /* XCRemoteSwiftPackageReference "RxSwift" */;
@@ -7743,35 +7735,15 @@
 			package = 1ED33DCF2D7B391100B980D3 /* XCRemoteSwiftPackageReference "RxGesture" */;
 			productName = RxGesture;
 		};
-		1ED33DD82D7B3D0B00B980D3 /* RealmSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = RealmSwift;
-		};
-		1ED33DDA2D7B3D4500B980D3 /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
-		};
 		1ED33DDC2D7B3D4500B980D3 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
 		};
-		1ED33DDE2D7B3D5300B980D3 /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
-		};
 		1ED33DE02D7B3D5300B980D3 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
-		};
-		1ED33DE22D7B3D7300B980D3 /* Realm */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
-			productName = Realm;
 		};
 		1ED33DE42D7B3D7300B980D3 /* RealmSwift */ = {
 			isa = XCSwiftPackageProductDependency;
