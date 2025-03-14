@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Mockingbird
 import RxBlocking
 import Swinject
 @testable import Windscribe

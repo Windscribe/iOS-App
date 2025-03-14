@@ -65,7 +65,6 @@
 		1E0A6DB32D7884DE0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB22D7884DE0075B8F5 /* SimpleKeychain */; };
 		1E0A6DB52D7884ED0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB42D7884ED0075B8F5 /* SimpleKeychain */; };
 		1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB62D7884FD0075B8F5 /* SimpleKeychain */; };
-		1E0A6DBD2D78871F0075B8F5 /* Mockingbird in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DBC2D78871F0075B8F5 /* Mockingbird */; };
 		1E0A6DC02D788B4F0075B8F5 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */; };
 		1E0A6DC32D7894280075B8F5 /* ExpyTableView in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DC22D7894280075B8F5 /* ExpyTableView */; };
 		1E0A6DC62D7894520075B8F5 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DC52D7894520075B8F5 /* SwipeCellKit */; };
@@ -850,7 +849,6 @@
 		C5592B8B2B394C0300F2F110 /* LocalDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */; };
 		C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0912B3A68820011EF56 /* PreferencesTests.swift */; };
 		C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */; };
-		C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */; };
 		C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A32B3E80300011EF56 /* RxExtensions.swift */; };
 		C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */; };
 		C561237A2C5F25750090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
@@ -1797,7 +1795,6 @@
 		C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseTests.swift; sourceTree = "<group>"; };
 		C55AF0982B3B672B0011EF56 /* TestModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModules.swift; sourceTree = "<group>"; };
 		C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesSampleData.swift; sourceTree = "<group>"; };
-		C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IpRepositoryTests.swift; sourceTree = "<group>"; };
 		C55AF0A32B3E80300011EF56 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+VPN.swift"; sourceTree = "<group>"; };
 		C561237F2C5F25B60090EB5A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
@@ -2106,7 +2103,6 @@
 				1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */,
 				1E0974852D7F3529003F7AA7 /* CocoaLumberjack in Frameworks */,
 				C50537AA2CD34B9E00EA8856 /* WSNet.xcframework in Frameworks */,
-				1E0A6DBD2D78871F0075B8F5 /* Mockingbird in Frameworks */,
 				1E0974872D7F3529003F7AA7 /* CocoaLumberjackSwift in Frameworks */,
 				1E0A6E082D79ECEB0075B8F5 /* Swinject in Frameworks */,
 			);
@@ -3190,8 +3186,8 @@
 				F40419432D8232190005EF97 /* Managers */,
 				C55AF0952B3B58940011EF56 /* Database */,
 				C5D983C52B34E5690069FF3A /* API */,
-				C55AF09D2B3B8A2A0011EF56 /* Repository */,
-				C55AF09C2B3B76060011EF56 /* Other */,
+				C55AF09C2B3B76060011EF56 /* Utils */,
+				F434A1B22D834A3D0059415F /* SampleData */,
 				F4EF7A092D5D31A200E4EB9F /* Mocks */,
 				AF018E1A21B1AA2D00B225FF /* Info.plist */,
 			);
@@ -3609,7 +3605,6 @@
 			isa = PBXGroup;
 			children = (
 				C55AF0912B3A68820011EF56 /* PreferencesTests.swift */,
-				C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -3622,20 +3617,12 @@
 			path = Database;
 			sourceTree = "<group>";
 		};
-		C55AF09C2B3B76060011EF56 /* Other */ = {
+		C55AF09C2B3B76060011EF56 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				C55AF0A32B3E80300011EF56 /* RxExtensions.swift */,
 			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		C55AF09D2B3B8A2A0011EF56 /* Repository */ = {
-			isa = PBXGroup;
-			children = (
-				C55AF09F2B3BEA150011EF56 /* IpRepositoryTests.swift */,
-			);
-			path = Repository;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		C56615F72C4D883E008AA993 /* libs */ = {
@@ -3975,7 +3962,6 @@
 			isa = PBXGroup;
 			children = (
 				C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */,
-				C5592B7F2B388B2800F2F110 /* APISampleData.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -4143,6 +4129,15 @@
 				F40419362D822ECF0005EF97 /* AppReviewManaging.swift */,
 			);
 			path = AppReview;
+			sourceTree = "<group>";
+		};
+		F434A1B22D834A3D0059415F /* SampleData */ = {
+			isa = PBXGroup;
+			children = (
+				C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */,
+				C5592B7F2B388B2800F2F110 /* APISampleData.swift */,
+			);
+			path = SampleData;
 			sourceTree = "<group>";
 		};
 		F45BA5932D53F96000CFDB82 /* PlanUpgrade */ = {
@@ -4650,7 +4645,6 @@
 				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */,
-				1E0A6DBB2D78871F0075B8F5 /* XCRemoteSwiftPackageReference "mockingbird" */,
 				1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				1E0A6DC12D7894280075B8F5 /* XCRemoteSwiftPackageReference "ExpyTableView" */,
 				1E0A6DC42D7894520075B8F5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
@@ -5716,7 +5710,6 @@
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
 				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,
 				C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */,
-				C55AF0A02B3BEA150011EF56 /* IpRepositoryTests.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
@@ -7431,14 +7424,6 @@
 				version = 1.2.0;
 			};
 		};
-		1E0A6DBB2D78871F0075B8F5 /* XCRemoteSwiftPackageReference "mockingbird" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/typealiased/mockingbird.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.20.0;
-			};
-		};
 		1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -7665,11 +7650,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
 			productName = SimpleKeychain;
-		};
-		1E0A6DBC2D78871F0075B8F5 /* Mockingbird */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DBB2D78871F0075B8F5 /* XCRemoteSwiftPackageReference "mockingbird" */;
-			productName = Mockingbird;
 		};
 		1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;
