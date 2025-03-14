@@ -11,19 +11,7 @@ import Foundation
 import RxSwift
 import StoreKit
 
-protocol AppReviewManager {
-    var preferences: Preferences { get }
-    var localDatabase: LocalDatabase { get }
-    var logger: FileLogger { get }
-
-    var reviewRequestTrigger: PublishSubject<Void> { get }
-
-    func requestReviewIfAvailable(session: Session?)
-    func promptReviewWithConfirmation()
-    func openAppStoreForReview()
-}
-
-class DefaultAppReviewManager: AppReviewManager {
+class AppReviewManager: AppReviewManaging {
 
     /// A main criterias that should be satisfied to show app rating
     enum AppReviewCriteriaType: CaseIterable {
@@ -167,7 +155,7 @@ class DefaultAppReviewManager: AppReviewManager {
 
 // MARK: - Review Status Helper
 
-extension DefaultAppReviewManager {
+extension AppReviewManager {
 
     private func daysSinceLogin() -> Int {
         let dateLoggedIn = preferences.getLoginDate() ?? Date()
@@ -188,7 +176,7 @@ extension DefaultAppReviewManager {
 
 // MARK: Review Display Helper
 
-extension DefaultAppReviewManager {
+extension AppReviewManager {
 
     private func promptReview() {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {

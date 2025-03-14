@@ -29,14 +29,16 @@ class NewsFeedModel: NewsFeedModelType {
     let localDatabase: LocalDatabase
     let sessionManager: SessionManagerV2
     let logger: FileLogger
+    let htmlParser: HTMLParsing
     let disposeBag = DisposeBag()
     let newsfeedData: BehaviorSubject<[NewsFeedData]> = BehaviorSubject(value: [])
     let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
     let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
 
-    init(localDatabase: LocalDatabase, sessionManager: SessionManagerV2, fileLogger: FileLogger) {
+    init(localDatabase: LocalDatabase, sessionManager: SessionManagerV2, fileLogger: FileLogger, htmlParser: HTMLParsing) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
+        self.htmlParser = htmlParser
         logger = fileLogger
         loadReadStatus()
         loadNewsFeedData()
@@ -102,27 +104,8 @@ class NewsFeedModel: NewsFeedModelType {
     }
 
     private func getMessage(description: String) -> (String, ActionLink?) {
-        do {
-            let document = try SwiftSoup.parse(description)
-            let messageArray = try document.select("p")
-                .filter { try $0.select(".ncta").isEmpty() }
-                .map { try $0.text() }
-            if messageArray.count > 0 {
-                let message = messageArray.joined(separator: "\n")
-                if let link = try document.select("a.ncta").first(),
-                   let url = try? link.attr("href") {
-                    let linkText = try link.text()
-                    let actionLink = ActionLink(title: linkText, link: url)
-                    return (message, actionLink)
-                }
-                return (message, nil)
-            } else {
-                return (description, nil)
-            }
-        } catch {
-            logger.logE("Newsfeed", "Error parsing newsfeed message html: \(error)")
-            return (description, nil)
-        }
+        let parsedContent = htmlParser.parse(description: description)
+        return (parsedContent.message, parsedContent.actionLink)
     }
 
     private func updateReadNotice(for noticeID: Int) {

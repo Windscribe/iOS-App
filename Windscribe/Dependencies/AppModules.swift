@@ -118,6 +118,9 @@ class Managers: Assembly {
         container.register(InAppPurchaseManager.self) { r in
             InAppPurchaseManagerImpl(apiManager: r.resolve(APIManager.self)!, preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.userScope)
+        container.register(HTMLParsing.self) { r in
+            HTMLParser(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
         container.register(SessionManagerV2.self) { _ in
             SessionManager()
         }.inObjectScope(.userScope)
