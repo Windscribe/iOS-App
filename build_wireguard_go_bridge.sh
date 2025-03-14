@@ -6,6 +6,41 @@ if [ "$XCODE_RUNNING_FOR_PREVIEWS" == "1" ]; then
     exit 0
 fi
 
+
+
+# If sdk root marker exists No rebuild it needed.
+check_and_save_sdkroot() {
+    local sdkroot_marker_file="$BUILD_DIR/sdkroot_marker.txt"
+    local current_sdkroot="$SDKROOT"
+
+    # If the marker file exists, compare the saved SDKROOT with the current one
+    if [ -f "$sdkroot_marker_file" ]; then
+        SAVED_SDKROOT=$(cat "$sdkroot_marker_file")
+        if [ "$SAVED_SDKROOT" == "$current_sdkroot" ]; then
+            echo "SDKROOT has not changed. Skipping build."
+            return 0
+        else
+            echo "SDKROOT has changed. Proceeding with build. $SAVED_SDKROOT $current_sdkroot"
+            echo "$current_sdkroot" > "$sdkroot_marker_file"
+            return 1
+        fi
+    else
+        # If the marker file does not exist, save the current SDKROOT
+        echo "$current_sdkroot" > "$sdkroot_marker_file"
+        echo "SDKROOT saved. Proceeding with build."
+        return 1
+    fi
+}
+check_and_save_sdkroot
+SDKROOT_RESULT=$?
+
+# If SDKROOT hasn't changed (SDKROOT_RESULT == 0), skip build
+if [ $SDKROOT_RESULT -eq 0 ]; then
+    exit 0
+fi
+
+
+
 # build_wireguard_go_bridge.sh - Builds WireGuardKitGo
 #
 # Figures out the directory where the wireguard-apple SPM package
@@ -60,14 +95,6 @@ else
     install_go
 fi
 
-# Prevent redundant builds by adding a caching marker
-BUILD_ARTIFACT="$BUILD_DIR/WireGuardGoBridge.artifact"
-
-if [ -f "$BUILD_ARTIFACT" ]; then
-    echo "WireGuardGoBridge already built. Skipping build step..."
-    exit 0
-fi
-
 # Proceed with the WireGuard build process
 project_data_dir="$BUILD_DIR"
 
@@ -104,7 +131,7 @@ cd "$wireguard_go_dir" && /usr/bin/make || {
     exit 1
 }
 
-# Create marker file to prevent redundant builds
-touch "$BUILD_ARTIFACT"
+# Saved last sdk used to built it.
+echo "$SDKROOT" > "$BUILD_DIR/sdkroot_marker.txt"
 
 echo "WireGuardGoBridge successfully built."
