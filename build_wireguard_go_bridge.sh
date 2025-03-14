@@ -60,14 +60,6 @@ else
     install_go
 fi
 
-# Prevent redundant builds by adding a caching marker
-BUILD_ARTIFACT="$BUILD_DIR/WireGuardGoBridge.artifact"
-
-if [ -f "$BUILD_ARTIFACT" ]; then
-    echo "WireGuardGoBridge already built. Skipping build step..."
-    exit 0
-fi
-
 # Proceed with the WireGuard build process
 project_data_dir="$BUILD_DIR"
 
