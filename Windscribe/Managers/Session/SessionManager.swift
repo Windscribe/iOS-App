@@ -218,6 +218,7 @@ class SessionManager: SessionManagerV2 {
         Task { @MainActor in
             if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
                 window.rootViewController?.dismiss(animated: false, completion: nil)
+#if os(iOS)
                 let welcomeView = Assembler.resolve(WelcomeView.self)
                 DispatchQueue.main.async {
                     UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
@@ -225,6 +226,14 @@ class SessionManager: SessionManagerV2 {
                             rootViewController: UIHostingController(rootView: welcomeView))
                     }, completion: nil)
                 }
+#elseif os(tvOS)
+                let firstViewController =  Assembler.resolve(WelcomeViewController.self)
+                DispatchQueue.main.async {
+                    UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                        window.rootViewController = UINavigationController(rootViewController: firstViewController)
+                    }, completion: nil)
+                }
+#endif
             }
             NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
             session = nil
