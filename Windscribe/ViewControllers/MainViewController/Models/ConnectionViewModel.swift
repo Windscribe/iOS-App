@@ -37,7 +37,7 @@ protocol ConnectionViewModelType {
     var reviewRequestTrigger: PublishSubject<Void> { get }
 
     var vpnManager: VPNManager { get }
-    var appReviewManager: AppReviewManager { get }
+    var appReviewManager: AppReviewManaging { get }
 
     // Check State
     func isConnected() -> Bool
@@ -104,7 +104,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let credentialsRepository: CredentialsRepository
     let ipRepository: IPRepository
     let localDB: LocalDatabase
-    let appReviewManager: AppReviewManager
+    let appReviewManager: AppReviewManaging
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -136,7 +136,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
         self.localDB = localDB
-        appReviewManager = DefaultAppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
+        appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnManager.getStatus().subscribe(onNext: { state in
             self.updateState(with: ConnectionState.state(from: state))

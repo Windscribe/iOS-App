@@ -13,19 +13,19 @@ import Swinject
 @testable import Windscribe
 import XCTest
 
-class DefaultAppReviewManagerTests: XCTestCase {
+class AppReviewManagerTests: XCTestCase {
 
-    var reviewManager: DefaultAppReviewManager!
-    var mockPreferences: MockPreferences!
-    var mockDatabase: MockLocalDatabase!
-    var mockLogger: MockLogger!
+    private var reviewManager: AppReviewManaging!
+    private var mockPreferences: MockPreferences!
+    private var mockDatabase: MockLocalDatabase!
+    private var mockLogger: MockLogger!
 
     override func setUp() {
         super.setUp()
         mockPreferences = MockPreferences()
         mockDatabase = MockLocalDatabase()
         mockLogger = MockLogger()
-        reviewManager = DefaultAppReviewManager(
+        reviewManager = AppReviewManager(
             preferences: mockPreferences,
             localDatabase: mockDatabase,
             logger: mockLogger)
