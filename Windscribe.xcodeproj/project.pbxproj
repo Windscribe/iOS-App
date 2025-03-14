@@ -1034,6 +1034,7 @@
 		C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
 		C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */; };
+		C5D9F9502D8491EC00249C90 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAB2D7882630075B8F5 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDE92B4D70EE004FA857 /* KeyChainDatabase.swift */; };
 		C5DD96062CA7255A00FFABBC /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* AppConstants.swift */; };
@@ -1299,6 +1300,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C5D9F9502D8491EC00249C90 /* RealmSwift in Embed Frameworks */,
 				59532A162CB852740069CC8F /* WSNet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
