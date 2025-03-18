@@ -10,12 +10,12 @@
 import XCTest
 
 class APIUtilTests: XCTestCase {
-    
+
     func testSuccessfulIPMapping() {
         XCTAssertNotNil(mapToSuccess(json: myIPSuccessJson, modeType: MyIP.self))
         XCTAssertTrue(mapToSuccess(json: myIPSuccessJson, modeType: MyIP.self)?.userIp == "127.0.0.1")
     }
-    
+
     func testErrorMapping() {
         if mapToAPIError(error: myIPIncorrectJson) == Errors.parsingError {
             XCTAssertTrue(true)
@@ -23,10 +23,10 @@ class APIUtilTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testErrorCodeHandling() {
         let error = mapToAPIError(error: myIPAPIError)
-        
+
         switch error {
         case let .apiError(apiError):
             XCTAssertTrue(apiError.errorCode == 7001)

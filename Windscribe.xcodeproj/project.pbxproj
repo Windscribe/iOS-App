@@ -117,6 +117,7 @@
 		1E55539F2D81F93C00F16AF0 /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 1E55539E2D81F93C00F16AF0 /* Logging */; };
 		1E5553A42D81FABF00F16AF0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; };
 		1E5553A52D81FABF00F16AF0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		1E5553B12D89BF7F00F16AF0 /* Flags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E5553B02D89BF7F00F16AF0 /* Flags.xcassets */; };
 		1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */; };
 		1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60E00D2CAC53DB00623CD5 /* ShortcutProvider.swift */; };
 		1E60E00F2CAC54F800623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
@@ -724,7 +725,6 @@
 		AFDF934F255EB93C002B1FBA /* HomeWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFDF934E255EB93C002B1FBA /* HomeWidget.swift */; };
 		AFDF9352255EB940002B1FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AFDF9351255EB940002B1FBA /* Assets.xcassets */; };
 		AFDF9358255EB941002B1FBA /* HomeWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AFDF9348255EB93C002B1FBA /* HomeWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		AFDF935C255EC191002B1FBA /* Flags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF0AED332200DACE00039CAF /* Flags.xcassets */; };
 		AFDF935D2562B7CA002B1FBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF4ECAA323E9D93A00E09223 /* Assets.xcassets */; };
 		AFED9A3A226E4457000E9EE2 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0021B09A6100B225FF /* AppConstants.swift */; };
 		AFED9A3F226E5286000E9EE2 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Extension.swift */; };
@@ -1384,6 +1384,7 @@
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
+		1E5553B02D89BF7F00F16AF0 /* Flags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Flags.xcassets; sourceTree = "<group>"; };
 		1E60DFEA2CA471B800623CD5 /* ShowLocationIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowLocationIntentHandler.swift; sourceTree = "<group>"; };
 		1E60DFF72CAB061800623CD5 /* Disconnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Disconnect.swift; sourceTree = "<group>"; };
 		1E60DFF82CAB061800623CD5 /* Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connect.swift; sourceTree = "<group>"; };
@@ -3479,6 +3480,7 @@
 		AFDF934D255EB93C002B1FBA /* HomeWidget */ = {
 			isa = PBXGroup;
 			children = (
+				1E5553B02D89BF7F00F16AF0 /* Flags.xcassets */,
 				AFDF934E255EB93C002B1FBA /* HomeWidget.swift */,
 				AFDF9351255EB940002B1FBA /* Assets.xcassets */,
 				AFDF9353255EB940002B1FBA /* Info.plist */,
@@ -4792,11 +4794,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				593607FC2B02A4710052913C /* IBMPlexSans-Regular.otf in Resources */,
+				1E5553B12D89BF7F00F16AF0 /* Flags.xcassets in Resources */,
 				AFDF9352255EB940002B1FBA /* Assets.xcassets in Resources */,
 				593607FA2B02A18E0052913C /* IBMPlexSans-Italic.otf in Resources */,
 				AFDF935D2562B7CA002B1FBA /* Assets.xcassets in Resources */,
 				F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */,
-				AFDF935C255EC191002B1FBA /* Flags.xcassets in Resources */,
 				593607F92B02A16D0052913C /* IBMPlexSans-Bold.otf in Resources */,
 				593607FB2B02A3B90052913C /* IBMPlexSans-BoldItalic.otf in Resources */,
 			);
