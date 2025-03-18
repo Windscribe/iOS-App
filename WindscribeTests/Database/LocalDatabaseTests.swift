@@ -16,12 +16,12 @@ import Swinject
 import XCTest
 
 class LocalDatabaseTests: XCTestCase {
-    
+
     var mockContainer: Container!
     var localDatabase: LocalDatabase!
-    
+
     let disposeBag = DisposeBag()
-    
+
     override func setUp() {
         super.setUp()
 
@@ -36,10 +36,10 @@ class LocalDatabaseTests: XCTestCase {
 
         super.tearDown()
     }
-    
+
     func testMyIpSave() {
         mockContainer.injectLocalDatabase().clean()
-        
+
         let expection = expectation(description: "Waiting for getIp call to finish.")
         // Check no saved ip object found
         localDatabase.getIp().subscribe(
@@ -47,20 +47,20 @@ class LocalDatabaseTests: XCTestCase {
                 expection.fulfill()
             }
         ).disposed(by: disposeBag)
-        
+
         // Save Ip object to database.
         let ipAddress = "192.168.0.\(String(describing: (0 ... 100).randomElement()))"
         let object = MyIP()
         object.userIp = ipAddress
         localDatabase.saveIp(myip: object).disposed(by: disposeBag)
-        
+
         // Get saved object from database
         if let myIP = try? localDatabase.getIp().toBlocking().first(), myIP?.userIp == ipAddress {
             XCTAssert(true, "MyIP object found in database.")
         } else {
             XCTFail("Did not found MyIP object.")
         }
-        
+
         // Wait for timeouts.
         waitForExpectations(timeout: 2) { _ in }
     }
