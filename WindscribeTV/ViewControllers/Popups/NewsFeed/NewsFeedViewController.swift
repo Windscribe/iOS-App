@@ -20,7 +20,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
     var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManagerV2!
     let disposeBag = DisposeBag()
-    var selectedActionLink: ActionLink?
+    var selectedActionLink: ActionLinkModel?
 
     // MARK: Overrides
 
@@ -106,7 +106,7 @@ extension NewsFeedViewController {
         return false
     }
 
-    private func setupDetailsView(with item: NewsFeedData) {
+    private func setupDetailsView(with item: NewsFeedDataModel) {
         newsBodyText.text = item.description
         if let action = item.actionLink {
             button.setTitle(action.title, for: .normal)

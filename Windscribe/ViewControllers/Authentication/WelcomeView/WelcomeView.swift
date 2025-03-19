@@ -58,7 +58,6 @@ struct WelcomeView: View {
                                 .padding()
                         } else {
                             Text(viewModel.getStartedText)
-                                .font(.headline)
                                 .font(.semiBold(.body))
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.black)

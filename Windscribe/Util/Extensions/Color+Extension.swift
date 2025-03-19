@@ -1,5 +1,5 @@
 //
-//  UIColor+Ext.swift
+//  Color+Ext.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-16.
@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 extension UIColor {
     // Login
@@ -95,4 +96,12 @@ extension UIColor {
     static let planUpgradeBackground = UIColor(red: 9 / 255.0, green: 14 / 255.0, blue: 25 / 255.0, alpha: 1.0)
     static let planUpgradeSelectionHighlight = UIColor(red: 202 / 255.0, green: 223 / 255.0, blue: 242 / 255.0, alpha: 1.0)
     static let planUpgradeSelectionShadow = UIColor(red: 0 / 255.0, green: 221 / 255.0, blue: 255 / 255.0, alpha: 0.53)
+}
+
+
+extension Color {
+    static let newsFeedButtonActionColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
+    static let newsFeedDetailExpandedBackgroundColor = Color(red: 32 / 255.0, green: 34 / 255.0, blue: 40 / 255.0)
+    static let newsFeedDetailBackgroundColor = Color(red: 24 / 255.0, green: 27 / 255.0, blue: 33 / 255.0)
+    static let newsFeedSeperatorColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
 }

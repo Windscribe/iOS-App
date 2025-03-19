@@ -69,16 +69,16 @@
 			<key>UIPrerenderedIcon</key>
 			<false/>
 		</dict>
-        <key>CFBundleAlternateIcons</key>
-        <dict>
-            <key>IconName</key>
-            <dict>
-                <key>CFBundleIconFiles</key>
-                <array>
-                    <string>IconName</string>
-                </array>
-            </dict>
-        </dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>IconName</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>IconName</string>
+				</array>
+			</dict>
+		</dict>
 	</dict>
 	<key>CFBundleIcons~ipad</key>
 	<dict>
@@ -138,9 +138,11 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexSans-Bold.otf</string>
-		<string>IBMPlexSans-Light.otf</string>
-		<string>IBMPlexSans-Regular.otf</string>
+		<string>IBMPlexSans-Medium.otf</string>
+		<string>IBMPlexSans-SemiBold.otf</string>
 		<string>IBMPlexSans-Text.otf</string>
+		<string>IBMPlexSans-Regular.otf</string>
+		<string>IBMPlexSans-Light.otf</string>
 		<string>EurostileExt-Bla.otf</string>
 	</array>
 	<key>UIApplicationShortcutItems</key>

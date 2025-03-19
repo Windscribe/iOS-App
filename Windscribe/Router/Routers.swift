@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 protocol NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController)

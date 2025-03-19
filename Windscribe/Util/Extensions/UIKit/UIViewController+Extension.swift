@@ -60,3 +60,21 @@ extension UIViewController {
         return self
     }
 }
+
+extension UIApplication {
+
+    /// Finding Top View Controller for connected scenes
+    func topMostViewController() -> UIViewController? {
+        guard let windowScene = connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else {
+            return nil
+        }
+
+        var topController = rootVC
+        while let presentedVC = topController.presentedViewController {
+            topController = presentedVC
+        }
+
+        return topController
+    }
+}
