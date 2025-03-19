@@ -13,6 +13,9 @@ import Swinject
 class PopupRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         var vc: UIViewController?
+
+        var view: (any View)?
+
         switch to {
         case .bannedAccountPopup:
             vc = Assembler.resolve(BannedAccountPopupViewController.self)
@@ -26,7 +29,7 @@ class PopupRouter: BaseRouter, RootRouter {
             errorVC.viewModel.setMessage(with: message)
             vc = errorVC
         case .newsFeedPopup:
-            vc = Assembler.resolve(NewsFeedViewController.self)
+            view = Assembler.resolve(NewsFeedView.self)
         case .setPreferredProtocolPopup:
             vc = Assembler.resolve(SetPreferredProtocolPopupViewController.self)
         case let .privacyView(completionHandler):
@@ -99,7 +102,6 @@ class PopupRouter: BaseRouter, RootRouter {
                 case let .bannedAccountPopup(pushAnimated):
                     from.navigationController?.pushViewController(vc, animated: pushAnimated)
                 case .setPreferredProtocolPopup,
-                        .newsFeedPopup,
                         .privacyView,
                         .infoPrompt,
                         .enterCredentials,
@@ -117,6 +119,12 @@ class PopupRouter: BaseRouter, RootRouter {
                     from.navigationController?.pushViewController(vc, animated: true)
                 }
             }
+        }
+
+        if let view = view {
+            let hostingController = UIHostingController(rootView: AnyView(view))
+            hostingController.modalPresentationStyle = .fullScreen
+            from.present(hostingController, animated: true, completion: nil)
         }
     }
 }

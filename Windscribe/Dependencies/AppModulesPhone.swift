@@ -114,11 +114,12 @@ class ViewModels: Assembly {
         container.register(ProtocolSetPreferredViewModelV2.self) { r in
             ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: .connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(NewsFeedModelType.self) { r in
-            return NewsFeedModel(
+        container.register((any NewsFeedViewModelProtocol).self) { r in
+            NewsFeedViewModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManagerV2.self)!,
-                fileLogger: r.resolve(FileLogger.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                router: r.resolve(AccountRouter.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!)
         }.inObjectScope(.transient)
         container.register(PrivacyViewModelType.self) { r in
@@ -432,12 +433,14 @@ class ViewControllerModule: Assembly {
             c.logger = r.resolve(FileLogger.self)
             c.viewModel = r.resolve(RobertViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(NewsFeedViewController.self) { _ in
-            NewsFeedViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(NewsFeedModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-            c.accountRouter = r.resolve(AccountRouter.self)
+        container.register(NewsFeedView.self) { r in
+            NewsFeedView(viewModel: NewsFeedViewModel(
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                router: r.resolve(AccountRouter.self)!,
+                htmlParser: r.resolve(HTMLParsing.self)!)
+            )
         }.inObjectScope(.transient)
         container.register(SetPreferredProtocolPopupViewController.self) { _ in
             SetPreferredProtocolPopupViewController()

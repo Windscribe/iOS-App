@@ -32,4 +32,5 @@ enum RouteID {
     case outOfDataAccountPopup
     case proPlanExpireddAccountPopup
     case privacyView(completionHandler: () -> Void)
+    case emergency
 }

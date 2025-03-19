@@ -128,9 +128,11 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>IBMPlexSans-Bold.otf</string>
-		<string>IBMPlexSans-Light.otf</string>
-		<string>IBMPlexSans-Regular.otf</string>
+		<string>IBMPlexSans-Medium.otf</string>
+		<string>IBMPlexSans-SemiBold.otf</string>
 		<string>IBMPlexSans-Text.otf</string>
+		<string>IBMPlexSans-Regular.otf</string>
+		<string>IBMPlexSans-Light.otf</string>
 		<string>EurostileExt-Bla.otf</string>
 	</array>
 	<key>UIApplicationShortcutItems</key>

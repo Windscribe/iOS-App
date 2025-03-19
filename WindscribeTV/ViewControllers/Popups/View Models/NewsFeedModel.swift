@@ -1,28 +1,21 @@
 //
 //  NewsFeedModel.swift
-//  Windscribe
+//  WindscribeTV
 //
-//  Created by Andre Fonseca on 09/04/2024.
-//  Copyright © 2024 Windscribe. All rights reserved.
+//  Created by Soner Yuksel on 2025-03-14.
+//  Copyright © 2025 Windscribe. All rights reserved.
 //
 
 import Foundation
 
 import RxCocoa
 import RxSwift
-import SwiftSoup
-
-enum NewsFeedViewToLaunch {
-    case safari(URL)
-    case payment(String, String?)
-    case unknown
-}
 
 protocol NewsFeedModelType {
-    var newsfeedData: BehaviorSubject<[NewsFeedData]> { get }
+    var newsfeedData: BehaviorSubject<[NewsFeedDataModel]> { get }
     var viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> { get }
     func didTapToExpand(id: Int)
-    func didTapAction(action: ActionLink)
+    func didTapAction(action: ActionLinkModel)
 }
 
 class NewsFeedModel: NewsFeedModelType {
@@ -31,7 +24,7 @@ class NewsFeedModel: NewsFeedModelType {
     let logger: FileLogger
     let htmlParser: HTMLParsing
     let disposeBag = DisposeBag()
-    let newsfeedData: BehaviorSubject<[NewsFeedData]> = BehaviorSubject(value: [])
+    let newsfeedData: BehaviorSubject<[NewsFeedDataModel]> = BehaviorSubject(value: [])
     let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
     let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
 
@@ -66,7 +59,12 @@ class NewsFeedModel: NewsFeedModelType {
                     if openByDefault == notification.id {
                         status = true
                     }
-                    return NewsFeedData(id: notification.id, title: notification.title, description: message.0, expanded: notification.id == openByDefault ? true : false, readStatus: status, actionLink: message.1)
+                    return NewsFeedDataModel(
+                        id: notification.id,
+                        title: notification.title,
+                        description: message.0,
+                        expanded: notification.id == openByDefault ? true : false,
+                        readStatus: status, actionLink: message.1)
                 }
             }
             .subscribe(on: MainScheduler.asyncInstance)
@@ -103,7 +101,7 @@ class NewsFeedModel: NewsFeedModelType {
             }, onError: { _ in }).disposed(by: disposeBag)
     }
 
-    private func getMessage(description: String) -> (String, ActionLink?) {
+    private func getMessage(description: String) -> (String, ActionLinkModel?) {
         let parsedContent = htmlParser.parse(description: description)
         return (parsedContent.message, parsedContent.actionLink)
     }
@@ -122,7 +120,7 @@ class NewsFeedModel: NewsFeedModelType {
     func didTapToExpand(id: Int) {
         updateReadNotice(for: id)
         let newsFeeds = (try? newsfeedData.value()) ?? []
-        let updatedFeeds = newsFeeds.map { feed -> NewsFeedData in
+        let updatedFeeds = newsFeeds.map { feed -> NewsFeedDataModel in
             var updatedFeed = feed
             if updatedFeed.id == id {
                 updatedFeed.expanded.toggle()
@@ -139,7 +137,7 @@ class NewsFeedModel: NewsFeedModelType {
         newsfeedData.onNext(updatedFeeds)
     }
 
-    func didTapAction(action: ActionLink) {
+    func didTapAction(action: ActionLinkModel) {
         logger.logI("Newsfeed", "User tapped on newsfeed action: \(action)")
         let queryParams = getQueryParameters(from: action.link)
         if queryParams.keys.contains("promo") {

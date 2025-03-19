@@ -10,7 +10,7 @@ import Foundation
 
 struct ParsedContent {
     let message: String
-    let actionLink: ActionLink?
+    let actionLink: ActionLinkModel?
 }
 
 class HTMLParser: HTMLParsing {
@@ -23,19 +23,19 @@ class HTMLParser: HTMLParsing {
 
     func parse(description: String) -> ParsedContent {
         let paragraphPattern = "<p[^>]*>(.*?)</p>"
-
-//        let linkPattern = #"<a[^>]*\bclass\s*=\s*["']ncta["'][^>]*\bhref\s*=\s*["'](.*?)["'][^>]*>(.*?)</a>"#
-
         let linkPattern = #"<a[^>]*href=["'](.*?)["'][^>]*class=["']ncta["'][^>]*>(.*?)</a>"#
 
-        print("🔍 Raw Description: [\(description)]")
-
         do {
-            let paragraphRegex = try NSRegularExpression(pattern: paragraphPattern, options: [.dotMatchesLineSeparators, .caseInsensitive])
-            let linkRegex = try NSRegularExpression(pattern: linkPattern, options: [.dotMatchesLineSeparators, .caseInsensitive])
+            let paragraphRegex = try NSRegularExpression(
+                pattern: paragraphPattern,
+                options: [.dotMatchesLineSeparators, .caseInsensitive])
+            let linkRegex = try NSRegularExpression(
+                pattern: linkPattern,
+                options: [.dotMatchesLineSeparators, .caseInsensitive])
 
             let nsDescription = description as NSString
-            let paragraphs = paragraphRegex.matches(in: description, range: NSRange(location: 0, length: nsDescription.length))
+            let paragraphs = paragraphRegex.matches(
+                in: description, range: NSRange(location: 0, length: nsDescription.length))
 
             var messageArray: [String] = []
 
@@ -56,15 +56,15 @@ class HTMLParser: HTMLParsing {
             let message = messageArray.joined(separator: "\n")
 
             // Link extraction logic
-            var actionLink: ActionLink?
-            if let linkMatch = linkRegex.firstMatch(in: description, range: NSRange(location: 0, length: nsDescription.length)) {
-                let url = nsDescription.substring(with: linkMatch.range(at: 1)).trimmingCharacters(in: .whitespacesAndNewlines)
-                let linkText = nsDescription.substring(with: linkMatch.range(at: 2)).trimmingCharacters(in: .whitespacesAndNewlines)
+            var actionLink: ActionLinkModel?
+            if let linkMatch = linkRegex.firstMatch(in: description,
+                                                    range: NSRange(location: 0, length: nsDescription.length)) {
+                let url = nsDescription.substring(
+                    with: linkMatch.range(at: 1)).trimmingCharacters(in: .whitespacesAndNewlines)
+                let linkText = nsDescription.substring(
+                    with: linkMatch.range(at: 2)).trimmingCharacters(in: .whitespacesAndNewlines)
 
-                print("🔗 Extracted URL: [\(url)]")
-                print("🔗 Extracted Link Text: [\(linkText)]")
-
-                actionLink = ActionLink(title: linkText, link: url)
+                actionLink = ActionLinkModel(title: linkText, link: url)
             }
 
             if !message.isEmpty {

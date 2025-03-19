@@ -112,7 +112,6 @@
 "Yes" = "Sí";
 "No" = "No";
 "Okay" = "Bueno";
-"Error" = "Error";
 "Setup later" = "Configurar luego";
 "Optional" = "Opcional";
 "Get More Data" = "Obtener más datos";
@@ -329,7 +328,6 @@
 "Show Location Load" = "Mostrar carga de ubicación";
 "Haptic Feedback" = "Retroalimentación háptica";
 "Are you sure you want to log out of Windscribe?" = "¿Estás seguro que deseas cerrar la sesión de Windscribe?";
-"News Feed" = "Fuente de noticias";
 "Disclaimer" = "Advertencia";
 "Grant Permission" = "Otorgar permiso";
 "Fill in the fields bellow and one of our support agents will personally get back to you very soon™" = "Llena los campos a continuación y uno de nuestros representantes de servicio muy pronto se comunicará contigo personalmente™";

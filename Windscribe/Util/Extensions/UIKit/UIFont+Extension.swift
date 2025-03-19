@@ -38,7 +38,7 @@ extension UIFont {
     }
 
     static func semiBold(textStyle: UIFont.TextStyle) -> UIFont {
-        return UIFont.customPreferredFont(name: "IBMPlexSans-Medium", textStyle: textStyle)
+        return UIFont.customPreferredFont(name: "IBMPlexSans-SemiBold", textStyle: textStyle)
     }
 
     static func text(textStyle: UIFont.TextStyle) -> UIFont {
@@ -47,6 +47,10 @@ extension UIFont {
 
     static func regular(textStyle: UIFont.TextStyle) -> UIFont {
         return UIFont.customPreferredFont(name: "IBMPlexSans-Regular", textStyle: textStyle)
+    }
+
+    static func light(textStyle: UIFont.TextStyle) -> UIFont {
+        return UIFont.customPreferredFont(name: "IBMPlexSans-Light", textStyle: textStyle)
     }
 
     static func customPreferredFont(name: String, textStyle: UIFont.TextStyle) -> UIFont {
@@ -63,27 +67,68 @@ extension UIFont {
 }
 
 extension Font {
+    private static func customFont(name: String, textStyle: UIFont.TextStyle) -> Font {
+        guard let customUIFont = UIFont(name: name, size: UIFont.preferredFont(forTextStyle: textStyle).pointSize) else {
+            return .system(textStyle.toCustomFontWeight()) // Fallback
+        }
+
+        let scaledFont = UIFontMetrics(forTextStyle: textStyle).scaledFont(for: customUIFont)
+        return Font(scaledFont)
+    }
+
     static func bold(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Bold", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-Bold", textStyle: textStyle)
     }
 
     static func medium(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-Medium", textStyle: textStyle)
     }
 
     static func semiBold(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Medium", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-SemiBold", textStyle: textStyle)
     }
 
     static func text(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Text", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-Text", textStyle: textStyle)
     }
 
     static func regular(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Regular", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-Regular", textStyle: textStyle)
     }
 
     static func light(_ textStyle: UIFont.TextStyle) -> Font {
-        return Font.custom("IBMPlexSans-Light", size: UIFont.preferredFont(forTextStyle: textStyle).pointSize)
+        customFont(name: "IBMPlexSans-Light", textStyle: textStyle)
+    }
+}
+
+extension UIFont.TextStyle {
+
+    func toCustomFontWeight() -> Font.TextStyle {
+        #if os(tvOS)
+        switch self {
+        case .title1: return .title
+        case .title2, .title3: return .title2
+        case .headline: return .headline
+        case .body: return .body
+        case .callout: return .callout
+        case .subheadline: return .subheadline
+        case .footnote: return .footnote
+        case .caption1, .caption2: return .caption
+        default: return .body
+        }
+        #else
+        switch self {
+        case .largeTitle: return .largeTitle
+        case .title1: return .title
+        case .title2, .title3: return .title2
+        case .headline: return .headline
+        case .body: return .body
+        case .callout: return .callout
+        case .subheadline: return .subheadline
+        case .footnote: return .footnote
+        case .caption1, .caption2: return .caption
+        default: return .body
+        }
+        #endif
     }
 }
