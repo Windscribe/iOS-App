@@ -434,6 +434,9 @@
 "Automatically Secure any Network" = "قم بتأمين أي شبكة تلقائيًا";
 "No-Logging Policy" = "سياسة عدم الاحتفاظ بالسجلات";
 "Works with Siri, Shortcuts & Widgets" = "يعمل مع Siri والاختصارات والأدوات الذكية";
-"Get Started" = "ابدأ";
+"Sign Up" = "إنشاء حساب";
 "Login" = "تسجيل الدخول";
 "Can't Connect?" = "غير قادر على الاتصال؟";
+"Continue with Google" = "متابعة باستخدام Google";
+"Continue with Apple" = "متابعة باستخدام Apple";
+"Emergency Connect On" = "تم تفعيل الاتصال الطارئ";

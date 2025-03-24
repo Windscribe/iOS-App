@@ -438,6 +438,9 @@
 "Automatically Secure any Network" = "Автоматически защитите любую сеть";
 "No-Logging Policy" = "Политика отсутствия логов";
 "Works with Siri, Shortcuts & Widgets" = "Работает с Siri, Ярлыками и Виджетами";
-"Get Started" = "Начать";
+"Sign Up" = "Зарегистрироваться";
 "Login" = "Войти";
 "Can't Connect?" = "Не удается подключиться?";
+"Continue with Google" = "Продолжить с Google";
+"Continue with Apple" = "Продолжить с Apple";
+"Emergency Connect On" = "Аварийное подключение включено";

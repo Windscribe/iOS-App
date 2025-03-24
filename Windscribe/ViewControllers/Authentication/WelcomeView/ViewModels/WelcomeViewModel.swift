@@ -43,6 +43,8 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
         ImagesAsset.Welcome.tabInfo3,
         ImagesAsset.Welcome.tabInfo4
     ]
+    let signupGoogleImage = ImagesAsset.Welcome.googleIcon
+    let signupAppleImage = ImagesAsset.Welcome.appleIcon
 
     // Text Assets
     let tabInfoTexts = [
@@ -51,9 +53,10 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
         TextsAsset.Welcome.tabInfo3,
         TextsAsset.Welcome.tabInfo4
     ]
-    let getStartedText = TextsAsset.Welcome.getStarted
+    let signupText = TextsAsset.Welcome.signup
     let loginText = TextsAsset.Welcome.login
     let connectionFaultText = TextsAsset.Welcome.connectionFault
+    let emergencyConnectOnText = TextsAsset.Welcome.emergencyConnectOn
 
     private var cancellables = Set<AnyCancellable>()
     private let userRepository: UserRepository
@@ -124,6 +127,16 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
                 self.prepareUserData()
             })
             .store(in: &cancellables)
+    }
+
+    func continueWithGoogleTapped() {
+        // TODO: Change with Google Authentication
+        continueButtonTapped()
+    }
+
+    func continueWithAppleTapped() {
+        // TODO: Change with Apple Authentication
+        continueButtonTapped()
     }
 
     private func prepareUserData() {

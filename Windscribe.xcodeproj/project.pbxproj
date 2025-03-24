@@ -1123,6 +1123,9 @@
 		F434A1C72D84AEF70059415F /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3FC11C227B68EB0050B224 /* SessionManager.swift */; };
 		F434A1C82D84AF0D0059415F /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
 		F434A1C92D84AF190059415F /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
+		F440F2F82D8CAA8E006F1A6D /* DeviceTypeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */; };
+		F440F2FC2D8CB4E4006F1A6D /* InfoPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F2FB2D8CB4E4006F1A6D /* InfoPageView.swift */; };
+		F440F2FD2D8CB4E4006F1A6D /* InfoPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F2FB2D8CB4E4006F1A6D /* InfoPageView.swift */; };
 		F44F275C2D84B79E00A47E37 /* NewsFeedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */; };
 		F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275D2D84B87500A47E37 /* NewsFeedView.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
@@ -1994,6 +1997,8 @@
 		F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDataModel.swift; sourceTree = "<group>"; };
 		F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
 		F434A1C42D84AB200059415F /* NewsFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedModel.swift; sourceTree = "<group>"; };
+		F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTypeProvider.swift; sourceTree = "<group>"; };
+		F440F2FB2D8CB4E4006F1A6D /* InfoPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPageView.swift; sourceTree = "<group>"; };
 		F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDetailView.swift; sourceTree = "<group>"; };
 		F44F275D2D84B87500A47E37 /* NewsFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedView.swift; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
@@ -3066,9 +3071,9 @@
 			children = (
 				F485CBC32D4D67630063EA3A /* UIKit */,
 				C545A0DB2D47638F00F3333E /* Completable+Extension.swift */,
-				AF4E926721EFC6EC00A3F584 /* Color+Extension.swift */,
 				AF018E0521B09FB300B225FF /* String+Extension.swift */,
 				AFFA716321C99B2F00349195 /* Date+Extension.swift */,
+				AF4E926721EFC6EC00A3F584 /* Color+Extension.swift */,
 				AF0CA558223C49020048D71C /* Array+Extension.swift */,
 				AFED9A3E226E5286000E9EE2 /* Data+Extension.swift */,
 				AF97EFDA2280E70300378058 /* Realm+Extension.swift */,
@@ -4119,8 +4124,8 @@
 		F41190232D7FC77A00AC7EB6 /* WelcomeView */ = {
 			isa = PBXGroup;
 			children = (
-				F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */,
-				F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */,
+				F440F2F92D8CB473006F1A6D /* Views */,
+				F440F2FA2D8CB492006F1A6D /* ViewModels */,
 			);
 			path = WelcomeView;
 			sourceTree = "<group>";
@@ -4166,6 +4171,23 @@
 				F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F440F2F92D8CB473006F1A6D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */,
+				F440F2FB2D8CB4E4006F1A6D /* InfoPageView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F440F2FA2D8CB492006F1A6D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		F45BA5932D53F96000CFDB82 /* PlanUpgrade */ = {
@@ -4269,6 +4291,7 @@
 			isa = PBXGroup;
 			children = (
 				F4843A942D89F7300034330F /* SafariView.swift */,
+				F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -5176,6 +5199,7 @@
 				1EF7BB452C74C8760032A4DF /* GetMoreDataPopupViewController.swift in Sources */,
 				59FC741E2C51547000021CD1 /* AdvanceRepositoryImpl.swift in Sources */,
 				59656F672C72D5D000707EA2 /* ServerListCollectionViewCell.swift in Sources */,
+				F440F2FD2D8CB4E4006F1A6D /* InfoPageView.swift in Sources */,
 				59FC74482C515DE700021CD1 /* Notifications.swift in Sources */,
 				592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */,
 				C59CA1602CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
@@ -5342,6 +5366,7 @@
 				F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */,
 				F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */,
 				AF21995F2270B147009B42E5 /* Result.swift in Sources */,
+				F440F2F82D8CAA8E006F1A6D /* DeviceTypeProvider.swift in Sources */,
 				1EE74F7E2BD6C0DE0031185F /* ShakeForDataViewModel.swift in Sources */,
 				1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */,
 				E9219FF12885AFB90026E544 /* UIStackView+Extension.swift in Sources */,
@@ -5733,6 +5758,7 @@
 				C5D1C2D62BBFE2F40083B9EC /* AdvanceKeys.swift in Sources */,
 				C57BDE3B29B93E2400337E63 /* SiriIdentifiers.swift in Sources */,
 				1E49334A2BF3A52500C853AF /* StaticIPListViewModel.swift in Sources */,
+				F440F2FC2D8CB4E4006F1A6D /* InfoPageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

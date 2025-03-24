@@ -297,7 +297,10 @@ extension AppDelegate {
             }
             rootViewController = UINavigationController(rootViewController: mainViewController)
         } else {
-            let hostingController = UIHostingController(rootView: view)
+            // Wrap the RootView in DeviceTypeProvider
+            let rootView = DeviceTypeProvider { view }
+
+            let hostingController = UIHostingController(rootView: rootView)
             rootViewController = UINavigationController(rootViewController: hostingController)
         }
 

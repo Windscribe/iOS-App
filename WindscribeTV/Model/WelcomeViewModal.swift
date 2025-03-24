@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+
 protocol WelcomeViewModal {
     var showLoadingView: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }

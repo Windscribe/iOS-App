@@ -436,6 +436,9 @@
 "Automatically Secure any Network" = "自動保護任何網絡";
 "No-Logging Policy" = "無日誌記錄政策";
 "Works with Siri, Shortcuts & Widgets" = "兼容 Siri、捷徑及小工具";
-"Get Started" = "開始";
+"Sign Up" = "註冊";
 "Login" = "登入";
 "Can't Connect?" = "無法連接？";
+"Continue with Google" = "繼續使用 Google";
+"Continue with Apple" = "繼續使用 Apple";
+"Emergency Connect On" = "緊急連接已開啟";
