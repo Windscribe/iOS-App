@@ -436,6 +436,9 @@
 "Automatically Secure any Network" = "Automatisch jedes Netzwerk sichern";
 "No-Logging Policy" = "Keine-Protokollierungs-Richtlinie";
 "Works with Siri, Shortcuts & Widgets" = "Funktioniert mit Siri, Kurzbefehlen und Widgets";
-"Get Started" = "Loslegen";
+"Sign Up" = "Registrieren";
 "Login" = "Anmelden";
 "Can't Connect?" = "Keine Verbindung möglich?";
+"Continue with Google" = "Mit Google fortfahren";
+"Continue with Apple" = "Mit Apple fortfahren";
+"Emergency Connect On" = "Notfallverbindung eingeschaltet";

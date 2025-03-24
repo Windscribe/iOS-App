@@ -98,10 +98,14 @@ extension UIColor {
     static let planUpgradeSelectionShadow = UIColor(red: 0 / 255.0, green: 221 / 255.0, blue: 255 / 255.0, alpha: 0.53)
 }
 
-
 extension Color {
+    // News Feed
     static let newsFeedButtonActionColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
     static let newsFeedDetailExpandedBackgroundColor = Color(red: 32 / 255.0, green: 34 / 255.0, blue: 40 / 255.0)
     static let newsFeedDetailBackgroundColor = Color(red: 24 / 255.0, green: 27 / 255.0, blue: 33 / 255.0)
     static let newsFeedSeperatorColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
+
+    // Welcome
+    static let welcomeButtonTextColor = Color(red: 131 / 255.0, green: 141 / 255.0, blue: 155 / 255.0)
+    static let welcomeEmergencyButtonColor = Color(red: 97 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
 }

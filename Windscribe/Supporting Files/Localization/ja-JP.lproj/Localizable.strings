@@ -439,6 +439,9 @@
 "Automatically Secure any Network" = "あらゆるネットワークを自動で保護";
 "No-Logging Policy" = "ログなしポリシー";
 "Works with Siri, Shortcuts & Widgets" = "Siri、ショートカット、ウィジェットに対応";
-"Get Started" = "始める";
+"Sign Up" = "サインアップ";
 "Login" = "ログイン";
 "Can't Connect?" = "接続できませんか？";
+"Continue with Google" = "Googleで続ける";
+"Continue with Apple" = "Appleで続ける";
+"Emergency Connect On" = "緊急接続オン";

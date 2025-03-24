@@ -1,8 +1,13 @@
 {
   "images" : [
     {
-      "filename" : "welcome-background.pdf",
+      "filename" : "welcome-background 1.pdf",
       "idiom" : "universal"
+    },
+    {
+      "filename" : "welcome-background.pdf",
+      "idiom" : "universal",
+      "width-class" : "compact"
     }
   ],
   "info" : {

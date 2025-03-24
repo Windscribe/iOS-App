@@ -1853,9 +1853,12 @@ enum TextsAsset {
         static let tabInfo2 = "Automatically Secure any Network".localize()
         static let tabInfo3 = "No-Logging Policy".localize()
         static let tabInfo4 = "Works with Siri, Shortcuts & Widgets".localize()
-        static let getStarted = "Get Started".localize()
+        static let signup = "Sign Up".localize()
         static let login = "Login".localize()
         static let connectionFault = "Can't Connect?".localize()
+        static let emergencyConnectOn = "Emergency Connect On".localize()
+        static let continueWithGoogle = "Continue with Google".localize()
+        static let continueWithApple = "Continue with Apple".localize()
     }
 }
 

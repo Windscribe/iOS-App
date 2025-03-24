@@ -452,6 +452,9 @@
 "Automatically Secure any Network" = "Herhangi bir ağı otomatik olarak güvenceye alın";
 "No-Logging Policy" = "Kayıt Tutmama Politikası";
 "Works with Siri, Shortcuts & Widgets" = "Siri, Kestirmeler ve Widget'larla çalışır";
-"Get Started" = "Başlayın";
+"Sign Up" = "Kayıt Ol";
 "Login" = "Giriş Yap";
 "Can't Connect?" = "Bağlanamıyor musunuz?";
+"Continue with Google" = "Google ile Devam Et";
+"Continue with Apple" = "Apple ile Devam Et";
+"Emergency Connect On" = "Acil Bağlantı Açık";

@@ -266,6 +266,8 @@ enum ImagesAsset {
 
     enum Welcome {
         static let icon = "welcome-icon"
+        static let googleIcon = "welcome-google-icon"
+        static let appleIcon = "welcome-apple-icon"
         static let background = "welcome-background"
         static let tabInfo1 = "welcome-info-tab-1"
         static let tabInfo2 = "welcome-info-tab-2"
