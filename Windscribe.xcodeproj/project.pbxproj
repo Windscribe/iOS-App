@@ -1037,6 +1037,8 @@
 		C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1FC237DC02200BDDCDB /* APIMessage.swift */; };
 		C5E3C4A82C36CAC0009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4A72C36CAC0009B67DC /* WireGuardKit */; };
 		C5E3C4AB2C36CBD1009B67DC /* WireGuardKit in Frameworks */ = {isa = PBXBuildFile; productRef = C5E3C4AA2C36CBD1009B67DC /* WireGuardKit */; };
+		C5F1B6B22D93125C0073ADFB /* AppleSignInDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B6B12D93125A0073ADFB /* AppleSignInDelegate.swift */; };
+		C5F1B6B32D93125C0073ADFB /* AppleSignInDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F1B6B12D93125A0073ADFB /* AppleSignInDelegate.swift */; };
 		C5FA3E802684BA56001D03A7 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */; };
 		C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E832684BB90001D03A7 /* HelpItem.swift */; };
 		C5FA3E882684E232001D03A7 /* SubmitTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FA3E872684E232001D03A7 /* SubmitTicketViewController.swift */; };
@@ -1904,6 +1906,7 @@
 		C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRepositoryImpl.swift; sourceTree = "<group>"; };
 		C5D983C12B34DA3F0069FF3A /* APIUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtil.swift; sourceTree = "<group>"; };
 		C5D983C62B34E5AA0069FF3A /* APIUtilTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIUtilTests.swift; sourceTree = "<group>"; };
+		C5F1B6B12D93125A0073ADFB /* AppleSignInDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleSignInDelegate.swift; sourceTree = "<group>"; };
 		C5FA3E7F2684BA56001D03A7 /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		C5FA3E832684BB90001D03A7 /* HelpItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpItem.swift; sourceTree = "<group>"; };
 		C5FA3E872684E232001D03A7 /* SubmitTicketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTicketViewController.swift; sourceTree = "<group>"; };
@@ -4185,6 +4188,7 @@
 		F440F2FA2D8CB492006F1A6D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				C5F1B6B12D93125A0073ADFB /* AppleSignInDelegate.swift */,
 				F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */,
 			);
 			path = ViewModels;
@@ -5131,6 +5135,7 @@
 				59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */,
 				59FC73EE2C51511700021CD1 /* Token.swift in Sources */,
 				1EA9D7122C8717DC00566A93 /* PrivacyPopUpViewController.swift in Sources */,
+				C5F1B6B22D93125C0073ADFB /* AppleSignInDelegate.swift in Sources */,
 				59FC73FA2C51538200021CD1 /* APIDebug.swift in Sources */,
 				59FC74382C515A8300021CD1 /* KeyChainDatabaseImpl.swift in Sources */,
 				59DA7FC72C3DC4D000042E57 /* DynamicWireGuardConfig.swift in Sources */,
@@ -5503,6 +5508,7 @@
 				C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */,
 				AF36A1A5237B4D9D00BDDCDB /* ShakeForDataPopupViewController+UI.swift in Sources */,
 				C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */,
+				C5F1B6B32D93125C0073ADFB /* AppleSignInDelegate.swift in Sources */,
 				C57668F02B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift in Sources */,
 				C5D983BB2B34A1D90069FF3A /* APIManager.swift in Sources */,
 				C580FDEC2B4D711D004FA857 /* KeyChainDatabaseImpl.swift in Sources */,

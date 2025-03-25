@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 import UIKit
+import AuthenticationServices
 
 protocol WelcomeViewModelProtocol: ObservableObject {
     var scrollOrder: Int { get set }
@@ -67,6 +68,7 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
     private let router: WelcomeRouter
     private let vpnManager: VPNManager
     private let logger: FileLogger
+    private var appleSignInDelegate: AppleSignInDelegate?
 
     private var presentingController: UIViewController?
 
@@ -135,8 +137,36 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
     }
 
     func continueWithAppleTapped() {
-        // TODO: Change with Apple Authentication
-        continueButtonTapped()
+        let request = ASAuthorizationAppleIDProvider().createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.state = UUID().uuidString
+
+        let controller = ASAuthorizationController(authorizationRequests: [request])
+        appleSignInDelegate = AppleSignInDelegate { result in
+            switch result {
+                case .success(let credential):
+                    if let appleCredential = credential as? ASAuthorizationAppleIDCredential,
+                       let authorizationCodeData = appleCredential.authorizationCode,
+                       let authorizationCode = String(data: authorizationCodeData, encoding: .utf8) {
+
+                        let parameters: [String: Any] = [
+                            "code": authorizationCode,
+                            "platform": "ios"
+                        ]
+                        print("$$$ Apple Sign In Success but no authorization code. \(parameters)")
+                    } else {
+                        print("$$$ Apple Sign In Success but no authorization code.")
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        print("$$$ Apple Sign In failure: \(error)")
+                    }
+                case .noCredentinals:
+                    print("$$$ Apple Sign In failure with no credentials.")
+            }
+        }
+        controller.delegate = appleSignInDelegate
+        controller.performRequests()
     }
 
     private func prepareUserData() {
