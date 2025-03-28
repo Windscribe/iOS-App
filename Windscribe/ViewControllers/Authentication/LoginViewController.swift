@@ -16,9 +16,9 @@ class LoginViewController: WSNavigationViewController {
 
     var scrollView: UIScrollView!
     var usernameLabel, passwordLabel: UILabel!
-    var usernameTextfield: LoginTextField!
+    var usernameTextfield: AuthenticationTextField!
     var passwordTextfield: PasswordTextField!
-    var twoFactorCodeTextfield: LoginTextField!
+    var twoFactorCodeTextfield: AuthenticationTextField!
     var usernameInfoIconImageView, passwordInfoIconImageView: UIImageView!
     var twoFactorCodeButton, continueButton, forgotPasswordButton: UIButton!
     var loadingView: UIActivityIndicatorView!
@@ -27,7 +27,7 @@ class LoginViewController: WSNavigationViewController {
 
     // MARK: - State properties
 
-    var viewModel: LoginViewModel!, router: LoginRouter!, logger: FileLogger!
+    var viewModel: LoginViewModelOld!, router: LoginRouter!, logger: FileLogger!
 
     // MARK: - UI Events
 
@@ -41,11 +41,11 @@ class LoginViewController: WSNavigationViewController {
     override func setupLocalized() {
         titleLabel.text = TextsAsset.login
         continueButton.setTitle(TextsAsset.continue, for: .normal)
-        forgotPasswordButton.setTitle(TextsAsset.forgotPassword, for: .normal)
-        twoFactorCodeButton.setTitle(TextsAsset.twoFactorCode, for: .normal)
+        forgotPasswordButton.setTitle(TextsAsset.Authentication.forgotPassword, for: .normal)
+        twoFactorCodeButton.setTitle(TextsAsset.Authentication.twoFactorCode, for: .normal)
         twoFactorInfoLabel.text = "If enabled, use an authentication app to generate the code.".localize()
-        passwordLabel.text = TextsAsset.password
-        usernameLabel.text = TextsAsset.username
+        passwordLabel.text = TextsAsset.Authentication.password
+        usernameLabel.text = TextsAsset.Authentication.username
     }
 
     override func viewWillAppear(_ animated: Bool) {

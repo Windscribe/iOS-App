@@ -26,7 +26,7 @@ extension EnterEmailViewController {
         emailLabel.textAlignment = .left
         view.addSubview(emailLabel)
 
-        emailTextField = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        emailTextField = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         emailTextField.addTarget(self, action: #selector(emailTextFieldValueChanged), for: .editingChanged)
         if let session = viewModel.sessionManager.session, session.isUserPro {
             emailTextField.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)

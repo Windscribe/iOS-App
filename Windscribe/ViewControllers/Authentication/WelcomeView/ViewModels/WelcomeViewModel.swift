@@ -165,10 +165,10 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
         vpnManager.vpnInfo
             .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] vpnInfo in
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] vpnInfo in
                 guard let self = self else { return }
                 self.emergencyConnectStatus = vpnInfo?.status == .connected
-            }
+            })
             .store(in: &cancellables)
     }
 
@@ -189,12 +189,6 @@ extension WelcomeViewModel {
         guard let presentingController = presentingController else { return }
 
         router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: presentingController)
-    }
-
-    func navigateToLogin() {
-        guard let presentingController = presentingController else { return }
-
-        router.routeTo(to: RouteID.login, from: presentingController)
     }
 
     func navigateToMain() {

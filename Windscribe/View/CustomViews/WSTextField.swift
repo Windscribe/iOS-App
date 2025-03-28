@@ -38,7 +38,7 @@ class WSTextField: UITextField, UITextFieldDelegate {
     }
 }
 
-class LoginTextField: UITextField {
+class AuthenticationTextField: UITextField {
     let disposeBag = DisposeBag()
     var padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 5)
 
@@ -77,7 +77,7 @@ class LoginTextField: UITextField {
     }
 }
 
-class PasswordTextField: LoginTextField {
+class PasswordTextField: AuthenticationTextField {
     lazy var showHidePasswordButton = ImageButton()
 
     override var isSecureTextEntry: Bool {

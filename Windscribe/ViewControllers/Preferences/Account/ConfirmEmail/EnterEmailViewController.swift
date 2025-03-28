@@ -15,7 +15,7 @@ class EnterEmailViewController: WSNavigationViewController {
     // MARK: - UI elements
 
     var emailLabel: UILabel!
-    var emailTextField: LoginTextField!
+    var emailTextField: AuthenticationTextField!
     var continueButton: UIButton!
     var loadingView: UIActivityIndicatorView!
     var emailInfoLabel, infoLabel: UILabel!

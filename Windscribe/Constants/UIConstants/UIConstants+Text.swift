@@ -84,14 +84,6 @@ enum TextsAsset {
         return "Get More Data".localize()
     }
 
-    static var username: String {
-        return "Username".localize()
-    }
-
-    static var password: String {
-        return "Password".localize()
-    }
-
     static var addEmail: String {
         return "Add Email".localize()
     }
@@ -122,10 +114,6 @@ enum TextsAsset {
 
     static var verifyYourPassword: String {
         return "Verify your password".localize()
-    }
-
-    static var forgotPassword: String {
-        return "Forgot password?".localize()
     }
 
     static var chooseUsername: String {
@@ -166,10 +154,6 @@ enum TextsAsset {
 
     static var error: String {
         return "Error".localize()
-    }
-
-    static var twoFactorCode: String {
-        return "2FA Code".localize()
     }
 
     static var loginFailed: String {
@@ -739,10 +723,6 @@ enum TextsAsset {
 
         static var sentLog: String {
             return "Sent, Thanks!".localize()
-        }
-
-        static var enterUsername: String {
-            return "Enter Username".localize()
         }
 
         static var submit: String {
@@ -1859,6 +1839,16 @@ enum TextsAsset {
         static let emergencyConnectOn = "Emergency Connect On".localize()
         static let continueWithGoogle = "Continue with Google".localize()
         static let continueWithApple = "Continue with Apple".localize()
+    }
+
+    enum Authentication {
+        static let username = "Username".localize()
+        static let enterUsername = "Enter Username".localize()
+        static let password = "Password".localize()
+        static let enterPassword = "Enter Password".localize()
+        static let twoFactorCode = "2FA Code".localize()
+        static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localize()
+        static let forgotPassword = "Forgot password?".localize()
     }
 }
 

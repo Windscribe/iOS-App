@@ -13,6 +13,7 @@ struct WelcomeView: View {
     @Environment(\.deviceType) private var deviceType
 
     @StateObject private var viewModel: WelcomeViewModel
+    @StateObject private var router = LoginNavigationRouter()
 
     private let dynamicTypeRange = (...DynamicTypeSize.large)
 
@@ -21,6 +22,27 @@ struct WelcomeView: View {
     }
 
     var body: some View {
+        NavigationView {
+            contentView
+                .getPresentingController { controller in
+                    guard let presentingController = controller else { return }
+                    viewModel.setPresentingController(presentingController)
+                }
+                .onReceive(viewModel.routeToSignup) { _ in
+                    viewModel.navigateToSignUp()
+                }
+                .onReceive(viewModel.routeToMainView) { _ in
+                    viewModel.navigateToMain()
+                }
+                .onReceive(viewModel.routeToEmergency) { _ in
+                    viewModel.navigateToEmergency()
+                }
+        }
+        .withRouter(router)
+    }
+
+    @ViewBuilder
+    private var contentView: some View {
         GeometryReader { geometry in
             if deviceType == .iPadLandscape {
                 HStack {
@@ -60,22 +82,6 @@ struct WelcomeView: View {
                         .ignoresSafeArea()
                 }
             }
-        }
-        .getPresentingController { controller in
-            guard let presentingController = controller else { return }
-            viewModel.setPresentingController(presentingController)
-        }
-        .onReceive(viewModel.routeToSignup) { _ in
-            viewModel.navigateToSignUp()
-        }
-        .onReceive(viewModel.routeToMainView) { _ in
-            viewModel.navigateToMain()
-        }
-        .onReceive(viewModel.routeToLogin) { _ in
-            viewModel.navigateToLogin()
-        }
-        .onReceive(viewModel.routeToEmergency) { _ in
-            viewModel.navigateToEmergency()
         }
     }
 
@@ -118,7 +124,7 @@ struct WelcomeView: View {
     private func tabInfoView(geometry: GeometryProxy) -> some View {
         TabView(selection: $viewModel.scrollOrder) {
             ForEach(0..<viewModel.tabInfoImages.count, id: \.self) { index in
-                InfoPageView(
+                WelcomeInfoPageView(
                     imageName: viewModel.tabInfoImages[index],
                     text: viewModel.tabInfoTexts[index]
                 )
@@ -140,7 +146,9 @@ extension WelcomeView {
     @ViewBuilder
     private func authenticationButtonView() -> some View {
         VStack(spacing: 12) {
-            Button(action: viewModel.continueWithGoogleTapped) {
+            Button(action: {
+                router.navigate(to: .login)
+            }, label: {
                 HStack(alignment: .center, spacing: 10) {
                     Image(viewModel.signupGoogleImage)
                         .resizable()
@@ -156,10 +164,12 @@ extension WelcomeView {
                 .padding()
                 .background(Color.white)
                 .clipShape(Capsule())
-            }
+            })
 
             // Apple Authentication Button
-            Button(action: viewModel.continueWithAppleTapped) {
+            Button(action: {
+                router.navigate(to: .login)
+            }, label: {
                 HStack(alignment: .center, spacing: 10) {
                     Image(viewModel.signupAppleImage)
                         .resizable()
@@ -178,7 +188,7 @@ extension WelcomeView {
                 .overlay(
                     Capsule().stroke(Color.white.opacity(0.3), lineWidth: 0.5)
                 )
-            }
+            })
 
             // Emergency & Sign-Up/Login Section
             HStack {
@@ -220,14 +230,22 @@ extension WelcomeView {
                         .fill(Color.white.opacity(0.3))
                         .frame(width: 1, height: 14)
 
-                    Button(action: {
-                        viewModel.routeToLogin.send(())
-                    }, label: {
-                        Text(viewModel.loginText)
-                            .font(.semiBold(.callout))
-                            .dynamicTypeSize(dynamicTypeRange)
-                            .foregroundColor(Color.welcomeButtonTextColor)
-                    })
+                    NavigationLink(
+                        destination: router.createView(for: .login),
+                        isActive: Binding(
+                            get: { router.activeRoute == .login },
+                            set: { if !$0 { router.pop() } }
+                        )
+                    ) {
+                        Button(action: {
+                            router.navigate(to: .login)
+                        }, label: {
+                            Text(viewModel.loginText)
+                                .font(.semiBold(.callout))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .foregroundColor(Color.welcomeButtonTextColor)
+                        })
+                    }
                 }
             }
             .padding(.top, 16)

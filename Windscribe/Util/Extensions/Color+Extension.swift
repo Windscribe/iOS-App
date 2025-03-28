@@ -108,4 +108,9 @@ extension Color {
     // Welcome
     static let welcomeButtonTextColor = Color(red: 131 / 255.0, green: 141 / 255.0, blue: 155 / 255.0)
     static let welcomeEmergencyButtonColor = Color(red: 97 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
+
+    // Login - Register
+    static let loginRegisterFailedField = Color(red: 249 / 255.0, green: 76 / 255.0, blue: 67 / 255.0)
+    static let loginRegisterEnabledButtonColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
+
 }
