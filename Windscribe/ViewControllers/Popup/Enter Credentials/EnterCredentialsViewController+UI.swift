@@ -52,7 +52,7 @@ extension EnterCredentialsViewController {
 
         usernameTextField = WSTextField()
         usernameTextField.attributedPlaceholder =
-            NSAttributedString(string: TextsAsset.username,
+            NSAttributedString(string: TextsAsset.Authentication.username,
                                attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         usernameTextField.backgroundColor = UIColor.clear
         usernameTextField.textColor = UIColor.white
@@ -65,7 +65,7 @@ extension EnterCredentialsViewController {
         passwordTextField = WSTextField()
         passwordTextField.isSecureTextEntry = true
         passwordTextField.attributedPlaceholder =
-            NSAttributedString(string: TextsAsset.password,
+            NSAttributedString(string: TextsAsset.Authentication.password,
                                attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
         passwordTextField.backgroundColor = UIColor.clear
         passwordTextField.textColor = UIColor.white

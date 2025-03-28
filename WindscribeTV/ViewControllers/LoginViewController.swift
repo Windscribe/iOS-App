@@ -33,7 +33,7 @@ class LoginViewController: PreferredFocusedViewController {
 
     // MARK: - State properties
 
-    var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
+    var viewModel: LoginViewModelOld!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
 
     private var credentials: (String?, String?) = (nil, nil)
@@ -140,12 +140,12 @@ class LoginViewController: PreferredFocusedViewController {
         description2.text = TextsAsset.TVAsset.lazyLoginDescription2
         generateCodeButton.setTitle(TextsAsset.TVAsset.generateCode, for: .normal)
         loginTitle.text = TextsAsset.TVAsset.manualLogin
-        usernameTextField.placeholder = TextsAsset.username
-        passwordTextField.placeholder = TextsAsset.password
+        usernameTextField.placeholder = TextsAsset.Authentication.username
+        passwordTextField.placeholder = TextsAsset.Authentication.password
         loginButton.setTitle(TextsAsset.login.uppercased(), for: .normal)
 
         backButton.setTitle(TextsAsset.back, for: .normal)
-        forgotButton.setTitle(TextsAsset.forgotPassword, for: .normal)
+        forgotButton.setTitle(TextsAsset.Authentication.forgotPassword, for: .normal)
     }
 
     func setupCommonUI() {
@@ -189,20 +189,20 @@ class LoginViewController: PreferredFocusedViewController {
         DispatchQueue.main.async {
             if context.nextFocusedView == self.usernameTextField {
                 self.usernameTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.username,
+                    string: TextsAsset.Authentication.username,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
                 self.usernameTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.username,
+                    string: TextsAsset.Authentication.username,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
             if context.nextFocusedView == self.passwordTextField {
                 self.passwordTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.password,
+                    string: TextsAsset.Authentication.password,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
                 self.passwordTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.password,
+                    string: TextsAsset.Authentication.password,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
         }

@@ -32,7 +32,7 @@ extension LoginViewController {
         usernameLabel.textAlignment = .left
         scrollView.addSubview(usernameLabel)
 
-        usernameTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        usernameTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         scrollView.addSubview(usernameTextfield)
 
         usernameInfoIconImageView = UIImageView()
@@ -60,7 +60,7 @@ extension LoginViewController {
         passwordInfoIconImageView.image = UIImage(named: ImagesAsset.failExIcon)
         scrollView.addSubview(passwordInfoIconImageView)
 
-        twoFactorCodeTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        twoFactorCodeTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         twoFactorCodeTextfield.keyboardType = .numberPad
         scrollView.addSubview(twoFactorCodeTextfield)
 

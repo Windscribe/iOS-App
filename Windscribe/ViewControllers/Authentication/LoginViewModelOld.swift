@@ -1,5 +1,5 @@
 //
-//  LoginViewModel.swift
+//  LoginViewModelOld.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-02-27.
@@ -11,13 +11,13 @@ import RxSwift
 import Swinject
 import Combine
 
-enum LoginErrorState: Equatable {
+enum LoginErrorStateOld: Equatable {
     case username(String), network(String), twoFa(String), api(String), loginCode(String)
 }
 
-protocol LoginViewModel {
+protocol LoginViewModelOld {
     var showLoadingView: BehaviorSubject<Bool> { get }
-    var failedState: BehaviorSubject<LoginErrorState?> { get }
+    var failedState: BehaviorSubject<LoginErrorStateOld?> { get }
     var show2faCodeField: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -27,11 +27,11 @@ protocol LoginViewModel {
     func generateCodeTapped()
 }
 
-class LoginViewModelImpl: LoginViewModel {
+class LoginViewModelImplOld: LoginViewModelOld {
     var xpressCode = BehaviorSubject<String?>(value: nil)
     let showLoadingView = BehaviorSubject(value: false)
     let stopEditing = BehaviorSubject(value: false)
-    let failedState = BehaviorSubject<LoginErrorState?>(value: nil)
+    let failedState = BehaviorSubject<LoginErrorStateOld?>(value: nil)
     let show2faCodeField = BehaviorSubject(value: false)
     let routeToMainView = PublishSubject<Bool>()
     let isDarkMode: BehaviorSubject<Bool>
@@ -67,7 +67,7 @@ class LoginViewModelImpl: LoginViewModel {
     func continueButtonTapped(username: String, password: String, twoFactorCode: String? = "") {
         failedState.onNext(.none)
         if username.contains("@") {
-            failedState.onNext(LoginErrorState.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
+            failedState.onNext(LoginErrorStateOld.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
             return
         }
         showLoadingView.onNext(true)
@@ -77,10 +77,10 @@ class LoginViewModelImpl: LoginViewModel {
                 self?.preferences.saveLoginDate(date: Date())
                 WifiManager.shared.saveCurrentWifiNetworks()
                 self?.userRepository.login(session: session)
-                self?.logger.logI(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
+                self?.logger.logI(LoginViewModelImplOld.self, "Login successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
             }, onFailure: { [weak self] error in
-                self?.logger.logE(LoginViewModelImpl.self, "Failed to login: \(error)")
+                self?.logger.logE(LoginViewModelImplOld.self, "Failed to login: \(error)")
                 self?.showLoadingView.onNext(false)
                 switch error {
                 case Errors.invalid2FA:
@@ -130,7 +130,7 @@ class LoginViewModelImpl: LoginViewModel {
                             WifiManager.shared.saveCurrentWifiNetworks()
                             self?.preferences.saveLoginDate(date: Date())
                             self?.userRepository.login(session: session)
-                            self?.logger.logI(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
+                            self?.logger.logI(LoginViewModelImplOld.self, "Login successful with login code, Preparing user data for \(session.username)")
                             self?.prepareUserData()
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)
@@ -188,7 +188,7 @@ class LoginViewModelImpl: LoginViewModel {
             }
         }, onFailure: { [weak self] error in
             self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-            self?.logger.logE(LoginViewModelImpl.self, "Failed to prepare user data: \(error)")
+            self?.logger.logE(LoginViewModelImplOld.self, "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {
             case let Errors.apiError(e):
@@ -207,7 +207,7 @@ class LoginViewModelImpl: LoginViewModel {
         connectivity.network.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] appNetwork in
             if let loginError = try? self?.failedState.value() {
                 switch loginError {
-                case LoginErrorState.network:
+                case LoginErrorStateOld.network:
                     // reset network error state if network re-connects.
                     if appNetwork.status == NetworkStatus.connected {
                         self?.failedState.onNext(.none)

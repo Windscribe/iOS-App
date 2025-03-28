@@ -1,5 +1,5 @@
 //
-//  InfoPageView.swift
+//  WelcomeInfoPageView.swift
 //  Windscribe
 //
 //  Created by Soner Yuksel on 2025-03-20.
@@ -10,7 +10,7 @@ import SwiftUI
 
 // MARK: - Info Page with Image and Text
 
-struct InfoPageView: View {
+struct WelcomeInfoPageView: View {
     let imageName: String
     let text: String
 
@@ -57,7 +57,7 @@ struct PageIndicator: View {
 #Preview {
     TabView(selection: .constant(1)) {
         ForEach(0..<4, id: \.self) { index in
-            InfoPageView(imageName: "welcome-info-tab-1", text: "Lorem ipsum dolor sit amet")
+            WelcomeInfoPageView(imageName: "welcome-info-tab-1", text: "Lorem ipsum dolor sit amet")
             .tag(index)
         }
     }

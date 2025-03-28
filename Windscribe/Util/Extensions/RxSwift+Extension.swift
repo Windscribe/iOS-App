@@ -9,42 +9,49 @@
 import Combine
 import RxSwift
 
+// MARK: Single -> Combine
+
 extension PrimitiveSequence where Trait == SingleTrait {
     func asPublisher() -> AnyPublisher<Element, Error> {
-        return Future { promise in
-            _ = self.subscribe(
-                onSuccess: { value in
-                    promise(.success(value))
-                },
-                onFailure: { error in
-                    promise(.failure(error))
-                }
-            )
+        return Deferred {
+            Future { promise in
+                let disposable = self.subscribe(
+                    onSuccess: { value in
+                        promise(.success(value))
+                    },
+                    onFailure: { error in
+                        promise(.failure(error))
+                    }
+                )
+
+                _ = disposable
+            }
         }
         .eraseToAnyPublisher()
     }
 }
 
+// MARK: BehaviorSubject -> Combine (with error propagation)
+
 extension BehaviorSubject {
-    func asPublisher() -> AnyPublisher<Element, Never> {
+    func asPublisher() -> AnyPublisher<Element, Error> {
         return self
             .asObservable()
-            .map { $0 } // Ensures type safety
-            .catch { _ in Observable.empty() } // Prevents termination on error
             .toPublisher()
     }
 }
 
-extension Observable {
-    func toPublisher() -> AnyPublisher<Element, Never> {
-        let subject = PassthroughSubject<Element, Never>()
+// MARK: Observable -> Combine (with error propagation)
 
+extension Observable {
+    func toPublisher() -> AnyPublisher<Element, Error> {
+        let subject = PassthroughSubject<Element, Error>()
         let disposable = self.subscribe(
             onNext: { value in
                 subject.send(value)
             },
-            onError: { _ in
-                subject.send(completion: .finished) // Ends gracefully on error
+            onError: { error in
+                subject.send(completion: .failure(error))
             },
             onCompleted: {
                 subject.send(completion: .finished)
@@ -53,7 +60,7 @@ extension Observable {
 
         return subject
             .handleEvents(receiveCancel: {
-                disposable.dispose() // Clean up Rx subscription
+                disposable.dispose()
             })
             .eraseToAnyPublisher()
     }

@@ -17,7 +17,7 @@ class GhostAccountRouter: BaseRouter, NavigationRouter {
             goToSignUp(viewController: from)
         case RouteID.upgrade:
             let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self)
-            let upgradeNavigationViewController = UINavigationController(rootViewController: planUpgradeVC).then{
+            let upgradeNavigationViewController = UINavigationController(rootViewController: planUpgradeVC).then {
                 $0.modalPresentationStyle = .fullScreen
             }
             from.present(upgradeNavigationViewController, animated: true)

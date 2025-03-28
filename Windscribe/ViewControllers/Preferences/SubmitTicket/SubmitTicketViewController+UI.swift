@@ -70,7 +70,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         emailRequiredView.font = UIFont.text(size: 16)
         view.addSubview(emailRequiredView)
 
-        emailInputView = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        emailInputView = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         emailInputView.text = viewModel.sessionManager.session?.email
         emailInputView.addTarget(self, action: #selector(fieldsValueChanged), for: .editingChanged)
         emailInputView.layer.cornerRadius = 24
@@ -98,7 +98,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         subjectRequiredView.font = UIFont.text(size: 16)
         view.addSubview(subjectRequiredView)
 
-        subjectInputView = LoginTextField(isDarkMode: viewModel.isDarkMode)
+        subjectInputView = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         subjectInputView.addTarget(self, action: #selector(fieldsValueChanged), for: .editingChanged)
         subjectInputView.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         subjectInputView.delegate = self

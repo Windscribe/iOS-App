@@ -85,12 +85,12 @@ class SignUpViewController: PreferredFocusedViewController {
     func setupLocalized() {
         welcomeLabel.text = TextsAsset.slogan
         signUpTitle.text = TextsAsset.signUp
-        usernameTextField.placeholder = TextsAsset.username
-        passwordTextField.placeholder = TextsAsset.password
+        usernameTextField.placeholder = TextsAsset.Authentication.username
+        passwordTextField.placeholder = TextsAsset.Authentication.password
 
         signUpButton.setTitle(TextsAsset.signUp.uppercased(), for: .normal)
         backButton.setTitle(TextsAsset.back, for: .normal)
-        forgotButton.setTitle(TextsAsset.forgotPassword, for: .normal)
+        forgotButton.setTitle(TextsAsset.Authentication.forgotPassword, for: .normal)
     }
 
     func bindView() {
@@ -148,20 +148,20 @@ class SignUpViewController: PreferredFocusedViewController {
         DispatchQueue.main.async {
             if context.nextFocusedView == self.usernameTextField {
                 self.usernameTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.username,
+                    string: TextsAsset.Authentication.username,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
                 self.usernameTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.username,
+                    string: TextsAsset.Authentication.username,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
             if context.nextFocusedView == self.passwordTextField {
                 self.passwordTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.password,
+                    string: TextsAsset.Authentication.password,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.grayWithOpacity(opacity: 0.60)])
             } else {
                 self.passwordTextField.attributedPlaceholder = NSAttributedString(
-                    string: TextsAsset.password,
+                    string: TextsAsset.Authentication.password,
                     attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.50)])
             }
         }

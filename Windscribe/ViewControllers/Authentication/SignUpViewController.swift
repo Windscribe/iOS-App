@@ -28,8 +28,8 @@ class SignUpViewController: WSNavigationViewController {
         return usernameLabel
     }()
 
-    lazy var usernameTextfield: LoginTextField = {
-        let usernameTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+    lazy var usernameTextfield: AuthenticationTextField = {
+        let usernameTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         usernameTextfield.makeCorner(24)
         return usernameTextfield
     }()
@@ -161,8 +161,8 @@ class SignUpViewController: WSNavigationViewController {
         return emailOptionalLabel
     }()
 
-    lazy var emailTextfield: LoginTextField = {
-        let emailTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+    lazy var emailTextfield: AuthenticationTextField = {
+        let emailTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         emailTextfield.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 100)
         emailTextfield.makeCorner(24)
         emailTextfield.autocorrectionType = .yes
@@ -250,8 +250,8 @@ class SignUpViewController: WSNavigationViewController {
         return voucherOptionalLabel
     }()
 
-    lazy var voucherTextfield: LoginTextField = {
-        let voucherTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+    lazy var voucherTextfield: AuthenticationTextField = {
+        let voucherTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         voucherTextfield.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 100)
         voucherTextfield.makeCorner(24)
         voucherTextfield.autocorrectionType = .yes
@@ -292,8 +292,8 @@ class SignUpViewController: WSNavigationViewController {
         return referralTitle
     }()
 
-    lazy var referralUsernameTextfield: LoginTextField = {
-        let referralUsernameTextfield = LoginTextField(isDarkMode: viewModel.isDarkMode)
+    lazy var referralUsernameTextfield: AuthenticationTextField = {
+        let referralUsernameTextfield = AuthenticationTextField(isDarkMode: viewModel.isDarkMode)
         referralUsernameTextfield.padding = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 100)
         referralUsernameTextfield.makeCorner(24)
         referralUsernameTextfield.anchor(height: 48)

@@ -28,7 +28,7 @@ class SubmitTicketViewController: WSNavigationViewController {
     var divider1: UIView!
     var catergoryDropDownView: DropdownButton!
     var emailInputView,
-        subjectInputView: LoginTextField!
+        subjectInputView: AuthenticationTextField!
     var messageInputView: UITextView!
     var continueButton: UIButton!
     var loadingView: UIActivityIndicatorView!

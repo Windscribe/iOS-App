@@ -9,13 +9,11 @@
 import Foundation
 import UIKit
 import Swinject
+import SwiftUI
 
 class WelcomeRouter: BaseRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {
-        case RouteID.login:
-            let vc = Assembler.resolve(LoginViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
         case RouteID.signup:
             let vc = Assembler.resolve(SignUpViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)

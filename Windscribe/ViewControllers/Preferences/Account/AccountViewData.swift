@@ -61,7 +61,7 @@ enum AccountItemCell {
 
         switch self {
         case .username:
-            return TextsAsset.username
+            return TextsAsset.Authentication.username
         case .email:
             return TextsAsset.email
         case .planType:

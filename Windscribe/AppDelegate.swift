@@ -299,9 +299,7 @@ extension AppDelegate {
         } else {
             // Wrap the RootView in DeviceTypeProvider
             let rootView = DeviceTypeProvider { view }
-
-            let hostingController = UIHostingController(rootView: rootView)
-            rootViewController = UINavigationController(rootViewController: hostingController)
+            rootViewController = UIHostingController(rootView: rootView)
         }
 
         window.rootViewController = rootViewController
@@ -312,5 +310,4 @@ extension AppDelegate {
     private func setUpWelcomeView() -> any View {
         return Assembler.resolve(WelcomeView.self)
     }
-
 }
