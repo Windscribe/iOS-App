@@ -22,8 +22,11 @@ class GhostAccountRouter: BaseRouter, NavigationRouter {
             }
             from.present(upgradeNavigationViewController, animated: true)
         case RouteID.login:
-            let vc = Assembler.resolve(LoginViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+//            let vc = Assembler.resolve(LoginViewController.self)
+//            from.navigationController?.pushViewController(vc, animated: true)
+
+            // TODO: Use the new LoginView written in SwiftUI
+            print("Present SwiftUI Login")
         default: ()
         }
     }

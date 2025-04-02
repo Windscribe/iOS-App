@@ -16,13 +16,8 @@ import Swinject
 
 class ViewModels: Assembly {
     func assemble(container: Container) {
-        ////////
-        container.register(LoginViewModelOld.self) { r in
-            LoginViewModelImplOld(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
-        }.inObjectScope(.transient)
-
-        container.register((any LoginViewModelProtocol).self) { r in
-            LoginViewModel(
+        container.register((any LoginViewModel).self) { r in
+            LoginViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
                 userRepository: r.resolve(UserRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
@@ -34,13 +29,23 @@ class ViewModels: Assembly {
                 connectivity: r.resolve(Connectivity.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
-        /////////////
 
-        container.register(SignUpViewModel.self) { r in
-            SignUpViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, preferences: r.resolve(Preferences.self)!, connectivity: r.resolve(Connectivity.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
+        container.register((any SignUpViewModel).self) { r in
+            SignUpViewModelImpl(
+                apiCallManager: r.resolve(APIManager.self)!,
+                userRepository: r.resolve(UserRepository.self)!,
+                userDataRepository: r.resolve(UserDataRepository.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                connectivity: r.resolve(Connectivity.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                latencyRepository: r.resolve(LatencyRepository.self)!,
+                emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
-        container.register((any WelcomeViewModelProtocol).self) { r in
-            WelcomeViewModel(
+
+        container.register((any WelcomeViewModel).self) { r in
+            WelcomeViewModelImpl(
                 userRepository: r.resolve(UserRepository.self)!,
                 keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
@@ -51,6 +56,22 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(PlanUpgradeViewModel.self) { r in
+            DefaultUpgradePlanViewModel(
+                alertManager: r.resolve(AlertManagerV2.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                upgradeRouter: r.resolve(UpgradeRouter.self)!,
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                inAppPurchaseManager: r.resolve(InAppPurchaseManager.self)!,
+                pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!,
+                billingRepository: r.resolve(BillingRepository.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                themeManager: r.resolve(ThemeManager.self)!)
+        }.inObjectScope(.transient)
+
         container.register(EmergenyConnectViewModal.self) { r in
             EmergencyConnectModalImpl(vpnManager: r.resolve(VPNManager.self)!, emergencyRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -95,20 +116,6 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(ConfirmEmailViewModel.self) { r in
             ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
-        }.inObjectScope(.transient)
-        container.register(PlanUpgradeViewModel.self) { r in
-            DefaultUpgradePlanViewModel(
-                alertManager: r.resolve(AlertManagerV2.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!,
-                apiManager: r.resolve(APIManager.self)!,
-                upgradeRouter: r.resolve(UpgradeRouter.self)!,
-                sessionManager: r.resolve(SessionManagerV2.self)!,
-                preferences: r.resolve(Preferences.self)!,
-                inAppPurchaseManager: r.resolve(InAppPurchaseManager.self)!,
-                pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!,
-                billingRepository: r.resolve(BillingRepository.self)!,
-                logger: r.resolve(FileLogger.self)!,
-                themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(SubmitTicketViewModel.self) { r in
             SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -264,9 +271,6 @@ class ViewModels: Assembly {
         container.register(PopUpMaintenanceLocationModelType.self) { r in
             PopUpMaintenanceLocationModel(themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
-        container.register(RateUsPopupModelType.self) { r in
-            RateUsPopupModel(preferences: r.resolve(Preferences.self)!)
-        }.inObjectScope(.transient)
     }
 }
 
@@ -274,6 +278,49 @@ class ViewModels: Assembly {
 
 class ViewControllerModule: Assembly {
     func assemble(container: Swinject.Container) {
+        container.register(WelcomeView.self) { r in
+            WelcomeView(viewModel: WelcomeViewModelImpl(
+                userRepository: r.resolve(UserRepository.self)!,
+                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
+                userDataRepository: r.resolve(UserDataRepository.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                router: r.resolve(WelcomeRouter.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                logger: r.resolve(FileLogger.self)!
+            ))
+        }.inObjectScope(.transient)
+
+        container.register(LoginView.self) { r in
+            LoginView(viewModel: LoginViewModelImpl(
+                    apiCallManager: r.resolve(APIManager.self)!,
+                    userRepository: r.resolve(UserRepository.self)!,
+                    preferences: r.resolve(Preferences.self)!,
+                    emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                    userDataRepository: r.resolve(UserDataRepository.self)!,
+                    vpnManager: r.resolve(VPNManager.self)!,
+                    protocolManager: r.resolve(ProtocolManagerType.self)!,
+                    latencyRepository: r.resolve(LatencyRepository.self)!,
+                    connectivity: r.resolve(Connectivity.self)!,
+                    logger: r.resolve(FileLogger.self)!
+                ))
+        }.inObjectScope(.transient)
+
+        container.register(SignUpView.self) { r in
+            SignUpView(viewModel: SignUpViewModelImpl(
+                apiCallManager: r.resolve(APIManager.self)!,
+                userRepository: r.resolve(UserRepository.self)!,
+                userDataRepository: r.resolve(UserDataRepository.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                connectivity: r.resolve(Connectivity.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                latencyRepository: r.resolve(LatencyRepository.self)!,
+                emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                logger: r.resolve(FileLogger.self)!
+            ))
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -291,55 +338,6 @@ class ViewControllerModule: Assembly {
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
-            vc.rateViewModel = r.resolve(RateUsPopupModelType.self)
-        }.inObjectScope(.transient)
-
-        container.register(WelcomeView.self) { r in
-            WelcomeView(viewModel: WelcomeViewModel(
-                userRepository: r.resolve(UserRepository.self)!,
-                keyChainDatabase: r.resolve(KeyChainDatabase.self)!,
-                userDataRepository: r.resolve(UserDataRepository.self)!,
-                apiManager: r.resolve(APIManager.self)!,
-                preferences: r.resolve(Preferences.self)!,
-                router: r.resolve(WelcomeRouter.self)!,
-                vpnManager: r.resolve(VPNManager.self)!,
-                logger: r.resolve(FileLogger.self)!
-            ))
-        }.inObjectScope(.transient)
-
-        //////////
-        container.register(LoginViewController.self) { _ in
-            LoginViewController()
-        }.initCompleted { r, vc in
-            vc.router = r.resolve(LoginRouter.self)
-            vc.viewModel = r.resolve(LoginViewModelOld.self)
-            vc.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-
-        container.register(LoginView.self) { r in
-            LoginView(viewModel: LoginViewModel(
-                    apiCallManager: r.resolve(APIManager.self)!,
-                    userRepository: r.resolve(UserRepository.self)!,
-                    preferences: r.resolve(Preferences.self)!,
-                    emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
-                    userDataRepository: r.resolve(UserDataRepository.self)!,
-                    vpnManager: r.resolve(VPNManager.self)!,
-                    protocolManager: r.resolve(ProtocolManagerType.self)!,
-                    latencyRepository: r.resolve(LatencyRepository.self)!,
-                    connectivity: r.resolve(Connectivity.self)!,
-                    logger: r.resolve(FileLogger.self)!
-                ))
-        }.inObjectScope(.transient)
-
-        ////////////
-
-        container.register(SignUpViewController.self) { _ in
-            SignUpViewController()
-        }.initCompleted { r, vc in
-            vc.router = r.resolve(SignupRouter.self)
-            vc.popupRouter = r.resolve(PopupRouter.self)
-            vc.viewModel = r.resolve(SignUpViewModel.self)
-            vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(EmergencyConnectViewController.self) { _ in
             EmergencyConnectViewController()
@@ -594,12 +592,6 @@ class Routers: Assembly {
         }.inObjectScope(.transient)
         container.register(HomeRouter.self) { _ in
             HomeRouter()
-        }.inObjectScope(.transient)
-        container.register(LoginRouter.self) { _ in
-            LoginRouter()
-        }.inObjectScope(.transient)
-        container.register(SignupRouter.self) { _ in
-            SignupRouter()
         }.inObjectScope(.transient)
         container.register(GhostAccountRouter.self) { _ in
             GhostAccountRouter()

@@ -10,12 +10,11 @@ import Foundation
 import Combine
 import UIKit
 
-protocol WelcomeViewModelProtocol: ObservableObject {
+protocol WelcomeViewModel: ObservableObject {
     var scrollOrder: Int { get set }
     var showLoadingView: Bool { get }
     var routeToMainView: PassthroughSubject<Bool, Never> { get }
     var routeToSignup: PassthroughSubject<Bool, Never> { get }
-    var routeToLogin: PassthroughSubject<Void, Never> { get }
     var routeToEmergency: PassthroughSubject<Void, Never> { get}
     var emergencyConnectStatus: Bool { get }
     var failedState: String? { get }
@@ -23,7 +22,7 @@ protocol WelcomeViewModelProtocol: ObservableObject {
     func continueButtonTapped()
 }
 
-class WelcomeViewModel: WelcomeViewModelProtocol {
+class WelcomeViewModelImpl: WelcomeViewModel {
     @Published var scrollOrder = 0
     @Published var showLoadingView = false
     @Published var emergencyConnectStatus = false
@@ -31,7 +30,6 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
     let routeToSignup = PassthroughSubject<Bool, Never>()
     let routeToMainView = PassthroughSubject<Bool, Never>()
-    let routeToLogin = PassthroughSubject<Void, Never>()
     let routeToEmergency = PassthroughSubject<Void, Never>()
 
     // Image Assets
@@ -48,7 +46,7 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
     // Text Assets
     let tabInfoTexts = [
-        TextsAsset.Welcome.tabInfo1.localize(),
+        TextsAsset.Welcome.tabInfo1,
         TextsAsset.Welcome.tabInfo2,
         TextsAsset.Welcome.tabInfo3,
         TextsAsset.Welcome.tabInfo4
@@ -123,7 +121,7 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
                 self.keyChainDatabase.setGhostAccountCreated()
                 self.userRepository.login(session: session)
-                self.logger.logI(WelcomeViewModel.self, "Ghost account registration successful")
+                self.logger.logI("WelcomeViewModel", "Ghost account registration successful")
                 self.prepareUserData()
             })
             .store(in: &cancellables)
@@ -151,14 +149,14 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
                 }
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
-                self.logger.logD(WelcomeViewModel.self, "User data is ready")
+                self.logger.logD("WelcomeViewModel", "User data is ready")
                 self.routeToMainView.send(true)
             })
             .store(in: &cancellables)
     }
 
     private func handleError(_ error: Error) {
-        self.logger.logE(WelcomeViewModel.self, "Error: \(error.localizedDescription)")
+        self.logger.logE("WelcomeViewModel", "Error: \(error.localizedDescription)")
     }
 
     private func listenForVPNStateChange() {
@@ -179,16 +177,10 @@ class WelcomeViewModel: WelcomeViewModelProtocol {
 
 // MARK: Navigation type action
 
-extension WelcomeViewModel {
+extension WelcomeViewModelImpl {
 
     func setPresentingController(_ controller: UIViewController) {
         self.presentingController = controller
-    }
-
-    func navigateToSignUp() {
-        guard let presentingController = presentingController else { return }
-
-        router.routeTo(to: RouteID.signup(claimGhostAccount: false), from: presentingController)
     }
 
     func navigateToMain() {

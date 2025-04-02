@@ -166,7 +166,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var serverListViewModel: ServerListViewModelType!
     var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!
     var latencyViewModel: LatencyViewModel!
-    var rateViewModel: RateUsPopupModelType!
     var logger: FileLogger!
 
     var headerBottomBorderViewBottomConstraint: NSLayoutConstraint!

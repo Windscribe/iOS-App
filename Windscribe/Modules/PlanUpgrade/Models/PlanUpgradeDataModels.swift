@@ -1,5 +1,5 @@
 //
-//  PlanUpgradeModels.swift
+//  PlanUpgradeDataModels.swift
 //  Windscribe
 //
 //  Created by Soner Yuksel on 2025-01-30.

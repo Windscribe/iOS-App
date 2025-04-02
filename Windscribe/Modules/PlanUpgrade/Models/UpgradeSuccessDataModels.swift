@@ -1,5 +1,5 @@
 //
-//  UpgradeSuccessModels.swift
+//  UpgradeSuccessDataModels.swift
 //  Windscribe
 //
 //  Created by Soner Yuksel on 2025-02-05.

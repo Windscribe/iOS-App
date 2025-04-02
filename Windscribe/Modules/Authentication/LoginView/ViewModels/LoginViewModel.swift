@@ -13,7 +13,7 @@ enum LoginErrorState: Equatable {
     case username(String), network(String), twoFa(String), api(String), loginCode(String)
 }
 
-protocol LoginViewModelProtocol: ObservableObject {
+protocol LoginViewModel: ObservableObject {
     var username: String { get set }
     var password: String { get set }
     var twoFactorCode: String { get set }
@@ -25,10 +25,9 @@ protocol LoginViewModelProtocol: ObservableObject {
 
     func continueButtonTapped()
     func generateCodeTapped()
-    func keyBoardWillShow()
 }
 
-class LoginViewModel: LoginViewModelProtocol {
+class LoginViewModelImpl: LoginViewModel {
 
     // Published Properties
     @Published var username = ""
@@ -108,7 +107,7 @@ class LoginViewModel: LoginViewModelProtocol {
                 self.showLoadingView = false
 
                 if case let .failure(error) = completion {
-                    self.logger.logE("Login View", "Failed to login: \(error)")
+                    self.logger.logE("LoginViewModel", "Failed to login: \(error)")
 
                     switch error {
                     case Errors.invalid2FA:
@@ -130,7 +129,7 @@ class LoginViewModel: LoginViewModelProtocol {
                 self?.preferences.saveLoginDate(date: Date())
                 WifiManager.shared.saveCurrentWifiNetworks()
                 self?.userRepository.login(session: session)
-                self?.logger.logI("Login View",
+                self?.logger.logI("LoginViewModel",
                                   "Login successful, Preparing user data for \(session.username)")
                 self?.prepareUserData()
             }
@@ -144,7 +143,7 @@ class LoginViewModel: LoginViewModelProtocol {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 if case .failure = completion {
-                    self?.logger.logE("Login View", "Unable to generate Login code.")
+                    self?.logger.logE("LoginViewModel", "Unable to generate Login code.")
                     self?.failedState = .loginCode(TextsAsset.TVAsset.loginCodeError)
                 }
             } receiveValue: { [weak self] xpressResponse in
@@ -191,7 +190,7 @@ class LoginViewModel: LoginViewModelProtocol {
                                 self.preferences.saveLoginDate(date: Date())
                                 self.userRepository.login(session: session)
                                 self.timerCancellable?.cancel()
-                                self.logger.logI(self,
+                                self.logger.logI("LoginViewModel",
                                                  "Login successful with login code, Preparing user data for \(session.username)")
                                 self.prepareUserData()
                                 self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
@@ -208,7 +207,7 @@ class LoginViewModel: LoginViewModelProtocol {
         let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
 
         if secondsPassed > loginCodeResponse.ttl {
-            logger.logD(self, "Failed to verify XPress login code in TTL. Giving up.")
+            logger.logD("LoginViewModel", "Failed to verify XPress login code in TTL. Giving up.")
             failedState = .network("Login code expired. Please try again.")
         }
     }
@@ -243,7 +242,7 @@ class LoginViewModel: LoginViewModelProtocol {
 
                 if case let .failure(error) = completion {
                     self.preferences.saveUserSessionAuth(sessionAuth: nil)
-                    self.logger.logE(self, "Failed to prepare user data: \(error)")
+                    self.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
                     self.showLoadingView = false
 
                     switch error {
@@ -260,12 +259,11 @@ class LoginViewModel: LoginViewModelProtocol {
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
 
-                self.logger.logD(self, "User data is ready")
+                self.logger.logD("LoginViewModel", "User data is ready")
                 self.emergencyConnectRepository.cleansEmergencyConfigs()
 
                 if self.emergencyConnectRepository.isConnected() == true {
-                    logger.logD(self, "Disconnecting emergency connect.")
-                    logger.logD(self, "Disconnecting emergency connect.")
+                    logger.logD("LoginViewModel", "Disconnecting emergency connect.")
                     self.disconnectFromEmergencyConnect()
                 } else {
                     self.showLoadingView = false
@@ -286,10 +284,5 @@ class LoginViewModel: LoginViewModelProtocol {
                 }
             })
             .store(in: &cancellables)
-    }
-
-    /// Keyboard Logic
-    func keyBoardWillShow() {
-        failedState = nil
     }
 }

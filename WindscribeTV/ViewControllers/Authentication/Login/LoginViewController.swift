@@ -33,7 +33,7 @@ class LoginViewController: PreferredFocusedViewController {
 
     // MARK: - State properties
 
-    var viewModel: LoginViewModelOld!, logger: FileLogger!, router: LoginRouter!
+    var viewModel: LoginViewModel!, logger: FileLogger!, router: LoginRouter!
     let disposeBag = DisposeBag()
 
     private var credentials: (String?, String?) = (nil, nil)

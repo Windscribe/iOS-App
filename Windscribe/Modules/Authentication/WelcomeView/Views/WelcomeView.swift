@@ -12,13 +12,19 @@ struct WelcomeView: View {
 
     @Environment(\.deviceType) private var deviceType
 
-    @StateObject private var viewModel: WelcomeViewModel
+    @StateObject private var viewModel: WelcomeViewModelImpl
     @StateObject private var router = LoginNavigationRouter()
+
+    @State private var shouldNavigateToSignup = false
 
     private let dynamicTypeRange = (...DynamicTypeSize.large)
 
-    init(viewModel: WelcomeViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    init(viewModel: any WelcomeViewModel) {
+        guard let model = viewModel as? WelcomeViewModelImpl else {
+            fatalError("WelcomeView must be initialized properly")
+        }
+        
+        _viewModel = StateObject(wrappedValue: model)
     }
 
     var body: some View {
@@ -28,8 +34,11 @@ struct WelcomeView: View {
                     guard let presentingController = controller else { return }
                     viewModel.setPresentingController(presentingController)
                 }
-                .onReceive(viewModel.routeToSignup) { _ in
-                    viewModel.navigateToSignUp()
+                .onReceive(viewModel.routeToSignup) { success in
+                    if success {
+                        router.navigate(to: .signup)
+                        shouldNavigateToSignup = true
+                    }
                 }
                 .onReceive(viewModel.routeToMainView) { _ in
                     viewModel.navigateToMain()
@@ -192,6 +201,7 @@ extension WelcomeView {
 
             // Emergency & Sign-Up/Login Section
             HStack {
+                // Emergency Connect
                 Button(action: {
                     viewModel.routeToEmergency.send(())
                 }, label: {
@@ -210,26 +220,42 @@ extension WelcomeView {
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 HStack(spacing: 12) {
-                    Button(action: viewModel.continueButtonTapped) {
-                        ZStack {
-                            Text(viewModel.signupText)
-                                .font(.semiBold(.callout))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(Color.welcomeButtonTextColor)
-                                .opacity(viewModel.showLoadingView ? 0 : 1)
+                    // SignUp Button
+                    ZStack {
+                        Button(action: {
+                            viewModel.continueButtonTapped()
+                        }, label: {
+                            ZStack {
+                                Text(viewModel.signupText)
+                                    .font(.semiBold(.callout))
+                                    .dynamicTypeSize(dynamicTypeRange)
+                                    .foregroundColor(Color.welcomeButtonTextColor)
+                                    .opacity(viewModel.showLoadingView ? 0 : 1)
 
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .padding()
-                                .opacity(viewModel.showLoadingView ? 1 : 0)
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                    .padding()
+                                    .opacity(viewModel.showLoadingView ? 1 : 0)
+                            }
+                        })
+                        .disabled(viewModel.showLoadingView)
+
+                        // Navigation trigger (invisible)
+                        NavigationLink(
+                            destination: router.createView(for: .signup),
+                            isActive: $shouldNavigateToSignup
+                        ) {
+                            EmptyView()
                         }
+                        .hidden()
                     }
-                    .disabled(viewModel.showLoadingView)
 
+                    // Seperators
                     Rectangle()
                         .fill(Color.white.opacity(0.3))
                         .frame(width: 1, height: 14)
 
+                    // Login Button
                     NavigationLink(
                         destination: router.createView(for: .login),
                         isActive: Binding(
@@ -243,7 +269,7 @@ extension WelcomeView {
                             Text(viewModel.loginText)
                                 .font(.semiBold(.callout))
                                 .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(Color.welcomeButtonTextColor)
+                                .foregroundColor(.welcomeButtonTextColor)
                         })
                     }
                 }

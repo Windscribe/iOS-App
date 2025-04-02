@@ -374,7 +374,6 @@
 		59E63A0E2BCEBFF3002E566F /* PopUpMaintenanceLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A0C2BCEBFF3002E566F /* PopUpMaintenanceLocationVC.swift */; };
 		59E63A0F2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A0D2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift */; };
 		59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */; };
-		59E63A212BD03DA1002E566F /* RateUsPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */; };
 		59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */; };
 		59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */; };
 		59E63A2A2BD0B762002E566F /* RobertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A292BD0B762002E566F /* RobertViewModel.swift */; };
@@ -532,7 +531,7 @@
 		59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
 		59FC74792C51741000021CD1 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		59FC747A2C51741F00021CD1 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716321C99B2F00349195 /* Date+Extension.swift */; };
-		59FC747B2C518BE400021CD1 /* LoginViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModelOld.swift */; };
+		59FC747B2C518BE400021CD1 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */; };
 		59FC747C2C52987600021CD1 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425BA42743707B008B8786 /* URLs.swift */; };
 		59FC74822C52D7D500021CD1 /* WelcomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74812C52D7D500021CD1 /* WelcomeRouter.swift */; };
 		59FC74852C52D9ED00021CD1 /* RouteIDTv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC74842C52D9ED00021CD1 /* RouteIDTv.swift */; };
@@ -682,7 +681,6 @@
 		AF8DA7AD2204BA1900885BD8 /* PreferencesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8DA7AC2204BA1900885BD8 /* PreferencesTableViewCell.swift */; };
 		AF8DA7AF2204BD5700885BD8 /* PreferenceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8DA7AE2204BD5700885BD8 /* PreferenceItem.swift */; };
 		AF8DA7B72204E37500885BD8 /* AccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF8DA7B62204E37500885BD8 /* AccountTableViewCell.swift */; };
-		AF914A6423C8E06A002D3041 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A6323C8E06A002D3041 /* SignUpViewController.swift */; };
 		AF914A6823CCDDBA002D3041 /* InfoPromptViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A6723CCDDB9002D3041 /* InfoPromptViewController.swift */; };
 		AF914A6A23CCDE86002D3041 /* InfoPromptViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A6923CCDE86002D3041 /* InfoPromptViewController+UI.swift */; };
 		AF914A6C23CCF409002D3041 /* EurostileExt-Bla.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF914A6B23CCF35D002D3041 /* EurostileExt-Bla.otf */; };
@@ -701,8 +699,6 @@
 		AFA8041E22089ED200F8E379 /* APIEmailSent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA8041D22089ED200F8E379 /* APIEmailSent.swift */; };
 		AFA804262209F13100F8E379 /* WifiNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA804252209F13100F8E379 /* WifiNetwork.swift */; };
 		AFB0DC0421FB997300C40E3C /* StaticIPTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB0DC0321FB997300C40E3C /* StaticIPTableViewCell.swift */; };
-		AFB83C2623C7BC2400607881 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB83C2523C7BC2400607881 /* LoginViewController.swift */; };
-		AFB83C2A23C7BC4F00607881 /* LoginViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB83C2923C7BC4F00607881 /* LoginViewController+UI.swift */; };
 		AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBBAD14250A674A000B6750 /* HapticFeedbackGenerator.swift */; };
 		AFBD019222946AF400FED749 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716321C99B2F00349195 /* Date+Extension.swift */; };
 		AFBD019622946B3400FED749 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF018E0521B09FB300B225FF /* String+Extension.swift */; };
@@ -826,7 +822,6 @@
 		C5387E9A2CD46C18008A26EE /* VPNManager+Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */; };
 		C545A0DC2D47639500F3333E /* Completable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C545A0DB2D47638F00F3333E /* Completable+Extension.swift */; };
 		C545A0DD2D47639500F3333E /* Completable+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C545A0DB2D47638F00F3333E /* Completable+Extension.swift */; };
-		C54AE8722B8E5BEF00646529 /* LoginViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModelOld.swift */; };
 		C55062BC2B6AD417007D6824 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; };
 		C5592B762B37F3F200F2F110 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */; };
@@ -882,10 +877,8 @@
 		C56FCBF02B2B9F11008DE7D4 /* Assembler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBEF2B2B9F11008DE7D4 /* Assembler.swift */; };
 		C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */; };
 		C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF32B2BA50A008DE7D4 /* HomeRouter.swift */; };
-		C56FCBF62B2CD180008DE7D4 /* LoginRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF52B2CD180008DE7D4 /* LoginRouter.swift */; };
 		C56FCBF82B2CD2CD008DE7D4 /* WelcomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF72B2CD2CD008DE7D4 /* WelcomeRouter.swift */; };
 		C56FCBFA2B2CDD9E008DE7D4 /* BaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF92B2CDD9E008DE7D4 /* BaseRouter.swift */; };
-		C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBFD2B2CE5EA008DE7D4 /* SignupRouter.swift */; };
 		C56FCC002B2CE66A008DE7D4 /* GhostAccountRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBFF2B2CE66A008DE7D4 /* GhostAccountRouter.swift */; };
 		C56FCC022B2CF298008DE7D4 /* AccountRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCC012B2CF298008DE7D4 /* AccountRouter.swift */; };
 		C56FCC042B2CF304008DE7D4 /* ConnectionRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCC032B2CF304008DE7D4 /* ConnectionRouter.swift */; };
@@ -902,7 +895,6 @@
 		C57668E42B2790AA004EA3D7 /* APIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57668E32B2790AA004EA3D7 /* APIResult.swift */; };
 		C57668EE2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57668ED2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift */; };
 		C57668F02B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57668EF2B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift */; };
-		C5790A672B93184C00D24495 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5790A662B93184C00D24495 /* SignUpViewModel.swift */; };
 		C57B5930276B8ADF00228B2F /* RobertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B592F276B8ADF00228B2F /* RobertViewController.swift */; };
 		C57B5938276BFFE000228B2F /* RobertFilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57B5937276BFFE000228B2F /* RobertFilterCell.swift */; };
 		C57BDE3729B93D7500337E63 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C57BDE3629B93D7500337E63 /* Enums.swift */; };
@@ -1132,7 +1124,7 @@
 		F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275D2D84B87500A47E37 /* NewsFeedView.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
 		F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */; };
-		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */; };
+		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */; };
 		F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */; };
 		F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */; };
 		F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */; };
@@ -1161,7 +1153,7 @@
 		F469F0EB2D7F8FFC004DC6AB /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0E92D7F8FFC004DC6AB /* View+Extension.swift */; };
 		F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */; };
 		F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */; };
-		F46C286C2D4C0AB30073207E /* PlanUpgradeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */; };
+		F46C286C2D4C0AB30073207E /* PlanUpgradeDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46C286B2D4C0AB30073207E /* PlanUpgradeDataModels.swift */; };
 		F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
 		F4843A952D89F7300034330F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A942D89F7300034330F /* SafariView.swift */; };
 		F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A972D89F7DE0034330F /* URL+Extension.swift */; };
@@ -1184,6 +1176,9 @@
 		F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E352D931364005EF149 /* NavigationRouterModifier.swift */; };
 		F4888E392D9313C0005EF149 /* LoginNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E382D9313C0005EF149 /* LoginNavigationRouter.swift */; };
 		F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */; };
+		F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E412D94A11B005EF149 /* SignUpViewModel.swift */; };
+		F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E432D959DDE005EF149 /* SignUpView.swift */; };
+		F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E452D9658EB005EF149 /* ViewPositionReader.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -1198,6 +1193,7 @@
 		F4F29E502D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E512D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
+		F4F51A692D9B176300407DE7 /* SignupWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A682D9B176300407DE7 /* SignupWarningView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1704,7 +1700,6 @@
 		AF8DA7AC2204BA1900885BD8 /* PreferencesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesTableViewCell.swift; sourceTree = "<group>"; };
 		AF8DA7AE2204BD5700885BD8 /* PreferenceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceItem.swift; sourceTree = "<group>"; };
 		AF8DA7B62204E37500885BD8 /* AccountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTableViewCell.swift; sourceTree = "<group>"; };
-		AF914A6323C8E06A002D3041 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		AF914A6723CCDDB9002D3041 /* InfoPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPromptViewController.swift; sourceTree = "<group>"; };
 		AF914A6923CCDE86002D3041 /* InfoPromptViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InfoPromptViewController+UI.swift"; sourceTree = "<group>"; };
 		AF914A6B23CCF35D002D3041 /* EurostileExt-Bla.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "EurostileExt-Bla.otf"; sourceTree = "<group>"; };
@@ -1724,8 +1719,6 @@
 		AFB0DC0321FB997300C40E3C /* StaticIPTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPTableViewCell.swift; sourceTree = "<group>"; };
 		AFB1FBAC22F3803A000CEB65 /* FileProvider.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FileProvider.framework; path = System/Library/Frameworks/FileProvider.framework; sourceTree = SDKROOT; };
 		AFB1FBAF22F3805D000CEB65 /* FileProviderUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FileProviderUI.framework; path = System/Library/Frameworks/FileProviderUI.framework; sourceTree = SDKROOT; };
-		AFB83C2523C7BC2400607881 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		AFB83C2923C7BC4F00607881 /* LoginViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewController+UI.swift"; sourceTree = "<group>"; };
 		AFBBAD14250A674A000B6750 /* HapticFeedbackGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackGenerator.swift; sourceTree = "<group>"; };
 		AFC75F7E24BD9FCD00897C18 /* WireGuardConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardConfig.swift; sourceTree = "<group>"; };
 		AFCAA9F223D7AEEC00D3C4D6 /* UIScrollView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIScrollView+Extension.swift"; sourceTree = "<group>"; };
@@ -1786,7 +1779,7 @@
 		C5387E982CD46C07008A26EE /* VPNManager+Connect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+Connect.swift"; sourceTree = "<group>"; };
 		C538B1582AB1A33D00E12CE2 /* proxy.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = proxy.xcframework; sourceTree = "<group>"; };
 		C545A0DB2D47638F00F3333E /* Completable+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Completable+Extension.swift"; sourceTree = "<group>"; };
-		C54AE8712B8E5BEF00646529 /* LoginViewModelOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModelOld.swift; sourceTree = "<group>"; };
+		C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		C553E34D2C25ABE900A2C027 /* LICENCE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENCE.md; sourceTree = "<group>"; };
 		C5592B752B37F3F200F2F110 /* WSNetErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSNetErrors.swift; sourceTree = "<group>"; };
 		C5592B772B37FA7D00F2F110 /* APIManagerImpl+Robert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+Robert.swift"; sourceTree = "<group>"; };
@@ -1816,10 +1809,8 @@
 		C56FCBEF2B2B9F11008DE7D4 /* Assembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
 		C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModules.swift; sourceTree = "<group>"; };
 		C56FCBF32B2BA50A008DE7D4 /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
-		C56FCBF52B2CD180008DE7D4 /* LoginRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRouter.swift; sourceTree = "<group>"; };
 		C56FCBF72B2CD2CD008DE7D4 /* WelcomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeRouter.swift; sourceTree = "<group>"; };
 		C56FCBF92B2CDD9E008DE7D4 /* BaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRouter.swift; sourceTree = "<group>"; };
-		C56FCBFD2B2CE5EA008DE7D4 /* SignupRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRouter.swift; sourceTree = "<group>"; };
 		C56FCBFF2B2CE66A008DE7D4 /* GhostAccountRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountRouter.swift; sourceTree = "<group>"; };
 		C56FCC012B2CF298008DE7D4 /* AccountRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountRouter.swift; sourceTree = "<group>"; };
 		C56FCC032B2CF304008DE7D4 /* ConnectionRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionRouter.swift; sourceTree = "<group>"; };
@@ -2013,7 +2004,7 @@
 		F44F275D2D84B87500A47E37 /* NewsFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedView.swift; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
 		F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradePromoView.swift; sourceTree = "<group>"; };
-		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessModels.swift; sourceTree = "<group>"; };
+		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessDataModels.swift; sourceTree = "<group>"; };
 		F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewModel.swift; sourceTree = "<group>"; };
 		F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewController.swift; sourceTree = "<group>"; };
 		F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessLogoView.swift; sourceTree = "<group>"; };
@@ -2033,7 +2024,7 @@
 		F469F0E92D7F8FFC004DC6AB /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		F46C285F2D4C09A60073207E /* PlanUpgradeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewController.swift; sourceTree = "<group>"; };
 		F46C28682D4C0A020073207E /* PlanUpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeViewModel.swift; sourceTree = "<group>"; };
-		F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeModels.swift; sourceTree = "<group>"; };
+		F46C286B2D4C0AB30073207E /* PlanUpgradeDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeDataModels.swift; sourceTree = "<group>"; };
 		F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+Accessibility.swift"; sourceTree = "<group>"; };
 		F4843A942D89F7300034330F /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		F4843A972D89F7DE0034330F /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
@@ -2048,6 +2039,9 @@
 		F4888E352D931364005EF149 /* NavigationRouterModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouterModifier.swift; sourceTree = "<group>"; };
 		F4888E382D9313C0005EF149 /* LoginNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginNavigationRouter.swift; sourceTree = "<group>"; };
 		F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		F4888E412D94A11B005EF149 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		F4888E432D959DDE005EF149 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		F4888E452D9658EB005EF149 /* ViewPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPositionReader.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -2056,6 +2050,7 @@
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
 		F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		F4F51A682D9B176300407DE7 /* SignupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWarningView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2337,16 +2332,14 @@
 		1E006BB72C6A9C5200EE6389 /* Popups */ = {
 			isa = PBXGroup;
 			children = (
+				1E006BBD2C6B738A00EE6389 /* Base */,
 				1EA9D7252C8734EC00566A93 /* Account */,
 				1EA9D7102C8717B900566A93 /* PrivacyView */,
 				1EA9D6F72C77478500566A93 /* NewsFeed */,
 				1EF7BB492C75F6680032A4DF /* Emails */,
 				1EF7BB432C74C8590032A4DF /* Get More Data */,
 				1EF7BB3B2C74AFB90032A4DF /* Rate Windscribe */,
-				1E006BBD2C6B738A00EE6389 /* View Models */,
 				1E006BBC2C6B711200EE6389 /* Upgrade */,
-				1E006BB82C6AA8F400EE6389 /* BasePopUpViewController.swift */,
-				1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */,
 			);
 			path = Popups;
 			sourceTree = "<group>";
@@ -2361,14 +2354,15 @@
 			path = Upgrade;
 			sourceTree = "<group>";
 		};
-		1E006BBD2C6B738A00EE6389 /* View Models */ = {
+		1E006BBD2C6B738A00EE6389 /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */,
+				1E006BB82C6AA8F400EE6389 /* BasePopUpViewController.swift */,
+				1E006BBA2C6AA91500EE6389 /* BasePopUpViewController.xib */,
 				1E006BBE2C6B739B00EE6389 /* BasePopupViewModel.swift */,
-				F434A1C42D84AB200059415F /* NewsFeedModel.swift */,
+				1E006BC02C6B7AC300EE6389 /* PopupTypes.swift */,
 			);
-			path = "View Models";
+			path = Base;
 			sourceTree = "<group>";
 		};
 		1E0D9D632C6103A3008AFF2D /* Components */ = {
@@ -2670,6 +2664,7 @@
 			children = (
 				1EA9D6F82C7747C300566A93 /* NewsFeedViewController.swift */,
 				1EA9D6FA2C7747E000566A93 /* NewsFeedViewController.xib */,
+				F434A1C42D84AB200059415F /* NewsFeedModel.swift */,
 			);
 			path = NewsFeed;
 			sourceTree = "<group>";
@@ -2818,6 +2813,7 @@
 			children = (
 				1EF7BB3C2C74AFFE0032A4DF /* RatePopupViewController.swift */,
 				1EF7BB3E2C74B0190032A4DF /* RatePopupViewController.xib */,
+				59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */,
 			);
 			path = "Rate Windscribe";
 			sourceTree = "<group>";
@@ -2916,12 +2912,9 @@
 				1EA9D6FE2C7754A800566A93 /* Components */,
 				1E006BB72C6A9C5200EE6389 /* Popups */,
 				1E0D9D6C2C6103A3008AFF2D /* Preferences */,
-				59A218672C3C8011000D89FA /* MainViewController.swift */,
-				59DA7FC12C3DAD3800042E57 /* WelcomeViewController.swift */,
-				5986AB5E2C485A2300167023 /* SignUpViewController.swift */,
-				592CA7992C4EC0FF0078D487 /* LoginViewController.swift */,
-				599BA2A62C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift */,
+				F4F51A6A2D9C643200407DE7 /* Authentication */,
 				59656F6D2C73BEF400707EA2 /* ServerList */,
+				59A218672C3C8011000D89FA /* MainViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -2951,14 +2944,6 @@
 				59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */,
 			);
 			path = "Trusted Network";
-			sourceTree = "<group>";
-		};
-		59E63A1D2BD03DA1002E566F /* Rate Us */ = {
-			isa = PBXGroup;
-			children = (
-				59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */,
-			);
-			path = "Rate Us";
 			sourceTree = "<group>";
 		};
 		59E63A242BD03DAC002E566F /* Location Permission */ = {
@@ -3072,6 +3057,7 @@
 				AF018E0921B0A34D00B225FF /* Managers */,
 				AF018E0B21B1917300B225FF /* Models */,
 				C56FCBCC2B2A418F008DE7D4 /* Router */,
+				F4F51A6F2D9C77E900407DE7 /* Modules */,
 				AF4E924721EF8C6900A3F584 /* View */,
 				AF4E924621EF8C6200A3F584 /* ViewControllers */,
 				C57BDE4029B93F6D00337E63 /* Util */,
@@ -3367,7 +3353,6 @@
 			children = (
 				AF16CA112226F53F00997A2A /* WSUIViewController.swift */,
 				AF36A207237DE8FF00BDDCDB /* MainViewController */,
-				AFB83C2723C7BC3600607881 /* Authentication */,
 				1AE6DA1C2833CF9C00593495 /* Preferences */,
 				C57BDE3429B9390A00337E63 /* Popup */,
 				E97ABD4E28DC477B00B38587 /* Connection */,
@@ -3484,14 +3469,10 @@
 			children = (
 				F41190232D7FC77A00AC7EB6 /* WelcomeView */,
 				F440F2FE2D8DE70D006F1A6D /* LoginView */,
+				F4888E3C2D949DA7005EF149 /* SignUpView */,
 				598F173829F05723007137A4 /* EmergencyConnectViewController.xib */,
 				598F173729F05723007137A4 /* EmergencyConnectViewController.swift */,
 				C5BF38512B918D5700AA725C /* EmergenyConnectViewModal.swift */,
-				AF914A6323C8E06A002D3041 /* SignUpViewController.swift */,
-				C5790A662B93184C00D24495 /* SignUpViewModel.swift */,
-				AFB83C2523C7BC2400607881 /* LoginViewController.swift */,
-				AFB83C2923C7BC4F00607881 /* LoginViewController+UI.swift */,
-				C54AE8712B8E5BEF00646529 /* LoginViewModelOld.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -3666,9 +3647,7 @@
 				C56FCBF92B2CDD9E008DE7D4 /* BaseRouter.swift */,
 				C56FCBCF2B2A428C008DE7D4 /* PreferenceMainRouter.swift */,
 				C56FCBF32B2BA50A008DE7D4 /* HomeRouter.swift */,
-				C56FCBF52B2CD180008DE7D4 /* LoginRouter.swift */,
 				C56FCBF72B2CD2CD008DE7D4 /* WelcomeRouter.swift */,
-				C56FCBFD2B2CE5EA008DE7D4 /* SignupRouter.swift */,
 				C56FCBFF2B2CE66A008DE7D4 /* GhostAccountRouter.swift */,
 				C56FCC012B2CF298008DE7D4 /* AccountRouter.swift */,
 				C56FCC032B2CF304008DE7D4 /* ConnectionRouter.swift */,
@@ -3724,12 +3703,9 @@
 				1E24AB862BD1436E0004D17D /* Info Prompt */,
 				1E24AB892BD16C7E0004D17D /* Enter Credentials */,
 				59E63A242BD03DAC002E566F /* Location Permission */,
-				59E63A1D2BD03DA1002E566F /* Rate Us */,
 				1EE74F742BD67B1D0031185F /* Push Notifications */,
 				1EA876D32BCEA37A00F0DD25 /* Error View */,
 				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
-				F46C285C2D4C041D0073207E /* PlanUpgrade */,
-				1E2366CB2BC5766E000DF098 /* News Feed */,
 				59E63A0B2BCEBFF3002E566F /* Maintenance Location */,
 				1E2366CE2BC587BF000DF098 /* Set Prefered Protocol */,
 				1E2366C62BC02447000DF098 /* Account */,
@@ -4313,8 +4289,8 @@
 		F46C28652D4C09D50073207E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F46C286B2D4C0AB30073207E /* PlanUpgradeModels.swift */,
-				F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessModels.swift */,
+				F46C286B2D4C0AB30073207E /* PlanUpgradeDataModels.swift */,
+				F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4336,6 +4312,7 @@
 				F4843A942D89F7300034330F /* SafariView.swift */,
 				F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */,
 				F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */,
+				F4888E452D9658EB005EF149 /* ViewPositionReader.swift */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -4383,6 +4360,32 @@
 			path = RouterTypes;
 			sourceTree = "<group>";
 		};
+		F4888E3C2D949DA7005EF149 /* SignUpView */ = {
+			isa = PBXGroup;
+			children = (
+				F4888E3D2D949DED005EF149 /* Views */,
+				F4888E402D949DFD005EF149 /* ViewModels */,
+			);
+			path = SignUpView;
+			sourceTree = "<group>";
+		};
+		F4888E3D2D949DED005EF149 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4888E432D959DDE005EF149 /* SignUpView.swift */,
+				F4F51A682D9B176300407DE7 /* SignupWarningView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F4888E402D949DFD005EF149 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F4888E412D94A11B005EF149 /* SignUpViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		F4ADA5F42D564F110077C132 /* ImageLoader */ = {
 			isa = PBXGroup;
 			children = (
@@ -4403,6 +4406,61 @@
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
 			);
 			path = Mocks;
+			sourceTree = "<group>";
+		};
+		F4F51A6A2D9C643200407DE7 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				F4F51A6B2D9C645E00407DE7 /* Welcome */,
+				F4F51A6C2D9C646500407DE7 /* Login */,
+				F4F51A6D2D9C647700407DE7 /* SignUp */,
+				F4F51A6E2D9C648400407DE7 /* ForgotPassword */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		F4F51A6B2D9C645E00407DE7 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				59DA7FC12C3DAD3800042E57 /* WelcomeViewController.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		F4F51A6C2D9C646500407DE7 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				592CA7992C4EC0FF0078D487 /* LoginViewController.swift */,
+				C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		F4F51A6D2D9C647700407DE7 /* SignUp */ = {
+			isa = PBXGroup;
+			children = (
+				5986AB5E2C485A2300167023 /* SignUpViewController.swift */,
+				C5790A662B93184C00D24495 /* SignUpViewModel.swift */,
+			);
+			path = SignUp;
+			sourceTree = "<group>";
+		};
+		F4F51A6E2D9C648400407DE7 /* ForgotPassword */ = {
+			isa = PBXGroup;
+			children = (
+				599BA2A62C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift */,
+			);
+			path = ForgotPassword;
+			sourceTree = "<group>";
+		};
+		F4F51A6F2D9C77E900407DE7 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				AFB83C2723C7BC3600607881 /* Authentication */,
+				F46C285C2D4C041D0073207E /* PlanUpgrade */,
+				1E2366CB2BC5766E000DF098 /* News Feed */,
+			);
+			path = Modules;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5054,7 +5112,7 @@
 				59DA7FCA2C3DC50D00042E57 /* DynamicWireGuardConnect.swift in Sources */,
 				59FC74302C5156BB00021CD1 /* FileManager+Extension.swift in Sources */,
 				59FC73F62C51533E00021CD1 /* Server.swift in Sources */,
-				59FC747B2C518BE400021CD1 /* LoginViewModelOld.swift in Sources */,
+				59FC747B2C518BE400021CD1 /* LoginViewModel.swift in Sources */,
 				59FC740B2C5153ED00021CD1 /* CustomConfig.swift in Sources */,
 				59FC74032C5153B700021CD1 /* WifiNetwork.swift in Sources */,
 				1E0D9D712C6103A3008AFF2D /* PreferencesOptionView.swift in Sources */,
@@ -5387,7 +5445,6 @@
 				AF4ECAA223E8D00800E09223 /* ConfirmEmailViewController+UI.swift in Sources */,
 				1A9DB352281686AC00C3EC1C /* LanguageDataCell.swift in Sources */,
 				E94E34F728B2817000E76D14 /* FeatureExplainer.swift in Sources */,
-				AF914A6423C8E06A002D3041 /* SignUpViewController.swift in Sources */,
 				59E63A2A2BD0B762002E566F /* RobertViewModel.swift in Sources */,
 				AF54C6C8228B378B00DAAB07 /* AutomaticMode.swift in Sources */,
 				C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */,
@@ -5441,7 +5498,7 @@
 				AF60571B236897D900986BA7 /* DropdownButton.swift in Sources */,
 				C57B5930276B8ADF00228B2F /* RobertViewController.swift in Sources */,
 				5947B4B22A2638BA00C95CF2 /* NWInterface+Extension.swift in Sources */,
-				F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessModels.swift in Sources */,
+				F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */,
 				1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */,
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
@@ -5455,12 +5512,10 @@
 				C5D0E40729BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				E9C4F9A12934301D0053B219 /* MainViewController+ProtocolSwitch.swift in Sources */,
 				1AE6D2B5283771D000276C7D /* AboutViewModel.swift in Sources */,
-				59E63A212BD03DA1002E566F /* RateUsPopupModel.swift in Sources */,
 				C5D1C2D22BBFE18F0083B9EC /* AdvanceRepository.swift in Sources */,
 				F440F3082D8E102D006F1A6D /* LoginViewModel.swift in Sources */,
 				AF2199572270B147009B42E5 /* QNNQue.m in Sources */,
 				1AE6D2C52838D25D00276C7D /* AccountHeaderView.swift in Sources */,
-				AFB83C2623C7BC2400607881 /* LoginViewController.swift in Sources */,
 				E90FD04727397DDB00721874 /* MainViewController+ServerList.swift in Sources */,
 				AF0AED412203614900039CAF /* StaticIPListTableViewDataSource+Delegate.swift in Sources */,
 				C5592B8B2B394C0300F2F110 /* LocalDatabaseImpl.swift in Sources */,
@@ -5549,7 +5604,6 @@
 				AF2199612270B147009B42E5 /* Socket.swift in Sources */,
 				1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				F4F29E502D68D6D500933633 /* UIImage+Extension.swift in Sources */,
-				C56FCBF62B2CD180008DE7D4 /* LoginRouter.swift in Sources */,
 				E97ABD6228F91ABA00B38587 /* ProtocolManager.swift in Sources */,
 				591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */,
 				E943750B27DEF6AD00F74F2D /* ErrorResponse.swift in Sources */,
@@ -5577,6 +5631,7 @@
 				AF2199582270B147009B42E5 /* Resolver.swift in Sources */,
 				1A9DB35428168E8500C3EC1C /* UITableViewCell+Extension.swift in Sources */,
 				AF2C1869234F5429008657FA /* VPNConnection.swift in Sources */,
+				F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */,
 				1E0EFF172C2D6C22002FBC72 /* ConnectedDNSView.swift in Sources */,
 				F469F0D62D7BA659004DC6AB /* ServerSectionCell.swift in Sources */,
 				C5D0E40529BB8BE70091FB14 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
@@ -5643,6 +5698,7 @@
 				C5D0E40929BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
 				C50F207E2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				1AF57D46280FCF37004E8082 /* Language.swift in Sources */,
+				F4F51A692D9B176300407DE7 /* SignupWarningView.swift in Sources */,
 				AFA8041E22089ED200F8E379 /* APIEmailSent.swift in Sources */,
 				C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */,
 				E9219FFC289196EF0026E544 /* SelectableView.swift in Sources */,
@@ -5665,12 +5721,12 @@
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C56FCC042B2CF304008DE7D4 /* ConnectionRouter.swift in Sources */,
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
-				C5790A672B93184C00D24495 /* SignUpViewModel.swift in Sources */,
 				E9219FFA289050BD0026E544 /* HelpView.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,
 				AF443D7122C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift in Sources */,
 				1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
+				F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */,
 				C5D0F2FE27E1959D00DB3E49 /* WgErrorCodes.swift in Sources */,
 				F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */,
 				1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
@@ -5702,7 +5758,6 @@
 				AF8DA7B72204E37500885BD8 /* AccountTableViewCell.swift in Sources */,
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+ Extension.swift in Sources */,
 				C545A0DD2D47639500F3333E /* Completable+Extension.swift in Sources */,
-				C56FCBFE2B2CE5EA008DE7D4 /* SignupRouter.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */,
 				AF36BF0C22FC969300FCC6F4 /* EnterCredentialsViewController.swift in Sources */,
 				1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */,
@@ -5714,19 +5769,18 @@
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				F404193E2D822F1A0005EF97 /* HTMLParser.swift in Sources */,
 				AF04ED9F21DFD1AE005C6576 /* StaticIP.swift in Sources */,
+				F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */,
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
 				C56FCC022B2CF298008DE7D4 /* AccountRouter.swift in Sources */,
-				C54AE8722B8E5BEF00646529 /* LoginViewModelOld.swift in Sources */,
 				C5D0E40B29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */,
 				1A9DB34E28167B8800C3EC1C /* LanguageTableViewCell.swift in Sources */,
 				AF914A7A23D63DFC002D3041 /* GhostAccountViewController.swift in Sources */,
 				F469F0E02D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
-				F46C286C2D4C0AB30073207E /* PlanUpgradeModels.swift in Sources */,
+				F46C286C2D4C0AB30073207E /* PlanUpgradeDataModels.swift in Sources */,
 				1AF57D43280FCBE2004E8082 /* LanguageManager.swift in Sources */,
 				C524AA5A26B219BE00FCB1B6 /* AboutViewController.swift in Sources */,
 				1A0FD3C8283D106D00148E39 /* ConnectionSecureView.swift in Sources */,
-				AFB83C2A23C7BC4F00607881 /* LoginViewController+UI.swift in Sources */,
 				AF3FC117227B3D8F0050B224 /* LoadingButton.swift in Sources */,
 				AF018E0121B09A6100B225FF /* AppConstants.swift in Sources */,
 				AF0AED3B22035A9E00039CAF /* StreamingListTableViewDataSource+Delegate.swift in Sources */,
