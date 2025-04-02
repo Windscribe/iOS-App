@@ -17,8 +17,8 @@ import UIKit
 
 class TVViewModels: Assembly {
     func assemble(container: Swinject.Container) {
-        container.register(LoginViewModelOld.self) { r in
-            LoginViewModelImplOld(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
+        container.register(LoginViewModel.self) { r in
+            LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(WelcomeViewModal.self) { r in
             WelcomeViewModelImpl(userRepository: r.resolve(UserRepository.self)!, keyChainDatabase: r.resolve(KeyChainDatabase.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, apiManager: r.resolve(APIManager.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
@@ -174,7 +174,7 @@ class TVViewControllers: Assembly {
         container.register(LoginViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         }.initCompleted { r, vc in
-            vc.viewModel = r.resolve(LoginViewModelOld.self)
+            vc.viewModel = r.resolve(LoginViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(LoginRouter.self)
         }.inObjectScope(.transient)

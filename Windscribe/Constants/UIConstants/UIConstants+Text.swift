@@ -1849,6 +1849,9 @@ enum TextsAsset {
         static let twoFactorCode = "2FA Code".localize()
         static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localize()
         static let forgotPassword = "Forgot password?".localize()
+        static let enterEmailAddress = "Enter Email".localize()
+        static let enterVoucherCode = "Enter Voucher Code".localize()
+        static let done = "Done".localize()
     }
 }
 

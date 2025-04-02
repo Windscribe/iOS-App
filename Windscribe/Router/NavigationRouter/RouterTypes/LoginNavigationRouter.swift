@@ -17,6 +17,8 @@ class LoginNavigationRouter: BaseNavigationRouter {
         switch route {
         case .login:
             Assembler.resolve(LoginView.self)
+        case .signup:
+            Assembler.resolve(SignUpView.self)
         default:
             fatalError("Unsupported route: \(route)")
         }

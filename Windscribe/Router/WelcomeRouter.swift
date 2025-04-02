@@ -14,9 +14,6 @@ import SwiftUI
 class WelcomeRouter: BaseRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {
-        case RouteID.signup:
-            let vc = Assembler.resolve(SignUpViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
         case RouteID.emergency:
             let vc = Assembler.resolve(EmergencyConnectViewController.self)
             vc.modalPresentationStyle = .overCurrentContext

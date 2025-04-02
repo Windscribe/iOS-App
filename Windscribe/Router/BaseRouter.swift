@@ -29,12 +29,14 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     }
 
     func goToSignUp(viewController: WSUIViewController, claimGhostAccount: Bool = false) {
-        let vc = Assembler.resolve(SignUpViewController.self)
-        vc.claimGhostAccount = claimGhostAccount
+//        let vc = Assembler.resolve(SignUpViewController.self)
+//        vc.claimGhostAccount = claimGhostAccount
+//
+//        DispatchQueue.main.async {
+//            viewController.navigationController?.pushViewController(vc, animated: true)
+//        }
 
-        DispatchQueue.main.async {
-            viewController.navigationController?.pushViewController(vc, animated: true)
-        }
+        // TODO: Use the new SignupView written in SwiftUI
     }
 
     func goToWeb(url: String, viewController: WSNavigationViewController, parameters _: [String: Any]?) {

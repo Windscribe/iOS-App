@@ -112,5 +112,5 @@ extension Color {
     // Login - Register
     static let loginRegisterFailedField = Color(red: 249 / 255.0, green: 76 / 255.0, blue: 67 / 255.0)
     static let loginRegisterEnabledButtonColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
-
+    static let loginRegisterBackgroundColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
 }

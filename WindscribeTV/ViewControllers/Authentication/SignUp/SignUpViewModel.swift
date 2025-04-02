@@ -207,6 +207,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             } else {
                 self?.preferences.saveUserSessionAuth(sessionAuth: nil)
                 self?.logger.logE(SignUpViewModelImpl.self, "Failed to prepare user data: \(error)")
+
                 switch error {
                 case let Errors.apiError(e):
                     self?.failedState.onNext(SignUpErrorState.api(e.errorMessage ?? ""))
@@ -217,6 +218,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                         self?.failedState.onNext(SignUpErrorState.network(error.localizedDescription))
                     }
                 }
+
             }
         }).disposed(by: disposeBag)
     }
