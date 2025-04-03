@@ -23,7 +23,7 @@ struct WelcomeView: View {
         guard let model = viewModel as? WelcomeViewModelImpl else {
             fatalError("WelcomeView must be initialized properly")
         }
-        
+
         _viewModel = StateObject(wrappedValue: model)
     }
 
@@ -43,10 +43,14 @@ struct WelcomeView: View {
                 .onReceive(viewModel.routeToMainView) { _ in
                     viewModel.navigateToMain()
                 }
-                .onReceive(viewModel.routeToEmergency) { _ in
-                    viewModel.navigateToEmergency()
-                }
+                .fullScreenCover(isPresented: Binding(
+                     get: { router.activeRoute == .emergency },
+                     set: { if !$0 { router.pop() } }
+                 )) {
+                     router.createView(for: .emergency)
+                 }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .withRouter(router)
     }
 
@@ -155,6 +159,7 @@ extension WelcomeView {
     @ViewBuilder
     private func authenticationButtonView() -> some View {
         VStack(spacing: 12) {
+            // Google Authentication
             Button(action: {
                 router.navigate(to: .login)
             }, label: {
@@ -175,7 +180,7 @@ extension WelcomeView {
                 .clipShape(Capsule())
             })
 
-            // Apple Authentication Button
+            // Apple Authentication
             Button(action: {
                 router.navigate(to: .login)
             }, label: {
@@ -203,8 +208,8 @@ extension WelcomeView {
             HStack {
                 // Emergency Connect
                 Button(action: {
-                    viewModel.routeToEmergency.send(())
-                }, label: {
+                    router.navigate(to: .emergency)
+                }) {
                     if viewModel.emergencyConnectStatus {
                         Text(viewModel.emergencyConnectOnText)
                             .font(.semiBold(.callout))
@@ -216,7 +221,7 @@ extension WelcomeView {
                             .dynamicTypeSize(dynamicTypeRange)
                             .foregroundColor(Color.welcomeButtonTextColor)
                     }
-                })
+                }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 HStack(spacing: 12) {

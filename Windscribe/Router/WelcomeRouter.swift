@@ -14,10 +14,6 @@ import SwiftUI
 class WelcomeRouter: BaseRouter {
     func routeTo(to: RouteID, from: UIViewController) {
         switch to {
-        case RouteID.emergency:
-            let vc = Assembler.resolve(EmergencyConnectViewController.self)
-            vc.modalPresentationStyle = .overCurrentContext
-            from.present(vc, animated: true)
         case RouteID.home:
             goToHome()
         default: ()

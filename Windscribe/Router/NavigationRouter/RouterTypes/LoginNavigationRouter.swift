@@ -19,6 +19,8 @@ class LoginNavigationRouter: BaseNavigationRouter {
             Assembler.resolve(LoginView.self)
         case .signup:
             Assembler.resolve(SignUpView.self)
+        case .emergency:
+            Assembler.resolve(EmergencyConnectView.self)
         default:
             fatalError("Unsupported route: \(route)")
         }
