@@ -52,14 +52,20 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     private let localDatabase: LocalDatabase
     private let connectivity: Connectivity
     private let vpnManager: VPNManager
+    let protocolManager: ProtocolManagerType
     var themeManager: ThemeManager
     private let disposeBag = DisposeBag()
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager, connectivity: Connectivity, vpnManager: VPNManager) {
+    init(localDatabase: LocalDatabase,
+         themeManager: ThemeManager,
+         connectivity: Connectivity,
+         vpnManager: VPNManager,
+         protocolManager: ProtocolManagerType) {
         self.localDatabase = localDatabase
         self.themeManager = themeManager
         self.connectivity = connectivity
         self.vpnManager = vpnManager
+        self.protocolManager = protocolManager
         loadData()
     }
 
@@ -110,6 +116,10 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: value, preferredPort: port, preferredProtocolStatus: network.preferredProtocolStatus)
         localDatabase.saveNetwork(wifiNetwork: updated).disposed(by: disposeBag)
         preferredProtocol = network.preferredProtocol
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true,
+                                                   shouldReconnect: vpnManager.isConnected())
+        }
     }
 
     func updatePreferredPort(value: String) {

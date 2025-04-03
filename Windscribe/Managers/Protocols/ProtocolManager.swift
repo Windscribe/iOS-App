@@ -31,13 +31,13 @@ protocol ProtocolManagerType {
 }
 
 class ProtocolManager: ProtocolManagerType {
-    private var logger: FileLogger
+    private let logger: FileLogger
     private let disposeBag = DisposeBag()
-    private var connectivity: Connectivity
-    private var localDatabase: LocalDatabase
-    private var securedNetwork: SecuredNetworkRepository
-    private var preferences: Preferences
-    private var locationManager: LocationsManagerType
+    private let connectivity: Connectivity
+    private let localDatabase: LocalDatabase
+    private let securedNetwork: SecuredNetworkRepository
+    private let preferences: Preferences
+    private let locationManager: LocationsManagerType
     static var shared = Assembler.resolve(ProtocolManagerType.self)
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
@@ -91,10 +91,23 @@ class ProtocolManager: ProtocolManagerType {
             self?.manualPort = port ?? DefaultValues.port
         }).disposed(by: disposeBag)
 
-        securedNetwork.networks.subscribe(onNext: { [weak self] networks in
-            guard !networks.isEmpty else { return }
-            Task {
+        connectivity.network.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] network in
+            Task { @MainActor in
+                self?.logger.logD("ProtocolManager", "connectivity Network : \(network)")
                 await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
+            }
+        }).disposed(by: disposeBag)
+
+        securedNetwork.networks.subscribe(onNext: { [weak self] networks in
+            guard let self = self else { return }
+            guard !networks.isEmpty else {
+                self.logger.logD("ProtocolManager", "Networks Empty")
+                return
+            }
+            Task { @MainActor in
+                self.logger.logD("ProtocolManager", "Secured Networks : \(networks)")
+                await self.refreshProtocols(shouldReset: false, shouldReconnect: false)
             }
         }).disposed(by: disposeBag)
     }
@@ -136,9 +149,10 @@ class ProtocolManager: ProtocolManagerType {
             setPriority(proto: manualProtocol, type: .normal)
         }
         WifiManager.shared.saveCurrentWifiNetworks()
-        if securedNetwork.getCurrentNetwork()?.preferredProtocolStatus == true {
-            let preferredProto = securedNetwork.getCurrentNetwork()?.preferredProtocol ?? defaultProtocol.protocolName
-            let preferredPort = securedNetwork.getCurrentNetwork()?.preferredPort ?? defaultProtocol.portName
+        if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
+            logger.logD(self, "Secured Network : \(currentNetwork.SSID), preferredProtocol: \(currentNetwork.preferredProtocol)")
+            let preferredProto = currentNetwork.preferredProtocol
+            let preferredPort = currentNetwork.preferredPort
             appendPort(proto: preferredProto, port: preferredPort)
             setPriority(proto: preferredProto, type: .normal)
         }

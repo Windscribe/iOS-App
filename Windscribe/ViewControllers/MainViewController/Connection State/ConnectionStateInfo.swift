@@ -47,18 +47,6 @@ struct ConnectionStateInfo {
     static func defaultValue(startState _: ConnectionState = .disconnected) -> ConnectionStateInfo {
         return ConnectionStateInfo(state: .disconnected, isCustomConfigSelected: false, internetConnectionAvailable: true, connectedWifi: nil)
     }
-
-    var trustedNetworkImage: String {
-        if let status = WifiManager.shared.getConnectedNetwork()?.status {
-            if status == true {
-                return ImagesAsset.wifiUnsecure
-            } else {
-                return ImagesAsset.wifi
-            }
-        } else {
-            return ImagesAsset.wifi
-        }
-    }
 }
 
 extension ConnectionState {
@@ -85,15 +73,15 @@ extension ConnectionState {
     var statusColor: UIColor {
         switch self {
         case .connected, .testing: .seaGreen
-        case .connecting: .lowGreen
-        case .disconnecting, .disconnected, .invalid: .white
         case .automaticFailed: .failedConnectionYellow
+        default: .white
         }
     }
 
+    var statusViewColor: UIColor { statusColor.withAlphaComponent(0.1) }
+
     var statusImage: String { self == .automaticFailed ? ImagesAsset.protocolFailed : ImagesAsset.connectionSpinner }
     var statusAlpha: CGFloat { [.connected, .testing, .connecting, .automaticFailed].contains(self) ? 1.0 : 0.5 }
-    var statusViewColor: UIColor { ([.disconnected, .disconnecting].contains(self) ? UIColor.white : .midnight).withAlphaComponent(0.25) }
     var preferredProtocolBadge: String {
         switch self {
         case .connected, .testing: ImagesAsset.preferredProtocolBadgeOn

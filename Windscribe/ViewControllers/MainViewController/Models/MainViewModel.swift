@@ -35,8 +35,6 @@ protocol MainViewModelType {
     var becameActiveTrigger: PublishSubject<Void> { get }
     var updateSSIDTrigger: PublishSubject<Void> { get }
 
-    var isBlurStaticIpAddress: Bool { get }
-    var isBlurNetworkName: Bool { get }
     var didShowProPlanExpiredPopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
     var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
@@ -55,9 +53,6 @@ protocol MainViewModelType {
     func isPrivacyPopupAccepted() -> Bool
     func updatePreferredProtocolSwitch(network: WifiNetwork, preferredProtocolStatus: Bool)
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool)
-    func isAntiCensorshipEnabled() -> Bool
-    func markBlurStaticIpAddress(isBlured: Bool)
-    func markBlurNetworkName(isBlured: Bool)
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel?
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
@@ -461,26 +456,6 @@ class MainViewModel: MainViewModelType {
 
     func isPrivacyPopupAccepted() -> Bool {
         return preferences.getPrivacyPopupAccepted() ?? false
-    }
-
-    func isAntiCensorshipEnabled() -> Bool {
-        return preferences.isCircumventCensorshipEnabled()
-    }
-
-    var isBlurStaticIpAddress: Bool {
-        return preferences.getBlurStaticIpAddress() ?? false
-    }
-
-    func markBlurStaticIpAddress(isBlured: Bool) {
-        preferences.saveBlurStaticIpAddress(bool: isBlured)
-    }
-
-    var isBlurNetworkName: Bool {
-        return preferences.getBlurNetworkName() ?? false
-    }
-
-    func markBlurNetworkName(isBlured: Bool) {
-        preferences.saveBlurNetworkName(bool: isBlured)
     }
 
     func getCustomConfig(customConfigID: String?) -> CustomConfigModel? {

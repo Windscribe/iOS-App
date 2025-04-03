@@ -123,10 +123,6 @@ class MockPreferences: Preferences {
 
     func saveShowServerHealth(show: Bool) {}
 
-    func getShowServerHealth() -> Observable<Bool?> {
-        return Observable.just(nil)
-    }
-
     func saveDarkMode(darkMode: Bool) {}
 
     func getDarkMode() -> Observable<Bool?> {

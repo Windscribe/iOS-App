@@ -17,7 +17,7 @@ struct LocationUIInfo {
 protocol LocationsManagerType {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
     func getLocation(from groupId: String) throws -> (Server, Group)
-    func getLocationUIInfo() -> LocationUIInfo?
+    func getLocationUIInfo() -> LocationUIInfo
     func saveLastSelectedLocation(with locationID: String)
     func saveStaticIP(withID staticID: Int?)
     func saveCustomConfig(withID staticID: String?)
@@ -77,28 +77,36 @@ class LocationsManager: LocationsManagerType {
         return (serverResultSafe, groupResultSafe)
     }
 
-    func getLocationUIInfo() -> LocationUIInfo? {
-        guard let locationType = getLocationType() else { return nil }
+    func getLocationUIInfo() -> LocationUIInfo {
+        guard let locationType = getLocationType() else {
+            return getEmptyUIInfo()
+        }
         let groupId = getLastSelectedLocation()
         if locationType == .server {
-            guard let location = try? getLocation(from: groupId) else { return nil }
+            guard let location = try? getLocation(from: groupId) else {
+                return getEmptyUIInfo()
+            }
             let cityName = getBestLocation() == getLastSelectedLocation() ? TextsAsset.bestLocation : location.1.city
             return LocationUIInfo(nickName: location.1.nick, cityName: cityName, countryCode: location.0.countryCode)
         } else {
             let locationID = getId()
             if locationType == .custom {
                 guard let customConfig = localDatabase.getCustomConfigs().first(where: { locationID == "\($0.id)" }) else {
-                    return nil
+                    return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: customConfig.name, cityName: TextsAsset.configuredLocation, countryCode: Fields.configuredLocation)
             } else if locationType == .staticIP {
                 guard let staticIP = localDatabase.getStaticIPs()?.first(where: { locationID == "\($0.id)" }) else {
-                    return nil
+                    return getEmptyUIInfo()
                 }
                 return LocationUIInfo(nickName: staticIP.staticIP, cityName: staticIP.cityName, countryCode: staticIP.countryCode)
             }
         }
-        return nil
+        return getEmptyUIInfo()
+    }
+
+    private func getEmptyUIInfo() -> LocationUIInfo {
+        return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
     }
 
     func checkForForceDisconnect() -> Bool {

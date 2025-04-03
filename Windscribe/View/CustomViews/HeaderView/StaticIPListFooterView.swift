@@ -43,6 +43,8 @@ class StaticIPListFooterView: WSView {
 
         iconView.contentMode = .scaleAspectFit
         iconView.layer.opacity = 0.4
+        iconView.image = UIImage(named: ImagesAsset.serverWhiteRightArrow)
+        iconView.setImageColor(color: .white)
         addSubview(iconView)
         viewModel?.staticIPs.subscribe(onNext: { _ in
             self.updateDeviceName()

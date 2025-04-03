@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 class ServerRepositoryImpl: ServerRepository {
+    var updatedServersSubject = BehaviorSubject<[Server]>(value: [])
+
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let userRepository: UserRepository
@@ -42,6 +44,7 @@ class ServerRepositoryImpl: ServerRepository {
                 }
                 self.localDatabase.saveServers(servers: servers)
                 self.rebuildFavouriteList(serverList: servers)
+                self.updatedServersSubject.onNext(servers)
                 return servers
             }.catch { error in
                 if let ips = self.localDatabase.getServers() {

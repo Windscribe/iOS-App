@@ -17,17 +17,15 @@ extension MainViewController {
         super.viewDidLoad()
         logger.logD(self, "Main view loaded. Preparing layout.")
         addViews()
-        renderBlurSpacedLabel()
         addGetMoreDataViews()
-        addAutoModeSelectorViews()
-        addAutoLayoutConstraintsForAutoModeSelectorViews()
-        addAutolayoutConstraintsForGetMoreDataViews()
-        addSearchViews()
+        addGetMoreDataViews()
         addCardHeaderView()
+        addSearchViews()
+        addAutoLayoutConstraints()
+        addAutolayoutConstraintsForGetMoreDataViews()
         displayLeftDataInformation()
         showSplashView()
         checkPrivacyConfirmation()
-        // UserPreferencesManager.shared.listenForUserPreferencesChange()
         WifiManager.shared.saveCurrentWifiNetworks()
         loadPortMap()
         loadServerList()
@@ -54,11 +52,11 @@ extension MainViewController {
         overrideUserInterfaceStyle = .dark
         viewModel.updateSSID()
         checkForInternetConnection()
-        hideAutoSecureViews()
         navigationController?.isNavigationBarHidden = true
         navigationController?.interactivePopGestureRecognizer?.delegate = self
         restartServerRefreshControl()
         updateConnectedState()
+        flagBackgroundView.redraw()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -75,5 +73,6 @@ extension MainViewController {
         bindServerListViewModel()
         bindProtocolSwitchViewModel()
         bindActions()
+        bindViews()
     }
 }

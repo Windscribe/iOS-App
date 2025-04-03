@@ -19,95 +19,42 @@ import UIKit
 import WidgetKit
 
 class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
-    // MARK: navbar
-
-    var topNavBarImageView: UIImageView!
     var preferencesTapAreaButton: LargeTapAreaImageButton!
     var logoIcon: ImageButton!
     var notificationDot: UIButton!
 
     // MARK: background views
-
-    var topView, cardTopView, cardView: UIView!
-    var backgroundView, flagBackgroundView: UIView!
-    var flagBottomGradientView: UIImageView!
-    var gradient,
-        backgroundGradient,
-        flagBottomGradient: CAGradientLayer!
-    var flagView: UIImageView!
+    var flagBackgroundView: FlagsBackgroundView!
 
     // MARK: table views
-
     var scrollView: WScrollView!
-    var serverListTableView, streamingTableView: PlainExpyTableView!
-    var favTableViewRefreshControl, streamingTableViewRefreshControl, staticIpTableViewRefreshControl, customConfigsTableViewRefreshControl: WSRefreshControl!
+    var favTableViewRefreshControl, staticIpTableViewRefreshControl, customConfigsTableViewRefreshControl: WSRefreshControl!
+    var serverListTableView: PlainExpyTableView!
     var favTableView, staticIpTableView, customConfigTableView: PlainTableView!
     var staticIPTableViewFooterView: StaticIPListFooterView!
     var customConfigTableViewFooterView: CustomConfigListFooterView!
 
-    // header selector views
-    var serverHeaderView, headerBottomBorderView, headerGradientView: UIView!
-
-    var cardHeaderContainerView: CardHeaderContainerView!
+    var listSelectionView: ListSelectionView!
     // search
     var searchLocationsView: SearchLocationsView!
 
     var sortedServerList: [ServerSection]?
 
     // MARK: connection views
+    var connectButtonView: ConnectButtonView!
+    var connectionStateInfoView: ConnectionStateInfoView!
+    var spacer: UIView!
+    var connectedCityLabel, connectedServerLabel: UILabel!
+    var ipInfoView: IPInfoView!
 
-    var connectButtonRingView: UIImageView!
-    var connectButton: UIButton!
-    var statusView, statusDivider, spacer: UIView!
-    var statusImageView, connectivityTestImageView: UIImageView!
-    var statusLabel, connectedCityLabel, connectedServerLabel: UILabel!
-    var protocolLabel, portLabel: UILabel!
-    var preferredProtocolBadge: UIImageView!
-    var circumventCensorshipBadge: UIImageView!
-    var changeProtocolArrow: UIImageView!
-    var yourIPValueLabel, trustedNetworkValueLabel: BlurredLabel!
-    var yourIPIcon, trustedNetworkIcon: UIImageView!
-    var cardViewTopConstraint: NSLayoutConstraint!
-
-    // MARK: auto-secure views
-
-    var expandButton: UIButton!
-    var autoSecureLabel: UILabel!
-    var preferredProtocolLabel: UILabel!
-    var trustNetworkSwitch: SwitchButton!
-    var preferredProtocolSwitch: SwitchButton!
-    var cellDivider1: UIView!
-    var autoSecureInfoButton, preferredProtocolInfoButton: UIButton!
-    var protocolSelectionLabel, portSelectionLabel: UILabel!
-    var manualViewDivider1: UIView!
-    var protocolDropdownButton: DropdownButton!
-    var portDropdownButton: DropdownButton!
-
-    // MARK: auto-mode selector views
-
-    var autoModeSelectorView: UIView!
-    var autoModeSelectorInfoIconView: UIImageView!
-    var autoModeInfoLabel: UILabel!
-    var autoModeSelectorCounterLabel: UILabel!
-    var autoModeSelectorIkev2Button: UIButton!
-    var autoModeSelectorUDPButton: UIButton!
-    var autoModeSelectorTCPButton: UIButton!
-    var autoModeSelectorOverlayView: UIView!
+    // MARK: Wifi Info views
+    var wifiInfoView: WifiInfoView!
 
     // MARK: datasources
-
     var serverListTableViewDataSource: ServerListTableViewDataSource?
-    var streamingTableViewDataSource: StreamingListTableViewDataSource?
     var favNodesListTableViewDataSource: FavNodesListTableViewDataSource?
     var staticIPListTableViewDataSource: StaticIPListTableViewDataSource?
     var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource?
-
-    // MARK: dynamic constraints
-
-    var flagViewTopConstraint: NSLayoutConstraint!
-    var preferredBadgeConstraints: [NSLayoutConstraint]!
-    var circumventCensorshipBadgeConstraints: [NSLayoutConstraint]!
-    var changeProtocolArrowConstraints: [NSLayoutConstraint]!
 
     // MARK: properties
 
@@ -185,68 +132,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func gestureRecognizerShouldBegin(_: UIGestureRecognizer) -> Bool {
         return false
-    }
-
-    func bindMainViewModel() {
-        viewModel.isDarkMode.subscribe(onNext: {
-            self.updateLayoutForTheme(isDarkMode: $0)
-        }).disposed(by: disposeBag)
-        viewModel.session.subscribe(onNext: {
-            self.updateUIForSession(session: $0)
-        }).disposed(by: disposeBag)
-
-        viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { payload in
-            guard let payload = payload else { return }
-            self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
-            self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
-        }).disposed(by: disposeBag)
-
-        viewModel.notices.subscribe(onNext: { _ in
-            self.checkForUnreadNotifications()
-        }, onError: { error in
-            self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
-
-        viewModel.showNetworkSecurityTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.locationManagerViewModel.requestLocationPermission {
-                self.popupRouter?.routeTo(to: .networkSecurity, from: self)
-            }
-        }).disposed(by: disposeBag)
-
-        viewModel.showNotificationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showNotificationsViewController()
-        }).disposed(by: disposeBag)
-
-        viewModel.becameActiveTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.clearScrollHappened()
-            self.checkAndShowShareDialogIfNeed()
-            self.updateConnectedState()
-        }).disposed(by: disposeBag)
-
-        vpnConnectionViewModel.reloadLocationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {  id in
-            if id.starts(with: "static") {
-                self.loadStaticIPs()
-            } else if id.starts(with: "custom") {
-                self.loadCustomConfigs()
-            } else {
-                self.loadServerList()
-            }
-        }).disposed(by: disposeBag)
-
-        vpnConnectionViewModel.reviewRequestTrigger
-             .observe(on: MainScheduler.instance)
-             .subscribe(onNext: { [weak self] in
-                 self?.displayReviewConfirmationAlert()
-             })
-             .disposed(by: disposeBag)
-
-        setNetworkSsid()
-    }
-
-    func bindActions() {
-        preferencesTapAreaButton.rx.tap.throttle(.seconds(1), scheduler: MainScheduler.instance).bind {
-            self.logoButtonTapped()
-        }.disposed(by: disposeBag)
     }
 
     func configureNotificationListeners() {
@@ -357,7 +242,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func clearScrollHappened() {
         serverListTableViewDataSource?.scrollHappened = false
-        streamingTableViewDataSource?.scrollHappened = false
         favNodesListTableViewDataSource?.scrollHappened = false
         customConfigListTableViewDataSource?.scrollHappened = false
         staticIPListTableViewDataSource?.scrollHappened = false
@@ -399,70 +283,17 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         customConfigTableView.reloadData()
     }
 
-    func showNoInternetConnection() {
-        statusLabel.isHidden = true
-        statusImageView.image = UIImage(named: ImagesAsset.noInternet)
-        statusImageView.isHidden = false
-        connectivityTestImageView.isHidden = true
-    }
-
-    func showFlagAnimation(countryCode: String, autoPicked: Bool = false) {
-        DispatchQueue.main.async {
-            let newFlag = UIImage(named: countryCode)
-            if autoPicked {
-                UIView.transition(with: self.flagView, duration: 0.25, options: .transitionCrossDissolve, animations: {
-                    if let newFlag = newFlag {
-                        self.flagView.image = newFlag
-                        self.flagView.alpha = 0.25
-                    } else {
-                        self.flagView.alpha = 0.0
-                    }
-                }, completion: nil)
-                return
-            }
-            guard self.flagView.frame.height != 0 else { return }
-            self.flagViewTopConstraint.constant = self.flagView.frame.height + 10
-            UIView.animate(withDuration: self.flagView != nil ? 0.5 : 0.0, delay: 0.0, options: .curveEaseOut, animations: {
-                self.view.layoutIfNeeded()
-            }, completion: { _ in
-                self.flagView.alpha = 0.25
-                self.flagView.image = newFlag
-                self.flagViewTopConstraint.constant = 0
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveEaseIn, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: nil)
-            })
-        }
-    }
-
     func tableViewScrolled(toTop: Bool) {
-        // serverRefreshControlValueChanged()
-        hideHeaderGradient(hide: toTop)
     }
 
     override func setupLocalized() {
         displayLeftDataInformation()
         getMoreDataButton.setTitle(TextsAsset.getMoreData.uppercased(), for: .normal)
         viewModel.updateSSID()
-        localizeAutoSecure()
     }
 
     func openConnectionChangeDialog() {
         router?.routeTo(to: RouteID.protocolSwitchVC(delegate: protocolSwitchViewModel, type: .change), from: self)
-    }
-
-    private func hideAutoModeSelectorView(connect: Bool = false) {
-        showGetMoreDataViews()
-
-        autoModeSelectorViewTimer?.invalidate()
-        UIView.animate(withDuration: 1.0, animations: {
-            self.autoModeSelectorView.frame = CGRect(x: 16, y: self.view.frame.maxY + 100, width: self.view.frame.width - 32, height: 44)
-        }, completion: { _ in
-            self.autoModeSelectorView.isHidden = true
-            if connect {
-                self.enableVPNConnection()
-            }
-        })
     }
 }
 

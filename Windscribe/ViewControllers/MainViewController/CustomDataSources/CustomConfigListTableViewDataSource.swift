@@ -51,14 +51,13 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource, UITableViewData
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier, for: indexPath) as? CustomConfigTableViewCell
-            ?? CustomConfigTableViewCell(
+            withIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier, for: indexPath) as? CustomConfigCell
+            ?? CustomConfigCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.customConfigCellReuseIdentifier)
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
         cell.delegate = self
-        let customConfig = customConfigs?[indexPath.row]
-        cell.displayingCustomConfig = customConfig
+        cell.customConfigCellViewModel = CustomConfigCellModel(displayingCustomConfig: customConfigs?[indexPath.row])
         return cell
     }
 

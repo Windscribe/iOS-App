@@ -25,7 +25,6 @@ protocol ConnectionViewModelType {
     var showAuthFailureTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
-    var ipAddressSubject: PublishSubject<String> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
     var trustedNetworkPopupTrigger: PublishSubject<Void> { get }
@@ -79,7 +78,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showPrivacyTrigger = PublishSubject<Void>()
     let showAuthFailureTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
-    let ipAddressSubject = PublishSubject<String>()
     let showAutoModeScreenTrigger = PublishSubject<Void>()
     let openNetworkHateUsDialogTrigger = PublishSubject<Void>()
     let trustedNetworkPopupTrigger = PublishSubject<Void>()
@@ -189,21 +187,6 @@ class ConnectionViewModel: ConnectionViewModelType {
                 self.currentNetwork = network
             }, onError: { _ in }).disposed(by: disposeBag)
 
-        ipRepository.ipState
-            .compactMap { state -> MyIP? in
-                guard case .available(let ip) = state, !ip.isInvalidated else {
-                    return nil
-                }
-                return ip
-            }
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(on: MainScheduler.asyncInstance)
-            .subscribe(onNext: { myip in
-                if !myip.isInvalidated {
-                    self.ipAddressSubject.onNext(myip.userIp)
-                }
-            }).disposed(by: disposeBag)
-
         localDB.getNetworks()
             .subscribe(onNext: {
                 guard let matchingNetwork = $0.first(where: { network in
@@ -285,10 +268,7 @@ extension ConnectionViewModel {
     }
 
     func getSelectedCountryInfo() -> LocationUIInfo {
-        guard let location = locationsManager.getLocationUIInfo() else {
-            return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
-        }
-        return location
+        locationsManager.getLocationUIInfo()
     }
 
     func isBestLocationSelected() -> Bool {
@@ -499,7 +479,7 @@ extension ConnectionViewModel {
     }
 
     private func saveDataForWidget() {
-        guard let locationInfo = locationsManager.getLocationUIInfo() else { return }
+        let locationInfo = locationsManager.getLocationUIInfo()
 
         preferences.saveServerNameKey(key: locationInfo.cityName)
         preferences.saveNickNameKey(key: locationInfo.nickName)

@@ -7,25 +7,6 @@
 //
 
 import Foundation
-import RxSwift
-
-extension MainViewController {
-    func bindStaticIPListViewModel() {
-        staticIPListViewModel.presentLinkTrigger.subscribe {
-            self.openLink(url: $0)
-        }.disposed(by: disposeBag)
-        staticIPListViewModel.presentAlertTrigger.subscribe {
-            switch $0 {
-            case .connecting:
-                self.displayConnectingAlert()
-            case .disconnecting:
-                self.displayDisconnectingAlert()
-            case .underMaintananence:
-                self.showMaintenanceLocationView(isStaticIp: true)
-            }
-        }.disposed(by: disposeBag)
-    }
-}
 
 extension MainViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {

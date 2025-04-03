@@ -303,14 +303,6 @@ class SharedSecretDefaults: Preferences {
         setBool(bool, forKey: SharedKeys.shakeForDataUnlock)
     }
 
-    func saveLatencyType(latencyType: String) {
-        setString(latencyType, forKey: SharedKeys.latencyType)
-    }
-
-    func getLatencyType() -> RxSwift.Observable<String> {
-        sharedDefault?.rx.observe(String.self, SharedKeys.latencyType).map { $0 ?? DefaultValues.latencyType } ?? Observable.just(DefaultValues.latencyType)
-    }
-
     func saveOrderLocationsBy(order: String) {
         setString(order, forKey: SharedKeys.orderLocationsBy)
     }
@@ -405,14 +397,6 @@ class SharedSecretDefaults: Preferences {
 
     func getSelectedPort() -> RxSwift.Observable<String?> {
         return sharedDefault?.rx.observe(String.self, SharedKeys.port) ?? Observable.just(DefaultValues.port)
-    }
-
-    func saveShowServerHealth(show: Bool) {
-        setBool(show, forKey: SharedKeys.serverHealth)
-    }
-
-    func getShowServerHealth() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.serverHealth) ?? Observable.just(DefaultValues.showServerHealth)
     }
 
     func saveDarkMode(darkMode: Bool) {
@@ -552,6 +536,27 @@ class SharedSecretDefaults: Preferences {
             return LocationType.custom
         }
         return nil
+    }
+
+    // Backgrounds
+    func saveHasCustomBackground(value: Bool) {
+        setBool(value, forKey: SharedKeys.hasCustomBackground)
+    }
+
+    func getHasCustomBackground() -> Bool {
+        return sharedDefault?.bool(forKey: SharedKeys.hasCustomBackground) ?? false
+    }
+
+    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.hasCustomBackground) ?? Observable.just(false)
+    }
+
+    func saveCurrentCustomBackground(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.currentCustomBackground)
+    }
+
+    func getCurrentCustomBackground() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.currentCustomBackground)
     }
 
     // MARK: - Base Types

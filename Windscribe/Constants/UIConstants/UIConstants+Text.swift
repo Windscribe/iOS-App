@@ -489,6 +489,10 @@ enum TextsAsset {
         return "Pro".localize()
     }
 
+    static var allServers: String {
+        return "All Locations".localize()
+    }
+
     enum General {
         static var title: String { return "General".localize() }
         static var connectionMode: String { return "Connection Mode".localize() }
@@ -516,6 +520,7 @@ enum TextsAsset {
         static var autoSecure: String { "Auto-Secure".localize() }
         static var enabled: String { "Enabled".localize() }
         static var disabled: String { "Disabled".localize() }
+        static var customBackground: String { "Custom Background".localize() }
 
         static func getValue(displayText: String) -> String? {
             switch displayText {
@@ -558,6 +563,7 @@ enum TextsAsset {
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localize() }
         static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localize() }
         static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localize() }
+        static var customBackground: String { return "Use the app custom background instead of the locations flag.".localize() }
     }
 
     enum Account {
@@ -1879,10 +1885,6 @@ extension TextsAsset {
 
         static var allTitle: String {
             return "All".localize()
-        }
-
-        static var windflixTitle: String {
-            return "Windflix".localize()
         }
 
         static var welcomeDescription: String {

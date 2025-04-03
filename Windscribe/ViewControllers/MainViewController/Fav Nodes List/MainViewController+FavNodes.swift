@@ -9,22 +9,6 @@
 import Foundation
 import UIKit
 
-import RxSwift
-
-extension MainViewController {
-    func bindFavNodesListViewModel() {
-        favNodesListViewModel.presentAlertTrigger.subscribe {
-            switch $0 {
-            case .connecting: self.displayConnectingAlert()
-            case .disconnecting: self.displayDisconnectingAlert()
-            }
-        }.disposed(by: disposeBag)
-        favNodesListViewModel.showUpgradeTrigger.subscribe { _ in
-            self.showUpgradeView()
-        }.disposed(by: disposeBag)
-    }
-}
-
 extension MainViewController: FavNodesListTableViewDelegate {
     func setSelectedFavNode(favNode: FavNodeModel) {
         favNodesListViewModel.setSelectedFavNode(favNode: favNode)

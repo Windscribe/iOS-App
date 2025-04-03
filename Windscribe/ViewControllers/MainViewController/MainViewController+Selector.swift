@@ -101,47 +101,13 @@ extension MainViewController {
 
     func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
         DispatchQueue.main.async {
+            self.wifiInfoView.updateNetwork(network: network)
             if network?.isInvalidated == true {
                 return
             }
-            guard let protoPort = protoPort else {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-                return
-            }
-            self.protocolLabel.text = protoPort.protocolName
-            self.portLabel.text = protoPort.portName
-
-            if !(network?.SSID.isEmpty ?? true), self.vpnConnectionViewModel.isConnected() || self.vpnConnectionViewModel.isConnecting() {
-                if let status = network?.preferredProtocolStatus, status, protoPort.protocolName == network?.preferredProtocol, protoPort.portName == network?.preferredPort {
-                    self.setPreferredProtocolBadgeVisibility(hidden: false)
-                } else {
-                    guard !self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network) else {
-                        // This means the network is temporarly cellular while connecting to VPN
-                        return
-                    }
-                    self.setPreferredProtocolBadgeVisibility(hidden: true)
-                }
-                return
-            }
-            if WifiManager.shared.selectedPreferredProtocolStatus ?? false, WifiManager.shared.selectedPreferredProtocol == protoPort.protocolName, WifiManager.shared.selectedPreferredPort == protoPort.portName {
-                self.setPreferredProtocolBadgeVisibility(hidden: false)
-            } else {
-                self.setPreferredProtocolBadgeVisibility(hidden: true)
-            }
-        }
-    }
-
-    private func setPreferredProtocolBadgeVisibility(hidden: Bool) {
-        DispatchQueue.main.async {
-            if hidden {
-                self.preferredBadgeConstraints[2].constant = 0
-                self.preferredBadgeConstraints[3].constant = 0
-            } else {
-                self.preferredBadgeConstraints[2].constant = 10
-                self.preferredBadgeConstraints[3].constant = 8
-            }
-            self.preferredProtocolBadge.layoutIfNeeded()
-            self.changeProtocolArrow.layoutIfNeeded()
+            let isNetworkCellularWhileConnecting = self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network)
+//            self.connectionStateInfoView.refreshProtocol(from: network, with: protoPort,
+//                                                         isNetworkCellularWhileConnecting: isNetworkCellularWhileConnecting)
         }
     }
 
@@ -163,7 +129,6 @@ extension MainViewController {
         DispatchQueue.main.async { [weak self] in
             self?.serverListTableView.reloadData()
             self?.favTableView.reloadData()
-            self?.streamingTableView.reloadData()
             self?.staticIpTableView.reloadData()
             self?.customConfigTableView.reloadData()
         }
@@ -216,16 +181,6 @@ extension MainViewController {
                 self.reloadServerList()
             }
         }
-        viewModel.sortServerListUsingUserPreferences(isForStreaming: true, servers: servers) { streamingSectionsOrdered in
-            self.streamingTableViewDataSource = StreamingListTableViewDataSource(streamingSections: streamingSectionsOrdered, viewModel: self.viewModel)
-            self.streamingTableViewDataSource?.delegate = self
-            self.streamingTableView.dataSource = self.streamingTableViewDataSource
-            self.streamingTableView.delegate = self.streamingTableViewDataSource
-            DispatchQueue.main.async {
-                self.streamingTableView.reloadData()
-                self.reloadServerList()
-            }
-        }
     }
 
     @objc func disconnectVPNIntentReceived() {
@@ -238,9 +193,9 @@ extension MainViewController {
         enableVPNConnection()
     }
 
-    @objc func connectButtonTapped() {
+    func connectButtonTapped() {
         HapticFeedbackGenerator.shared.run(level: .medium)
-        if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
+        if vpnConnectionViewModel.isDisconnected() || vpnConnectionViewModel.isDisconnecting() {
             logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
@@ -251,18 +206,6 @@ extension MainViewController {
         } else {
             logger.logD(self, "User tapped to disconnect.")
             vpnConnectionViewModel.disableConnection()
-        }
-    }
-
-    @objc func expandButtonTapped() {
-        if expandButton.tag == 0 {
-            locationManagerViewModel.requestLocationPermission {
-                self.showAutoSecureViews()
-            }
-        } else {
-            hideAutoSecureViews()
-            WifiManager.shared.saveCurrentWifiNetworks()
-            vpnConnectionViewModel.refreshProtocols()
         }
     }
 

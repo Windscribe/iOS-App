@@ -9,38 +9,6 @@
 import Foundation
 import UIKit
 
-extension MainViewController {
-    func bindCustomConfigPickerModel() {
-        customConfigPickerViewModel.configureVPNTrigger.subscribe(onNext: {
-            self.enableVPNConnection()
-        }).disposed(by: disposeBag)
-        customConfigPickerViewModel.disableVPNTrigger.subscribe(onNext: {
-            self.disableVPNConnection()
-        }).disposed(by: disposeBag)
-
-        customConfigPickerViewModel.displayAllertTrigger.subscribe(onNext: {
-            switch $0 {
-            case .connecting:
-                self.displayConnectingAlert()
-            case .disconnecting:
-                self.displayDisconnectingAlert()
-            }
-        }).disposed(by: disposeBag)
-
-        customConfigPickerViewModel.presentDocumentPickerTrigger.subscribe(onNext: {
-            self.present($0, animated: true)
-        }).disposed(by: disposeBag)
-
-        customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
-            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: true), from: self)
-        }).disposed(by: disposeBag)
-
-        vpnConnectionViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
-            self.popupRouter?.routeTo(to: .enterCredentials(config: $0, isUpdating: false), from: self)
-        }).disposed(by: disposeBag)
-    }
-}
-
 extension MainViewController: CustomConfigListViewDelegate {
     func hideCustomConfigRefreshControl() {
         if customConfigTableView.subviews.contains(customConfigsTableViewRefreshControl) {

@@ -17,8 +17,6 @@ protocol Preferences {
     func userSessionAuth() -> String?
 
     // UserPreferenceManager
-    func saveLatencyType(latencyType: String)
-    func getLatencyType() -> Observable<String>
     func saveOrderLocationsBy(order: String)
     func getOrderLocationsBy() -> Observable<String?>
     func saveAppearance(appearance: String)
@@ -39,8 +37,6 @@ protocol Preferences {
     func getSelectedProtocol() -> Observable<String?>
     func saveSelectedPort(port: String)
     func getSelectedPort() -> Observable<String?>
-    func saveShowServerHealth(show: Bool)
-    func getShowServerHealth() -> Observable<Bool?>
     func saveDarkMode(darkMode: Bool)
     func getDarkMode() -> Observable<Bool?>
 
@@ -156,4 +152,11 @@ protocol Preferences {
     func isCustomConfigSelected() -> Bool
     func getLocationType() -> LocationType?
     func getLocationType(id: String) -> LocationType?
+
+    // Backgrounds
+    func saveHasCustomBackground(value: Bool)
+    func getHasCustomBackground() -> Bool
+    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?>
+    func saveCurrentCustomBackground(value: String)
+    func getCurrentCustomBackground() -> String?
 }
