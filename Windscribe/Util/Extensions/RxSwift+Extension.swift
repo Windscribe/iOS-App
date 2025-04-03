@@ -1,5 +1,5 @@
 //
-//  RXExtensions.swift
+//  RxSwift+Extension.swift
 //  Windscribe
 //
 //  Created by Soner Yuksel on 2025-03-06.

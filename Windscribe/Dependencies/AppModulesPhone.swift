@@ -72,9 +72,13 @@ class ViewModels: Assembly {
                 themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
 
-        container.register(EmergenyConnectViewModal.self) { r in
-            EmergencyConnectModalImpl(vpnManager: r.resolve(VPNManager.self)!, emergencyRepository: r.resolve(EmergencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
+        container.register((any EmergencyConnectViewModel).self) { r in
+            EmergencyConnectViewModelImpl(
+                vpnManager: r.resolve(VPNManager.self)!,
+                emergencyRepository: r.resolve(EmergencyRepository.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
+
         container.register(AdvanceParamsViewModel.self) { r in
             AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
@@ -321,6 +325,14 @@ class ViewControllerModule: Assembly {
             ))
         }.inObjectScope(.transient)
 
+        container.register(EmergencyConnectView.self) { r in
+            EmergencyConnectView(viewModel: EmergencyConnectViewModelImpl(
+                vpnManager: r.resolve(VPNManager.self)!,
+                emergencyRepository: r.resolve(EmergencyRepository.self)!,
+                logger: r.resolve(FileLogger.self)!
+            ))
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -338,12 +350,6 @@ class ViewControllerModule: Assembly {
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
-        }.inObjectScope(.transient)
-        container.register(EmergencyConnectViewController.self) { _ in
-            EmergencyConnectViewController()
-        }.initCompleted { r, vc in
-            vc.viewmodal = r.resolve(EmergenyConnectViewModal.self)
-            vc.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(PreferencesMainViewController.self) { _ in
             PreferencesMainViewController()

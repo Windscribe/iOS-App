@@ -120,7 +120,7 @@ struct SignUpView: View {
         guard let model = viewModel as? SignUpViewModelImpl else {
             fatalError("SignUpView must be initialized properly")
         }
-        
+
         _viewModel = StateObject(wrappedValue: model)
     }
 

@@ -320,8 +320,6 @@
 		5986AB582C47428B00167023 /* IBMPlexSans-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AF4E925321EF8EC500A3F584 /* IBMPlexSans-Medium.otf */; };
 		5986AB602C485A2300167023 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5986AB5E2C485A2300167023 /* SignUpViewController.swift */; };
 		598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */; };
-		598F173929F05723007137A4 /* EmergencyConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F173729F05723007137A4 /* EmergencyConnectViewController.swift */; };
-		598F173A29F05723007137A4 /* EmergencyConnectViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 598F173829F05723007137A4 /* EmergencyConnectViewController.xib */; };
 		59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59909FC52C778D68008FA4C7 /* ServerListRouter.swift */; };
 		5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
 		5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5993396A2B4CD26600EC615D /* DefaultValues.swift */; };
@@ -986,7 +984,6 @@
 		C5B8DF072C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5BF0D52277454EB009C95DF /* PushNotificationPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */; };
 		C5BF38502B917EF300AA725C /* UserDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384F2B917EF300AA725C /* UserDataRepository.swift */; };
-		C5BF38522B918D5700AA725C /* EmergenyConnectViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF38512B918D5700AA725C /* EmergenyConnectViewModal.swift */; };
 		C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3EC29BB85280091FB14 /* NETunnelProviderManager+Ext.swift */; };
 		C5D0E3EE29BB85460091FB14 /* NETunnelProviderManager+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3EC29BB85280091FB14 /* NETunnelProviderManager+Ext.swift */; };
 		C5D0E40129BB8BE70091FB14 /* ringlogger.c in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3F829BB8BE60091FB14 /* ringlogger.c */; };
@@ -1194,6 +1191,10 @@
 		F4F29E512D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F4F51A692D9B176300407DE7 /* SignupWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A682D9B176300407DE7 /* SignupWarningView.swift */; };
+		F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
+		F4F51A792D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
+		F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */; };
+		F4F51A7C2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1501,8 +1502,6 @@
 		5986AB592C47432D00167023 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5986AB5E2C485A2300167023 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenVPNConnectionInfo.swift; sourceTree = "<group>"; };
-		598F173729F05723007137A4 /* EmergencyConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewController.swift; sourceTree = "<group>"; };
-		598F173829F05723007137A4 /* EmergencyConnectViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmergencyConnectViewController.xib; sourceTree = "<group>"; };
 		59909FC52C778D68008FA4C7 /* ServerListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListRouter.swift; sourceTree = "<group>"; };
 		5993396A2B4CD26600EC615D /* DefaultValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultValues.swift; sourceTree = "<group>"; };
 		599BA2A62C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
@@ -1882,7 +1881,6 @@
 		C5B8DF012C9FD3450072333E /* VPNErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNErrors.swift; sourceTree = "<group>"; };
 		C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationPayload.swift; sourceTree = "<group>"; };
 		C5BF384F2B917EF300AA725C /* UserDataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataRepository.swift; sourceTree = "<group>"; };
-		C5BF38512B918D5700AA725C /* EmergenyConnectViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergenyConnectViewModal.swift; sourceTree = "<group>"; };
 		C5D0E3EC29BB85280091FB14 /* NETunnelProviderManager+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NETunnelProviderManager+Ext.swift"; sourceTree = "<group>"; };
 		C5D0E3F829BB8BE60091FB14 /* ringlogger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ringlogger.c; sourceTree = "<group>"; };
 		C5D0E3F929BB8BE60091FB14 /* test_ringlogger.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test_ringlogger.c; sourceTree = "<group>"; };
@@ -2051,6 +2049,8 @@
 		F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
 		F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		F4F51A682D9B176300407DE7 /* SignupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWarningView.swift; sourceTree = "<group>"; };
+		F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewModel.swift; sourceTree = "<group>"; };
+		F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3170,7 +3170,6 @@
 				C51F7B73276D0AAB0074A025 /* RobertFilters.swift */,
 				C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */,
 				E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */,
-				598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */,
 				5947B4AD2A214E7C00C95CF2 /* Latency.swift */,
 				C5592B7D2B38838500F2F110 /* MyIP.swift */,
 				C5A930CC2B4332AA0001CFA0 /* User.swift */,
@@ -3470,9 +3469,7 @@
 				F41190232D7FC77A00AC7EB6 /* WelcomeView */,
 				F440F2FE2D8DE70D006F1A6D /* LoginView */,
 				F4888E3C2D949DA7005EF149 /* SignUpView */,
-				598F173829F05723007137A4 /* EmergencyConnectViewController.xib */,
-				598F173729F05723007137A4 /* EmergencyConnectViewController.swift */,
-				C5BF38512B918D5700AA725C /* EmergenyConnectViewModal.swift */,
+				F4F51A732D9D7E2B00407DE7 /* EmergencyConnect */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -4463,6 +4460,40 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
+		F4F51A732D9D7E2B00407DE7 /* EmergencyConnect */ = {
+			isa = PBXGroup;
+			children = (
+				F4F51A742D9D7E4D00407DE7 /* Views */,
+				F4F51A752D9D7E5800407DE7 /* ViewModels */,
+				F4F51A762D9D836D00407DE7 /* Models */,
+			);
+			path = EmergencyConnect;
+			sourceTree = "<group>";
+		};
+		F4F51A742D9D7E4D00407DE7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F4F51A752D9D7E5800407DE7 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F4F51A762D9D836D00407DE7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				598F173229EEF500007137A4 /* OpenVPNConnectionInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
@@ -4928,7 +4959,6 @@
 				AF4E925921EF8F5900A3F584 /* IBMPlexSans-BoldItalic.otf in Resources */,
 				AF4ECAA423E9D93B00E09223 /* Assets.xcassets in Resources */,
 				AF4E925A21EF8F5900A3F584 /* IBMPlexSans-ExtraLightItalic.otf in Resources */,
-				598F173A29F05723007137A4 /* EmergencyConnectViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5149,6 +5179,7 @@
 				59FC74422C515D8E00021CD1 /* PortMapRepository.swift in Sources */,
 				599BA2B82C65453F00F0D1E4 /* UpgradeButton.swift in Sources */,
 				F4843A992D89F7DE0034330F /* URL+Extension.swift in Sources */,
+				F4F51A792D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */,
 				F469F0D82D7BA74E004DC6AB /* UIImage+GIF.swift in Sources */,
 				59FC74202C51549600021CD1 /* AdvanceKeys.swift in Sources */,
 				59909FC62C778D68008FA4C7 /* ServerListRouter.swift in Sources */,
@@ -5299,6 +5330,7 @@
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				1E09747D2D7F33FE003F7AA7 /* RxRealm+Extension.swift in Sources */,
 				F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
+				F4F51A7C2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */,
 				F434A1BE2D84A7160059415F /* HTMLParser.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
@@ -5400,7 +5432,6 @@
 				C580FE042B4F254E004FA857 /* PushNotificationManagerV2Impl.swift in Sources */,
 				F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */,
 				C5A930EC2B44A2DE0001CFA0 /* FileDatabase.swift in Sources */,
-				C5BF38522B918D5700AA725C /* EmergenyConnectViewModal.swift in Sources */,
 				1E2366D02BC587F5000DF098 /* SetPreferredProtocolModel.swift in Sources */,
 				C580FE182B5078B3004FA857 /* WindscribeInAppProduct.swift in Sources */,
 				C5A930DC2B43EF390001CFA0 /* StaticIpRepositoryImpl.swift in Sources */,
@@ -5502,6 +5533,7 @@
 				1EC6C7832BE268E30036248B /* CardHeaderContainerView.swift in Sources */,
 				AFFA715C21C407E700349195 /* Notice.swift in Sources */,
 				C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */,
+				F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */,
 				1E818F122C3D6D560088066C /* RegexConstants.swift in Sources */,
 				1E2CBFEC2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */,
 				F469F0EA2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
@@ -5579,7 +5611,6 @@
 				F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Extension.swift in Sources */,
 				C57668EE2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift in Sources */,
-				598F173929F05723007137A4 /* EmergencyConnectViewController.swift in Sources */,
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
 				E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */,
 				C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */,
@@ -5773,6 +5804,7 @@
 				C5A930D52B43EE710001CFA0 /* NotificationRepository.swift in Sources */,
 				C56FCC022B2CF298008DE7D4 /* AccountRouter.swift in Sources */,
 				C5D0E40B29BB8BE70091FB14 /* Keychain.swift in Sources */,
+				F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */,
 				C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */,
 				1A9DB34E28167B8800C3EC1C /* LanguageTableViewCell.swift in Sources */,
 				AF914A7A23D63DFC002D3041 /* GhostAccountViewController.swift in Sources */,

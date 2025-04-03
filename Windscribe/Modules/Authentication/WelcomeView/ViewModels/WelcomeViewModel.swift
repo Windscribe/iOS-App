@@ -15,7 +15,6 @@ protocol WelcomeViewModel: ObservableObject {
     var showLoadingView: Bool { get }
     var routeToMainView: PassthroughSubject<Bool, Never> { get }
     var routeToSignup: PassthroughSubject<Bool, Never> { get }
-    var routeToEmergency: PassthroughSubject<Void, Never> { get}
     var emergencyConnectStatus: Bool { get }
     var failedState: String? { get }
 
@@ -30,7 +29,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     let routeToSignup = PassthroughSubject<Bool, Never>()
     let routeToMainView = PassthroughSubject<Bool, Never>()
-    let routeToEmergency = PassthroughSubject<Void, Never>()
 
     // Image Assets
     let backgroundImage = ImagesAsset.Welcome.background
@@ -187,11 +185,5 @@ extension WelcomeViewModelImpl {
         guard let presentingController = presentingController else { return }
 
         router.routeTo(to: RouteID.home, from: presentingController)
-    }
-
-    func navigateToEmergency() {
-        guard let presentingController = presentingController else { return }
-
-        router.routeTo(to: RouteID.emergency, from: presentingController)
     }
 }

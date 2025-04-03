@@ -78,7 +78,6 @@ enum ImagesAsset {
     static let checkCircleGreen = "check_circle_green"
     static let closeIconMidnight = "close_ico_midnight"
     static let connectedArrow = "connected_arrow"
-    static let emergencyConnectIcon = "emergency-connect"
     static let circumventCensorship = "circumvent-censorship"
     static let customDns = "custom-dns"
     static let closeCross = "close-cross"
@@ -273,6 +272,8 @@ enum ImagesAsset {
         static let tabInfo2 = "welcome-info-tab-2"
         static let tabInfo3 = "welcome-info-tab-3"
         static let tabInfo4 = "welcome-info-tab-4"
+        static let emergencyConnectIcon = "welcome-emergency-connect"
+
     }
 
     enum TvAsset {
