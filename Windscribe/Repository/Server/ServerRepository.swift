@@ -10,5 +10,6 @@ import Foundation
 import RxSwift
 
 protocol ServerRepository {
+    var updatedServersSubject: BehaviorSubject<[Server]> { get }
     func getUpdatedServers() -> Single<[Server]>
 }

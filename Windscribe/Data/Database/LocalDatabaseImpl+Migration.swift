@@ -178,9 +178,6 @@ extension LocalDatabaseImpl {
                     }
                 } else if oldSchemaVersion < 47 {
                     migration.enumerateObjects(ofType: UserPreferences.className()) { oldObject, _ in
-                        if let latencyType = oldObject?["latencyType"] as? String {
-                            self.preferences.saveLatencyType(latencyType: latencyType)
-                        }
                         if let connectionMode = oldObject?["connectionMode"] as? String {
                             self.preferences.saveConnectionMode(mode: connectionMode)
                         }
@@ -207,9 +204,6 @@ extension LocalDatabaseImpl {
                         }
                         if let hapticFeedback = oldObject?["hapticFeedback"] as? Bool {
                             self.preferences.saveHapticFeedback(haptic: hapticFeedback)
-                        }
-                        if let showServerHealth = oldObject?["showServerHealth"] as? Bool {
-                            self.preferences.saveShowServerHealth(show: showServerHealth)
                         }
                         if let protocolType = oldObject?["protocolType"] as? String {
                             self.preferences.saveSelectedProtocol(selectedProtocol: protocolType)

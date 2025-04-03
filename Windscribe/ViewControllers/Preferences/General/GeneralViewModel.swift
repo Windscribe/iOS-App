@@ -1,9 +1,9 @@
 //
-//	GeneralViewModel.swift
-//	Windscribe
+//    GeneralViewModel.swift
+//    Windscribe
 //
-//	Created by Thomas on 18/05/2022.
-//	Copyright © 2022 Windscribe. All rights reserved.
+//    Created by Thomas on 18/05/2022.
+//    Copyright © 2022 Windscribe. All rights reserved.
 //
 
 import Foundation
@@ -11,24 +11,21 @@ import RxSwift
 
 protocol GeneralViewModelType {
     var hapticFeedback: BehaviorSubject<Bool> { get }
-    var showServerHealth: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
     var languageUpdatedTrigger: PublishSubject<Void> { get }
     var themeManager: ThemeManager { get }
     func didSelectedLocationOrder(value: String)
-    func didSelectedLatencyDisplay(value: String)
     func didSelectedAppearance(value: String)
-    func updateShowServerHealth()
     func updateHapticFeedback()
     func askForPushNotificationPermission()
     func getCurrentLocationOrder() -> String
-    func getCurrentDisplayLatency() -> String
     func getCurrentApperance() -> String
     func getCurrentLanguage() -> String
     func getVersion() -> String
-    func getServerHealth() -> Bool
     func getHapticFeedback() -> Bool
     func selectLanguage(with value: String)
+    func toggleHasCustomBackground()
+    func getHasCustomBackground() -> Bool
 }
 
 class GeneralViewModel: GeneralViewModelType {
@@ -43,9 +40,8 @@ class GeneralViewModel: GeneralViewModelType {
 
     let disposeBag = DisposeBag()
     let hapticFeedback = BehaviorSubject<Bool>(value: DefaultValues.hapticFeedback)
-    let showServerHealth = BehaviorSubject<Bool>(value: DefaultValues.showServerHealth)
+
     let locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
-    let latencyType = BehaviorSubject<String>(value: DefaultValues.latencyType)
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
     let languageUpdatedTrigger = PublishSubject<Void>()
 
@@ -64,16 +60,8 @@ class GeneralViewModel: GeneralViewModelType {
             self?.hapticFeedback.onNext(data ?? DefaultValues.hapticFeedback)
         }.disposed(by: disposeBag)
 
-        preferences.getShowServerHealth().subscribe { [weak self] data in
-            self?.showServerHealth.onNext(data ?? DefaultValues.showServerHealth)
-        }.disposed(by: disposeBag)
-
         preferences.getOrderLocationsBy().subscribe { [weak self] data in
             self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
-        }.disposed(by: disposeBag)
-
-        preferences.getLatencyType().subscribe { [weak self] data in
-            self?.latencyType.onNext(data)
         }.disposed(by: disposeBag)
 
         themeManager.darkTheme.subscribe { [weak self] data in
@@ -89,10 +77,6 @@ class GeneralViewModel: GeneralViewModelType {
         try? preferences.saveHapticFeedback(haptic: !hapticFeedback.value())
     }
 
-    func updateShowServerHealth() {
-        try? preferences.saveShowServerHealth(show: !showServerHealth.value())
-    }
-
     func didSelectedLocationOrder(value: String) {
         guard let valueToSave = TextsAsset.General.getValue(displayText: value) else { return }
         preferences.saveOrderLocationsBy(order: valueToSave)
@@ -104,17 +88,8 @@ class GeneralViewModel: GeneralViewModelType {
         preferences.saveDarkMode(darkMode: valueToSave == DefaultValues.appearance)
     }
 
-    func didSelectedLatencyDisplay(value: String) {
-        guard let valueToSave = TextsAsset.General.getValue(displayText: value) else { return }
-        preferences.saveLatencyType(latencyType: valueToSave)
-    }
-
     func getCurrentLocationOrder() -> String {
         return (try? locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
-    }
-
-    func getCurrentDisplayLatency() -> String {
-        return (try? latencyType.value()) ?? DefaultValues.latencyType
     }
 
     func getCurrentApperance() -> String {
@@ -134,10 +109,6 @@ class GeneralViewModel: GeneralViewModelType {
         }
     }
 
-    func getServerHealth() -> Bool {
-        return (try? showServerHealth.value()) ?? DefaultValues.showServerHealth
-    }
-
     func getHapticFeedback() -> Bool {
         return (try? hapticFeedback.value()) ?? DefaultValues.hapticFeedback
     }
@@ -146,9 +117,14 @@ class GeneralViewModel: GeneralViewModelType {
         preferences.saveHapticFeedback(haptic: status)
     }
 
-    func updateServerHealth(_ status: Bool) {
-        preferences.saveShowServerHealth(show: status)
+    func toggleHasCustomBackground() {
+        preferences.saveHasCustomBackground(value: !preferences.getHasCustomBackground())
     }
+
+    func getHasCustomBackground() -> Bool {
+        return preferences.getHasCustomBackground()
+    }
+
 
     func getVersion() -> String {
         guard let releaseNumber = Bundle.main.releaseVersionNumber, let buildNumber = Bundle.main.buildVersionNumber else { return "" }

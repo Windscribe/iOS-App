@@ -48,6 +48,10 @@ class HomeRouter: BaseRouter, RootRouter {
         case RouteID.shareWithFriends:
             let vc = Assembler.resolve(ShareWithFriendViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
+        case let RouteID.network(network):
+            let vc = Assembler.resolve(NetworkViewController.self)
+            vc.viewModel.displayingNetwork = network
+            from.navigationController?.pushViewController(vc, animated: true)
         default: ()
         }
     }

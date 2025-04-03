@@ -57,7 +57,7 @@ class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.staticIPCellReuseIdentifier)
         let staticIP = staticIPs?[indexPath.row]
-        cell.displayingStaticIP = staticIP
+        cell.staticIPCellViewModel = StaticIPNodeCellModel(displayingStaticIP: staticIP)
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
         return cell
     }

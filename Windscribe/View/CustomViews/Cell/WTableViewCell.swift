@@ -15,21 +15,21 @@ class WTableViewCell: SwipeTableViewCell {
 
     // let isDark = themeManager.getIsDarkTheme()
 
-    var fullFavImage: UIImage? {
-        if !themeManager.getIsDarkTheme() {
-            return UIImage(named: ImagesAsset.favFull)
-        } else {
-            return UIImage(named: ImagesAsset.DarkMode.favFull)
-        }
-    }
+//    var fullFavImage: UIImage? {
+//        if !themeManager.getIsDarkTheme() {
+//            return UIImage(named: ImagesAsset.favFull)
+//        } else {
+//            return UIImage(named: ImagesAsset.DarkMode.favFull)
+//        }
+//    }
 
-    var emptyFavImage: UIImage? {
-        if !themeManager.getIsDarkTheme() {
-            return UIImage(named: ImagesAsset.favEmpty)
-        } else {
-            return UIImage(named: ImagesAsset.DarkMode.favEmpty)
-        }
-    }
+//    var emptyFavImage: UIImage? {
+//        if !themeManager.getIsDarkTheme() {
+//            return UIImage(named: ImagesAsset.favEmpty)
+//        } else {
+//            return UIImage(named: ImagesAsset.DarkMode.favEmpty)
+//        }
+//    }
 
     var proNodeIconImage: UIImage? {
         if !themeManager.getIsDarkTheme() {

@@ -57,7 +57,7 @@ class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         let node = favNodes?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
-        cell.displayingFavNode = node
+        cell.favCellViewModel = FavNodeCellModel(displayingFavNode: node)
         return cell
     }
 

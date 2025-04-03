@@ -11,8 +11,6 @@ import UIKit
 
 enum GeneralOption {
     case locationOrder
-    case locationLoad
-    case latencyDisplay
     case appearance
     case language
     case appBackground
@@ -25,6 +23,7 @@ enum GeneralOption {
     case connectionMode
     case autoSecure
     case preferredProtocol
+    case customBackground
 }
 
 enum GeneralHelper {
@@ -32,10 +31,6 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return ImagesAsset.General.locationOrder
-        case .locationLoad:
-            return ImagesAsset.General.locationLoad
-        case .latencyDisplay:
-            return ImagesAsset.General.latencyDisplay
         case .appearance:
             return ImagesAsset.General.appearance
         case .language:
@@ -60,6 +55,8 @@ enum GeneralHelper {
             return ImagesAsset.General.autoSecure
         case .preferredProtocol:
             return ImagesAsset.General.preferredProtocol
+        case .customBackground:
+            return ImagesAsset.General.appBackground
         }
     }
 
@@ -67,10 +64,6 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return TextsAsset.General.orderLocationsBy
-        case .locationLoad:
-            return TextsAsset.General.showServerHealth
-        case .latencyDisplay:
-            return TextsAsset.General.displayLatency
         case .appearance:
             return TextsAsset.General.appearance
         case .language:
@@ -95,6 +88,8 @@ enum GeneralHelper {
             return TextsAsset.General.autoSecure
         case .preferredProtocol:
             return TextsAsset.PreferredProtocol.title
+        case .customBackground:
+            return TextsAsset.General.customBackground
         }
     }
 
@@ -102,10 +97,6 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return TextsAsset.PreferencesDescription.locationOrder
-        case .locationLoad:
-            return TextsAsset.PreferencesDescription.locationLoad
-        case .latencyDisplay:
-            return TextsAsset.PreferencesDescription.displayLatency
         case .appearance:
             return TextsAsset.PreferencesDescription.appearance
         case .language:
@@ -130,6 +121,8 @@ enum GeneralHelper {
             return TextsAsset.PreferencesDescription.autoSecure
         case .preferredProtocol:
             return TextsAsset.PreferredProtocol.newDescription
+        case .customBackground:
+            return TextsAsset.PreferencesDescription.customBackground
         }
     }
 }

@@ -26,7 +26,6 @@ extension MainViewController {
                 latencyViewModel.loadAllServerLatency(
                     onAllServerCompletion: { [weak self] in
                         guard let self else { return }
-
                         self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
                         self.favTableView.reloadData()
                         self.endRefreshControls(update: false)
@@ -57,7 +56,6 @@ extension MainViewController {
     func hideTextOnRefreshControls() {
         serverListTableView.refreshControl?.attributedTitle = nil
         favTableViewRefreshControl.attributedTitle = nil
-        streamingTableViewRefreshControl.attributedTitle = nil
         staticIpTableViewRefreshControl.attributedTitle = nil
         customConfigsTableViewRefreshControl.attributedTitle = nil
     }
@@ -65,7 +63,6 @@ extension MainViewController {
     func beginRefreshControls() {
         serverListTableView.refreshControl?.beginRefreshing()
         favTableViewRefreshControl.beginRefreshing()
-        streamingTableViewRefreshControl.beginRefreshing()
         staticIpTableViewRefreshControl.beginRefreshing()
         customConfigsTableViewRefreshControl.beginRefreshing()
     }
@@ -75,7 +72,6 @@ extension MainViewController {
         DispatchQueue.main.async { [weak self] in
             self?.serverListTableView.refreshControl?.endRefreshing()
             self?.favTableViewRefreshControl.endRefreshing()
-            self?.streamingTableViewRefreshControl.endRefreshing()
             self?.staticIpTableViewRefreshControl.endRefreshing()
             self?.customConfigsTableViewRefreshControl.endRefreshing()
         }
@@ -91,7 +87,6 @@ extension MainViewController {
                 showRefreshControlDisconnectedState(serverRefreshControl)
             }
             showRefreshControlDisconnectedState(favTableViewRefreshControl)
-            showRefreshControlDisconnectedState(streamingTableViewRefreshControl)
             showRefreshControlDisconnectedState(staticIpTableViewRefreshControl)
             showRefreshControlDisconnectedState(customConfigsTableViewRefreshControl)
         } else {
@@ -99,7 +94,6 @@ extension MainViewController {
                 showRefreshControlConnectedState(serverRefreshControl)
             }
             showRefreshControlConnectedState(favTableViewRefreshControl)
-            showRefreshControlConnectedState(streamingTableViewRefreshControl)
             showRefreshControlConnectedState(staticIpTableViewRefreshControl)
             showRefreshControlConnectedState(customConfigsTableViewRefreshControl)
         }
@@ -119,7 +113,7 @@ extension MainViewController {
     }
 
     func isAnyRefreshControlIsRefreshing() -> Bool {
-        return serverListTableView.refreshControl?.isRefreshing ?? false || favTableViewRefreshControl.isRefreshing || streamingTableViewRefreshControl.isRefreshing || staticIpTableViewRefreshControl.isRefreshing || customConfigsTableViewRefreshControl.isRefreshing
+        return serverListTableView.refreshControl?.isRefreshing ?? false || favTableViewRefreshControl.isRefreshing || staticIpTableViewRefreshControl.isRefreshing || customConfigsTableViewRefreshControl.isRefreshing
     }
 
     func addRefreshControls() {
@@ -128,7 +122,6 @@ extension MainViewController {
         if (favNodesListTableViewDataSource?.favNodes?.count ?? 0) > 0 {
             favTableView.addSubview(favTableViewRefreshControl)
         }
-        streamingTableView.addSubview(streamingTableViewRefreshControl)
         staticIpTableView.addSubview(staticIpTableViewRefreshControl)
         customConfigTableView.addSubview(customConfigsTableViewRefreshControl)
     }
@@ -136,7 +129,6 @@ extension MainViewController {
     func removeRefreshControls() {
         serverListTableView.refreshControl = nil
         favTableViewRefreshControl.removeFromSuperview()
-        streamingTableViewRefreshControl.removeFromSuperview()
         staticIpTableViewRefreshControl.removeFromSuperview()
         customConfigsTableViewRefreshControl.removeFromSuperview()
     }

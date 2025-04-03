@@ -1,9 +1,9 @@
 //
-//	GeneralViewController.swift
-//	Windscribe
+//    GeneralViewController.swift
+//    Windscribe
 //
-//	Created by Thomas on 17/05/2022.
-//	Copyright © 2022 Windscribe. All rights reserved.
+//    Created by Thomas on 17/05/2022.
+//    Copyright © 2022 Windscribe. All rights reserved.
 //
 
 import Foundation
@@ -27,20 +27,6 @@ class GeneralViewController: WSNavigationViewController {
             icon: GeneralHelper.getAsset(.locationOrder),
             isDarkMode: viewModel.isDarkMode,
             subTitle: GeneralHelper.getDescription(.locationOrder),
-            delegate: self
-        )
-        view.hideShowExplainIcon()
-        return view
-    }()
-
-    private lazy var latencyDisPlayRow: SelectableView = {
-        let view = SelectableView(
-            header: GeneralHelper.getTitle(.latencyDisplay),
-            currentOption: viewModel.getCurrentDisplayLatency(),
-            listOption: TextsAsset.General.latencytypes,
-            icon: GeneralHelper.getAsset(.latencyDisplay),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: GeneralHelper.getDescription(.latencyDisplay),
             delegate: self
         )
         view.hideShowExplainIcon()
@@ -76,6 +62,21 @@ class GeneralViewController: WSNavigationViewController {
         return view
     }()
 
+//    private lazy var backgroundRow: SelectableView = {
+//        let view = SelectableView(
+//            type: .direction,
+//            header: GeneralHelper.getTitle(.customBackground),
+//            currentOption: TextsAsset.General.openSettings,
+//            listOption: [],
+//            icon: GeneralHelper.getAsset(.customBackground),
+//            isDarkMode: viewModel.isDarkMode,
+//            subTitle: GeneralHelper.getDescription(.customBackground),
+//            delegate: self
+//        )
+//        view.hideShowExplainIcon()
+//        return view
+//    }()
+
     private lazy var notificationRow: SelectableView = {
         let view = SelectableView(
             type: .directionWithoutIcon,
@@ -91,8 +92,9 @@ class GeneralViewController: WSNavigationViewController {
         return view
     }()
 
-    private lazy var locationLoadRow = makeRatioView(type: .locationLoad)
     private lazy var hapticFeedbackRow = makeRatioView(type: .hapticFeeback)
+
+    private lazy var backgroundRow = makeRatioView(type: .customBackground)
 
     private lazy var versionLabel: UILabel = {
         let lbl = UILabel()
@@ -173,20 +175,18 @@ class GeneralViewController: WSNavigationViewController {
         if UIDevice.current.userInterfaceIdiom == .pad {
             layoutView.stackView.addArrangedSubviews([
                 locationOrderRow,
-                latencyDisPlayRow,
                 languageRow,
                 appearanceRow,
-                locationLoadRow,
+                backgroundRow,
                 notificationRow,
                 versionRow
             ])
         } else {
             layoutView.stackView.addArrangedSubviews([
                 locationOrderRow,
-                latencyDisPlayRow,
                 languageRow,
                 appearanceRow,
-                locationLoadRow,
+                backgroundRow,
                 hapticFeedbackRow,
                 notificationRow,
                 versionRow
@@ -203,19 +203,19 @@ class GeneralViewController: WSNavigationViewController {
         view.subTitleLabel.text = type.description
         view.hideShowExplainIcon(true)
         switch type {
-        case .locationLoad:
-            view.switchButton.setStatus(viewModel.getServerHealth())
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.locationLoad)))
-            view.subTitleLabel.text = GeneralHelper.getDescription(.locationLoad)
-            view.connectionSecureViewSwitchAcction = { [weak self] in
-                self?.viewModel.updateShowServerHealth()
-            }
         case .hapticFeeback:
             view.switchButton.setStatus(viewModel.getHapticFeedback())
             view.setImage(UIImage(named: GeneralHelper.getAsset(.hapticFeedback)))
             view.subTitleLabel.text = GeneralHelper.getDescription(.hapticFeedback)
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateHapticFeedback()
+            }
+        case .customBackground:
+            view.switchButton.setStatus(viewModel.getHasCustomBackground())
+            view.setImage(UIImage(named: GeneralHelper.getAsset(.customBackground)))
+            view.subTitleLabel.text = GeneralHelper.getDescription(.customBackground)
+            view.connectionSecureViewSwitchAcction = { [weak self] in
+                self?.viewModel.toggleHasCustomBackground()
             }
         default:
             break
@@ -252,12 +252,11 @@ class GeneralViewController: WSNavigationViewController {
     override func setupLocalized() {
         titleLabel.text = TextsAsset.General.title
         locationOrderRow.updateStringData(title: GeneralHelper.getTitle(.locationOrder), optionTitle: viewModel.getCurrentLocationOrder(), listOption: TextsAsset.orderPreferences, subTitle: GeneralHelper.getDescription(.locationOrder))
-        latencyDisPlayRow.updateStringData(title: GeneralHelper.getTitle(.latencyDisplay), optionTitle: viewModel.getCurrentDisplayLatency(), listOption: TextsAsset.General.latencytypes, subTitle: GeneralHelper.getDescription(.latencyDisplay))
         languageRow.updateStringData(title: GeneralHelper.getTitle(.language), optionTitle: viewModel.getCurrentLanguage(), listOption: TextsAsset.General.languages, subTitle: GeneralHelper.getDescription(.language))
         appearanceRow.updateStringData(title: GeneralHelper.getTitle(.appearance), optionTitle: viewModel.getCurrentApperance(), listOption: TextsAsset.appearances, subTitle: GeneralHelper.getDescription(.appearance))
+        backgroundRow.udpateStringData(title: GeneralHelper.getTitle(.customBackground), subTitle: GeneralHelper.getDescription(.customBackground))
         notificationRow.updateStringData(title: GeneralHelper.getTitle(.notification), optionTitle: TextsAsset.General.openSettings, listOption: [], subTitle: GeneralHelper.getDescription(.notification))
         versionLabel.text = TextsAsset.General.version
-        locationLoadRow.udpateStringData(title: GeneralHelper.getTitle(.locationLoad), subTitle: GeneralHelper.getDescription(.locationLoad))
         hapticFeedbackRow.udpateStringData(title: GeneralHelper.getTitle(.hapticFeedback), subTitle: GeneralHelper.getDescription(.hapticFeedback))
     }
 }
@@ -269,8 +268,6 @@ extension GeneralViewController: SelectableViewDelegate {
         switch sender {
         case locationOrderRow:
             viewModel.didSelectedLocationOrder(value: option)
-        case latencyDisPlayRow:
-            viewModel.didSelectedLatencyDisplay(value: option)
         case appearanceRow:
             viewModel.didSelectedAppearance(value: option)
         default:

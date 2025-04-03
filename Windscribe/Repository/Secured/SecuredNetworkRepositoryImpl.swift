@@ -34,10 +34,13 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
         isObserving = true
         localdatabase.getNetworks().subscribe(
             onNext: { savedNetworks in
+                self.logger.logD("SecuredNetworkRepositoryImpl", "Secured Networks : \(savedNetworks)")
                 self.networks.onNext(savedNetworks)
             }, onError: { _ in
+                self.logger.logD("SecuredNetworkRepositoryImpl", "Error getting networks")
                 self.networks.onNext([])
             }, onCompleted: {
+                self.logger.logD("SecuredNetworkRepositoryImpl", "getNetworks onCompleted")
                 self.isObserving = false
             }
         ).disposed(by: disposeBag)
@@ -45,6 +48,7 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
 
     /// Returns currently connected saved network if avaialble
     func getCurrentNetwork() -> WifiNetwork? {
+        self.logger.logD("SecuredNetworkRepositoryImpl", "connectivity.getNetwork() \(connectivity.getNetwork())")
         let networkName = connectivity.getNetwork().name
         return try? networks.value().first { networkName == $0.SSID }
     }

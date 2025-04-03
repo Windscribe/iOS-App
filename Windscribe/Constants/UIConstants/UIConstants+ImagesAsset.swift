@@ -19,30 +19,31 @@ enum ImagesAsset {
     static let loginInActive = "login-inactive"
     static let loginActive = "login-active"
     static let connectButton = "connect-button"
+    static let connectindDots1 = "connecting-dots-1"
+    static let connectindDots2 = "connecting-dots-2"
+    static let connectindDots3 = "connecting-dots-3"
     static let connectionSpinner = "connection-spinner"
     static let disconnectedButton = "disconnected-button"
     static let connectButtonRing = "connect-button-ring"
     static let connectingButtonRing = "connecting-button-ring"
     static let failedConnectionButtonRing = "failed-connection-button-ring"
-    static let secure = "secure"
-    static let unsecure = "unsecure"
     static let wifi = "wifi"
     static let wifiUnsecure = "wifi-unsecure"
     static let expandHome = "expand-home"
     static let expandHomeUp = "expand-home-up"
     static let smallWhiteRightArrow = "small-white-right-arrow"
+    static let serverWhiteRightArrow = "server-white-right-arrow"
     static let mainLogo = "main-logo"
     static let notifications = "notifications"
+    static let locationLoad = "location-load"
+    static let cityImage = "city-image"
     static let cellExpand = "cell-expand"
+    static let cellCollapse = "cell-collapse"
     static let p2p = "p2p"
     static let p2pWhite = "p2p-white"
     static let whiteExpand = "white-expand"
-    static let topNavWhite = "top-nav-white"
-    static let topNavWhiteSliced = "top-nav-white-sliced"
-    static let topNavBlack = "top-nav-black"
-    static let topNavBlackSliced = "top-nav-black-sliced"
-    static let topNavWhiteForNotch = "top-nav-white-for-notch"
-    static let topNavBlackForNotch = "top-nav-black-for-notch"
+    static let topNavRight = "top-nav-bar-right"
+    static let topNavLeft = "top-nav-bar-left"
     static let topNavBarMenu = "top-nav-bar-menu"
     static let favEmpty = "fav-empty"
     static let favFull = "fav-full"
@@ -57,6 +58,7 @@ enum ImagesAsset {
     static let prefProIconBlue = "pref-pro-icon-blue"
     static let prefProIconGrey = "white-pro-star"
     static let prefBackIcon = "pref-back"
+    static let exitSearchWhite = "exit-search-white"
     static let dropDownIcon = "dropdown-icon"
     static let closeIcon = "close-icon"
     static let newsIcon = "news-icon"
@@ -77,7 +79,6 @@ enum ImagesAsset {
     static let windscribeReload = "windscribe_reload_ic_white"
     static let checkCircleGreen = "check_circle_green"
     static let closeIconMidnight = "close_ico_midnight"
-    static let connectedArrow = "connected_arrow"
     static let circumventCensorship = "circumvent-censorship"
     static let customDns = "custom-dns"
     static let closeCross = "close-cross"
@@ -105,12 +106,22 @@ enum ImagesAsset {
     static let customConfigIcon = "add-custom-config"
     static let learnMoreIcon = "learn-more-ic"
 
+    enum IPMenu {
+        static let open = "ip-menu-open"
+        static let close = "ip-menu-close"
+        static let save = "ip-menu-save"
+        static let refresh = "ip-menu-refresh"
+    }
+
     enum Servers {
-        static let all = "servers-all"
-        static let fav = "servers-fav"
-        static let flix = "servers-flix"
+        static let serversAll = "servers-all"
+        static let fav = "fav-empty"
         static let staticIP = "servers-static-ip"
         static let config = "servers-config"
+        static let allSelected = "servers-all-selected"
+        static let favSelected = "fav-full"
+        static let staticIPSelected = "servers-static-ip-selected"
+        static let configSelected = "servers-config-selected"
     }
 
     enum Preferences {
@@ -156,11 +167,9 @@ enum ImagesAsset {
 
     enum General {
         static let locationOrder = "location_order_ic_white"
-        static let latencyDisplay = "latency_display_ic_white"
         static let language = "language_ic_white"
         static let appearance = "appearance_ic_white"
         static let appBackground = "app_background_ic_white"
-        static let locationLoad = "location_load_ic_white"
         static let hapticFeedback = "haptic_feedback_ic_white"
         static let firewall = "firewall-ic-white"
         static let killSwitch = "kill-switch-white"
@@ -182,9 +191,9 @@ enum ImagesAsset {
     }
 
     enum CellSignalBars {
-        static let low = "cell-signal-bars-connected-low"
-        static let medium = "cell-signal-bars-connected-med"
-        static let full = "cell-signal-bars-connected-full"
+        static let low = "cell-signal-low"
+        static let medium = "cell-signal-med"
+        static let full = "cell-signal-full"
         static let down = "cell-signal-bars-down"
     }
 
@@ -196,16 +205,8 @@ enum ImagesAsset {
     }
 
     enum DarkMode {
-        static let serversAll = "servers-all-white"
-        static let serversFav = "servers-fav-white"
-        static let serversFlix = "servers-flix-white"
-        static let serversStaticIP = "servers-static-ip-white"
-        static let serversConfig = "servers-config-white"
-
         static let brokenHeart = "broken-heart-white"
         static let proServerIcon = "pro-server-white"
-        static let favEmpty = "fav-empty-white"
-        static let favFull = "fav-full-white"
 
         static let cellSignalBarsLow = "cell-signal-bars-connected-low-white"
         static let cellSignalBarsMedium = "cell-signal-bars-connected-med-white"
@@ -220,8 +221,6 @@ enum ImagesAsset {
         static let delete = "delete-white"
         static let edit = "edit-white"
         static let clear = "clear-white"
-        static let search = "search-white"
-        static let exitSearch = "exit-search-white"
         static let dropDownIcon = "dropdown-icon-white"
         static let prefRightIcon = "pref-right-arrow-white"
         static let prefBackIcon = "pref-back-white"
@@ -300,5 +299,9 @@ enum ImagesAsset {
         static let connectionButtonOnFocused = "connectionButtonOnFocused"
         static let connectingRing = "connecting_ring"
         static let connectedRing = "connected_ring"
+    }
+
+    enum Backgrounds {
+        static let one = "windscribe-background"
     }
 }

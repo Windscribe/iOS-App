@@ -7,25 +7,7 @@
 //
 
 import Foundation
-import RxSwift
 import UIKit
-
-extension MainViewController {
-    func bindServerListViewModel() {
-        serverListViewModel.presentConnectingAlertTrigger.subscribe { _ in
-            self.displayConnectingAlert()
-        }.disposed(by: disposeBag)
-        serverListViewModel.showMaintenanceLocationTrigger.subscribe { _ in
-            self.showMaintenanceLocationView()
-        }.disposed(by: disposeBag)
-        serverListViewModel.showUpgradeTrigger.subscribe { _ in
-            self.showUpgradeView()
-        }.disposed(by: disposeBag)
-        serverListViewModel.reloadTrigger.subscribe { _ in
-            self.reloadTableViews()
-        }.disposed(by: disposeBag)
-    }
-}
 
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {

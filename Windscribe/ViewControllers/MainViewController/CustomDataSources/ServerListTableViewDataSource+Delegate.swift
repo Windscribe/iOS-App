@@ -90,12 +90,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         ?? NodeTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
         if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups?.count ?? 0) > indexPath.row - 1) {
             let group = serverSections[indexPath.section].server?.groups?[indexPath.row - 1]
-            if let groupId = group?.id {
-                cell.favourited = favNodes?.map { $0.groupId }.contains("\(groupId)") ?? false
-            }
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.displayingGroup = group
-            cell.displayingNodeServer = serverSections[indexPath.section].server
+            cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: group, displayingNodeServer: serverSections[indexPath.section].server)
         }
         return cell
     }
@@ -117,7 +113,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
                 ?? BestLocationCell(
                     style: .default,
                     reuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
-            bestLocationCell.displayingBestLocation = bestLocation
+            bestLocationCell.updateBestLocation(bestLocation)
             bestLocationCell.bindViews(isDarkMode: viewModel.isDarkMode)
             return bestLocationCell
         } else {
@@ -132,7 +128,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
             if serverSections.count > 0 {
                 cell.setCollapsed(collapsed: serverSections[section].collapsed)
-                cell.displayingServer = serverSections[section].server
+                cell.updateServerModel(serverSections[section].server)
             }
             return cell
         }

@@ -14,6 +14,10 @@ extension UIFont {
         return UIFont(name: "IBMPlexSans-Bold", size: size)!
     }
 
+    static func medium(size: CGFloat) -> UIFont {
+        return UIFont(name: "IBMPlexSans-Medium", size: size)!
+    }
+
     static func text(size: CGFloat) -> UIFont {
         return UIFont(name: "IBMPlexSans-Text", size: size)!
     }

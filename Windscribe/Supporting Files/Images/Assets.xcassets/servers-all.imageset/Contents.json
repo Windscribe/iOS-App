@@ -1,23 +1,15 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
-      "filename" : "all_icon.png",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
-      "filename" : "all_icon-1.png",
-      "scale" : "2x"
-    },
-    {
-      "idiom" : "universal",
-      "filename" : "all_icon-2.png",
-      "scale" : "3x"
+      "filename" : "servers-all.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
+    "author" : "xcode",
+    "version" : 1
+  },
+  "properties" : {
+    "template-rendering-intent" : "template"
   }
 }

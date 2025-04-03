@@ -36,6 +36,8 @@ class CustomConfigListFooterView: WSView {
         iconView.image = UIImage(named: ImagesAsset.externalLink)
         iconView.contentMode = .scaleAspectFit
         iconView.layer.opacity = 0.4
+        iconView.image = UIImage(named: ImagesAsset.serverWhiteRightArrow)
+        iconView.setImageColor(color: .white)
         addSubview(iconView)
 
         languageManager.activelanguage.subscribe(onNext: { [self] _ in

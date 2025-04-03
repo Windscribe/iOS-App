@@ -28,7 +28,6 @@ enum SharedKeys {
     static let serverSettings = "ServerSettings"
 
     // UserPreferenceManager
-    static let latencyType = "latencyType"
     static let orderLocationsBy = "OrderLocationsBy"
     static let appearance = "appearance"
     static let language = "language"
@@ -37,7 +36,6 @@ enum SharedKeys {
     static let allowLanMode = "allowLanMode"
     static let hapticFeedback = "hapticFeedback"
     static let selectedProtocol = "selectedProtocol"
-    static let serverHealth = "serverHealth"
     static let darkMode = "darkMode"
     static let connectedDNSValue = "connectedDNSValue"
 
@@ -91,6 +89,10 @@ enum SharedKeys {
     // Locations
     static let savedLastLocation = "savedLastLocation"
     static let savedBestLocation = "savedBestLocation"
+
+    // Backgrounds
+    static let hasCustomBackground = "hasCustomBackground"
+    static let currentCustomBackground = "currentCustomBackground"
 }
 
 /// Read value from plist file or not found returns empty string.

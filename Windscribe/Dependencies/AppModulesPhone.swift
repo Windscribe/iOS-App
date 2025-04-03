@@ -110,7 +110,11 @@ class ViewModels: Assembly {
             NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(NetworkOptionViewModelType.self) { r in
-            NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!, vpnManager: r.resolve(VPNManager.self)!)
+            NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
+                                   themeManager: r.resolve(ThemeManager.self)!,
+                                   connectivity: r.resolve(Connectivity.self)!,
+                                   vpnManager: r.resolve(VPNManager.self)!,
+                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(GhostAccountViewModelType.self) { r in
             GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!)
@@ -203,8 +207,8 @@ class ViewModels: Assembly {
                                      repository: r.resolve(ShakeDataRepository.self)!,
                                      themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
-        container.register(SearchLocationsViewModelType.self) { r in
-            SearchLocationsViewModel(themeManager: r.resolve(ThemeManager.self)!)
+        container.register(SearchLocationsViewModelType.self) { _ in
+            SearchLocationsViewModel()
         }.inObjectScope(.transient)
         container.register(LocationManagingViewModelType.self) { r in
             LocationManagingViewModel(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
@@ -223,8 +227,8 @@ class ViewModels: Assembly {
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
-        container.register(CardTopViewModelType.self) { r in
-            CardTopViewModel(themeManager: r.resolve(ThemeManager.self)!)
+        container.register(ListSelectionViewModelType.self) { _ in
+            ListSelectionViewModel()
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchViewModelType.self) { r in
             ProtocolSwitchViewModel(themeManager: r.resolve(ThemeManager.self)!, vpnManager: r.resolve(VPNManager.self)!)
@@ -274,6 +278,37 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(PopUpMaintenanceLocationModelType.self) { r in
             PopUpMaintenanceLocationModel(themeManager: r.resolve(ThemeManager.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(FlagsBackgroundViewModelType.self) { r in
+            FlagsBackgroundViewModel(preferences: r.resolve(Preferences.self)!,
+                                     locationsManager: r.resolve(LocationsManagerType.self)!,
+                                     vpnManager: r.resolve(VPNManager.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(ConnectButtonViewModelType.self) { r in
+            ConnectButtonViewModel(vpnManager: r.resolve(VPNManager.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(ConnectionStateInfoViewModelType.self) { r in
+            ConnectionStateInfoViewModel(vpnManager: r.resolve(VPNManager.self)!,
+                                         locationsManager: r.resolve(LocationsManagerType.self)!,
+                                         preferences: r.resolve(Preferences.self)!,
+                                         protocolManager: r.resolve(ProtocolManagerType.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(IPInfoViewModelType.self) { r in
+            IPInfoViewModel(ipRepository: r.resolve(IPRepository.self)!,
+                            preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(WifiInfoViewModelType.self) { r in
+            WifiInfoViewModel(preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(ServerInfoViewModelType.self) { r in
+            ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
+                                themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
     }
 }
@@ -561,10 +596,10 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(InfoPromptViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(CardHeaderContainerView.self) { _ in
-            CardHeaderContainerView()
+        container.register(ListSelectionView.self) { _ in
+            ListSelectionView()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(CardTopViewModelType.self)
+            c.viewModel = r.resolve(ListSelectionViewModelType.self)
         }.inObjectScope(.transient)
         container.register(PopUpMaintenanceLocationVC.self) { _ in
             PopUpMaintenanceLocationVC()
@@ -585,6 +620,42 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(GhostAccountViewModelType.self)
             c.router = r.resolve(GhostAccountRouter.self)
             c.logger = r.resolve(FileLogger.self)
+        }.inObjectScope(.transient)
+
+        container.register(FlagsBackgroundView.self) { _ in
+            FlagsBackgroundView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(FlagsBackgroundViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ConnectButtonView.self) { _ in
+            ConnectButtonView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(ConnectButtonViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ConnectionStateInfoView.self) { _ in
+            ConnectionStateInfoView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(ConnectionStateInfoViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(IPInfoView.self) { _ in
+            IPInfoView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(IPInfoViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(WifiInfoView.self) { _ in
+            WifiInfoView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(WifiInfoViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ServerInfoView.self) { _ in
+            ServerInfoView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(ServerInfoViewModelType.self)
         }.inObjectScope(.transient)
     }
 }

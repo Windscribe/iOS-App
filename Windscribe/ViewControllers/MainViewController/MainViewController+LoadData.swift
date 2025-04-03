@@ -14,8 +14,10 @@ import UIKit
 extension MainViewController {
     func loadLastConnection() {
         viewModel.lastConnection.subscribe(onNext: { lastconnection in
-            self.protocolLabel.text = lastconnection?.protocolType
-            self.portLabel.text = lastconnection?.port
+            self.connectionStateInfoView.updateProtoPort(ProtocolPort(
+                lastconnection?.protocolType ?? "",
+                lastconnection?.port ?? ""
+            ))
         }).disposed(by: disposeBag)
     }
 
