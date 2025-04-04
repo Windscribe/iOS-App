@@ -333,7 +333,7 @@ struct SignUpView: View {
                     SignupWarningView(
                         onContinue: {
                             showEmailWarning = false
-                            router.routeToMainView()
+                            viewModel.continueButtonTapped(ignoreEmailCheck: true, claimAccount: false)
                         },
                         onBack: {
                             showEmailWarning = false
