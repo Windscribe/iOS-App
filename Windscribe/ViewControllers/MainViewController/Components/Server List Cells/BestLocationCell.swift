@@ -15,7 +15,7 @@ class BestLocationCellModel: ServerCellModelType {
     var displayingBestLocation: BestLocationModel?
 
     var name: String {
-        displayingBestLocation?.cityName ?? ""
+        TextsAsset.bestLocation
     }
 
     var iconImage: UIImage? {

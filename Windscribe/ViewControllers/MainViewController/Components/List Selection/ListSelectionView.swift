@@ -54,7 +54,7 @@ private class ButtonImageView: UIView {
 class ListSelectionView: UIView {
     var stackContainerView = UIStackView()
     fileprivate lazy var allButton = ButtonImageView(imageName: ImagesAsset.Servers.serversAll, imageSize: 24, tapAction: viewModel.allSelected)
-    fileprivate lazy var favButton = ButtonImageView(imageName: ImagesAsset.Servers.fav, imageSize: 24, tapAction: viewModel.favSelected)
+    fileprivate lazy var favButton = ButtonImageView(imageName: ImagesAsset.favEmpty, imageSize: 24, tapAction: viewModel.favSelected)
     fileprivate lazy var staticIpButton = ButtonImageView(imageName: ImagesAsset.Servers.staticIP, imageWidth: 18, imageHeight: 22, tapAction: viewModel.staticSelected)
     fileprivate lazy var configButton = ButtonImageView(imageName: ImagesAsset.Servers.config, imageSize: 24, tapAction: viewModel.configSelected)
     fileprivate lazy var startSearchButton = ButtonImageView(imageName: ImagesAsset.search, imageSize: 20, tapAction: viewModel.startSearchSelected)
@@ -160,7 +160,7 @@ class ListSelectionView: UIView {
             self.allButton.imageView.image = UIImage(named: cardButtonType == .all ?
                                                      ImagesAsset.Servers.allSelected : ImagesAsset.Servers.serversAll)
             self.favButton.imageView.image = UIImage(named: cardButtonType == .fav ?
-                                                     ImagesAsset.Servers.favSelected : ImagesAsset.Servers.fav)
+                                                     ImagesAsset.favFull : ImagesAsset.favEmpty)
             self.staticIpButton.imageView.image = UIImage(named: cardButtonType == .staticIP ?
                                                           ImagesAsset.Servers.staticIPSelected : ImagesAsset.Servers.staticIP)
             self.configButton.imageView.image = UIImage(named: cardButtonType == .config ?

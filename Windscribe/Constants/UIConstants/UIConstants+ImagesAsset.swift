@@ -115,11 +115,9 @@ enum ImagesAsset {
 
     enum Servers {
         static let serversAll = "servers-all"
-        static let fav = "fav-empty"
         static let staticIP = "servers-static-ip"
         static let config = "servers-config"
         static let allSelected = "servers-all-selected"
-        static let favSelected = "fav-full"
         static let staticIPSelected = "servers-static-ip-selected"
         static let configSelected = "servers-config-selected"
     }

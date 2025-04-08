@@ -86,10 +86,20 @@ extension MainViewController: SearchCountryViewDelegate {
         var cityPrefixMatches: [ServerModel] = []
         var groupNameContainsMatches: [ServerModel] = []
         var cityContainsMatches: [ServerModel] = []
+        var serverList: [ServerModel] = groupList
+
+        var bestLocations: [ServerModel] = []
+
+        if let first = serverList.first {
+            if first.name == Fields.Values.bestLocation {
+                bestLocations =  [first]
+                serverList.remove(at: 0)
+            }
+        }
 
         let lowerCaseKeyword = keyword.lowercased()
 
-        for group in groupList {
+        for group in serverList {
             if let (filteredGroup, matchType) = filterIfContains(group: group, keyword: lowerCaseKeyword) {
                 switch matchType {
                 case .groupPrefix:
@@ -103,7 +113,7 @@ extension MainViewController: SearchCountryViewDelegate {
                 }
             }
         }
-        return groupNamePrefixMatches + cityPrefixMatches + groupNameContainsMatches + cityContainsMatches
+        return bestLocations + groupNamePrefixMatches + cityPrefixMatches + groupNameContainsMatches + cityContainsMatches
     }
 
     private func filterIfContains(group: ServerModel, keyword: String) -> (ServerModel, MatchType)? {

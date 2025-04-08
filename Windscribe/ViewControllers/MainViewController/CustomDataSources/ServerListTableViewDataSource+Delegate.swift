@@ -27,8 +27,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     let disposeBag = DisposeBag()
     var bestLocation: BestLocationModel? {
         didSet {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
-            if serverSections.first?.server?.name != Fields.Values.bestLocation {
+            if bestLocation != nil && serverSections.first?.server?.name != Fields.Values.bestLocation {
+                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
                 serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
             }
             delegate?.reloadServerListTableView()

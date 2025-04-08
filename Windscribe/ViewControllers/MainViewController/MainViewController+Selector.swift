@@ -255,8 +255,4 @@ extension MainViewController {
         logger.logD(self, "User tapped upgrade button.")
         showUpgradeView()
     }
-
-    @objc func protocolPortLableTapped() {
-        openConnectionChangeDialog()
-    }
 }

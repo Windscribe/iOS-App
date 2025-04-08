@@ -16,7 +16,7 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
     var arrowIcon = UIImageView()
     var cellDivider = UIView()
     let disposeBag = DisposeBag()
-    var displayingItem: PreferenceItem? {
+    var displayingItem: PreferenceItemType? {
         didSet {
             updateUI()
         }
@@ -37,8 +37,8 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
 
         addSubview(titleLabel)
         arrowIcon.contentMode = .scaleAspectFit
-        arrowIcon.layer.opacity = 0.5
-        arrowIcon.image = UIImage(named: ImagesAsset.prefRightIcon)
+        arrowIcon.layer.opacity = 0.25
+        arrowIcon.image = UIImage(named: ImagesAsset.serverWhiteRightArrow)
         addSubview(arrowIcon)
 
         cellDivider.backgroundColor = UIColor.white
@@ -52,12 +52,12 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
 
     override func configNormal() {
         titleLabel.layer.opacity = 0.5
-        arrowIcon.layer.opacity = 0.5
+        arrowIcon.layer.opacity = 0.25
     }
 
     override func configHighlight() {
         titleLabel.layer.opacity = 1
-        arrowIcon.layer.opacity = 1
+        arrowIcon.layer.opacity = 0.5
     }
 
     override func layoutSubviews() {
@@ -99,24 +99,20 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
         if let title = displayingItem?.title {
             titleLabel.text = title
         }
+        iconView.image = displayingItem?.icon
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         isDarkMode.subscribe(onNext: { isDarkMode in
-            if !isDarkMode {
-                self.cellDivider.backgroundColor = UIColor.midnight
-                self.titleLabel.textColor = UIColor.midnight
-                if let icon = self.displayingItem?.icon {
-                    self.iconView.image = UIImage(named: "\(icon)")
-                }
-                self.arrowIcon.image = UIImage(named: ImagesAsset.prefRightIcon)
+            let color: UIColor = isDarkMode ? .white : .midnight
+            self.cellDivider.backgroundColor = color
+            self.titleLabel.textColor = color
+            self.iconView.setImageColor(color: color)
+            self.arrowIcon.setImageColor(color: color)
+            if let tintColor = self.displayingItem?.tint {
+                self.iconView.setImageColor(color: tintColor)
             } else {
-                self.cellDivider.backgroundColor = UIColor.white
-                self.titleLabel.textColor = UIColor.white
-                if let icon = self.displayingItem?.icon {
-                    self.iconView.image = UIImage(named: "\(icon)-white")
-                }
-                self.arrowIcon.image = UIImage(named: ImagesAsset.DarkMode.prefRightIcon)
+                self.iconView.setImageColor(color: color)
             }
         }).disposed(by: disposeBag)
     }
