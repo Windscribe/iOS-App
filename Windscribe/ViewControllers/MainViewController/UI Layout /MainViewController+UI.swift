@@ -178,6 +178,7 @@ extension MainViewController {
         view.addSubview(connectButtonView)
 
         connectionStateInfoView = Assembler.resolve(ConnectionStateInfoView.self)
+        connectionStateInfoView.delegate = self
         view.addSubview(connectionStateInfoView)
 
         ipInfoView = Assembler.resolve(IPInfoView.self)

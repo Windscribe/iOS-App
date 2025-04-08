@@ -18,7 +18,7 @@ protocol PreferencesMainViewModel {
     func logoutUser()
     func isUserGhost() -> Bool
     func isUserPro() -> Bool
-    func getPreferenceItem(for row: Int) -> PreferenceItem?
+    func getPreferenceItem(for row: Int) -> PreferenceItemType?
     func getDataLeft() -> String
     func isDarkTheme() -> Bool
 }
@@ -108,35 +108,8 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
         return sessionManager.session?.getDataLeft() ?? "0 GB"
     }
 
-    func getPreferenceItem(for row: Int) -> PreferenceItem? {
-        switch row {
-        case 0:
-            return PreferenceItem(icon: ImagesAsset.Preferences.general,
-                                  title: TextsAsset.Preferences.general)
-        case 1:
-            return PreferenceItem(icon: ImagesAsset.Preferences.account,
-                                  title: TextsAsset.Preferences.account)
-        case 3:
-            return PreferenceItem(icon: ImagesAsset.Preferences.robert,
-                                  title: TextsAsset.Preferences.robert)
-        case 2:
-            return PreferenceItem(icon: ImagesAsset.Preferences.connection,
-                                  title: TextsAsset.Preferences.connection)
-        case 4:
-            return PreferenceItem(icon: ImagesAsset.Servers.fav,
-                                  title: TextsAsset.Preferences.referForData)
-        case 5:
-            return PreferenceItem(icon: ImagesAsset.Preferences.helpMe,
-                                  title: TextsAsset.Preferences.helpMe)
-        case 6:
-            return PreferenceItem(icon: ImagesAsset.Preferences.about,
-                                  title: TextsAsset.Preferences.about)
-        case 7:
-            return PreferenceItem(icon: ImagesAsset.Preferences.logoutRed,
-                                  title: TextsAsset.Preferences.logout)
-        default: break
-        }
-        return nil
+    func getPreferenceItem(for row: Int) -> PreferenceItemType? {
+        PreferenceItemType(rawValue: row)
     }
 
     func isDarkTheme() -> Bool {

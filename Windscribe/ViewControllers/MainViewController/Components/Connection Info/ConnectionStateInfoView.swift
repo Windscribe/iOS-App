@@ -64,8 +64,14 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     }
 }
 
+protocol ConnectionStateInfoViewDelegate: AnyObject {
+    func protocolPortTapped()
+}
+
 class ConnectionStateInfoView: UIView {
     let disposeBag = DisposeBag()
+
+    var delegate: ConnectionStateInfoViewDelegate?
 
     var pillView = UIView()
     var pillLabel = UILabel()
@@ -115,6 +121,11 @@ class ConnectionStateInfoView: UIView {
             DispatchQueue.main.async {
                 self.refreshProtocol(from: nil, with: protoPort, isNetworkCellularWhileConnecting: false)
             }
+        }.disposed(by: disposeBag)
+
+        actionButton.rx.tap.bind { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.protocolPortTapped()
         }.disposed(by: disposeBag)
     }
 
@@ -307,5 +318,11 @@ class ConnectionStateInfoView: UIView {
             actionIcon.widthAnchor.constraint(equalToConstant: 12),
             actionIcon.heightAnchor.constraint(equalToConstant: 12)
         ])
+    }
+}
+
+extension MainViewController:ConnectionStateInfoViewDelegate {
+    func protocolPortTapped() {
+        openConnectionChangeDialog()
     }
 }

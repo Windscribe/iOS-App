@@ -12,6 +12,7 @@ import UIKit
 
 protocol ServerSectionCellModelType: ServerCellModelType {
     var isExpanded: Bool { get }
+    var isP2pHidden: Bool { get }
     var displayingServer: ServerModel? { get }
     func setIsExpanded(_ value: Bool)
     func setDisplayingServer(_ value: ServerModel?)
@@ -53,6 +54,10 @@ class ServerSectionCellModel: ServerSectionCellModelType {
         CGFloat(self.displayingServer?.getServerHealth() ?? 0)
     }
 
+    var isP2pHidden: Bool {
+        displayingServer?.p2p ?? false
+    }
+
     func setIsExpanded(_ value: Bool) {
         isExpanded = value
     }
@@ -64,10 +69,17 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 
 class ServerSectionCell: ServerListCell {
     var serverCellViewModel = ServerSectionCellModel()
+    var p2pIcon = UIImageView()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         viewModel = serverCellViewModel
+
+        p2pIcon.image = UIImage(named: ImagesAsset.p2p)
+        p2pIcon.setImageColor(color: .white)
+        p2pIcon.layer.opacity = 0.7
+        contentView.addSubview(p2pIcon)
+
         updateUI()
         updateLayout()
     }
@@ -84,6 +96,32 @@ class ServerSectionCell: ServerListCell {
     func setCollapsed(collapsed: Bool, completion _: @escaping () -> Void = {}) {
         serverCellViewModel.setIsExpanded(!collapsed)
         updateUI()
+    }
+
+    override func updateUI() {
+        super.updateUI()
+        p2pIcon.isHidden = serverCellViewModel.isP2pHidden
+    }
+
+    override func updateLayout() {
+        super.updateLayout()
+
+        p2pIcon.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            // p2pIcon
+            p2pIcon.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
+            p2pIcon.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
+            p2pIcon.heightAnchor.constraint(equalToConstant: 16),
+            p2pIcon.widthAnchor.constraint(equalToConstant: 16)
+        ])
+    }
+
+    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
+        super.bindViews(isDarkMode: isDarkMode)
+        isDarkMode.subscribe(onNext: { isDark in
+            self.p2pIcon.setImageColor(color: isDark ? .white : .nightBlue)
+        }).disposed(by: disposeBag)
     }
 
     private func animateExpansion(completion: @escaping () -> Void = {}) {
