@@ -107,6 +107,7 @@ struct NewsFeedView: View {
                 )
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

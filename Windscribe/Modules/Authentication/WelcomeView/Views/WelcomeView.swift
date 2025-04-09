@@ -11,20 +11,18 @@ import SwiftUI
 struct WelcomeView: View {
 
     @Environment(\.deviceType) private var deviceType
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: WelcomeViewModelImpl
-    @StateObject private var router = LoginNavigationRouter()
+    @StateObject private var router: LoginNavigationRouter
 
-    @State private var shouldNavigateToSignup = false
-
-    private let dynamicTypeRange = (...DynamicTypeSize.large)
-
-    init(viewModel: any WelcomeViewModel) {
+    init(viewModel: any WelcomeViewModel, router: LoginNavigationRouter) {
         guard let model = viewModel as? WelcomeViewModelImpl else {
             fatalError("WelcomeView must be initialized properly")
         }
 
         _viewModel = StateObject(wrappedValue: model)
+        _router = StateObject(wrappedValue: router)
     }
 
     var body: some View {
@@ -36,21 +34,20 @@ struct WelcomeView: View {
                 }
                 .onReceive(viewModel.routeToSignup) { success in
                     if success {
-                        router.navigate(to: .signup)
-                        shouldNavigateToSignup = true
+                        router.shouldNavigateToSignup = true
                     }
                 }
                 .onReceive(viewModel.routeToMainView) { _ in
                     viewModel.navigateToMain()
                 }
-                .fullScreenCover(isPresented: Binding(
-                     get: { router.activeRoute == .emergency },
-                     set: { if !$0 { router.pop() } }
-                 )) {
-                     router.createView(for: .emergency)
-                 }
+                .fullScreenCover(
+                    isPresented: $router.shouldNavigateToEmergency,
+                    content: {
+                        router.createView(for: .emergency)
+                    })
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .dynamicTypeSize(dynamicTypeRange)
         .withRouter(router)
     }
 
@@ -82,7 +79,7 @@ struct WelcomeView: View {
                         .padding(.bottom, 24)
                         .padding(.horizontal, 24)
                 }
-                .padding(.horizontal, (deviceType == .iPadPortrait) ? geometry.size.width * 0.25 : 0)
+                .padding(.horizontal, (deviceType == .iPadPortrait) ? geometry.size.width * 0.2 : 0)
                 .padding(.vertical, (deviceType == .iPadPortrait) ? geometry.size.width * 0.1 : 0)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background {
@@ -107,6 +104,7 @@ struct WelcomeView: View {
                     .scaledToFit()
                     .frame(width: 54, height: 54)
                     .padding(.bottom, 80)
+                    .padding(.top, 10)
 
                 tabInfoView(geometry: geometry)
 
@@ -120,6 +118,7 @@ struct WelcomeView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 54, height: 54)
+                    .padding(.top, 10)
 
                 VStack {
                     tabInfoView(geometry: geometry)
@@ -161,7 +160,7 @@ extension WelcomeView {
         VStack(spacing: 12) {
             // Google Authentication
             Button(action: {
-                router.navigate(to: .login)
+                router.shouldNavigateToLogin = true
             }, label: {
                 HStack(alignment: .center, spacing: 10) {
                     Image(viewModel.signupGoogleImage)
@@ -171,7 +170,6 @@ extension WelcomeView {
 
                     Text(TextsAsset.Welcome.continueWithGoogle)
                         .font(.medium(.body))
-                        .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.black.opacity(0.54))
                 }
                 .frame(maxWidth: .infinity)
@@ -182,7 +180,7 @@ extension WelcomeView {
 
             // Apple Authentication
             Button(action: {
-                router.navigate(to: .login)
+                router.shouldNavigateToLogin = true
             }, label: {
                 HStack(alignment: .center, spacing: 10) {
                     Image(viewModel.signupAppleImage)
@@ -192,7 +190,6 @@ extension WelcomeView {
 
                     Text(TextsAsset.Welcome.continueWithApple)
                         .font(.medium(.body))
-                        .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.white)
                 }
                 .frame(maxWidth: .infinity)
@@ -208,20 +205,18 @@ extension WelcomeView {
             HStack {
                 // Emergency Connect
                 Button(action: {
-                    router.navigate(to: .emergency)
-                }) {
+                    router.shouldNavigateToEmergency = true
+                }, label: {
                     if viewModel.emergencyConnectStatus {
                         Text(viewModel.emergencyConnectOnText)
                             .font(.semiBold(.callout))
-                            .dynamicTypeSize(dynamicTypeRange)
                             .foregroundColor(Color.welcomeEmergencyButtonColor)
                     } else {
                         Text(viewModel.connectionFaultText)
                             .font(.semiBold(.callout))
-                            .dynamicTypeSize(dynamicTypeRange)
                             .foregroundColor(Color.welcomeButtonTextColor)
                     }
-                }
+                })
                 .frame(maxWidth: .infinity, alignment: .leading)
 
                 HStack(spacing: 12) {
@@ -233,7 +228,6 @@ extension WelcomeView {
                             ZStack {
                                 Text(viewModel.signupText)
                                     .font(.semiBold(.callout))
-                                    .dynamicTypeSize(dynamicTypeRange)
                                     .foregroundColor(Color.welcomeButtonTextColor)
                                     .opacity(viewModel.showLoadingView ? 0 : 1)
 
@@ -248,7 +242,7 @@ extension WelcomeView {
                         // Navigation trigger (invisible)
                         NavigationLink(
                             destination: router.createView(for: .signup),
-                            isActive: $shouldNavigateToSignup
+                            isActive: $router.shouldNavigateToSignup
                         ) {
                             EmptyView()
                         }
@@ -263,18 +257,15 @@ extension WelcomeView {
                     // Login Button
                     NavigationLink(
                         destination: router.createView(for: .login),
-                        isActive: Binding(
-                            get: { router.activeRoute == .login },
-                            set: { if !$0 { router.pop() } }
-                        )
+                        isActive: $router.shouldNavigateToLogin
                     ) {
                         Button(action: {
-                            router.navigate(to: .login)
+                            router.shouldNavigateToLogin = true
                         }, label: {
                             Text(viewModel.loginText)
                                 .font(.semiBold(.callout))
-                                .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.welcomeButtonTextColor)
+
                         })
                     }
                 }

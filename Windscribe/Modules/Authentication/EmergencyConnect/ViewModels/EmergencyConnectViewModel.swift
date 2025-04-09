@@ -10,10 +10,7 @@ import Foundation
 import Combine
 
 enum EmergencyConnectState {
-    case disconnected
-    case disconnecting
-    case connecting
-    case connected
+    case disconnected, disconnecting, connecting, connected
 }
 
 protocol EmergencyConnectViewModel: ObservableObject {

@@ -71,43 +71,52 @@ extension UIFont {
 }
 
 extension Font {
-    private static func customFont(name: String, textStyle: UIFont.TextStyle) -> Font {
-        guard let customUIFont = UIFont(name: name, size: UIFont.preferredFont(forTextStyle: textStyle).pointSize) else {
-            return .system(textStyle.toCustomFontWeight()) // Fallback
-        }
-
-        let scaledFont = UIFontMetrics(forTextStyle: textStyle).scaledFont(for: customUIFont)
-        return Font(scaledFont)
-    }
 
     static func bold(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-Bold", textStyle: textStyle)
+        .custom("IBMPlexSans-Bold", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func medium(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-Medium", textStyle: textStyle)
+        .custom("IBMPlexSans-Medium", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func semiBold(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-SemiBold", textStyle: textStyle)
+        .custom("IBMPlexSans-SemiBold", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func text(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-Text", textStyle: textStyle)
+        .custom("IBMPlexSans-Text", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func regular(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-Regular", textStyle: textStyle)
+        .custom("IBMPlexSans-Regular", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func light(_ textStyle: UIFont.TextStyle) -> Font {
-        customFont(name: "IBMPlexSans-Light", textStyle: textStyle)
+        .custom("IBMPlexSans-Light", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
+    }
+
+    /// Base point size per `UIFont.TextStyle`, matching Apple's dynamic type spec.
+    private static func baseSize(for textStyle: UIFont.TextStyle) -> CGFloat {
+        switch textStyle {
+        case .largeTitle: return 34
+        case .title1: return 28
+        case .title2: return 22
+        case .title3: return 20
+        case .headline: return 17
+        case .body: return 17
+        case .callout: return 16
+        case .subheadline: return 15
+        case .footnote: return 13
+        case .caption1: return 12
+        case .caption2: return 11
+        default: return 17
+        }
     }
 }
 
 extension UIFont.TextStyle {
-
-    func toCustomFontWeight() -> Font.TextStyle {
+    func toFontTextStyle() -> Font.TextStyle {
         #if os(tvOS)
         switch self {
         case .title1: return .title

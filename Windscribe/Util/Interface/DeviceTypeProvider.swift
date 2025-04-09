@@ -22,10 +22,20 @@ private struct DeviceTypeKey: EnvironmentKey {
     static let defaultValue: DeviceType = .unknown
 }
 
+private struct DynamicTypeRangeKey: EnvironmentKey {
+    static let defaultValue: PartialRangeThrough<DynamicTypeSize> = ...DynamicTypeSize.medium
+}
+
+/// Injected environment value for dynamic type range, e.g., based on device type
 extension EnvironmentValues {
     var deviceType: DeviceType {
         get { self[DeviceTypeKey.self] }
         set { self[DeviceTypeKey.self] = newValue }
+    }
+
+    var dynamicTypeRange: PartialRangeThrough<DynamicTypeSize> {
+        get { self[DynamicTypeRangeKey.self] }
+        set { self[DynamicTypeRangeKey.self] = newValue }
     }
 }
 
@@ -48,8 +58,11 @@ struct DeviceTypeProvider<Content: View>: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let type = determineDeviceType(geometry: geometry)
+
             content()
-                .environment(\.deviceType, determineDeviceType(geometry: geometry))
+                .environment(\.deviceType, type)
+                .environment(\.dynamicTypeRange, dynamicRange(for: type))
         }
     }
 
@@ -59,6 +72,18 @@ struct DeviceTypeProvider<Content: View>: View {
             return geometry.size.width > geometry.size.height ? .iPadLandscape : .iPadPortrait
         } else {
             return deviceType
+        }
+    }
+
+    /// Gather  appropriate dynamic type range based on device type
+    private func dynamicRange(for type: DeviceType) -> PartialRangeThrough<DynamicTypeSize> {
+        switch type {
+        case .iPadPortrait, .iPadLandscape:
+            return ...DynamicTypeSize.xLarge
+        case .iPhonePortrait, .iPhoneLandscape:
+            return ...DynamicTypeSize.large
+        default:
+            return ...DynamicTypeSize.medium
         }
     }
 }

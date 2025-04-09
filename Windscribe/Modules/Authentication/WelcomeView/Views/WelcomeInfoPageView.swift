@@ -11,10 +11,11 @@ import SwiftUI
 // MARK: - Info Page with Image and Text
 
 struct WelcomeInfoPageView: View {
+
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+
     let imageName: String
     let text: String
-
-    private let dynamicTypeRange = (...DynamicTypeSize.large)
 
     var body: some View {
         VStack(spacing: 12) {
@@ -25,18 +26,21 @@ struct WelcomeInfoPageView: View {
 
             Text(text)
                 .font(.light(.title1))
-                .dynamicTypeSize(dynamicTypeRange)
                 .foregroundColor(.white)
                 .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.75)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 20)
         }
+        .dynamicTypeSize(dynamicTypeRange)
     }
 }
 
 // MARK: - Custom Page Indicator
 
 struct PageIndicator: View {
+
     let currentPage: Int
 
     var body: some View {

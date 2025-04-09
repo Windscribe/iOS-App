@@ -22,6 +22,7 @@ protocol WelcomeViewModel: ObservableObject {
 }
 
 class WelcomeViewModelImpl: WelcomeViewModel {
+
     @Published var scrollOrder = 0
     @Published var showLoadingView = false
     @Published var emergencyConnectStatus = false

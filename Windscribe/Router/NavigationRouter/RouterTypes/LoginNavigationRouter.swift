@@ -11,6 +11,9 @@ import Swinject
 
 class LoginNavigationRouter: BaseNavigationRouter {
     @Published var activeRoute: NavigationRouteID?
+    @Published var shouldNavigateToSignup = false
+    @Published var shouldNavigateToLogin = false
+    @Published var shouldNavigateToEmergency = false
 
     @ViewBuilder
     func createView(for route: NavigationRouteID) -> some View {
