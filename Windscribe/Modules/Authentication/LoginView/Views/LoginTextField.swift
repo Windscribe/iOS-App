@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct LoginTextField: View {
+
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+
     var title: String
     var placeholder: String
     var isSecure: Bool = false
@@ -98,6 +101,7 @@ struct LoginTextField: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .dynamicTypeSize(dynamicTypeRange)
     }
 }
 

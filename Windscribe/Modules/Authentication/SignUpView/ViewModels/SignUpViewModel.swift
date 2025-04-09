@@ -24,12 +24,10 @@ protocol SignUpViewModel: ObservableObject {
     var email: String { get set }
     var voucherCode: String { get set }
     var referralUsername: String { get set }
-
     var isReferralVisible: Bool { get set }
     var isContinueButtonEnabled: Bool { get }
     var showLoadingView: Bool { get set }
     var failedState: SignUpErrorState { get set }
-
     var isPremiumUser: Bool { get }
 
     var routeTo: PassthroughSubject<SignupRoutes, Never> { get }
@@ -140,10 +138,6 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     func referralViewTapped() {
         isReferralVisible.toggle()
-    }
-
-    func keyboardWillShow() {
-        failedState = .none
     }
 
     // MARK: Networking
@@ -324,7 +318,6 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     // Validation
-
     private func isUsernameValid(_ username: String) -> Bool {
         let charset = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "_")).inverted
         return !username.isEmpty && username.rangeOfCharacter(from: charset) == nil && username.count > 2

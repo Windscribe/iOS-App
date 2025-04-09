@@ -10,14 +10,13 @@ import Foundation
 import Combine
 
 enum LoginErrorState: Equatable {
-    case username(String), network(String), twoFa(String), api(String), loginCode(String)
+    case username(String), network(String), twoFactor(String), api(String), loginCode(String)
 }
 
 protocol LoginViewModel: ObservableObject {
     var username: String { get set }
     var password: String { get set }
     var twoFactorCode: String { get set }
-
     var showLoadingView: Bool { get set }
     var failedState: LoginErrorState? { get set }
     var show2FAField: Bool { get set }
@@ -111,9 +110,9 @@ class LoginViewModelImpl: LoginViewModel {
 
                     switch error {
                     case Errors.invalid2FA:
-                        self.failedState = .twoFa(TextsAsset.twoFactorInvalidError)
+                        self.failedState = .twoFactor(TextsAsset.twoFactorInvalidError)
                     case Errors.twoFactorRequired:
-                        self.failedState = .twoFa(TextsAsset.twoFactorRequiredError)
+                        self.failedState = .twoFactor(TextsAsset.twoFactorRequiredError)
                         self.show2FAField = true
                     case let Errors.apiError(e):
                         self.failedState = .api(e.errorMessage ?? "Unknown API error")

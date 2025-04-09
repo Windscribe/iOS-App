@@ -12,9 +12,9 @@ import Combine
 struct EmergencyConnectView: View {
 
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: EmergencyConnectViewModelImpl
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
 
-    private let dynamicTypeRange = (...DynamicTypeSize.large)
+    @StateObject private var viewModel: EmergencyConnectViewModelImpl
 
     init(viewModel: any EmergencyConnectViewModel) {
         guard let model = viewModel as? EmergencyConnectViewModelImpl else {
@@ -95,6 +95,7 @@ struct EmergencyConnectView: View {
             }
             .padding()
             .background(Color.black.ignoresSafeArea())
+            .dynamicTypeSize(...DynamicTypeSize.medium)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 viewModel.appEnteredForeground()
             }

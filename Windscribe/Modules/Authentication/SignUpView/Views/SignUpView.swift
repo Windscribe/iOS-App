@@ -10,12 +10,15 @@ import SwiftUI
 import Combine
 
 struct SignUpView: View {
+
     enum Field: Hashable {
         case username, password, email, voucher, referral
     }
 
     @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
     @EnvironmentObject var router: LoginNavigationRouter
+
     @ObservedObject private var keyboard = KeyboardResponder()
 
     @StateObject private var viewModel: SignUpViewModelImpl
@@ -343,6 +346,7 @@ struct SignUpView: View {
             }
         }
         .background(Color.loginRegisterBackgroundColor)
+        .dynamicTypeSize(dynamicTypeRange)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {

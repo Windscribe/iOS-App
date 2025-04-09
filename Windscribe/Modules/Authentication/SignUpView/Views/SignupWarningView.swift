@@ -9,6 +9,9 @@
 import SwiftUI
 
 struct SignupWarningView: View {
+
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+
     let onContinue: () -> Void
     let onBack: () -> Void
 
@@ -53,5 +56,6 @@ struct SignupWarningView: View {
             .padding(.bottom, 64)
         }
         .background(Color.loginRegisterBackgroundColor)
+        .dynamicTypeSize(dynamicTypeRange)
     }
 }

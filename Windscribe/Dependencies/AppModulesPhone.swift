@@ -327,7 +327,7 @@ class ViewControllerModule: Assembly {
                 router: r.resolve(WelcomeRouter.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!
-            ))
+            ), router: LoginNavigationRouter())
         }.inObjectScope(.transient)
 
         container.register(LoginView.self) { r in

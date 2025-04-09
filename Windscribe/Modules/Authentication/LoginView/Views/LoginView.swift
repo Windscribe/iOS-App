@@ -9,19 +9,20 @@
 import SwiftUI
 
 struct LoginView: View {
+
     enum Field {
         case username, password, twoFactorCode
     }
 
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
     @EnvironmentObject var router: LoginNavigationRouter
 
     @ObservedObject private var keyboard = KeyboardResponder()
-    @StateObject private var viewModel: LoginViewModelImpl
-
     @FocusState private var focusedField: Field?
     @State private var fieldPositions: [String: Anchor<CGRect>] = [:]
 
+    @StateObject private var viewModel: LoginViewModelImpl
     @State private var safariURL: URL?
 
     //  Error Flags
@@ -69,7 +70,7 @@ struct LoginView: View {
     }
 
     private var isTwoFaError: Bool {
-        if case .twoFa = viewModel.failedState {
+        if case .twoFactor = viewModel.failedState {
             return true
         }
 
@@ -202,7 +203,9 @@ struct LoginView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(viewModel.isContinueButtonEnabled ? Color.loginRegisterEnabledButtonColor : Color.white)
+                            .background(viewModel.isContinueButtonEnabled
+                                        ? Color.loginRegisterEnabledButtonColor
+                                        : Color.white)
                             .clipShape(Capsule())
                         }
                         .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
@@ -282,6 +285,7 @@ struct LoginView: View {
                   }
               }
         }
+        .dynamicTypeSize(dynamicTypeRange)
     }
 
     /// Error Mapping
@@ -291,7 +295,7 @@ struct LoginView: View {
         switch state {
         case .username(let error): return error
         case .network(let error): return error
-        case .twoFa(let error): return error
+        case .twoFactor(let error): return error
         case .api(let error): return error
         case .loginCode(let error): return error
         }
