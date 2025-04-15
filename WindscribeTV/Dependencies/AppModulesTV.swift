@@ -72,8 +72,8 @@ class TVViewModels: Assembly {
             RateUsPopupModel(preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
 
-        container.register(EnterEmailViewModel.self) { r in
-            EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
+        container.register(EnterEmailViewModelOld.self) { r in
+            EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConfirmEmailViewModel.self) { r in
@@ -240,7 +240,7 @@ class TVViewControllers: Assembly {
         container.register(AddEmailPopupViewController.self) { _ in AddEmailPopupViewController(nibName: "AddEmailPopupViewController", bundle: nil)
         }.initCompleted { r, vc in
             vc.viewModel = r.resolve(BasePopupViewModelType.self)
-            vc.aeViewModel = r.resolve(EnterEmailViewModel.self)
+            vc.aeViewModel = r.resolve(EnterEmailViewModelOld.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)

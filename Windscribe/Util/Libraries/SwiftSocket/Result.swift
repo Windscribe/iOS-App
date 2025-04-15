@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Result {
+public enum SocketResult {
     case success
     case failure(Error)
 

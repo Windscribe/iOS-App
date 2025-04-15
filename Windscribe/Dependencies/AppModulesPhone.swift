@@ -78,6 +78,13 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any EnterEmailViewModel).self) { r in
+            EnterEmailViewModelImpl(
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                alertManager: r.resolve(AlertManagerV2.self)!,
+                apiManager: r.resolve(APIManager.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any GhostAccountViewModel).self) { r in
             GhostAccountViewModelImpl(
                 sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -120,8 +127,8 @@ class ViewModels: Assembly {
                                    vpnManager: r.resolve(VPNManager.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(EnterEmailViewModel.self) { r in
-            EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
+        container.register(EnterEmailViewModelOld.self) { r in
+            EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
         container.register(ConfirmEmailViewModel.self) { r in
             ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
@@ -372,6 +379,14 @@ class ViewControllerModule: Assembly {
                 router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
+        container.register(EnterEmailView.self) { r in
+            EnterEmailView(viewModel: EnterEmailViewModelImpl(
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                alertManager: r.resolve(AlertManagerV2.self)!,
+                apiManager: r.resolve(APIManager.self)!
+            ))
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -469,7 +484,7 @@ class ViewControllerModule: Assembly {
         container.register(EnterEmailViewController.self) { _ in
             EnterEmailViewController()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(EnterEmailViewModel.self)
+            c.viewModel = r.resolve(EnterEmailViewModelOld.self)
             c.router = r.resolve(EmailRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)

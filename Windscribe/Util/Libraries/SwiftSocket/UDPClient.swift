@@ -60,7 +60,7 @@ open class UDPClient: Socket {
      * send data
      * return success or fail with message
      */
-    open func send(data: [Byte]) -> Result {
+    open func send(data: [Byte]) -> SocketResult {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
         let sendsize: Int32 = c_yudpsocket_sentto(fd, buff: data, len: Int32(data.count), ip: self.address, port: Int32(self.port))
@@ -75,7 +75,7 @@ open class UDPClient: Socket {
      * send string
      * return success or fail with message
      */
-    open func send(string: String) -> Result {
+    open func send(string: String) -> SocketResult {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
         let sendsize = c_yudpsocket_sentto(fd, buff: string, len: Int32(strlen(string)), ip: address, port: port)
@@ -99,7 +99,7 @@ open class UDPClient: Socket {
      *
      * send nsdata
      */
-    open func send(data: Data) -> Result {
+    open func send(data: Data) -> SocketResult {
         guard let fd = self.fd else { return .failure(SocketError.connectionClosed) }
 
         var buff = [Byte](repeating: 0x0, count: data.count)

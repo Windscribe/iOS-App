@@ -266,13 +266,13 @@
 		1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB472C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift */; };
 		1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4A2C75F6840032A4DF /* AddEmailPopupViewController.swift */; };
 		1EF7BB4D2C75FB2F0032A4DF /* AddEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */; };
-		1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */; };
+		1EF7BB502C7618410032A4DF /* EnterEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */; };
 		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
 		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
 		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
-		591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */; };
+		591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */; };
 		591CF9B12BBB3ED1004DEB48 /* EmailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */; };
 		591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
 		591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */; };
@@ -1173,6 +1173,8 @@
 		F499351C2DA6D93700108558 /* RoutedHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499351B2DA6D93700108558 /* RoutedHostingController.swift */; };
 		F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499352B2DA71F0800108558 /* GhostAccountView.swift */; };
 		F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */; };
+		F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935322DA8435D00108558 /* EnterEmailView.swift */; };
+		F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935342DA843A200108558 /* EnterEmailViewModel.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -1472,7 +1474,7 @@
 		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
 		591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManager.swift; sourceTree = "<group>"; };
 		591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManagerV2.swift; sourceTree = "<group>"; };
-		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
+		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModelOld.swift; sourceTree = "<group>"; };
 		591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRouter.swift; sourceTree = "<group>"; };
 		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTicketViewModel.swift; sourceTree = "<group>"; };
@@ -2035,6 +2037,8 @@
 		F499351B2DA6D93700108558 /* RoutedHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutedHostingController.swift; sourceTree = "<group>"; };
 		F499352B2DA71F0800108558 /* GhostAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountView.swift; sourceTree = "<group>"; };
 		F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountViewModel.swift; sourceTree = "<group>"; };
+		F49935322DA8435D00108558 /* EnterEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailView.swift; sourceTree = "<group>"; };
+		F49935342DA843A200108558 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -2402,7 +2406,6 @@
 		1E2366C62BC02447000DF098 /* Account */ = {
 			isa = PBXGroup;
 			children = (
-				1EA876D72BCEE3A200F0DD25 /* Upgrade */,
 				AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */,
 				AF4B92F3221DF6670054580D /* AccountPopupViewController.swift */,
 				1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */,
@@ -2685,14 +2688,6 @@
 			);
 			path = "Error View";
 			sourceTree = "<group>";
-		};
-		1EA876D72BCEE3A200F0DD25 /* Upgrade */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Upgrade;
-			path = Windscribe/ViewControllers/popup/Upgrade;
-			sourceTree = SOURCE_ROOT;
 		};
 		1EA876D92BCEE3BF00F0DD25 /* Privacy */ = {
 			isa = PBXGroup;
@@ -3520,9 +3515,9 @@
 		AFB83C2723C7BC3600607881 /* Authentication */ = {
 			isa = PBXGroup;
 			children = (
-				F41190232D7FC77A00AC7EB6 /* WelcomeView */,
-				F440F2FE2D8DE70D006F1A6D /* LoginView */,
-				F4888E3C2D949DA7005EF149 /* SignUpView */,
+				F41190232D7FC77A00AC7EB6 /* Welcome */,
+				F440F2FE2D8DE70D006F1A6D /* Login */,
+				F4888E3C2D949DA7005EF149 /* SignUp */,
 				F4F51A732D9D7E2B00407DE7 /* EmergencyConnect */,
 			);
 			path = Authentication;
@@ -4050,7 +4045,7 @@
 			children = (
 				AF4B92ED221DB3150054580D /* EnterEmailViewController.swift */,
 				AF4B92EF221DB3290054580D /* EnterEmailViewController+UI.swift */,
-				591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */,
+				591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */,
 				AF4ECA9F23E8CF1900E09223 /* ConfirmEmailViewController.swift */,
 				AF4ECAA123E8D00800E09223 /* ConfirmEmailViewController+UI.swift */,
 				591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */,
@@ -4158,13 +4153,13 @@
 			path = Localization;
 			sourceTree = "<group>";
 		};
-		F41190232D7FC77A00AC7EB6 /* WelcomeView */ = {
+		F41190232D7FC77A00AC7EB6 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
 				F440F2F92D8CB473006F1A6D /* Views */,
 				F440F2FA2D8CB492006F1A6D /* ViewModels */,
 			);
-			path = WelcomeView;
+			path = Welcome;
 			sourceTree = "<group>";
 		};
 		F42ADD1E2D5BB47F0021AF6E /* AppReview */ = {
@@ -4227,13 +4222,13 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		F440F2FE2D8DE70D006F1A6D /* LoginView */ = {
+		F440F2FE2D8DE70D006F1A6D /* Login */ = {
 			isa = PBXGroup;
 			children = (
 				F440F2FF2D8DE722006F1A6D /* Views */,
 				F440F3002D8DE79F006F1A6D /* ViewModels */,
 			);
-			path = LoginView;
+			path = Login;
 			sourceTree = "<group>";
 		};
 		F440F2FF2D8DE722006F1A6D /* Views */ = {
@@ -4405,13 +4400,13 @@
 			path = RouterTypes;
 			sourceTree = "<group>";
 		};
-		F4888E3C2D949DA7005EF149 /* SignUpView */ = {
+		F4888E3C2D949DA7005EF149 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
 				F4888E3D2D949DED005EF149 /* Views */,
 				F4888E402D949DFD005EF149 /* ViewModels */,
 			);
-			path = SignUpView;
+			path = SignUp;
 			sourceTree = "<group>";
 		};
 		F4888E3D2D949DED005EF149 /* Views */ = {
@@ -4442,18 +4437,19 @@
 		F499351F2DA7174000108558 /* Account */ = {
 			isa = PBXGroup;
 			children = (
-				F49935202DA7175200108558 /* GhostAccountView */,
+				F49935202DA7175200108558 /* GhostAccount */,
+				F499352F2DA83E3800108558 /* ConfirmEmail */,
 			);
 			path = Account;
 			sourceTree = "<group>";
 		};
-		F49935202DA7175200108558 /* GhostAccountView */ = {
+		F49935202DA7175200108558 /* GhostAccount */ = {
 			isa = PBXGroup;
 			children = (
 				F49935212DA7176B00108558 /* Views */,
 				F49935222DA7177100108558 /* ViewModels */,
 			);
-			path = GhostAccountView;
+			path = GhostAccount;
 			sourceTree = "<group>";
 		};
 		F49935212DA7176B00108558 /* Views */ = {
@@ -4468,6 +4464,31 @@
 			isa = PBXGroup;
 			children = (
 				F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F499352F2DA83E3800108558 /* ConfirmEmail */ = {
+			isa = PBXGroup;
+			children = (
+				F49935302DA83EB600108558 /* Views */,
+				F49935312DA83EBC00108558 /* ViewModels */,
+			);
+			path = ConfirmEmail;
+			sourceTree = "<group>";
+		};
+		F49935302DA83EB600108558 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F49935322DA8435D00108558 /* EnterEmailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49935312DA83EBC00108558 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F49935342DA843A200108558 /* EnterEmailViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -5483,7 +5504,7 @@
 				59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */,
 				59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */,
 				1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */,
-				1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */,
+				1EF7BB502C7618410032A4DF /* EnterEmailViewModelOld.swift in Sources */,
 				1E0D9D7B2C6107E6008AFF2D /* GeneralHelper.swift in Sources */,
 				59FC74152C51543700021CD1 /* ErrorResponse.swift in Sources */,
 				1E0D9D752C6103A3008AFF2D /* PreferencesMainViewController.swift in Sources */,
@@ -5720,7 +5741,7 @@
 				1E7A195E2C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				F4F29E502D68D6D500933633 /* UIImage+Extension.swift in Sources */,
 				E97ABD6228F91ABA00B38587 /* ProtocolManager.swift in Sources */,
-				591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModel.swift in Sources */,
+				591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift in Sources */,
 				E943750B27DEF6AD00F74F2D /* ErrorResponse.swift in Sources */,
 				AF0AED3F22035E9700039CAF /* FavNodesListTableViewDataSource+Delegate.swift in Sources */,
 				AF36BF0422FB11FE00FCC6F4 /* RefreshControlViewBack.swift in Sources */,
@@ -5735,6 +5756,7 @@
 				1AE6D2BB2837E44E00276C7D /* AccountViewController.swift in Sources */,
 				AF7F3082237609890097C6D6 /* ShakeForDataViewController.swift in Sources */,
 				C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */,
+				F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */,
 				AF36A1A5237B4D9D00BDDCDB /* ShakeForDataPopupViewController+UI.swift in Sources */,
 				C5FA3E842684BB90001D03A7 /* HelpItem.swift in Sources */,
 				C57668F02B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift in Sources */,
@@ -5836,6 +5858,7 @@
 				C5A930E12B43F0270001CFA0 /* CredentialsRepositoryImpl.swift in Sources */,
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C56FCC042B2CF304008DE7D4 /* ConnectionRouter.swift in Sources */,
+				F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */,
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
 				E9219FFA289050BD0026E544 /* HelpView.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,

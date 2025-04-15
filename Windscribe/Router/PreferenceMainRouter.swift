@@ -48,8 +48,8 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
             vc.dismissDelegate = delegate
             from.present(vc, animated: true)
         case RouteID.enterEmail:
-            let vc = Assembler.resolve(EnterEmailViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+            let enterEmail = Assembler.resolve(EnterEmailView.self)
+            pushViewWithoutNavigationBar(from: from, view: enterEmail)
         case RouteID.login:
             goToLogin(viewController: from)
         default: ()
