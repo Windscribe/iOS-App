@@ -26,6 +26,8 @@ struct LoginTextField: View {
     var titleTapAction: (() -> Void)?
     var keyboardType: UIKeyboardType = .default
 
+    var trailingView: AnyView? = nil
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             // Title with right-aligned warning icon
@@ -82,6 +84,8 @@ struct LoginTextField: View {
                             Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
                                 .foregroundColor(.gray)
                         })
+                    } else if let trailingView = trailingView {
+                        trailingView
                     }
                 }
                 .padding()

@@ -10,7 +10,7 @@ import RxSwift
 import UIKit
 
 class EnterEmailViewController: WSNavigationViewController {
-    var router: EmailRouter!, viewModel: EnterEmailViewModel!, logger: FileLogger!
+    var router: EmailRouter!, viewModel: EnterEmailViewModelOld!, logger: FileLogger!
 
     // MARK: - UI elements
 

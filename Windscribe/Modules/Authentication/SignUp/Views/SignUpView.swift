@@ -171,7 +171,12 @@ struct SignUpView: View {
                                 errorMessage: emailErrorMessage,
                                 showWarningIcon: showEmailIcon,
                                 text: $viewModel.email,
-                                keyboardType: .emailAddress
+                                keyboardType: .emailAddress,
+                                trailingView: AnyView(
+                                    Text(TextsAsset.get10GbAMonth)
+                                        .font(.medium(.callout))
+                                        .foregroundColor(.white.opacity(0.5))
+                                )
                             )
                             .focused($focusedField, equals: .email)
                             .id(Field.email)

@@ -13,8 +13,11 @@ class UpgradeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case RouteID.enterEmail:
-            let vc = Assembler.resolve(EnterEmailViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+            let enterEmail = Assembler.resolve(EnterEmailView.self)
+            pushViewWithoutNavigationBar(from: from, view: enterEmail)
+
+//            let vc = Assembler.resolve(EnterEmailViewController.self)
+//            from.navigationController?.pushViewController(vc, animated: true)
         case let RouteID.confirmEmail(delegate):
             let vc = Assembler.resolve(ConfirmEmailViewController.self)
             vc.dismissDelegate = delegate
