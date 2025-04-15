@@ -94,8 +94,8 @@ struct EmergencyConnectView: View {
                 .padding(.bottom, 24)
             }
             .padding()
-            .background(Color.black.ignoresSafeArea())
-            .dynamicTypeSize(...DynamicTypeSize.medium)
+            .background(Color.loginRegisterBackgroundColor.ignoresSafeArea())
+            .dynamicTypeSize(dynamicTypeRange)
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 viewModel.appEnteredForeground()
             }

@@ -52,13 +52,6 @@ class PopupRouter: BaseRouter, RootRouter {
             let credentialsVC = Assembler.resolve(EnterCredentialsViewController.self)
             credentialsVC.viewModel.setup(with: config, isUpdating: isUpdating)
             vc = credentialsVC
-        case let .infoPrompt(title, actionValue, justDismissOnAction, delegate):
-            let infoPromptVC = Assembler.resolve(InfoPromptViewController.self)
-            infoPromptVC.viewModel.setInfo(title: title,
-                                           actionValue: actionValue,
-                                           justDismissOnAction: justDismissOnAction,
-                                           delegate: delegate)
-            vc = infoPromptVC
         case .maintenanceLocation(let isStaticIp):
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
             (vc as? PopUpMaintenanceLocationVC)?.isStaticIp = isStaticIp
@@ -85,8 +78,7 @@ class PopupRouter: BaseRouter, RootRouter {
                 vc.modalPresentationStyle = .fullScreen
             case .maintenanceLocation:
                 vc.modalPresentationStyle = .overFullScreen
-            case .infoPrompt,
-                 .shakeForDataView,
+            case .shakeForDataView,
                  .shakeForDataResult:
                 vc.modalPresentationStyle = .overCurrentContext
                 vc.modalTransitionStyle = .coverVertical
@@ -103,7 +95,6 @@ class PopupRouter: BaseRouter, RootRouter {
                     from.navigationController?.pushViewController(vc, animated: pushAnimated)
                 case .setPreferredProtocolPopup,
                         .privacyView,
-                        .infoPrompt,
                         .enterCredentials,
                         .shakeForDataPopUp,
                         .pushNotifications,

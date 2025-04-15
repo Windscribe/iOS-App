@@ -251,9 +251,11 @@ class LocalDatabaseImpl: LocalDatabase {
 
     func clean() {
         let realm = try? Realm()
+
+        cleanTrigger.onNext(())
+
         try? realm?.write {
             realm?.deleteAll()
-            cleanTrigger.onNext(())
         }
     }
 

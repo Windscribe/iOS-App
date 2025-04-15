@@ -17,11 +17,13 @@ struct SignUpView: View {
 
     @Environment(\.presentationMode) private var presentationMode
     @Environment(\.dynamicTypeRange) private var dynamicTypeRange
-    @EnvironmentObject var router: LoginNavigationRouter
 
+    @EnvironmentObject var signupFlowContext: SignupFlowContext
     @ObservedObject private var keyboard = KeyboardResponder()
 
     @StateObject private var viewModel: SignUpViewModelImpl
+    @StateObject private var router: AuthenticationNavigationRouter
+
     @State private var showEmailWarning = false
 
     @FocusState private var focusedField: Field?
@@ -119,12 +121,13 @@ struct SignUpView: View {
         }
     }
 
-    init(viewModel: any SignUpViewModel) {
+    init(viewModel: any SignUpViewModel, router: AuthenticationNavigationRouter) {
         guard let model = viewModel as? SignUpViewModelImpl else {
             fatalError("SignUpView must be initialized properly")
         }
 
         _viewModel = StateObject(wrappedValue: model)
+        _router = StateObject(wrappedValue: router)
     }
 
     var body: some View {
@@ -190,25 +193,27 @@ struct SignUpView: View {
                         .id(Field.voucher)
                         .readingFrame(id: "voucher-anchor")
 
-                        // Referral Toggle
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.25)) {
-                                viewModel.referralViewTapped()
-                            }
-                        },label: {
-                            HStack(spacing: 8) {
-                                Text(TextsAsset.referredBySomeone)
-                                    .font(.medium(.callout))
-                                    .foregroundColor(.white)
+                        if !signupFlowContext.isFromGhostAccount {
+                            // Referral Toggle
+                            Button(action: {
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    viewModel.referralViewTapped()
+                                }
+                            },label: {
+                                HStack(spacing: 8) {
+                                    Text(TextsAsset.referredBySomeone)
+                                        .font(.medium(.callout))
+                                        .foregroundColor(.white)
 
-                                Image(systemName: "chevron.down")
-                                    .rotationEffect(.degrees(viewModel.isReferralVisible ? 180 : 0))
-                                    .foregroundColor(.white.opacity(0.5))
-                                    .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
-                            }
-                        })
-                        .buttonStyle(.plain)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                                    Image(systemName: "chevron.down")
+                                        .rotationEffect(.degrees(viewModel.isReferralVisible ? 180 : 0))
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
+                                }
+                            })
+                            .buttonStyle(.plain)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
 
                         // Referral Section
                         if viewModel.isReferralVisible {
@@ -289,8 +294,21 @@ struct SignUpView: View {
                             .clipShape(Capsule())
                         }
                         .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
+
+                        if signupFlowContext.isFromGhostAccount {
+                            Button(action: {
+                                presentationMode.wrappedValue.dismiss()
+                            }, label: {
+                                Text(TextsAsset.setupLater)
+                                    .foregroundColor(.welcomeButtonTextColor)
+                                    .font(.bold(.title3))
+                                    .padding(.top, 12)
+                            })
+                            .buttonStyle(.plain)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        }
                     }
-                    .padding() // Outer padding for VStack
+                    .padding()
                     .padding(.bottom, keyboard.currentHeight) // Dynamic keyboard-aware padding
                     .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
                     .background( // Needed for anchor resolution
@@ -351,7 +369,7 @@ struct SignUpView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text(TextsAsset.createAccount)
+                Text(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
                     .foregroundColor(.white)
                     .font(.headline)
             }
@@ -432,4 +450,8 @@ struct SignUpView: View {
             }
         }
     }
+}
+
+final class SignupFlowContext: ObservableObject {
+    @Published var isFromGhostAccount = false
 }

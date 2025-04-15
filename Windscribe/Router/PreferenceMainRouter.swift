@@ -9,6 +9,7 @@
 import Foundation
 import Swinject
 import UIKit
+import SwiftUI
 
 class PreferenceMainRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {
@@ -25,8 +26,8 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(GeneralViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
         case RouteID.ghostAccount:
-            let vc = Assembler.resolve(GhostAccountViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+            let ghostView = Assembler.resolve(GhostAccountView.self)
+            pushViewWithoutNavigationBar(from: from, view: ghostView)
         case RouteID.account:
             let vc = Assembler.resolve(AccountViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
@@ -50,11 +51,7 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
             let vc = Assembler.resolve(EnterEmailViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
         case RouteID.login:
-//            let vc = Assembler.resolve(LoginViewController.self)
-//            from.navigationController?.pushViewController(vc, animated: true)
-
-            // TODO: Use the new LoginView written in SwiftUI
-            print("Present SwiftUI Login")
+            goToLogin(viewController: from)
         default: ()
         }
     }

@@ -16,13 +16,13 @@ struct LoginView: View {
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dynamicTypeRange) private var dynamicTypeRange
-    @EnvironmentObject var router: LoginNavigationRouter
 
     @ObservedObject private var keyboard = KeyboardResponder()
     @FocusState private var focusedField: Field?
     @State private var fieldPositions: [String: Anchor<CGRect>] = [:]
 
     @StateObject private var viewModel: LoginViewModelImpl
+    @StateObject private var router: AuthenticationNavigationRouter
     @State private var safariURL: URL?
 
     //  Error Flags
@@ -79,12 +79,13 @@ struct LoginView: View {
 
     private var showTwoFaIcon: Bool { isTwoFaError }
 
-    init(viewModel: any LoginViewModel) {
+    init(viewModel: any LoginViewModel, router: AuthenticationNavigationRouter) {
         guard let model = viewModel as? LoginViewModelImpl else {
             fatalError("LoginView must be initialized properly")
         }
 
         _viewModel = StateObject(wrappedValue: model)
+        _router = StateObject(wrappedValue: router)
     }
 
     var body: some View {
@@ -240,50 +241,50 @@ struct LoginView: View {
             }
             .sheet(item: $safariURL) { url in
                   SafariView(url: url)
+            }
+            .padding(.top, 1)
+            .background(Color.loginRegisterBackgroundColor)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+              ToolbarItem(placement: .principal) {
+                  Text(TextsAsset.Welcome.login)
+                      .foregroundColor(.white)
+                      .font(.headline)
               }
-              .padding(.top, 1)
-              .background(Color.loginRegisterBackgroundColor)
-              .navigationBarTitleDisplayMode(.inline)
-              .navigationBarBackButtonHidden(true)
-              .toolbar {
-                  ToolbarItem(placement: .principal) {
-                      Text(TextsAsset.Welcome.login)
+
+              ToolbarItem(placement: .navigationBarLeading) {
+                  Button(action: {
+                      presentationMode.wrappedValue.dismiss()
+                  }, label: {
+                      Image(systemName: "chevron.left")
                           .foregroundColor(.white)
-                          .font(.headline)
-                  }
+                  })
+                  .padding(.leading, 8)
+              }
 
-                  ToolbarItem(placement: .navigationBarLeading) {
-                      Button(action: {
-                          presentationMode.wrappedValue.dismiss()
-                      }, label: {
-                          Image(systemName: "chevron.left")
-                              .foregroundColor(.white)
-                      })
-                      .padding(.leading, 8)
-                  }
+              ToolbarItemGroup(placement: .keyboard) {
+                  Button(action: {
+                      moveFocus(up: true)
+                  }, label: {
+                      Image(systemName: "chevron.up")
+                  })
+                  .disabled(focusedField == .username)
 
-                  ToolbarItemGroup(placement: .keyboard) {
-                      Button(action: {
-                          moveFocus(up: true)
-                      }, label: {
-                          Image(systemName: "chevron.up")
-                      })
-                      .disabled(focusedField == .username)
+                  Button(action: {
+                      moveFocus(up: false)
+                  }, label: {
+                      Image(systemName: "chevron.down")
+                  })
+                  .disabled(focusedField == .twoFactorCode || (!viewModel.show2FAField && focusedField == .password))
 
-                      Button(action: {
-                          moveFocus(up: false)
-                      }, label: {
-                          Image(systemName: "chevron.down")
-                      })
-                      .disabled(focusedField == .twoFactorCode || (!viewModel.show2FAField && focusedField == .password))
+                  Spacer()
 
-                      Spacer()
-
-                      Button(TextsAsset.Authentication.done) {
-                          focusedField = nil
-                      }
+                  Button(TextsAsset.Authentication.done) {
+                      focusedField = nil
                   }
               }
+            }
         }
         .dynamicTypeSize(dynamicTypeRange)
     }
