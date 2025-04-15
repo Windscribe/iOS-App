@@ -9,7 +9,7 @@
 import SwiftUI
 import Swinject
 
-class LoginNavigationRouter: BaseNavigationRouter {
+class AuthenticationNavigationRouter: BaseNavigationRouter {
     @Published var activeRoute: NavigationRouteID?
     @Published var shouldNavigateToSignup = false
     @Published var shouldNavigateToLogin = false
@@ -20,13 +20,24 @@ class LoginNavigationRouter: BaseNavigationRouter {
         switch route {
         case .login:
             Assembler.resolve(LoginView.self)
-        case .signup:
-            Assembler.resolve(SignUpView.self)
+        case .signup(let claimGhostAccount):
+            getSignupView(claimGhostAccount: claimGhostAccount)
         case .emergency:
             Assembler.resolve(EmergencyConnectView.self)
+
         default:
             fatalError("Unsupported route: \(route)")
         }
+    }
+
+    private func getSignupView(claimGhostAccount: Bool) -> some View {
+        let context = SignupFlowContext()
+        context.isFromGhostAccount = claimGhostAccount
+
+        return AnyView(
+            Assembler.resolve(SignUpView.self)
+                .environmentObject(context)
+        )
     }
 
     /// Navigate to a specific route

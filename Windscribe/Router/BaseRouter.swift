@@ -9,6 +9,7 @@
 import Foundation
 import SafariServices
 import Swinject
+import SwiftUI
 
 class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     func goToHome() {
@@ -29,17 +30,22 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     }
 
     func goToSignUp(viewController: WSUIViewController, claimGhostAccount: Bool = false) {
-//        let vc = Assembler.resolve(SignUpViewController.self)
-//        vc.claimGhostAccount = claimGhostAccount
-//
-//        DispatchQueue.main.async {
-//            viewController.navigationController?.pushViewController(vc, animated: true)
-//        }
+        let context = SignupFlowContext()
+        context.isFromGhostAccount = claimGhostAccount
 
-        // TODO: Use the new SignupView written in SwiftUI
+        let signUpView =  Assembler.resolve(SignUpView.self)
+            .environmentObject(context)
+
+        pushViewWithoutNavigationBar(from: viewController, view: signUpView)
     }
 
-    func goToWeb(url: String, viewController: WSNavigationViewController, parameters _: [String: Any]?) {
+    func goToLogin(viewController: WSUIViewController) {
+        let loginView = Assembler.resolve(LoginView.self)
+
+        pushViewWithoutNavigationBar(from: viewController, view: loginView)
+    }
+
+    func goToWeb(url: String, viewController: WSNavigationViewController) {
         let safariVC = SFSafariViewController(url: URL(string: url)!)
         safariVC.preferredBarTintColor = UIColor.black
         viewController.present(safariVC, animated: true, completion: nil)
@@ -56,4 +62,15 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
             navigationVC?.pushViewController(vc, animated: true)
         }
     }
+
+    func pushViewWithoutNavigationBar<V: View>(from viewController: WSUIViewController, view: V) {
+        let hostingController = RoutedHostingController(rootView: view)
+        hostingController.onPop = { [weak viewController] in
+            viewController?.changeNavigationBarStyle(isHidden: true)
+        }
+
+        viewController.navigationController?.pushViewController(hostingController, animated: true)
+        viewController.changeNavigationBarStyle(isHidden: false)
+    }
+
 }

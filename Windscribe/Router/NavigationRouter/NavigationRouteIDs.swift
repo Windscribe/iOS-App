@@ -8,11 +8,11 @@
 
 import SwiftUI
 
-enum NavigationRouteID: Identifiable {
+enum NavigationRouteID: Identifiable, Hashable {
     case login
-    case signup
+    case signup(claimGhostAccount: Bool)
     case emergency
     case main
 
-    var id: Self { self }
+    var id: NavigationRouteID { self }
 }

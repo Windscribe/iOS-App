@@ -98,6 +98,21 @@ extension Font {
 
     /// Base point size per `UIFont.TextStyle`, matching Apple's dynamic type spec.
     private static func baseSize(for textStyle: UIFont.TextStyle) -> CGFloat {
+#if os(tvOS)
+        switch textStyle {
+        case .title1: return 28
+        case .title2: return 22
+        case .title3: return 20
+        case .headline: return 17
+        case .body: return 17
+        case .callout: return 16
+        case .subheadline: return 15
+        case .footnote: return 13
+        case .caption1: return 12
+        case .caption2: return 11
+        default: return 17
+        }
+#else
         switch textStyle {
         case .largeTitle: return 34
         case .title1: return 28
@@ -112,12 +127,13 @@ extension Font {
         case .caption2: return 11
         default: return 17
         }
+#endif
     }
 }
 
 extension UIFont.TextStyle {
     func toFontTextStyle() -> Font.TextStyle {
-        #if os(tvOS)
+#if os(tvOS)
         switch self {
         case .title1: return .title
         case .title2, .title3: return .title2
@@ -129,7 +145,7 @@ extension UIFont.TextStyle {
         case .caption1, .caption2: return .caption
         default: return .body
         }
-        #else
+#else
         switch self {
         case .largeTitle: return .largeTitle
         case .title1: return .title
@@ -142,6 +158,6 @@ extension UIFont.TextStyle {
         case .caption1, .caption2: return .caption
         default: return .body
         }
-        #endif
+#endif
     }
 }

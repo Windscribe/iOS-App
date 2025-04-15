@@ -11,6 +11,7 @@ import StoreKit
 import Swinject
 import UIKit
 import SnapKit
+import SwiftUI
 
 class PlanUpgradeViewController: WSUIViewController {
 
@@ -292,5 +293,21 @@ class PlanUpgradeViewController: WSUIViewController {
         if let plan = windscribePlans.first(where: { $0.extId == planExtID }) {
             viewModel?.setSelectedPlan(plan: plan)
         }
+    }
+}
+
+struct PlanUpgradeViewControllerWrapper: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        let planUpgradeController = Assembler.resolve(PlanUpgradeViewController.self)
+
+        let navigationController = UINavigationController(rootViewController: planUpgradeController).then {
+            $0.modalPresentationStyle = .fullScreen
+        }
+
+        return navigationController
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        // no-op
     }
 }

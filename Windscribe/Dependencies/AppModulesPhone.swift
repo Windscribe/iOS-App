@@ -51,7 +51,6 @@ class ViewModels: Assembly {
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                router: r.resolve(WelcomeRouter.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
@@ -77,6 +76,11 @@ class ViewModels: Assembly {
                 vpnManager: r.resolve(VPNManager.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
                 logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any GhostAccountViewModel).self) { r in
+            GhostAccountViewModelImpl(
+                sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
 
         container.register(AdvanceParamsViewModel.self) { r in
@@ -115,9 +119,6 @@ class ViewModels: Assembly {
                                    connectivity: r.resolve(Connectivity.self)!,
                                    vpnManager: r.resolve(VPNManager.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
-        }.inObjectScope(.transient)
-        container.register(GhostAccountViewModelType.self) { r in
-            GhostAccountViewModel(sessionManager: r.resolve(SessionManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(EnterEmailViewModel.self) { r in
             EnterEmailViewModelImpl(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
@@ -177,9 +178,6 @@ class ViewModels: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 themeManager: r.resolve(ThemeManager.self)!
             )
-        }.inObjectScope(.transient)
-        container.register(InfoPromptViewModelType.self) { _ in
-            InfoPromptViewModel()
         }.inObjectScope(.transient)
         container.register(PushNotificationViewModelType.self) { r in
             PushNotificationViewModel(
@@ -324,10 +322,9 @@ class ViewControllerModule: Assembly {
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                router: r.resolve(WelcomeRouter.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!
-            ), router: LoginNavigationRouter())
+            ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
         container.register(LoginView.self) { r in
@@ -342,7 +339,7 @@ class ViewControllerModule: Assembly {
                     latencyRepository: r.resolve(LatencyRepository.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
                     logger: r.resolve(FileLogger.self)!
-                ))
+                ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
         container.register(SignUpView.self) { r in
@@ -357,7 +354,7 @@ class ViewControllerModule: Assembly {
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
-            ))
+            ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
         container.register(EmergencyConnectView.self) { r in
@@ -366,6 +363,13 @@ class ViewControllerModule: Assembly {
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
                 logger: r.resolve(FileLogger.self)!
             ))
+        }.inObjectScope(.transient)
+
+        container.register(GhostAccountView.self) { r in
+            GhostAccountView(
+                viewModel: GhostAccountViewModelImpl(
+                    sessionManager: r.resolve(SessionManagerV2.self)!),
+                router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
         container.register(MainViewController.self) { _ in
@@ -591,11 +595,6 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(EnterCredentialsViewModelType.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        container.register(InfoPromptViewController.self) { _ in
-            InfoPromptViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(InfoPromptViewModelType.self)
-        }.inObjectScope(.transient)
         container.register(ListSelectionView.self) { _ in
             ListSelectionView()
         }.initCompleted { r, c in
@@ -613,13 +612,6 @@ class ViewControllerModule: Assembly {
         }.inObjectScope(.transient)
         container.register(LocationPermissionInfoViewController.self) { _ in
             LocationPermissionInfoViewController()
-        }.inObjectScope(.transient)
-        container.register(GhostAccountViewController.self) { _ in
-            GhostAccountViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(GhostAccountViewModelType.self)
-            c.router = r.resolve(GhostAccountRouter.self)
-            c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
 
         container.register(FlagsBackgroundView.self) { _ in
@@ -664,15 +656,12 @@ class ViewControllerModule: Assembly {
 
 class Routers: Assembly {
     func assemble(container: Container) {
-        container.register(WelcomeRouter.self) { _ in
-            WelcomeRouter()
+        container.register(AuthenticationNavigationRouter.self) { _ in
+            AuthenticationNavigationRouter()
         }.inObjectScope(.transient)
         container.register(HomeRouter.self) { _ in
             HomeRouter()
         }.inObjectScope(.transient)
-        container.register(GhostAccountRouter.self) { _ in
-            GhostAccountRouter()
-        }.inObjectScope(.container)
         container.register(PreferenceMainRouter.self) { _ in
             PreferenceMainRouter()
         }.inObjectScope(.transient)

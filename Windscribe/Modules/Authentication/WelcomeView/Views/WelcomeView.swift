@@ -14,9 +14,9 @@ struct WelcomeView: View {
     @Environment(\.dynamicTypeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: WelcomeViewModelImpl
-    @StateObject private var router: LoginNavigationRouter
+    @StateObject private var router: AuthenticationNavigationRouter
 
-    init(viewModel: any WelcomeViewModel, router: LoginNavigationRouter) {
+    init(viewModel: any WelcomeViewModel, router: AuthenticationNavigationRouter) {
         guard let model = viewModel as? WelcomeViewModelImpl else {
             fatalError("WelcomeView must be initialized properly")
         }
@@ -38,8 +38,7 @@ struct WelcomeView: View {
                     }
                 }
                 .onReceive(viewModel.routeToMainView) { _ in
-                    viewModel.navigateToMain()
-                }
+                    router.routeToMainView()                }
                 .fullScreenCover(
                     isPresented: $router.shouldNavigateToEmergency,
                     content: {
@@ -241,7 +240,7 @@ extension WelcomeView {
 
                         // Navigation trigger (invisible)
                         NavigationLink(
-                            destination: router.createView(for: .signup),
+                            destination: router.createView(for: .signup(claimGhostAccount: false)),
                             isActive: $router.shouldNavigateToSignup
                         ) {
                             EmptyView()

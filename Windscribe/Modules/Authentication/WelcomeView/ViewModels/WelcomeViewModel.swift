@@ -61,7 +61,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private let userDataRepository: UserDataRepository
     private let apiManager: APIManager
     private let preferences: Preferences
-    private let router: WelcomeRouter
     private let vpnManager: VPNManager
     private let logger: FileLogger
 
@@ -72,7 +71,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
          preferences: Preferences,
-         router: WelcomeRouter,
          vpnManager: VPNManager,
          logger: FileLogger) {
         self.userRepository = userRepository
@@ -80,7 +78,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
         self.preferences = preferences
-        self.router = router
         self.vpnManager = vpnManager
         self.logger = logger
 
@@ -180,11 +177,5 @@ extension WelcomeViewModelImpl {
 
     func setPresentingController(_ controller: UIViewController) {
         self.presentingController = controller
-    }
-
-    func navigateToMain() {
-        guard let presentingController = presentingController else { return }
-
-        router.routeTo(to: RouteID.home, from: presentingController)
     }
 }

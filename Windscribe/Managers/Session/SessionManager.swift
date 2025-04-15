@@ -215,38 +215,46 @@ class SessionManager: SessionManagerV2 {
     }
 
     func logoutUser() {
-        Task { @MainActor in
-            if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
-                window.rootViewController?.dismiss(animated: false, completion: nil)
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate, let window = appDelegate.window {
+            window.rootViewController?.dismiss(animated: false, completion: nil)
 #if os(iOS)
-                let welcomeView = Assembler.resolve(WelcomeView.self)
+                let welcomeRootView = DeviceTypeProvider { Assembler.resolve(WelcomeView.self) }
+
                 DispatchQueue.main.async {
-                    UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                        window.rootViewController = UINavigationController(
-                            rootViewController: UIHostingController(rootView: welcomeView))
-                    }, completion: nil)
+                    UIView.transition(
+                        with: window,
+                        duration: 0.3,
+                        options: .transitionCrossDissolve,
+                        animations: {
+                            window.rootViewController = UIHostingController(rootView: welcomeRootView)
+                        },
+                        completion: nil)
                 }
 #elseif os(tvOS)
-                let firstViewController =  Assembler.resolve(WelcomeViewController.self)
-                DispatchQueue.main.async {
-                    UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-                        window.rootViewController = UINavigationController(rootViewController: firstViewController)
-                    }, completion: nil)
-                }
-#endif
+            let firstViewController =  Assembler.resolve(WelcomeViewController.self)
+            DispatchQueue.main.async {
+                UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                    window.rootViewController = UINavigationController(rootViewController: firstViewController)
+                }, completion: nil)
             }
-            NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
-            session = nil
-            wgCredentials.delete()
-            preferences.saveConnectionCount(count: 0)
-            Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
-            await vpnManager.resetProfiles()
-            localDatabase.clean()
-            preferences.clearFavourites()
-            preferences.saveUserSessionAuth(sessionAuth: nil)
-            preferences.clearSelectedLocations()
-            Assembler.container.resetObjectScope(.userScope)
+#endif
         }
+
+        NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
+        session = nil
+        wgCredentials.delete()
+        preferences.saveConnectionCount(count: 0)
+        Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
+
+        Task { @MainActor in
+            await vpnManager.resetProfiles()
+        }
+
+        localDatabase.clean()
+        preferences.clearFavourites()
+        preferences.saveUserSessionAuth(sessionAuth: nil)
+        preferences.clearSelectedLocations()
+        Assembler.container.resetObjectScope(.userScope)
     }
 
     func reloadRootViewController() {

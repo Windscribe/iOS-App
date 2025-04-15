@@ -54,8 +54,6 @@ enum RouteID {
     case privacyView(completionHandler: () -> Void)
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
-    case infoPrompt(title: String, actionValue: String,
-                    justDismissOnAction: Bool, delegate: InfoPromptViewDelegate?)
     case trustedNetwork
 
     // MARK: - Protocol View

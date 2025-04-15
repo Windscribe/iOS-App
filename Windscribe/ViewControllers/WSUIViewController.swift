@@ -63,10 +63,6 @@ class WSUIViewController: UIViewController {
 
     func changeNavigationBarStyle(isHidden: Bool) {
         navigationController?.isNavigationBarHidden = isHidden
-
-        if isHidden {
-            navigationController?.interactivePopGestureRecognizer?.delegate = nil
-        }
     }
 
     func showSplashView() {
