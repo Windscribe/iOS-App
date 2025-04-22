@@ -509,6 +509,7 @@ enum TextsAsset {
         static var port: String { "Port".localize() }
         static var appearance: String { "Appearance".localize() }
         static let protocols = ["WireGuard", "IKEv2", "UDP", "TCP", "Stealth", "WStunnel"]
+        static let openVpnProtocols = ["UDP", "TCP", "Stealth", "WStunnel"]
         static var version: String { "Version".localize() }
         static var auto: String { "Auto".localize() }
         static var manual: String { "Manual".localize() }
@@ -1110,13 +1111,17 @@ enum TextsAsset {
         return ["Light".localize(), "Dark".localize()]
     }
 
-    enum RemoveFavNode {
-        static var title: String {
+    enum Favorites {
+        static var removeTitle: String {
             return "Are you sure?".localize()
         }
 
-        static var message: String {
+        static var removeMessage: String {
             return "Removing this location from favourites will make it feel sad.".localize()
+        }
+
+        static var noFavorites: String {
+            return "No Favourites".localize()
         }
     }
 
@@ -1581,6 +1586,10 @@ enum TextsAsset {
 
     static var searchLocations: String {
         return "Search Locations".localize()
+    }
+
+    static var clearSearch: String {
+        return "Clear".localize()
     }
 
     enum EmailView {

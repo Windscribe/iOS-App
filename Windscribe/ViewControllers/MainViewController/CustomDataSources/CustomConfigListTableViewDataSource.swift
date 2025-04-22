@@ -42,9 +42,11 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource, UITableViewData
         if count == 0 {
             uiDelegate?.hideCustomConfigRefreshControl()
             showEmptyView(tableView: tableView)
+            tableView.tableHeaderView?.isHidden = true
         } else {
             uiDelegate?.showCustomConfigRefreshControl()
             tableView.backgroundView = nil
+            tableView.tableHeaderView?.isHidden = false
         }
         return count
     }
@@ -71,11 +73,20 @@ class CustomConfigListTableViewDataSource: WTableViewDataSource, UITableViewData
     }
 
     func showEmptyView(tableView: UITableView) {
-        let view = CustomConfigEmptyView(frame: tableView.bounds, isDarkMode: viewModel.isDarkMode)
-        view.addCustomConfigAction = { [weak self] in
+        let view = ListEmptyView(type: .customConfig,isDarkMode: viewModel.isDarkMode)
+        view.addAction = { [weak self] in
             self?.logicDelegate?.addCustomConfig()
         }
         tableView.backgroundView = view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // view
+            view.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            view.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
+            view.heightAnchor.constraint(equalTo: tableView.heightAnchor),
+            view.widthAnchor.constraint(equalTo: tableView.widthAnchor)
+        ])
+        view.updateLayout()
     }
 
     func tableView(_: UITableView, canEditRowAt _: IndexPath) -> Bool {

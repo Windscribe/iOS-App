@@ -25,16 +25,12 @@ class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
     var viewModel: MainViewModelType
     lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
     let disposeBag = DisposeBag()
-    var label: UILabel
+
     init(favNodes: [FavNodeModel]?, viewModel: MainViewModelType) {
-        label = UILabel()
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self
         self.favNodes = favNodes
-        languageManager.activelanguage.subscribe(onNext: { [self] _ in
-            label.text = TextsAsset.nothingToSeeHere
-        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -42,9 +38,11 @@ class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
         if count == 0 {
             delegate?.hideFavNodeRefreshControl()
             showEmptyView(tableView: tableView)
+            tableView.tableHeaderView?.isHidden = true
         } else {
             delegate?.showFavNodeRefreshControl()
             tableView.backgroundView = nil
+            tableView.tableHeaderView?.isHidden = false
         }
         return count
     }
@@ -75,21 +73,18 @@ class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
     }
 
     func showEmptyView(tableView: UITableView) {
-        let emptyView = UIView(frame: tableView.bounds)
-        let imageView = UIImageView(frame: CGRect(x: emptyView.frame.midX - 16, y: emptyView.frame.midY - 60, width: 32, height: 28))
-        imageView.image = UIImage(named: ImagesAsset.brokenHeart)
-        imageView.layer.opacity = 0.4
-        emptyView.addSubview(imageView)
-        label.frame = CGRect(x: 0, y: imageView.frame.maxY + 10, width: emptyView.frame.width, height: 32)
-        label.textAlignment = .center
-        label.font = UIFont.text(size: 19)
-        label.text = TextsAsset.nothingToSeeHere
-        let isDarkMode = (try? viewModel.isDarkMode.value()) ?? true
-        label.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        imageView.image = UIImage(named: isDarkMode ? ImagesAsset.DarkMode.brokenHeart : ImagesAsset.brokenHeart)
-        label.layer.opacity = 0.4
-        emptyView.addSubview(label)
-        tableView.backgroundView = emptyView
+        let view = ListEmptyView(type: .favNodes, isDarkMode: viewModel.isDarkMode)
+        tableView.backgroundView = view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // view
+            view.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            view.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
+            view.heightAnchor.constraint(equalTo: tableView.heightAnchor),
+            view.widthAnchor.constraint(equalTo: tableView.widthAnchor)
+        ])
+        view.updateLayout()
+        tableView.backgroundView = view
     }
 
     func handleRefresh() {

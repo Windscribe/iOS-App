@@ -30,6 +30,11 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
         displayingStaticIP?.staticIP ?? ""
     }
 
+    override var iconAspect: UIView.ContentMode { .scaleAspectFit }
+    override var iconImage: UIImage? {
+        UIImage(named: ImagesAsset.Servers.staticIP)?.withRenderingMode(.alwaysTemplate)
+    }
+
     override var actionImage: UIImage? {
         nil
     }
@@ -48,5 +53,13 @@ class StaticIPTableViewCell: BaseNodeCell {
         didSet {
             baseNodeCellViewModel = staticIPCellViewModel
         }
+    }
+
+    override func updateUI() {
+        super.updateUI()
+        nameInfoStackView.axis = .vertical
+        nameInfoStackView.spacing = 0
+        healthCircle.health = -1
+        locationLoadImage.isHidden = true
     }
 }

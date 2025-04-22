@@ -50,8 +50,9 @@ extension MainViewController {
             forCellReuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
         scrollView.addSubview(serverListTableView)
 
-        // Set table header
-        serverListTableView.tableHeaderView = Assembler.container.resolve(ServerInfoView.self)!
+        // Set table headers
+        serverHeaderView = Assembler.container.resolve(ServerInfoView.self)!
+        serverListTableView.tableHeaderView = serverHeaderView
 
         favTableView = PlainTableView()
         favTableView.tag = 1
@@ -63,6 +64,7 @@ extension MainViewController {
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         favTableViewRefreshControl.backView = RefreshControlViewBack(frame: favTableViewRefreshControl.bounds)
+        favTableView.tableHeaderView = ListHeaderView(type: .favNodes, isDarkMode: viewModel.isDarkMode)
 
         staticIpTableView = PlainTableView()
         staticIpTableView.tag = 3
@@ -79,6 +81,7 @@ extension MainViewController {
         staticIpTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         staticIpTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         staticIpTableViewRefreshControl.backView = RefreshControlViewBack(frame: staticIpTableViewRefreshControl.bounds)
+        staticIpTableView.tableHeaderView = ListHeaderView(type: .staticIP, isDarkMode: viewModel.isDarkMode)
 
         customConfigTableView = PlainTableView()
         customConfigTableView.tag = 4
@@ -95,6 +98,7 @@ extension MainViewController {
         customConfigsTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         customConfigsTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         customConfigsTableViewRefreshControl.backView = RefreshControlViewBack(frame: customConfigsTableViewRefreshControl.bounds)
+        customConfigTableView.tableHeaderView = ListHeaderView(type: .customConfig, isDarkMode: viewModel.isDarkMode)
 
         addRefreshControls()
 
@@ -212,7 +216,7 @@ extension MainViewController {
         getMoreDataView.isHidden = hide
         getMoreDataLabel.isHidden = hide
         getMoreDataButton.isHidden = hide
-        staticIPTableViewFooterView.isHidden = !hide
+        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? false) || !hide
         customConfigTableViewFooterView.isHidden = !hide
         if customConfigListTableViewDataSource?.customConfigs?.count == 0 {
             customConfigTableViewFooterView.isHidden = true

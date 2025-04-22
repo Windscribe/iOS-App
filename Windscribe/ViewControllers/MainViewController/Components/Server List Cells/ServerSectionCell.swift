@@ -27,6 +27,8 @@ class ServerSectionCellModel: ServerSectionCellModelType {
         displayingServer?.name ?? ""
     }
 
+    var clipIcon: Bool { true }
+    var iconAspect: UIView.ContentMode { .scaleAspectFill }
     var iconImage: UIImage? {
         guard let countryCode = displayingServer?.countryCode else { return nil }
         return UIImage(named: "\(countryCode)-s")

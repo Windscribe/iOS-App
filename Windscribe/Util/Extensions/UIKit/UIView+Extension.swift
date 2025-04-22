@@ -30,6 +30,10 @@ extension UIView {
         }
     }
 
+    func makeAllRoundCorners(radius: CGFloat) {
+        makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight, .bottomLeft], radius: radius)
+    }
+
     func makeRoundCorners(corners: UIRectCorner, radius: CGFloat) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }

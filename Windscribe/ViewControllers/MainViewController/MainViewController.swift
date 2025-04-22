@@ -34,6 +34,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var staticIPTableViewFooterView: StaticIPListFooterView!
     var customConfigTableViewFooterView: CustomConfigListFooterView!
 
+    var serverHeaderView: ServerInfoView!
+
     var listSelectionView: ListSelectionView!
     // search
     var searchLocationsView: SearchLocationsView!
@@ -103,7 +105,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var pushNotificationManager: PushNotificationManagerV2?
 
     // MARK: View Models
-
     var viewModel: MainViewModelType!
     var locationManagerViewModel: LocationManagingViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
@@ -115,7 +116,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var latencyViewModel: LatencyViewModel!
     var logger: FileLogger!
 
-    var headerBottomBorderViewBottomConstraint: NSLayoutConstraint!
+    // MARK: constraints
+    var listSelectionViewTopConstraint: NSLayoutConstraint!
+    var listSelectionViewBottomConstraint: NSLayoutConstraint!
 
     var displayingNetwork: WifiNetwork? {
         return try? viewModel.wifiNetwork.value() ?? WifiManager.shared.getConnectedNetwork()

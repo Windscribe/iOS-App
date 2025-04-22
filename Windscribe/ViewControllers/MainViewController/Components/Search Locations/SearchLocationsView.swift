@@ -14,7 +14,8 @@ class SearchLocationsView: UIView {
     var stackContainerView = UIStackView()
     var searchIcon = UIImageView()
     var searchTextfield = UITextField()
-    var clearSearchButton = ImageButton()
+    var clearSearchButton = UIButton()
+    var spacerView = UIView()
     var exitSearchButton = ImageButton()
 
     var viewModel: SearchLocationsViewModelType
@@ -41,21 +42,33 @@ class SearchLocationsView: UIView {
 
     private func addViews() {
         stackContainerView.axis = .horizontal
-        stackContainerView.spacing = 24
+        stackContainerView.spacing = 0
         addSubview(stackContainerView)
 
         searchTextfield.textColor = UIColor.white
         searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
                                                                    attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5)])
         searchIcon.image = UIImage(named: ImagesAsset.search)
-        clearSearchButton.setImage(UIImage(named: ImagesAsset.DarkMode.clear), for: .normal)
-        exitSearchButton.setImage(UIImage(named: ImagesAsset.exitSearchWhite), for: .normal)
+        searchIcon.contentMode = .scaleAspectFit
+        searchIcon.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
-        searchIcon.setImageColor(color: .white)
-        clearSearchButton.imageView?.setImageColor(color: .white)
-        exitSearchButton.imageView?.setImageColor(color: .white)
+        exitSearchButton.setImage(UIImage(named: ImagesAsset.exitSearch)?.withRenderingMode(.alwaysTemplate)
+                                  , for: .normal)
+        exitSearchButton.imageView?.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
-        clearSearchButton.imageView?.contentMode = .scaleAspectFit
+        var config = UIButton.Configuration.plain()
+        config.title = TextsAsset.clearSearch
+        config.baseForegroundColor = .actionGreenWithOpacity(opacity: 0.7)
+        config.titleAlignment = .center
+        config.titleTextAttributesTransformer =
+          UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.text(size: 16)
+            return outgoing
+          }
+
+        clearSearchButton.configuration = config
+
         searchTextfield.autocorrectionType = .no
         searchTextfield.autocapitalizationType = .none
         searchTextfield.textColor = UIColor.white
@@ -67,7 +80,7 @@ class SearchLocationsView: UIView {
         exitSearchButton.imageView?.contentMode = .scaleAspectFit
         exitSearchButton.layer.opacity = serverSectionOpacity
 
-        stackContainerView.addArrangedSubviews([searchIcon, searchTextfield, clearSearchButton, exitSearchButton])
+        stackContainerView.addArrangedSubviews([searchIcon, spacerView, searchTextfield, clearSearchButton, exitSearchButton])
     }
 
     private func addViewConstraints() {
@@ -76,24 +89,25 @@ class SearchLocationsView: UIView {
         searchTextfield.translatesAutoresizingMaskIntoConstraints = false
         clearSearchButton.translatesAutoresizingMaskIntoConstraints = false
         exitSearchButton.translatesAutoresizingMaskIntoConstraints = false
+        spacerView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // stackContainerView
             stackContainerView.centerYAnchor.constraint(equalTo: centerYAnchor),
             stackContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             stackContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
-            stackContainerView.heightAnchor.constraint(equalToConstant: 20),
+            stackContainerView.heightAnchor.constraint(equalToConstant: 24),
+
+            // spacerView
+            spacerView.widthAnchor.constraint(equalToConstant: 16),
 
             // searchIcon
             searchIcon.widthAnchor.constraint(equalToConstant: 20),
             searchIcon.heightAnchor.constraint(equalToConstant: 20),
 
-            // clearSearchButton
-            clearSearchButton.widthAnchor.constraint(equalToConstant: 16),
-            clearSearchButton.heightAnchor.constraint(equalToConstant: 16),
-
             // exitSearchButton
-            exitSearchButton.widthAnchor.constraint(equalToConstant: 20)
+            exitSearchButton.widthAnchor.constraint(equalToConstant: 24),
+            exitSearchButton.heightAnchor.constraint(equalToConstant: 24)
         ])
     }
 

@@ -16,6 +16,7 @@ protocol StaticIPListTableViewDelegate: AnyObject {
     func showStaticIPRefreshControl()
     func handleRefresh()
     func tableViewScrolled(toTop: Bool)
+    func addStaticIP()
 }
 
 class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
@@ -25,29 +26,32 @@ class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
     var viewModel: MainViewModelType
     let disposeBag = DisposeBag()
     lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
-    var label: UILabel?
 
     init(staticIPs: [StaticIPModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
         super.init()
-        label = UILabel()
         scrollViewDelegate = self
         self.staticIPs = staticIPs
-        languageManager.activelanguage.subscribe(onNext: { [self] _ in
-            label?.text = TextsAsset.noStaticIPs
-        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
         guard let count = staticIPs?.count else { return 0 }
         if count == 0 {
             delegate?.hideStaticIPRefreshControl()
-            showEmptyView(tableView: tableView)
+            tableView.backgroundView?.isHidden = false
+            tableView.tableFooterView?.isHidden = true
+            tableView.tableHeaderView?.isHidden = true
         } else {
             delegate?.showStaticIPRefreshControl()
-            tableView.backgroundView = nil
+            tableView.backgroundView?.isHidden = true
+            tableView.tableFooterView?.isHidden = false
+            tableView.tableHeaderView?.isHidden = false
         }
         return count
+    }
+
+    func shouldHideFooter() -> Bool {
+        (staticIPs?.count ?? 0) == 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,19 +75,21 @@ class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
         delegate?.setSelectedStaticIP(staticIP: staticIP)
     }
 
-    func showEmptyView(tableView: UITableView) {
-        let emptyView = UIView(frame: tableView.bounds)
-        label = UILabel(frame: CGRect(x: 0, y: emptyView.frame.midY - 42, width: emptyView.frame.width, height: 32))
-        label?.textAlignment = .center
-        label?.font = UIFont.text(size: 19)
-        label?.text = TextsAsset.noStaticIPs
-        let isDarkMode = (try? viewModel.isDarkMode.value()) ?? true
-        label?.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
-        label?.layer.opacity = 0.4
-        if let label = label {
-            emptyView.addSubview(label)
+    func makeEmptyView(tableView: UITableView) {
+        let view = ListEmptyView(type: .staticIP,isDarkMode: viewModel.isDarkMode)
+        view.addAction = { [weak self] in
+            self?.delegate?.addStaticIP()
         }
-        tableView.backgroundView = emptyView
+        tableView.backgroundView = view
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            // view
+            view.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
+            view.centerYAnchor.constraint(equalTo: tableView.centerYAnchor),
+            view.heightAnchor.constraint(equalTo: tableView.heightAnchor),
+            view.widthAnchor.constraint(equalTo: tableView.widthAnchor)
+        ])
+        view.updateLayout()
     }
 
     func handleRefresh() {

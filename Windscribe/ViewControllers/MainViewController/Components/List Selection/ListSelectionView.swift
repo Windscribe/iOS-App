@@ -27,6 +27,7 @@ private class ButtonImageView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         button.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: imageName)
+        imageView.contentMode = .scaleAspectFill
 
         NSLayoutConstraint.activate([
             button.widthAnchor.constraint(equalTo: self.widthAnchor),
@@ -74,6 +75,10 @@ class ListSelectionView: UIView {
         super.init(frame: .zero)
     }
 
+    func setSearchHidden(_ isHidden: Bool) {
+        gradientView.backgroundColor = isHidden ? .clear : .nightBlue
+    }
+
     func loadView() {
         addViews()
         addViewConstraints()
@@ -101,6 +106,8 @@ class ListSelectionView: UIView {
     private func addViews() {
         stackContainerView.axis = .horizontal
         stackContainerView.spacing = 16
+
+        gradientView.backgroundColor = .clear
 
         addSubview(gradientView)
         addSubview(stackContainerView)

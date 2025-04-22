@@ -48,8 +48,8 @@ class FavNodeCellModel: BaseNodeCellViewModel {
                 self.localDB.removeFavNode(hostName: favNodeHostname)
             }
         }
-        AlertManager.shared.showAlert(title: TextsAsset.RemoveFavNode.title,
-                                      message: TextsAsset.RemoveFavNode.message,
+        AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
+                                      message: TextsAsset.Favorites.removeMessage,
                                       buttonText: TextsAsset.cancel, actions: [yesAction])
     }
 }
