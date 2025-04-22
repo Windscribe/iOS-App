@@ -106,6 +106,8 @@
 		1E2CBFEF2CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
 		1E2CBFF02CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
 		1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */; };
+		1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */; };
+		1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */; };
 		1E49334A2BF3A52500C853AF /* StaticIPListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */; };
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
@@ -1087,7 +1089,6 @@
 		E9D3D373274D29A500283285 /* MainViewController+LoadData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D3D372274D29A500283285 /* MainViewController+LoadData.swift */; };
 		E9DF548C274BD8FE00E9C672 /* MainViewController+UILayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF548B274BD8FE00E9C672 /* MainViewController+UILayout.swift */; };
 		E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */; };
-		E9F9EF0B27BC071E00E6C548 /* CustomConfigEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */; };
 		F40419372D822ECF0005EF97 /* AppReviewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419362D822ECF0005EF97 /* AppReviewManaging.swift */; };
 		F40419382D822ECF0005EF97 /* AppReviewManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419362D822ECF0005EF97 /* AppReviewManaging.swift */; };
 		F404193A2D822F0F0005EF97 /* HTMLParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419392D822F0F0005EF97 /* HTMLParsing.swift */; };
@@ -1382,6 +1383,8 @@
 		1E2CBFEB2CBFE1F000748D9F /* SiriIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = SiriIntents.intentdefinition; sourceTree = "<group>"; };
 		1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsManager.swift; sourceTree = "<group>"; };
 		1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+FavNodes.swift"; sourceTree = "<group>"; };
+		1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListEmptyView.swift; sourceTree = "<group>"; };
+		1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderView.swift; sourceTree = "<group>"; };
 		1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPListViewModel.swift; sourceTree = "<group>"; };
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
@@ -1974,7 +1977,6 @@
 		E9D3D372274D29A500283285 /* MainViewController+LoadData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+LoadData.swift"; sourceTree = "<group>"; };
 		E9DF548B274BD8FE00E9C672 /* MainViewController+UILayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+UILayout.swift"; sourceTree = "<group>"; };
 		E9E5F346273C14F600226BED /* VPNManager+ConnectionStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VPNManager+ConnectionStatus.swift"; sourceTree = "<group>"; };
-		E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigEmptyView.swift; sourceTree = "<group>"; };
 		F40419362D822ECF0005EF97 /* AppReviewManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManaging.swift; sourceTree = "<group>"; };
 		F40419392D822F0F0005EF97 /* HTMLParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParsing.swift; sourceTree = "<group>"; };
 		F404193C2D822F1A0005EF97 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
@@ -2459,6 +2461,23 @@
 			path = "Protocol Switch";
 			sourceTree = "<group>";
 		};
+		1E3F775B2DAFFC2C008308A8 /* Empty Views */ = {
+			isa = PBXGroup;
+			children = (
+				1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */,
+			);
+			path = "Empty Views";
+			sourceTree = "<group>";
+		};
+		1E3F775E2DB007A8008308A8 /* Lists Header Views */ = {
+			isa = PBXGroup;
+			children = (
+				1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */,
+				1E5553D12D96E6EA00F16AF0 /* ServerInfoView.swift */,
+			);
+			path = "Lists Header Views";
+			sourceTree = "<group>";
+		};
 		1E4933482BF3A50700C853AF /* Static IP List */ = {
 			isa = PBXGroup;
 			children = (
@@ -2513,9 +2532,9 @@
 		1E5553BA2D8D880600F16AF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1E3F775E2DB007A8008308A8 /* Lists Header Views */,
 				1EC6C77C2BE10DB00036248B /* Search Locations */,
 				1E5553A62D830EC700F16AF0 /* Server List Cells */,
-				1E5553D12D96E6EA00F16AF0 /* ServerInfoView.swift */,
 				1E5553C82D95C90000F16AF0 /* IP View */,
 				1E5553C42D946BCD00F16AF0 /* Connect Button */,
 				1E5553C12D93114500F16AF0 /* Custom Flags */,
@@ -3275,6 +3294,7 @@
 		AF0AED392203583F00039CAF /* CustomDataSources */ = {
 			isa = PBXGroup;
 			children = (
+				1E3F775B2DAFFC2C008308A8 /* Empty Views */,
 				AF0AED372203548F00039CAF /* ServerListTableViewDataSource+Delegate.swift */,
 				AF0AED3E22035E9700039CAF /* FavNodesListTableViewDataSource+Delegate.swift */,
 				AF0AED402203614900039CAF /* StaticIPListTableViewDataSource+Delegate.swift */,
@@ -3488,7 +3508,6 @@
 				AFF51A0825ACA15D00220F74 /* TextView.swift */,
 				C524AA5726B0A06300FCB1B6 /* DynamicSizeTableView.swift */,
 				C51704BE27694B4000556040 /* ServerHealthView.swift */,
-				E9F9EF0A27BC071E00E6C548 /* CustomConfigEmptyView.swift */,
 				E9219FF22885BD4D0026E544 /* WSFillLayoutView.swift */,
 				E94E34F828B3E2B100E76D14 /* WSTouchView.swift */,
 				E97ABD5828E60A9500B38587 /* WSButton.swift */,
@@ -5549,7 +5568,6 @@
 				F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */,
 				AF16CA202228488700997A2A /* IAPInfoSectionCell.swift in Sources */,
 				C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */,
-				E9F9EF0B27BC071E00E6C548 /* CustomConfigEmptyView.swift in Sources */,
 				E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */,
 				F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */,
 				59EB6D1B2B3286E600616414 /* PreferencesMainViewController.swift in Sources */,
@@ -5622,6 +5640,7 @@
 				1A59057F283E176E00A79B99 /* ConnectionModeView.swift in Sources */,
 				C5A930CD2B4332AA0001CFA0 /* User.swift in Sources */,
 				AFF410D8234F473D0089F1D1 /* SetPreferredProtocolPopupViewController.swift in Sources */,
+				1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */,
 				C5A930E92B44A1580001CFA0 /* FileDatabaseImpl.swift in Sources */,
 				F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */,
 				F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */,
@@ -5754,6 +5773,7 @@
 				E97ABD4828D081BA00B38587 /* CheckView.swift in Sources */,
 				C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */,
 				1AE6D2BB2837E44E00276C7D /* AccountViewController.swift in Sources */,
+				1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */,
 				AF7F3082237609890097C6D6 /* ShakeForDataViewController.swift in Sources */,
 				C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */,
 				F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */,

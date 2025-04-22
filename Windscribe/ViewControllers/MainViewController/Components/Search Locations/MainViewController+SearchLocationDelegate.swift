@@ -77,6 +77,11 @@ extension MainViewController: SearchCountryViewDelegate {
                         self.serverListTableView.collapse(index)
                     }
                 }
+                if text.isEmpty {
+                    self.serverHeaderView.updadeWithSearchResult(searchCount: -1)
+                } else {
+                    self.serverHeaderView.updadeWithSearchResult(searchCount: resultServerSections.count)
+                }
             }
         }
     }
@@ -169,8 +174,16 @@ extension MainViewController: SearchCountryViewDelegate {
         toggleSearchViews(to: true)
         serverListTableViewDataSource?.bestLocation = nil
         DispatchQueue.main.async { [weak self] in
-            self?.expandedSections = self?.serverListTableView.expandedSections
-            self?.serverListTableView.collapseExpandedSections()
+            guard let self = self else { return }
+            self.expandedSections = self.serverListTableView.expandedSections
+            self.serverListTableView.collapseExpandedSections()
+
+            self.listSelectionViewTopConstraint.isActive = true
+            self.listSelectionViewBottomConstraint.isActive = false
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+                self.listSelectionView.setSearchHidden(false)
+            }
         }
     }
 
@@ -180,7 +193,15 @@ extension MainViewController: SearchCountryViewDelegate {
         }
         toggleSearchViews(to: false)
         DispatchQueue.main.async { [weak self] in
-            self?.reloadServerListOrder()
+            guard let self = self else { return }
+            self.reloadServerListOrder()
+
+            self.listSelectionViewTopConstraint.isActive = false
+            self.listSelectionViewBottomConstraint.isActive = true
+            UIView.animate(withDuration: 0.3) {
+                self.view.layoutIfNeeded()
+                self.listSelectionView.setSearchHidden(true)
+            }
         }
     }
 }

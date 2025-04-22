@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "custom-config-ovpn.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

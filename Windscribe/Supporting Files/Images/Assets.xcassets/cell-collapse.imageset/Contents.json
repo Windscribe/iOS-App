@@ -1,15 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "cell-collapse.svg",
+      "filename" : "cell-collapse.pdf",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }

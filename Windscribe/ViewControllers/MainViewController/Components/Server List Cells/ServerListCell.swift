@@ -14,6 +14,8 @@ import UIKit
 protocol ServerCellModelType {
     var name: String { get }
     var iconImage: UIImage? { get }
+    var iconAspect: UIView.ContentMode { get }
+    var clipIcon: Bool { get }
     var actionImage: UIImage? { get }
     var iconSize: CGFloat { get }
     var actionSize: CGFloat { get }
@@ -43,7 +45,9 @@ class HealthCircleView: UIView {
 
     func getColorFromHealth() -> UIColor {
         guard let health = health else { return .red }
-        if health < 60 {
+        if health < 0 {
+            return .clear
+        } else if health < 60 {
             return .green
         } else if health < 89 {
             return .yellow
@@ -58,6 +62,7 @@ class ServerListCell: SwipeTableViewCell {
     var locationLoadImage = UIImageView()
     var actionImage = UIImageView()
     var nameLabel = UILabel()
+    var nameInfoStackView = UIStackView()
     var healthCircle = HealthCircleView()
     var tableViewTag: Int = 0
 
@@ -77,11 +82,14 @@ class ServerListCell: SwipeTableViewCell {
         nameLabel.font = UIFont.bold(size: 14)
         nameLabel.textColor = UIColor.nightBlue
 
+        nameInfoStackView.addArrangedSubview(nameLabel)
+        nameInfoStackView.spacing = 5
+
         contentView.addSubview(icon)
         contentView.addSubview(locationLoadImage)
         contentView.addSubview(healthCircle)
         contentView.addSubview(actionImage)
-        contentView.addSubview(nameLabel)
+        contentView.addSubview(nameInfoStackView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -95,13 +103,14 @@ class ServerListCell: SwipeTableViewCell {
 
     func updateLayout() {
         guard let viewModel = viewModel else { return }
-        icon.clipsToBounds = true
+        icon.clipsToBounds = viewModel.clipIcon
         icon.layer.cornerRadius = viewModel.iconSize / 2.0
+        icon.contentMode = viewModel.iconAspect
 
         icon.translatesAutoresizingMaskIntoConstraints = false
         locationLoadImage.translatesAutoresizingMaskIntoConstraints = false
         actionImage.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         healthCircle.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
@@ -123,9 +132,9 @@ class ServerListCell: SwipeTableViewCell {
             healthCircle.heightAnchor.constraint(equalTo: locationLoadImage.heightAnchor),
             healthCircle.widthAnchor.constraint(equalTo: locationLoadImage.widthAnchor),
 
-            // nameLabel
-            nameLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
-            nameLabel.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 16),
+            // nameInfoStackView
+            nameInfoStackView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            nameInfoStackView.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 16),
 
             // actionImage
             actionImage.centerYAnchor.constraint(equalTo: icon.centerYAnchor),

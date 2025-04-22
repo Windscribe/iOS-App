@@ -19,6 +19,7 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
     var updateUISubject: PublishSubject<Void> { get }
     var groupId: String { get }
     var isActionVisible: Bool { get }
+    var isSignalVisible: Bool { get }
 
     func favoriteSelected()
     func setPressed(_ isPressed: Bool)
@@ -41,33 +42,29 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var nickName: String { "" }
 
-    var iconImage: UIImage? = UIImage(named: ImagesAsset.cityImage)?.withRenderingMode(.alwaysTemplate)
+    var clipIcon: Bool { true }
+    var iconAspect: UIView.ContentMode { .scaleToFill }
+    var iconImage: UIImage? {
+        UIImage(named: ImagesAsset.cityImage)?.withRenderingMode(.alwaysTemplate)
+    }
 
     var actionImage: UIImage? {
         UIImage(named: isFavourited ? ImagesAsset.favFull : ImagesAsset.favEmpty)
     }
 
-    var iconSize: CGFloat = 24.0
+    var iconSize: CGFloat { 24.0 }
 
-    var actionSize: CGFloat {
-        20.0
-    }
+    var actionSize: CGFloat { 20.0 }
 
-    var actionRightOffset: CGFloat {
-        24.0
-    }
+    var actionRightOffset: CGFloat { 24.0 }
 
     var actionOpacity: Float {
-        (isFavourited || isPressed) ? 1.0 : 0.4
+        isPressed ? 1.0 : 0.4
     }
 
-    var nameOpacity: Float {
-        1.0
-    }
+    var nameOpacity: Float { 1.0 }
 
-    var serverHealth: CGFloat {
-        0.0
-    }
+    var serverHealth: CGFloat { 0.0 }
 
     var signalImage: UIImage? {
         switch getSignalLevel(minTime: minTime) {
@@ -82,9 +79,9 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
         }
     }
 
-    var isActionVisible: Bool {
-       true
-    }
+    var isActionVisible: Bool { true }
+
+    var isSignalVisible: Bool { true }
 
     var latencyValue: String {
         minTime > 0 ? "  \(minTime.description)  " : "  --  "
@@ -142,12 +139,10 @@ class BaseNodeCell: ServerListCell {
         favButton.layer.opacity = 0.4
         contentView.addSubview(favButton)
 
-        nameLabel.layer.opacity = 0.4
-
         nickNameLabel.font = UIFont.text(size: 14)
-        nickNameLabel.layer.opacity = 0.4
+        nickNameLabel.layer.opacity = 1
         nickNameLabel.textColor = UIColor.nightBlue
-        contentView.addSubview(nickNameLabel)
+        nameInfoStackView.addArrangedSubview(nickNameLabel)
 
         latencyLabel.font = UIFont.bold(size: 9)
         latencyLabel.layer.opacity = 0.8
@@ -202,7 +197,6 @@ class BaseNodeCell: ServerListCell {
         super.updateLayout()
 
         favButton.translatesAutoresizingMaskIntoConstraints = false
-        nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
         latencyLabel.translatesAutoresizingMaskIntoConstraints = false
         signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
 
@@ -213,16 +207,12 @@ class BaseNodeCell: ServerListCell {
             favButton.heightAnchor.constraint(equalTo: actionImage.heightAnchor, constant: 8),
             favButton.widthAnchor.constraint(equalTo: actionImage.widthAnchor, constant: 8),
 
-            // nickNameLabel
-            nickNameLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
-            nickNameLabel.leftAnchor.constraint(equalTo: nameLabel.rightAnchor, constant: 5),
-
             // latencyLabel
-            latencyLabel.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor, constant: 6),
+            latencyLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 6),
             latencyLabel.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
 
             // latencyLabel
-            signalBarsIcon.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor, constant: -4),
+            signalBarsIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: -4),
             signalBarsIcon.centerXAnchor.constraint(equalTo: latencyLabel.centerXAnchor),
             signalBarsIcon.heightAnchor.constraint(equalToConstant: 10),
             signalBarsIcon.widthAnchor.constraint(equalToConstant: 11)
@@ -237,6 +227,9 @@ class BaseNodeCell: ServerListCell {
         latencyLabel.text = baseNodeCellViewModel?.latencyValue
         signalBarsIcon.image = baseNodeCellViewModel?.signalImage
         nickNameLabel.text = baseNodeCellViewModel?.nickName
+
+        latencyLabel.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
+        signalBarsIcon.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
         super.updateUI()
     }
 

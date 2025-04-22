@@ -115,6 +115,7 @@ class WifiInfoView: UIView {
 
     func updateNetwork(network: WifiNetwork?) {
         self.network = network
+        trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)
         updateActionVivibility()
     }
 

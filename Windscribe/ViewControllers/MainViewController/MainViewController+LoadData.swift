@@ -82,6 +82,7 @@ extension MainViewController {
                 }
                 self.staticIPListTableViewDataSource = StaticIPListTableViewDataSource(staticIPs: staticIPModels, viewModel: self.viewModel)
                 self.staticIPListTableViewDataSource?.delegate = self
+                self.staticIPListTableViewDataSource?.makeEmptyView(tableView: self.staticIpTableView)
                 self.staticIpTableView.dataSource = self.staticIPListTableViewDataSource
                 self.staticIpTableView.delegate = self.staticIPListTableViewDataSource
                 self.staticIpTableView.reloadData()

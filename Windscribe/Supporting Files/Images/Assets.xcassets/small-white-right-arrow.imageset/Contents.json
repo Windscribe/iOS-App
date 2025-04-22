@@ -1,15 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "small-white-right-arrow.svg",
+      "filename" : "ARROWRIGHT SMALL.pdf",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "template"
   }
 }

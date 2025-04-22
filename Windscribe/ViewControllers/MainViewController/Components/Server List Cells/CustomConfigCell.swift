@@ -31,16 +31,37 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
         ""
     }
 
+    override var clipIcon: Bool { false }
+    override var iconAspect: UIView.ContentMode { .scaleAspectFit }
+
+    override var iconImage: UIImage? {
+        if displayingCustomConfig?.protocolType == TextsAsset.wireGuard {
+            return UIImage(named: ImagesAsset.customConfigWG)?.withRenderingMode(.alwaysTemplate)
+        } else if TextsAsset.General.openVpnProtocols.contains(displayingCustomConfig?.protocolType ?? "") {
+            return UIImage(named: ImagesAsset.customConfigOVPN)?.withRenderingMode(.alwaysTemplate)
+        }
+        return UIImage(named: ImagesAsset.Servers.config)?.withRenderingMode(.alwaysTemplate)
+    }
+
     override var actionImage: UIImage? {
-        nil
+        if areMissingCredentials {
+            return UIImage(named: ImagesAsset.missingCredentials)?.withRenderingMode(.alwaysTemplate)
+        }
+        return nil
     }
 
     override var actionSize: CGFloat {
-        0.0
+        areMissingCredentials ? 20.0 : 0.0
     }
 
     override var actionRightOffset: CGFloat {
-        0.0
+        areMissingCredentials ? 24.0 : 0.0
+    }
+
+    override var isSignalVisible: Bool { !areMissingCredentials }
+
+    private var areMissingCredentials: Bool {
+        ((displayingCustomConfig?.username ?? "").isEmpty || (displayingCustomConfig?.password ?? "").isEmpty) && (displayingCustomConfig?.authRequired ?? false)
     }
 }
 

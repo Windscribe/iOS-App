@@ -30,6 +30,11 @@ extension UIColor {
     static func seaGreen(opacity: CGFloat) -> UIColor {
         return UIColor(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0, alpha: opacity)
     }
+    static let actionGreen = UIColor(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0, alpha: 1.0)
+
+    static func actionGreenWithOpacity(opacity: CGFloat) -> UIColor {
+        return UIColor(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0, alpha: opacity)
+    }
 
     static let lowGreen = UIColor(red: 160 / 255.0, green: 254 / 255.0, blue: 218 / 255.0, alpha: 1.0)
     static let brightBlue = UIColor(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0, alpha: 1.0)

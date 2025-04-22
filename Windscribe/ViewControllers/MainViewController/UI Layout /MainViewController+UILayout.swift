@@ -32,6 +32,9 @@ extension MainViewController {
         ipInfoView.translatesAutoresizingMaskIntoConstraints = false
 
         let isSmaller = UIDevice.current.isIphone5orLess()
+
+        listSelectionViewTopConstraint = listSelectionView.topAnchor.constraint(equalTo: flagBackgroundView.topAnchor, constant: flagBackgroundView.topViewHeight + 16)
+        listSelectionViewBottomConstraint = listSelectionView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor)
         NSLayoutConstraint.activate([
             // flagBackgroundView
             flagBackgroundView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -57,7 +60,7 @@ extension MainViewController {
             notificationDot.widthAnchor.constraint(equalToConstant: 14),
 
             // listSelectionView
-            listSelectionView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor),
+            listSelectionViewBottomConstraint,
             listSelectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             listSelectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             listSelectionView.heightAnchor.constraint(equalToConstant: 54),

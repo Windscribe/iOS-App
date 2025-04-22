@@ -14,21 +14,11 @@ extension MainViewController {
             serverRefreshControl.backView.label.backgroundColor = .clear
         }
 
-        let mainColor: UIColor = isDarkMode ? .white : .midnight
-        let textcolor: UIColor = isDarkMode ? .darkBlack : .midnight
-        staticIPTableViewFooterView.backgroundColor = isDarkMode ? .seperatorGray : .seperatorWhite
-        staticIPTableViewFooterView.actionButton.setTitleColor(textcolor, for: .normal)
-        staticIPTableViewFooterView.label.textColor = mainColor
-        staticIPTableViewFooterView.deviceNameLabel.textColor = mainColor
-        staticIPTableViewFooterView.iconView.setImageColor(color: mainColor)
-        customConfigTableViewFooterView.backgroundColor = isDarkMode ? .seperatorGray : .seperatorWhite
-        customConfigTableViewFooterView.actionButton.setTitleColor(textcolor, for: .normal)
-        customConfigTableViewFooterView.label.textColor =  mainColor
-        customConfigTableViewFooterView.iconView.setImageColor(color: mainColor)
-        favTableView.backgroundColor = isDarkMode ? .nightBlue : .white
-        staticIpTableView.backgroundColor = isDarkMode ? .nightBlue : .white
-        customConfigTableView.backgroundColor = isDarkMode ? .nightBlue : .white
-        serverListTableView.backgroundColor = isDarkMode ? .nightBlue : .white
+        let backgroundColor: UIColor =  isDarkMode ? .nightBlue : .white
+        favTableView.backgroundColor = backgroundColor
+        staticIpTableView.backgroundColor = backgroundColor
+        customConfigTableView.backgroundColor = backgroundColor
+        serverListTableView.backgroundColor = backgroundColor
         reloadTableViews()
     }
 }
