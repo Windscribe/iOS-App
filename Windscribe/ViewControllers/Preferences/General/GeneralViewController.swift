@@ -33,20 +33,6 @@ class GeneralViewController: WSNavigationViewController {
         return view
     }()
 
-    private lazy var appearanceRow: SelectableView = {
-        let view = SelectableView(
-            header: GeneralHelper.getTitle(.appearance),
-            currentOption: viewModel.getCurrentApperance(),
-            listOption: TextsAsset.appearances,
-            icon: GeneralHelper.getAsset(.appearance),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: GeneralHelper.getDescription(.appearance),
-            delegate: self
-        )
-        view.hideShowExplainIcon()
-        return view
-    }()
-
     private lazy var languageRow: SelectableView = {
         let view = SelectableView(
             type: .direction,
@@ -61,21 +47,6 @@ class GeneralViewController: WSNavigationViewController {
         view.hideShowExplainIcon()
         return view
     }()
-
-//    private lazy var backgroundRow: SelectableView = {
-//        let view = SelectableView(
-//            type: .direction,
-//            header: GeneralHelper.getTitle(.customBackground),
-//            currentOption: TextsAsset.General.openSettings,
-//            listOption: [],
-//            icon: GeneralHelper.getAsset(.customBackground),
-//            isDarkMode: viewModel.isDarkMode,
-//            subTitle: GeneralHelper.getDescription(.customBackground),
-//            delegate: self
-//        )
-//        view.hideShowExplainIcon()
-//        return view
-//    }()
 
     private lazy var notificationRow: SelectableView = {
         let view = SelectableView(
@@ -93,8 +64,6 @@ class GeneralViewController: WSNavigationViewController {
     }()
 
     private lazy var hapticFeedbackRow = makeRatioView(type: .hapticFeeback)
-
-    private lazy var backgroundRow = makeRatioView(type: .customBackground)
 
     private lazy var versionLabel: UILabel = {
         let lbl = UILabel()
@@ -176,8 +145,6 @@ class GeneralViewController: WSNavigationViewController {
             layoutView.stackView.addArrangedSubviews([
                 locationOrderRow,
                 languageRow,
-                appearanceRow,
-                backgroundRow,
                 notificationRow,
                 versionRow
             ])
@@ -185,9 +152,6 @@ class GeneralViewController: WSNavigationViewController {
             layoutView.stackView.addArrangedSubviews([
                 locationOrderRow,
                 languageRow,
-                appearanceRow,
-                backgroundRow,
-                hapticFeedbackRow,
                 notificationRow,
                 versionRow
             ])
@@ -209,13 +173,6 @@ class GeneralViewController: WSNavigationViewController {
             view.subTitleLabel.text = GeneralHelper.getDescription(.hapticFeedback)
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateHapticFeedback()
-            }
-        case .customBackground:
-            view.switchButton.setStatus(viewModel.getHasCustomBackground())
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.customBackground)))
-            view.subTitleLabel.text = GeneralHelper.getDescription(.customBackground)
-            view.connectionSecureViewSwitchAcction = { [weak self] in
-                self?.viewModel.toggleHasCustomBackground()
             }
         default:
             break
@@ -253,23 +210,19 @@ class GeneralViewController: WSNavigationViewController {
         titleLabel.text = TextsAsset.General.title
         locationOrderRow.updateStringData(title: GeneralHelper.getTitle(.locationOrder), optionTitle: viewModel.getCurrentLocationOrder(), listOption: TextsAsset.orderPreferences, subTitle: GeneralHelper.getDescription(.locationOrder))
         languageRow.updateStringData(title: GeneralHelper.getTitle(.language), optionTitle: viewModel.getCurrentLanguage(), listOption: TextsAsset.General.languages, subTitle: GeneralHelper.getDescription(.language))
-        appearanceRow.updateStringData(title: GeneralHelper.getTitle(.appearance), optionTitle: viewModel.getCurrentApperance(), listOption: TextsAsset.appearances, subTitle: GeneralHelper.getDescription(.appearance))
-        backgroundRow.udpateStringData(title: GeneralHelper.getTitle(.customBackground), subTitle: GeneralHelper.getDescription(.customBackground))
         notificationRow.updateStringData(title: GeneralHelper.getTitle(.notification), optionTitle: TextsAsset.General.openSettings, listOption: [], subTitle: GeneralHelper.getDescription(.notification))
         versionLabel.text = TextsAsset.General.version
-        hapticFeedbackRow.udpateStringData(title: GeneralHelper.getTitle(.hapticFeedback), subTitle: GeneralHelper.getDescription(.hapticFeedback))
+        hapticFeedbackRow.updateStringData(title: GeneralHelper.getTitle(.hapticFeedback), subTitle: GeneralHelper.getDescription(.hapticFeedback))
     }
 }
 
-// MARK: - extensions
+// MARK: Extensions
 
 extension GeneralViewController: SelectableViewDelegate {
     func selectableViewSelect(_ sender: SelectableView, option: String) {
         switch sender {
         case locationOrderRow:
             viewModel.didSelectedLocationOrder(value: option)
-        case appearanceRow:
-            viewModel.didSelectedAppearance(value: option)
         default:
             break
         }

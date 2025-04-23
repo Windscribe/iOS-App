@@ -38,14 +38,6 @@ class SharedSecretDefaults: Preferences {
         setString(typeKey, forKey: SharedKeys.serverCredentialsTypeKey)
     }
 
-    func migrate() {
-        let sessionAuth = standardDefault.string(forKey: SharedKeys.activeUserSessionAuth)
-        setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
-
-        let privacyPopupAccepted = standardDefault.bool(forKey: SharedKeys.privacyPopupAccepted)
-        setBool(privacyPopupAccepted, forKey: SharedKeys.privacyPopupAccepted)
-    }
-
     func setLanguageManagerSelectedLanguage(language: Languages) {
         setString(language.name, forKey: SharedKeys.languageManagerSelectedLanguage)
     }
@@ -311,6 +303,14 @@ class SharedSecretDefaults: Preferences {
         sharedDefault?.rx.observe(String.self, SharedKeys.orderLocationsBy) ?? Observable.just(DefaultValues.orderLocationsBy)
     }
 
+    func saveAppSkinPreferences(type: String) {
+        setString(type, forKey: SharedKeys.appSkinType)
+    }
+
+    func getAppSkinPreferences() -> RxSwift.Observable<String?> {
+        sharedDefault?.rx.observe(String.self, SharedKeys.appSkinType) ?? Observable.just(DefaultValues.appSkin)
+    }
+
     func saveAppearance(appearance: String) {
         setString(appearance, forKey: SharedKeys.appearance)
     }
@@ -538,25 +538,63 @@ class SharedSecretDefaults: Preferences {
         return nil
     }
 
+    // Aspect Ratio
+    func saveAspectRatio(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.aspectRatio)
+    }
+
+    func getAspectRatio() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.aspectRatio)
+    }
+
+    // Sounds
+    func saveSoundEffectConnect(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.connectSoundEffect)
+    }
+
+    func getSoundEffectConnect() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.connectSoundEffect)
+    }
+
+    func saveSoundEffectDisconnect(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.disconnectSoundEffect)
+    }
+
+    func getSoundEffectDisconnect() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.disconnectSoundEffect)
+    }
+
+    func saveCustomSoundEffectPathConnect(_ path: String) {
+        sharedDefault?.set(path, forKey: SharedKeys.customSoundEffectPathConnect)
+    }
+
+    func saveCustomSoundEffectPathDisconnect(_ path: String) {
+        sharedDefault?.set(path, forKey: SharedKeys.customSoundEffectPathDisconnect)
+    }
+
+    func getCustomSoundEffectPathConnect() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.customSoundEffectPathConnect)
+    }
+
+    func getCustomSoundEffectPathDisconnect() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.customSoundEffectPathDisconnect)
+    }
+
     // Backgrounds
-    func saveHasCustomBackground(value: Bool) {
-        setBool(value, forKey: SharedKeys.hasCustomBackground)
+    func saveBackgroundEffectConnect(value: String) {
+        UserDefaults.standard.set(value, forKey: SharedKeys.connectBackgroundEffect)
     }
 
-    func getHasCustomBackground() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.hasCustomBackground) ?? false
+    func getBackgroundEffectConnect() -> String? {
+        return UserDefaults.standard.string(forKey: SharedKeys.connectBackgroundEffect)
     }
 
-    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.hasCustomBackground) ?? Observable.just(false)
+    func saveBackgroundEffectDisconnect(value: String) {
+        UserDefaults.standard.set(value, forKey: SharedKeys.disconnectBackgroundEffect)
     }
 
-    func saveCurrentCustomBackground(value: String) {
-        sharedDefault?.set(value, forKey: SharedKeys.currentCustomBackground)
-    }
-
-    func getCurrentCustomBackground() -> String? {
-        return sharedDefault?.string(forKey: SharedKeys.currentCustomBackground)
+    func getBackgroundEffectDisconnect() -> String? {
+        return UserDefaults.standard.string(forKey: SharedKeys.disconnectBackgroundEffect)
     }
 
     // MARK: - Base Types
@@ -641,6 +679,14 @@ class SharedSecretDefaults: Preferences {
 
     private func observeObject<T: Codable>(forKey: String) -> Observable<T?>? {
         sharedDefault?.rx_observe(T.self, forKey: forKey)
+    }
+
+    func migrate() {
+        let sessionAuth = standardDefault.string(forKey: SharedKeys.activeUserSessionAuth)
+        setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
+
+        let privacyPopupAccepted = standardDefault.bool(forKey: SharedKeys.privacyPopupAccepted)
+        setBool(privacyPopupAccepted, forKey: SharedKeys.privacyPopupAccepted)
     }
 }
 

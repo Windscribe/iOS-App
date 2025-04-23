@@ -11,9 +11,10 @@ import UIKit
 enum PreferenceItemType: Int {
     case general
     case account
-    case robert
     case connection
+    case robert
     case referForData
+    case lookAndFeel
     case helpMe
     case about
     case logout
@@ -24,12 +25,14 @@ enum PreferenceItemType: Int {
             TextsAsset.Preferences.general
         case .account:
             TextsAsset.Preferences.account
-        case .robert:
-            TextsAsset.Preferences.robert
         case .connection:
             TextsAsset.Preferences.connection
+        case .robert:
+            TextsAsset.Preferences.robert
         case .referForData:
             TextsAsset.Preferences.referForData
+        case .lookAndFeel:
+            TextsAsset.Preferences.lookFeel
         case .helpMe:
             TextsAsset.Preferences.helpMe
         case .about:
@@ -45,12 +48,14 @@ enum PreferenceItemType: Int {
             UIImage(named: ImagesAsset.Preferences.general)
         case .account:
             UIImage(named: ImagesAsset.Preferences.account)
-        case .robert:
-            UIImage(named: ImagesAsset.Preferences.robert)
         case .connection:
             UIImage(named: ImagesAsset.Preferences.connection)
+        case .robert:
+            UIImage(named: ImagesAsset.Preferences.robert)
         case .referForData:
             UIImage(named: ImagesAsset.favEmpty)
+        case .lookAndFeel:
+            UIImage(named: ImagesAsset.Preferences.lookFeel)
         case .helpMe:
             UIImage(named: ImagesAsset.Preferences.helpMe)
         case .about:

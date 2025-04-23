@@ -24,9 +24,9 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     let disposeBag = DisposeBag()
 
     init(preferences: Preferences, locationsManager: LocationsManagerType, vpnManager: VPNManager) {
-        preferences.getHasCustomBackgroundObservable().subscribe { [weak self] isCustom in
-            self?.customBackgroundSubject.onNext(isCustom ?? false)
-        }.disposed(by: disposeBag)
+//        preferences.getHasCustomBackgroundObservable().subscribe { [weak self] isCustom in
+//            self?.customBackgroundSubject.onNext(isCustom ?? false)
+//        }.disposed(by: disposeBag)
 
         locationsManager.selectedLocationUpdatedSubject.subscribe { [weak self] _ in
             self?.locationSubject.onNext(locationsManager.getLocationUIInfo())

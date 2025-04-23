@@ -102,6 +102,9 @@ class ViewModels: Assembly {
         container.register(GeneralViewModelType.self) { r in
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.transient)
+        container.register(LookAndFeelViewModelType.self) { r in
+            LookAndFeelViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!)
+        }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
@@ -395,6 +398,7 @@ class ViewControllerModule: Assembly {
             vc.popupRouter = r.resolve(PopupRouter.self)
             vc.customConfigRepository = r.resolve(CustomConfigRepository.self)
             vc.viewModel = r.resolve(MainViewModelType.self)
+            vc.soundManager = r.resolve(SoundManaging.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
@@ -419,6 +423,12 @@ class ViewControllerModule: Assembly {
             c.logger = r.resolve(FileLogger.self)
             c.router = r.resolve(GeneralRouter.self)
             c.popupRouter = r.resolve(PopupRouter.self)
+        }.inObjectScope(.transient)
+        container.register(LookAndFeelViewController.self) { _ in
+            LookAndFeelViewController()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(LookAndFeelViewModelType.self)
+            c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(AccountViewController.self) { _ in
             AccountViewController()

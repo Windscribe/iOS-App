@@ -47,6 +47,7 @@ class HelpViewController: WSNavigationViewController {
                                           title: TextsAsset.Help.communitySupport,
                                           subTitle: TextsAsset.Help.bestPlacesTohelp),
                            type: .navigation,
+                           actionableHeader: false,
                            delegate: self, isDarkMode: viewModel.isDarkMode)
         redditRow.addTopDivider()
         redditRow.addBottomDivider()

@@ -1130,6 +1130,11 @@
 		F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A63A2D5D3B7F00579B5F /* MockLogger.swift */; };
 		F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */; };
 		F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F465A6402D5D3E1400579B5F /* MockSession.swift */; };
+		F4693E482DB028A700ECD6C4 /* LookAndFeelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E472DB028A700ECD6C4 /* LookAndFeelViewController.swift */; };
+		F4693E4A2DB028C100ECD6C4 /* LookAndFeelHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E492DB028C100ECD6C4 /* LookAndFeelHelper.swift */; };
+		F4693E4C2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E4B2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift */; };
+		F4693E4F2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E4E2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift */; };
+		F4693E512DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E502DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift */; };
 		F469F0D22D7BA5CF004DC6AB /* AccountTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0D12D7BA5CF004DC6AB /* AccountTableViewCell.swift */; };
 		F469F0D42D7BA5E0004DC6AB /* BestLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0D32D7BA5E0004DC6AB /* BestLocationCell.swift */; };
 		F469F0D62D7BA659004DC6AB /* ServerSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F469F0D52D7BA659004DC6AB /* ServerSectionCell.swift */; };
@@ -1176,6 +1181,37 @@
 		F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */; };
 		F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935322DA8435D00108558 /* EnterEmailView.swift */; };
 		F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935342DA843A200108558 /* EnterEmailViewModel.swift */; };
+		F499353C2DA994BC00108558 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353A2DA994BC00108558 /* SoundManager.swift */; };
+		F499353F2DA9953900108558 /* SoundManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353D2DA9953900108558 /* SoundManaging.swift */; };
+		F49935412DA9973100108558 /* MockSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935402DA9973100108558 /* MockSoundManager.swift */; };
+		F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935422DA9987800108558 /* SoundManagerTests.swift */; };
+		F49935452DA99E5400108558 /* click.caf in Resources */ = {isa = PBXBuildFile; fileRef = F49935442DA99E5400108558 /* click.caf */; };
+		F499355F2DAD9F2100108558 /* ws_button_videogameoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */; };
+		F49935602DAD9F2100108558 /* ws_button_videogameon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */; };
+		F49935612DAD9F2100108558 /* ws_button_boingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */; };
+		F49935622DAD9F2100108558 /* ws_button_windscribeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */; };
+		F49935632DAD9F2100108558 /* ws_button_fartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */; };
+		F49935642DAD9F2100108558 /* ws_button_arcadeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */; };
+		F49935652DAD9F2100108558 /* ws_button_swordoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */; };
+		F49935662DAD9F2100108558 /* ws_button_ghostwindoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */; };
+		F49935672DAD9F2100108558 /* ws_button_subpingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */; };
+		F49935682DAD9F2100108558 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */; };
+		F49935692DAD9F2100108558 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */; };
+		F499356A2DAD9F2100108558 /* ws_button_windscribeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */; };
+		F499356B2DAD9F2100108558 /* ws_button_subpingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */; };
+		F499356C2DAD9F2100108558 /* ws_button_popcanon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */; };
+		F499356D2DAD9F2100108558 /* ws_button_multifarton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */; };
+		F499356E2DAD9F2100108558 /* ws_button_multifartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */; };
+		F499356F2DAD9F2100108558 /* ws_button_scifioff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */; };
+		F49935702DAD9F2100108558 /* ws_button_arcadeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */; };
+		F49935712DAD9F2100108558 /* ws_button_popcanoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */; };
+		F49935722DAD9F2100108558 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354C2DAD9F2100108558 /* ws_button_farton.m4a */; };
+		F49935732DAD9F2100108558 /* ws_button_swordon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935582DAD9F2100108558 /* ws_button_swordon.m4a */; };
+		F49935742DAD9F2100108558 /* ws_button_ghostwindon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */; };
+		F49935752DAD9F2100108558 /* ws_button_wizbyoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */; };
+		F49935762DAD9F2100108558 /* ws_button_scifion.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935542DAD9F2100108558 /* ws_button_scifion.m4a */; };
+		F499357B2DAEE4E900108558 /* CustomSoundEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */; };
+		F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -2010,6 +2046,11 @@
 		F465A63A2D5D3B7F00579B5F /* MockLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLogger.swift; sourceTree = "<group>"; };
 		F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockLocalDatabase.swift; sourceTree = "<group>"; };
 		F465A6402D5D3E1400579B5F /* MockSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSession.swift; sourceTree = "<group>"; };
+		F4693E472DB028A700ECD6C4 /* LookAndFeelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelViewController.swift; sourceTree = "<group>"; };
+		F4693E492DB028C100ECD6C4 /* LookAndFeelHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelHelper.swift; sourceTree = "<group>"; };
+		F4693E4B2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelViewModel.swift; sourceTree = "<group>"; };
+		F4693E4E2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundEffectType.swift; sourceTree = "<group>"; };
+		F4693E502DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBackgroundEffectView.swift; sourceTree = "<group>"; };
 		F469F0D12D7BA5CF004DC6AB /* AccountTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountTableViewCell.swift; sourceTree = "<group>"; };
 		F469F0D32D7BA5E0004DC6AB /* BestLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestLocationCell.swift; sourceTree = "<group>"; };
 		F469F0D52D7BA659004DC6AB /* ServerSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSectionCell.swift; sourceTree = "<group>"; };
@@ -2041,6 +2082,37 @@
 		F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountViewModel.swift; sourceTree = "<group>"; };
 		F49935322DA8435D00108558 /* EnterEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailView.swift; sourceTree = "<group>"; };
 		F49935342DA843A200108558 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
+		F499353A2DA994BC00108558 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
+		F499353D2DA9953900108558 /* SoundManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManaging.swift; sourceTree = "<group>"; };
+		F49935402DA9973100108558 /* MockSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSoundManager.swift; sourceTree = "<group>"; };
+		F49935422DA9987800108558 /* SoundManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManagerTests.swift; sourceTree = "<group>"; };
+		F49935442DA99E5400108558 /* click.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = click.caf; sourceTree = "<group>"; };
+		F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
+		F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
+		F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
+		F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingon.m4a; sourceTree = "<group>"; };
+		F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_fartoff.m4a; sourceTree = "<group>"; };
+		F499354C2DAD9F2100108558 /* ws_button_farton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_farton.m4a; sourceTree = "<group>"; };
+		F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindoff.m4a; sourceTree = "<group>"; };
+		F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindon.m4a; sourceTree = "<group>"; };
+		F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifartoff.m4a; sourceTree = "<group>"; };
+		F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifarton.m4a; sourceTree = "<group>"; };
+		F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanoff.m4a; sourceTree = "<group>"; };
+		F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanon.m4a; sourceTree = "<group>"; };
+		F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifioff.m4a; sourceTree = "<group>"; };
+		F49935542DAD9F2100108558 /* ws_button_scifion.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifion.m4a; sourceTree = "<group>"; };
+		F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingoff.m4a; sourceTree = "<group>"; };
+		F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingon.m4a; sourceTree = "<group>"; };
+		F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordoff.m4a; sourceTree = "<group>"; };
+		F49935582DAD9F2100108558 /* ws_button_swordon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordon.m4a; sourceTree = "<group>"; };
+		F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameoff.m4a; sourceTree = "<group>"; };
+		F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameon.m4a; sourceTree = "<group>"; };
+		F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeoff.m4a; sourceTree = "<group>"; };
+		F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeon.m4a; sourceTree = "<group>"; };
+		F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyoff.m4a; sourceTree = "<group>"; };
+		F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyon.m4a; sourceTree = "<group>"; };
+		F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectView.swift; sourceTree = "<group>"; };
+		F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectType.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -2300,6 +2372,7 @@
 				1AE6D2B62837D09100276C7D /* Account */,
 				1AE6D2B328376E1400276C7D /* About */,
 				1AE6DA1D2833CFA500593495 /* General */,
+				F4693E462DB0285700ECD6C4 /* LookAndFeel */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -3189,6 +3262,7 @@
 				591CF9A72BB47951004DEB48 /* ReferAndShareManager */,
 				F42ADD1E2D5BB47F0021AF6E /* AppReview */,
 				F40419352D822CE90005EF97 /* HTMLParser */,
+				F49935392DA994A000108558 /* Sound */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3196,6 +3270,7 @@
 		AF018E0A21B0A35500B225FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F49935462DAD9F0D00108558 /* Sounds */,
 				F41190212D7FBABA00AC7EB6 /* Localization */,
 				AF4E924821EF8EAF00A3F584 /* Fonts */,
 				F45F191C2D7B711E0028D0C2 /* Images */,
@@ -4160,6 +4235,7 @@
 			children = (
 				F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */,
 				F40419442D8232460005EF97 /* HTMLParserTests.swift */,
+				F49935422DA9987800108558 /* SoundManagerTests.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -4195,6 +4271,7 @@
 			children = (
 				C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */,
 				C5592B7F2B388B2800F2F110 /* APISampleData.swift */,
+				F49935442DA99E5400108558 /* click.caf */,
 			);
 			path = SampleData;
 			sourceTree = "<group>";
@@ -4303,6 +4380,27 @@
 				AF4ECAA323E9D93A00E09223 /* Assets.xcassets */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		F4693E462DB0285700ECD6C4 /* LookAndFeel */ = {
+			isa = PBXGroup;
+			children = (
+				F4693E4D2DB7CC5800ECD6C4 /* Background */,
+				F499357C2DAEE80700108558 /* Sound */,
+				F4693E472DB028A700ECD6C4 /* LookAndFeelViewController.swift */,
+				F4693E4B2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift */,
+				F4693E492DB028C100ECD6C4 /* LookAndFeelHelper.swift */,
+			);
+			path = LookAndFeel;
+			sourceTree = "<group>";
+		};
+		F4693E4D2DB7CC5800ECD6C4 /* Background */ = {
+			isa = PBXGroup;
+			children = (
+				F4693E502DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift */,
+				F4693E4E2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift */,
+			);
+			path = Background;
 			sourceTree = "<group>";
 		};
 		F469F0E12D7F3266004DC6AB /* Data */ = {
@@ -4512,6 +4610,55 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		F49935392DA994A000108558 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				F499353A2DA994BC00108558 /* SoundManager.swift */,
+				F499353D2DA9953900108558 /* SoundManaging.swift */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
+		F49935462DAD9F0D00108558 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */,
+				F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */,
+				F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */,
+				F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */,
+				F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */,
+				F499354C2DAD9F2100108558 /* ws_button_farton.m4a */,
+				F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */,
+				F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */,
+				F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */,
+				F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */,
+				F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */,
+				F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */,
+				F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */,
+				F49935542DAD9F2100108558 /* ws_button_scifion.m4a */,
+				F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */,
+				F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */,
+				F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */,
+				F49935582DAD9F2100108558 /* ws_button_swordon.m4a */,
+				F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */,
+				F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */,
+				F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */,
+				F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */,
+				F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */,
+				F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		F499357C2DAEE80700108558 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */,
+				F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */,
+			);
+			path = Sound;
+			sourceTree = "<group>";
+		};
 		F4ADA5F42D564F110077C132 /* ImageLoader */ = {
 			isa = PBXGroup;
 			children = (
@@ -4530,6 +4677,7 @@
 				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
+				F49935402DA9973100108558 /* MockSoundManager.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -5081,6 +5229,30 @@
 				AF4E926321EF8F5900A3F584 /* IBMPlexSans-Text.otf in Resources */,
 				AF283F7B22C40BE7001F5520 /* Localizable.strings in Resources */,
 				AF4E925B21EF8F5900A3F584 /* IBMPlexSans-Italic.otf in Resources */,
+				F499355F2DAD9F2100108558 /* ws_button_videogameoff.m4a in Resources */,
+				F49935602DAD9F2100108558 /* ws_button_videogameon.m4a in Resources */,
+				F49935612DAD9F2100108558 /* ws_button_boingon.m4a in Resources */,
+				F49935622DAD9F2100108558 /* ws_button_windscribeoff.m4a in Resources */,
+				F49935632DAD9F2100108558 /* ws_button_fartoff.m4a in Resources */,
+				F49935642DAD9F2100108558 /* ws_button_arcadeoff.m4a in Resources */,
+				F49935652DAD9F2100108558 /* ws_button_swordoff.m4a in Resources */,
+				F49935662DAD9F2100108558 /* ws_button_ghostwindoff.m4a in Resources */,
+				F49935672DAD9F2100108558 /* ws_button_subpingoff.m4a in Resources */,
+				F49935682DAD9F2100108558 /* ws_button_wizbyon.m4a in Resources */,
+				F49935692DAD9F2100108558 /* ws_button_boingoff.m4a in Resources */,
+				F499356A2DAD9F2100108558 /* ws_button_windscribeon.m4a in Resources */,
+				F499356B2DAD9F2100108558 /* ws_button_subpingon.m4a in Resources */,
+				F499356C2DAD9F2100108558 /* ws_button_popcanon.m4a in Resources */,
+				F499356D2DAD9F2100108558 /* ws_button_multifarton.m4a in Resources */,
+				F499356E2DAD9F2100108558 /* ws_button_multifartoff.m4a in Resources */,
+				F499356F2DAD9F2100108558 /* ws_button_scifioff.m4a in Resources */,
+				F49935702DAD9F2100108558 /* ws_button_arcadeon.m4a in Resources */,
+				F49935712DAD9F2100108558 /* ws_button_popcanoff.m4a in Resources */,
+				F49935722DAD9F2100108558 /* ws_button_farton.m4a in Resources */,
+				F49935732DAD9F2100108558 /* ws_button_swordon.m4a in Resources */,
+				F49935742DAD9F2100108558 /* ws_button_ghostwindon.m4a in Resources */,
+				F49935752DAD9F2100108558 /* ws_button_wizbyoff.m4a in Resources */,
+				F49935762DAD9F2100108558 /* ws_button_scifion.m4a in Resources */,
 				AF4E926621EF8F5900A3F584 /* IBMPlexSans-ThinItalic.otf in Resources */,
 				AF15B8C3246C514A0086BB2A /* dots.gif in Resources */,
 				AF4E925E21EF8F5900A3F584 /* IBMPlexSans-Medium.otf in Resources */,
@@ -5096,6 +5268,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49935452DA99E5400108558 /* click.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5589,6 +5762,7 @@
 				1AE6D2C12838BBF900276C7D /* AccountEditCell.swift in Sources */,
 				C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */,
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
+				F4693E4F2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift in Sources */,
 				C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				C5592B7E2B38838500F2F110 /* MyIP.swift in Sources */,
 				F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */,
@@ -5612,6 +5786,7 @@
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
 				C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */,
+				F4693E482DB028A700ECD6C4 /* LookAndFeelViewController.swift in Sources */,
 				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
 				1E5553CA2D95C91B00F16AF0 /* IPContentView.swift in Sources */,
 				F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */,
@@ -5739,8 +5914,10 @@
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
 				E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */,
 				C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */,
+				F4693E4A2DB028C100ECD6C4 /* LookAndFeelHelper.swift in Sources */,
 				1EC6C77E2BE136190036248B /* MainViewController+SearchLocationDelegate.swift in Sources */,
 				F485CBCA2D51411B0063EA3A /* PlanUpgradeBenefitView.swift in Sources */,
+				F4693E4C2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift in Sources */,
 				AF2531B6220A27FB0001CF96 /* WifiManager.swift in Sources */,
 				E998651328A565130091B6A3 /* NetworkViewController.swift in Sources */,
 				C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
@@ -5843,6 +6020,7 @@
 				598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */,
 				AFC75F7F24BD9FCD00897C18 /* WireGuardConfig.swift in Sources */,
 				AF16CA1E222847B700997A2A /* IAPInfoCellTableViewCell.swift in Sources */,
+				F499357B2DAEE4E900108558 /* CustomSoundEffectView.swift in Sources */,
 				AF4E926B21F2309000A3F584 /* UIConstants+Text.swift in Sources */,
 				C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */,
 				AF16CA22222884E700997A2A /* UITextView+Extension.swift in Sources */,
@@ -5894,6 +6072,7 @@
 				1EC6C7812BE268D60036248B /* ListSelectionViewModel.swift in Sources */,
 				C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */,
 				F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */,
+				F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */,
 				C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */,
 				F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */,
 				1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */,
@@ -5908,6 +6087,7 @@
 				C52DA5272B63901400E5C571 /* CustomConfigRepository.swift in Sources */,
 				AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */,
 				AFB0DC0421FB997300C40E3C /* StaticIPTableViewCell.swift in Sources */,
+				F499353C2DA994BC00108558 /* SoundManager.swift in Sources */,
 				1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */,
 				C5A930EF2B44AA730001CFA0 /* PortMapRepository.swift in Sources */,
 				C52DA50F2B637ED700E5C571 /* RepositoryErrors.swift in Sources */,
@@ -5950,6 +6130,7 @@
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,
+				F499353F2DA9953900108558 /* SoundManaging.swift in Sources */,
 				E998651B28AB29540091B6A3 /* NetworkSecurityViewModel.swift in Sources */,
 				AFD16F1122775E9F00E9FAD3 /* Notifications.swift in Sources */,
 				C571C6642C1212FF00786DA5 /* ConnectivityImpl+Hotspot.swift in Sources */,
@@ -5977,6 +6158,7 @@
 				1E5553AD2D89AAC400F16AF0 /* BaseNodeCell.swift in Sources */,
 				E9425BA227437064008B8786 /* FilePaths.swift in Sources */,
 				AF36A1A7237C7C2800BDDCDB /* ViewLeaderboardViewController.swift in Sources */,
+				F4693E512DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift in Sources */,
 				C5A930DA2B43EF0D0001CFA0 /* StaticIpRepository.swift in Sources */,
 				1E5553BD2D8D883700F16AF0 /* ConnectionStateInfoView.swift in Sources */,
 				1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */,
@@ -6060,6 +6242,8 @@
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
+				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
+				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
 				C5592B802B388B2800F2F110 /* APISampleData.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,

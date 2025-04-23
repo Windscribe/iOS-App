@@ -15,20 +15,17 @@ protocol GeneralViewModelType {
     var languageUpdatedTrigger: PublishSubject<Void> { get }
     var themeManager: ThemeManager { get }
     func didSelectedLocationOrder(value: String)
-    func didSelectedAppearance(value: String)
     func updateHapticFeedback()
     func askForPushNotificationPermission()
     func getCurrentLocationOrder() -> String
-    func getCurrentApperance() -> String
     func getCurrentLanguage() -> String
     func getVersion() -> String
     func getHapticFeedback() -> Bool
     func selectLanguage(with value: String)
-    func toggleHasCustomBackground()
-    func getHasCustomBackground() -> Bool
 }
 
 class GeneralViewModel: GeneralViewModelType {
+
     // MARK: - Dependencies
 
     let preferences: Preferences
@@ -116,15 +113,6 @@ class GeneralViewModel: GeneralViewModelType {
     func updateHapticFeedback(_ status: Bool) {
         preferences.saveHapticFeedback(haptic: status)
     }
-
-    func toggleHasCustomBackground() {
-        preferences.saveHasCustomBackground(value: !preferences.getHasCustomBackground())
-    }
-
-    func getHasCustomBackground() -> Bool {
-        return preferences.getHasCustomBackground()
-    }
-
 
     func getVersion() -> String {
         guard let releaseNumber = Bundle.main.releaseVersionNumber, let buildNumber = Bundle.main.buildVersionNumber else { return "" }

@@ -11,6 +11,7 @@ import Foundation
 enum DefaultValues {
     static let latencyType = "Bars"
     static let orderLocationsBy = "Geography"
+    static let appSkin = "Alpha"
     static let appearance = "Dark"
     static let language = "English"
     static let `protocol` = "WireGuard"

@@ -31,7 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var latencyRepository: LatencyRepository = Assembler.resolve(LatencyRepository.self)
 
-
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 
     private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)

@@ -215,9 +215,9 @@ extension PreferencesMainViewController: ConfirmEmailViewControllerDelegate {
 extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         if viewModel?.isUserGhost() ?? false {
-            return 7
+            return 8
         }
-        return 8
+        return 9
     }
 
     func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -233,17 +233,19 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
         else {
             return UITableViewCell()
         }
-        cell.arrowIcon.isHidden = false
-        cell.cellDivider.isHidden = false
-        if let preferenceItem = viewModel?.getPreferenceItem(for: indexPath.row) {
-            cell.displayingItem = preferenceItem
+
+        let isUserFree = (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true)
+
+        cell.do {
+            $0.arrowIcon.isHidden = false
+            $0.cellDivider.isHidden = false
+            $0.displayingItem = viewModel?.getPreferenceItem(for: indexPath.row)
+            $0.isHidden = indexPath.row == 4 && isUserFree
+            $0.arrowIcon.isHidden = indexPath.row == 8
+            $0.cellDivider.isHidden = indexPath.row == 8
+            $0.bindViews(isDarkMode: viewModel.isDarkMode)
         }
-        cell.isHidden = indexPath.row == 4 && (viewModel?.isUserPro() == true || viewModel?.isUserGhost() == true)
-        if indexPath.row == 7 {
-            cell.arrowIcon.isHidden = true
-            cell.cellDivider.isHidden = true
-        }
-        cell.bindViews(isDarkMode: viewModel.isDarkMode)
+
         return cell
     }
 
@@ -263,17 +265,19 @@ extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSou
             } else {
                 router?.routeTo(to: RouteID.account, from: self)
             }
-        case 3:
-            router?.routeTo(to: RouteID.robert, from: self)
         case 2:
             router?.routeTo(to: RouteID.connection, from: self)
+        case 3:
+            router?.routeTo(to: RouteID.robert, from: self)
         case 4:
             router?.routeTo(to: RouteID.shareWithFriends, from: self)
         case 5:
-            router?.routeTo(to: RouteID.help, from: self)
+            router?.routeTo(to: RouteID.lookFeel, from: self)
         case 6:
-            router?.routeTo(to: RouteID.about, from: self)
+            router?.routeTo(to: RouteID.help, from: self)
         case 7:
+            router?.routeTo(to: RouteID.about, from: self)
+        case 8:
             signoutButtonTapped()
         default:
             break

@@ -114,6 +114,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var serverListViewModel: ServerListViewModelType!
     var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!
     var latencyViewModel: LatencyViewModel!
+
+    var soundManager: SoundManaging!
     var logger: FileLogger!
 
     // MARK: constraints

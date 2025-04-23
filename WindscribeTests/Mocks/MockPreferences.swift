@@ -11,7 +11,6 @@ import RxSwift
 
 @testable import Windscribe
 
-
 class MockPreferences: Preferences {
 
     var mockConnectionCount = 0
@@ -62,6 +61,12 @@ class MockPreferences: Preferences {
     func saveOrderLocationsBy(order: String) {}
 
     func getOrderLocationsBy() -> Observable<String?> {
+        return Observable.just(nil)
+    }
+
+    func saveAppSkinPreferences(type: String) {}
+
+    func getAppSkinPreferences() -> Observable<String?> {
         return Observable.just(nil)
     }
 
@@ -408,6 +413,22 @@ class MockPreferences: Preferences {
     }
 
     func getLocationType(id: String) -> Windscribe.LocationType? {
+        return nil
+    }
+
+    func saveHasCustomBackground(value: Bool) { }
+
+    func getHasCustomBackground() -> Bool {
+        return false
+    }
+
+    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?> {
+        return Observable.just(nil)
+    }
+
+    func saveCurrentCustomBackground(value: String) { }
+
+    func getCurrentCustomBackground() -> String? {
         return nil
     }
 }
