@@ -15,7 +15,7 @@ struct ParsedContent {
 
 class HTMLParser: HTMLParsing {
 
-    let logger: FileLogger
+    private let logger: FileLogger
 
     init (logger: FileLogger) {
         self.logger = logger

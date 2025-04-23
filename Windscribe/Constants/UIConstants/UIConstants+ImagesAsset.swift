@@ -129,6 +129,7 @@ enum ImagesAsset {
         static let robert = "pref-robert"
         static let networkSecurity = "pref-network-security"
         static let connection = "pref-connection"
+        static let lookFeel = "pref-look-feel"
         static let debug = "pref-debug"
         static let logOut = "pref-logout"
         static let helpMe = "pref-help-me"
@@ -164,10 +165,15 @@ enum ImagesAsset {
                                   "competitors": "other-vpn", "cryptominers": "crypto"]
     }
 
+    enum LookFeel {
+        static let appearance = "appearance_ic_white"
+        static let appBackground = "app_background_ic_white"
+        static var soundNotification = "sound_notification"
+    }
+
     enum General {
         static let locationOrder = "location_order_ic_white"
         static let language = "language_ic_white"
-        static let appearance = "appearance_ic_white"
         static let appBackground = "app_background_ic_white"
         static let hapticFeedback = "haptic_feedback_ic_white"
         static let firewall = "firewall-ic-white"

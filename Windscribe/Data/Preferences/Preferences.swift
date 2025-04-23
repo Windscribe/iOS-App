@@ -153,10 +153,26 @@ protocol Preferences {
     func getLocationType() -> LocationType?
     func getLocationType(id: String) -> LocationType?
 
+    // AspectRatio
+    func saveAspectRatio(value: String)
+    func getAspectRatio() -> String?
+
     // Backgrounds
-    func saveHasCustomBackground(value: Bool)
-    func getHasCustomBackground() -> Bool
-    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?>
-    func saveCurrentCustomBackground(value: String)
-    func getCurrentCustomBackground() -> String?
+    func saveBackgroundEffectConnect(value: String)
+    func getBackgroundEffectConnect() -> String?
+
+    func saveBackgroundEffectDisconnect(value: String)
+    func getBackgroundEffectDisconnect() -> String?
+
+    // Sounds
+    func saveSoundEffectConnect(value: String)
+    func getSoundEffectConnect() -> String?
+
+    func saveSoundEffectDisconnect(value: String)
+    func getSoundEffectDisconnect() -> String?
+
+    func saveCustomSoundEffectPathConnect(_ path: String)
+    func saveCustomSoundEffectPathDisconnect(_ path: String)
+    func getCustomSoundEffectPathConnect() -> String?
+    func getCustomSoundEffectPathDisconnect() -> String?
 }

@@ -28,6 +28,7 @@ enum RouteID {
     case ghostAccount
     case account
     case robert
+    case lookFeel
     case about
     case shareWithFriends
     case connection

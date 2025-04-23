@@ -442,6 +442,7 @@ enum TextsAsset {
         static var general: String { return "General".localize() }
         static var account: String { return "Account".localize() }
         static var robert: String { return "R.O.B.E.R.T.".localize() }
+        static var lookFeel: String { return "Look & Feel".localize() }
         static var connection: String { return "Connection".localize() }
         static var networkSecurity: String { return "Network Options".localize() }
         static var debug: String { return "Debug".localize() }
@@ -507,13 +508,17 @@ enum TextsAsset {
         static var orderLocationsBy: String { "Location Order".localize() }
         static var protocolType: String { "Protocol".localize() }
         static var port: String { "Port".localize() }
-        static var appearance: String { "Appearance".localize() }
         static let protocols = ["WireGuard", "IKEv2", "UDP", "TCP", "Stealth", "WStunnel"]
         static let openVpnProtocols = ["UDP", "TCP", "Stealth", "WStunnel"]
         static var version: String { "Version".localize() }
         static var auto: String { "Auto".localize() }
         static var manual: String { "Manual".localize() }
+        static var bundled: String { "Bundled".localize() }
         static var custom: String { "Custom".localize() }
+        static var none: String { "None".localize() }
+        static var stretch: String { "Stretch".localize() }
+        static var fill: String { "Fill".localize() }
+        static var tile: String { "Tile".localize() }
         static let languages: [String] = Languages.allCases.map { $0.name }
         static let languagesList: [Languages] = Languages.allCases
         static var hapticFeedback: String { "Haptic Feedback".localize() }
@@ -539,10 +544,6 @@ enum TextsAsset {
                 return Fields.Values.alphabet
             case TextsAsset.orderPreferences[2]:
                 return Fields.Values.latency
-            case TextsAsset.appearances[0]:
-                return Fields.Values.light
-            case TextsAsset.appearances[1]:
-                return Fields.Values.dark
             case TextsAsset.General.hapticFeedback:
                 return Fields.hapticFeedback
             case TextsAsset.General.showServerHealth:
@@ -557,7 +558,6 @@ enum TextsAsset {
         static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localize() }
         static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localize() }
         static var language: String { return "Localize Windscribe to supported languages.".localize() }
-        static var appearance: String { return "Light or Dark. Choose a side, and choose wisely.".localize() }
         static var background: String { return "Customize the background of the main app screen.".localize() }
         static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localize() }
         static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localize() }
@@ -565,6 +565,51 @@ enum TextsAsset {
         static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localize() }
         static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localize() }
         static var customBackground: String { return "Use the app custom background instead of the locations flag.".localize() }
+    }
+
+    enum LookFeel {
+        static var title: String {
+            return "Look & Feel".localize()
+        }
+
+        static var appearanceTitle: String {
+            "Appearance".localize()
+        }
+
+        static var appBackgroundTitle: String {
+            "App Background".localize()
+        }
+
+        static var soundNotificationTitle: String {
+            "Sound Notifications".localize()
+        }
+
+        static var versionTitle: String {
+            "Version".localize()
+        }
+
+        static var appearanceDescription: String {
+            "Light or Dark. Choose a side, and choose wisely.".localize()
+        }
+
+        static var appBackgroundDescription: String {
+            "Customize the background of the main app screen.".localize()
+        }
+
+        static var soundNotificationDescription: String {
+            "Choose sounds to play when connection events occur.".localize()
+        }
+
+        static func getValue(displayText: String) -> String? {
+            switch displayText {
+            case TextsAsset.appearances[0]:
+                return Fields.Values.light
+            case TextsAsset.appearances[1]:
+                return Fields.Values.dark
+            default:
+                return nil
+            }
+        }
     }
 
     enum Account {

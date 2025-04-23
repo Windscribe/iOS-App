@@ -66,25 +66,13 @@ class Dropdown: UITableView {
 
     func prepareTableView() {
         UIView.animate(withDuration: 0.25, animations: {
-            if self.height <= 150 {
-                self.frame = CGRect(x: self.point.x - self.width, y: self.point.y, width: self.width, height: self.height)
-            } else {
-                self.frame = CGRect(x: self.point.x - self.width, y: self.point.y, width: self.width, height: self.maxHeight)
-            }
+            self.frame = CGRect(x: self.point.x - self.width, y: self.point.y, width: self.width, height: min(self.height, self.maxHeight))
         }, completion: { _ in
             self.flashScrollIndicators()
         })
     }
 
     func removeWithAnimation() {
-//        UIView.animate(withDuration: 0.25, animations: {
-//            for cell in self.visibleCells {
-//                cell.layer.opacity = 0.0
-//            }
-//            self.frame = CGRect(x: self.point.x, y: self.point.y, width: 0, height: 0)
-//        }) { _ in
-//            self.removeFromSuperview()
-//        }
         UIView.animate(withDuration: 0.25, animations: { [weak self] in
             guard let self = self else { return }
             for cell in self.visibleCells {

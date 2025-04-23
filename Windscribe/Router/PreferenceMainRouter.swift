@@ -52,6 +52,9 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
             pushViewWithoutNavigationBar(from: from, view: enterEmail)
         case RouteID.login:
             goToLogin(viewController: from)
+        case RouteID.lookFeel:
+            let vc = Assembler.resolve(LookAndFeelViewController.self)
+            from.navigationController?.pushViewController(vc, animated: true)
         default: ()
         }
     }

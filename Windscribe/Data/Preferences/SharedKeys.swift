@@ -38,6 +38,7 @@ enum SharedKeys {
     static let selectedProtocol = "selectedProtocol"
     static let darkMode = "darkMode"
     static let connectedDNSValue = "connectedDNSValue"
+    static let appSkinType = "appSkinType"
 
     // UserDefaultKeys
     static let autoSecureNewNetworks = "AutoSecureNewNetworks"
@@ -90,9 +91,18 @@ enum SharedKeys {
     static let savedLastLocation = "savedLastLocation"
     static let savedBestLocation = "savedBestLocation"
 
+    // Aspect Ratio
+    static let aspectRatio = "aspectRatio"
+
+    // Sounds
+    static let connectSoundEffect = "connectSoundEffect"
+    static let disconnectSoundEffect = "disconnectSoundEffect"
+    static let customSoundEffectPathConnect = "customSoundEffectPathConnect"
+    static let customSoundEffectPathDisconnect = "customSoundEffectPathDisconnect"
+
     // Backgrounds
-    static let hasCustomBackground = "hasCustomBackground"
-    static let currentCustomBackground = "currentCustomBackground"
+    static let connectBackgroundEffect = "connectBackgroundEffect"
+    static let disconnectBackgroundEffect = "disconnectBackgroundEffect"
 }
 
 /// Read value from plist file or not found returns empty string.

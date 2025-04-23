@@ -63,6 +63,7 @@ class ConnectionViewController: WSNavigationViewController {
         layoutView.scrollView.bounces = false
         layoutView.stackView.spacing = 8
         layoutView.stackView.setPadding(UIEdgeInsets(horizontalInset: 16, verticalInset: 12))
+
         if #available(iOS 15.1, *) {
             layoutView.stackView.addArrangedSubviews([
                 networkWhiteListRow,

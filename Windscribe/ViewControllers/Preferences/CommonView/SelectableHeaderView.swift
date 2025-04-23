@@ -18,6 +18,8 @@ class SelectableHeaderView: UIStackView {
     private(set) var currentOption: String
     private(set) var listOption: [String]
     private(set) var imageAsset: String?
+    private(set) var systemImageUsed: Bool
+
     var viewToAddDropdown: UIView?
 
     weak var delegate: SelectableHeaderViewDelegate?
@@ -64,7 +66,7 @@ class SelectableHeaderView: UIStackView {
     private lazy var iconImage: UIImageView = {
         let imageView = UIImageView()
         if let imageAsset = imageAsset {
-            imageView.image = UIImage(named: imageAsset)
+            imageView.image = systemImageUsed ? UIImage(systemName: imageAsset) : UIImage(named: imageAsset)
         } else {
             imageView.layer.cornerRadius = 4
             imageView.layer.borderWidth = 2
@@ -82,12 +84,13 @@ class SelectableHeaderView: UIStackView {
         return view
     }()
 
-    init(viewToAddDropdown: UIView? = nil, title: String, imageAsset: String?, optionTitle: String, listOption: [String], isDarkMode: BehaviorSubject<Bool>) {
+    init(viewToAddDropdown: UIView? = nil, title: String, imageAsset: String?, optionTitle: String = "", listOption: [String] = [], systemImageUsed: Bool = false, isDarkMode: BehaviorSubject<Bool>) {
         self.title = title
         self.imageAsset = imageAsset
         currentOption = optionTitle
         self.listOption = listOption
         self.viewToAddDropdown = viewToAddDropdown
+        self.systemImageUsed = systemImageUsed
         super.init(frame: .zero)
         setup()
         bindViews(isDarkMode: isDarkMode)
@@ -137,6 +140,10 @@ class SelectableHeaderView: UIStackView {
         } else {
             wrapperView.makeRoundCorners(corners: [.topLeft, .topRight, .bottomRight, .bottomLeft], radius: 6)
         }
+    }
+
+    func changeThemeColor(_ color: UIColor) {
+        wrapperView.backgroundColor = color
     }
 
     func disableDropdown() {

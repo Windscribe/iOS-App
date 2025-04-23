@@ -11,9 +11,7 @@ import UIKit
 
 enum GeneralOption {
     case locationOrder
-    case appearance
     case language
-    case appBackground
     case notification
     case hapticFeedback
     case firewall
@@ -31,12 +29,8 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return ImagesAsset.General.locationOrder
-        case .appearance:
-            return ImagesAsset.General.appearance
         case .language:
             return ImagesAsset.General.language
-        case .appBackground:
-            return ImagesAsset.General.appBackground
         case .notification:
             return ImagesAsset.notifications
         case .hapticFeedback:
@@ -64,12 +58,8 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return TextsAsset.General.orderLocationsBy
-        case .appearance:
-            return TextsAsset.General.appearance
         case .language:
             return TextsAsset.General.language
-        case .appBackground:
-            return "App Background".localize()
         case .notification:
             return TextsAsset.General.pushNotificationSettings
         case .hapticFeedback:
@@ -97,12 +87,8 @@ enum GeneralHelper {
         switch option {
         case .locationOrder:
             return TextsAsset.PreferencesDescription.locationOrder
-        case .appearance:
-            return TextsAsset.PreferencesDescription.appearance
         case .language:
             return TextsAsset.PreferencesDescription.language
-        case .appBackground:
-            return TextsAsset.PreferencesDescription.background
         case .notification:
             return TextsAsset.PreferencesDescription.notificationStats
         case .hapticFeedback:

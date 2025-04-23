@@ -157,7 +157,7 @@ class ConnectionSecureView: UIView {
         subTitleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
     }
 
-    func udpateStringData(title: String, subTitle: String) {
+    func updateStringData(title: String, subTitle: String) {
         titleLabel.text = title
         subTitleLabel.text = subTitle
     }

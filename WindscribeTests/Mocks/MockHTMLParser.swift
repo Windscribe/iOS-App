@@ -14,7 +14,7 @@ class MockHTMLParser: HTMLParsing {
     func parse(description: String) -> ParsedContent {
         return ParsedContent(
             message: "Mock message content.",
-            actionLink: ActionLink(title: "Mock Link", link: "https://mock.link")
+            actionLink: ActionLinkModel(title: "Mock Link", link: "https://mock.link")
         )
     }
 }

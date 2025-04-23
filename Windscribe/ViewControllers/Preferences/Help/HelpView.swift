@@ -21,6 +21,7 @@ class HelpView: UIStackView {
     weak var delegate: HelpViewDelegate?
     private let isDarkMode: BehaviorSubject<Bool>
     private let disposeBag = DisposeBag()
+    private let actionableHeader: Bool
 
     var listSubView: [UIView] = [] {
         didSet {
@@ -54,7 +55,7 @@ class HelpView: UIStackView {
         return stack
     }()
 
-    lazy var header = HelpHeaderView(item: item, type: type, isDarkMode: isDarkMode)
+    lazy var header = HelpHeaderView(item: item, type: type, actionableHeader: actionableHeader, isDarkMode: isDarkMode)
 
     private lazy var footerView: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [footerLabel])
@@ -97,9 +98,10 @@ class HelpView: UIStackView {
         return view
     }()
 
-    init(item: HelpItem, type: HelpHeaderType, delegate: HelpViewDelegate? = nil, isDarkMode: BehaviorSubject<Bool>) {
+    init(item: HelpItem, type: HelpHeaderType, actionableHeader: Bool = true, delegate: HelpViewDelegate? = nil, isDarkMode: BehaviorSubject<Bool>) {
         self.type = type
         self.item = item
+        self.actionableHeader = actionableHeader
         self.delegate = delegate
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
@@ -160,6 +162,7 @@ enum HelpHeaderType {
 class HelpHeaderView: WSTouchStackView {
     private(set) var item: HelpItem
     private(set) var type: HelpHeaderType
+    private let actionableHeader: Bool
 
     private lazy var iconImage: UIImageView = {
         let imageView = UIImageView()
@@ -177,7 +180,6 @@ class HelpHeaderView: WSTouchStackView {
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.bold(size: 16)
-        lbl.layer.opacity = 0.5
         lbl.setTextWithOffSet(text: item.title)
         return lbl
     }()
@@ -187,6 +189,7 @@ class HelpHeaderView: WSTouchStackView {
         image.contentMode = .scaleAspectFit
         image.layer.opacity = 0.5
         image.anchor(width: 16, height: 16)
+        image.isHidden = !actionableHeader
         return image
     }()
 
@@ -208,9 +211,10 @@ class HelpHeaderView: WSTouchStackView {
 
     private let disposeBag = DisposeBag()
 
-    init(item: HelpItem, type: HelpHeaderType, isDarkMode: BehaviorSubject<Bool>) {
+    init(item: HelpItem, type: HelpHeaderType, actionableHeader: Bool = true, isDarkMode: BehaviorSubject<Bool>) {
         self.type = type
         self.item = item
+        self.actionableHeader = actionableHeader
         super.init(frame: .zero)
         setup()
         bindViews(isDarkMode: isDarkMode)
@@ -291,6 +295,7 @@ class HelpSubRowView: WSTouchStackView {
     init(header: String, isDarkMode: BehaviorSubject<Bool>, delegate: HelpSubRowViewDelegate? = nil) {
         self.header = header
         self.delegate = delegate
+
         super.init(frame: .zero)
         setup()
         bindViews(isDarkMode: isDarkMode)
