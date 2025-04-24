@@ -323,6 +323,10 @@ class ViewModels: Assembly {
             ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
                                 themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
+
+        container.register(FreeAccountFooterViewModelType.self) { r in
+            FreeAccountFooterViewModel(localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -678,6 +682,12 @@ class ViewControllerModule: Assembly {
             ServerInfoView()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ServerInfoViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(FreeAccountFooterView.self) { _ in
+            FreeAccountFooterView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(FreeAccountFooterViewModelType.self)
         }.inObjectScope(.transient)
     }
 }

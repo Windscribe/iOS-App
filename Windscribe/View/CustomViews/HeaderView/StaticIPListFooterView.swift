@@ -34,7 +34,7 @@ class StaticIPListFooterView: WSView {
         addSubview(deviceNameLabel)
 
         label.font = UIFont.text(size: 16)
-        label.textColor = UIColor.actionGreen
+        label.textColor = UIColor.cyberBlue
         label.layer.opacity = 0.7
         addSubview(label)
 

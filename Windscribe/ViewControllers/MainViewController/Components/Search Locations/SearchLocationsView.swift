@@ -58,7 +58,7 @@ class SearchLocationsView: UIView {
 
         var config = UIButton.Configuration.plain()
         config.title = TextsAsset.clearSearch
-        config.baseForegroundColor = .actionGreenWithOpacity(opacity: 0.7)
+        config.baseForegroundColor = .cyberBlueWithOpacity(opacity: 0.7)
         config.titleAlignment = .center
         config.titleTextAttributesTransformer =
           UIConfigurationTextAttributesTransformer { incoming in

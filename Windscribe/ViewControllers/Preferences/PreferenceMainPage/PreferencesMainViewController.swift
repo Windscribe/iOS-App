@@ -38,9 +38,6 @@ class PreferencesMainViewController: WSNavigationViewController {
         super.viewDidLoad()
         logger.logD(self, "Displaying Preferences View")
         addViews()
-        addGetMoreDataViews()
-        addAutolayoutConstraintsForGetMoreDataViews()
-        displayLeftDataInformation()
         setupLocalized()
         bindViews()
         viewModel.getActionButtonDisplay()
@@ -100,8 +97,6 @@ class PreferencesMainViewController: WSNavigationViewController {
         loginButton.setTitle("\(TextsAsset.login)", for: .normal)
         tableView.reloadData()
         viewModel.getActionButtonDisplay()
-        displayLeftDataInformation()
-        getMoreDataButton.setTitle(TextsAsset.getMoreData.uppercased(), for: .normal)
     }
 
     func displayAddEmailGet10Gb() {
@@ -143,8 +138,8 @@ class PreferencesMainViewController: WSNavigationViewController {
             actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton,
                                                               attribute: .bottom,
                                                               relatedBy: .equal,
-                                                              toItem: getMoreDataView,
-                                                              attribute: .top,
+                                                              toItem: view,
+                                                              attribute: .bottom,
                                                               multiplier: 1.0,
                                                               constant: -24)
         }
@@ -158,7 +153,7 @@ class PreferencesMainViewController: WSNavigationViewController {
         actionButton.setTitleColor(UIColor.midnight, for: .normal)
         actionButton.addIcon(icon: ImagesAsset.warningBlack)
         if let actionButton = actionButton {
-            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+            actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24)
         }
         view.setNeedsLayout()
     }
@@ -190,17 +185,6 @@ class PreferencesMainViewController: WSNavigationViewController {
                                                       self.viewModel?.logoutUser()
                                                   }
                                               })
-    }
-
-    // helper functions
-    override func displayLeftDataInformation() {
-        if getMoreDataLabel == nil { return }
-        getMoreDataLabel.text = "\(viewModel.getDataLeft()) \(TextsAsset.left.uppercased())"
-        if viewModel.isUserPro() {
-            getMoreDataView.isHidden = true
-            getMoreDataLabel.isHidden = true
-            getMoreDataButton.isHidden = true
-        }
     }
 }
 

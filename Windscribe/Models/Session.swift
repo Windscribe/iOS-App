@@ -9,6 +9,13 @@
 import Foundation
 import RealmSwift
 
+struct DataLeftModel {
+    let unit: String
+    let dataLeft: String
+    let percentage: CGFloat
+    let isPro: Bool
+}
+
 @objcMembers class Session: Object, Decodable {
     dynamic var session: String = "session"
     dynamic var sessionAuthHash: String = ""
@@ -149,6 +156,16 @@ import RealmSwift
         var maxData = trafficMax / 1024 / 1024
         if maxData > 1024 { unit = "GB"; maxData = maxData / 1024 }
         return "\(maxData) " + unit
+    }
+
+    func getDataLeftModel() -> DataLeftModel {
+        let data = trafficMax - trafficUsed
+        let dataLeftMB = data / 1024 / 1024
+        let dataLeft = dataLeftMB > 1024 ? dataLeftMB / 1024 : dataLeftMB
+        return DataLeftModel(unit: dataLeftMB > 1024 ? "GB" : "MB",
+                             dataLeft: String(format: "%.2f", dataLeft),
+                             percentage: CGFloat(data) / CGFloat(trafficMax) * 100,
+                             isPro: isUserPro)
     }
 
     // swiftlint:enable shorthand_operator

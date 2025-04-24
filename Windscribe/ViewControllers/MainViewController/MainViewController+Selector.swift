@@ -66,8 +66,7 @@ extension MainViewController {
             router?.routeTo(to: RouteID.signup(claimGhostAccount: true), from: self)
         }
 
-        getMoreDataLabel.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
-        arrangeDataLeftViews()
+        arrangeListsFooterViews()
         reloadTableViews()
         setTableViewInsets()
         if session.status == 3 {

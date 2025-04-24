@@ -884,6 +884,20 @@ enum TextsAsset {
         }
     }
 
+    enum FreeAccount {
+        static var header: String {
+            return "Unlock full access to Windscribe".localize()
+        }
+
+        static var outOfDataHeader: String {
+            return "You’re out of data".localize()
+        }
+
+        static var body: String {
+            return "Go Pro for unlimited everything".localize()
+        }
+    }
+
     enum PushNotifications {
         static var title: String {
             return "Stay Protected".localize()

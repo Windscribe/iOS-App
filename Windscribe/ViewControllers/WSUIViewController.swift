@@ -19,11 +19,6 @@ class WSUIViewController: UIViewController {
     var loadingBackgroundView: UIView!
     var backgroundLoadingIndicator: UIActivityIndicatorView!
 
-    // getmoredata views
-    var getMoreDataView: UIImageView!
-    var getMoreDataLabel: UILabel!
-    var getMoreDataButton: UIButton!
-
     // layoutView
     lazy var layoutView: WSFillLayoutView = {
         let layoutView = WSFillLayoutView()
@@ -36,24 +31,12 @@ class WSUIViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(displayLeftDataInformation), name: Notifications.sessionUpdated, object: nil)
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "didChangeLangeguage"), object: nil, queue: .main) { [weak self] _ in
             self?.setupLocalized()
         }
     }
 
     func setupLocalized() {}
-
-    @objc func displayLeftDataInformation() {
-        if getMoreDataLabel == nil { return }
-        guard let session = sessionManager.session else { return }
-        getMoreDataLabel.text = "\(session.getDataLeft()) \(TextsAsset.left.uppercased())"
-        if session.isUserPro {
-            getMoreDataView.isHidden = true
-            getMoreDataLabel.isHidden = true
-            getMoreDataButton.isHidden = true
-        }
-    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -142,13 +125,6 @@ class WSUIViewController: UIViewController {
                                   }
                               }, completion: nil)
         }
-    }
-
-    @objc func getMoreDataButtonTapped() {
-        let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self)
-        let navigationController = UINavigationController(rootViewController: planUpgradeVC)
-        navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
     }
 
     func addPromptBackgroundView() {

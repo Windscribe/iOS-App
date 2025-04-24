@@ -30,6 +30,7 @@ extension MainViewController {
         connectionStateInfoView.translatesAutoresizingMaskIntoConstraints = false
         wifiInfoView.translatesAutoresizingMaskIntoConstraints = false
         ipInfoView.translatesAutoresizingMaskIntoConstraints = false
+        freeAccountViewFooterView.translatesAutoresizingMaskIntoConstraints = false
 
         let isSmaller = UIDevice.current.isIphone5orLess()
 
@@ -73,8 +74,12 @@ extension MainViewController {
 
             // serverListTableViews
             serverListTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            serverListTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             serverListTableView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            serverListTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+            // freeAccountViewFooterView
+            freeAccountViewFooterView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            freeAccountViewFooterView.widthAnchor.constraint(equalTo: view.widthAnchor),
 
             // favTableView
             favTableView.topAnchor.constraint(equalTo: scrollView.topAnchor),
