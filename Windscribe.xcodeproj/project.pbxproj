@@ -108,14 +108,14 @@
 		1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */; };
 		1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */; };
 		1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */; };
-		1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */; };
-		1E3F776C2DB8FE08008308A8 /* CompletionCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */; };
 		1E3F77612DB13CA0008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E3F77622DB13CA0008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E3F77642DB13CD1008308A8 /* ExportedLocations+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */; };
 		1E3F77652DB13CD1008308A8 /* ExportedLocations+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */; };
 		1E3F77662DB13D29008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E3F77672DB13D35008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
+		1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */; };
+		1E3F776C2DB8FE08008308A8 /* CompletionCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */; };
 		1E49334A2BF3A52500C853AF /* StaticIPListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */; };
 		1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */; };
 		1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */; };
@@ -1184,6 +1184,10 @@
 		F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E412D94A11B005EF149 /* SignUpViewModel.swift */; };
 		F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E432D959DDE005EF149 /* SignUpView.swift */; };
 		F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E452D9658EB005EF149 /* ViewPositionReader.swift */; };
+		F48F41362DB938E300AFFC30 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353A2DA994BC00108558 /* SoundManager.swift */; };
+		F48F41372DB938EB00AFFC30 /* SoundManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353D2DA9953900108558 /* SoundManaging.swift */; };
+		F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
+		F48F413A2DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
 		F499351C2DA6D93700108558 /* RoutedHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499351B2DA6D93700108558 /* RoutedHostingController.swift */; };
 		F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499352B2DA71F0800108558 /* GhostAccountView.swift */; };
 		F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */; };
@@ -1194,30 +1198,6 @@
 		F49935412DA9973100108558 /* MockSoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935402DA9973100108558 /* MockSoundManager.swift */; };
 		F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935422DA9987800108558 /* SoundManagerTests.swift */; };
 		F49935452DA99E5400108558 /* click.caf in Resources */ = {isa = PBXBuildFile; fileRef = F49935442DA99E5400108558 /* click.caf */; };
-		F499355F2DAD9F2100108558 /* ws_button_videogameoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */; };
-		F49935602DAD9F2100108558 /* ws_button_videogameon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */; };
-		F49935612DAD9F2100108558 /* ws_button_boingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */; };
-		F49935622DAD9F2100108558 /* ws_button_windscribeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */; };
-		F49935632DAD9F2100108558 /* ws_button_fartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */; };
-		F49935642DAD9F2100108558 /* ws_button_arcadeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */; };
-		F49935652DAD9F2100108558 /* ws_button_swordoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */; };
-		F49935662DAD9F2100108558 /* ws_button_ghostwindoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */; };
-		F49935672DAD9F2100108558 /* ws_button_subpingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */; };
-		F49935682DAD9F2100108558 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */; };
-		F49935692DAD9F2100108558 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */; };
-		F499356A2DAD9F2100108558 /* ws_button_windscribeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */; };
-		F499356B2DAD9F2100108558 /* ws_button_subpingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */; };
-		F499356C2DAD9F2100108558 /* ws_button_popcanon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */; };
-		F499356D2DAD9F2100108558 /* ws_button_multifarton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */; };
-		F499356E2DAD9F2100108558 /* ws_button_multifartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */; };
-		F499356F2DAD9F2100108558 /* ws_button_scifioff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */; };
-		F49935702DAD9F2100108558 /* ws_button_arcadeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */; };
-		F49935712DAD9F2100108558 /* ws_button_popcanoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */; };
-		F49935722DAD9F2100108558 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354C2DAD9F2100108558 /* ws_button_farton.m4a */; };
-		F49935732DAD9F2100108558 /* ws_button_swordon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935582DAD9F2100108558 /* ws_button_swordon.m4a */; };
-		F49935742DAD9F2100108558 /* ws_button_ghostwindon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */; };
-		F49935752DAD9F2100108558 /* ws_button_wizbyoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */; };
-		F49935762DAD9F2100108558 /* ws_button_scifion.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F49935542DAD9F2100108558 /* ws_button_scifion.m4a */; };
 		F499357B2DAEE4E900108558 /* CustomSoundEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */; };
 		F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
@@ -1231,6 +1211,32 @@
 		F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B7F7AF2D833D9900CB4CEF /* WelcomeViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */; };
+		F4E48D712DB9C2B0005CB047 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */; };
+		F4E48D722DB9C2B0005CB047 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */; };
+		F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */; };
+		F4E48D742DB9C2B0005CB047 /* ws_button_ghostwindon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5F2DB9C2B0005CB047 /* ws_button_ghostwindon.m4a */; };
+		F4E48D752DB9C2B0005CB047 /* ws_button_arcadeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */; };
+		F4E48D762DB9C2B0005CB047 /* ws_button_wizbyoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6E2DB9C2B0005CB047 /* ws_button_wizbyoff.m4a */; };
+		F4E48D772DB9C2B0005CB047 /* ws_button_multifartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D602DB9C2B0005CB047 /* ws_button_multifartoff.m4a */; };
+		F4E48D782DB9C2B0005CB047 /* ws_button_scifion.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D652DB9C2B0005CB047 /* ws_button_scifion.m4a */; };
+		F4E48D792DB9C2B0005CB047 /* ws_button_windscribeon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6D2DB9C2B0005CB047 /* ws_button_windscribeon.m4a */; };
+		F4E48D7A2DB9C2B0005CB047 /* ws_button_videogameon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6B2DB9C2B0005CB047 /* ws_button_videogameon.m4a */; };
+		F4E48D7B2DB9C2B0005CB047 /* ws_button_swordoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D682DB9C2B0005CB047 /* ws_button_swordoff.m4a */; };
+		F4E48D7C2DB9C2B0005CB047 /* ws_button_scifioff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D642DB9C2B0005CB047 /* ws_button_scifioff.m4a */; };
+		F4E48D7D2DB9C2B0005CB047 /* ws_button_swordon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D692DB9C2B0005CB047 /* ws_button_swordon.m4a */; };
+		F4E48D7E2DB9C2B0005CB047 /* ws_button_videogameoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6A2DB9C2B0005CB047 /* ws_button_videogameoff.m4a */; };
+		F4E48D7F2DB9C2B0005CB047 /* ws_button_arcadeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */; };
+		F4E48D802DB9C2B0005CB047 /* ws_button_popcanon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D632DB9C2B0005CB047 /* ws_button_popcanon.m4a */; };
+		F4E48D812DB9C2B0005CB047 /* ws_button_subpingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D672DB9C2B0005CB047 /* ws_button_subpingon.m4a */; };
+		F4E48D822DB9C2B0005CB047 /* ws_button_popcanoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D622DB9C2B0005CB047 /* ws_button_popcanoff.m4a */; };
+		F4E48D832DB9C2B0005CB047 /* ws_button_multifarton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D612DB9C2B0005CB047 /* ws_button_multifarton.m4a */; };
+		F4E48D842DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5E2DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a */; };
+		F4E48D852DB9C2B0005CB047 /* ws_button_fartoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5C2DB9C2B0005CB047 /* ws_button_fartoff.m4a */; };
+		F4E48D862DB9C2B0005CB047 /* ws_button_windscribeoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6C2DB9C2B0005CB047 /* ws_button_windscribeoff.m4a */; };
+		F4E48D872DB9C2B0005CB047 /* ws_button_subpingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D662DB9C2B0005CB047 /* ws_button_subpingoff.m4a */; };
+		F4E48D882DB9C2B0005CB047 /* ws_button_boingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5B2DB9C2B0005CB047 /* ws_button_boingon.m4a */; };
+		F4E48D8A2DBAB85F005CB047 /* SoundFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */; };
+		F4E48D8B2DBAB85F005CB047 /* SoundFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */; };
 		F4F29E502D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E512D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -1429,9 +1435,9 @@
 		1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+FavNodes.swift"; sourceTree = "<group>"; };
 		1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListEmptyView.swift; sourceTree = "<group>"; };
 		1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderView.swift; sourceTree = "<group>"; };
+		1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExportedLocations+Init.swift"; sourceTree = "<group>"; };
 		1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeAccountFooterView.swift; sourceTree = "<group>"; };
 		1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionCircleView.swift; sourceTree = "<group>"; };
-		1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExportedLocations+Init.swift"; sourceTree = "<group>"; };
 		1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPListViewModel.swift; sourceTree = "<group>"; };
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
@@ -2087,6 +2093,7 @@
 		F4888E412D94A11B005EF149 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		F4888E432D959DDE005EF149 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		F4888E452D9658EB005EF149 /* ViewPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPositionReader.swift; sourceTree = "<group>"; };
+		F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundPlaybackManager.swift; sourceTree = "<group>"; };
 		F499351B2DA6D93700108558 /* RoutedHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutedHostingController.swift; sourceTree = "<group>"; };
 		F499352B2DA71F0800108558 /* GhostAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountView.swift; sourceTree = "<group>"; };
 		F499352D2DA71F1400108558 /* GhostAccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountViewModel.swift; sourceTree = "<group>"; };
@@ -2097,30 +2104,6 @@
 		F49935402DA9973100108558 /* MockSoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSoundManager.swift; sourceTree = "<group>"; };
 		F49935422DA9987800108558 /* SoundManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManagerTests.swift; sourceTree = "<group>"; };
 		F49935442DA99E5400108558 /* click.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = click.caf; sourceTree = "<group>"; };
-		F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
-		F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
-		F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
-		F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingon.m4a; sourceTree = "<group>"; };
-		F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_fartoff.m4a; sourceTree = "<group>"; };
-		F499354C2DAD9F2100108558 /* ws_button_farton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_farton.m4a; sourceTree = "<group>"; };
-		F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindoff.m4a; sourceTree = "<group>"; };
-		F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindon.m4a; sourceTree = "<group>"; };
-		F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifartoff.m4a; sourceTree = "<group>"; };
-		F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifarton.m4a; sourceTree = "<group>"; };
-		F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanoff.m4a; sourceTree = "<group>"; };
-		F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanon.m4a; sourceTree = "<group>"; };
-		F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifioff.m4a; sourceTree = "<group>"; };
-		F49935542DAD9F2100108558 /* ws_button_scifion.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifion.m4a; sourceTree = "<group>"; };
-		F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingoff.m4a; sourceTree = "<group>"; };
-		F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingon.m4a; sourceTree = "<group>"; };
-		F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordoff.m4a; sourceTree = "<group>"; };
-		F49935582DAD9F2100108558 /* ws_button_swordon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordon.m4a; sourceTree = "<group>"; };
-		F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameoff.m4a; sourceTree = "<group>"; };
-		F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameon.m4a; sourceTree = "<group>"; };
-		F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeoff.m4a; sourceTree = "<group>"; };
-		F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeon.m4a; sourceTree = "<group>"; };
-		F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyoff.m4a; sourceTree = "<group>"; };
-		F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyon.m4a; sourceTree = "<group>"; };
 		F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectView.swift; sourceTree = "<group>"; };
 		F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectType.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -2130,6 +2113,31 @@
 		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
+		F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
+		F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
+		F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
+		F4E48D5B2DB9C2B0005CB047 /* ws_button_boingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingon.m4a; sourceTree = "<group>"; };
+		F4E48D5C2DB9C2B0005CB047 /* ws_button_fartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_fartoff.m4a; sourceTree = "<group>"; };
+		F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_farton.m4a; sourceTree = "<group>"; };
+		F4E48D5E2DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindoff.m4a; sourceTree = "<group>"; };
+		F4E48D5F2DB9C2B0005CB047 /* ws_button_ghostwindon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_ghostwindon.m4a; sourceTree = "<group>"; };
+		F4E48D602DB9C2B0005CB047 /* ws_button_multifartoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifartoff.m4a; sourceTree = "<group>"; };
+		F4E48D612DB9C2B0005CB047 /* ws_button_multifarton.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifarton.m4a; sourceTree = "<group>"; };
+		F4E48D622DB9C2B0005CB047 /* ws_button_popcanoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanoff.m4a; sourceTree = "<group>"; };
+		F4E48D632DB9C2B0005CB047 /* ws_button_popcanon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_popcanon.m4a; sourceTree = "<group>"; };
+		F4E48D642DB9C2B0005CB047 /* ws_button_scifioff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifioff.m4a; sourceTree = "<group>"; };
+		F4E48D652DB9C2B0005CB047 /* ws_button_scifion.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_scifion.m4a; sourceTree = "<group>"; };
+		F4E48D662DB9C2B0005CB047 /* ws_button_subpingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingoff.m4a; sourceTree = "<group>"; };
+		F4E48D672DB9C2B0005CB047 /* ws_button_subpingon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_subpingon.m4a; sourceTree = "<group>"; };
+		F4E48D682DB9C2B0005CB047 /* ws_button_swordoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordoff.m4a; sourceTree = "<group>"; };
+		F4E48D692DB9C2B0005CB047 /* ws_button_swordon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_swordon.m4a; sourceTree = "<group>"; };
+		F4E48D6A2DB9C2B0005CB047 /* ws_button_videogameoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameoff.m4a; sourceTree = "<group>"; };
+		F4E48D6B2DB9C2B0005CB047 /* ws_button_videogameon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_videogameon.m4a; sourceTree = "<group>"; };
+		F4E48D6C2DB9C2B0005CB047 /* ws_button_windscribeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeoff.m4a; sourceTree = "<group>"; };
+		F4E48D6D2DB9C2B0005CB047 /* ws_button_windscribeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_windscribeon.m4a; sourceTree = "<group>"; };
+		F4E48D6E2DB9C2B0005CB047 /* ws_button_wizbyoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyoff.m4a; sourceTree = "<group>"; };
+		F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyon.m4a; sourceTree = "<group>"; };
+		F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundFileManager.swift; sourceTree = "<group>"; };
 		F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		F4F51A682D9B176300407DE7 /* SignupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWarningView.swift; sourceTree = "<group>"; };
 		F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewModel.swift; sourceTree = "<group>"; };
@@ -3302,7 +3310,7 @@
 		AF018E0A21B0A35500B225FF /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				F49935462DAD9F0D00108558 /* Sounds */,
+				F4E48D702DB9C2B0005CB047 /* Sounds */,
 				F41190212D7FBABA00AC7EB6 /* Localization */,
 				AF4E924821EF8EAF00A3F584 /* Fonts */,
 				F45F191C2D7B711E0028D0C2 /* Images */,
@@ -4643,39 +4651,10 @@
 			children = (
 				F499353A2DA994BC00108558 /* SoundManager.swift */,
 				F499353D2DA9953900108558 /* SoundManaging.swift */,
+				F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */,
+				F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */,
 			);
 			path = Sound;
-			sourceTree = "<group>";
-		};
-		F49935462DAD9F0D00108558 /* Sounds */ = {
-			isa = PBXGroup;
-			children = (
-				F49935472DAD9F2100108558 /* ws_button_arcadeoff.m4a */,
-				F49935482DAD9F2100108558 /* ws_button_arcadeon.m4a */,
-				F49935492DAD9F2100108558 /* ws_button_boingoff.m4a */,
-				F499354A2DAD9F2100108558 /* ws_button_boingon.m4a */,
-				F499354B2DAD9F2100108558 /* ws_button_fartoff.m4a */,
-				F499354C2DAD9F2100108558 /* ws_button_farton.m4a */,
-				F499354D2DAD9F2100108558 /* ws_button_ghostwindoff.m4a */,
-				F499354E2DAD9F2100108558 /* ws_button_ghostwindon.m4a */,
-				F499354F2DAD9F2100108558 /* ws_button_multifartoff.m4a */,
-				F49935502DAD9F2100108558 /* ws_button_multifarton.m4a */,
-				F49935512DAD9F2100108558 /* ws_button_popcanoff.m4a */,
-				F49935522DAD9F2100108558 /* ws_button_popcanon.m4a */,
-				F49935532DAD9F2100108558 /* ws_button_scifioff.m4a */,
-				F49935542DAD9F2100108558 /* ws_button_scifion.m4a */,
-				F49935552DAD9F2100108558 /* ws_button_subpingoff.m4a */,
-				F49935562DAD9F2100108558 /* ws_button_subpingon.m4a */,
-				F49935572DAD9F2100108558 /* ws_button_swordoff.m4a */,
-				F49935582DAD9F2100108558 /* ws_button_swordon.m4a */,
-				F49935592DAD9F2100108558 /* ws_button_videogameoff.m4a */,
-				F499355A2DAD9F2100108558 /* ws_button_videogameon.m4a */,
-				F499355B2DAD9F2100108558 /* ws_button_windscribeoff.m4a */,
-				F499355C2DAD9F2100108558 /* ws_button_windscribeon.m4a */,
-				F499355D2DAD9F2100108558 /* ws_button_wizbyoff.m4a */,
-				F499355E2DAD9F2100108558 /* ws_button_wizbyon.m4a */,
-			);
-			path = Sounds;
 			sourceTree = "<group>";
 		};
 		F499357C2DAEE80700108558 /* Sound */ = {
@@ -4695,6 +4674,37 @@
 				F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */,
 			);
 			path = ImageLoader;
+			sourceTree = "<group>";
+		};
+		F4E48D702DB9C2B0005CB047 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */,
+				F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */,
+				F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */,
+				F4E48D5B2DB9C2B0005CB047 /* ws_button_boingon.m4a */,
+				F4E48D5C2DB9C2B0005CB047 /* ws_button_fartoff.m4a */,
+				F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */,
+				F4E48D5E2DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a */,
+				F4E48D5F2DB9C2B0005CB047 /* ws_button_ghostwindon.m4a */,
+				F4E48D602DB9C2B0005CB047 /* ws_button_multifartoff.m4a */,
+				F4E48D612DB9C2B0005CB047 /* ws_button_multifarton.m4a */,
+				F4E48D622DB9C2B0005CB047 /* ws_button_popcanoff.m4a */,
+				F4E48D632DB9C2B0005CB047 /* ws_button_popcanon.m4a */,
+				F4E48D642DB9C2B0005CB047 /* ws_button_scifioff.m4a */,
+				F4E48D652DB9C2B0005CB047 /* ws_button_scifion.m4a */,
+				F4E48D662DB9C2B0005CB047 /* ws_button_subpingoff.m4a */,
+				F4E48D672DB9C2B0005CB047 /* ws_button_subpingon.m4a */,
+				F4E48D682DB9C2B0005CB047 /* ws_button_swordoff.m4a */,
+				F4E48D692DB9C2B0005CB047 /* ws_button_swordon.m4a */,
+				F4E48D6A2DB9C2B0005CB047 /* ws_button_videogameoff.m4a */,
+				F4E48D6B2DB9C2B0005CB047 /* ws_button_videogameon.m4a */,
+				F4E48D6C2DB9C2B0005CB047 /* ws_button_windscribeoff.m4a */,
+				F4E48D6D2DB9C2B0005CB047 /* ws_button_windscribeon.m4a */,
+				F4E48D6E2DB9C2B0005CB047 /* ws_button_wizbyoff.m4a */,
+				F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
@@ -5257,32 +5267,32 @@
 				AF4E926321EF8F5900A3F584 /* IBMPlexSans-Text.otf in Resources */,
 				AF283F7B22C40BE7001F5520 /* Localizable.strings in Resources */,
 				AF4E925B21EF8F5900A3F584 /* IBMPlexSans-Italic.otf in Resources */,
-				F499355F2DAD9F2100108558 /* ws_button_videogameoff.m4a in Resources */,
-				F49935602DAD9F2100108558 /* ws_button_videogameon.m4a in Resources */,
-				F49935612DAD9F2100108558 /* ws_button_boingon.m4a in Resources */,
-				F49935622DAD9F2100108558 /* ws_button_windscribeoff.m4a in Resources */,
-				F49935632DAD9F2100108558 /* ws_button_fartoff.m4a in Resources */,
-				F49935642DAD9F2100108558 /* ws_button_arcadeoff.m4a in Resources */,
-				F49935652DAD9F2100108558 /* ws_button_swordoff.m4a in Resources */,
-				F49935662DAD9F2100108558 /* ws_button_ghostwindoff.m4a in Resources */,
-				F49935672DAD9F2100108558 /* ws_button_subpingoff.m4a in Resources */,
-				F49935682DAD9F2100108558 /* ws_button_wizbyon.m4a in Resources */,
-				F49935692DAD9F2100108558 /* ws_button_boingoff.m4a in Resources */,
-				F499356A2DAD9F2100108558 /* ws_button_windscribeon.m4a in Resources */,
-				F499356B2DAD9F2100108558 /* ws_button_subpingon.m4a in Resources */,
-				F499356C2DAD9F2100108558 /* ws_button_popcanon.m4a in Resources */,
-				F499356D2DAD9F2100108558 /* ws_button_multifarton.m4a in Resources */,
-				F499356E2DAD9F2100108558 /* ws_button_multifartoff.m4a in Resources */,
-				F499356F2DAD9F2100108558 /* ws_button_scifioff.m4a in Resources */,
-				F49935702DAD9F2100108558 /* ws_button_arcadeon.m4a in Resources */,
-				F49935712DAD9F2100108558 /* ws_button_popcanoff.m4a in Resources */,
-				F49935722DAD9F2100108558 /* ws_button_farton.m4a in Resources */,
-				F49935732DAD9F2100108558 /* ws_button_swordon.m4a in Resources */,
-				F49935742DAD9F2100108558 /* ws_button_ghostwindon.m4a in Resources */,
-				F49935752DAD9F2100108558 /* ws_button_wizbyoff.m4a in Resources */,
-				F49935762DAD9F2100108558 /* ws_button_scifion.m4a in Resources */,
 				AF4E926621EF8F5900A3F584 /* IBMPlexSans-ThinItalic.otf in Resources */,
 				AF15B8C3246C514A0086BB2A /* dots.gif in Resources */,
+				F4E48D712DB9C2B0005CB047 /* ws_button_farton.m4a in Resources */,
+				F4E48D722DB9C2B0005CB047 /* ws_button_wizbyon.m4a in Resources */,
+				F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */,
+				F4E48D742DB9C2B0005CB047 /* ws_button_ghostwindon.m4a in Resources */,
+				F4E48D752DB9C2B0005CB047 /* ws_button_arcadeon.m4a in Resources */,
+				F4E48D762DB9C2B0005CB047 /* ws_button_wizbyoff.m4a in Resources */,
+				F4E48D772DB9C2B0005CB047 /* ws_button_multifartoff.m4a in Resources */,
+				F4E48D782DB9C2B0005CB047 /* ws_button_scifion.m4a in Resources */,
+				F4E48D792DB9C2B0005CB047 /* ws_button_windscribeon.m4a in Resources */,
+				F4E48D7A2DB9C2B0005CB047 /* ws_button_videogameon.m4a in Resources */,
+				F4E48D7B2DB9C2B0005CB047 /* ws_button_swordoff.m4a in Resources */,
+				F4E48D7C2DB9C2B0005CB047 /* ws_button_scifioff.m4a in Resources */,
+				F4E48D7D2DB9C2B0005CB047 /* ws_button_swordon.m4a in Resources */,
+				F4E48D7E2DB9C2B0005CB047 /* ws_button_videogameoff.m4a in Resources */,
+				F4E48D7F2DB9C2B0005CB047 /* ws_button_arcadeoff.m4a in Resources */,
+				F4E48D802DB9C2B0005CB047 /* ws_button_popcanon.m4a in Resources */,
+				F4E48D812DB9C2B0005CB047 /* ws_button_subpingon.m4a in Resources */,
+				F4E48D822DB9C2B0005CB047 /* ws_button_popcanoff.m4a in Resources */,
+				F4E48D832DB9C2B0005CB047 /* ws_button_multifarton.m4a in Resources */,
+				F4E48D842DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a in Resources */,
+				F4E48D852DB9C2B0005CB047 /* ws_button_fartoff.m4a in Resources */,
+				F4E48D862DB9C2B0005CB047 /* ws_button_windscribeoff.m4a in Resources */,
+				F4E48D872DB9C2B0005CB047 /* ws_button_subpingoff.m4a in Resources */,
+				F4E48D882DB9C2B0005CB047 /* ws_button_boingon.m4a in Resources */,
 				AF4E925E21EF8F5900A3F584 /* IBMPlexSans-Medium.otf in Resources */,
 				AF4E926121EF8F5900A3F584 /* IBMPlexSans-SemiBold.otf in Resources */,
 				AF914A7023CCF947002D3041 /* ws-rotating-logo.gif in Resources */,
@@ -5567,6 +5577,7 @@
 				C545A0DC2D47639500F3333E /* Completable+Extension.swift in Sources */,
 				59DA7FC22C3DAD3800042E57 /* WelcomeViewController.swift in Sources */,
 				1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */,
+				F4E48D8A2DBAB85F005CB047 /* SoundFileManager.swift in Sources */,
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
 				59FC73DD2C514BCD00021CD1 /* ConnectivityImpl.swift in Sources */,
@@ -5590,14 +5601,17 @@
 				59FC74642C5167A300021CD1 /* NotificationRepositoryImpl.swift in Sources */,
 				F434A1C52D84AB200059415F /* NewsFeedModel.swift in Sources */,
 				1E0D9D732C6103A3008AFF2D /* PreferencesGeneralView.swift in Sources */,
+				F48F41362DB938E300AFFC30 /* SoundManager.swift in Sources */,
 				59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */,
 				1EF7BB412C74B0880032A4DF /* UIVIew+Gradient.swift in Sources */,
 				1EA4FA712D3E89A60021C656 /* VPNConfigurationErrors.swift in Sources */,
 				59FC745B2C5161D900021CD1 /* UIView+Extension.swift in Sources */,
+				F48F41372DB938EB00AFFC30 /* SoundManaging.swift in Sources */,
 				59FC74132C51542300021CD1 /* RobertFilters.swift in Sources */,
 				59DA7FBA2C3D898F00042E57 /* FileDatabaseImpl.swift in Sources */,
 				F434A1BD2D84A5690059415F /* NewsFeedDataModel.swift in Sources */,
 				59FC74212C51555500021CD1 /* ProxyInfo.swift in Sources */,
+				F48F413A2DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */,
 				59A218732C3C9EDF000D89FA /* DefaultValues.swift in Sources */,
 				59FC74142C51543400021CD1 /* PushNotificationPayload.swift in Sources */,
 				1E8C8F3D2C6500D900CBFDC5 /* DNSSettingsManager.swift in Sources */,
@@ -5981,6 +5995,7 @@
 				1AE6D2BB2837E44E00276C7D /* AccountViewController.swift in Sources */,
 				1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */,
 				AF7F3082237609890097C6D6 /* ShakeForDataViewController.swift in Sources */,
+				F4E48D8B2DBAB85F005CB047 /* SoundFileManager.swift in Sources */,
 				C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */,
 				F49935352DA843A200108558 /* EnterEmailViewModel.swift in Sources */,
 				AF36A1A5237B4D9D00BDDCDB /* ShakeForDataPopupViewController+UI.swift in Sources */,
@@ -6074,6 +6089,7 @@
 				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				AF3E90E1231D970F00AD192A /* PrivacyViewController.swift in Sources */,
 				59EB6D1D2B328D6400616414 /* PreferencesMainViewModel.swift in Sources */,
+				F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */,
 				1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				AF02A9EB22B14D4700A9F44B /* SelectedNode.swift in Sources */,
 				AF914A7423CE2012002D3041 /* Token.swift in Sources */,

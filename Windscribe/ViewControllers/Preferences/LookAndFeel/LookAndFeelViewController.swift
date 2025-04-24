@@ -16,6 +16,7 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     var viewModel: LookAndFeelViewModelType!
     var logger: FileLogger!
+    var soundFileManager: SoundFileManaging!
 
     // MARK: UI Elements
 
@@ -45,7 +46,9 @@ class LookAndFeelViewController: WSNavigationViewController {
     private lazy var soundEffectRow = CustomSoundEffectView(
         isDarkMode: viewModel.isDarkMode,
         connectInitialType: viewModel.getSoundEffect(for: .connect),
-        disconnectInitialType: viewModel.getSoundEffect(for: .disconnect)
+        connectInitialSoundPath: viewModel.getCustomSoundPath(for: .connect),
+        disconnectInitialType: viewModel.getSoundEffect(for: .disconnect),
+        disconnectInitialSoundPath: viewModel.getCustomSoundPath(for: .disconnect)
     ).then {
         $0.delegate = self
     }
@@ -218,8 +221,19 @@ extension LookAndFeelViewController: CustomSoundEffectViewDelegate {
         viewModel.updateSoundEffectType(domain: domain, type: type)
     }
 
-    func customSoundDidPickCustomFile(domain: SoundAssetDomainType, path: String) {
-        viewModel.saveCustomSoundPath(domain: domain, path: path)
+    func customSoundView(_ view: CustomSoundEffectView, didPickSoundFile url: URL, for domain: SoundAssetDomainType) {
+        soundFileManager.saveSoundFile(from: url, for: domain) { [weak self] copiedURL in
+            guard let self = self, let copiedURL = copiedURL else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                view.updateFileNameLabel(copiedURL.lastPathComponent, for: domain)
+
+                // Save the path to preferences
+                self.viewModel.saveCustomSoundPath(domain: domain, path: copiedURL.path)
+            }
+        }
     }
 }
 

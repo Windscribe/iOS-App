@@ -30,15 +30,18 @@ final class SoundManager: SoundManaging {
     internal private(set) var systemSounds: [String: SystemSoundID] = [:]
 
     private var taggedPlayers: [String: AVAudioPlayer] = [:]
-    private let defaultSoundFolder = "Sounds"
 
     let logger: FileLogger
 
-    init (logger: FileLogger) {
+    init(logger: FileLogger) {
         self.logger = logger
 
-        try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default, options: [.mixWithOthers])
-        try? AVAudioSession.sharedInstance().setActive(true)
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            logger.logE("SoundManager", "Failed to configure AVAudioSession: \(error)")
+        }
     }
 
     /// Unified sound playback interface.
@@ -125,7 +128,8 @@ final class SoundManager: SoundManaging {
             }
 
         } catch {
-            logger.logE("SoundManager", "Failed to play custom sound from path: \(path), error: \(error.localizedDescription)")
+            logger.logE("SoundManager",
+                        "Failed to play custom sound from path: \(path), error: \(error.localizedDescription)")
         }
     }
 
@@ -158,7 +162,7 @@ final class SoundManager: SoundManaging {
         }
 
         // 💡 Use subdirectory: "Sounds" since we are storing files in a real folder reference
-        guard let soundURL = bundle.url(forResource: name, withExtension: ext, subdirectory: defaultSoundFolder) else {
+        guard let soundURL = bundle.url(forResource: name, withExtension: ext, subdirectory: nil) else {
             logger.logE("SoundManager", "Sound file not found in Sounds/: \(name).\(ext)")
             return
         }
@@ -187,7 +191,7 @@ final class SoundManager: SoundManaging {
             taggedPlayers.removeValue(forKey: tag)
         }
 
-        guard let soundURL = bundle.url(forResource: name, withExtension: ext, subdirectory: defaultSoundFolder) else {
+        guard let soundURL = bundle.url(forResource: name, withExtension: ext, subdirectory: nil) else {
             logger.logE("SoundManager", "Sound file not found in Sounds/: \(name).\(ext)")
             return
         }

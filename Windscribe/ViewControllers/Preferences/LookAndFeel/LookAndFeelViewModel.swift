@@ -31,6 +31,7 @@ protocol LookAndFeelViewModelType {
     func getSoundEffect(for domain: SoundAssetDomainType) -> SoundEffectType
     func updateSoundEffectType(domain: SoundAssetDomainType, type: SoundEffectType)
     func saveCustomSoundPath(domain: SoundAssetDomainType, path: String)
+    func getCustomSoundPath(for domain: SoundAssetDomainType) -> String?
 
     // Version
     func getVersion() -> String

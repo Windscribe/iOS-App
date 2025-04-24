@@ -11,7 +11,7 @@ import RxSwift
 
 protocol CustomSoundEffectViewDelegate: AnyObject {
     func customSoundDidChangeType(_ domain: SoundAssetDomainType, type: SoundEffectType)
-    func customSoundDidPickCustomFile(domain: SoundAssetDomainType, path: String)
+    func customSoundView(_ view: CustomSoundEffectView, didPickSoundFile url: URL, for domain: SoundAssetDomainType)
 }
 
 class CustomSoundEffectView: UIView {
@@ -27,7 +27,9 @@ class CustomSoundEffectView: UIView {
     ]
 
     private var connectCurrentType: SoundEffectType
+    private var connectCurrentSoundPath: String?
     private var disconnectCurrentType: SoundEffectType
+    private var disconnectCurrentSoundPath: String?
     private var activeDropdownDomain: SoundAssetDomainType?
 
     // UI
@@ -75,11 +77,15 @@ class CustomSoundEffectView: UIView {
 
     init(isDarkMode: BehaviorSubject<Bool>,
          connectInitialType: SoundEffectType,
-         disconnectInitialType: SoundEffectType) {
+         connectInitialSoundPath: String?,
+         disconnectInitialType: SoundEffectType,
+         disconnectInitialSoundPath: String?) {
         self.isDarkMode = isDarkMode
 
         connectCurrentType = connectInitialType
+        connectCurrentSoundPath = connectInitialSoundPath
         disconnectCurrentType = disconnectInitialType
+        disconnectCurrentSoundPath = disconnectInitialSoundPath
         footerView = FooterView(isDarkMode: isDarkMode)
 
         super.init(frame: .zero)
@@ -339,8 +345,21 @@ class CustomSoundEffectView: UIView {
         connectCustomWrapperView.isHidden = connectCurrentType != .custom
         disconnectCustomWrapperView.isHidden = disconnectCurrentType != .custom
 
-        connectCustomValueLabel.text = "[no selection]"
-        disconnectCustomValueLabel.text = "[no selection]"
+        restoreCustomSoundSelections()
+    }
+
+    private func restoreCustomSoundSelections() {
+        if let connectPath = connectCurrentSoundPath {
+            connectCustomValueLabel.text = URL(fileURLWithPath: connectPath).lastPathComponent
+        } else {
+            connectCustomValueLabel.text = "[no selection]"
+        }
+
+        if let disconnectPath = disconnectCurrentSoundPath {
+            disconnectCustomValueLabel.text = URL(fileURLWithPath: disconnectPath).lastPathComponent
+        } else {
+            disconnectCustomValueLabel.text = "[no selection]"
+        }
     }
 
     // MARK: Actions
@@ -469,6 +488,15 @@ extension CustomSoundEffectView: DropdownDelegate {
             domain,
             type: domain == .connect ? connectCurrentType : disconnectCurrentType)
     }
+
+    func updateFileNameLabel(_ name: String, for domain: SoundAssetDomainType) {
+        switch domain {
+        case .connect:
+            connectCustomValueLabel.text = name
+        case .disconnect:
+            disconnectCustomValueLabel.text = name
+        }
+    }
 }
 
 extension CustomSoundEffectView: UIDocumentPickerDelegate {
@@ -476,21 +504,8 @@ extension CustomSoundEffectView: UIDocumentPickerDelegate {
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let selectedURL = urls.first else { return }
 
-        // Optional: validate it's an audio file, or trust picker config
-
-        let fileName = selectedURL.lastPathComponent
-        let filePath = selectedURL.path
-
-        let domain = activeDropdownDomain ?? .connect // fallback
-
-        switch domain {
-        case .connect:
-            connectCustomValueLabel.text = fileName
-        case .disconnect:
-            disconnectCustomValueLabel.text = fileName
-        }
-
-        delegate?.customSoundDidPickCustomFile(domain: domain, path: filePath)
+        let domain = activeDropdownDomain ?? .connect
+        delegate?.customSoundView(self, didPickSoundFile: selectedURL, for: domain)
     }
 
     private func presentFilePicker() {

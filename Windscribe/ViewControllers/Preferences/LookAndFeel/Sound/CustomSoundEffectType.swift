@@ -13,6 +13,17 @@ enum SoundAssetDomainType {
     case disconnect
 }
 
+extension SoundAssetDomainType {
+    var tag: String {
+        switch self {
+        case .connect:
+            return "vpnConnect"
+        case .disconnect:
+            return "vpnDisconnect"
+        }
+    }
+}
+
 enum SoundEffectType {
     case none
     case bundled(subtype: SoundEffectSubtype)
@@ -108,13 +119,23 @@ enum SoundEffectSubtype: String, CaseIterable {
         return rawValue
     }
 
-    var assetName: String {
+    var turnOnAssetName: String {
         switch self {
-        case .arcade: return "arcade_sound.mp3"
-        case .boing: return "boing_sound.mp3"
-        case .fart: return "fart_sound.mp3"
-        case .sword: return "sword_sound.mp3"
-        case .windscribe: return "windscribe_sound.mp3"
+        case .arcade: return "ws_button_arcadeon"
+        case .boing: return "ws_button_boingon"
+        case .fart: return "ws_button_farton"
+        case .sword: return "ws_button_swordon"
+        case .windscribe: return "ws_button_windscribeon"
+        }
+    }
+
+    var turnOffAssetName: String {
+        switch self {
+        case .arcade: return "ws_button_arcadeoff"
+        case .boing: return "ws_button_boingoff"
+        case .fart: return "ws_button_fartoff"
+        case .sword: return "ws_button_swordoff"
+        case .windscribe: return "ws_button_windscribeoff"
         }
     }
 }

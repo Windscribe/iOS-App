@@ -408,6 +408,7 @@ class ViewControllerModule: Assembly {
             vc.customConfigRepository = r.resolve(CustomConfigRepository.self)
             vc.viewModel = r.resolve(MainViewModelType.self)
             vc.soundManager = r.resolve(SoundManaging.self)
+            vc.customSoundPlaybackManager = r.resolve(CustomSoundPlaybackManaging.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
@@ -438,6 +439,7 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(LookAndFeelViewModelType.self)
             c.logger = r.resolve(FileLogger.self)
+            c.soundFileManager = r.resolve(SoundFileManaging.self)
         }.inObjectScope(.transient)
         container.register(AccountViewController.self) { _ in
             AccountViewController()
