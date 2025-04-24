@@ -32,7 +32,7 @@ extension PreferencesMainViewController {
         else {
             return
         }
-        actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+        actionButtonBottomConstraint = NSLayoutConstraint(item: actionButton, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24)
         view.addConstraints([
             actionButtonBottomConstraint,
             NSLayoutConstraint(item: actionButton, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1.0, constant: 50),
@@ -42,7 +42,7 @@ extension PreferencesMainViewController {
         if actionButton.isHidden == false {
             loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: actionButton, attribute: .top, multiplier: 1.0, constant: -24)
         } else {
-            loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: getMoreDataView, attribute: .top, multiplier: 1.0, constant: -24)
+            loginButtonBottomConstraint = NSLayoutConstraint(item: loginButton, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: -24)
         }
         view.addConstraints([
             loginButtonBottomConstraint,

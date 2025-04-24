@@ -33,6 +33,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var favTableView, staticIpTableView, customConfigTableView: PlainTableView!
     var staticIPTableViewFooterView: StaticIPListFooterView!
     var customConfigTableViewFooterView: CustomConfigListFooterView!
+    var freeAccountViewFooterView: FreeAccountFooterView!
+
+    var serverHeaderView: ServerInfoView!
 
     var serverHeaderView: ServerInfoView!
 
@@ -293,8 +296,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     override func setupLocalized() {
-        displayLeftDataInformation()
-        getMoreDataButton.setTitle(TextsAsset.getMoreData.uppercased(), for: .normal)
         viewModel.updateSSID()
     }
 

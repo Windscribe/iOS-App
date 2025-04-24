@@ -40,12 +40,8 @@ extension UIColor {
     static let brightBlue = UIColor(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0, alpha: 1.0)
     static let failRed = UIColor(red: 249 / 255.0, green: 76 / 255.0, blue: 67 / 255.0, alpha: 1.0)
     static let midnight = UIColor(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0, alpha: 1.0)
-    static let nightBlue = UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: 1.0)
     static func midnightWithOpacity(opacity: CGFloat) -> UIColor {
         return UIColor(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0, alpha: opacity)
-    }
-    static func nightBlueOpacity(opacity: CGFloat) -> UIColor {
-        return UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: opacity)
     }
 
     static func blackWithOpacity(opacity: CGFloat) -> UIColor {
@@ -122,4 +118,21 @@ extension Color {
     static let loginRegisterFailedField = Color(red: 249 / 255.0, green: 76 / 255.0, blue: 67 / 255.0)
     static let loginRegisterEnabledButtonColor = Color(red: 85 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
     static let loginRegisterBackgroundColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
+}
+
+// New Memefication colors
+extension UIColor {
+    // night blue
+    static let nightBlue = UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: 1.0)
+
+    static func nightBlueOpacity(opacity: CGFloat) -> UIColor {
+        return UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: opacity)
+    }
+
+    // cyber blue
+    static let cyberBlue = UIColor(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0, alpha: 1.0)
+
+    static func cyberBlueWithOpacity(opacity: CGFloat) -> UIColor {
+        return UIColor(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0, alpha: opacity)
+    }
 }

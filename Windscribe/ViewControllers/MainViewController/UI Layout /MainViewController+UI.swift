@@ -39,6 +39,7 @@ extension MainViewController {
 
         serverListTableView = PlainExpyTableView()
         serverListTableView.tag = 0
+        serverListTableView.clipsToBounds = false
         serverListTableView.register(
             NodeTableViewCell.self,
             forCellReuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
@@ -102,6 +103,10 @@ extension MainViewController {
 
         addRefreshControls()
 
+        freeAccountViewFooterView = Assembler.container.resolve(FreeAccountFooterView.self)!
+        freeAccountViewFooterView.delegate = self
+        scrollView.addSubview(freeAccountViewFooterView)
+
         view.bringSubviewToFront(scrollView)
     }
 
@@ -126,17 +131,14 @@ extension MainViewController {
             selectedHeaderViewTab = .all
             tableViewScrolled(toTop: serverListTableView.contentOffset.y <= 0)
             listSelectionView.viewModel.setSelectedAction(selectedAction: .all)
-            arrangeDataLeftViews()
         case view.frame.width:
             selectedHeaderViewTab = .fav
             tableViewScrolled(toTop: favTableView.contentOffset.y <= 0)
             listSelectionView.viewModel.setSelectedAction(selectedAction: .fav)
-            arrangeDataLeftViews()
         case view.frame.width * 2:
             selectedHeaderViewTab = .staticIP
             tableViewScrolled(toTop: staticIpTableView.contentOffset.y <= 0)
             listSelectionView.viewModel.setSelectedAction(selectedAction: .staticIP)
-            arrangeDataLeftViews()
         case view.frame.width * 3:
             selectedHeaderViewTab = .config
             tableViewScrolled(toTop: customConfigTableView.contentOffset.y <= 0)
@@ -210,14 +212,11 @@ extension MainViewController {
         view.addSubview(spacer)
     }
 
-    func arrangeDataLeftViews() {
+    func arrangeListsFooterViews() {
         guard let session = try? viewModel.session.value() else { return }
-        let hide = session.isPremium || session.billingPlanId == -9 || !isSpaceAvailableForGetMoreDataView()
-        getMoreDataView.isHidden = hide
-        getMoreDataLabel.isHidden = hide
-        getMoreDataButton.isHidden = hide
-        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? false) || !hide
-        customConfigTableViewFooterView.isHidden = !hide
+        let visible = session.isPremium || session.billingPlanId == -9 || !isSpaceAvailableForGetMoreDataView()
+        staticIPTableViewFooterView.isHidden = (staticIPListTableViewDataSource?.shouldHideFooter() ?? true) || !visible
+        customConfigTableViewFooterView.isHidden = !visible
         if customConfigListTableViewDataSource?.customConfigs?.count == 0 {
             customConfigTableViewFooterView.isHidden = true
         }

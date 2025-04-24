@@ -108,6 +108,8 @@
 		1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */; };
 		1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */; };
 		1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */; };
+		1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */; };
+		1E3F776C2DB8FE08008308A8 /* CompletionCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */; };
 		1E3F77612DB13CA0008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E3F77622DB13CA0008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
 		1E3F77642DB13CD1008308A8 /* ExportedLocations+Init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */; };
@@ -702,7 +704,6 @@
 		AF914A7023CCF947002D3041 /* ws-rotating-logo.gif in Resources */ = {isa = PBXBuildFile; fileRef = AF914A6F23CCF946002D3041 /* ws-rotating-logo.gif */; };
 		AF914A7223CD0C7D002D3041 /* PromptBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A7123CD0C7D002D3041 /* PromptBackgroundView.swift */; };
 		AF914A7423CE2012002D3041 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A7323CE2011002D3041 /* Token.swift */; };
-		AF914A7623D609C5002D3041 /* WSUIViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A7523D609C2002D3041 /* WSUIViewController+UI.swift */; };
 		AF914A7823D611DB002D3041 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF914A7723D611DA002D3041 /* UIButton+Extension.swift */; };
 		AF935E9522FCA13800327837 /* CheckMarkButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF935E9422FCA13800327837 /* CheckMarkButton.swift */; };
 		AF97EFDB2280E70300378058 /* Realm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDA2280E70300378058 /* Realm+Extension.swift */; };
@@ -1428,6 +1429,8 @@
 		1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+FavNodes.swift"; sourceTree = "<group>"; };
 		1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListEmptyView.swift; sourceTree = "<group>"; };
 		1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderView.swift; sourceTree = "<group>"; };
+		1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeAccountFooterView.swift; sourceTree = "<group>"; };
+		1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionCircleView.swift; sourceTree = "<group>"; };
 		1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExportedLocations+Init.swift"; sourceTree = "<group>"; };
 		1E4933492BF3A52500C853AF /* StaticIPListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIPListViewModel.swift; sourceTree = "<group>"; };
 		1E49334C2BF3C6A100C853AF /* MainViewController+StaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+StaticIP.swift"; sourceTree = "<group>"; };
@@ -1758,7 +1761,6 @@
 		AF914A6F23CCF946002D3041 /* ws-rotating-logo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "ws-rotating-logo.gif"; sourceTree = "<group>"; };
 		AF914A7123CD0C7D002D3041 /* PromptBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromptBackgroundView.swift; sourceTree = "<group>"; };
 		AF914A7323CE2011002D3041 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
-		AF914A7523D609C2002D3041 /* WSUIViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WSUIViewController+UI.swift"; sourceTree = "<group>"; };
 		AF914A7723D611DA002D3041 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
 		AF935E9422FCA13800327837 /* CheckMarkButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMarkButton.swift; sourceTree = "<group>"; };
 		AF97EFDA2280E70300378058 /* Realm+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Realm+Extension.swift"; sourceTree = "<group>"; };
@@ -2559,6 +2561,14 @@
 			path = "Lists Header Views";
 			sourceTree = "<group>";
 		};
+		1E3F77682DB7E5CB008308A8 /* Free Account Footer */ = {
+			isa = PBXGroup;
+			children = (
+				1E3F77692DB7E5DA008308A8 /* FreeAccountFooterView.swift */,
+			);
+			path = "Free Account Footer";
+			sourceTree = "<group>";
+		};
 		1E4933482BF3A50700C853AF /* Static IP List */ = {
 			isa = PBXGroup;
 			children = (
@@ -2613,6 +2623,8 @@
 		1E5553BA2D8D880600F16AF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */,
+				1E3F77682DB7E5CB008308A8 /* Free Account Footer */,
 				1E3F775E2DB007A8008308A8 /* Lists Header Views */,
 				1EC6C77C2BE10DB00036248B /* Search Locations */,
 				1E5553A62D830EC700F16AF0 /* Server List Cells */,
@@ -3525,7 +3537,6 @@
 		AF4E924721EF8C6900A3F584 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				AF914A7523D609C2002D3041 /* WSUIViewController+UI.swift */,
 				AF4E927421F7B56500A3F584 /* CustomViews */,
 			);
 			path = View;
@@ -5977,6 +5988,7 @@
 				C57668F02B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift in Sources */,
 				C5D983BB2B34A1D90069FF3A /* APIManager.swift in Sources */,
 				C580FDEC2B4D711D004FA857 /* KeyChainDatabaseImpl.swift in Sources */,
+				1E3F776C2DB8FE08008308A8 /* CompletionCircleView.swift in Sources */,
 				1E5553D72DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */,
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
 				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
@@ -6035,6 +6047,7 @@
 				AF3E90E3231D974C00AD192A /* PrivacyViewController+UI.swift in Sources */,
 				C5A930E42B44710E0001CFA0 /* ServerRepository.swift in Sources */,
 				C56FCBDB2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift in Sources */,
+				1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */,
 				C5A930F72B45A4FC0001CFA0 /* FileLogFormater.swift in Sources */,
 				598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */,
 				AFC75F7F24BD9FCD00897C18 /* WireGuardConfig.swift in Sources */,
@@ -6102,7 +6115,6 @@
 				59215B462B6051AC0086CBF6 /* ThemeManager.swift in Sources */,
 				AFF507D8229D86BA00C094A0 /* VPNManager.swift in Sources */,
 				E9D3D373274D29A500283285 /* MainViewController+LoadData.swift in Sources */,
-				AF914A7623D609C5002D3041 /* WSUIViewController+UI.swift in Sources */,
 				AF4ECA9C23E3434400E09223 /* MainViewController+Theme.swift in Sources */,
 				C52DA5272B63901400E5C571 /* CustomConfigRepository.swift in Sources */,
 				AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */,

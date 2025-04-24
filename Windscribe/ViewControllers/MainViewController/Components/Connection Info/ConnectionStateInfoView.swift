@@ -71,7 +71,7 @@ protocol ConnectionStateInfoViewDelegate: AnyObject {
 class ConnectionStateInfoView: UIView {
     let disposeBag = DisposeBag()
 
-    var delegate: ConnectionStateInfoViewDelegate?
+    weak var delegate: ConnectionStateInfoViewDelegate?
 
     var pillView = UIView()
     var pillLabel = UILabel()
@@ -258,7 +258,7 @@ class ConnectionStateInfoView: UIView {
             UIImage(named: $0)?.withRenderingMode(.alwaysTemplate)
         }
 
-        stackView.addArrangedSubviews([pillView, protocolLabel, portLabel, preferredIcon, circunventIcon, actionIcon])
+        stackView.addArrangedSubviews([pillView, circunventIcon, protocolLabel, portLabel, preferredIcon, actionIcon])
         stackView.spacing = 8
 
         pillView.addSubview(pillLabel)

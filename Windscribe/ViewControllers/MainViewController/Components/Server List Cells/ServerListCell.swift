@@ -25,25 +25,14 @@ protocol ServerCellModelType {
     var serverHealth: CGFloat { get }
 }
 
-class HealthCircleView: UIView {
+class HealthCircleView: CompletionCircleView {
     var health: CGFloat? {
         didSet {
-            self.setNeedsDisplay()
-            self.backgroundColor = .clear
+            self.percentage = health
         }
     }
 
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        guard let health = health else { return }
-        let endAngle = (health * 0.02 - 1) * CGFloat.pi
-        let path = UIBezierPath(arcCenter: CGPoint(x: 12, y: 12), radius: 11, startAngle: -CGFloat.pi, endAngle: endAngle, clockwise: true)
-        getColorFromHealth().setStroke()
-        path.lineWidth = 1
-        path.stroke()
-    }
-
-    func getColorFromHealth() -> UIColor {
+    override func getColorFromPercentage() -> UIColor {
         guard let health = health else { return .red }
         if health < 0 {
             return .clear
