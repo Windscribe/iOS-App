@@ -198,13 +198,14 @@ extension MainViewController {
             logger.logI(MainViewController.self, "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
-                soundManager.playSound(named: "ws_button_arcadeon", withExtension: "m4a", fromBundle: .main, volume: 1.0, style: .instant, tag: "vpnState")
+                customSoundPlaybackManager.playSound(for: .connect)
                 enableVPNConnection()
             } else {
                 displayInternetConnectionLostAlert()
             }
         } else {
             logger.logD(self, "User tapped to disconnect.")
+            customSoundPlaybackManager.playSound(for: .disconnect)
             vpnConnectionViewModel.disableConnection()
         }
     }

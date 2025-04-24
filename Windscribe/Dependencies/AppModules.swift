@@ -108,6 +108,7 @@ class Repository: Assembly {
                                   locationsManager: r.resolve(LocationsManagerType.self)!,
                                   ipRepository: r.resolve(IPRepository.self)!)
         }.inObjectScope(.userScope)
+
     }
 }
 
@@ -123,6 +124,14 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
         container.register(SoundManaging.self) { r in
             SoundManager(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+        container.register(SoundFileManaging.self) { r in
+            SoundFileManager(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+        container.register(CustomSoundPlaybackManaging.self) { r in
+            CustomSoundPlaybackManager(
+                preferences: r.resolve(Preferences.self)!,
+                soundManager: r.resolve(SoundManaging.self)!)
         }.inObjectScope(.userScope)
         container.register(HTMLParsing.self) { r in
             HTMLParser(logger: r.resolve(FileLogger.self)!)
