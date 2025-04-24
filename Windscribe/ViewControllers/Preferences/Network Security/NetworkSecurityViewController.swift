@@ -110,7 +110,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
         let type = ConnectionSecure.autoSecure
         view.titleLabel.text = type.title
         view.subTitleLabel.text = type.description
-        view.setImage(UIImage(named: GeneralHelper.getAsset(.autoConnection)))
+        view.setImage(UIImage(named: SelectionViewType.autoConnection.asset))
         view.hideShowExplainIcon()
         view.switchButton.setStatus(viewModel.getAutoSecureNetworkStatus())
         view.connectionSecureViewSwitchAcction = { [weak self] in

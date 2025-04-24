@@ -103,6 +103,9 @@ enum SharedKeys {
     // Backgrounds
     static let connectBackgroundEffect = "connectBackgroundEffect"
     static let disconnectBackgroundEffect = "disconnectBackgroundEffect"
+
+    // Custom Locations Names
+    static let customLocationNames = "customLocationNames"
 }
 
 /// Read value from plist file or not found returns empty string.

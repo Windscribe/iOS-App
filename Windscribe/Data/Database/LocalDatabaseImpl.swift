@@ -414,18 +414,4 @@ class LocalDatabaseImpl: LocalDatabase {
             }
         }
     }
-
-    func getServerAndGroup(bestNodeHostname: String) -> (ServerModel, GroupModel)? {
-        guard let servers = getServers() else { return nil }
-        var serverResult: ServerModel?
-        var groupResult: GroupModel?
-        for server in servers.map({ $0.getServerModel() }) {
-            for group in server?.groups ?? [] where group.bestNodeHostname == bestNodeHostname {
-                serverResult = server
-                groupResult = group
-            }
-        }
-        guard let serverResultSafe = serverResult, let groupResultSafe = groupResult else { return nil }
-        return (serverResultSafe, groupResultSafe)
-    }
 }

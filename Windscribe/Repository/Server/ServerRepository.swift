@@ -10,6 +10,8 @@ import Foundation
 import RxSwift
 
 protocol ServerRepository {
-    var updatedServersSubject: BehaviorSubject<[Server]> { get }
+    var updatedServerModelsSubject: BehaviorSubject<[ServerModel]> { get }
+    var currentServerModels: [ServerModel] { get }
     func getUpdatedServers() -> Single<[Server]>
+    func updateRegions(with regions: [ExportedRegion])
 }

@@ -376,8 +376,8 @@ extension ConfigurationsManager {
 
         var groupResult: GroupModel?
         for server in servers.map({ $0.getServerModel() }) {
-            for group in server?.groups ?? [] where locationID == "\(group.id ?? 0)" {
-                groupResult = server?.groups?.filter { $0.isNodesAvailable() }.randomElement()
+            for group in server.groups ?? [] where locationID == "\(group.id ?? 0)" {
+                groupResult = server.groups?.filter { $0.isNodesAvailable() }.randomElement()
             }
         }
         if let city = groupResult {

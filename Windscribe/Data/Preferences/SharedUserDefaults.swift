@@ -597,6 +597,15 @@ class SharedSecretDefaults: Preferences {
         return UserDefaults.standard.string(forKey: SharedKeys.disconnectBackgroundEffect)
     }
 
+    // Custom Locations Names {
+    func saveCustomLocationsNames(value: [ExportedRegion]) {
+        saveObject(object: value, forKey: SharedKeys.customLocationNames)
+    }
+
+    func getCustomLocationsNames() -> [ExportedRegion] {
+        getObject(forKey: SharedKeys.customLocationNames) ?? []
+    }
+
     // MARK: - Base Types
 
     func setString(_ value: String?, forKey: String) {

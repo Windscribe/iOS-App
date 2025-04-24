@@ -35,7 +35,6 @@ protocol ConnectionsViewModelType {
     func getAllowLanStatus() -> Bool
     func getAutoSecureNetworkStatus() -> Bool
 
-    func currentConnectionModes() -> [String]
     func getCurrentConnectionMode() -> ConnectionModeType
     func getCurrentConnectedDNS() -> ConnectedDNSType
 
@@ -184,10 +183,6 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     func getConnectedDNSValue() -> String {
         preferences.getCustomDNSValue().value
-    }
-
-    func currentConnectionModes() -> [String] {
-        return [TextsAsset.General.auto, TextsAsset.General.manual]
     }
 
     func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void) {

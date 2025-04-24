@@ -103,7 +103,12 @@ class ViewModels: Assembly {
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(LookAndFeelViewModelType.self) { r in
-            LookAndFeelViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!)
+            LookAndFeelViewModel(preferences: r.resolve(Preferences.self)!,
+                                 themeManager: r.resolve(ThemeManager.self)!,
+                                 logger: r.resolve(FileLogger.self)!,
+                                 alertManager: r.resolve(AlertManagerV2.self)!,
+                                 localDB: r.resolve(LocalDatabase.self)!,
+                                 serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!)

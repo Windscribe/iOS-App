@@ -167,10 +167,10 @@ struct GroupModel {
         }
     }
 
-    func getGroupModel() -> GroupModel {
+    func getGroupModel(customCity: String = "", customNick: String = "") -> GroupModel {
         return GroupModel(id: id,
-                          city: city,
-                          nick: nick,
+                          city: customCity.isEmpty ? city : customCity,
+                          nick: customNick.isEmpty ? nick : customNick,
                           premiumOnly: premiumOnly,
                           nodes: nodes.map { $0.getNodeModel() },
                           bestNode: bestNode?.getNodeModel(),

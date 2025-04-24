@@ -219,8 +219,9 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 logger.logD(self, "Forcing to connect to best location.")
                 enableVPNConnection()
             }
-            guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
-            let isGroupProOnly = displayingGroup.premiumOnly
+            guard let displayingGroup = (try? self.viewModel.serverList.value())?
+                .flatMap({ $0.groups ?? [] }).filter({ $0.id == bestLocation.groupId }).first else { return }
+            let isGroupProOnly = displayingGroup.premiumOnly ?? false
             if let isUserPro = try? viewModel.session.value()?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
@@ -254,12 +255,12 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func reloadServerList() {
         let results = (try? viewModel.serverList.value()) ?? []
-        if results.count == 0, results.map({$0.isInvalidated}).count > 0 { return }
+        if results.count == 0 { return }
 
         if let oldSession = viewModel.oldSession,
            let newSession = sessionManager.session {
-            let groups = results.flatMap { $0.groups }
-            let nodes = groups.flatMap { $0.nodes }
+            let groups = results.compactMap { $0.groups }.flatMap { $0 }
+            let nodes = groups.compactMap { $0.nodes }.flatMap { $0 }
             if oldSession.isPremium &&
                 !newSession.isPremium &&
                 !nodes.isEmpty {

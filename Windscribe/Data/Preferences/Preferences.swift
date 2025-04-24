@@ -175,4 +175,8 @@ protocol Preferences {
     func saveCustomSoundEffectPathDisconnect(_ path: String)
     func getCustomSoundEffectPathConnect() -> String?
     func getCustomSoundEffectPathDisconnect() -> String?
+
+    // Custom Locations Names {
+    func saveCustomLocationsNames(value: [ExportedRegion])
+    func getCustomLocationsNames() -> [ExportedRegion]
 }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 class FileDatabaseImpl: FileDatabase {
     private let logger: FileLogger

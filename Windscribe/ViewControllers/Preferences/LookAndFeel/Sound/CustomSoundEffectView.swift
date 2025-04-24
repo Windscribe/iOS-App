@@ -52,8 +52,7 @@ class CustomSoundEffectView: UIView {
     private let footerView: FooterView
 
     private lazy var header = SelectableHeaderView(
-        title: LookAndFeelHelper.getTitle(.soundNotification),
-        imageAsset: LookAndFeelHelper.getAsset(.soundNotification),
+        type: .soundNotification,
         isDarkMode: isDarkMode
     ).then {
         $0.disableDropdown()
@@ -186,7 +185,7 @@ class CustomSoundEffectView: UIView {
 
         // Footer
         footerView.do {
-            $0.content = LookAndFeelHelper.getDescription(.soundNotification)
+            $0.content = SelectionViewType.soundNotification.description
             $0.hideShowExplainIcon(true)
         }
         containerStack.addArrangedSubview(footerView)

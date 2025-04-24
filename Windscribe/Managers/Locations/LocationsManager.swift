@@ -60,8 +60,8 @@ class LocationsManager: LocationsManagerType {
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
         guard let groupServer = try? getLocation(from: groupId),
-              let node = groupServer.1.nodes.randomElement(),
-              let serverModel = groupServer.0.getServerModel() else { return nil }
+              let node = groupServer.1.nodes.randomElement() else { return nil }
+        let serverModel = groupServer.0.getServerModel()
         return BestLocationModel(node: node.getNodeModel(),
                                  group: groupServer.1.getGroupModel(),
                                  server: serverModel)

@@ -21,15 +21,10 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     // Appearance
     private lazy var appearanceRow: SelectableView = {
-        let view = SelectableView(
-            header: LookAndFeelHelper.getTitle(.appearance),
-            currentOption: viewModel.getCurrentApperance(),
-            listOption: TextsAsset.appearances,
-            icon: LookAndFeelHelper.getAsset(.appearance),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: LookAndFeelHelper.getDescription(.appearance),
-            delegate: self
-        )
+        let view = SelectableView(type: .appearance,
+                       currentOption: viewModel.getCurrentApperance(),
+                       isDarkMode: viewModel.isDarkMode,
+                       delegate: self)
         view.hideShowExplainIcon()
         return view
     }()
@@ -185,14 +180,19 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     override func setupLocalized() {
         titleLabel.text = TextsAsset.LookFeel.title
+        versionLabel.text = SelectionViewType.version.title
+    }
 
-        appearanceRow.updateStringData(
-            title: LookAndFeelHelper.getTitle(.appearance),
-            optionTitle: viewModel.getCurrentApperance(),
-            listOption: TextsAsset.appearances,
-            subTitle: LookAndFeelHelper.getDescription(.appearance))
+    func exportLocationsTapped() {
+        viewModel.exportLocations(from: self)
+    }
 
-        versionLabel.text = LookAndFeelHelper.getTitle(.version)
+    func importLocationsTapped() {
+        viewModel.importLocations(from: self)
+    }
+
+    func resetLocationsTapped() {
+        viewModel.resetLocations(from: self)
     }
 }
 
@@ -237,11 +237,11 @@ extension LookAndFeelViewController: HelpSubRowViewDelegate {
     func helpSubRowViewDidTap(_ sender: HelpSubRowView) {
         switch sender {
         case exportRow:
-            print("Export Row activated")
+            exportLocationsTapped()
         case importRow:
-            print("Import Row activated")
+            importLocationsTapped()
         case resetRow:
-            print("Reset Row activated")
+            resetLocationsTapped()
         default:
             break
         }

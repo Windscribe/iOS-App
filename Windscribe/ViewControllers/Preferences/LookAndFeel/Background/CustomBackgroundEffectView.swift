@@ -64,16 +64,16 @@ class CustomBackgroundEffectView: UIView {
 
     private let footerView: FooterView
 
+
     private lazy var header = SelectableHeaderView(
-        title: LookAndFeelHelper.getTitle(.appBackground),
-        imageAsset: LookAndFeelHelper.getAsset(.appBackground),
-        isDarkMode: isDarkMode
-    ).then {
-        $0.disableDropdown()
-        $0.hideDropdownIcon()
-        $0.cornerBottomEdge(false)
-        $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
-    }
+        type: .appBackground,
+        isDarkMode: isDarkMode)
+        .then {
+            $0.disableDropdown()
+            $0.hideDropdownIcon()
+            $0.cornerBottomEdge(false)
+            $0.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        }
 
     private let borderWrapperView = UIView().then {
         $0.translatesAutoresizingMaskIntoConstraints = false
@@ -215,7 +215,7 @@ class CustomBackgroundEffectView: UIView {
 
         // Footer
         footerView.do {
-            $0.content = LookAndFeelHelper.getDescription(.appBackground)
+            $0.content = SelectionViewType.appBackground.description
             $0.hideShowExplainIcon(true)
         }
         containerStack.addArrangedSubview(footerView)
