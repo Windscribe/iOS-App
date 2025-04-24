@@ -202,10 +202,6 @@ class MockLocalDatabase: LocalDatabase {
 
     func updateConnectionMode(value: String) {}
 
-    func getServerAndGroup(bestNodeHostname: String) -> (Windscribe.ServerModel, Windscribe.GroupModel)? {
-        return nil
-    }
-
     func getCustomConfigs() -> [Windscribe.CustomConfig] {
         return []
     }

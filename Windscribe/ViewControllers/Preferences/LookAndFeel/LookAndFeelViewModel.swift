@@ -8,6 +8,8 @@
 
 import Foundation
 import RxSwift
+import UIKit
+import UniformTypeIdentifiers
 
 protocol LookAndFeelViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -32,13 +34,22 @@ protocol LookAndFeelViewModelType {
 
     // Version
     func getVersion() -> String
+
+    // Custom Locations
+    func exportLocations(from presenter: UIViewController)
+    func importLocations(from presenter: UIViewController)
+    func resetLocations(from presenter: UIViewController)
 }
 
-class LookAndFeelViewModel: LookAndFeelViewModelType {
+class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
 
     // Dependencies
     let preferences: Preferences
     let themeManager: ThemeManager
+    let localDB: LocalDatabase
+    let logger: FileLogger
+    let alertManager: AlertManagerV2
+    let serverRepository: ServerRepository
 
     // State
     let disposeBag = DisposeBag()
@@ -50,10 +61,19 @@ class LookAndFeelViewModel: LookAndFeelViewModelType {
     let backgroundConnect = BehaviorSubject<BackgroundEffectType>(value: .none)
     let backgroundDisconnect = BehaviorSubject<BackgroundEffectType>(value: .none)
 
-    init(preferences: Preferences, themeManager: ThemeManager) {
+    init(preferences: Preferences,
+         themeManager: ThemeManager,
+         logger: FileLogger,
+         alertManager: AlertManagerV2,
+         localDB: LocalDatabase,
+         serverRepository: ServerRepository) {
         self.preferences = preferences
         self.themeManager = themeManager
-
+        self.localDB = localDB
+        self.logger = logger
+        self.alertManager = alertManager
+        self.serverRepository = serverRepository
+        super.init()
         bindViews()
     }
 
@@ -201,5 +221,100 @@ class LookAndFeelViewModel: LookAndFeelViewModelType {
         }
 
         return "v\(releaseNumber) (\(buildNumber))"
+    }
+
+    func exportLocations(from presenter: UIViewController) {
+        logger.logI("GeneralViewModel", "Export Locations pressed")
+        let serverModels = serverRepository.currentServerModels
+        guard !serverModels.isEmpty else {
+            logger.logI("GeneralViewModel", "Export Locations failed, no local servers to export")
+            showFailedExportMessage(from: presenter)
+            return
+        }
+
+        do {
+            let jsonData = try buildLocationsJsonString(serverModels: serverModels)
+            try saveJSONToFile(jsonData: jsonData, from: presenter)
+        } catch {
+            showFailedExportMessage(from: presenter)
+            logger.logE("GeneralViewModel", "Export Locations failed, \(error.localizedDescription)")
+            return
+        }
+        logger.logI("GeneralViewModel", "Export Locations successful")
+    }
+
+    func importLocations(from presenter: UIViewController) {
+        logger.logI("GeneralViewModel", "Import Locations pressed")
+        let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.json])
+        filePicker.delegate = self
+        presenter.present(filePicker, animated: true, completion: nil)
+    }
+
+    func resetLocations(from presenter: UIViewController) {
+        serverRepository.updateRegions(with: [])
+        showSuccessfulResetMessage(from: presenter)
+    }
+
+    private func saveJSONToFile(jsonData: Data, from presenter: UIViewController) throws {
+        let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("windscribe-servers.json")
+        try jsonData.write(to: tempURL)
+        DispatchQueue.main.async {
+            let documentPicker = UIDocumentPickerViewController(forExporting: [tempURL], asCopy: true)
+            presenter.present(documentPicker, animated: true, completion: nil)
+        }
+    }
+
+    private func buildLocationsJsonString(serverModels: [ServerModel]) throws -> Data {
+        let regions: [ExportedRegion] = serverModels.compactMap { ExportedRegion(model: $0) }
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        return try encoder.encode(regions)
+    }
+
+    private func showFailedExportMessage(from presenter: UIViewController) {
+        alertManager.showSimpleAlert(viewController: presenter,
+                                     title: TextsAsset.CustomLocationNames.exportTitleFailed,
+                                     message: TextsAsset.CustomLocationNames.failedExporting,
+                                     buttonText: TextsAsset.ok)
+    }
+
+    private func showFailedImportMessage(from presenter: UIViewController? = nil) {
+        alertManager.showSimpleAlert(viewController: presenter,
+                                     title: TextsAsset.CustomLocationNames.importTitleFailed,
+                                     message: TextsAsset.CustomLocationNames.failedImporting,
+                                     buttonText: TextsAsset.ok)
+    }
+
+    private func showSuccessfulImportMessage(from presenter: UIViewController? = nil) {
+        alertManager.showSimpleAlert(viewController: presenter,
+                                     title: TextsAsset.CustomLocationNames.importTitleSuccess,
+                                     message: TextsAsset.CustomLocationNames.successfullyImported,
+                                     buttonText: TextsAsset.ok)
+    }
+
+    private func showSuccessfulResetMessage(from presenter: UIViewController? = nil) {
+        alertManager.showSimpleAlert(viewController: presenter,
+                                     title: TextsAsset.CustomLocationNames.resetTitleSuccess,
+                                     message: TextsAsset.CustomLocationNames.resetSuccessful,
+                                     buttonText: TextsAsset.ok)
+    }
+}
+
+extension LookAndFeelViewModel: UIDocumentPickerDelegate {
+    func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let fileURL = urls.first else { return }
+        if fileURL.startAccessingSecurityScopedResource() {
+            defer { fileURL.stopAccessingSecurityScopedResource() }
+            do {
+                let jsonData = try Data(contentsOf: fileURL)
+                let regionList = try JSONDecoder().decode([ExportedRegion].self, from: jsonData)
+                serverRepository.updateRegions(with: regionList)
+                logger.logI("GeneralViewModel", "Import Locations finished")
+            } catch {
+                showFailedImportMessage()
+                logger.logE("GeneralViewModel", "Import Locations failed, \(error.localizedDescription)")
+            }
+            showSuccessfulImportMessage()
+        }
     }
 }

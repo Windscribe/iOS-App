@@ -166,7 +166,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func loadServerTable(servers: [Server], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
+    func loadServerTable(servers: [ServerModel], shouldColapse: Bool = false, reloadFinishedCompletion: (() -> Void)? = nil) {
         viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: servers) { serverSectionsOrdered in
             self.serverListTableViewDataSource = ServerListTableViewDataSource(serverSections: serverSectionsOrdered, viewModel: self.viewModel, shouldColapse: shouldColapse)
             self.serverListTableViewDataSource?.delegate = self

@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 protocol GeneralViewModelType {
     var hapticFeedback: BehaviorSubject<Bool> { get }
@@ -25,13 +26,12 @@ protocol GeneralViewModelType {
 }
 
 class GeneralViewModel: GeneralViewModelType {
-
     // MARK: - Dependencies
 
-    let preferences: Preferences
     let themeManager: ThemeManager
-    let languageManager: LanguageManagerV2
-    let pushNotificationManager: PushNotificationManagerV2
+    private let preferences: Preferences
+    private let languageManager: LanguageManagerV2
+    private let pushNotificationManager: PushNotificationManagerV2
 
     // MARK: - State
 
@@ -44,7 +44,10 @@ class GeneralViewModel: GeneralViewModelType {
 
     // MARK: - Data
 
-    init(preferences: Preferences, themeManager: ThemeManager, languageManager: LanguageManagerV2, pushNotificationManager: PushNotificationManagerV2) {
+    init(preferences: Preferences,
+         themeManager: ThemeManager,
+         languageManager: LanguageManagerV2,
+         pushNotificationManager: PushNotificationManagerV2) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.languageManager = languageManager

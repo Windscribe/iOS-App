@@ -22,17 +22,13 @@ protocol SelectableViewDelegate: AnyObject {
 }
 
 class SelectableView: UIStackView {
-    private(set) var header: String
+    private(set) var type: SelectionViewType
     private(set) var currentOption: String
-    private(set) var listOption: [String]
-    private(set) var type: SelectableViewType
-    private(set) var subTitle: String?
-    private(set) var iconAsset: String?
+    private let isDarkMode: BehaviorSubject<Bool>
+    private let disposeBag = DisposeBag()
 
     weak var delegate: SelectableViewDelegate?
 
-    private let isDarkMode: BehaviorSubject<Bool>
-    private let disposeBag = DisposeBag()
 
     private lazy var mainWrapperView: UIView = {
         let view = UIView()
@@ -43,12 +39,10 @@ class SelectableView: UIStackView {
     }()
 
     private lazy var headerView: SelectableHeaderView = {
-        let header = SelectableHeaderView(title: header,
-                                          imageAsset: iconAsset,
+        let header = SelectableHeaderView(type: type,
                                           optionTitle: currentOption,
-                                          listOption: listOption,
                                           isDarkMode: isDarkMode)
-        switch type {
+        switch type.type {
         case .selection:
             header.delegate = self
         case .direction:
@@ -65,20 +59,12 @@ class SelectableView: UIStackView {
 
     private lazy var footer = FooterView(isDarkMode: isDarkMode)
 
-    init(type: SelectableViewType = .selection,
-         header: String,
+    init(type: SelectionViewType,
          currentOption: String,
-         listOption: [String],
-         icon: String?,
          isDarkMode: BehaviorSubject<Bool>,
-         subTitle: String? = nil,
          delegate: SelectableViewDelegate? = nil) {
-        self.header = header
-        self.currentOption = currentOption
-        self.listOption = listOption
-        self.subTitle = subTitle
-        iconAsset = icon
         self.type = type
+        self.currentOption = currentOption
         self.delegate = delegate
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
@@ -107,7 +93,7 @@ class SelectableView: UIStackView {
         addSubview(mainWrapperView)
         mainWrapperView.fillSuperview()
         mainWrapperView.sendToBack()
-        footer.content = subTitle ?? "Explain me!".localize()
+        footer.content = type.description
     }
 
     private func update() {}
@@ -124,10 +110,9 @@ class SelectableView: UIStackView {
         mainWrapperView.layer.borderColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDark).cgColor
     }
 
-    func updateStringData(title: String, optionTitle: String, listOption: [String], subTitle: String? = nil) {
-        headerView.updateStringData(title: title, optionTitle: optionTitle, listOption: listOption)
-        self.subTitle = subTitle
-        footer.content = subTitle ?? "Explain me!".localize()
+    func refreshLocalization(optionTitle: String) {
+        headerView.refreshLocalization(optionTitle: optionTitle)
+        footer.content = type.description
         update()
     }
 }

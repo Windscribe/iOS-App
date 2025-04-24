@@ -29,14 +29,8 @@ class ConnectionViewController: WSNavigationViewController {
     }()
 
     lazy var connectionModeViewV2: ConnectionModeView = {
-        let name = GeneralHelper.getTitle(.connectionMode)
-        let asset = GeneralHelper.getAsset(.connectionMode)
-        let description = GeneralHelper.getDescription(.connectionMode)
-        let vw = ConnectionModeView(title: name,
-                                    description: description,
-                                    iconAsset: asset,
+        let vw = ConnectionModeView(optionType: .connectionMode,
                                     optionMode: viewModel.getCurrentConnectionMode(),
-                                    listOption: viewModel.currentConnectionModes(),
                                     currentProtocol: viewModel.getCurrentProtocol(),
                                     listProtocolOption: viewModel.getProtocols(),
                                     currentPort: viewModel.getCurrentPort(),
@@ -121,14 +115,14 @@ class ConnectionViewController: WSNavigationViewController {
         view.subTitleLabel.text = type.description
         switch type {
         case .killSwitch:
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.killSwitch)))
+            view.setImage(UIImage(named: SelectionViewType.killSwitch.asset))
             view.hideShowExplainIcon(true)
             view.switchButton.setStatus(viewModel.getKillSwitchStatus())
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateChangeKillSwitchStatus()
             }
         case .allowLan:
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.allowLan)))
+            view.setImage(UIImage(named: SelectionViewType.allowLan.asset))
             view.explainHandler = { [weak self] in
                 if let url = URL(string: FeatureExplainer.allowLan.getUrl()) {
                     self?.openLink(url: url)
@@ -139,7 +133,7 @@ class ConnectionViewController: WSNavigationViewController {
                 self?.viewModel.updateChangeAllowLanStatus()
             }
         case .autoSecure:
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.autoConnection)))
+            view.setImage(UIImage(named: SelectionViewType.autoConnection.asset))
             view.switchButton.setStatus(viewModel.getAutoSecureNetworkStatus())
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateAutoSecureNetworkStatus()

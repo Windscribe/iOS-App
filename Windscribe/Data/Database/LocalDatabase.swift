@@ -70,7 +70,6 @@ protocol LocalDatabase {
     func saveBestNode(node: BestNode) -> Disposable
     func getBestNode() -> [BestNode]?
     func updateConnectionMode(value: String)
-    func getServerAndGroup(bestNodeHostname: String) -> (ServerModel, GroupModel)?
     func getCustomConfigs() -> [CustomConfig]
     func clean()
     func getGroups() -> [Group]?

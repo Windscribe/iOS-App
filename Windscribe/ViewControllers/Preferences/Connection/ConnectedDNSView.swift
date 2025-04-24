@@ -31,10 +31,8 @@ class ConnectedDNSView: UIStackView {
     weak var delegate: ConnectedDNSViewDelegate?
 
     private lazy var header: SelectableHeaderView = {
-        let header = SelectableHeaderView(title: TextsAsset.connectedDNS,
-                                          imageAsset: ImagesAsset.customDns,
+        let header = SelectableHeaderView(type: .connectedDNS,
                                           optionTitle: optionType.titleValue,
-                                          listOption: [ConnectedDNSType.auto.titleValue, ConnectedDNSType.custom.titleValue],
                                           isDarkMode: isDarkMode)
         return header
     }()

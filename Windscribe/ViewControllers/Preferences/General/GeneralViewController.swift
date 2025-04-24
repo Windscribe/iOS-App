@@ -18,53 +18,10 @@ class GeneralViewController: WSNavigationViewController {
     var viewModel: GeneralViewModelType!, router: GeneralRouter!, popupRouter: PopupRouter!, logger: FileLogger!
 
     // MARK: - UI Elements
-
-    private lazy var locationOrderRow: SelectableView = {
-        let view = SelectableView(
-            header: GeneralHelper.getTitle(.locationOrder),
-            currentOption: viewModel.getCurrentLocationOrder(),
-            listOption: TextsAsset.orderPreferences,
-            icon: GeneralHelper.getAsset(.locationOrder),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: GeneralHelper.getDescription(.locationOrder),
-            delegate: self
-        )
-        view.hideShowExplainIcon()
-        return view
-    }()
-
-    private lazy var languageRow: SelectableView = {
-        let view = SelectableView(
-            type: .direction,
-            header: GeneralHelper.getTitle(.language),
-            currentOption: viewModel.getCurrentLanguage(),
-            listOption: TextsAsset.General.languages,
-            icon: GeneralHelper.getAsset(.language),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: GeneralHelper.getDescription(.language),
-            delegate: self
-        )
-        view.hideShowExplainIcon()
-        return view
-    }()
-
-    private lazy var notificationRow: SelectableView = {
-        let view = SelectableView(
-            type: .directionWithoutIcon,
-            header: GeneralHelper.getTitle(.notification),
-            currentOption: TextsAsset.General.openSettings,
-            listOption: [],
-            icon: GeneralHelper.getAsset(.notification),
-            isDarkMode: viewModel.isDarkMode,
-            subTitle: GeneralHelper.getDescription(.notification),
-            delegate: self
-        )
-        view.hideShowExplainIcon()
-        return view
-    }()
-
-    private lazy var hapticFeedbackRow = makeRatioView(type: .hapticFeeback)
-
+    private lazy var locationOrderRow: SelectableView = makeSelectableView(type: .locationOrder)
+    private lazy var languageRow: SelectableView = makeSelectableView(type: .language)
+    private lazy var notificationRow: SelectableView = makeSelectableView(type: .notification)
+    private lazy var hapticFeedbackRow = makeSwitchView(type: .hapticFeedback)
     private lazy var versionLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = TextsAsset.General.version
@@ -161,16 +118,31 @@ class GeneralViewController: WSNavigationViewController {
         layoutView.stackView.spacing = 16
     }
 
-    private func makeRatioView(type: ConnectionSecure) -> ConnectionSecureView {
+    private func makeSelectableView(type: SelectionViewType) -> SelectableView {
+        var currentOption = ""
+        switch type {
+        case .locationOrder: currentOption = viewModel.getCurrentLocationOrder()
+        case .language: currentOption = viewModel.getCurrentLanguage()
+        case .notification: currentOption = TextsAsset.General.openSettings
+        default: currentOption = ""
+        }
+        let view = SelectableView(type: type,
+                                  currentOption: currentOption,
+                                  isDarkMode: viewModel.isDarkMode,
+                                  delegate: self)
+        view.hideShowExplainIcon()
+        return view
+    }
+
+    private func makeSwitchView(type: SelectionViewType) -> ConnectionSecureView {
         let view = ConnectionSecureView(isDarkMode: viewModel.isDarkMode)
         view.titleLabel.text = type.title
         view.subTitleLabel.text = type.description
+        view.setImage(UIImage(named: type.asset))
         view.hideShowExplainIcon(true)
         switch type {
-        case .hapticFeeback:
+        case .hapticFeedback:
             view.switchButton.setStatus(viewModel.getHapticFeedback())
-            view.setImage(UIImage(named: GeneralHelper.getAsset(.hapticFeedback)))
-            view.subTitleLabel.text = GeneralHelper.getDescription(.hapticFeedback)
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateHapticFeedback()
             }
@@ -181,8 +153,7 @@ class GeneralViewController: WSNavigationViewController {
     }
 
     // MARK: - Actions
-
-    @objc func pushNotificationSettingsButtonTapped() {
+    func pushNotificationSettingsButtonTapped() {
         UNUserNotificationCenter.current().getNotificationSettings { settings in
             switch settings.authorizationStatus {
             case .authorized, .denied:
@@ -208,11 +179,11 @@ class GeneralViewController: WSNavigationViewController {
 
     override func setupLocalized() {
         titleLabel.text = TextsAsset.General.title
-        locationOrderRow.updateStringData(title: GeneralHelper.getTitle(.locationOrder), optionTitle: viewModel.getCurrentLocationOrder(), listOption: TextsAsset.orderPreferences, subTitle: GeneralHelper.getDescription(.locationOrder))
-        languageRow.updateStringData(title: GeneralHelper.getTitle(.language), optionTitle: viewModel.getCurrentLanguage(), listOption: TextsAsset.General.languages, subTitle: GeneralHelper.getDescription(.language))
-        notificationRow.updateStringData(title: GeneralHelper.getTitle(.notification), optionTitle: TextsAsset.General.openSettings, listOption: [], subTitle: GeneralHelper.getDescription(.notification))
-        versionLabel.text = TextsAsset.General.version
-        hapticFeedbackRow.updateStringData(title: GeneralHelper.getTitle(.hapticFeedback), subTitle: GeneralHelper.getDescription(.hapticFeedback))
+        locationOrderRow.refreshLocalization(optionTitle: viewModel.getCurrentLocationOrder())
+        languageRow.refreshLocalization(optionTitle: viewModel.getCurrentLanguage())
+        notificationRow.refreshLocalization(optionTitle: TextsAsset.General.openSettings)
+        hapticFeedbackRow.updateStringData(title: SelectionViewType.hapticFeedback.title,
+                                           subTitle: SelectionViewType.hapticFeedback.description)
     }
 }
 

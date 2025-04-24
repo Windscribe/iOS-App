@@ -14,10 +14,8 @@ protocol SelectableHeaderViewDelegate: AnyObject {
 }
 
 class SelectableHeaderView: UIStackView {
-    private(set) var title: String
+    private(set) var type: SelectionViewType
     private(set) var currentOption: String
-    private(set) var listOption: [String]
-    private(set) var imageAsset: String?
     private(set) var systemImageUsed: Bool
 
     var viewToAddDropdown: UIView?
@@ -25,70 +23,49 @@ class SelectableHeaderView: UIStackView {
     weak var delegate: SelectableHeaderViewDelegate?
     private let disposeBag = DisposeBag()
 
-    private lazy var titleLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.font = UIFont.bold(size: 16)
-        lbl.text = title
-        lbl.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: .horizontal)
-        return lbl
-    }()
+    private lazy var titleLabel = UILabel().then {
+        $0.font = UIFont.bold(size: 16)
+        $0.text = type.title
+        $0.setContentCompressionResistancePriority(UILayoutPriority.defaultLow, for: .horizontal)
+    }
 
-    private lazy var iconDropdown: UIImageView = {
-        let imv = UIImageView()
-        imv.anchor(width: 16, height: 16)
-        imv.contentMode = .scaleAspectFit
-        imv.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        return imv
-    }()
+    private lazy var actionImage = UIImageView().then {
+        $0.anchor(width: 16, height: 16)
+        $0.contentMode = .scaleAspectFit
+        $0.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
+    }
 
-    private lazy var optionLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.setTextWithOffSet(text: currentOption)
-        lbl.font = UIFont.text(size: 16)
-        lbl.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        lbl.layer.opacity = 0.5
-        return lbl
-    }()
+    private lazy var optionLabel = UILabel().then {
+        $0.setTextWithOffSet(text: currentOption)
+        $0.font = UIFont.text(size: 16)
+        $0.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
+        $0.layer.opacity = 0.5
+    }
 
-    private lazy var dropdownView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [
-            optionLabel,
-            iconDropdown
-        ])
-        stack.axis = .horizontal
-        stack.spacing = 8
-        stack.isUserInteractionEnabled = true
-        stack.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        stack.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showDropdown)))
-        return stack
-    }()
+    private lazy var dropdownView = UIStackView().then {
+        $0.addArrangedSubviews([optionLabel, actionImage])
+        $0.axis = .horizontal
+        $0.spacing = 8
+        $0.isUserInteractionEnabled = true
+        $0.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
+        $0.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showDropdown)))
+    }
 
-    private lazy var iconImage: UIImageView = {
-        let imageView = UIImageView()
-        if let imageAsset = imageAsset {
-            imageView.image = systemImageUsed ? UIImage(systemName: imageAsset) : UIImage(named: imageAsset)
-        } else {
-            imageView.layer.cornerRadius = 4
-            imageView.layer.borderWidth = 2
-        }
-        imageView.contentMode = .scaleAspectFit
-        imageView.anchor(width: 18, height: 18)
-        imageView.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
-        return imageView
-    }()
+    private lazy var iconImage = UIImageView().then {
+        $0.image = UIImage(named: type.asset)
+        $0.contentMode = .scaleAspectFit
+        $0.anchor(width: 18, height: 18)
+        $0.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh, for: .horizontal)
+    }
 
-    private lazy var wrapperView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.clipsToBounds = true
-        return view
-    }()
+    private lazy var wrapperView = UIView().then {
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        $0.clipsToBounds = true
+    }
 
-    init(viewToAddDropdown: UIView? = nil, title: String, imageAsset: String?, optionTitle: String = "", listOption: [String] = [], systemImageUsed: Bool = false, isDarkMode: BehaviorSubject<Bool>) {
-        self.title = title
-        self.imageAsset = imageAsset
+    init(viewToAddDropdown: UIView? = nil, type: SelectionViewType, optionTitle: String = "", listOption: [String] = [], systemImageUsed: Bool = false, isDarkMode: BehaviorSubject<Bool>) {
+         self.type = type
         currentOption = optionTitle
-        self.listOption = listOption
         self.viewToAddDropdown = viewToAddDropdown
         self.systemImageUsed = systemImageUsed
         super.init(frame: .zero)
@@ -105,7 +82,7 @@ class SelectableHeaderView: UIStackView {
         isDarkMode.subscribe(on: MainScheduler.instance).subscribe(onNext: { [weak self] in
             guard let self = self else { return }
             self.titleLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.iconDropdown.image = ThemeUtils.dropDownIcon(isDarkMode: $0)
+            self.actionImage.setImageColor(color: ThemeUtils.primaryTextColor50(isDarkMode: $0))
             self.optionLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.wrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
             if iconImage.image == nil {
@@ -131,6 +108,11 @@ class SelectableHeaderView: UIStackView {
         wrapperView.sendToBack()
         clipsToBounds = true
         cornerBottomEdge(true)
+
+        actionImage.image = UIImage(named: type.type == .selection ?
+                                    ImagesAsset.DarkMode.dropDownIcon :
+                                        ImagesAsset.serverWhiteRightArrow)?
+            .withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
     }
 
     func cornerBottomEdge(_ haveCorner: Bool) {
@@ -151,15 +133,12 @@ class SelectableHeaderView: UIStackView {
     }
 
     func hideDropdownIcon() {
-        iconDropdown.isHidden = true
+        actionImage.isHidden = true
     }
 
-    func updateStringData(title: String, optionTitle: String, listOption: [String]) {
-        self.title = title
+    func refreshLocalization(optionTitle: String) {
         currentOption = optionTitle
-        self.listOption = listOption
-
-        titleLabel.setTextWithOffSet(text: title)
+        titleLabel.setTextWithOffSet(text: type.title)
         optionLabel.setTextWithOffSet(text: currentOption)
     }
 }
@@ -180,7 +159,7 @@ extension SelectableHeaderView {
             let tmpView = UIView(frame: displayFrame)
             currentDropdownView = Dropdown(attachedView: tmpView)
             currentDropdownView?.dropDownDelegate = self
-            currentDropdownView?.options = listOption
+            currentDropdownView?.options = type.listOption
             viewDismiss.addTapGesture(target: self, action: #selector(dismissDropdown))
             grandParentView.addSubview(viewDismiss)
             viewDismiss.fillSuperview()

@@ -27,15 +27,12 @@ enum ConnectionHeaderType {
 
 class ConnectionModeView: UIStackView {
     private(set) var optionMode: ConnectionModeType
-    private(set) var listOption: [String]
+    private(set) var optionType: SelectionViewType
     private(set) var currentPort: String
     private(set) var listPortOption: [String]
     private(set) var currentProtocol: String
     private(set) var listProtocolOption: [String]
     private(set) var type: ConnectionHeaderType
-    private(set) var name: String
-    private(set) var footerDescription: String
-    private(set) var iconAsset: String
     private(set) var currentSwitchOption: Bool
     weak var delegate: ConnectionModeViewDelegate?
 
@@ -71,10 +68,8 @@ class ConnectionModeView: UIStackView {
     }()
 
     private lazy var header: SelectableHeaderView = {
-        let header = SelectableHeaderView(title: self.name,
-                                          imageAsset: self.iconAsset,
+        let header = SelectableHeaderView(type: optionType,
                                           optionTitle: optionMode.titleValue,
-                                          listOption: listOption,
                                           isDarkMode: isDarkMode)
         header.delegate = self
         header.cornerBottomEdge(false)
@@ -83,8 +78,8 @@ class ConnectionModeView: UIStackView {
 
     private lazy var switchHeader: SwitchHeaderView = {
         let header = SwitchHeaderView(
-            title: name,
-            icon: iconAsset,
+            title: optionType.title,
+            icon: optionType.asset,
             isDarkMode: isDarkMode
         )
         header.connectionSecureViewSwitchAction = { [weak self] in
@@ -102,26 +97,20 @@ class ConnectionModeView: UIStackView {
         return view
     }()
 
-    init(title: String,
-         description: String,
-         iconAsset: String,
+    init(optionType: SelectionViewType,
          optionMode: ConnectionModeType,
-         listOption: [String],
          currentProtocol: String,
          listProtocolOption: [String],
          currentPort: String,
          listPortOption: [String],
          isDarkMode: BehaviorSubject<Bool>) {
         type = .selection
+        self.optionType = optionType
         self.optionMode = optionMode
-        self.listOption = listOption
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
         self.listPortOption = listPortOption
         self.listProtocolOption = listProtocolOption
-        name = title
-        footerDescription = description
-        self.iconAsset = iconAsset
         currentSwitchOption = false
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
@@ -129,9 +118,7 @@ class ConnectionModeView: UIStackView {
         bindViews()
     }
 
-    init(title: String,
-         description: String,
-         iconAsset: String,
+    init(optionType: SelectionViewType,
          currentSwitchOption: Bool = false,
          currentProtocol: String,
          listProtocolOption: [String],
@@ -140,14 +127,11 @@ class ConnectionModeView: UIStackView {
          isDarkMode: BehaviorSubject<Bool>) {
         type = .switch
         optionMode = .auto
-        listOption = []
+        self.optionType = optionType
         self.currentPort = currentPort
         self.currentProtocol = currentProtocol
         self.listPortOption = listPortOption
         self.listProtocolOption = listProtocolOption
-        name = title
-        footerDescription = description
-        self.iconAsset = iconAsset
         self.currentSwitchOption = currentSwitchOption
         self.isDarkMode = isDarkMode
         super.init(frame: .zero)
@@ -196,7 +180,7 @@ class ConnectionModeView: UIStackView {
     }
 
     private func update() {
-        footer.content = footerDescription
+        footer.content = optionType.description
     }
 
     func toggleHeader() {

@@ -134,8 +134,17 @@ struct ServerModel {
         groups.append(objectsIn: array.sorted(by: { $0.city < $1.city }))
     }
 
-    func getServerModel() -> ServerModel? {
-        return ServerModel(id: id, name: name, countryCode: countryCode, status: status, premiumOnly: premiumOnly, dnsHostname: dnsHostname, groups: groups.map { $0.getGroupModel() }, locType: locType, p2p: p2p)
+    func getServerModel(customName: String = "", groupModels: [GroupModel] = []) -> ServerModel {
+        let groupModelList = groupModels.isEmpty ? groups.map { $0.getGroupModel() } : groupModels
+        return ServerModel(id: id,
+                           name: customName.isEmpty ? name : customName,
+                           countryCode: countryCode,
+                           status: status,
+                           premiumOnly: premiumOnly,
+                           dnsHostname: dnsHostname,
+                           groups: groupModelList,
+                           locType: locType,
+                           p2p: p2p)
     }
 }
 

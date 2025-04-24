@@ -554,6 +554,23 @@ enum TextsAsset {
         }
     }
 
+    enum CustomLocationNames {
+        static var exportLocations: String { "Export Locations".localize() }
+        static var importLocations: String { "Import Custom Locations".localize() }
+        static var exportLocationsDesc: String { "Export your server location list to a local file in JSON that you can edit to change the locations names into your own custom ones".localize() }
+        static var importLocationsDesc: String { "Import a custom name server location names list from a local JSON file".localize() }
+        static var failedImporting: String { "Failed to import custom location names list".localize() }
+        static var successfullyImported: String { "Successfully imported custom location names list".localize() }
+        static var failedExporting: String { "Failed to export custom location names list".localize() }
+        static var successfullyExported: String { "Successfully exported custom location names list".localize() }
+        static var resetSuccessful: String { "Successfully reset custom location names list".localize() }
+        static var exportTitleSuccess: String { "Export Successful".localize() }
+        static var importTitleSuccess: String { "Import Successful".localize() }
+        static var exportTitleFailed: String { "Export Failed".localize() }
+        static var importTitleFailed: String { "Import Failed".localize() }
+        static var resetTitleSuccess: String { "Reset Successful".localize() }
+    }
+
     enum PreferencesDescription {
         static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localize() }
         static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localize() }
@@ -1156,7 +1173,15 @@ enum TextsAsset {
         return ["Light".localize(), "Dark".localize()]
     }
 
-    enum Favorites {
+    static var connectionModes: [String] {
+        [TextsAsset.General.auto, TextsAsset.General.manual]
+    }
+
+    static var connectedDNSOptions: [String] {
+        [TextsAsset.General.auto, TextsAsset.General.custom]
+    }
+
+     enum Favorites {
         static var removeTitle: String {
             return "Are you sure?".localize()
         }

@@ -11,7 +11,7 @@ import RxSwift
 import StoreKit
 
 protocol MainViewModelType {
-    var serverList: BehaviorSubject<[Server]> { get }
+    var serverList: BehaviorSubject<[ServerModel]> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
     var portMap: BehaviorSubject<[PortMap]?> { get }
     var favNode: BehaviorSubject<[FavNode]?> { get }
@@ -28,7 +28,7 @@ protocol MainViewModelType {
     var appNetwork: BehaviorSubject<AppNetwork> { get }
     var wifiNetwork: BehaviorSubject<WifiNetwork?> { get }
     var session: BehaviorSubject<Session?> { get }
-    var favouriteGroups: BehaviorSubject<[Group]> { get }
+    var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
 
     var showNetworkSecurityTrigger: PublishSubject<Void> { get }
     var showNotificationsTrigger: PublishSubject<Void> { get }
@@ -39,7 +39,7 @@ protocol MainViewModelType {
     var didShowOutOfDataPopup: Bool { get set }
     var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
     func loadServerList()
-    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void)
+    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
     func loadPortMap()
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
     func loadCustomConfigLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
@@ -76,7 +76,7 @@ class MainViewModel: MainViewModelType {
     let livecycleManager: LivecycleManagerType
     let locationsManager: LocationsManagerType
 
-    let serverList = BehaviorSubject<[Server]>(value: [])
+    let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMap = BehaviorSubject<[PortMap]?>(value: nil)
     var favNode = BehaviorSubject<[FavNode]?>(value: nil)
@@ -91,7 +91,7 @@ class MainViewModel: MainViewModelType {
     var appNetwork = BehaviorSubject<AppNetwork>(value: AppNetwork(.disconnected, networkType: .none, name: nil, isVPN: false))
     var wifiNetwork = BehaviorSubject<WifiNetwork?>(value: nil)
     var session = BehaviorSubject<Session?>(value: nil)
-    var favouriteGroups = BehaviorSubject<[Group]>(value: [])
+    var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
     let showNetworkSecurityTrigger: PublishSubject<Void>
@@ -152,7 +152,7 @@ class MainViewModel: MainViewModelType {
         preferences.getConnectionMode().subscribe(onNext: { [self] data in
             self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
         }, onError: { _ in }).disposed(by: disposeBag)
-        localDatabase.getServersObservable().subscribe(onNext: { [self] data in
+        serverRepository.updatedServerModelsSubject.subscribe(onNext: { [self] data in
             self.serverList.onNext(data)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
@@ -204,16 +204,15 @@ class MainViewModel: MainViewModelType {
         return latencyRepo.getPingData(ip: ip ?? "")?.latency ?? -1
     }
 
-    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [Server], completion: @escaping (_ result: [ServerSection]) -> Void) {
+    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void) {
         DispatchQueue.main.async {
             var serverSections = [ServerSection]()
             var serverSectionsOrdered = [ServerSection]()
-            if servers.filter({$0.isInvalidated}).count > 0 {
+            if servers.count == 0 {
                 completion(serverSectionsOrdered)
                 return
             }
-            let serverModels = servers.compactMap { $0.getServerModel() }
-            serverSections = serverModels.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
+            serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
             let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
             switch orderBy {
             case Fields.Values.geography:
@@ -293,10 +292,10 @@ class MainViewModel: MainViewModelType {
         }).disposed(by: disposeBag)
     }
 
-    private func getFavouriteGroup(id: String, servers: [Server]) -> Group? {
-        var groups: [Group] = []
+    private func getFavouriteGroup(id: String, servers: [ServerModel]) -> GroupModel? {
+        var groups: [GroupModel] = []
         for server in servers {
-            for group in server.groups {
+            for group in (server.groups ?? []) {
                 groups.append(group)
             }
         }
