@@ -37,8 +37,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     var serverHeaderView: ServerInfoView!
 
-    var serverHeaderView: ServerInfoView!
-
     var listSelectionView: ListSelectionView!
     // search
     var searchLocationsView: SearchLocationsView!
