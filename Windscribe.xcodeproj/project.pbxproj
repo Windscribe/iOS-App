@@ -279,14 +279,14 @@
 		1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4A2C75F6840032A4DF /* AddEmailPopupViewController.swift */; };
 		1EF7BB4D2C75FB2F0032A4DF /* AddEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */; };
 		1EF7BB502C7618410032A4DF /* EnterEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */; };
-		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
+		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift */; };
 		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
 		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
 		591CF9AF2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */; };
 		591CF9B12BBB3ED1004DEB48 /* EmailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */; };
-		591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
+		591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift */; };
 		591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */; };
 		591CF9B92BBF1160004DEB48 /* HelpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */; };
 		59215B462B6051AC0086CBF6 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B452B6051AC0086CBF6 /* ThemeManager.swift */; };
@@ -1131,6 +1131,8 @@
 		F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */; };
 		F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */; };
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
+		F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */; };
+		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
 		F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		F45F191A2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
@@ -1533,7 +1535,7 @@
 		591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManagerV2.swift; sourceTree = "<group>"; };
 		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModelOld.swift; sourceTree = "<group>"; };
 		591CF9B02BBB3ED1004DEB48 /* EmailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailRouter.swift; sourceTree = "<group>"; };
-		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
+		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModelOld.swift; sourceTree = "<group>"; };
 		591CF9B62BBE02E4004DEB48 /* SubmitTicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitTicketViewModel.swift; sourceTree = "<group>"; };
 		591CF9B82BBF1160004DEB48 /* HelpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewModel.swift; sourceTree = "<group>"; };
 		59215B452B6051AC0086CBF6 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
@@ -2057,6 +2059,8 @@
 		F45BA59B2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessLogoView.swift; sourceTree = "<group>"; };
 		F45BA59F2D54000400CFDB82 /* UpgradeSuccessBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessBenefitView.swift; sourceTree = "<group>"; };
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
+		F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
+		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
 		F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Extension.swift"; sourceTree = "<group>"; };
 		F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManagerTests.swift; sourceTree = "<group>"; };
 		F465A6382D5D3B6000579B5F /* MockPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPreferences.swift; sourceTree = "<group>"; };
@@ -2390,7 +2394,6 @@
 				1AE6D2B62837D09100276C7D /* Account */,
 				1AE6D2B328376E1400276C7D /* About */,
 				1AE6DA1D2833CFA500593495 /* General */,
-				F4693E462DB0285700ECD6C4 /* LookAndFeel */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -3201,9 +3204,6 @@
 		AF018DE021B0866600B225FF = {
 			isa = PBXGroup;
 			children = (
-				C56615F72C4D883E008AA993 /* libs */,
-				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
-				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				AF018DEB21B0866600B225FF /* Windscribe */,
 				592EDBFA2C3C688400351D44 /* WindscribeTV */,
 				AF018E1721B1AA2D00B225FF /* WindscribeTests */,
@@ -3214,6 +3214,9 @@
 				AF619C4324AA348900BB331C /* WireGuardTunnel */,
 				AF018DEA21B0866600B225FF /* Products */,
 				5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */,
+				C56615F72C4D883E008AA993 /* libs */,
+				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
+				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -4179,7 +4182,7 @@
 				591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModelOld.swift */,
 				AF4ECA9F23E8CF1900E09223 /* ConfirmEmailViewController.swift */,
 				AF4ECAA123E8D00800E09223 /* ConfirmEmailViewController+UI.swift */,
-				591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */,
+				591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift */,
 				1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailViewControllerDelegate.swift */,
 			);
 			path = ConfirmEmail;
@@ -4407,6 +4410,31 @@
 			path = UpgradeSuccess;
 			sourceTree = "<group>";
 		};
+		F45C67422DBFE848006A6D30 /* ConfirmEmail */ = {
+			isa = PBXGroup;
+			children = (
+				F45C67432DBFE882006A6D30 /* Views */,
+				F45C67442DBFE887006A6D30 /* ViewModels */,
+			);
+			path = ConfirmEmail;
+			sourceTree = "<group>";
+		};
+		F45C67432DBFE882006A6D30 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F45C67442DBFE887006A6D30 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		F45F191C2D7B711E0028D0C2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -4583,6 +4611,7 @@
 			isa = PBXGroup;
 			children = (
 				F499351F2DA7174000108558 /* Account */,
+				F4693E462DB0285700ECD6C4 /* LookAndFeel */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -4591,7 +4620,8 @@
 			isa = PBXGroup;
 			children = (
 				F49935202DA7175200108558 /* GhostAccount */,
-				F499352F2DA83E3800108558 /* ConfirmEmail */,
+				F499352F2DA83E3800108558 /* EnterEmail */,
+				F45C67422DBFE848006A6D30 /* ConfirmEmail */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -4621,13 +4651,13 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		F499352F2DA83E3800108558 /* ConfirmEmail */ = {
+		F499352F2DA83E3800108558 /* EnterEmail */ = {
 			isa = PBXGroup;
 			children = (
 				F49935302DA83EB600108558 /* Views */,
 				F49935312DA83EBC00108558 /* ViewModels */,
 			);
-			path = ConfirmEmail;
+			path = EnterEmail;
 			sourceTree = "<group>";
 		};
 		F49935302DA83EB600108558 /* Views */ = {
@@ -5502,7 +5532,7 @@
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				59FC74102C51540C00021CD1 /* HelpItem.swift in Sources */,
-				1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */,
+				1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModelOld.swift in Sources */,
 				59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */,
 				1E9F2C332C665FC600607BAA /* PreferencesViewLogView.swift in Sources */,
 				59DF45892C59C58600EB6DC1 /* SignUpViewModel.swift in Sources */,
@@ -6007,6 +6037,7 @@
 				1E5553D72DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */,
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
 				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
+				F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */,
 				AF2199582270B147009B42E5 /* Resolver.swift in Sources */,
 				1A9DB35428168E8500C3EC1C /* UITableViewCell+Extension.swift in Sources */,
 				AF2C1869234F5429008657FA /* VPNConnection.swift in Sources */,
@@ -6057,6 +6088,7 @@
 				AF3FC11D227B68EB0050B224 /* SessionManager.swift in Sources */,
 				E94E34F928B3E2B100E76D14 /* WSTouchView.swift in Sources */,
 				AF914A7823D611DB002D3041 /* UIButton+Extension.swift in Sources */,
+				F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */,
 				AF018E0321B09B6400B225FF /* VPNProtocols.swift in Sources */,
 				AF018E0621B09FB300B225FF /* String+Extension.swift in Sources */,
 				AF3E90E3231D974C00AD192A /* PrivacyViewController+UI.swift in Sources */,
@@ -6213,7 +6245,7 @@
 				AF36A206237DE8EE00BDDCDB /* ShakeForDataResultViewController.swift in Sources */,
 				E90FD02B273977C100721874 /* SearchLocationsView.swift in Sources */,
 				591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */,
-				591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModel.swift in Sources */,
+				591CF9B32BBC65E3004DEB48 /* ConfirmEmailViewModelOld.swift in Sources */,
 				C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */,
 				C524AA5826B0A06300FCB1B6 /* DynamicSizeTableView.swift in Sources */,
 				59215B482B60DE2E0086CBF6 /* HapticFeedbackGeneratorV2.swift in Sources */,

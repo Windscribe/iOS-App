@@ -54,6 +54,7 @@ struct EnterEmailView: View {
                 // Info Text
                 Text(viewModel.infoLabelText)
                     .font(.regular(.footnote))
+                    .dynamicTypeSize(dynamicTypeRange)
                     .foregroundColor(.white.opacity(0.5))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -71,6 +72,7 @@ struct EnterEmailView: View {
                         } else {
                             Text(TextsAsset.continue)
                                 .font(.bold(.body))
+                                .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.black)
                         }
                     }
@@ -79,9 +81,11 @@ struct EnterEmailView: View {
                     .background(viewModel.emailIsValid ? Color.loginRegisterEnabledButtonColor : Color.white)
                     .clipShape(Capsule())
                 }
+                .disabled(!viewModel.emailIsValid)
             }
             .padding()
             .padding(.bottom, keyboard.currentHeight + 16)
+            .dynamicTypeSize(dynamicTypeRange)
             .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
         }
         .onTapGesture {
@@ -93,11 +97,12 @@ struct EnterEmailView: View {
                 currentError = nil
                 // TODO: Confirm Email Navigation
             case .failure(let error):
-                currentError = error.localizedDescription
+                currentError = error.errorDescription
             }
         }
         .padding(.top, 1)
         .background(Color.loginRegisterBackgroundColor)
+        .dynamicTypeSize(dynamicTypeRange)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {

@@ -33,7 +33,6 @@ enum RouteID {
     case shareWithFriends
     case connection
     case language
-    case enterEmailVC
     case networkSecurity
     case network(with: WifiNetwork)
     case submitTicket

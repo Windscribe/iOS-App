@@ -102,16 +102,23 @@ enum EmailError: LocalizedError {
     }
 
     static func from(_ error: Error) -> EmailError {
-        switch error.localizedDescription {
-        case Errors.emailExists.localizedDescription:
-            return .emailExists
-        case Errors.disposableEmail.localizedDescription:
-            return .disposable
-        case Errors.cannotChangeExistingEmail.localizedDescription:
-            return .cannotChange
-        case Errors.noNetwork.localizedDescription:
-            return .noNetwork
-        default: return .generic
+        if case let Errors.apiError(apiError) = error {
+            if let message = apiError.errorMessage?.trimmingCharacters(in: .whitespacesAndNewlines) {
+                switch message {
+                case TextsAsset.emailIsTaken:
+                    return .emailExists
+                case TextsAsset.disposableEmail:
+                    return .disposable
+                case TextsAsset.cannotChangeExistingEmail:
+                    return .cannotChange
+                case TextsAsset.noNetworksAvailable:
+                    return .noNetwork
+                default:
+                    return .generic
+                }
+            }
         }
+
+        return .generic
     }
 }

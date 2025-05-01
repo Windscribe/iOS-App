@@ -26,7 +26,7 @@ struct LoginTextField: View {
     var titleTapAction: (() -> Void)?
     var keyboardType: UIKeyboardType = .default
 
-    var trailingView: AnyView? = nil
+    var trailingView: AnyView?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {

@@ -85,6 +85,13 @@ class ViewModels: Assembly {
                 apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any ConfirmEmailViewModel).self) { r in
+            ConfirmEmailViewModelImpl(
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                apiManager: r.resolve(APIManager.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any GhostAccountViewModel).self) { r in
             GhostAccountViewModelImpl(
                 sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -138,8 +145,8 @@ class ViewModels: Assembly {
         container.register(EnterEmailViewModelOld.self) { r in
             EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
-        container.register(ConfirmEmailViewModel.self) { r in
-            ConfirmEmailViewModelImpl(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
+        container.register(ConfirmEmailViewModelOld.self) { r in
+            ConfirmEmailViewModelImplOld(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
         container.register(SubmitTicketViewModel.self) { r in
             SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -399,6 +406,15 @@ class ViewControllerModule: Assembly {
             ))
         }.inObjectScope(.transient)
 
+        container.register(ConfirmEmailView.self) { r in
+            ConfirmEmailView(
+                viewModel: ConfirmEmailViewModelImpl(
+                    sessionManager: r.resolve(SessionManagerV2.self)!,
+                    localDatabase: r.resolve(LocalDatabase.self)!,
+                    apiManager: r.resolve(APIManager.self)!
+                ), router: r.resolve(AuthenticationNavigationRouter.self)!)
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -512,7 +528,7 @@ class ViewControllerModule: Assembly {
         container.register(ConfirmEmailViewController.self) { _ in
             ConfirmEmailViewController()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(ConfirmEmailViewModel.self)
+            c.viewModel = r.resolve(ConfirmEmailViewModelOld.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(PlanUpgradeViewController.self) { _ in

@@ -10,7 +10,7 @@ import RxSwift
 import UIKit
 
 class ConfirmEmailViewController: WSUIViewController {
-    var viewModel: ConfirmEmailViewModel!, logger: FileLogger!
+    var viewModel: ConfirmEmailViewModelOld!, logger: FileLogger!
 
     var backgroundView: UIView!
     var iconView: UIImageView!
