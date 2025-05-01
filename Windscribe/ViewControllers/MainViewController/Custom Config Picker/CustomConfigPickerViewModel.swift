@@ -70,27 +70,29 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
 
 extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
     func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let url = urls.first else { return }
+        guard !urls.isEmpty else { return }
         logger.logD(self, "Importing WireGuard/OpenVPN .conf file")
-        let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
-        localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
-            let config = $0.first { $0.name == fileName }
-            if config != nil {
-                self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
-                return
-            }
-            guard url.startAccessingSecurityScopedResource() else {
-                self.logger.logI("CustomConfigPickerViewModel", "Error when accessing config file")
-                return
-            }
-            if url.isFileURL, url.pathExtension == "ovpn" {
-                _ = self.customConfigRepository.saveOpenVPNConfig(url: url)
-            } else if url.isFileURL, url.pathExtension == "conf" {
-                _ = self.customConfigRepository.saveWgConfig(url: url)
-            }
+        urls.forEach { url in
+            let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
+            localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
+                let config = $0.first { $0.name == fileName }
+                if config != nil {
+                    self.alertManager.showSimpleAlert(viewController: nil, title: TextsAsset.error, message: TextsAsset.customConfigWithSameFileNameError, buttonText: TextsAsset.okay)
+                    return
+                }
+                guard url.startAccessingSecurityScopedResource() else {
+                    self.logger.logI("CustomConfigPickerViewModel", "Error when accessing config file")
+                    return
+                }
+                if url.isFileURL, url.pathExtension == "ovpn" {
+                    _ = self.customConfigRepository.saveOpenVPNConfig(url: url)
+                } else if url.isFileURL, url.pathExtension == "conf" {
+                    _ = self.customConfigRepository.saveWgConfig(url: url)
+                }
 
-            url.stopAccessingSecurityScopedResource()
-        }).disposed(by: disposeBag)
+                url.stopAccessingSecurityScopedResource()
+            }).disposed(by: disposeBag)
+        }
     }
 }
 
@@ -107,6 +109,7 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
 
         let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: documentTypes)
         filePicker.delegate = self
+        filePicker.allowsMultipleSelection = true
         presentDocumentPickerTrigger.onNext(filePicker)
     }
 }
