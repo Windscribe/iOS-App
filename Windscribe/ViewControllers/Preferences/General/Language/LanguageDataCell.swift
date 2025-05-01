@@ -13,6 +13,6 @@ struct LanguageDataCell {
     let language: Languages
 
     func isShowGreenMarkCheck() -> Bool {
-        return language.rawValue == Assembler.resolve(LanguageManagerV2.self).getCurrentLanguage().rawValue
+        return language.rawValue == Assembler.resolve(LanguageManager.self).getCurrentLanguage().rawValue
     }
 }

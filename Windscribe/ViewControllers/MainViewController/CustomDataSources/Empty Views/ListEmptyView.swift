@@ -60,7 +60,7 @@ enum ListEmptyViewType {
 class ListEmptyView: UIView {
     var isDarkMode: BehaviorSubject<Bool>
     let disposeBag = DisposeBag()
-    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     let label = UILabel()
     let button = UIButton()

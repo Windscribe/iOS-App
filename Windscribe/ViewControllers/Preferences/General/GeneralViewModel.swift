@@ -30,7 +30,7 @@ class GeneralViewModel: GeneralViewModelType {
 
     let themeManager: ThemeManager
     private let preferences: Preferences
-    private let languageManager: LanguageManagerV2
+    private let languageManager: LanguageManager
     private let pushNotificationManager: PushNotificationManagerV2
 
     // MARK: - State
@@ -46,7 +46,7 @@ class GeneralViewModel: GeneralViewModelType {
 
     init(preferences: Preferences,
          themeManager: ThemeManager,
-         languageManager: LanguageManagerV2,
+         languageManager: LanguageManager,
          pushNotificationManager: PushNotificationManagerV2) {
         self.preferences = preferences
         self.themeManager = themeManager

@@ -50,7 +50,7 @@ enum ConnectionSecure {
         case .autoSecure:
             return TextsAsset.autoSecureNewDescription
         case .hapticFeeback:
-            return "Explain me!".localize()
+            return "Explain me!".localized
         case .circumventCensorship:
             return TextsAsset.circumventCensorshipDescription
         case .connectedDNS:

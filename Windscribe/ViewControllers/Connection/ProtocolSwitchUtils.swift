@@ -23,18 +23,18 @@ enum ProtocolFallbacksType {
     func getHeader() -> String {
         switch self {
         case .failure:
-            return "Connection Failure!".localize()
+            return "Connection Failure!".localized
         case .change:
-            return "Change Protocol".localize()
+            return "Change Protocol".localized
         }
     }
 
     func getDescription() -> String {
         switch self {
         case .failure:
-            return "The protocol you’ve chosen has failed to connect. Windscribe will attempt to reconnect using the first protocol below.".localize()
+            return "The protocol you’ve chosen has failed to connect. Windscribe will attempt to reconnect using the first protocol below.".localized
         case .change:
-            return "Quickly re-connect using a different protocol. ".localize()
+            return "Quickly re-connect using a different protocol. ".localized
         }
     }
 }

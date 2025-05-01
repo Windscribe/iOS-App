@@ -25,7 +25,7 @@ class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
     var scrollHappened = false
     var viewModel: MainViewModelType
     let disposeBag = DisposeBag()
-    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     init(staticIPs: [StaticIPModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel

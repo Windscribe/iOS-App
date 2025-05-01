@@ -17,7 +17,7 @@ class CustomConfigListFooterView: WSView {
     lazy var actionButton = UIButton(type: .system)
     lazy var label = UILabel()
     let disposeBag = DisposeBag()
-    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     override init(frame: CGRect) {
         super.init(frame: frame)

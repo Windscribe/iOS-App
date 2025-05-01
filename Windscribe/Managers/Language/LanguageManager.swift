@@ -10,15 +10,51 @@ import Foundation
 import RxSwift
 import UIKit
 
-class LanguageManager: LanguageManagerV2 {
-    private let preference: Preferences
-    private let disposeBag = DisposeBag()
+protocol LanguageManager {
+    var activelanguage: BehaviorSubject<Languages> { get }
+    func setAppLanguage()
+    func setLanguage(language: Languages)
+    func getCurrentLanguage() -> Languages
+}
+
+class LanguageManagerImpl: LanguageManager {
+
     var activelanguage = BehaviorSubject(value: Languages.english)
     private var language = Languages.english
-    var currentLanguage: Languages = .english
-    init(preference: Preferences) {
+    private var currentLanguage: Languages = .english
+
+    lazy var supportedLanguages: [String] = Languages.allCases.map { $0.rawValue }
+
+    var defaultLanguage: Languages {
+        get {
+            guard let defaultLanguage = preference.getDefaultLanguage() else {
+                return Languages.english
+            }
+            return Languages(rawValue: defaultLanguage)!
+        }
+        set {
+            let defaultLanguage = preference.getDefaultLanguage()
+
+            guard defaultLanguage == nil else {
+                setLanguage(language: getCurrentLanguage())
+                return
+            }
+            preference.saveDefaultLanguage(language: newValue.rawValue)
+            setLanguage(language: newValue)
+        }
+    }
+
+    private let preference: Preferences
+    private let localizationService: LocalizationService
+
+    private let disposeBag = DisposeBag()
+
+    init(preference: Preferences, localizationService: LocalizationService) {
         self.preference = preference
+        self.localizationService = localizationService
+
         currentLanguage = getCurrentLanguage()
+        self.localizationService.updateLanguage(currentLanguage)
         bindData()
     }
 
@@ -48,36 +84,10 @@ class LanguageManager: LanguageManagerV2 {
         return Languages(rawValue: currentLang) ?? .english
     }
 
-    lazy var supportedLanguages: [String] = Languages.allCases.map { $0.rawValue }
-
-    var defaultLanguage: Languages {
-        get {
-            guard let defaultLanguage = preference.getDefaultLanguage() else {
-                return Languages.english
-            }
-            return Languages(rawValue: defaultLanguage)!
-        }
-        set {
-            let defaultLanguage = preference.getDefaultLanguage()
-
-            guard defaultLanguage == nil else {
-                setLanguage(language: getCurrentLanguage())
-                return
-            }
-            preference.saveDefaultLanguage(language: newValue.rawValue)
-            setLanguage(language: newValue)
-        }
-    }
-
-    var deviceLanguage: Languages? {
-        guard let deviceLanguage = Bundle.main.preferredLocalizations.first else {
-            return nil
-        }
-        return Languages(rawValue: deviceLanguage)
-    }
-
     func setLanguage(language: Languages) {
         preference.setLanguageManagerSelectedLanguage(language: language)
+        localizationService.updateLanguage(language)
+        activelanguage.onNext(language)
     }
 
     func setAppLanguage() {

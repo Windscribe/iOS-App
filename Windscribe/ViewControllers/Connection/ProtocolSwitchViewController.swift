@@ -101,7 +101,7 @@ class ProtocolSwitchViewController: WSNavigationViewController {
             headerLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDark)
             subHeaderLabel.textColor = ThemeUtils.primaryTextColor50(isDarkMode: isDark)
             let attribute = NSAttributedString(
-                string: "Cancel".localize(),
+                string: TextsAsset.cancel,
                 attributes: [NSAttributedString.Key.font: UIFont.bold(size: 16),
                              NSAttributedString.Key.foregroundColor: ThemeUtils.primaryTextColor50(isDarkMode: isDark)]
             )
@@ -128,19 +128,19 @@ class ProtocolSwitchViewController: WSNavigationViewController {
                 var protocolDescription: String
                 switch dt.protocolPort.protocolName {
                 case iKEv2:
-                    protocolDescription = "IKEv2 is an IPsec based tunneling protocol.".localize()
+                    protocolDescription = "IKEv2 is an IPsec based tunneling protocol.".localized
                 case udp:
-                    protocolDescription = "Balanced speed and security.".localize()
+                    protocolDescription = "Balanced speed and security.".localized
                 case tcp:
-                    protocolDescription = "Use it if OpenVPN UDP fails.".localize()
+                    protocolDescription = "Use it if OpenVPN UDP fails.".localized
                 case wsTunnel:
-                    protocolDescription = "Wraps your HTTPS traffic with web sockets.".localize()
+                    protocolDescription = "Wraps your HTTPS traffic with web sockets.".localized
                 case stealth:
-                    protocolDescription = "Disguises your traffic as HTTPS traffic with TLS".localize()
+                    protocolDescription = "Disguises your traffic as HTTPS traffic with TLS".localized
                 case wireGuard:
-                    protocolDescription = "Extremely simple yet fast and modern VPN protocol.".localize()
+                    protocolDescription = "Extremely simple yet fast and modern VPN protocol.".localized
                 default:
-                    protocolDescription = "One line description.".localize()
+                    protocolDescription = "One line description.".localized
                 }
 
                 let vw = ProtocolView(type: dt.viewType,

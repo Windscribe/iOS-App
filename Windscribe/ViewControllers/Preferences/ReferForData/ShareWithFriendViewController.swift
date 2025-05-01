@@ -91,7 +91,7 @@ class ShareWithFriendViewController: WSNavigationViewController {
         btn.clipsToBounds = true
         btn.setTitleColor(UIColor.midnight, for: .normal)
         btn.backgroundColor = UIColor.seaGreen
-        btn.setTitle("Share Invite Link".localize(), for: .normal)
+        btn.setTitle(TextsAsset.Refer.shareInviteLink, for: .normal)
         return btn
     }()
 

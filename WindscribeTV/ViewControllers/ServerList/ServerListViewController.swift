@@ -473,7 +473,8 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
             }
             cell.setup(isShadow: true)
         }
-        cell.countryCode.text = serverSection.server?.name.localize()
+
+        cell.countryCode.text = serverSection.server?.name.localized
         return cell
     }
 

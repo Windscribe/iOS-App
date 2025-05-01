@@ -55,7 +55,7 @@ class MainViewController: PreferredFocusedViewController {
     var logger: FileLogger!
     var isFromServer: Bool = false
     lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
-    private lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+    private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManagerV2.self)
 
     override func viewDidLoad() {
         super.viewDidLoad()

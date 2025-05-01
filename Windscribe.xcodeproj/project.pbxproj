@@ -17,8 +17,6 @@
 		1A9DB3502816859E00C3EC1C /* LanguageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB34F2816859E00C3EC1C /* LanguageViewModel.swift */; };
 		1A9DB352281686AC00C3EC1C /* LanguageDataCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB351281686AC00C3EC1C /* LanguageDataCell.swift */; };
 		1A9DB35428168E8500C3EC1C /* UITableViewCell+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB35328168E8500C3EC1C /* UITableViewCell+Extension.swift */; };
-		1A9DB35B2817F53400C3EC1C /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB35A2817F53400C3EC1C /* String+Localized.swift */; };
-		1A9DB35C2817F63A00C3EC1C /* UIView+Swizzling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB3582817F47600C3EC1C /* UIView+Swizzling.swift */; };
 		1ABEA50F283F7279004D5765 /* ConnectionsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABEA50E283F7279004D5765 /* ConnectionsViewModel.swift */; };
 		1AC9DBBF283BC33600BE082B /* RobertHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9DBBE283BC33600BE082B /* RobertHeaderView.swift */; };
 		1AC9DBC1283BD29700BE082B /* RobertFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AC9DBC0283BD29700BE082B /* RobertFooterView.swift */; };
@@ -300,7 +298,6 @@
 		59215B462B6051AC0086CBF6 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B452B6051AC0086CBF6 /* ThemeManager.swift */; };
 		59215B482B60DE2E0086CBF6 /* HapticFeedbackGeneratorV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B472B60DE2E0086CBF6 /* HapticFeedbackGeneratorV2.swift */; };
 		59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
-		59215B4C2B63925B0086CBF6 /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592CA7992C4EC0FF0078D487 /* LoginViewController.swift */; };
 		592CA7A32C4FF8910078D487 /* Login2FA.xib in Resources */ = {isa = PBXBuildFile; fileRef = 592CA7A22C4FF8910078D487 /* Login2FA.xib */; };
 		592EDBFC2C3C688400351D44 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592EDBFB2C3C688400351D44 /* AppDelegate.swift */; };
@@ -334,7 +331,6 @@
 		59656F702C73BF1F00707EA2 /* ServerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59656F6E2C73BF1F00707EA2 /* ServerDetailViewController.swift */; };
 		59656F712C73BF1F00707EA2 /* ServerDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59656F6F2C73BF1F00707EA2 /* ServerDetailViewController.xib */; };
 		59656F732C73C3E000707EA2 /* PageTitleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59656F722C73C3E000707EA2 /* PageTitleLabel.swift */; };
-		596E60052B8F774000D51E20 /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		596E60062B8F77EC00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		596E60072B8F77ED00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
 		596E60082B8F77EF00D51E20 /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D45280FCF37004E8082 /* Language.swift */; };
@@ -420,7 +416,6 @@
 		59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
 		59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02427394FA800721874 /* UIConstants+Fields.swift */; };
 		59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA50E2B637ED700E5C571 /* RepositoryErrors.swift */; };
-		59FC73D82C514B6700021CD1 /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		59FC73D92C514B7400021CD1 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		59FC73DA2C514B9000021CD1 /* WgErrorCodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0F2FD27E1959D00DB3E49 /* WgErrorCodes.swift */; };
 		59FC73DB2C514B9D00021CD1 /* FilePaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425BA127437064008B8786 /* FilePaths.swift */; };
@@ -801,9 +796,6 @@
 		C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		C51EEDCB2C1779AB00B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
-		C51EEDCC2C1779B500B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
-		C51EEDCD2C1779B600B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
-		C51EEDCE2C1779B800B01F8F /* LanguageManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */; };
 		C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */; };
 		C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F7B73276D0AAB0074A025 /* RobertFilters.swift */; };
 		C524AA5826B0A06300FCB1B6 /* DynamicSizeTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C524AA5726B0A06300FCB1B6 /* DynamicSizeTableView.swift */; };
@@ -905,7 +897,6 @@
 		C56FCC062B2CF358008DE7D4 /* NetworkSecurityRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCC052B2CF358008DE7D4 /* NetworkSecurityRouter.swift */; };
 		C56FCC082B2CF3A7008DE7D4 /* HelpRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCC072B2CF3A7008DE7D4 /* HelpRouter.swift */; };
 		C56FCC0A2B2CF3DF008DE7D4 /* UpgradeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCC092B2CF3DF008DE7D4 /* UpgradeRouter.swift */; };
-		C570FE272D80A95F003C85F0 /* String+Localized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A9DB35A2817F53400C3EC1C /* String+Localized.swift */; };
 		C571C6642C1212FF00786DA5 /* ConnectivityImpl+Hotspot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6632C1212FF00786DA5 /* ConnectivityImpl+Hotspot.swift */; };
 		C571C6742C135C3600786DA5 /* UserScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6732C135C3600786DA5 /* UserScope.swift */; };
 		C571C6752C135C3600786DA5 /* UserScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6732C135C3600786DA5 /* UserScope.swift */; };
@@ -1210,6 +1201,19 @@
 		F49935452DA99E5400108558 /* click.caf in Resources */ = {isa = PBXBuildFile; fileRef = F49935442DA99E5400108558 /* click.caf */; };
 		F499357B2DAEE4E900108558 /* CustomSoundEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */; };
 		F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */; };
+		F49C45742DC2A03A007E5EF1 /* CustomSoundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */; };
+		F49C45762DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C45782DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C45792DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C457B2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */; };
+		F49C457D2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C457E2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C45802DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C45812DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -1396,8 +1400,6 @@
 		1A9DB34F2816859E00C3EC1C /* LanguageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageViewModel.swift; sourceTree = "<group>"; };
 		1A9DB351281686AC00C3EC1C /* LanguageDataCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageDataCell.swift; sourceTree = "<group>"; };
 		1A9DB35328168E8500C3EC1C /* UITableViewCell+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCell+Extension.swift"; sourceTree = "<group>"; };
-		1A9DB3582817F47600C3EC1C /* UIView+Swizzling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Swizzling.swift"; sourceTree = "<group>"; };
-		1A9DB35A2817F53400C3EC1C /* String+Localized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Localized.swift"; sourceTree = "<group>"; };
 		1ABEA50E283F7279004D5765 /* ConnectionsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsViewModel.swift; sourceTree = "<group>"; };
 		1AC9DBBE283BC33600BE082B /* RobertHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertHeaderView.swift; sourceTree = "<group>"; };
 		1AC9DBC0283BD29700BE082B /* RobertFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertFooterView.swift; sourceTree = "<group>"; };
@@ -1553,7 +1555,6 @@
 		59215B452B6051AC0086CBF6 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		59215B472B60DE2E0086CBF6 /* HapticFeedbackGeneratorV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedbackGeneratorV2.swift; sourceTree = "<group>"; };
 		59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManagerV2.swift; sourceTree = "<group>"; };
-		59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManagerV2.swift; sourceTree = "<group>"; };
 		592CA7992C4EC0FF0078D487 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		592CA7A22C4FF8910078D487 /* Login2FA.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Login2FA.xib; sourceTree = "<group>"; };
 		592EDBF92C3C688400351D44 /* WindscribeTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WindscribeTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2122,6 +2123,8 @@
 		F49935442DA99E5400108558 /* click.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = click.caf; sourceTree = "<group>"; };
 		F49935792DAEE4E900108558 /* CustomSoundEffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectView.swift; sourceTree = "<group>"; };
 		F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectType.swift; sourceTree = "<group>"; };
+		F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
+		F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationBridge.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -2427,9 +2430,8 @@
 			children = (
 				1AF57D42280FCBE2004E8082 /* LanguageManager.swift */,
 				1AF57D45280FCF37004E8082 /* Language.swift */,
-				1A9DB3582817F47600C3EC1C /* UIView+Swizzling.swift */,
-				1A9DB35A2817F53400C3EC1C /* String+Localized.swift */,
-				59215B4B2B63925B0086CBF6 /* LanguageManagerV2.swift */,
+				F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */,
+				F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */,
 			);
 			path = Language;
 			sourceTree = "<group>";
@@ -5495,6 +5497,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */,
+				F49C45742DC2A03A007E5EF1 /* CustomSoundEffectType.swift in Sources */,
 				59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
 				59FC74282C5155B000021CD1 /* Proxy.swift in Sources */,
@@ -5544,7 +5547,6 @@
 				59FC74392C515A9400021CD1 /* ServerRepository.swift in Sources */,
 				59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */,
 				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
-				59FC73D82C514B6700021CD1 /* LanguageManagerV2.swift in Sources */,
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				1ED23F7E2DBBCB7400C7BEE5 /* SoundManaging.swift in Sources */,
@@ -5719,9 +5721,11 @@
 				5986AB522C4740B000167023 /* Color+Extension.swift in Sources */,
 				59FC74002C5153AE00021CD1 /* Section.swift in Sources */,
 				59FC74692C5167DF00021CD1 /* EmergencyRepository.swift in Sources */,
+				F49C457B2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */,
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
+				F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				1E09747D2D7F33FE003F7AA7 /* RxRealm+Extension.swift in Sources */,
 				F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */,
 				F434A1BE2D84A7160059415F /* HTMLParser.swift in Sources */,
@@ -5770,7 +5774,6 @@
 				59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */,
 				59A218682C3C8011000D89FA /* MainViewController.swift in Sources */,
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,
-				C570FE272D80A95F003C85F0 /* String+Localized.swift in Sources */,
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
@@ -5980,7 +5983,6 @@
 				C5035A122CBE272B00A46B6D /* ShowLocation.swift in Sources */,
 				1E5553A82D830EE200F16AF0 /* ServerListCell.swift in Sources */,
 				F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */,
-				1A9DB35B2817F53400C3EC1C /* String+Localized.swift in Sources */,
 				1E7918C32CDE2FD100C20723 /* LivecycleManager.swift in Sources */,
 				AF16C98F2225EB8A00997A2A /* LoadingSplashView.swift in Sources */,
 				E97ABD4D28D985CD00B38587 /* ShareWithFriendViewModel.swift in Sources */,
@@ -6188,6 +6190,7 @@
 				AF4ECA9C23E3434400E09223 /* MainViewController+Theme.swift in Sources */,
 				C52DA5272B63901400E5C571 /* CustomConfigRepository.swift in Sources */,
 				AF16CA122226F53F00997A2A /* WSUIViewController.swift in Sources */,
+				F49C457E2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				AFB0DC0421FB997300C40E3C /* StaticIPTableViewCell.swift in Sources */,
 				F499353C2DA994BC00108558 /* SoundManager.swift in Sources */,
 				1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */,
@@ -6283,6 +6286,7 @@
 				AFD29A1822D530AF007F08C9 /* ConnectionsViewController.swift in Sources */,
 				AF21995B2270B147009B42E5 /* QNNTcpPing.m in Sources */,
 				1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */,
+				F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */,
 				AF36A1AD237C7FC500BDDCDB /* Score.swift in Sources */,
 				1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */,
@@ -6307,7 +6311,6 @@
 				AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */,
 				AF42803022D7943B006761C5 /* ViewLogViewController+UI.swift in Sources */,
 				C59CA15F2CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
-				59215B4C2B63925B0086CBF6 /* LanguageManagerV2.swift in Sources */,
 				C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */,
 				1EE74F762BD67B630031185F /* PushNotificationViewModel.swift in Sources */,
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
@@ -6371,6 +6374,7 @@
 				1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,
+				F49C457A2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				AFD16F1222775EA300E9FAD3 /* Notifications.swift in Sources */,
 				C59C074029406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				C52DA52A2B63912A00E5C571 /* FileDatabase.swift in Sources */,
@@ -6386,10 +6390,10 @@
 				1E3F77662DB13D29008308A8 /* ExportedLocations.swift in Sources */,
 				C52DA5122B63821100E5C571 /* RepositoryErrors.swift in Sources */,
 				C50F20B62B61734400266B23 /* FileLoggerImpl.swift in Sources */,
+				F49C457D2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C59C074529424CF300D6C3C1 /* Proxy.swift in Sources */,
 				F485CBBF2D4D52D40063EA3A /* Then.swift in Sources */,
 				AFBD019222946AF400FED749 /* Date+Extension.swift in Sources */,
-				C51EEDCC2C1779B500B01F8F /* LanguageManagerV2.swift in Sources */,
 				C52DA52E2B63913100E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
@@ -6404,7 +6408,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C51EEDCD2C1779B600B01F8F /* LanguageManagerV2.swift in Sources */,
 				C5DD96062CA7255A00FFABBC /* AppConstants.swift in Sources */,
 				C56FCBEB2B2B8E4E008DE7D4 /* SharedKeys.swift in Sources */,
 				C52DA52B2B63912B00E5C571 /* FileDatabase.swift in Sources */,
@@ -6430,6 +6433,7 @@
 				C52DA52F2B63913300E5C571 /* FileDatabaseImpl.swift in Sources */,
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
 				C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */,
+				F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
@@ -6445,6 +6449,7 @@
 				C5DEF9F62C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				1E7A19562C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C59FF1A62CBB8DDB0072EF70 /* APIError.swift in Sources */,
+				F49C45762DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6458,13 +6463,14 @@
 				C50F20822B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,
 				C535D29A27E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
+				F49C45792DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */,
 				C585F3E42C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */,
 				C50F20C92B61777B00266B23 /* CoreModule.swift in Sources */,
 				C535D29327E2EF3700C08345 /* FilePaths.swift in Sources */,
 				C5D0E40429BB8BE70091FB14 /* test_ringlogger.c in Sources */,
-				C51EEDCE2C1779B800B01F8F /* LanguageManagerV2.swift in Sources */,
+				F49C45812DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C52DA5302B63913500E5C571 /* FileDatabaseImpl.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,
@@ -6532,10 +6538,9 @@
 				C5DEF9F42C52EDCD00696D06 /* AdvanceKeys.swift in Sources */,
 				1E60E0242CAD693500623CD5 /* AppConstants.swift in Sources */,
 				1E60E0212CAD68C600623CD5 /* KeyChainDatabase.swift in Sources */,
+				F49C45782DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				1E3F77622DB13CA0008308A8 /* ExportedLocations.swift in Sources */,
 				C52DA52D2B63912D00E5C571 /* FileDatabase.swift in Sources */,
-				596E60052B8F774000D51E20 /* LanguageManagerV2.swift in Sources */,
-				1A9DB35C2817F63A00C3EC1C /* UIView+Swizzling.swift in Sources */,
 				F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */,
 				F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */,
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
@@ -6544,6 +6549,7 @@
 				F469F0DC2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
+				F49C45802DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,

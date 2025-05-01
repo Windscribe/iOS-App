@@ -13,7 +13,7 @@ protocol SendDebugLogCompletedVCDelegate: AnyObject {
 }
 
 class SendDebugLogCompletedViewController: WSNavigationViewController {
-    private let message = "Your debug log has been received. Please contact support if you want assistance with this issue.".localize()
+    private let message = "Your debug log has been received. Please contact support if you want assistance with this issue.".localized
     var viewModel: SendDebugLogCompletedViewModelType!
 
     weak var delegate: SendDebugLogCompletedVCDelegate?
@@ -91,7 +91,7 @@ class SendDebugLogCompletedViewController: WSNavigationViewController {
             setupViews(isDark: $0)
             subHeaderLabel.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             let attribute = NSAttributedString(
-                string: "Cancel".localize(),
+                string: "Cancel".localized,
                 attributes: [NSAttributedString.Key.font: UIFont.bold(size: 16),
                              NSAttributedString.Key.foregroundColor: ThemeUtils.primaryTextColor50(isDarkMode: $0)]
             )

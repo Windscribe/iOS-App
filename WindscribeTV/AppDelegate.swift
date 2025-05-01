@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
 
-    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
