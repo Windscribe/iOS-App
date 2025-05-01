@@ -13,353 +13,353 @@ import Foundation
 
 enum TextsAsset {
     static var slogan: String {
-        return "Keep Your Secrets.".localize()
+        return "Keep Your Secrets.".localized
     }
 
     static var getStarted: String {
-        return "Get Started".localize()
+        return "Get Started".localized
     }
 
     static var loading: String {
-        return "Loading".localize()
+        return "Loading".localized
     }
 
     static var login: String {
-        return "Login".localize()
+        return "Login".localized
     }
 
     static var get10GbAMonth: String {
-        return "Get 10GB/Mo".localize()
+        return "Get 10GB/Mo".localized
     }
 
     static var tenGbAMonth: String {
-        return "10GB/Mo".localize()
+        return "10GB/Mo".localized
     }
 
     static var continueWithoutAccount: String {
-        return "Continue without account".localize()
+        return "Continue without account".localized
     }
 
     static var ghostAccountInfoLabel: String {
-        return "Limited to 2GB/Mo".localize()
+        return "Limited to 2GB/Mo".localized
     }
 
     static var `continue`: String {
-        return "Continue".localize()
+        return "Continue".localized
     }
 
     static var setupLater: String {
-        return "Setup later".localize()
+        return "Setup later".localized
     }
 
     static var signUp: String {
-        return "Sign up".localize()
+        return "Sign up".localized
     }
 
     static var signUpFree: String {
-        return "Sign up free".localize()
+        return "Sign up free".localized
     }
 
     static var createAccount: String {
-        return "Create Account".localize()
+        return "Create Account".localized
     }
 
     static var accountSetupTitle: String {
-        return "Account setup".localize()
+        return "Account setup".localized
     }
 
     static var accountSetupMessage: String {
-        return "Safeguard your Pro account and access it from any device.".localize()
+        return "Safeguard your Pro account and access it from any device.".localized
     }
 
     static var signUpInfo: String {
-        return "Safeguard your account, access your settings from any device and get more data.".localize()
+        return "Safeguard your account, access your settings from any device and get more data.".localized
     }
 
     static var optional: String {
-        return "Optional".localize()
+        return "Optional".localized
     }
 
     static var getMoreData: String {
-        return "Get More Data".localize()
+        return "Get More Data".localized
     }
 
     static var addEmail: String {
-        return "Add Email".localize()
+        return "Add Email".localized
     }
 
     static var addEmailInfo: String {
-        return "For password recovery, updates & promo only. No spam".localize()
+        return "For password recovery, updates & promo only. No spam".localized
     }
 
     static var setupAccount: String {
-        return "Setup Account".localize()
+        return "Setup Account".localized
     }
 
     static var email: String {
-        return "Email".localize()
+        return "Email".localized
     }
 
     static var yourEmail: String {
-        return "Your email".localize()
+        return "Your email".localized
     }
 
     static var emailInfoLabel: String {
-        return "For password recovery, updates & promo only. No spam".localize()
+        return "For password recovery, updates & promo only. No spam".localized
     }
 
     static var enterYourEmail: String {
-        return "Enter your email".localize()
+        return "Enter your email".localized
     }
 
     static var verifyYourPassword: String {
-        return "Verify your password".localize()
+        return "Verify your password".localized
     }
 
     static var chooseUsername: String {
-        return "Choose Username".localize()
+        return "Choose Username".localized
     }
 
     static var choosePassword: String {
-        return "Choose Password".localize()
+        return "Choose Password".localized
     }
 
     static var confirmPassword: String {
-        return "Confirm password".localize()
+        return "Confirm password".localized
     }
 
     static var referredBySomeone: String {
-        return "Referred by someone?".localize()
+        return "Referred by someone?".localized
     }
 
     static var mustConfirmEmail: String {
-        return "You must confirm your email in order for the benefits above to apply to you and the referrer.".localize()
+        return "You must confirm your email in order for the benefits above to apply to you and the referrer.".localized
     }
 
     static var yes: String {
-        return "Yes".localize()
+        return "Yes".localized
     }
 
     static var no: String {
-        return "No".localize()
+        return "No".localized
     }
 
     static var okay: String {
-        return "Okay".localize()
+        return "Okay".localized
     }
 
     static var ok: String {
-        return "OK".localize()
+        return "OK".localized
     }
 
     static var error: String {
-        return "Error".localize()
+        return "Error".localized
     }
 
     static var loginFailed: String {
-        return "The username and password combination is wrong.".localize()
+        return "The username and password combination is wrong.".localized
     }
 
     static var pleaseDisconnectFirst: String {
-        return "You can't make changes while connected to a VPN.".localize()
+        return "You can't make changes while connected to a VPN.".localized
     }
 
     static var youWillBothGetTenGb: String {
-        return "You will both get an additional 1GB per month when you sign up.".localize()
+        return "You will both get an additional 1GB per month when you sign up.".localized
     }
 
     static var ifYouGoPro: String {
-        return "If you go Pro, they’ll go Pro too!".localize()
+        return "If you go Pro, they’ll go Pro too!".localized
     }
 
     static var signInProgress: [String] {
-        return ["Getting Server List".localize(),
-                "Getting IKEv2 Server Credentials".localize(),
-                "Getting OpenVPN Server Credentials".localize(),
-                "Getting Static IPs".localize(),
-                "Getting Port Maps".localize(),
-                "Getting Mobile Plans".localize(),
-                "Getting Configurations".localize(),
-                "Getting Notifications".localize(),
-                "Preparing Your Dashboard".localize()]
+        return ["Getting Server List".localized,
+                "Getting IKEv2 Server Credentials".localized,
+                "Getting OpenVPN Server Credentials".localized,
+                "Getting Static IPs".localized,
+                "Getting Port Maps".localized,
+                "Getting Mobile Plans".localized,
+                "Getting Configurations".localized,
+                "Getting Notifications".localized,
+                "Preparing Your Dashboard".localized]
     }
 
     static var passwordsDontMatch: String {
-        return "The passwords don't match.".localize()
+        return "The passwords don't match.".localized
     }
 
     static var cannotRegister: String {
-        return "Registration failed, please contact support.".localize()
+        return "Registration failed, please contact support.".localized
     }
 
     static var pleaseContactSupport: String {
-        return "Please contact support.".localize()
+        return "Please contact support.".localized
     }
 
     static var usernameIsTaken: String {
-        return "Awww! This username is taken.".localize()
+        return "Awww! This username is taken.".localized
     }
 
     static var emailIsTaken: String {
-        return "Awww! This email already exists.".localize()
+        return "Awww! This email already exists.".localized
     }
 
     static var disposableEmail: String {
-        return "Disposable emails are not allowed. Provide a valid email, or leave the email field blank.".localize()
+        return "Disposable emails are not allowed. Provide a valid email, or leave the email field blank.".localized
     }
 
     static var cannotChangeExistingEmail: String {
-        return "Cannot change existing email because it is already confirmed.".localize()
+        return "Cannot change existing email because it is already confirmed.".localized
     }
 
     static var usernameValidationError: String {
-        return "Must only contain letters, numbers and underscores.".localize()
+        return "Must only contain letters, numbers and underscores.".localized
     }
 
     static var passwordValidationError: String {
-        return "Must be longer than 7 characters.".localize()
+        return "Must be longer than 7 characters.".localized
     }
 
     static var emailValidationError: String {
-        return "Enter a valid email.".localize()
+        return "Enter a valid email.".localized
     }
 
     static var ghostModeError: String {
-        return "Unfortunately you cannot use Windscribe without an account as we detected potential abuse. Please make one, it's really easy.".localize()
+        return "Unfortunately you cannot use Windscribe without an account as we detected potential abuse. Please make one, it's really easy.".localized
     }
 
     static var pleaseEnterEmailFirst: String {
-        return "Please provide an email first".localize()
+        return "Please provide an email first".localized
     }
 
     static var referringUsername: String {
-        return "Referring Username".localize()
+        return "Referring Username".localized
     }
 
     static var voucherCode: String {
-        return "Voucher Code".localize()
+        return "Voucher Code".localized
     }
 
     enum SignInError {
         static var usernameExpectedEmailProvided: String {
-            return "Please login with your username, not your email".localize()
+            return "Please login with your username, not your email".localized
         }
     }
 
     enum Permission {
         static var locationDescription: String {
-            return "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location.".localize()
+            return "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location.".localized
         }
 
         static var locationPermissionLabel: String {
-            return "Locations".localize()
+            return "Locations".localized
         }
         static var disclosureDescription: String {
-            return "Windscribe requires the Locations permission, with Precise Location enabled, in order to make the \"Network Whitelist\" feature work. This permission is required to access WiFi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.".localize()
+            return "Windscribe requires the Locations permission, with Precise Location enabled, in order to make the \"Network Whitelist\" feature work. This permission is required to access WiFi network names. This permission is used solely for this feature. Your location data does not leave your device, and is not used for anything else.".localized
         }
 
         static var disclaimer: String {
-            return "Disclaimer".localize()
+            return "Disclaimer".localized
         }
 
         static var grantPermission: String {
-            return "Grant Permission".localize()
+            return "Grant Permission".localized
         }
 
         static var openSettings: String {
-            return "Open Settings".localize()
+            return "Open Settings".localized
         }
     }
 
     enum ConnectingAlert {
         static var title: String {
-            return "Connecting...".localize()
+            return "Connecting...".localized
         }
 
         static var message: String {
-            return "Please terminate the current connection before starting new connection.".localize()
+            return "Please terminate the current connection before starting new connection.".localized
         }
     }
 
     enum DisconnectingAlert {
         static var title: String {
-            return "Disconnecting...".localize()
+            return "Disconnecting...".localized
         }
 
         static var message: String {
-            return "Please wait until you are disconnected before starting new connection.".localize()
+            return "Please wait until you are disconnected before starting new connection.".localized
         }
     }
 
     enum NoInternetAlert {
         static var title: String {
-            return "No Internet".localize()
+            return "No Internet".localized
         }
 
         static var message: String {
-            return "Your device is currently offline. Please enable WiFi or cellular connection.".localize()
+            return "Your device is currently offline. Please enable WiFi or cellular connection.".localized
         }
     }
 
     enum AutomaticModeFailedAlert {
         static var title: String {
-            return "Sorry! We tried our best and couldn't connect you.".localize()
+            return "Sorry! We tried our best and couldn't connect you.".localized
         }
 
         static var message: String {
-            return "Well, we gave it our best shot, but we couldn't connect you on this network. Please send us a debug log via the button below and open a support ticket on Windscribe.com".localize()
+            return "Well, we gave it our best shot, but we couldn't connect you on this network. Please send us a debug log via the button below and open a support ticket on Windscribe.com".localized
         }
     }
 
     enum UnableToConnect {
         static var title: String {
-            return "Unable to connect".localize()
+            return "Unable to connect".localized
         }
 
         static var message: String {
-            return "Windscribe was unable to connect to this location, please try another location or contact support.".localize()
+            return "Windscribe was unable to connect to this location, please try another location or contact support.".localized
         }
     }
 
     enum AuthFailure {
         static var title: String {
-            return "Unable to connect".localize()
+            return "Unable to connect".localized
         }
 
         static var message: String {
-            return "VPN will be disconnected due to credential failure.".localize()
+            return "VPN will be disconnected due to credential failure.".localized
         }
     }
 
     static var appLogSubmitSuccessAlert: String {
-        return "App Log Submitted.".localize()
+        return "App Log Submitted.".localized
     }
 
     static var appLogSubmitFailAlert: String {
-        return "App log cannot be submitted at this time.".localize()
+        return "App log cannot be submitted at this time.".localized
     }
 
     enum ConfirmationEmailSentAlert {
         static var title: String {
-            return "Confirmation Email Sent".localize()
+            return "Confirmation Email Sent".localized
         }
 
         static var message: String {
-            return "Please check your inbox and junk/spam folder.".localize()
+            return "Please check your inbox and junk/spam folder.".localized
         }
     }
 
     static var SubmitEmailFailAlertMessage: String {
-        return "Please make sure you have entered a correct password and a valid email.".localize()
+        return "Please make sure you have entered a correct password and a valid email.".localized
     }
 
     enum PurchaseRestoredAlert {
         static var title: String {
-            return "Purchases Restored".localize()
+            return "Purchases Restored".localized
         }
 
         static var message: String {
-            return "All purchases restored.".localize()
+            return "All purchases restored.".localized
         }
 
         static var error: String {
@@ -369,164 +369,164 @@ enum TextsAsset {
 
     enum Status {
         static var connectedTo: String {
-            return "CONNECTED".localize()
+            return "CONNECTED".localized
         }
 
         static var connecting: String {
-            return "CONNECTING".localize()
+            return "CONNECTING".localized
         }
 
         static var disconnected: String {
-            return "DISCONNECTED".localize()
+            return "DISCONNECTED".localized
         }
 
         static var disconnecting: String {
-            return "DISCONNECTING".localize()
+            return "DISCONNECTING".localized
         }
 
         static var connectivityTest: String {
-            return "CONNECTIVITY TEST".localize()
+            return "CONNECTIVITY TEST".localized
         }
 
         static var lowWifiSignal: String {
-            return "LOW WIFI SIGNAL".localize()
+            return "LOW WIFI SIGNAL".localized
         }
 
         static var failed: String {
-            return "FAILED".localize()
+            return "FAILED".localized
         }
 
         static var on: String {
-            return "ON".localize()
+            return "ON".localized
         }
 
         static var off: String {
-            return "OFF".localize()
+            return "OFF".localized
         }
     }
 
     static var yourIP: String {
-        return "Your IP".localize()
+        return "Your IP".localized
     }
 
     static var trusted: String {
-        return "Trusted".localize()
+        return "Trusted".localized
     }
 
     static var upgrade: String {
-        return "Upgrade".localize()
+        return "Upgrade".localized
     }
 
     static var left: String {
-        return "Left".localize()
+        return "Left".localized
     }
 
     static var bestLocation: String {
-        return "Best Location".localize()
+        return "Best Location".localized
     }
 
     static var nothingToSeeHere: String {
-        return "Nothing to see here".localize()
+        return "Nothing to see here".localized
     }
 
     static var noStaticIPs: String {
-        return "No Static IP's".localize()
+        return "No Static IP's".localized
     }
 
     static var noConfiguredLocations: String {
-        return "No Custom Configs".localize()
+        return "No Custom Configs".localized
     }
 
     enum Preferences {
-        static var title: String { return "Preferences".localize() }
-        static var general: String { return "General".localize() }
-        static var account: String { return "Account".localize() }
-        static var robert: String { return "R.O.B.E.R.T.".localize() }
-        static var lookFeel: String { return "Look & Feel".localize() }
-        static var connection: String { return "Connection".localize() }
-        static var networkSecurity: String { return "Network Options".localize() }
-        static var debug: String { return "Debug".localize() }
-        static var logout: String { return "Log Out".localize() }
-        static var helpMe: String { return "Help Me!".localize() }
-        static var leaderboard: String { return "Leaderboard".localize() }
-        static var about: String { return "About".localize() }
-        static var privacy: String { return "Privacy & EULA".localize() }
-        static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localize() }
-        static var referForData: String { return "Refer for Data".localize() }
-        static var advanceParameters: String { return "Advanced Parameters".localize() }
+        static var title: String { return "Preferences".localized }
+        static var general: String { return "General".localized }
+        static var account: String { return "Account".localized }
+        static var robert: String { return "R.O.B.E.R.T.".localized }
+        static var lookFeel: String { return "Look & Feel".localized }
+        static var connection: String { return "Connection".localized }
+        static var networkSecurity: String { return "Network Options".localized }
+        static var debug: String { return "Debug".localized }
+        static var logout: String { return "Log Out".localized }
+        static var helpMe: String { return "Help Me!".localized }
+        static var leaderboard: String { return "Leaderboard".localized }
+        static var about: String { return "About".localized }
+        static var privacy: String { return "Privacy & EULA".localized }
+        static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localized }
+        static var referForData: String { return "Refer for Data".localized }
+        static var advanceParameters: String { return "Advanced Parameters".localized }
     }
 
     enum Robert {
         static var learnMore: String {
-            return "Learn more".localize()
+            return "Learn more".localized
         }
 
         static var manageCustomRules: String {
-            return "Manage Custom Rules".localize()
+            return "Manage Custom Rules".localized
         }
 
         static var blocking: String {
-            return "Blocking".localize()
+            return "Blocking".localized
         }
 
         static var allowing: String {
-            return "Allowing".localize()
+            return "Allowing".localized
         }
 
         static var description: String {
-            return "R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch.".localize()
+            return "R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch.".localized
         }
     }
 
     static var unlimited: String {
-        return "Unlimited".localize()
+        return "Unlimited".localized
     }
 
     static var pro: String {
-        return "Pro".localize()
+        return "Pro".localized
     }
 
     static var proSubscription: String {
-        return "Pro".localize()
+        return "Pro".localized
     }
 
     static var allServers: String {
-        return "All Locations".localize()
+        return "All Locations".localized
     }
 
     enum General {
-        static var title: String { return "General".localize() }
-        static var connectionMode: String { return "Connection Mode".localize() }
-        static var language: String { return "Language".localize() }
-        static var displayLatency: String { return "Latency Display".localize() }
-        static var sendLog: String { return "Send Log".localize() }
-        static var ms: String { return "MS".localize() }
-        static var bars: String { "Bars".localize() }
-        static var latencytypes: [String] { return ["MS".localize(), "Bars".localize()] }
-        static var pushNotificationSettings: String { "Enable Notifications".localize() }
-        static var openSettings: String { return "Open Settings".localize() }
-        static var orderLocationsBy: String { "Location Order".localize() }
-        static var protocolType: String { "Protocol".localize() }
-        static var port: String { "Port".localize() }
+        static var title: String { return "General".localized }
+        static var connectionMode: String { return "Connection Mode".localized }
+        static var language: String { return "Language".localized }
+        static var displayLatency: String { return "Latency Display".localized }
+        static var sendLog: String { return "Send Log".localized }
+        static var ms: String { return "MS".localized }
+        static var bars: String { "Bars".localized }
+        static var latencytypes: [String] { return ["MS".localized, "Bars".localized] }
+        static var pushNotificationSettings: String { "Enable Notifications".localized }
+        static var openSettings: String { return "Open Settings".localized }
+        static var orderLocationsBy: String { "Location Order".localized }
+        static var protocolType: String { "Protocol".localized }
+        static var port: String { "Port".localized }
         static let protocols = ["WireGuard", "IKEv2", "UDP", "TCP", "Stealth", "WStunnel"]
         static let openVpnProtocols = ["UDP", "TCP", "Stealth", "WStunnel"]
-        static var version: String { "Version".localize() }
-        static var auto: String { "Auto".localize() }
-        static var manual: String { "Manual".localize() }
-        static var bundled: String { "Bundled".localize() }
-        static var custom: String { "Custom".localize() }
-        static var none: String { "None".localize() }
-        static var stretch: String { "Stretch".localize() }
-        static var fill: String { "Fill".localize() }
-        static var tile: String { "Tile".localize() }
+        static var version: String { "Version".localized }
+        static var auto: String { "Auto".localized }
+        static var manual: String { "Manual".localized }
+        static var bundled: String { "Bundled".localized }
+        static var custom: String { "Custom".localized }
+        static var none: String { "None".localized }
+        static var stretch: String { "Stretch".localized }
+        static var fill: String { "Fill".localized }
+        static var tile: String { "Tile".localized }
         static let languages: [String] = Languages.allCases.map { $0.name }
         static let languagesList: [Languages] = Languages.allCases
-        static var hapticFeedback: String { "Haptic Feedback".localize() }
-        static var showServerHealth: String { "Show Location Load".localize() }
-        static var autoSecure: String { "Auto-Secure".localize() }
-        static var enabled: String { "Enabled".localize() }
-        static var disabled: String { "Disabled".localize() }
-        static var customBackground: String { "Custom Background".localize() }
+        static var hapticFeedback: String { "Haptic Feedback".localized }
+        static var showServerHealth: String { "Show Location Load".localized }
+        static var autoSecure: String { "Auto-Secure".localized }
+        static var enabled: String { "Enabled".localized }
+        static var disabled: String { "Disabled".localized }
+        static var customBackground: String { "Custom Background".localized }
 
         static func getValue(displayText: String) -> String? {
             switch displayText {
@@ -555,66 +555,66 @@ enum TextsAsset {
     }
 
     enum CustomLocationNames {
-        static var exportLocations: String { "Export Locations".localize() }
-        static var importLocations: String { "Import Custom Locations".localize() }
-        static var exportLocationsDesc: String { "Export your server location list to a local file in JSON that you can edit to change the locations names into your own custom ones".localize() }
-        static var importLocationsDesc: String { "Import a custom name server location names list from a local JSON file".localize() }
-        static var failedImporting: String { "Failed to import custom location names list".localize() }
-        static var successfullyImported: String { "Successfully imported custom location names list".localize() }
-        static var failedExporting: String { "Failed to export custom location names list".localize() }
-        static var successfullyExported: String { "Successfully exported custom location names list".localize() }
-        static var resetSuccessful: String { "Successfully reset custom location names list".localize() }
-        static var exportTitleSuccess: String { "Export Successful".localize() }
-        static var importTitleSuccess: String { "Import Successful".localize() }
-        static var exportTitleFailed: String { "Export Failed".localize() }
-        static var importTitleFailed: String { "Import Failed".localize() }
-        static var resetTitleSuccess: String { "Reset Successful".localize() }
+        static var exportLocations: String { "Export Locations".localized }
+        static var importLocations: String { "Import Custom Locations".localized }
+        static var exportLocationsDesc: String { "Export your server location list to a local file in JSON that you can edit to change the locations names into your own custom ones".localized }
+        static var importLocationsDesc: String { "Import a custom name server location names list from a local JSON file".localized }
+        static var failedImporting: String { "Failed to import custom location names list".localized }
+        static var successfullyImported: String { "Successfully imported custom location names list".localized }
+        static var failedExporting: String { "Failed to export custom location names list".localized }
+        static var successfullyExported: String { "Successfully exported custom location names list".localized }
+        static var resetSuccessful: String { "Successfully reset custom location names list".localized }
+        static var exportTitleSuccess: String { "Export Successful".localized }
+        static var importTitleSuccess: String { "Import Successful".localized }
+        static var exportTitleFailed: String { "Export Failed".localized }
+        static var importTitleFailed: String { "Import Failed".localized }
+        static var resetTitleSuccess: String { "Reset Successful".localized }
     }
 
     enum PreferencesDescription {
-        static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localize() }
-        static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localize() }
-        static var language: String { return "Localize Windscribe to supported languages.".localize() }
-        static var background: String { return "Customize the background of the main app screen.".localize() }
-        static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localize() }
-        static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localize() }
-        static var hapticFeedback: String { return "Vibrate the device based on user actions.".localize() }
-        static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localize() }
-        static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localize() }
-        static var customBackground: String { return "Use the app custom background instead of the locations flag.".localize() }
+        static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localized }
+        static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localized }
+        static var language: String { return "Localize Windscribe to supported languages.".localized }
+        static var background: String { return "Customize the background of the main app screen.".localized }
+        static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localized }
+        static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localized }
+        static var hapticFeedback: String { return "Vibrate the device based on user actions.".localized }
+        static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized }
+        static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localized }
+        static var customBackground: String { return "Use the app custom background instead of the locations flag.".localized }
     }
 
     enum LookFeel {
         static var title: String {
-            return "Look & Feel".localize()
+            return "Look & Feel".localized
         }
 
         static var appearanceTitle: String {
-            "Appearance".localize()
+            "Appearance".localized
         }
 
         static var appBackgroundTitle: String {
-            "App Background".localize()
+            "App Background".localized
         }
 
         static var soundNotificationTitle: String {
-            "Sound Notifications".localize()
+            "Sound Notifications".localized
         }
 
         static var versionTitle: String {
-            "Version".localize()
+            "Version".localized
         }
 
         static var appearanceDescription: String {
-            "Light or Dark. Choose a side, and choose wisely.".localize()
+            "Light or Dark. Choose a side, and choose wisely.".localized
         }
 
         static var appBackgroundDescription: String {
-            "Customize the background of the main app screen.".localize()
+            "Customize the background of the main app screen.".localized
         }
 
         static var soundNotificationDescription: String {
-            "Choose sounds to play when connection events occur.".localize()
+            "Choose sounds to play when connection events occur.".localized
         }
 
         static func getValue(displayText: String) -> String? {
@@ -631,95 +631,95 @@ enum TextsAsset {
 
     enum Account {
         static var title: String {
-            return "Account".localize()
+            return "Account".localized
         }
 
         static var plan: String {
-            return "PLAN".localize()
+            return "PLAN".localized
         }
 
         static var expiryDate: String {
-            return "Expiry Date".localize()
+            return "Expiry Date".localized
         }
 
         static var resetDate: String {
-            return "Reset Date".localize()
+            return "Reset Date".localized
         }
 
         static var dataLeft: String {
-            return "Data Left".localize()
+            return "Data Left".localized
         }
 
         static var info: String {
-            return "INFO".localize()
+            return "INFO".localized
         }
 
         static var editAccount: String {
-            return "Edit Account".localize()
+            return "Edit Account".localized
         }
 
         static var managerAccount: String {
-            return "Manage Account".localize()
+            return "Manage Account".localized
         }
 
         static var addEmail: String {
-            return "Add".localize()
+            return "Add".localized
         }
 
         static var addEmailDescription: String {
-            return "Get 10GB/Mo of data and gain the ability to reset a forgotten password.".localize()
+            return "Get 10GB/Mo of data and gain the ability to reset a forgotten password.".localized
         }
 
         static var addEmailDescriptionPro: String {
-            return "Gain the ability to reset a forgotten password.".localize()
+            return "Gain the ability to reset a forgotten password.".localized
         }
 
         static var upgrade: String {
-            return "Upgrade".localize()
+            return "Upgrade".localized
         }
 
         static var confirmYourEmail: String {
-            return "Confirm Your Email".localize()
+            return "Confirm Your Email".localized
         }
 
         static var resend: String {
-            return "Resend".localize()
+            return "Resend".localized
         }
 
         static var ghostInfo: String {
-            return "Sign up or login to view your account details and safeguard your preferences".localize()
+            return "Sign up or login to view your account details and safeguard your preferences".localized
         }
 
         static var cancelAccount: String {
-            return "Delete Account".localize()
+            return "Delete Account".localized
         }
 
         static var deleteAccountMessage: String {
-            return "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone.".localize()
+            return "Enter your Windscribe password to delete your account. Please be aware this action cannot be undone.".localized
         }
 
         static var other: String {
-            return "Other".localize()
+            return "Other".localized
         }
 
         static var enterCode: String {
-            return "Enter Code".localize()
+            return "Enter Code".localized
         }
 
         static var enterCodeHere: String {
-            return "Enter code here".localize()
+            return "Enter code here".localized
         }
 
         static var enter: String {
-            return "Enter".localize()
+            return "Enter".localized
         }
 
         static var lazyLogin: String {
-            return "Lazy Login".localize()
+            return "Lazy Login".localized
         }
 
         static var lazyLoginDescription: String {
-            return "Login into Windscribe's TV apps with a short code".localize()
+            return "Login into Windscribe's TV apps with a short code".localized
         }
 
         static var lazyLoginSuccess: String {
@@ -727,75 +727,75 @@ enum TextsAsset {
         }
 
         static var voucherCodeDescription: String {
-            return "Apply voucher code to your account".localize()
+            return "Apply voucher code to your account".localized
         }
 
         static var voucherCodeSuccessful: String {
-            return "Sweet, Voucher code is applied successfully".localize()
+            return "Sweet, Voucher code is applied successfully".localized
         }
 
         static var voucherUsedMessage: String {
-            return "Voucher code is used already".localize()
+            return "Voucher code is used already".localized
         }
 
         static var invalidVoucherCode: String {
-            return "Voucher provided is invalid or expired.".localize()
+            return "Voucher provided is invalid or expired.".localized
         }
 
         static var emailRequired: String {
-            return "Confirmed email is required.".localize()
+            return "Confirmed email is required.".localized
         }
     }
 
     enum NetworkSecurity {
         static var title: String {
-            return "Network Security".localize()
+            return "Network Security".localized
         }
 
         static var trusted: String {
-            return "Unsecured".localize()
+            return "Unsecured".localized
         }
 
         static var untrusted: String {
-            return "Secured".localize()
+            return "Secured".localized
         }
 
         static var forget: String {
-            return "Forget".localize()
+            return "Forget".localized
         }
 
         static var currentNetwork: String {
-            return "current network".localize()
+            return "current network".localized
         }
 
         static var otherNetwork: String {
-            return "other network".localize()
+            return "other network".localized
         }
 
         static var unknownNetwork: String {
-            return "Unknown Network".localize().uppercased()
+            return "Unknown Network".localized.uppercased()
         }
     }
 
     enum Debug {
         static var viewLog: String {
-            return "View Debug Log".localize()
+            return "View Debug Log".localized
         }
 
         static var sendLog: String {
-            return "Send Debug Log".localize()
+            return "Send Debug Log".localized
         }
 
         static var sendingLog: String {
-            return "Sending Log".localize()
+            return "Sending Log".localized
         }
 
         static var sentLog: String {
-            return "Sent, Thanks!".localize()
+            return "Sent, Thanks!".localized
         }
 
         static var submit: String {
-            return "Submit".localize()
+            return "Submit".localized
         }
     }
 
@@ -808,383 +808,383 @@ enum TextsAsset {
 
     enum NewsFeed {
         static var title: String {
-            return "News Feed".localize()
+            return "News Feed".localized
         }
     }
 
     enum EnterEmail {
         static var headline: String {
-            return "One last thing!".localize()
+            return "One last thing!".localized
         }
 
         static var description: String {
-            return "Add your email address in case you forget your password. We’ll even give you 10GB for it.".localize()
+            return "Add your email address in case you forget your password. We’ll even give you 10GB for it.".localized
         }
 
         static var acceptButton: String {
-            return "Add".localize()
+            return "Add".localized
         }
 
         static var declineButton: String {
-            return "No Thanks".localize()
+            return "No Thanks".localized
         }
 
         static var secureYourAccount: String {
-            return "Secure your account".localize()
+            return "Secure your account".localized
         }
     }
 
     enum OutOfData {
         static var title: String {
-            return "You’re out of data".localize()
+            return "You’re out of data".localized
         }
 
         static var description: String {
-            return "Upgrade now to stay protected or wait until your bandwidth is reset on ".localize()
+            return "Upgrade now to stay protected or wait until your bandwidth is reset on ".localized
         }
 
         static var action: String {
-            return "Upgrade".localize()
+            return "Upgrade".localized
         }
 
         static var cancel: String {
-            return "I'll wait!".localize()
+            return "I'll wait!".localized
         }
     }
 
     enum ProPlanExpired {
         static var title: String {
-            return "Your Pro Plan expired!".localize()
+            return "Your Pro Plan expired!".localized
         }
 
         static var description: String {
-            return "You’ve been downgraded to free for now".localize()
+            return "You’ve been downgraded to free for now".localized
         }
 
         static var action: String {
-            return "Renew Plan".localize()
+            return "Renew Plan".localized
         }
 
         static var cancel: String {
-            return "Remind me later".localize()
+            return "Remind me later".localized
         }
     }
 
     enum Banned {
         static var title: String {
-            return "You’ve been banned".localize()
+            return "You’ve been banned".localized
         }
 
         static var description: String {
-            return "Your account has been disabled for violating our Terms of Service".localize()
+            return "Your account has been disabled for violating our Terms of Service".localized
         }
 
         static var action: String {
-            return "Learn More".localize()
+            return "Learn More".localized
         }
     }
 
     enum FreeAccount {
         static var header: String {
-            return "Unlock full access to Windscribe".localize()
+            return "Unlock full access to Windscribe".localized
         }
 
         static var outOfDataHeader: String {
-            return "You’re out of data".localize()
+            return "You’re out of data".localized
         }
 
         static var body: String {
-            return "Go Pro for unlimited everything".localize()
+            return "Go Pro for unlimited everything".localized
         }
     }
 
     enum PushNotifications {
         static var title: String {
-            return "Stay Protected".localize()
+            return "Stay Protected".localized
         }
 
         static var description: String {
-            return "Set up push notifications to receive connection updates in case of an interruption".localize()
+            return "Set up push notifications to receive connection updates in case of an interruption".localized
         }
 
         static var action: String {
-            return "Turn Notification On".localize()
+            return "Turn Notification On".localized
         }
     }
 
     enum UpgradeView {
         static var title: String {
-            return "Plans".localize()
+            return "Plans".localized
         }
 
         static var pricing: String {
-            return "Pricing".localize()
+            return "Pricing".localized
         }
 
         static var benefits: String {
-            return "Benefits".localize()
+            return "Benefits".localized
         }
 
         static var continueFree10GB: String {
-            return "Free 10GB/Mo".localize()
+            return "Free 10GB/Mo".localized
         }
 
         static var unlimitedData: String {
-            return "Unlimited Data".localize()
+            return "Unlimited Data".localized
         }
 
         static var unlimitedDataMessage: String {
-            return "Pretty self explanatory. Use as much bandwidth as you'd like.".localize()
+            return "Pretty self explanatory. Use as much bandwidth as you'd like.".localized
         }
 
         static var allLocations: String {
-            return "All Locations".localize()
+            return "All Locations".localized
         }
 
         static var allLocationsMessage: String {
-            return "Access to servers in over 60 countries and 110 data centers.".localize()
+            return "Access to servers in over 60 countries and 110 data centers.".localized
         }
 
         static let robert = "R.O.B.E.R.T"
         static var robertMessage: String {
-            return "Best malware and ad-blocker you will ever use. Seriously.".localize()
+            return "Best malware and ad-blocker you will ever use. Seriously.".localized
         }
 
         static var choosePlan: String {
-            return "Choose Plan".localize()
+            return "Choose Plan".localized
         }
 
         static var year: String {
-            return "Year".localize()
+            return "Year".localized
         }
 
         static var month: String {
-            return "Month".localize()
+            return "Month".localized
         }
 
         static var months: String {
-            return "Months".localize()
+            return "Months".localized
         }
 
         static var oneMonth: String {
-            return "1 Month Pro Subscription".localize()
+            return "1 Month Pro Subscription".localized
         }
 
         static var oneYear: String {
-            return "1 Year Pro Subscription".localize()
+            return "1 Year Pro Subscription".localized
         }
 
         static var iAPDescription: String {
-            return "Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period. You can cancel anytime with your iTunes account settings. Any unused portion of a free trial will be forfeited if you purchase a subscription".localize()
+            return "Subscriptions will automatically renew unless canceled within 24-hours before the end of the current period. You can cancel anytime with your iTunes account settings. Any unused portion of a free trial will be forfeited if you purchase a subscription".localized
         }
 
         static var termsOfUse: String {
-            return "Terms of Use".localize()
+            return "Terms of Use".localized
         }
 
         static var privacyPolicy: String {
-            return "Privacy Policy".localize()
+            return "Privacy Policy".localized
         }
 
         static var restorePurchases: String {
-            return "Restore Purchases".localize()
+            return "Restore Purchases".localized
         }
 
         static var networkError: String {
-            return "Error network.".localize()
+            return "Error network.".localized
         }
 
         static var promoNotValid: String {
-            return "Promo is not valid anymore.".localize()
+            return "Promo is not valid anymore.".localized
         }
 
         // TODO: Need to add localizable languages
         static var yearly: String {
-            return "Yearly".localize()
+            return "Yearly".localized
         }
 
         static var billedAnnually: String {
-            return "Billed Annually".localize()
+            return "Billed Annually".localized
         }
 
         static var monthly: String {
-            return "Monthly".localize()
+            return "Monthly".localized
         }
 
         static var billedMonthly: String {
-            return "Billed Monthly".localize()
+            return "Billed Monthly".localized
         }
 
         static var subscribe: String {
-            return "Subscribe".localize()
+            return "Subscribe".localized
         }
 
         static var details: String {
-            return "Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes.".localize()
+            return "Subscriptions may be managed monthly, yearly or turned off by going to the App Store Account Settings after purchase. All prices include applicable taxes.".localized
         }
 
         static var restore: String {
-            return "Restore".localize()
+            return "Restore".localized
         }
 
         static var planBenefitUnlimitedTitle: String {
-            return "Unlimited Everything".localize()
+            return "Unlimited Everything".localized
         }
 
         static var planBenefitUnlimitedDescription: String {
-            return "Use on all devices, with no data limits".localize()
+            return "Use on all devices, with no data limits".localized
         }
 
         static var planBenefitAllLocationsTitle: String {
-            return "All VPN Locations".localize()
+            return "All VPN Locations".localized
         }
 
         static var planBenefitAllLocationsDescription: String {
-            return "Servers in 130 cities, more than any other VPN".localize()
+            return "Servers in 130 cities, more than any other VPN".localized
         }
 
         static var planBenefitSpeedSecurityTitle: String {
-            return "Increased Speed and Security".localize()
+            return "Increased Speed and Security".localized
         }
 
         static var planBenefitSpeedSecurityDescription: String {
-            return "Blocks 99.9% of malicious websites and trackers".localize()
+            return "Blocks 99.9% of malicious websites and trackers".localized
         }
 
         static var planBenefitUnableConnectAppStore: String {
-            return "Unable to connect to app store services. Please try again.".localize()
+            return "Unable to connect to app store services. Please try again.".localized
         }
 
         static var planBenefitSuccessfullPurchaseTitle: String {
-            return "You're all set".localize()
+            return "You're all set".localized
         }
 
         static var planBenefitSuccessfullPurchase: String {
-            return "Your purchase is successful.".localize()
+            return "Your purchase is successful.".localized
         }
 
         static var planBenefitSuccessScreenTitle: String {
-            return "Welcome to Windscribe Pro!".localize()
+            return "Welcome to Windscribe Pro!".localized
         }
 
         static var planBenefitSuccessScreenDescription: String {
-            return "Thanks for upgrading to Windscribe Pro! You now have access to even more powerful features.".localize()
+            return "Thanks for upgrading to Windscribe Pro! You now have access to even more powerful features.".localized
         }
 
         static var planBenefitSuccessShareTitle: String {
-            return "Share".localize()
+            return "Share".localized
         }
 
         static var planBenefitSuccessStartTitle: String {
-            return "Start using Pro".localize()
+            return "Start using Pro".localized
         }
 
         static var planBenefitTransactionFailedAlertTitle: String {
-            return "Failed to complete transaction.".localize()
+            return "Failed to complete transaction.".localized
         }
 
         static var planBenefitTransactionFailedAlert: String {
-            return "Something went wrong. Please try another payment method or contact our customer support.".localize()
+            return "Something went wrong. Please try another payment method or contact our customer support.".localized
         }
 
         static var planBenefitTransactionFailedRestoreTitle: String {
-            return "Failed to restore transaction.".localize()
+            return "Failed to restore transaction.".localized
         }
 
         static var planBenefitNetworkProblemTitle: String {
-            return "Failed to load products. Check your internet connection and try again.".localize()
+            return "Failed to load products. Check your internet connection and try again.".localized
         }
 
         static var planBenefitSuccessShareDevices: String {
-            return "Set Up on All Your Devices".localize()
+            return "Set Up on All Your Devices".localized
         }
 
         static var planBenefitSuccessShareLocation: String {
-            return "Connect to Any Location".localize()
+            return "Connect to Any Location".localized
         }
 
         static var planBenefitSuccessShareBandwidth: String {
-            return "Unlimited Bandwidth".localize()
+            return "Unlimited Bandwidth".localized
         }
 
         static var planBenefitJoinDiscord: String {
-            return "Join our Discord community".localize()
+            return "Join our Discord community".localized
         }
 
         static var planBenefitJoinReddit: String {
-            return "Join our Reddit community".localize()
+            return "Join our Reddit community".localized
         }
 
         static var planBenefitFindUsYoutube: String {
-            return "Find us on YouTube".localize()
+            return "Find us on YouTube".localized
         }
 
         static var planBenefitFollowUsX: String {
-            return "Follow us on X".localize()
+            return "Follow us on X".localized
         }
     }
 
     static var addStaticIP: String {
-        return "Add Static IP".localize()
+        return "Add Static IP".localized
     }
 
     static var addCustomConfig: String {
-        return "Add Custom Config".localize()
+        return "Add Custom Config".localized
     }
 
     static var addCustomConfigDescription: String {
-        return "Custom configs allow you to connect to any OpenVPN or Wireguard server. Just add a valid config file and it will appear in this tab.".localize()
+        return "Custom configs allow you to connect to any OpenVPN or Wireguard server. Just add a valid config file and it will appear in this tab.".localized
     }
 
     static var customConfigWithSameFileNameError: String {
-        return "Custom config file with this name already exists".localize()
+        return "Custom config file with this name already exists".localized
     }
 
     enum Siri {
         static var connectToVPN: String {
-            return "Connect to VPN".localize()
+            return "Connect to VPN".localized
         }
 
         static var disconnectVPN: String {
-            return "Disconnect VPN".localize()
+            return "Disconnect VPN".localized
         }
 
         static var showMyLocation: String {
-            return "Show My Location".localize()
+            return "Show My Location".localized
         }
     }
 
     enum RateUs {
         static var title: String {
-            return "Rate Us!".localize()
+            return "Rate Us!".localized
         }
 
         static var description: String {
-            return "Are you enjoying Windscribe? Sure you are. Rate us in the App store and we’ll love you long time.".localize()
+            return "Are you enjoying Windscribe? Sure you are. Rate us in the App store and we’ll love you long time.".localized
         }
 
         static var action: String {
-            return "Rate Windscribe".localize()
+            return "Rate Windscribe".localized
         }
 
         static var maybeLater: String {
-            return "Maybe Later".localize()
+            return "Maybe Later".localized
         }
 
         static var goAway: String {
-            return "Go Away".localize()
+            return "Go Away".localized
         }
     }
 
     static var orderPreferences: [String] {
-        return ["Geography".localize(), "Alphabet".localize(), "Latency".localize()]
+        return ["Geography".localized, "Alphabet".localized, "Latency".localized]
     }
 
     static let openVPN = "OpenVPN"
     static let iKEv2 = "IKEv2"
     static let wireGuard = "WireGuard"
     static var appearances: [String] {
-        return ["Light".localize(), "Dark".localize()]
+        return ["Light".localized, "Dark".localized]
     }
 
     static var connectionModes: [String] {
@@ -1197,203 +1197,203 @@ enum TextsAsset {
 
      enum Favorites {
         static var removeTitle: String {
-            return "Are you sure?".localize()
+            return "Are you sure?".localized
         }
 
         static var removeMessage: String {
-            return "Removing this location from favourites will make it feel sad.".localize()
+            return "Removing this location from favourites will make it feel sad.".localized
         }
 
         static var noFavorites: String {
-            return "No Favourites".localize()
+            return "No Favourites".localized
         }
     }
 
     enum TrustedNetworkPopup {
         static var title: String {
-            return "This network is unsecured".localize()
+            return "This network is unsecured".localized
         }
 
         static var message: String {
-            return "is unsecured, meaning you don't wish to use Windscribe while on this network".localize()
+            return "is unsecured, meaning you don't wish to use Windscribe while on this network".localized
         }
 
         static var action: String {
-            return "Connect Anyway".localize()
+            return "Connect Anyway".localized
         }
 
         static var cancel: String {
-            return "Cancel".localize()
+            return "Cancel".localized
         }
     }
 
     static var remove: String {
-        return "Remove".localize()
+        return "Remove".localized
     }
 
     static var cancel: String {
-        return "Cancel".localize()
+        return "Cancel".localized
     }
 
     enum RestartAppAlert {
         static var title: String {
-            return "This action requires a restart".localize()
+            return "This action requires a restart".localized
         }
 
         static var message: String {
-            return "Please restart Windscribe to continue using in the preferred language.".localize()
+            return "Please restart Windscribe to continue using in the preferred language.".localized
         }
 
         static var action: String {
-            return "Close App".localize()
+            return "Close App".localized
         }
     }
 
     static var refreshLatency: String {
-        return "Refresh latency".localize()
+        return "Refresh latency".localized
     }
 
     static var disconnectToRefreshLatency: String {
-        return "Disconnect to refresh latency".localize()
+        return "Disconnect to refresh latency".localized
     }
 
     static var iKEv2RemoteIDTest: String {
-        return "IKEv2 RemoteID Test".localize()
+        return "IKEv2 RemoteID Test".localized
     }
 
     static var iKEv2RemoteIDTestDescription: String {
-        return "Only enable this for testing.".localize()
+        return "Only enable this for testing.".localized
     }
 
     static var disconnecting: String {
-        return "Disconnecting".localize()
+        return "Disconnecting".localized
     }
 
     static var firewall: String {
-        return "Firewall".localize()
+        return "Firewall".localized
     }
 
     static var killSwitch: String {
-        return "Always on VPN".localize()
+        return "Always on VPN".localized
     }
 
     static var allowLan: String {
-        return "Allow LAN Traffic".localize()
+        return "Allow LAN Traffic".localized
     }
 
     static var firewallDescription: String {
-        return "This turns on the on-demand mode.".localize()
+        return "This turns on the on-demand mode.".localized
     }
 
     static var killSwitchDescription: String {
-        return "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services.".localize()
+        return "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services.".localized
     }
 
     static var allowLanDescription: String {
-        return "Allow access to local services and printers while connected to Windscribe.".localize()
+        return "Allow access to local services and printers while connected to Windscribe.".localized
     }
 
     static var circumventCensorship: String {
-        return "Circumvent Censorship".localize()
+        return "Circumvent Censorship".localized
     }
 
     static var circumventCensorshipDescription: String {
-        return "Connect to the VPN even in hostile environment".localize()
+        return "Connect to the VPN even in hostile environment".localized
     }
 
     static var connectedDNS: String {
-        return "Connected DNS".localize()
+        return "Connected DNS".localized
     }
 
     static var connectedDNSDescription: String {
-        return "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting.".localize()
+        return "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting.".localized
     }
 
     static var connectedDNSValueFieldDescription: String {
-        return "IP/DNS-over-HTTPS/TLS".localize()
+        return "IP/DNS-over-HTTPS/TLS".localized
     }
 
     static var connectedDNSInvalidAlertTitle: String {
-        return "Invalid DNS server".localize()
+        return "Invalid DNS server".localized
     }
 
     static var connectedDNSInvalidAlertBody: String {
-        return "Something went wrong. Please make sure you have entered a valid DNS server.".localize()
+        return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
     }
 
     static var configuredLocation: String {
-        return "Custom Config".localize()
+        return "Custom Config".localized
     }
 
     static var configTitle: String {
-        return "Config Title".localize()
+        return "Config Title".localized
     }
 
     enum RemoveCustomConfig {
         static var title: String {
-            return "Are you sure?".localize()
+            return "Are you sure?".localized
         }
 
         static var message: String {
-            return "This custom configuration will be gone forever.".localize()
+            return "This custom configuration will be gone forever.".localized
         }
     }
 
     enum EnterCredentialsAlert {
         static var title: String {
-            return "Enter Credentials".localize()
+            return "Enter Credentials".localized
         }
 
         static var message: String {
-            return "Enter the username and password associated with this custom config".localize()
+            return "Enter the username and password associated with this custom config".localized
         }
 
         static var saveCredentials: String {
-            return "Save credentials?".localize()
+            return "Save credentials?".localized
         }
     }
 
     enum EditCredentialsAlert {
         static var title: String {
-            return "Edit Credentials".localize()
+            return "Edit Credentials".localized
         }
     }
 
     static var connect: String {
-        return "Connect".localize()
+        return "Connect".localized
     }
 
     static var save: String {
-        return "Save".localize()
+        return "Save".localized
     }
 
     enum FileNotInCorrectFormat {
         static var title: String {
-            return "Incorrect File Format".localize()
+            return "Incorrect File Format".localized
         }
 
         static var message: String {
-            return "Something went wrong. Please make sure you have the correct OpenVPN configurations.".localize()
+            return "Something went wrong. Please make sure you have the correct OpenVPN configurations.".localized
         }
     }
 
     enum ConfigFileNotSupported {
         static var title: String {
-            return "Config file is not supported".localize()
+            return "Config file is not supported".localized
         }
 
         static var message: String {
-            return "Your configuration contains unsupported directives.".localize()
+            return "Your configuration contains unsupported directives.".localized
         }
     }
 
     static var delete: String {
-        return "Delete".localize()
+        return "Delete".localized
     }
 
     enum PrivacyView {
         static var title: String {
-            return "Your Privacy Is Important".localize()
+            return "Your Privacy Is Important".localized
         }
 
         static var description: String {
@@ -1419,58 +1419,58 @@ enum TextsAsset {
         }
 
         static var firstLine: String {
-            return "Account data: username, email (if you gave us one), and payment transaction IDs (if you gave us money)".localize()
+            return "Account data: username, email (if you gave us one), and payment transaction IDs (if you gave us money)".localized
         }
 
         static var secondLine: String {
-            return "Metadata needed to ensure quality of service: bandwidth used in a 30 day period, number of parallel connections".localize()
+            return "Metadata needed to ensure quality of service: bandwidth used in a 30 day period, number of parallel connections".localized
         }
 
         static var action: String {
-            return "I'm OK With This".localize()
+            return "I'm OK With This".localized
         }
     }
 
     enum AskToRetryPopup {
         static var title: String {
-            return "Unable to connect".localize()
+            return "Unable to connect".localized
         }
 
         static var message: String {
-            return "We're unable to connect you via $proto_name protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localize()
+            return "We're unable to connect you via $proto_name protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localized
         }
 
         static func messageWithProtocol(protocolType: String) -> String {
-            return "We're unable to connect you via \(protocolType) protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localize()
+            return "We're unable to connect you via \(protocolType) protocol. Your network may have unstable Internet connectivity or is blocking VPNs. Let's try another protocol.".localized
         }
     }
 
     enum AutoModeFailedToConnectPopup {
         static var title: String {
-            return "This network hates us".localize()
+            return "This network hates us".localized
         }
 
         static var message: String {
-            return "Well we gave it our best shot, we just couldn’t connect you on this network for some reason.".localize()
+            return "Well we gave it our best shot, we just couldn’t connect you on this network for some reason.".localized
         }
 
         static var sendDebugLog: String {
-            return "Send Debug Log".localize()
+            return "Send Debug Log".localized
         }
 
         static var contactSupport: String {
-            return "Contact Support".localize()
+            return "Contact Support".localized
         }
     }
 
     // swiftlint:disable inclusive_language
     enum Whitelist {
         static var title: String {
-            return "Auto-Secure".localize()
+            return "Auto-Secure".localized
         }
 
         static var description: String {
-            return "When you connect to this network, Windscribe will auto-connect to the last chosen location.".localize()
+            return "When you connect to this network, Windscribe will auto-connect to the last chosen location.".localized
         }
     }
 
@@ -1478,437 +1478,437 @@ enum TextsAsset {
 
     enum PreferredProtocol {
         static var title: String {
-            return "Preferred Protocol".localize()
+            return "Preferred Protocol".localized
         }
 
         static var description: String {
-            return "Choose the best protocol for this network. This overrides all global connection settings.".localize()
+            return "Choose the best protocol for this network. This overrides all global connection settings.".localized
         }
 
         static var newDescription: String {
-            return "Select the preferred protocol for this network. This overrides global connection preferences.".localize()
+            return "Select the preferred protocol for this network. This overrides global connection preferences.".localized
         }
     }
 
     static var forgetNetwork: String {
-        return "Forget Network".localize()
+        return "Forget Network".localized
     }
 
     static var autoModeSelectorInfo: String {
-        return "Next up in".localize()
+        return "Next up in".localized
     }
 
     enum SetPreferredProtocolPopup {
         static func title(protocolType: String) -> String {
-            let firstPart = "Set".localize()
-            let lastPart = "as preferred protocol?".localize()
+            let firstPart = "Set".localized
+            let lastPart = "as preferred protocol?".localized
             return "\(firstPart) \(protocolType) \(lastPart)"
         }
 
         static var message: String {
-            return "Windscribe will keep using the chosen protocol on this network, regardless of your global connection settings.".localize()
+            return "Windscribe will keep using the chosen protocol on this network, regardless of your global connection settings.".localized
         }
 
         static var action: String {
-            return "Set as Preferred".localize()
+            return "Set as Preferred".localized
         }
 
         static var cancel: String {
-            return "Keep it automatic".localize()
+            return "Keep it automatic".localized
         }
 
         static var dontAskAgain: String {
-            return "Don't ask again".localize()
+            return "Don't ask again".localized
         }
 
         static var changeMessage: String {
-            return "Windscribe will always use this protocol to connect on this network in the future to avoid any interruptions.".localize()
+            return "Windscribe will always use this protocol to connect on this network in the future to avoid any interruptions.".localized
         }
 
         static var failMessage: String {
-            return "We couldn’t connect you on this network. Send us your debug log so we can figure out what happened.".localize()
+            return "We couldn’t connect you on this network. Send us your debug log so we can figure out what happened.".localized
         }
 
-        static var failHeaderString: String { return "This network hates us".localize() }
+        static var failHeaderString: String { return "This network hates us".localized }
     }
 
     static var back: String {
-        return "Back".localize()
+        return "Back".localized
     }
 
     enum ShakeForData {
         static var title: String {
-            return "Shake for Data".localize()
+            return "Shake for Data".localized
         }
 
         static var shakes: String {
-            return "Shakes".localize()
+            return "Shakes".localized
         }
 
         static var quit: String {
-            return "I Quit".localize()
+            return "I Quit".localized
         }
 
         static var leave: String {
-            return "Leave".localize()
+            return "Leave".localized
         }
 
         static var claimPrize: String {
-            return "Claim Prize".localize()
+            return "Claim Prize".localized
         }
 
         static var tryAgain: String {
-            return "Try Again".localize()
+            return "Try Again".localized
         }
 
         static var notBad: String {
-            return "Not Bad!".localize()
+            return "Not Bad!".localized
         }
 
         static var lowerThanHighScoreMessage: String {
-            return "Not Bad!".localize()
+            return "Not Bad!".localized
         }
 
         static var popupTitle: String {
-            return "Shake for Data!".localize()
+            return "Shake for Data!".localized
         }
 
         static var popupDescription: String {
-            return "Shake your phone as much as you can before the time runs out and win!".localize()
+            return "Shake your phone as much as you can before the time runs out and win!".localized
         }
 
         static var popupAction: String {
-            return "Start Shaking".localize()
+            return "Start Shaking".localized
         }
 
         static var popupCancel: String {
-            return "I hate free stuff".localize()
+            return "I hate free stuff".localized
         }
 
         static var popupViewLeaderboard: String {
-            return "View Leaderboard".localize()
+            return "View Leaderboard".localized
         }
 
         static var highScore: String {
-            return "High Score:".localize()
+            return "High Score:".localized
         }
 
         static var newHighScore: String {
-            return "New High Score!".localize()
+            return "New High Score!".localized
         }
 
         static var leaveAlertTitle: String {
-            return "Unlock Shake For Data".localize()
+            return "Unlock Shake For Data".localized
         }
 
         static var leaveAlertDescription: String {
-            return "Unlock access to this feature? It will show up in Preferences.".localize()
+            return "Unlock access to this feature? It will show up in Preferences.".localized
         }
 
         static var leaveAlertUnlock: String {
-            return "Unlock".localize()
+            return "Unlock".localized
         }
 
         static var leaveAlertLeave: String {
-            return "Just Leave".localize()
+            return "Just Leave".localized
         }
 
         static var play: String {
-            return "Play".localize()
+            return "Play".localized
         }
     }
 
     static var autoSecureNew: String {
-        return "Auto-Secure New Networks".localize()
+        return "Auto-Secure New Networks".localized
     }
 
     static var autoSecureNewDescription: String {
-        return "Mark all newly encountered networks as Secured.".localize()
+        return "Mark all newly encountered networks as Secured.".localized
     }
 
     enum NoEmailPrompt {
         static var title: String {
-            return "Without an email, your free account will be limited to 2GB/Mo and you won’t be able to reset your password.".localize()
+            return "Without an email, your free account will be limited to 2GB/Mo and you won’t be able to reset your password.".localized
         }
 
         static var titlePro: String {
-            return "You won’t be able to reset a password without an email or receive any service updates from us.".localize()
+            return "You won’t be able to reset a password without an email or receive any service updates from us.".localized
         }
 
         static var action: String {
-            return "Continue without email".localize()
+            return "Continue without email".localized
         }
     }
 
     enum SetupLaterPrompt {
         static var title: String {
-            return "Failure to setup account will prevent access in case you’re logged out.".localize()
+            return "Failure to setup account will prevent access in case you’re logged out.".localized
         }
 
         static var action: String {
-            return "Setup later".localize()
+            return "Setup later".localized
         }
     }
 
     enum Powers {
         static var first: String {
-            return "Servers in over 100 locations".localize()
+            return "Servers in over 100 locations".localized
         }
 
         static var second: String {
-            return "Automatically secure any network".localize()
+            return "Automatically secure any network".localized
         }
 
         static var third: String {
-            return "Strict No-Logging Policy".localize()
+            return "Strict No-Logging Policy".localized
         }
 
         static var fourth: String {
-            return "Works with Siri, Shortcuts & Widgets".localize()
+            return "Works with Siri, Shortcuts & Widgets".localized
         }
     }
 
     static var searchLocations: String {
-        return "Search Locations".localize()
+        return "Search Locations".localized
     }
 
     static var clearSearch: String {
-        return "Clear".localize()
+        return "Clear".localized
     }
 
     enum EmailView {
         static var confirmEmail: String {
-            return "Confirm Email".localize()
+            return "Confirm Email".localized
         }
 
         static var info: String {
-            return "Please confirm your email to get 10GB/Mo".localize()
+            return "Please confirm your email to get 10GB/Mo".localized
         }
 
         static var infoPro: String {
-            return "Please confirm your email".localize()
+            return "Please confirm your email".localized
         }
 
         static var resendEmail: String {
-            return "Resend Verification Email".localize()
+            return "Resend Verification Email".localized
         }
 
         static var changeEmail: String {
-            return "Change Email".localize()
+            return "Change Email".localized
         }
 
         static var close: String {
-            return "Close".localize()
+            return "Close".localized
         }
     }
 
     static var twoFactorRequiredError: String {
-        return "2FA code is required".localize()
+        return "2FA code is required".localized
     }
 
     static var twoFactorInvalidError: String {
-        return "Invalid 2FA code, please try again.".localize()
+        return "Invalid 2FA code, please try again.".localized
     }
 
     static var cantGetConnectedWifi: String {
-        return "Problem occured while detecting the connected network on your device.".localize()
+        return "Problem occured while detecting the connected network on your device.".localized
     }
 
     static var restartApp: String {
-        return "Restart App".localize()
+        return "Restart App".localized
     }
 
     static var tryAgain: String {
-        return "Try Again".localize()
+        return "Try Again".localized
     }
 
     enum Refer {
         static var shareWindscribeWithFriend: String {
-            return "Share Windscribe with a friend!".localize()
+            return "Share Windscribe with a friend!".localized
         }
 
         static var getAdditionalPerMonth: String {
-            return "You will both get an additional 1GB per month when they sign up.".localize()
+            return "You will both get an additional 1GB per month when they sign up.".localized
         }
 
         static var goProTo: String {
-            return "If they go Pro, you’ll go Pro too!".localize()
+            return "If they go Pro, you’ll go Pro too!".localized
         }
 
         static var shareInviteLink: String {
-            return "Share Invite Link".localize()
+            return "Share Invite Link".localized
         }
 
         static var refereeMustProvideUsername: String {
-            return "Referee must provide your username at sign up and confirm their email in order for the benefits above to apply to your account.".localize()
+            return "Referee must provide your username at sign up and confirm their email in order for the benefits above to apply to your account.".localized
         }
 
         static var inviteMessage: String {
-            return "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!".localize()
+            return "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!".localized
         }
     }
 
     static var emergencyConnect: String {
-        return "Emergency Connect".localize()
+        return "Emergency Connect".localized
     }
 
     static var eConnectDescription: String {
-        return "Can’t access Windscribe? Connect to our servers to unblock your restrictive network.".localize()
+        return "Can’t access Windscribe? Connect to our servers to unblock your restrictive network.".localized
     }
 
     static var connecting: String {
-        return "Connecting".localize()
+        return "Connecting".localized
     }
 
     static var disconnect: String {
-        return "Disconnect".localize()
+        return "Disconnect".localized
     }
 
     static var connectedDescription: String {
-        return "You are now connected to Windscribe server. Try to login again.".localize()
+        return "You are now connected to Windscribe server. Try to login again.".localized
     }
 
     enum MaintenanceLocationPopUp {
         static var title: String {
-            return "This Location is Under Maintenance".localize()
+            return "This Location is Under Maintenance".localized
         }
 
         static var subtHeader: String {
-            return "Try again later or go\nto our Status page\nfor more info".localize()
+            return "Try again later or go\nto our Status page\nfor more info".localized
         }
 
         static var checkStatus: String {
-            return "Check status".localize()
+            return "Check status".localized
         }
 
         static var cancelTitle: String {
-            return "Back".localize()
+            return "Back".localized
         }
     }
 
     enum Help {
         static var helpMe: String {
-            return "Help Me!".localize()
+            return "Help Me!".localized
         }
 
         static var knowledgeBase: String {
-            return "Knowledge Base".localize()
+            return "Knowledge Base".localized
         }
 
         static var allYouNeedToknowIsHere: String {
-            return "All you need to know about Windscribe.".localize()
+            return "All you need to know about Windscribe.".localized
         }
 
         static var talkToGarry: String {
-            return "Talk to Garry".localize()
+            return "Talk to Garry".localized
         }
 
         static var notAsSmartAsSiri: String {
-            return "Need help? Garry can help you with most issues, go talk to him.".localize()
+            return "Need help? Garry can help you with most issues, go talk to him.".localized
         }
 
         static var sendTicket: String {
-            return "Contact Humans".localize()
+            return "Contact Humans".localized
         }
 
         static var sendUsATicket: String {
-            return "Have a problem that Garry can't resolve? Contact human support".localize()
+            return "Have a problem that Garry can't resolve? Contact human support".localized
         }
 
         static var communitySupport: String {
-            return "Community Support".localize()
+            return "Community Support".localized
         }
 
         static var bestPlacesTohelp: String {
-            return "Best places to help and get help from other users.".localize()
+            return "Best places to help and get help from other users.".localized
         }
 
         static var reddit: String {
-            return "Reddit".localize()
+            return "Reddit".localized
         }
 
         static var discord: String {
-            return "Discord".localize()
+            return "Discord".localized
         }
 
         static var advanceParamDescription: String {
-            return "Make advanced tweaks to the way the app functions".localize()
+            return "Make advanced tweaks to the way the app functions".localized
         }
     }
 
     enum About {
         static var about: String {
-            return "About".localize()
+            return "About".localized
         }
 
         static var status: String {
-            return "Status".localize()
+            return "Status".localized
         }
 
         static var aboutUs: String {
-            return "About us".localize()
+            return "About us".localized
         }
 
         static var privacyPolicy: String {
-            return "Privacy Policy".localize()
+            return "Privacy Policy".localized
         }
 
         static var terms: String {
-            return "Terms".localize()
+            return "Terms".localized
         }
 
         static var blog: String {
-            return "Blog".localize()
+            return "Blog".localized
         }
 
         static var jobs: String {
-            return "Jobs".localize()
+            return "Jobs".localized
         }
 
         static var softwareLicenses: String {
-            return "Software Licenses".localize()
+            return "Software Licenses".localized
         }
 
         static var changelog: String {
-            return "Changelog".localize()
+            return "Changelog".localized
         }
     }
 
     enum SubmitTicket {
         static var submitTicket: String {
-            return "Send Ticket".localize()
+            return "Send Ticket".localized
         }
 
         static var fillInTheFields: String {
-            return "Fill in the fields bellow and one of our support agents will personally get back to you very soon™".localize()
+            return "Fill in the fields bellow and one of our support agents will personally get back to you very soon™".localized
         }
 
         static var category: String {
-            return "Category".localize()
+            return "Category".localized
         }
 
         static var email: String {
-            return "Email".localize()
+            return "Email".localized
         }
 
         static var required: String {
-            return "Required".localize()
+            return "Required".localized
         }
 
         static var soWeCanContactYou: String {
-            return "So we can contact you, we won’t use it for anything else".localize()
+            return "So we can contact you, we won’t use it for anything else".localized
         }
 
         static var subject: String {
-            return "Subject".localize()
+            return "Subject".localized
         }
 
         static var whatsTheIssue: String {
-            return "What’s the issue?".localize()
+            return "What’s the issue?".localized
         }
 
         static var message: String {
-            return "Message".localize()
+            return "Message".localized
         }
 
         static let `continue` = "Continue"
@@ -1919,101 +1919,101 @@ enum TextsAsset {
         static let categories = [acount, technical, sales, feedback]
         static let categoryValues = [acount: 1, technical: 2, sales: 3, feedback: 4]
         static var weWillGetBackToYou: String {
-            return "Sweet, we’ll get back to you as soon as one of our agents is back from lunch.".localize()
+            return "Sweet, we’ll get back to you as soon as one of our agents is back from lunch.".localized
         }
 
         static var failedToSendTicket: String {
-            return "Failed to send support ticket. Please check your network and try again.".localize()
+            return "Failed to send support ticket. Please check your network and try again.".localized
         }
     }
 
     enum Welcome {
-        static let tabInfo1 = "Servers in over 69 countries and 134 cities.".localize()
-        static let tabInfo2 = "Automatically Secure any Network".localize()
-        static let tabInfo3 = "No-Logging Policy".localize()
-        static let tabInfo4 = "Works with Siri, Shortcuts & Widgets".localize()
-        static let signup = "Sign Up".localize()
-        static let login = "Login".localize()
-        static let connectionFault = "Can't Connect?".localize()
-        static let emergencyConnectOn = "Emergency Connect On".localize()
-        static let continueWithGoogle = "Continue with Google".localize()
-        static let continueWithApple = "Continue with Apple".localize()
+        static let tabInfo1 = "Servers in over 69 countries and 134 cities.".localized
+        static let tabInfo2 = "Automatically Secure any Network".localized
+        static let tabInfo3 = "No-Logging Policy".localized
+        static let tabInfo4 = "Works with Siri, Shortcuts & Widgets".localized
+        static let signup = "Sign Up".localized
+        static let login = "Login".localized
+        static let connectionFault = "Can't Connect?".localized
+        static let emergencyConnectOn = "Emergency Connect On".localized
+        static let continueWithGoogle = "Continue with Google".localized
+        static let continueWithApple = "Continue with Apple".localized
     }
 
     enum Authentication {
-        static let username = "Username".localize()
-        static let enterUsername = "Enter Username".localize()
-        static let password = "Password".localize()
-        static let enterPassword = "Enter Password".localize()
-        static let twoFactorCode = "2FA Code".localize()
-        static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localize()
-        static let forgotPassword = "Forgot password?".localize()
-        static let enterEmailAddress = "Enter Email".localize()
-        static let enterVoucherCode = "Enter Voucher Code".localize()
-        static let done = "Done".localize()
+        static let username = "Username".localized
+        static let enterUsername = "Enter Username".localized
+        static let password = "Password".localized
+        static let enterPassword = "Enter Password".localized
+        static let twoFactorCode = "2FA Code".localized
+        static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localized
+        static let forgotPassword = "Forgot password?".localized
+        static let enterEmailAddress = "Enter Email".localized
+        static let enterVoucherCode = "Enter Voucher Code".localized
+        static let done = "Done".localized
     }
 }
 
 extension TextsAsset {
     enum TVAsset {
         static var loginCodeError: String {
-            return "Unable to generate Login code. Check you network connection.".localize()
+            return "Unable to generate Login code. Check you network connection.".localized
         }
 
         static var addToFav: String {
-            return "Add to fav".localize()
+            return "Add to fav".localized
         }
 
         static var removeFromFav: String {
-            return "Remove from fav".localize()
+            return "Remove from fav".localized
         }
 
         static var favTitle: String {
-            return "Favourites".localize()
+            return "Favourites".localized
         }
 
         static var staticIPTitle: String {
-            return "Static IP".localize()
+            return "Static IP".localized
         }
 
         static var allTitle: String {
-            return "All".localize()
+            return "All".localized
         }
 
         static var welcomeDescription: String {
-            return "If you already have an account.".localize()
+            return "If you already have an account.".localized
         }
 
         static var lazyLogin: String {
-            return "Lazy Login".localize()
+            return "Lazy Login".localized
         }
 
         static var lazyLoginDescription: String {
-            return "Go to https://windscribe.com/lazy on any device and enter the code below.".localize()
+            return "Go to https://windscribe.com/lazy on any device and enter the code below.".localized
         }
 
         static var or: String {
-            return "OR".localize()
+            return "OR".localized
         }
 
         static var lazyLoginDescription2: String {
-            return "Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below.".localize()
+            return "Using your Windscribe iOS app on your phone or iPad, go to Preferences (Top left),\n under \"Account\" choose \"Lazy Login\" and enter the code below.".localized
         }
 
         static var generateCode: String {
-            return "Generate Code".localize().uppercased()
+            return "Generate Code".localized.uppercased()
         }
 
         static var manualLogin: String {
-            return "Manual Login".localize()
+            return "Manual Login".localized
         }
 
         static var forgotPasswordInfo: String {
-            return "Please visit windscribe.com to reset your password".localize()
+            return "Please visit windscribe.com to reset your password".localized
         }
 
         static var twofaDescription: String {
-            return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localize()
+            return "2FA require to proceed.\nUse an authentication\napp to generate the code.".localized
         }
 
         static var locationMaintenanceDescription: String {
@@ -2025,11 +2025,11 @@ extension TextsAsset {
         }
 
         static var supportTitle: String {
-            return "Support".localize()
+            return "Support".localized
         }
 
         static var supportBody: String {
-            return "Go to the address above on your phone or computer for all support related inquiries.".localize()
+            return "Go to the address above on your phone or computer for all support related inquiries.".localized
         }
     }
 }

@@ -41,14 +41,16 @@ class LocationsManager: LocationsManagerType {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
     private let logger: FileLogger
-    private let languageManager: LanguageManagerV2
+
+    private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
 
     private let disposeBag = DisposeBag()
 
     let selectedLocationUpdatedSubject = BehaviorSubject<Bool>(value: (false))
 
-    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManagerV2, serverRepository: ServerRepository) {
+
+    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManager, serverRepository: ServerRepository) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.logger = logger

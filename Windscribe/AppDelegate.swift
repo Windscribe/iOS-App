@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
 
-    lazy var languageManager: LanguageManagerV2 = Assembler.resolve(LanguageManagerV2.self)
+    private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     var window: UIWindow?
 

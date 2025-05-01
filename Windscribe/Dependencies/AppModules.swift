@@ -151,7 +151,7 @@ class Managers: Assembly {
             LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              logger: r.resolve(FileLogger.self)!,
-                             languageManager: r.resolve(LanguageManagerV2.self)!,
+                             languageManager: r.resolve(LanguageManager.self)!,
                              serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
@@ -171,8 +171,14 @@ class Managers: Assembly {
         container.register(ThemeManager.self) { r in
             ThemeManagerImpl(preference: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
-        container.register(LanguageManagerV2.self) { r in
-            LanguageManager(preference: r.resolve(Preferences.self)!)
+        container.register(LocalizationService.self) { r in
+            LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+        container.register(LanguageManager.self) { r in
+            let prefs = r.resolve(Preferences.self)!
+            let localizer = r.resolve(LocalizationService.self)!
+            LocalizationBridge.setup(localizer)
+            return LanguageManagerImpl(preference: prefs, localizationService: localizer)
         }.inObjectScope(.userScope)
         container.register(PushNotificationManagerV2.self) { r in
             PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)

@@ -24,7 +24,7 @@ protocol ProtocolViewDelegate: AnyObject {
 
 class ProtocolView: UIView {
     private(set) var type: ProtocolViewType
-    private(set) var protocolDescription: String = "One line description.".localize()
+    private(set) var protocolDescription: String = "One line description.".localized
     weak var delegate: ProtocolViewDelegate?
     var protocolName: String
     var portName: String
@@ -77,7 +77,7 @@ class ProtocolView: UIView {
 
     private lazy var connectedLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Connected to".localize()
+        lbl.text = "Connected to".localized
         lbl.font = .text(size: 12)
         lbl.textColor = .seaGreen
         return lbl
@@ -85,7 +85,7 @@ class ProtocolView: UIView {
 
     private lazy var nextInLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Next Up In \(countdownValue)s".localize()
+        lbl.text = "Next Up In \(countdownValue)s".localized
         lbl.font = .bold(size: 12)
         lbl.textColor = .seaGreen
         return lbl
@@ -116,7 +116,7 @@ class ProtocolView: UIView {
 
     private lazy var failedLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "Failed".localize()
+        lbl.text = "Failed".localized
         lbl.font = .text(size: 12)
         lbl.textColor = .failRed
         lbl.isHidden = true

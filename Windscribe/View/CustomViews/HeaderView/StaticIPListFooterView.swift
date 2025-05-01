@@ -19,7 +19,7 @@ class StaticIPListFooterView: WSView {
     lazy var label = UILabel()
     var viewModel: MainViewModelType?
     let disposeBag = DisposeBag()
-    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     override init(frame: CGRect) {
         super.init(frame: frame)

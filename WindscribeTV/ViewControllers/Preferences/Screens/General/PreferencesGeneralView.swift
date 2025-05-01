@@ -36,7 +36,7 @@ class PreferencesGeneralView: UIView {
 
     func updateSelection() {
         languagesView.select(option: viewModel.getCurrentLanguage(), animated: false)
-        orderByView.select(option: viewModel.getCurrentLocationOrder().localize(), animated: false)
+        orderByView.select(option: viewModel.getCurrentLocationOrder().localized, animated: false)
     }
 
     func getFocusItem(onTop: Bool) -> UIView? {

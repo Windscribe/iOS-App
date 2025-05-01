@@ -20,7 +20,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
         let lbl = UILabel()
         lbl.font = UIFont.text(size: 14)
         lbl.numberOfLines = 0
-        lbl.text = "Windscribe will auto-disconnect when you join a network tagged \"Unsecured\".".localize()
+        lbl.text = "Windscribe will auto-disconnect when you join a network tagged \"Unsecured\".".localized
         return lbl
     }()
 

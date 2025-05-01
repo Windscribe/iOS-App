@@ -28,7 +28,6 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         descriptionView.layer.opacity = 0.5
         descriptionView.textColor = UIColor.white
         descriptionView.numberOfLines = 2
-//        self.view.addSubview(descriptionView)
 
         descriptionContentView = UIView()
         descriptionContentView.layer.cornerRadius = 8
@@ -120,7 +119,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
 
         messageInputView = UITextView()
         messageInputView.font = UIFont.text(size: 16)
-        messageInputView.toolbarPlaceholder = "Message".localize()
+        messageInputView.toolbarPlaceholder = "Message".localized
         messageInputView.delegate = self
         messageInputView.isEditable = true
         messageInputView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
@@ -134,7 +133,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         continueButton.layer.cornerRadius = 26
         continueButton.clipsToBounds = true
         continueButton.backgroundColor = UIColor.seaGreen
-        let buttonTitle = "Send".localize()
+        let buttonTitle = "Send".localized
         // TextsAsset.continue)
         let attributedTitle = NSMutableAttributedString(string: buttonTitle)
         continueButton.setAttributedTitle(attributedTitle, for: .normal)

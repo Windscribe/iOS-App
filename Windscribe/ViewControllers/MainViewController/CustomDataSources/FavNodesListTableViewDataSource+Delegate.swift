@@ -23,7 +23,7 @@ class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSour
     weak var delegate: FavNodesListTableViewDelegate?
     var scrollHappened = false
     var viewModel: MainViewModelType
-    lazy var languageManager = Assembler.resolve(LanguageManagerV2.self)
+    lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
 
     init(favNodes: [FavNodeModel]?, viewModel: MainViewModelType) {

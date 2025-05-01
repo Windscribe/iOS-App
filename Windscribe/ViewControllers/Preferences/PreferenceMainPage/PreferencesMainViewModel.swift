@@ -43,9 +43,9 @@ class PreferencesMainViewModelImp: PreferencesMainViewModel {
     let alertManager: AlertManagerV2
     let preferences: Preferences
     let themeManager: ThemeManager
-    let languageManager: LanguageManagerV2
+    let languageManager: LanguageManager
 
-    init(sessionManager: SessionManagerV2, logger: FileLogger, alertManager: AlertManagerV2, themeManager: ThemeManager, preferences: Preferences, languageManager: LanguageManagerV2) {
+    init(sessionManager: SessionManagerV2, logger: FileLogger, alertManager: AlertManagerV2, themeManager: ThemeManager, preferences: Preferences, languageManager: LanguageManager) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.alertManager = alertManager

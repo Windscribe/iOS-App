@@ -38,7 +38,7 @@ class AdvanceParamsViewController: WSNavigationViewController {
         btn.clipsToBounds = true
         btn.setTitleColor(UIColor.midnight, for: .normal)
         btn.backgroundColor = UIColor.seaGreen
-        btn.setTitle("Save".localize(), for: .normal)
+        btn.setTitle(TextsAsset.save, for: .normal)
         return btn
     }()
 

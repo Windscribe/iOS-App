@@ -23,11 +23,11 @@ class LanguageViewModel: LanguageViewModelType {
 
     // MARK: - Dependencies
 
-    let languageManager: LanguageManagerV2, preferences: Preferences, disposeBag = DisposeBag()
+    let languageManager: LanguageManager, preferences: Preferences, disposeBag = DisposeBag()
 
     var language = Languages.english
 
-    init(languageManager: LanguageManagerV2, preferences: Preferences, themeManager: ThemeManager) {
+    init(languageManager: LanguageManager, preferences: Preferences, themeManager: ThemeManager) {
         self.languageManager = languageManager
         self.preferences = preferences
         isDarkMode = themeManager.darkTheme

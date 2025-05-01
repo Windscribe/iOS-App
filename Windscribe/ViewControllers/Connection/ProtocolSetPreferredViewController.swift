@@ -63,7 +63,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
     private lazy var setPreferredButton: WSButton = {
         let btn = WSButton(type: .hightlight,
                            size: .large,
-                           text: "Set as Preferred".localize(),
+                           text: "Set as Preferred".localized,
                            isDarkMode: viewModel.isDarkMode)
         return btn
     }()
@@ -120,7 +120,7 @@ class ProtocolSetPreferredViewController: WSNavigationViewController {
 
             self.topImage.updateTheme(isDark: $0)
             let attribute = NSAttributedString(
-                string: "Cancel".localize(),
+                string: TextsAsset.cancel,
                 attributes: [NSAttributedString.Key.font: UIFont.bold(size: 16),
                              NSAttributedString.Key.foregroundColor: ThemeUtils.primaryTextColor50(isDarkMode: $0)]
             )

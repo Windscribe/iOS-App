@@ -25,7 +25,7 @@ class SideMenuOptions: UIView {
     func setup(with type: SideMenuType, isSelected: Bool = false) {
         sideMenuType = type
         selectionView.layer.cornerRadius = 2
-        titleLabel.text = type.rawValue.localize()
+        titleLabel.text = type.rawValue.localized
         imgView.image = type.getImage(isSelected: isSelected)
         titleLabel.font = UIFont.bold(size: 42)
         updateSelection(with: isSelected)

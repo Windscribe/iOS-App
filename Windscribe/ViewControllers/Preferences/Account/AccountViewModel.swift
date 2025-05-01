@@ -54,7 +54,7 @@ class AccountViewModel: AccountViewModelType {
     var sessionUpdatedTrigger = PublishSubject<Void>()
     let session = BehaviorSubject<Session?>(value: nil)
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManagerV2, localDatabase: LocalDatabase) {
+    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
