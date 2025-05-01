@@ -73,4 +73,27 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         viewController.changeNavigationBarStyle(isHidden: false)
     }
 
+    func presentConfirmEmail(from presentingVC: UIViewController) {
+        let confirmEmailView = Assembler.resolve(ConfirmEmailView.self)
+
+        let vc = UIHostingController(rootView: confirmEmailView)
+
+        if #available(iOS 16.0, *) {
+            if let sheet = vc.sheetPresentationController {
+                sheet.detents = [
+                    .custom { context in
+                        return context.maximumDetentValue * 0.65
+                    }
+                ]
+                sheet.prefersGrabberVisible = true
+                sheet.preferredCornerRadius = 24
+            }
+            vc.modalPresentationStyle = .pageSheet
+        } else {
+            vc.modalPresentationStyle = .automatic
+        }
+
+        presentingVC.present(vc, animated: true)
+    }
+
 }

@@ -364,7 +364,7 @@ extension AccountViewController {
     }
 
     private func navigateAddEmailViewController() {
-        router?.routeTo(to: RouteID.enterEmailVC, from: self)
+        router?.routeTo(to: RouteID.enterEmail, from: self)
     }
 
     private func navigateToConfirmEmailVC() {

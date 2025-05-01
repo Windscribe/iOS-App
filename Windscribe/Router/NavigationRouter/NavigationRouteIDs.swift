@@ -13,6 +13,7 @@ enum NavigationRouteID: Identifiable, Hashable {
     case signup(claimGhostAccount: Bool)
     case emergency
     case main
+    case enterEmail
 
     var id: NavigationRouteID { self }
 }

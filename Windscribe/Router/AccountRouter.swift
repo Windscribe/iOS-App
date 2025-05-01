@@ -13,7 +13,7 @@ import UIKit
 class AccountRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {
         switch to {
-        case .enterEmailVC:
+        case .enterEmail:
             let enterEmail = Assembler.resolve(EnterEmailView.self)
             pushViewWithoutNavigationBar(from: from, view: enterEmail)
         case let .confirmEmail(delegate):

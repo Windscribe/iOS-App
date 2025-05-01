@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct APIError: Equatable {
+struct APIError: Error, Equatable {
     let errorCode: Int?
     let errorDescription: String?
     let errorMessage: String?

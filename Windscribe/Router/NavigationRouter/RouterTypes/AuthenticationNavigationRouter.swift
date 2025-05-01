@@ -11,9 +11,11 @@ import Swinject
 
 class AuthenticationNavigationRouter: BaseNavigationRouter {
     @Published var activeRoute: NavigationRouteID?
+
     @Published var shouldNavigateToSignup = false
     @Published var shouldNavigateToLogin = false
     @Published var shouldNavigateToEmergency = false
+    @Published var shouldNavigateToEnterEmail = false
 
     @ViewBuilder
     func createView(for route: NavigationRouteID) -> some View {
@@ -24,6 +26,8 @@ class AuthenticationNavigationRouter: BaseNavigationRouter {
             getSignupView(claimGhostAccount: claimGhostAccount)
         case .emergency:
             Assembler.resolve(EmergencyConnectView.self)
+        case .enterEmail:
+            Assembler.resolve(EnterEmailView.self)
 
         default:
             fatalError("Unsupported route: \(route)")
