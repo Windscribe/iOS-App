@@ -11,19 +11,19 @@ import RealmSwift
 import Swinject
 
 struct GroupModel {
-    let id: Int?
-    let city: String?
-    let nick: String?
-    let premiumOnly: Bool?
-    let nodes: [NodeModel]?
+    let id: Int
+    let city: String
+    let nick: String
+    let premiumOnly: Bool
+    let nodes: [NodeModel]
     let bestNode: NodeModel?
-    let bestNodeHostname: String?
-    let wgPublicKey: String?
-    let ovpnX509: String?
-    let pingIp: String?
-    let linkSpeed: String?
-    let health: Int?
-    let pingHost: String?
+    let bestNodeHostname: String
+    let wgPublicKey: String
+    let ovpnX509: String
+    let pingIp: String
+    let linkSpeed: String
+    let health: Int
+    let pingHost: String
 
     init(id: Int,
          city: String,
@@ -31,13 +31,13 @@ struct GroupModel {
          premiumOnly: Bool,
          nodes: [NodeModel],
          bestNode: NodeModel?,
-         bestNodeHostname: String?,
-         wgPublicKey: String?,
-         ovpnX509: String?,
-         pingIp: String?,
-         linkSpeed: String?,
-         health: Int?,
-         pingHost: String?) {
+         bestNodeHostname: String,
+         wgPublicKey: String,
+         ovpnX509: String,
+         pingIp: String,
+         linkSpeed: String,
+         health: Int,
+         pingHost: String) {
         self.id = id
         self.city = city
         self.nick = nick
@@ -59,7 +59,7 @@ struct GroupModel {
     }
 
     func isNodesAvailable() -> Bool {
-        guard let nodes = nodes else {
+        guard !nodes.isEmpty else {
             return false
         }
         for node in nodes where !node.forceDisconnect {

@@ -126,6 +126,34 @@ extension UIView {
                                                     multiplier: 1.0,
                                                     constant: trailing))
     }
+
+    func slideNewImageUp(_ imageView: UIImageView, to newImage: UIImage) {
+        let oldImageView = UIImageView(image: imageView.image)
+        oldImageView.frame = imageView.bounds
+        oldImageView.contentMode = imageView.contentMode
+        oldImageView.clipsToBounds = true
+        let newImageView = UIImageView(image: newImage)
+        newImageView.frame = imageView.bounds
+        newImageView.contentMode = imageView.contentMode
+        newImageView.clipsToBounds = true
+
+        // Start below the current image
+        oldImageView.transform = CGAffineTransform(translationX: 0, y: 0)
+        newImageView.transform = CGAffineTransform(translationX: 0, y: imageView.bounds.height)
+        imageView.addSubview(oldImageView)
+        imageView.addSubview(newImageView)
+
+        UIView.animate(withDuration: 0.4, animations: {
+            // Move new image into place
+            oldImageView.transform = CGAffineTransform(translationX: 0, y: -imageView.bounds.height)
+            newImageView.transform = CGAffineTransform(translationX: 0, y: 0)
+        }, completion: { _ in
+            // Cleanup
+            imageView.image = newImage
+            newImageView.removeFromSuperview()
+            oldImageView.removeFromSuperview()
+        })
+    }
 }
 
 extension UIView {

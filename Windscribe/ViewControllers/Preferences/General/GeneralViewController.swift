@@ -18,10 +18,10 @@ class GeneralViewController: WSNavigationViewController {
     var viewModel: GeneralViewModelType!, router: GeneralRouter!, popupRouter: PopupRouter!, logger: FileLogger!
 
     // MARK: - UI Elements
-    private lazy var locationOrderRow: SelectableView = makeSelectableView(type: .locationOrder)
-    private lazy var languageRow: SelectableView = makeSelectableView(type: .language)
-    private lazy var notificationRow: SelectableView = makeSelectableView(type: .notification)
-    private lazy var hapticFeedbackRow = makeSwitchView(type: .hapticFeedback)
+    private lazy var locationOrderRow: SelectableView = makeSelectableView(type: GeneralViewType.locationOrder)
+    private lazy var languageRow: SelectableView = makeSelectableView(type: GeneralViewType.language)
+    private lazy var notificationRow: SelectableView = makeSelectableView(type: GeneralViewType.notification)
+    private lazy var hapticFeedbackRow = makeSwitchView(type: GeneralViewType.hapticFeedback)
     private lazy var versionLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = TextsAsset.General.version
@@ -121,9 +121,9 @@ class GeneralViewController: WSNavigationViewController {
     private func makeSelectableView(type: SelectionViewType) -> SelectableView {
         var currentOption = ""
         switch type {
-        case .locationOrder: currentOption = viewModel.getCurrentLocationOrder()
-        case .language: currentOption = viewModel.getCurrentLanguage()
-        case .notification: currentOption = TextsAsset.General.openSettings
+        case GeneralViewType.locationOrder: currentOption = viewModel.getCurrentLocationOrder()
+        case GeneralViewType.language: currentOption = viewModel.getCurrentLanguage()
+        case GeneralViewType.notification: currentOption = TextsAsset.General.openSettings
         default: currentOption = ""
         }
         let view = SelectableView(type: type,
@@ -141,7 +141,7 @@ class GeneralViewController: WSNavigationViewController {
         view.setImage(UIImage(named: type.asset))
         view.hideShowExplainIcon(true)
         switch type {
-        case .hapticFeedback:
+        case GeneralViewType.hapticFeedback:
             view.switchButton.setStatus(viewModel.getHapticFeedback())
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateHapticFeedback()
@@ -182,8 +182,8 @@ class GeneralViewController: WSNavigationViewController {
         locationOrderRow.refreshLocalization(optionTitle: viewModel.getCurrentLocationOrder())
         languageRow.refreshLocalization(optionTitle: viewModel.getCurrentLanguage())
         notificationRow.refreshLocalization(optionTitle: TextsAsset.General.openSettings)
-        hapticFeedbackRow.updateStringData(title: SelectionViewType.hapticFeedback.title,
-                                           subTitle: SelectionViewType.hapticFeedback.description)
+        hapticFeedbackRow.updateStringData(title: GeneralViewType.hapticFeedback.title,
+                                           subTitle: GeneralViewType.hapticFeedback.description)
     }
 }
 

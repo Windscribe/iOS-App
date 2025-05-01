@@ -29,7 +29,7 @@ class ConnectionViewController: WSNavigationViewController {
     }()
 
     lazy var connectionModeViewV2: ConnectionModeView = {
-        let vw = ConnectionModeView(optionType: .connectionMode,
+        let vw = ConnectionModeView(optionType: GeneralViewType.connectionMode,
                                     optionMode: viewModel.getCurrentConnectionMode(),
                                     currentProtocol: viewModel.getCurrentProtocol(),
                                     listProtocolOption: viewModel.getProtocols(),
@@ -115,14 +115,14 @@ class ConnectionViewController: WSNavigationViewController {
         view.subTitleLabel.text = type.description
         switch type {
         case .killSwitch:
-            view.setImage(UIImage(named: SelectionViewType.killSwitch.asset))
+            view.setImage(UIImage(named: GeneralViewType.killSwitch.asset))
             view.hideShowExplainIcon(true)
             view.switchButton.setStatus(viewModel.getKillSwitchStatus())
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateChangeKillSwitchStatus()
             }
         case .allowLan:
-            view.setImage(UIImage(named: SelectionViewType.allowLan.asset))
+            view.setImage(UIImage(named: GeneralViewType.allowLan.asset))
             view.explainHandler = { [weak self] in
                 if let url = URL(string: FeatureExplainer.allowLan.getUrl()) {
                     self?.openLink(url: url)
@@ -133,7 +133,7 @@ class ConnectionViewController: WSNavigationViewController {
                 self?.viewModel.updateChangeAllowLanStatus()
             }
         case .autoSecure:
-            view.setImage(UIImage(named: SelectionViewType.autoConnection.asset))
+            view.setImage(UIImage(named: GeneralViewType.autoConnection.asset))
             view.switchButton.setStatus(viewModel.getAutoSecureNetworkStatus())
             view.connectionSecureViewSwitchAcction = { [weak self] in
                 self?.viewModel.updateAutoSecureNetworkStatus()

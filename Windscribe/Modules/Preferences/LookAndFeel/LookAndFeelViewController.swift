@@ -11,6 +11,7 @@ import RxGesture
 import RxSwift
 import StoreKit
 import UIKit
+import UniformTypeIdentifiers
 
 class LookAndFeelViewController: WSNavigationViewController {
 
@@ -22,7 +23,7 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     // Appearance
     private lazy var appearanceRow: SelectableView = {
-        let view = SelectableView(type: .appearance,
+        let view = SelectableView(type: LookAndFeelViewType.appearance,
                        currentOption: viewModel.getCurrentApperance(),
                        isDarkMode: viewModel.isDarkMode,
                        delegate: self)
@@ -134,6 +135,13 @@ class LookAndFeelViewController: WSNavigationViewController {
             self.setupTheme(isDark: isDark)
         }).disposed(by: disposeBag)
 
+        viewModel.alertPublishSubject.subscribe(onNext: { [self] alertType in
+            viewModel.alertManager.showSimpleAlert(viewController: self,
+                                                title: alertType.title,
+                                                message: alertType.message,
+                                                buttonText: TextsAsset.okay)
+        }).disposed(by: disposeBag)
+
         currentVersionLabel.rx.tapGesture { gesture, _ in
             gesture.numberOfTapsRequired = 3
         }
@@ -183,19 +191,27 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     override func setupLocalized() {
         titleLabel.text = TextsAsset.LookFeel.title
-        versionLabel.text = SelectionViewType.version.title
+        versionLabel.text = LookAndFeelViewType.version.title
     }
 
     func exportLocationsTapped() {
-        viewModel.exportLocations(from: self)
+        viewModel.exportLocations() { tempURL in
+            DispatchQueue.main.async {
+                let documentPicker = UIDocumentPickerViewController(forExporting: [tempURL], asCopy: true)
+                self.present(documentPicker, animated: true, completion: nil)
+            }
+        }
     }
 
     func importLocationsTapped() {
-        viewModel.importLocations(from: self)
+        logger.logI("LookAndFeelViewModel", "Import Locations pressed")
+        let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.json])
+        filePicker.delegate = viewModel
+        present(filePicker, animated: true, completion: nil)
     }
 
     func resetLocationsTapped() {
-        viewModel.resetLocations(from: self)
+        viewModel.resetLocations()
     }
 }
 

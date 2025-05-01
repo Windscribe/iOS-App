@@ -131,7 +131,7 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: Array(location.1.nodes))
-            let ip = node.ip
+            let ip = node.ip1
             let hostname = node.hostname
             guard let auth = keychainDb.retrieve(username: username) else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
@@ -139,8 +139,9 @@ extension ConfigurationsManager {
             return IKEv2VPNConfiguration(username: username, auth: auth, hostname: hostname, ip: ip)
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
-            let node = try getRandomNode(nodes: Array(location.nodes))
-            let ip = node.ip
+            let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
+            let node = try getRandomNode(nodes: nodeModels)
+            let ip = node.ip1
             let hostname = node.hostname
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.iKEv2)
@@ -171,20 +172,21 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let location = try locationsManager.getLocation(from: location)
             let node = try getRandomNode(nodes: Array(location.1.nodes))
-            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
+            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
             let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
             let location = try getStaticIPLocation(id: locationID)
-            let node = try getRandomNode(nodes: Array(location.nodes))
+            let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
+            let node = try getRandomNode(nodes: nodeModels)
             guard let credentials = location.credentials.last else {
                 throw VPNConfigurationErrors.credentialsNotFound(TextsAsset.openVPN)
             }
             let username = credentials.username
             let password = credentials.password
             keychainDb.save(username: username, password: password)
-            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip, ip3: node.ip3)
+            let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
             let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
@@ -306,7 +308,7 @@ extension ConfigurationsManager {
     ///   maintenance and then uses weighted random selection. This ensures that nodes with fewer connections or lowers weight are
     ///   chosen more frequently, balancing load across nodes. If no weighted selection is possible, it falls back
     ///   to a purely random selection. This function guarantees that a valid node is selected, if available.
-    private func getRandomNode(nodes: [Node]) throws -> Node {
+    private func getRandomNode(nodes: [NodeModel]) throws -> NodeModel {
         if nodes.isEmpty {
             throw VPNConfigurationErrors.noValidNodeFound
         } else {
@@ -348,11 +350,12 @@ extension ConfigurationsManager {
                 if isFreeUser, location.1.premiumOnly {
                     throw VPNConfigurationErrors.invalidLocationType
                 }
-                _ = try getRandomNode(nodes: Array(location.1.nodes))
+                _ = try getRandomNode(nodes: location.1.nodes)
                 return lastLocation
             case .staticIP:
                 let location = try getStaticIPLocation(id: locationID)
-                _ = try getRandomNode(nodes: Array(location.nodes))
+                let nodeModels = Array(location.nodes).map({ $0.getNodeModel() })
+                _ = try getRandomNode(nodes: nodeModels)
                 return lastLocation
             case .custom:
                 do {
@@ -376,12 +379,12 @@ extension ConfigurationsManager {
 
         var groupResult: GroupModel?
         for server in servers.map({ $0.getServerModel() }) {
-            for group in server.groups ?? [] where locationID == "\(group.id ?? 0)" {
-                groupResult = server.groups?.filter { $0.isNodesAvailable() }.randomElement()
+            for group in server.groups where locationID == "\(group.id)" {
+                groupResult = server.groups.filter { $0.isNodesAvailable() }.randomElement()
             }
         }
         if let city = groupResult {
-            return "\(city.id ?? 0)"
+            return "\(city.id)"
         } else {
             let bestLocation = locationsManager.getBestLocation()
             if !bestLocation.isEmpty {

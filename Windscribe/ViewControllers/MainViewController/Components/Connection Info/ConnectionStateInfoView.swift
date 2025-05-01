@@ -250,11 +250,12 @@ class ConnectionStateInfoView: UIView {
         circunventIcon.contentMode = .scaleAspectFit
 
         connectingImageView.tintColor = .white
-        connectingImageView.animationDuration = 0.5
+        connectingImageView.animationDuration = 0.8
         connectingImageView.animationRepeatCount = 0
         connectingImageView.animationImages = [ImagesAsset.connectindDots1,
                                                ImagesAsset.connectindDots2,
-                                               ImagesAsset.connectindDots3].compactMap {
+                                               ImagesAsset.connectindDots3,
+                                               ImagesAsset.connectindDots4].compactMap {
             UIImage(named: $0)?.withRenderingMode(.alwaysTemplate)
         }
 

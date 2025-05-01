@@ -75,10 +75,6 @@ class ListSelectionView: UIView {
         super.init(frame: .zero)
     }
 
-    func setSearchHidden(_ isHidden: Bool) {
-        gradientView.backgroundColor = isHidden ? .clear : .nightBlue
-    }
-
     func loadView() {
         addViews()
         addViewConstraints()

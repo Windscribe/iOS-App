@@ -9,11 +9,12 @@
 import Foundation
 import RxSwift
 import UIKit
-import UniformTypeIdentifiers
 
-protocol LookAndFeelViewModelType {
+protocol LookAndFeelViewModelType: UIDocumentPickerDelegate {
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var alertPublishSubject: PublishSubject<CustomLocationsAlertType> { get }
     var themeManager: ThemeManager { get }
+    var alertManager: AlertManagerV2 { get }
 
     // Appearance
     func didSelectedAppearance(value: String)
@@ -37,9 +38,8 @@ protocol LookAndFeelViewModelType {
     func getVersion() -> String
 
     // Custom Locations
-    func exportLocations(from presenter: UIViewController)
-    func importLocations(from presenter: UIViewController)
-    func resetLocations(from presenter: UIViewController)
+    func exportLocations(presentClosure: (_ tempURL: URL) -> Void)
+    func resetLocations()
 }
 
 class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
@@ -55,6 +55,7 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
     // State
     let disposeBag = DisposeBag()
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
+    let alertPublishSubject = PublishSubject<CustomLocationsAlertType>()
 
     let soundEffectConnect = BehaviorSubject<SoundEffectType>(value: .none)
     let soundEffectDisconnect = BehaviorSubject<SoundEffectType>(value: .none)
@@ -224,45 +225,35 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
         return "v\(releaseNumber) (\(buildNumber))"
     }
 
-    func exportLocations(from presenter: UIViewController) {
+    func exportLocations(presentClosure: (_ tempURL: URL) -> Void) {
         logger.logI("GeneralViewModel", "Export Locations pressed")
         let serverModels = serverRepository.currentServerModels
         guard !serverModels.isEmpty else {
             logger.logI("GeneralViewModel", "Export Locations failed, no local servers to export")
-            showFailedExportMessage(from: presenter)
+            alertPublishSubject.onNext(.failedExport)
             return
         }
 
         do {
             let jsonData = try buildLocationsJsonString(serverModels: serverModels)
-            try saveJSONToFile(jsonData: jsonData, from: presenter)
+            try saveJSONToFile(jsonData: jsonData, presentClosure: presentClosure)
         } catch {
-            showFailedExportMessage(from: presenter)
+            alertPublishSubject.onNext(.failedExport)
             logger.logE("GeneralViewModel", "Export Locations failed, \(error.localizedDescription)")
             return
         }
         logger.logI("GeneralViewModel", "Export Locations successful")
     }
 
-    func importLocations(from presenter: UIViewController) {
-        logger.logI("GeneralViewModel", "Import Locations pressed")
-        let filePicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.json])
-        filePicker.delegate = self
-        presenter.present(filePicker, animated: true, completion: nil)
-    }
-
-    func resetLocations(from presenter: UIViewController) {
+    func resetLocations() {
         serverRepository.updateRegions(with: [])
-        showSuccessfulResetMessage(from: presenter)
+        alertPublishSubject.onNext(.successfulReset)
     }
 
-    private func saveJSONToFile(jsonData: Data, from presenter: UIViewController) throws {
+    private func saveJSONToFile(jsonData: Data, presentClosure: (_ tempURL: URL) -> Void) throws {
         let tempURL = FileManager.default.temporaryDirectory.appendingPathComponent("windscribe-servers.json")
         try jsonData.write(to: tempURL)
-        DispatchQueue.main.async {
-            let documentPicker = UIDocumentPickerViewController(forExporting: [tempURL], asCopy: true)
-            presenter.present(documentPicker, animated: true, completion: nil)
-        }
+            presentClosure(tempURL)
     }
 
     private func buildLocationsJsonString(serverModels: [ServerModel]) throws -> Data {
@@ -270,34 +261,6 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         return try encoder.encode(regions)
-    }
-
-    private func showFailedExportMessage(from presenter: UIViewController) {
-        alertManager.showSimpleAlert(viewController: presenter,
-                                     title: TextsAsset.CustomLocationNames.exportTitleFailed,
-                                     message: TextsAsset.CustomLocationNames.failedExporting,
-                                     buttonText: TextsAsset.ok)
-    }
-
-    private func showFailedImportMessage(from presenter: UIViewController? = nil) {
-        alertManager.showSimpleAlert(viewController: presenter,
-                                     title: TextsAsset.CustomLocationNames.importTitleFailed,
-                                     message: TextsAsset.CustomLocationNames.failedImporting,
-                                     buttonText: TextsAsset.ok)
-    }
-
-    private func showSuccessfulImportMessage(from presenter: UIViewController? = nil) {
-        alertManager.showSimpleAlert(viewController: presenter,
-                                     title: TextsAsset.CustomLocationNames.importTitleSuccess,
-                                     message: TextsAsset.CustomLocationNames.successfullyImported,
-                                     buttonText: TextsAsset.ok)
-    }
-
-    private func showSuccessfulResetMessage(from presenter: UIViewController? = nil) {
-        alertManager.showSimpleAlert(viewController: presenter,
-                                     title: TextsAsset.CustomLocationNames.resetTitleSuccess,
-                                     message: TextsAsset.CustomLocationNames.resetSuccessful,
-                                     buttonText: TextsAsset.ok)
     }
 }
 
@@ -312,10 +275,10 @@ extension LookAndFeelViewModel: UIDocumentPickerDelegate {
                 serverRepository.updateRegions(with: regionList)
                 logger.logI("GeneralViewModel", "Import Locations finished")
             } catch {
-                showFailedImportMessage()
+                alertPublishSubject.onNext(.failedImport)
                 logger.logE("GeneralViewModel", "Import Locations failed, \(error.localizedDescription)")
             }
-            showSuccessfulImportMessage()
+            alertPublishSubject.onNext(.successfulImport)
         }
     }
 }

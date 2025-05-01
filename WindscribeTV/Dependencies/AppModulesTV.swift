@@ -136,6 +136,10 @@ class TVViewModels: Assembly {
                                   locationsManager: r.resolve(LocationsManagerType.self)!,
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
+        container.register(IPInfoViewModelType.self) { r in
+            IPInfoViewModel(ipRepository: r.resolve(IPRepository.self)!,
+                            preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.transient)
     }
 }
 
@@ -155,6 +159,7 @@ class TVViewControllers: Assembly {
             vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
+            vc.ipInfoViewModel = r.resolve(IPInfoViewModelType.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
         container.register(WelcomeViewController.self) { _ in

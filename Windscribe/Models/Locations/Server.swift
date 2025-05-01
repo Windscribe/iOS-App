@@ -10,24 +10,25 @@ import Foundation
 import RealmSwift
 
 struct ServerModel {
-    let id: Int?
-    let name: String?
-    let countryCode: String?
-    let status: Bool?
-    let premiumOnly: Bool?
-    let dnsHostname: String?
-    let groups: [GroupModel]?
-    let locType: String?
-    let p2p: Bool?
+    let id: Int
+    let name: String
+    let countryCode: String
+    let status: Bool
+    let premiumOnly: Bool
+    let dnsHostname: String
+    let groups: [GroupModel]
+    let locType: String
+    let p2p: Bool
 
-    init(id: Int?, name: String?,
-         countryCode: String?,
-         status: Bool?,
-         premiumOnly: Bool?,
-         dnsHostname: String?,
+    init(id: Int,
+         name: String,
+         countryCode: String,
+         status: Bool,
+         premiumOnly: Bool,
+         dnsHostname: String,
          groups: [GroupModel],
-         locType: String?,
-         p2p: Bool?) {
+         locType: String,
+         p2p: Bool) {
         self.id = id
         self.name = name
         self.countryCode = countryCode
@@ -39,16 +40,16 @@ struct ServerModel {
         self.p2p = p2p
     }
 
-    init(name: String) {
-        id = nil
+    init(name: String, serverModel: ServerModel) {
+        id = serverModel.id
         self.name = name
-        countryCode = nil
-        status = nil
-        premiumOnly = nil
-        dnsHostname = nil
-        groups = nil
-        locType = nil
-        p2p = nil
+        countryCode = serverModel.countryCode
+        status = serverModel.status
+        premiumOnly = serverModel.premiumOnly
+        dnsHostname = serverModel.dnsHostname
+        groups = serverModel.groups
+        locType = serverModel.locType
+        p2p = serverModel.p2p
     }
 
     func isForStreaming() -> Bool {
@@ -59,16 +60,15 @@ struct ServerModel {
     /// are ignored.
     /// - Returns: Average health
     func getServerHealth() -> Int {
-        if let availableGroups = groups {
-            let totalHealth = availableGroups.filter {
-                $0.health! > 0
-            }.reduce(0) { x, y in
-                x + y.health!
-            }
-            if totalHealth > 0 {
-                let numberOfGroups = availableGroups.filter { $0.health! > 0 }.count
-                return totalHealth / numberOfGroups
-            }
+        guard !groups.isEmpty else { return 0 }
+        let totalHealth = groups.filter {
+            $0.health > 0
+        }.reduce(0) { x, y in
+            x + y.health
+        }
+        if totalHealth > 0 {
+            let numberOfGroups = groups.filter { $0.health > 0 }.count
+            return totalHealth / numberOfGroups
         }
         return 0
     }

@@ -16,7 +16,7 @@ struct LocationUIInfo {
 
 protocol LocationsManagerType {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
-    func getLocation(from groupId: String) throws -> (Server, Group)
+    func getLocation(from groupId: String) throws -> (ServerModel, GroupModel)
     func getLocationUIInfo() -> LocationUIInfo
     func saveLastSelectedLocation(with locationID: String)
     func saveStaticIP(withID staticID: Int?)
@@ -42,33 +42,41 @@ class LocationsManager: LocationsManagerType {
     private let preferences: Preferences
     private let logger: FileLogger
     private let languageManager: LanguageManagerV2
+    private let serverRepository: ServerRepository
 
     private let disposeBag = DisposeBag()
 
     let selectedLocationUpdatedSubject = BehaviorSubject<Bool>(value: (false))
 
-    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManagerV2) {
+    init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManagerV2, serverRepository: ServerRepository) {
         self.localDatabase = localDatabase
         self.preferences = preferences
         self.logger = logger
         self.languageManager = languageManager
+        self.serverRepository = serverRepository
 
         languageManager.activelanguage.subscribe { [weak self] _ in
             self?.selectedLocationUpdatedSubject.onNext(false)
         }.disposed(by: disposeBag)
+
+        serverRepository.updatedServerModelsSubject.subscribe { [weak self] _ in
+            self?.selectedLocationUpdatedSubject.onNext(false)
+        }.disposed(by: disposeBag)
+
+
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
         guard let groupServer = try? getLocation(from: groupId),
               let node = groupServer.1.nodes.randomElement() else { return nil }
-        let serverModel = groupServer.0.getServerModel()
-        return BestLocationModel(node: node.getNodeModel(),
-                                 group: groupServer.1.getGroupModel(),
-                                 server: serverModel)
+        return BestLocationModel(node: node,
+                                 group: groupServer.1,
+                                 server: groupServer.0)
     }
 
-    func getLocation(from groupId: String) throws -> (Server, Group) {
-        guard let servers = localDatabase.getServers() else { throw VPNConfigurationErrors.locationNotFound(groupId) }
+    func getLocation(from groupId: String) throws -> (ServerModel, GroupModel) {
+        let servers = serverRepository.currentServerModels
+        guard !servers.isEmpty else { throw VPNConfigurationErrors.locationNotFound(groupId) }
         let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
         guard let serverResultSafe = serverResult else { throw VPNConfigurationErrors.locationNotFound(groupId) }
         let groupResult = serverResultSafe.groups.first(where: { groupId == "\($0.id)" })
@@ -219,11 +227,12 @@ extension LocationsManager {
     }
 
     private func getSisterLocationID(from groupId: String) -> String? {
-        guard let servers = localDatabase.getServers() else { return nil }
+        let servers = serverRepository.currentServerModels
+        guard !servers.isEmpty else { return nil }
         let serverResult = servers.first { $0.groups.first { groupId == "\($0.id)" } != nil }
         guard let serverResultSafe = serverResult else { return nil }
         let groupResult = serverResultSafe.groups.filter {
-            groupId != "\($0.id)" && $0.getGroupModel().isNodesAvailable()
+            groupId != "\($0.id)" && $0.isNodesAvailable()
         }.randomElement()
         guard let groupResultSafe = groupResult else { return nil }
         return "\(groupResultSafe.id)"

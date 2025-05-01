@@ -158,9 +158,9 @@ extension MainViewController {
             }
         }).disposed(by: disposeBag)
         reloadFavNodeOrder()
-        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] _ in
+        viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] servers in
             DispatchQueue.main.async {
-                self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
+                self.loadServerTable(servers: servers)
             }
         }).disposed(by: disposeBag)
     }

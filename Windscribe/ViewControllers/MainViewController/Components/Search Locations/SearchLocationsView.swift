@@ -32,6 +32,7 @@ class SearchLocationsView: UIView {
         self.viewModel = viewModel
         self.serverSectionOpacity = serverSectionOpacity
         super.init(frame: .zero)
+        isUserInteractionEnabled = false
     }
 
     func loadView() {
@@ -93,10 +94,10 @@ class SearchLocationsView: UIView {
 
         NSLayoutConstraint.activate([
             // stackContainerView
-            stackContainerView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackContainerView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             stackContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
-            stackContainerView.heightAnchor.constraint(equalToConstant: 24),
+            stackContainerView.heightAnchor.constraint(equalToConstant: 54),
 
             // spacerView
             spacerView.widthAnchor.constraint(equalToConstant: 16),
@@ -143,6 +144,11 @@ class SearchLocationsView: UIView {
                 self.clearSearchField()
             }
         }.disposed(by: disposeBag)
+    }
+
+    func setSearchSelected(isSelected: Bool) {
+        backgroundColor = isSelected ? .nightBlue : .clear
+        isUserInteractionEnabled = isSelected
     }
 
     private func clearSearchField() {

@@ -31,10 +31,10 @@ extension MainViewController {
     private func addSearchViewConstraints() {
         searchLocationsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchLocationsView.centerYAnchor.constraint(equalTo: listSelectionView.centerYAnchor),
+            searchLocationsView.bottomAnchor.constraint(equalTo: listSelectionView.bottomAnchor, constant: -1),
+            searchLocationsView.topAnchor.constraint(equalTo: view.topAnchor),
             searchLocationsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            searchLocationsView.heightAnchor.constraint(equalToConstant: 24)
+            searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
 
@@ -114,40 +114,39 @@ extension MainViewController: SearchCountryViewDelegate {
                 case .groupContains:
                     groupNameContainsMatches.append(filteredGroup)
                 case .cityContains:
-                        cityContainsMatches.append(filteredGroup)
+                    cityContainsMatches.append(filteredGroup)
                 }
             }
         }
         return bestLocations + groupNamePrefixMatches + cityPrefixMatches + groupNameContainsMatches + cityContainsMatches
     }
 
+    /// Checks what kind of MatchType best fits group with the keyword from the search
+    /// This will allow the list to be better order and give priority to the the keyword being in the server name first and then in the city name or nick name
     private func filterIfContains(group: ServerModel, keyword: String) -> (ServerModel, MatchType)? {
         var cities: [GroupModel] = []
         var bestMatch: MatchType?
-        if let name = group.name?.lowercased() {
-            if name.hasPrefix(keyword) {
-                bestMatch = .groupPrefix
-            } else if name.contains(keyword) {
-                bestMatch = .groupContains
-            }
+        let name = group.name.lowercased()
+        if name.hasPrefix(keyword) {
+            bestMatch = .groupPrefix
+        } else if name.contains(keyword) {
+            bestMatch = .groupContains
         }
-        if let items = group.groups {
-            for cityGroup in items {
-                if let nick = cityGroup.nick?.lowercased(), let city = cityGroup.city?.lowercased() {
-                    if nick.hasPrefix(keyword) || city.hasPrefix(keyword) {
-                        bestMatch = bestMatch ?? .cityPrefix
-                        cities.append(cityGroup)
-                    } else if nick.contains(keyword) || city.contains(keyword) {
-                        if bestMatch == nil {
-                            bestMatch = .cityContains
-                        }
-                        cities.append(cityGroup)
-                    }
+        for cityGroup in group.groups {
+            let nick = cityGroup.nick.lowercased()
+            let city = cityGroup.city.lowercased()
+            if nick.hasPrefix(keyword) || city.hasPrefix(keyword) {
+                bestMatch = bestMatch ?? .cityPrefix
+                cities.append(cityGroup)
+            } else if nick.contains(keyword) || city.contains(keyword) {
+                if bestMatch == nil {
+                    bestMatch = .cityContains
                 }
+                cities.append(cityGroup)
             }
         }
         if let match = bestMatch, match == .groupPrefix || match == .groupContains {
-            cities = group.groups ?? []
+            cities = group.groups
         }
         if let match = bestMatch {
             let newServer = ServerModel(
@@ -182,7 +181,7 @@ extension MainViewController: SearchCountryViewDelegate {
             self.listSelectionViewBottomConstraint.isActive = false
             UIView.animate(withDuration: 0.3) {
                 self.view.layoutIfNeeded()
-                self.listSelectionView.setSearchHidden(false)
+                self.searchLocationsView.setSearchSelected(isSelected: true)
             }
         }
     }
@@ -200,7 +199,7 @@ extension MainViewController: SearchCountryViewDelegate {
             self.listSelectionViewBottomConstraint.isActive = true
             UIView.animate(withDuration: 0.3) {
                 self.view.layoutIfNeeded()
-                self.listSelectionView.setSearchHidden(true)
+                self.searchLocationsView.setSearchSelected(isSelected: false)
             }
         }
     }

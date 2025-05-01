@@ -10,12 +10,13 @@ import Foundation
 import RealmSwift
 
 struct NodeModel {
-    let ip1: String?
-    let ip2: String?
-    let ip3: String?
-    let hostname: String?
-    let dnsHostname: String?
+    let ip1: String
+    let ip2: String
+    let ip3: String
+    let hostname: String
+    let dnsHostname: String
     let forceDisconnect: Bool
+    let weight: Int
 
     init(
         ip1: String,
@@ -23,7 +24,8 @@ struct NodeModel {
         ip3: String,
         hostname: String,
         dnsHostname: String,
-        forceDisconnect: Bool
+        forceDisconnect: Bool,
+        weight: Int
     ) {
         self.ip1 = ip1
         self.ip2 = ip2
@@ -31,6 +33,7 @@ struct NodeModel {
         self.hostname = hostname
         self.dnsHostname = dnsHostname
         self.forceDisconnect = forceDisconnect
+        self.weight = weight
     }
 }
 
@@ -77,7 +80,8 @@ struct NodeModel {
                          ip3: ip3,
                          hostname: hostname,
                          dnsHostname: dnsHostname,
-                         forceDisconnect: forceDisconnect)
+                         forceDisconnect: forceDisconnect,
+                         weight: weight)
     }
 }
 
@@ -124,8 +128,8 @@ struct FavNodeModel {
     }
 
     init(node: NodeModel, group: GroupModel, server: ServerModel) {
-        if let groupId = group.id {
-            self.groupId = "\(groupId)"
+        if group.id >= 0 {
+            self.groupId = "\(group.id)"
         } else {
             groupId = node.hostname
         }
@@ -178,20 +182,20 @@ struct FavNodeModel {
 
     convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
         self.init()
-        guard let groupId = group.id else { return }
-        self.groupId = "\(groupId)"
-        serverName = server.name ?? ""
-        countryCode = server.countryCode ?? ""
-        hostname = node.hostname ?? ""
-        cityName = group.city ?? ""
-        nickName = group.nick ?? ""
-        dnsHostname = server.dnsHostname ?? ""
-        ipAddress = node.ip2 ?? ""
-        pingIp = group.pingIp ?? ""
-        pingHost = group.pingHost ?? ""
-        linkSpeed = group.linkSpeed ?? "1000"
-        health = group.health ?? 0
-        isPremiumOnly = group.premiumOnly ?? false
+        guard group.id >= 0  else { return }
+        self.groupId = "\(group.id)"
+        serverName = server.name
+        countryCode = server.countryCode
+        hostname = node.hostname
+        cityName = group.city
+        nickName = group.nick
+        dnsHostname = server.dnsHostname
+        ipAddress = node.ip2
+        pingIp = group.pingIp
+        pingHost = group.pingHost
+        linkSpeed = group.linkSpeed
+        health = group.health
+        isPremiumOnly = group.premiumOnly
     }
 
     override static func primaryKey() -> String? {
@@ -239,16 +243,16 @@ class LastConnectedNode: FavNode {
 }
 
 struct BestLocationModel {
-    let serverName: String?
-    let countryCode: String?
+    let serverName: String
+    let countryCode: String
     let hostname: String?
-    let cityName: String?
-    let nickName: String?
-    let dnsHostname: String?
+    let cityName: String
+    let nickName: String
+    let dnsHostname: String
     let ipAddress: String?
-    let groupId: Int?
-    let linkSpeed: String?
-    let health: Int?
+    let groupId: Int
+    let linkSpeed: String
+    let health: Int
 
     init(serverName: String,
          countryCode: String,
@@ -301,16 +305,16 @@ struct BestLocationModel {
 
     convenience init(node: NodeModel, group: GroupModel, server: ServerModel) {
         self.init()
-        serverName = group.city ?? ""
-        countryCode = server.countryCode ?? ""
-        hostname = node.hostname ?? ""
-        cityName = group.city ?? ""
-        nickName = group.nick ?? ""
-        dnsHostname = server.dnsHostname ?? ""
-        ipAddress = node.ip2 ?? ""
-        groupId = group.id ?? 0
-        linkSpeed = group.linkSpeed ?? "1000"
-        health = group.health ?? 0
+        serverName = group.city
+        countryCode = server.countryCode
+        hostname = node.hostname
+        cityName = group.city
+        nickName = group.nick
+        dnsHostname = server.dnsHostname
+        ipAddress = node.ip2
+        groupId = group.id
+        linkSpeed = group.linkSpeed
+        health = group.health
     }
 
     override static func primaryKey() -> String? {

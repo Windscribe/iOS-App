@@ -20,8 +20,8 @@ class PreferencesGeneralView: UIView {
     private let disposeBag = DisposeBag()
 
     func setup() {
-        languagesView.populate(with: TextsAsset.General.languages, title: GeneralHelper.getTitle(.language))
-        orderByView.populate(with: TextsAsset.orderPreferences, title: GeneralHelper.getTitle(.locationOrder))
+        languagesView.populate(with: TextsAsset.General.languages, title: GeneralViewType.language.title)
+        orderByView.populate(with: TextsAsset.orderPreferences, title: GeneralViewType.locationOrder.title)
 
         languagesView.delegate = self
         orderByView.select(option: viewModel.getCurrentLocationOrder())
@@ -47,8 +47,8 @@ class PreferencesGeneralView: UIView {
     }
 
     private func updateText() {
-        languagesView.updateText(with: TextsAsset.General.languages, title: GeneralHelper.getTitle(.language))
-        orderByView.updateText(with: TextsAsset.orderPreferences, title: GeneralHelper.getTitle(.locationOrder))
+        languagesView.updateText(with: TextsAsset.General.languages, title:  GeneralViewType.language.title)
+        orderByView.updateText(with: TextsAsset.orderPreferences, title: GeneralViewType.locationOrder.title)
     }
 
     private func bindViews() {

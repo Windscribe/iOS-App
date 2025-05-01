@@ -62,17 +62,15 @@ class ServerListViewModel: ServerListViewModelType {
             return
         }
 
-        if !sessionManager.canAccesstoProLocation() && group.premiumOnly ?? false {
+        if !sessionManager.canAccesstoProLocation() && group.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
         } else if !group.canConnect() {
             reloadTrigger.onNext(())
         } else if vpnManager.configurationState == ConfigurationState.initial {
-            guard let bestNode = group.bestNode,
-                  let bestNodeHostname = bestNode.hostname,
-                  let groupId = group.id else { return }
-            logger.logD(self, "Tapped on a node with groupID: \(groupId) \(bestNodeHostname) from the server list.")
-            locationsManager.saveLastSelectedLocation(with: "\(groupId)")
+            guard let bestNode = group.bestNode else { return }
+            logger.logD(self, "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
+            locationsManager.saveLastSelectedLocation(with: "\(group.id)")
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }
@@ -102,12 +100,9 @@ extension ServerListViewModel {
         if server.status == false {
             return true
         }
-        guard let premiumOnly = group.premiumOnly else {
-            return false
-        }
-        if !group.isNodesAvailable() && !premiumOnly {
+        if !group.isNodesAvailable() && !group.premiumOnly {
             return true
-        } else if !group.isNodesAvailable() && premiumOnly && sessionManager.session?.isPremium == true {
+        } else if !group.isNodesAvailable() && group.premiumOnly && sessionManager.session?.isPremium == true {
             return true
         }
         return false

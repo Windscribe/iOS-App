@@ -10,12 +10,6 @@ import Foundation
 import RxSwift
 import UIKit
 
-enum SelectableViewType {
-    case selection
-    case direction
-    case directionWithoutIcon
-}
-
 protocol SelectableViewDelegate: AnyObject {
     func selectableViewSelect(_ sender: SelectableView, option: String)
     func selectableViewDirection(_ sender: SelectableView)

@@ -50,7 +50,7 @@ class ServerRepositoryImpl: ServerRepository {
                 }
                 self.localDatabase.saveServers(servers: servers)
                 self.rebuildFavouriteList(serverList: servers)
-                self.updateServerModels()
+                self.updateServerModels(servers: servers)
                 return servers
             }.catch { error in
                 if let ips = self.localDatabase.getServers() {
@@ -63,11 +63,11 @@ class ServerRepositoryImpl: ServerRepository {
 
     func updateRegions(with regions: [ExportedRegion]) {
         preferences.saveCustomLocationsNames(value: regions)
-        updateServerModels()
+        guard let servers = localDatabase.getServers() else { return }
+        updateServerModels(servers: servers)
     }
 
-    private func updateServerModels() {
-        guard let servers = localDatabase.getServers() else { return }
+    private func updateServerModels(servers: [Server]) {
         logger.logI("ServerRepositoryImpl", "Stating merge of local and external servers")
         let regions = preferences.getCustomLocationsNames()
         if regions.isEmpty {

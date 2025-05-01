@@ -27,7 +27,8 @@ class PreferencesConnectionView: UIView {
         updateProtocols()
         updatePorts()
 
-        connectionModeView.populate(with: viewModel.currentConnectionModes(), title: GeneralHelper.getTitle(.connectionMode))
+        connectionModeView.populate(with: GeneralViewType.connectionMode.listOption,
+                                    title: GeneralViewType.connectionMode.title)
 
         circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
 
@@ -65,7 +66,8 @@ class PreferencesConnectionView: UIView {
     }
 
     private func updateText() {
-        connectionModeView.updateText(with: viewModel.currentConnectionModes(), title: GeneralHelper.getTitle(.connectionMode))
+        connectionModeView.updateText(with: GeneralViewType.connectionMode.listOption,
+                                    title: GeneralViewType.connectionMode.title)
 
         protocolsView.updateText(with: viewModel.getProtocols(), title: nil)
 

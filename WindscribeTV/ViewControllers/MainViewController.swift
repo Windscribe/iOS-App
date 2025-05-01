@@ -44,6 +44,7 @@ class MainViewController: PreferredFocusedViewController {
     // MARK: Properties
 
     var viewModel: MainViewModelType!
+    var ipInfoViewModel: IPInfoViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var latencyViewModel: LatencyViewModel!
     var serverListViewModel: ServerListViewModelType!
@@ -312,9 +313,9 @@ class MainViewController: PreferredFocusedViewController {
             self.setConnectionLabelValuesForSelectedNode()
         }).disposed(by: disposeBag)
 
-//        vpnConnectionViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-//            self.showSecureIPAddressState(ipAddress: $0)
-//        }).disposed(by: disposeBag)
+        ipInfoViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.showSecureIPAddressState(ipAddress: $0)
+        }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.connectedState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.animateConnectedState(with: $0)
@@ -386,7 +387,7 @@ class MainViewController: PreferredFocusedViewController {
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
-            let locationId = "\(bestLocation.groupId ?? 0)"
+            let locationId = "\(bestLocation.groupId)"
             logger.logD(self, "Configuring best location.")
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
@@ -410,9 +411,9 @@ class MainViewController: PreferredFocusedViewController {
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
             self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
                 if serverSectionsOrdered.count > 2 {
-                    self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode?.lowercased() ?? "")-s")
-                    self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode?.lowercased() ?? "")-s")
-                    self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode?.lowercased() ?? "")-s")
+                    self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode.lowercased() ?? "")-s")
+                    self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode.lowercased() ?? "")-s")
+                    self.thirdServer.image = UIImage(named: "\(serverSectionsOrdered[2].server?.countryCode.lowercased() ?? "")-s")
                 }
 
             }
@@ -581,8 +582,8 @@ class MainViewController: PreferredFocusedViewController {
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel,
                                    group: GroupModel) {
-        if let premiumOnly = group.premiumOnly, let isUserPro = sessionManager.session?.isPremium {
-            if premiumOnly && !isUserPro {
+        if let isUserPro = sessionManager.session?.isPremium {
+            if group.premiumOnly && !isUserPro {
                 router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             } else {
                 serverListViewModel.setSelectedServerAndGroup(server: server,

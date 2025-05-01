@@ -27,8 +27,11 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     let disposeBag = DisposeBag()
     var bestLocation: BestLocationModel? {
         didSet {
-            if bestLocation != nil && serverSections.first?.server?.name != Fields.Values.bestLocation {
-                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+            if bestLocation != nil,
+               serverSections.first?.server?.name != Fields.Values.bestLocation,
+               let groupId = bestLocation?.groupId,
+               let serverModel = viewModel.getServerModel(from: groupId) {
+                let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
                 serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
             }
             delegate?.reloadServerListTableView()
@@ -67,8 +70,11 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     }
 
     func numberOfSections(in _: UITableView) -> Int {
-        if bestLocation != nil && serverSections.first?.server?.name != Fields.Values.bestLocation {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+        if bestLocation != nil,
+           serverSections.first?.server?.name != Fields.Values.bestLocation,
+           let groupId = bestLocation?.groupId,
+           let serverModel = viewModel.getServerModel(from: groupId) {
+            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
             serverSections.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
         }
         return serverSections.count
@@ -77,7 +83,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 && bestLocation != nil { return 1 }
         if serverSections.indices.contains(section) {
-            guard let count = serverSections[section].server?.groups?.count else { return 0 }
+            guard let count = serverSections[section].server?.groups.count else { return 0 }
             return count + 1
         } else {
             return 0
@@ -88,8 +94,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         let cell = tableView.dequeueReusableCell(
             withIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
         ?? NodeTableViewCell(style: .default, reuseIdentifier: ReuseIdentifiers.nodeCellReuseIdentifier)
-        if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups?.count ?? 0) > indexPath.row - 1) {
-            let group = serverSections[indexPath.section].server?.groups?[indexPath.row - 1]
+        if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups.count ?? 0) > indexPath.row - 1) {
+            let group = serverSections[indexPath.section].server?.groups[indexPath.row - 1]
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
             cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: group, displayingNodeServer: serverSections[indexPath.section].server)
         }
@@ -101,8 +107,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             delegate?.connectToBestLocation()
         }
         if indexPath.row == 0 { return }
-        guard let server = serverSections[indexPath.section].server,
-              let group = server.groups?[indexPath.row - 1] else { return }
+        guard let server = serverSections[indexPath.section].server else { return }
+        let group = server.groups[indexPath.row - 1]
         delegate?.setSelectedServerAndGroup(server: server, group: group)
     }
 

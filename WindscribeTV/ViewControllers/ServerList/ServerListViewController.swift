@@ -61,7 +61,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     private var selectionOption = SideMenuType.all
 
     var serverSectionsOrdered: [ServerSection] = []
-    var favGroups: [Group] = []
+    var favGroups: [GroupModel] = []
     var staticIPModels = [StaticIPModel]()
     var staticIpSelected = false
     var bestLocation: BestLocationModel?
@@ -163,8 +163,10 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             return
         }
 
-        if  bestLocation != nil {
-            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation)
+        if  bestLocation != nil,
+            let groupId = bestLocation?.groupId,
+            let serverModel = viewModel.getServerModel(from: groupId) {
+            let bestLocationServer = ServerModel(name: Fields.Values.bestLocation, serverModel: serverModel)
             if serverSectionsOrdered.first?.server?.name != Fields.Values.bestLocation {
                 serverSectionsOrdered.insert(ServerSection(server: bestLocationServer, collapsed: true), at: 0)
             }
@@ -471,7 +473,7 @@ extension ServerListViewController: UICollectionViewDataSource, UICollectionView
             }
             cell.setup(isShadow: true)
         }
-        cell.countryCode.text = serverSection.server?.name?.localize()
+        cell.countryCode.text = serverSection.server?.name.localize()
         return cell
     }
 

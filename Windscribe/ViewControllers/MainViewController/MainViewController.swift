@@ -211,7 +211,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
-            let locationId = "\(bestLocation.groupId ?? 0)"
+            let locationId = "\(bestLocation.groupId)"
             logger.logD(self, "Configuring best location.")
             serverListTableViewDataSource?.bestLocation = bestLocation
             if selectBestLocation || noSelectedNodeToConnect() {
@@ -222,8 +222,8 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
                 enableVPNConnection()
             }
             guard let displayingGroup = (try? self.viewModel.serverList.value())?
-                .flatMap({ $0.groups ?? [] }).filter({ $0.id == bestLocation.groupId }).first else { return }
-            let isGroupProOnly = displayingGroup.premiumOnly ?? false
+                .flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
+            let isGroupProOnly = displayingGroup.premiumOnly
             if let isUserPro = try? viewModel.session.value()?.isPremium,
                vpnConnectionViewModel.isDisconnected(),
                isGroupProOnly,
