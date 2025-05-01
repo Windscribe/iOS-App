@@ -17,8 +17,8 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
     init(displayingStaticIP: StaticIPModel?) {
         super.init()
         self.displayingStaticIP = displayingStaticIP
-        if let bestNode = displayingStaticIP?.bestNode, let pingIP = bestNode.ip1, bestNode.forceDisconnect == false {
-            minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
+        if let bestNode = displayingStaticIP?.bestNode, bestNode.forceDisconnect == false {
+            minTime = latencyRepository.getPingData(ip: bestNode.ip1)?.latency ?? minTime
         }
     }
 

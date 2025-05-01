@@ -1,5 +1,5 @@
 //
-//  GeneralHelper.swift
+//  GeneralViewType.swift
 //  Windscribe
 //
 //  Created by Thomas on 31/07/2022.
@@ -9,10 +9,9 @@
 import Foundation
 import UIKit
 
-enum SelectionViewType {
+enum GeneralViewType: SelectionViewType {
     case locationOrder
     case language
-    case appBackground
     case notification
     case hapticFeedback
     case firewall
@@ -22,19 +21,13 @@ enum SelectionViewType {
     case connectionMode
     case autoSecure
     case preferredProtocol
-    case customBackground
     case connectedDNS
-    case exportLocations
-    case importLocations
-    case appearance
-    case soundNotification
     case version
 
     var asset: String {
         switch self {
         case .locationOrder: ImagesAsset.General.locationOrder
         case .language: ImagesAsset.General.language
-        case .appBackground: ImagesAsset.LookFeel.appBackground
         case .notification: ImagesAsset.notifications
         case .hapticFeedback: ImagesAsset.General.hapticFeedback
         case .firewall: ImagesAsset.General.firewall
@@ -44,12 +37,7 @@ enum SelectionViewType {
         case .connectionMode: ImagesAsset.General.connectionMode
         case .autoSecure: ImagesAsset.General.autoSecure
         case .preferredProtocol: ImagesAsset.General.preferredProtocol
-        case .customBackground: ImagesAsset.General.appBackground
         case .connectedDNS: ImagesAsset.customDns
-        case .exportLocations: ImagesAsset.Servers.serversAll
-        case .importLocations: ImagesAsset.Servers.allSelected
-        case .appearance: ImagesAsset.LookFeel.appearance
-        case .soundNotification: ImagesAsset.LookFeel.soundNotification
         default: ""
         }
     }
@@ -67,13 +55,7 @@ enum SelectionViewType {
         case .connectionMode: TextsAsset.General.connectionMode
         case .autoSecure: TextsAsset.General.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.title
-        case .customBackground: TextsAsset.General.customBackground
         case .connectedDNS: TextsAsset.connectedDNS
-        case .exportLocations: TextsAsset.CustomLocationNames.exportLocations
-        case .importLocations: TextsAsset.CustomLocationNames.importLocations
-        case .appBackground: TextsAsset.LookFeel.appBackgroundTitle
-        case .appearance: TextsAsset.LookFeel.appearanceTitle
-        case .soundNotification: TextsAsset.LookFeel.soundNotificationTitle
         case .version: TextsAsset.LookFeel.versionTitle
         }
     }
@@ -91,13 +73,7 @@ enum SelectionViewType {
         case .connectionMode: TextsAsset.PreferencesDescription.connectionMode
         case .autoSecure: TextsAsset.PreferencesDescription.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.newDescription
-        case .customBackground: TextsAsset.PreferencesDescription.customBackground
         case .connectedDNS: TextsAsset.connectedDNSDescription
-        case .exportLocations: TextsAsset.CustomLocationNames.exportLocationsDesc
-        case .importLocations: TextsAsset.CustomLocationNames.importLocationsDesc
-        case .appBackground: TextsAsset.LookFeel.appBackgroundDescription
-        case .appearance: TextsAsset.LookFeel.appearanceDescription
-        case .soundNotification: TextsAsset.LookFeel.soundNotificationDescription
         case .version: ""
         }
     }
@@ -115,7 +91,7 @@ enum SelectionViewType {
 
     var type: SelectableViewType {
         switch self {
-        case .language, .exportLocations, .importLocations: .direction
+        case .language: .direction
         case .notification: .directionWithoutIcon
         default: .selection
         }

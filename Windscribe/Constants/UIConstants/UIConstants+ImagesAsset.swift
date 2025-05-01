@@ -22,6 +22,7 @@ enum ImagesAsset {
     static let connectindDots1 = "connecting-dots-1"
     static let connectindDots2 = "connecting-dots-2"
     static let connectindDots3 = "connecting-dots-3"
+    static let connectindDots4 = "connecting-dots-4"
     static let connectionSpinner = "connection-spinner"
     static let disconnectedButton = "disconnected-button"
     static let connectButtonRing = "connect-button-ring"
@@ -181,7 +182,7 @@ enum ImagesAsset {
         static let allowLan = "allow-lan-white"
         static let autoConnection = "auto-connection-ic-white"
         static let connectionMode = "connection-mode-ic-white"
-        static let autoSecure = "auto_secure"
+        static let autoSecure = "wifi"
         static let preferredProtocol = "preferred_protocol"
         static let autoSecureNew = "auto_secure_new"
     }

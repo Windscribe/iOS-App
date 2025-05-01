@@ -164,23 +164,23 @@ class WifiInfoView: UIView {
             stackView.leftAnchor.constraint(equalTo: leftAnchor),
             stackView.rightAnchor.constraint(equalTo: rightAnchor),
 
-            // trustedIcon
-            paddingView.heightAnchor.constraint(equalToConstant: 32),
+            // paddingView
+            paddingView.heightAnchor.constraint(equalToConstant: 24),
             paddingView.widthAnchor.constraint(equalToConstant: 5),
 
             // trustedIcon
-            trustedIcon.heightAnchor.constraint(equalToConstant: 32),
-            trustedIcon.widthAnchor.constraint(equalToConstant: 32),
+            trustedIcon.heightAnchor.constraint(equalToConstant: 24),
+            trustedIcon.widthAnchor.constraint(equalToConstant: 24),
 
             // actionImage
             actionImage.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor),
-            actionImage.centerXAnchor.constraint(equalTo: actionButton.centerXAnchor),
+            actionImage.centerXAnchor.constraint(equalTo: actionButton.centerXAnchor, constant: -4),
             actionImage.heightAnchor.constraint(equalToConstant: 12),
             actionImage.widthAnchor.constraint(equalToConstant: 12),
 
             // actionButton
-            actionButton.heightAnchor.constraint(equalToConstant: 32),
-            actionButton.widthAnchor.constraint(equalToConstant: 32)
+            actionButton.heightAnchor.constraint(equalToConstant: 24),
+            actionButton.widthAnchor.constraint(equalToConstant: 24)
         ])
     }
 }

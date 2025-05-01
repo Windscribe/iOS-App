@@ -77,8 +77,8 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
                     guard let self = self else { return }
                     self.isFavourited = false
                     updateUISubject.onNext(())
-                    if let groupId = group.id,
-                       let favNodeHostname = self.favNodes.filter({ $0.groupId == "\(groupId)" }).first?.hostname {
+                    if group.id >= 0,
+                       let favNodeHostname = self.favNodes.filter({ $0.groupId == "\(self.groupId)" }).first?.hostname {
                         self.localDB.removeFavNode(hostName: favNodeHostname)
                     }
                 }
@@ -134,7 +134,7 @@ class NodeTableViewCell: BaseNodeCell {
 
         NSLayoutConstraint.activate([
             // speedIcon
-            speedIcon.centerYAnchor.constraint(equalTo: nickNameLabel.centerYAnchor),
+            speedIcon.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 1),
             speedIcon.rightAnchor.constraint(equalTo: latencyLabel.leftAnchor, constant: -14),
             speedIcon.heightAnchor.constraint(equalToConstant: 20),
             speedIcon.widthAnchor.constraint(equalToConstant: 20)

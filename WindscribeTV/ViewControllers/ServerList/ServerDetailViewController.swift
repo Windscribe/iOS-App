@@ -62,9 +62,9 @@ class ServerDetailViewController: UIViewController {
         view.addSubview(flagBackgroundView)
         flagBackgroundView.sendToBack()
         if let server = server {
-            flagView.image = UIImage(named: "\(server.countryCode?.lowercased() ?? "")-l")
+            flagView.image = UIImage(named: "\(server.countryCode.lowercased())-l")
             serverTitle.text = server.name
-            countLabel.text = String(describing: server.groups?.count ?? 0)
+            countLabel.text = String(describing: server.groups.count)
         }
         tableView.contentInset = UIEdgeInsets.zero
         tableView.register(UINib(nibName: "ServerDetailTableViewCell", bundle: nil), forCellReuseIdentifier: "ServerDetailTableViewCell")
@@ -79,12 +79,12 @@ class ServerDetailViewController: UIViewController {
 
 extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return server?.groups?.count ?? 0
+        return server?.groups.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ServerDetailTableViewCell", for: indexPath) as? ServerDetailTableViewCell else { return ServerDetailTableViewCell() }
-        if let group = server?.groups?[indexPath.row] {
+        if let group = server?.groups[indexPath.row] {
             cell.bindData(group: group)
             cell.displayingGroup = group
             cell.displayingNodeServer = server

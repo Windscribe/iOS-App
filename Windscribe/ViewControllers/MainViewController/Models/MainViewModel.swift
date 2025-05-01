@@ -57,6 +57,7 @@ protocol MainViewModelType {
 
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
     func updateSSID()
+    func getServerModel(from groupId: Int) -> ServerModel?
 }
 
 class MainViewModel: MainViewModelType {
@@ -224,9 +225,9 @@ class MainViewModel: MainViewModelType {
                 }
             case Fields.Values.latency:
                 let serversMappedWithPing = serverSections.map {
-                    guard let hostnames = $0.server?.groups?.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return ($0, -1)}
+                    guard let hostnames = $0.server?.groups.filter({$0.pingIp != ""}).map({$0.pingIp}) else { return ($0, -1)}
                     let nodeList = hostnames.compactMap({
-                        let latency = self.latencyRepo.getPingData(ip: $0 ?? "")?.latency
+                        let latency = self.latencyRepo.getPingData(ip: $0)?.latency
                         return latency == -1 ? nil : latency
                     })
                     guard nodeList.count != 0 else { return ($0, -1) }
@@ -254,23 +255,21 @@ class MainViewModel: MainViewModelType {
     private func sortServerNodes(serverList: [ServerSection], orderBy: String) -> [ServerSection] {
         guard orderBy != Fields.Values.geography else { return serverList }
         return serverList.map {
-            guard let serverModel = $0.server, let serverGroups = serverModel.groups else { return $0 }
+            guard let serverModel = $0.server else { return $0 }
             var sortedGroups = [GroupModel]()
             switch orderBy {
             case Fields.Values.latency:
-                sortedGroups = serverGroups.sorted {
-                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingIp ?? "")?.latency, ping0 != -1 else { return false }
-                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingIp ?? "")?.latency, ping1 != -1 else { return true }
+                sortedGroups = serverModel.groups.sorted {
+                    guard let ping0 = self.latencyRepo.getPingData(ip: $0.pingIp)?.latency, ping0 != -1 else { return false }
+                    guard let ping1 = self.latencyRepo.getPingData(ip: $1.pingIp)?.latency, ping1 != -1 else { return true }
                     return ping0 < ping1
                 }
             default:
-                sortedGroups = serverGroups.sorted {
-                    guard let nick1 = $0.nick, let city1 = $0.city else { return false }
-                    guard let nick2 = $1.nick, let city2 = $1.city else { return true }
-                    if city1 == city2 {
-                        return nick1 < nick2
+                sortedGroups = serverModel.groups.sorted {
+                    if $0.city == $1.city {
+                        return $0.nick < $1.nick
                     }
-                    return city1 < city2
+                    return $0.city < $1.city
                 }
             }
             let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p)
@@ -295,7 +294,7 @@ class MainViewModel: MainViewModelType {
     private func getFavouriteGroup(id: String, servers: [ServerModel]) -> GroupModel? {
         var groups: [GroupModel] = []
         for server in servers {
-            for group in (server.groups ?? []) {
+            for group in (server.groups) {
                 groups.append(group)
             }
         }
@@ -333,9 +332,9 @@ class MainViewModel: MainViewModelType {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.instance)
             .subscribe(onNext: { [self] data in
-            customConfigs.onNext(data)
+                customConfigs.onNext(data)
                 updateCustomConfigLatency()
-        }).disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
     }
 
     func updateCustomConfigLatency() {
@@ -438,11 +437,11 @@ class MainViewModel: MainViewModelType {
     }
 
     func updateTrustNetworkSwitch(network: WifiNetwork, status: Bool) {
-            localDatabase.updateWifiNetwork(network: network,
-                                            properties: [
-                                                Fields.WifiNetwork.trustStatus: !status,
-                                                Fields.WifiNetwork.preferredProtocolStatus: false
-                                            ])
+        localDatabase.updateWifiNetwork(network: network,
+                                        properties: [
+                                            Fields.WifiNetwork.trustStatus: !status,
+                                            Fields.WifiNetwork.preferredProtocolStatus: false
+                                        ])
     }
 
     func loadServerList() {
@@ -464,5 +463,9 @@ class MainViewModel: MainViewModelType {
 
     func updateSSID() {
         updateSSIDTrigger.onNext(())
+    }
+
+    func getServerModel(from groupId: Int) -> ServerModel? {
+        try? locationsManager.getLocation(from: String(groupId)).0
     }
 }

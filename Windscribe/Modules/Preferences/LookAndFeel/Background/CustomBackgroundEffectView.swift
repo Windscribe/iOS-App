@@ -66,7 +66,7 @@ class CustomBackgroundEffectView: UIView {
 
 
     private lazy var header = SelectableHeaderView(
-        type: .appBackground,
+        type: LookAndFeelViewType.appBackground,
         isDarkMode: isDarkMode)
         .then {
             $0.disableDropdown()
@@ -215,7 +215,7 @@ class CustomBackgroundEffectView: UIView {
 
         // Footer
         footerView.do {
-            $0.content = SelectionViewType.appBackground.description
+            $0.content = LookAndFeelViewType.appBackground.description
             $0.hideShowExplainIcon(true)
         }
         containerStack.addArrangedSubview(footerView)

@@ -62,7 +62,7 @@ class ServerListCell: SwipeTableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
-        backgroundColor = UIColor.white
+        backgroundColor = .clear
 
         locationLoadImage.image = UIImage(named: ImagesAsset.locationLoad)
         actionImage.image = UIImage(named: ImagesAsset.cellExpand)
@@ -101,6 +101,7 @@ class ServerListCell: SwipeTableViewCell {
         actionImage.translatesAutoresizingMaskIntoConstraints = false
         nameInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         healthCircle.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // icon
@@ -121,8 +122,11 @@ class ServerListCell: SwipeTableViewCell {
             healthCircle.heightAnchor.constraint(equalTo: locationLoadImage.heightAnchor),
             healthCircle.widthAnchor.constraint(equalTo: locationLoadImage.widthAnchor),
 
+            // nameLabel
+            nameLabel.heightAnchor.constraint(equalToConstant: 20),
+
             // nameInfoStackView
-            nameInfoStackView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            nameInfoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             nameInfoStackView.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 16),
 
             // actionImage
@@ -147,9 +151,30 @@ class ServerListCell: SwipeTableViewCell {
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         isDarkMode.subscribe(onNext: { isDark in
-            self.backgroundColor = isDark ? .nightBlue : .white
             self.nameLabel.textColor = isDark ? .white : .nightBlue
             self.actionImage.setImageColor(color: isDark ? .white : .nightBlue)
         }).disposed(by: disposeBag)
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        setPressState(active: true)
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        setPressState(active: false)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        setPressState(active: false)
+    }
+
+    func setPressState(active: Bool) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + (active ? 0.0 : 0.3)) { [weak self] in
+            self?.updateUI()
+            self?.backgroundColor = active ? .whiteWithOpacity(opacity: 0.05) : .clear
+        }
     }
 }

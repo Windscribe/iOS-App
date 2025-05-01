@@ -22,7 +22,6 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
     var isSignalVisible: Bool { get }
 
     func favoriteSelected()
-    func setPressed(_ isPressed: Bool)
 }
 
 class BaseNodeCellViewModel: BaseNodeCellViewModelType {
@@ -31,7 +30,6 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var favNodes: [FavNode] = []
     var isFavourited: Bool = false
     var minTime = -1
-    var isPressed = false
 
     let updateUISubject = PublishSubject<Void>()
     let disposeBag = DisposeBag()
@@ -59,7 +57,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var actionRightOffset: CGFloat { 24.0 }
 
     var actionOpacity: Float {
-        isPressed ? 1.0 : 0.4
+        0.4
     }
 
     var nameOpacity: Float { 1.0 }
@@ -97,10 +95,6 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     }
 
     func favoriteSelected() { }
-
-    func setPressed(_ isPressed: Bool) {
-        self.isPressed = isPressed
-    }
 
     private func getSignalLevel(minTime: Int) -> Int {
         var signalLevel = 0
@@ -144,8 +138,8 @@ class BaseNodeCell: ServerListCell {
         nickNameLabel.textColor = UIColor.nightBlue
         nameInfoStackView.addArrangedSubview(nickNameLabel)
 
-        latencyLabel.font = UIFont.bold(size: 9)
-        latencyLabel.layer.opacity = 0.8
+        latencyLabel.font = UIFont.medium(size: 9)
+        latencyLabel.layer.opacity = 0.7
         latencyLabel.textColor = UIColor.nightBlue
         contentView.addSubview(latencyLabel)
 
@@ -155,32 +149,6 @@ class BaseNodeCell: ServerListCell {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        setPressState(active: true)
-    }
-
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        setPressState(active: false)
-    }
-
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        setPressState(active: false)
-    }
-
-    func setPressState(active: Bool) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (active ? 0.0 : 0.3)) { [weak self] in
-            self?.nickNameLabel.layer.opacity = active ? 1 : 0.4
-            self?.favButton.layer.opacity = active ? 1 : 0.4
-            self?.latencyLabel.layer.opacity = active ? 1 : 0.8
-            self?.signalBarsIcon.layer.opacity = active ? 1 : 0.8
-            self?.baseNodeCellViewModel?.setPressed(active)
-            self?.updateUI()
-        }
     }
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
@@ -199,8 +167,12 @@ class BaseNodeCell: ServerListCell {
         favButton.translatesAutoresizingMaskIntoConstraints = false
         latencyLabel.translatesAutoresizingMaskIntoConstraints = false
         signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
+        nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            // nickNameLabel
+            nickNameLabel.heightAnchor.constraint(equalToConstant: 16),
+
             // favButton
             favButton.centerYAnchor.constraint(equalTo: actionImage.centerYAnchor),
             favButton.centerXAnchor.constraint(equalTo: actionImage.centerXAnchor),
@@ -210,11 +182,12 @@ class BaseNodeCell: ServerListCell {
             // latencyLabel
             latencyLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 6),
             latencyLabel.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
+            latencyLabel.heightAnchor.constraint(equalToConstant: 12),
 
             // latencyLabel
-            signalBarsIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: -4),
+            signalBarsIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: -6),
             signalBarsIcon.centerXAnchor.constraint(equalTo: latencyLabel.centerXAnchor),
-            signalBarsIcon.heightAnchor.constraint(equalToConstant: 10),
+            signalBarsIcon.heightAnchor.constraint(equalToConstant: 11),
             signalBarsIcon.widthAnchor.constraint(equalToConstant: 11)
         ])
     }

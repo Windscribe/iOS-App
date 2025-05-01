@@ -294,7 +294,9 @@ class ViewModels: Assembly {
             ProtocolSwitchDelegateViewModel()
         }.inObjectScope(.transient)
         container.register(LatencyViewModel.self) { r in
-            LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!, serverRepository: r.resolve(ServerRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!)
+            LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!,
+                                 serverRepository: r.resolve(ServerRepository.self)!,
+                                 staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
         container.register(PopUpMaintenanceLocationModelType.self) { r in
             PopUpMaintenanceLocationModel(themeManager: r.resolve(ThemeManager.self)!)

@@ -39,10 +39,10 @@ class NetworkViewController: WSNavigationViewController {
 
     private func createViewSecure() -> ConnectionSecureView {
         let view = ConnectionSecureView(isDarkMode: viewModel.isDarkMode)
-        view.titleLabel.text = SelectionViewType.autoSecure.title
-        view.setImage(UIImage(named:SelectionViewType.autoSecure.asset))
+        view.titleLabel.text = GeneralViewType.autoSecure.title
+        view.setImage(UIImage(named:GeneralViewType.autoSecure.asset))
         view.hideShowExplainIcon()
-        view.subTitleLabel.text = SelectionViewType.autoSecure.description
+        view.subTitleLabel.text = GeneralViewType.autoSecure.description
         view.connectionSecureViewSwitchAcction = { [weak self] in
             self?.viewModel.toggleAutoSecure()
             self?.viewModel.updateTrustNetwork(self?.viewModel.trustNetworkStatus ?? false, completion: {
@@ -53,7 +53,7 @@ class NetworkViewController: WSNavigationViewController {
     }
 
     lazy var preferredProtocolView: ConnectionModeView = {
-        let vw = ConnectionModeView(optionType: .preferredProtocol,
+        let vw = ConnectionModeView(optionType: GeneralViewType.preferredProtocol,
                                     currentSwitchOption: viewModel.showPreferredProtocol,
                                     currentProtocol: viewModel.preferredProtocol ?? "",
                                     listProtocolOption: viewModel.getProtocols(),
