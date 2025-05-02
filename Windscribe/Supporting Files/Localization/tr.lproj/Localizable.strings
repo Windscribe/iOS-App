@@ -353,7 +353,6 @@
 "Software Licenses" = "Yazılım Lisansları";
 "Connected DNS" = "Bağlı DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe'a bağlıyken DNS sunucusunu seçin.";
-"Custom" = "Özel";
 "Pro" = "Lehinde";
 "Enabled" = "aktif";
 "Disabled" = "Engelli";
@@ -458,3 +457,7 @@
 "Continue with Google" = "Google ile Devam Et";
 "Continue with Apple" = "Apple ile Devam Et";
 "Emergency Connect On" = "Acil Bağlantı Açık";
+
+"None" = "Yok";
+"Bundled" = "Paketli";
+"Custom" = "Özel";

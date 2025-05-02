@@ -337,7 +337,6 @@
 "Subject" = "主题";
 "Connected DNS" = "连接的域名解析";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "在连接到Windscribe时选择DNS服务器。";
-"Custom" = "习惯";
 "Pro" = "親";
 "Enabled" = "已啟用";
 "Disabled" = "已停用";
@@ -442,3 +441,7 @@
 "Continue with Google" = "继续使用 Google";
 "Continue with Apple" = "继续使用 Apple";
 "Emergency Connect On" = "紧急连接已开启";
+
+"None" = "无";
+"Bundled" = "内置";
+"Custom" = "习惯";

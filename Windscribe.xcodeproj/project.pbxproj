@@ -4466,12 +4466,12 @@
 		F4693E462DB0285700ECD6C4 /* LookAndFeel */ = {
 			isa = PBXGroup;
 			children = (
-				1ED23F832DC28E0E00C7BEE5 /* CustomLocationsAlertType.swift */,
-				1ED23F7A2DBAA20400C7BEE5 /* LookAndFeelViewType.swift */,
 				F4693E4D2DB7CC5800ECD6C4 /* Background */,
 				F499357C2DAEE80700108558 /* Sound */,
 				F4693E472DB028A700ECD6C4 /* LookAndFeelViewController.swift */,
 				F4693E4B2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift */,
+				1ED23F7A2DBAA20400C7BEE5 /* LookAndFeelViewType.swift */,
+				1ED23F832DC28E0E00C7BEE5 /* CustomLocationsAlertType.swift */,
 			);
 			path = LookAndFeel;
 			sourceTree = "<group>";

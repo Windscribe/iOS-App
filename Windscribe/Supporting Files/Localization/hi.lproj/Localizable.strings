@@ -377,7 +377,6 @@
 "Share Windscribe with a friend!" = "एक दोस्त के साथ Windscribe साझा करें!";
 "Connected DNS" = "कनेक्टेड DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "विंडस्क्राइब से कनेक्ट करते समय DNS सर्वर का चयन करें।";
-"Custom" = "परम्परा";
 "Pro" = "प्रो";
 "Enabled" = "सक्षम";
 "Disabled" = "अक्षम";
@@ -466,3 +465,7 @@
 "Continue with Google" = "Google के साथ जारी रखें";
 "Continue with Apple" = "Apple के साथ जारी रखें";
 "Emergency Connect On" = "आपातकालीन कनेक्ट चालू";
+
+"None" = "कोई नहीं";
+"Bundled" = "बंडल किया गया";
+"Custom" = "परम्परा";

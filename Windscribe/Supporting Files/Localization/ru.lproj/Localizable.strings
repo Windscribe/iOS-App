@@ -337,7 +337,6 @@
 "Subject" = "Тема";
 "Connected DNS" = "DNS в туннеле";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Выберите DNS-сервер при подключении к Windscribe.";
-"Custom" = "Пользовательский";
 "Pro" = "Про";
 "Enabled" = "Включено";
 "Disabled" = "Отключено";
@@ -444,3 +443,7 @@
 "Continue with Google" = "Продолжить с Google";
 "Continue with Apple" = "Продолжить с Apple";
 "Emergency Connect On" = "Аварийное подключение включено";
+
+"None" = "Нет";
+"Bundled" = "В комплекте";
+"Custom" = "Пользовательский";

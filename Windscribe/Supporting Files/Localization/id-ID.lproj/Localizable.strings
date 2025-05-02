@@ -337,7 +337,6 @@
 "Subject" = "Perihal";
 "Connected DNS" = "DNS yang tersambung";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Pilih server DNS saat terhubung ke Windscribe.";
-"Custom" = "Adat";
 "Pro" = "Pro";
 "Enabled" = "Diaktifkan";
 "Disabled" = "Cacat";
@@ -442,3 +441,7 @@
 "Continue with Google" = "Lanjutkan dengan Google";
 "Continue with Apple" = "Lanjutkan dengan Apple";
 "Emergency Connect On" = "Koneksi darurat aktif";
+
+"None" = "Tidak ada";
+"Bundled" = "Dibundel";
+"Custom" = "Adat";

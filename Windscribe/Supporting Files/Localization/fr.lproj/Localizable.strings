@@ -337,7 +337,6 @@
 "Subject" = "Sujet";
 "Connected DNS" = "DNS connecté";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Sélectionnez le serveur DNS lorsque vous êtes connecté à Windscribe.";
-"Custom" = "Coutume";
 "Pro" = "Pro";
 "Enabled" = "Activé";
 "Disabled" = "Désactivé";
@@ -442,3 +441,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Continue with Google" = "Continuer avec Google";
 "Continue with Apple" = "Continuer avec Apple";
 "Emergency Connect On" = "Connexion d'urgence activée";
+
+"None" = "Aucun";
+"Bundled" = "Inclus";
+"Custom" = "Coutume";

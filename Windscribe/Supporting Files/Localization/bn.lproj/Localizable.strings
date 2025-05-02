@@ -366,7 +366,6 @@
 "Share Windscribe with a friend!" = "Share Windscribe with a friend!";
 "Connected DNS" = "সংযুক্ত DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe এর সাথে সংযুক্ত থাকার সময় DNS সার্ভার নির্বাচন করুন।.";
-"Custom" = "কাস্টম";
 "Invalid DNS server" = "Invalid DNS server";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Something went wrong. Please make sure you have entered a valid DNS server.";
 "Pro" = "প্রো";
@@ -474,3 +473,7 @@ app to generate the code." = "2FA প্রয়োজন। কোড জে�
 "Continue with Google" = "Google দিয়ে চালিয়ে যান";
 "Continue with Apple" = "Apple দিয়ে চালিয়ে যান";
 "Emergency Connect On" = "জরুরি সংযোগ চালু";
+
+"None" = "কিছু না";
+"Bundled" = "বান্ডেল করা";
+"Custom" = "কাস্টম";

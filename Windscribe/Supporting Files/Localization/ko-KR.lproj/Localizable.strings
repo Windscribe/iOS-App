@@ -337,7 +337,6 @@
 "Subject" = "제목";
 "Connected DNS" = "연결된 DNS";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe에 연결된 상태에서 DNS 서버를 선택합니다.";
-"Custom" = "관습";
 "Pro" = "프로";
 "Enabled" = "켜짐";
 "Disabled" = "비활성화됨";
@@ -442,3 +441,7 @@
 "Continue with Google" = "Google로 계속";
 "Continue with Apple" = "Apple로 계속";
 "Emergency Connect On" = "긴급 연결 켜짐";
+
+"None" = "없음";
+"Bundled" = "번들";
+"Custom" = "관습";
