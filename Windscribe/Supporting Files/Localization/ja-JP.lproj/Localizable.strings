@@ -340,7 +340,6 @@
 "Subject" = "件名";
 "Connected DNS" = "DNSに接続しました";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Windscribe に接続しているときに DNS サーバーを選択します。";
-"Custom" = "カスタム";
 "Pro" = "プロ";
 "Enabled" = "有効";
 "Disabled" = "無効";
@@ -445,3 +444,7 @@
 "Continue with Google" = "Googleで続ける";
 "Continue with Apple" = "Appleで続ける";
 "Emergency Connect On" = "緊急接続オン";
+
+"None" = "なし";
+"Bundled" = "バンドル";
+"Custom" = "カスタム";

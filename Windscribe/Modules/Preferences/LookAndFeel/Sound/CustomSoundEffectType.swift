@@ -111,9 +111,16 @@ extension SoundEffectType: Equatable {
 enum SoundEffectSubtype: String, CaseIterable {
     case arcade = "Arcade"
     case boing = "Boing"
+    case fartDeluxe = "Fart Deluxe"
     case fart = "Fart"
+    case ghostWind = "Ghost Wind"
+    case popCan = "Pop Can"
+    case scifi = "Sci Fi"
+    case subPing = "Sub Ping"
     case sword = "Sword"
+    case videoGame = "Video Game"
     case windscribe = "Windscribe"
+    case wizBy = "Wiz By"
 
     var displayName: String {
         return rawValue
@@ -122,20 +129,34 @@ enum SoundEffectSubtype: String, CaseIterable {
     var turnOnAssetName: String {
         switch self {
         case .arcade: return "ws_button_arcadeon"
-        case .boing: return "ws_button_boingon"
+        case .boing:  return "ws_button_boingon"
+        case .fartDeluxe: return "ws_button_multifarton"
         case .fart: return "ws_button_farton"
+        case .ghostWind: return "ws_button_ghostwindon"
+        case .popCan: return "ws_button_popcanon"
+        case .scifi: return "ws_button_scifion"
+        case .subPing: return "ws_button_subpingon"
         case .sword: return "ws_button_swordon"
+        case .videoGame: return "ws_button_videogameon"
         case .windscribe: return "ws_button_windscribeon"
+        case .wizBy: return "ws_button_wizbyon"
         }
     }
 
     var turnOffAssetName: String {
         switch self {
         case .arcade: return "ws_button_arcadeoff"
-        case .boing: return "ws_button_boingoff"
+        case .boing:  return "ws_button_boingoff"
+        case .fartDeluxe: return "ws_button_multifartoff"
         case .fart: return "ws_button_fartoff"
+        case .ghostWind: return "ws_button_ghostwindoff"
+        case .popCan: return "ws_button_popcanoff"
+        case .scifi: return "ws_button_scifioff"
+        case .subPing: return "ws_button_subpingoff"
         case .sword: return "ws_button_swordoff"
+        case .videoGame: return "ws_button_videogameoff"
         case .windscribe: return "ws_button_windscribeoff"
+        case .wizBy: return "ws_button_wizbyoff"
         }
     }
 }

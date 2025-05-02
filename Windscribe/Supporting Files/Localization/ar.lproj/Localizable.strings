@@ -337,7 +337,6 @@
 "Subject" = "الموضوع";
 "Connected DNS" = "DNS المتصل";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "حدد خادم DNS أثناء الاتصال ب Windscribe.";
-"Custom" = "تقليد";
 "Invalid DNS server" = "Invalid DNS server";
 "Pro" = "برو";
 "Enabled" = "مُفعَّل";
@@ -440,3 +439,7 @@
 "Continue with Google" = "متابعة باستخدام Google";
 "Continue with Apple" = "متابعة باستخدام Apple";
 "Emergency Connect On" = "تم تفعيل الاتصال الطارئ";
+
+"None" = "لا شيء";
+"Bundled" = "مضمّن";
+"Custom" = "تقليد";

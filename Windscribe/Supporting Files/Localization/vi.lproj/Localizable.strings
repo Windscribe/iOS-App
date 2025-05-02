@@ -346,7 +346,6 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Subject" = "Chủ đề";
 "Connected DNS" = "DNS được kết nối";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Chọn máy chủ DNS trong khi kết nối với Windscribe.";
-"Custom" = "Phong tục";
 "Pro" = "Tài khoản cao cấp";
 "Enabled" = "Đã kích hoạt";
 "Disabled" = "Vô hiệu hóa";
@@ -452,3 +451,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Continue with Google" = "Tiếp tục với Google";
 "Continue with Apple" = "Tiếp tục với Apple";
 "Emergency Connect On" = "Kết nối khẩn cấp bật";
+
+"None" = "Không có";
+"Bundled" = "Gói sẵn";
+"Custom" = "Phong tục";

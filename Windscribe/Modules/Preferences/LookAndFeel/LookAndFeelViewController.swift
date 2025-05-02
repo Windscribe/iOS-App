@@ -195,7 +195,7 @@ class LookAndFeelViewController: WSNavigationViewController {
     }
 
     func exportLocationsTapped() {
-        viewModel.exportLocations() { tempURL in
+        viewModel.exportLocations { tempURL in
             DispatchQueue.main.async {
                 let documentPicker = UIDocumentPickerViewController(forExporting: [tempURL], asCopy: true)
                 self.present(documentPicker, animated: true, completion: nil)

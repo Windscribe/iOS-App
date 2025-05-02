@@ -336,7 +336,6 @@
 "Subject" = "Asunto";
 "Connected DNS" = "DNS al conectarse";
 "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting." = "Selecciona el servidor DNS mientras estás conectado a Windscribe.";
-"Custom" = "Personalizado";
 "Pro" = "Pro";
 "Enabled" = "Habilitado";
 "Disabled" = "Discapacitado";
@@ -442,3 +441,7 @@
 "Continue with Google" = "Continuar con Google";
 "Continue with Apple" = "Continuar con Apple";
 "Emergency Connect On" = "Conexión de emergencia activada";
+
+"None" = "Ninguno";
+"Bundled" = "Incluido";
+"Custom" = "Personalizado";
