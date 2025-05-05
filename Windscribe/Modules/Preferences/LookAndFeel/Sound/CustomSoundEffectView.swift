@@ -155,7 +155,7 @@ class CustomSoundEffectView: UIView {
         contentWrapperView.addArrangedSubviews([header, makeInsetDivider()])
 
         setupRow(container: connectWrapperView,
-                 title: "When Connected",
+                 title: TextsAsset.LookFeel.connectedActionTitle,
                  valueLabel: connectValueLabel,
                  selector: #selector(tapConnected))
         contentWrapperView.addArrangedSubview(connectWrapperView)
@@ -173,7 +173,7 @@ class CustomSoundEffectView: UIView {
 
         // Disconnected
         setupRow(container: disconnectWrapperView,
-                 title: "When Disconnected",
+                 title: TextsAsset.LookFeel.disconnectedActionTitle,
                  valueLabel: disconnectValueLabel,
                  selector: #selector(tapDisconnected))
         contentWrapperView.addArrangedSubview(disconnectWrapperView)
@@ -352,13 +352,13 @@ class CustomSoundEffectView: UIView {
         if let connectPath = connectCurrentSoundPath {
             connectCustomValueLabel.text = URL(fileURLWithPath: connectPath).lastPathComponent
         } else {
-            connectCustomValueLabel.text = "[no selection]"
+            connectCustomValueLabel.text =  "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
         }
 
         if let disconnectPath = disconnectCurrentSoundPath {
             disconnectCustomValueLabel.text = URL(fileURLWithPath: disconnectPath).lastPathComponent
         } else {
-            disconnectCustomValueLabel.text = "[no selection]"
+            disconnectCustomValueLabel.text = "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
         }
     }
 

@@ -445,3 +445,15 @@
 "None" = "Brak";
 "Bundled" = "Zestaw";
 "Custom" = "Niestandardowe";
+
+"Unknown API error" = "Nieznany błąd API";
+"Login code expired. Please try again." = "Kod logowania wygasł. Spróbuj ponownie.";
+"Aspect Ratio Mode" = "Tryb proporcji obrazu";
+"When Connected" = "Po połączeniu";
+"When Disconnected" = "Po rozłączeniu";
+"no selection" = "brak wyboru";
+"Rename Locations" = "Zmień nazwy lokalizacji";
+"Change location names to your liking." = "Zmień nazwy lokalizacji według własnych upodobań.";
+"Export" = "Eksportuj";
+"Import" = "Importuj";
+"Reset" = "Resetuj";

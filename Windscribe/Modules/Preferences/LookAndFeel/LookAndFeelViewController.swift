@@ -58,8 +58,8 @@ class LookAndFeelViewController: WSNavigationViewController {
 
     private lazy var renameLocationsRow: HelpView = {
         let row = HelpView(item: HelpItem(icon: ImagesAsset.Help.community,
-                                          title: "Rename Locations",
-                                          subTitle: "Change location names to your liking."),
+                                          title: TextsAsset.LookFeel.renameLocationsTitle,
+                                          subTitle: TextsAsset.LookFeel.renameLocationsDescription),
                            type: .navigation,
                            actionableHeader: false,
                            delegate: nil,
@@ -82,17 +82,20 @@ class LookAndFeelViewController: WSNavigationViewController {
         return row
     }()
 
-    private lazy var exportRow = HelpSubRowView(header: "Export",
-                                                isDarkMode: viewModel.isDarkMode,
-                                                delegate: self)
+    private lazy var exportRow = HelpSubRowView(
+        header: TextsAsset.LookFeel.exportActionTitle,
+        isDarkMode: viewModel.isDarkMode,
+        delegate: self)
 
-    private lazy var importRow = HelpSubRowView(header: "Import",
-                                                 isDarkMode: viewModel.isDarkMode,
-                                                 delegate: self)
+    private lazy var importRow = HelpSubRowView(
+        header: TextsAsset.LookFeel.importActionTitle,
+        isDarkMode: viewModel.isDarkMode,
+        delegate: self)
 
-    private lazy var resetRow = HelpSubRowView(header: "Reset",
-                                               isDarkMode: viewModel.isDarkMode,
-                                               delegate: self)
+    private lazy var resetRow = HelpSubRowView(
+        header: TextsAsset.LookFeel.resetActionTitle,
+        isDarkMode: viewModel.isDarkMode,
+        delegate: self)
 
     // Version
 

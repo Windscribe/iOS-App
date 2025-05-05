@@ -445,3 +445,15 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "None" = "Aucun";
 "Bundled" = "Inclus";
 "Custom" = "Coutume";
+
+"Unknown API error" = "Erreur API inconnue";
+"Login code expired. Please try again." = "Le code de connexion a expiré. Veuillez réessayer.";
+"Aspect Ratio Mode" = "Mode de rapport hauteur/largeur";
+"When Connected" = "Lors de la connexion";
+"When Disconnected" = "Lors de la déconnexion";
+"no selection" = "aucune sélection";
+"Rename Locations" = "Renommer les emplacements";
+"Change location names to your liking." = "Modifiez les noms des emplacements selon vos préférences.";
+"Export" = "Exporter";
+"Import" = "Importer";
+"Reset" = "Réinitialiser";

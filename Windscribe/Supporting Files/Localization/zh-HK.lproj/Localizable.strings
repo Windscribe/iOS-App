@@ -445,3 +445,15 @@
 "None" = "無";
 "Bundled" = "內建";
 "Custom" = "習慣";
+
+"Unknown API error" = "未知的 API 錯誤";
+"Login code expired. Please try again." = "登入代碼已過期。請再試一次。";
+"Aspect Ratio Mode" = "長寬比模式";
+"When Connected" = "連接時";
+"When Disconnected" = "斷線時";
+"no selection" = "沒有選擇";
+"Rename Locations" = "重新命名位置";
+"Change location names to your liking." = "可根據需要修改位置名稱。";
+"Export" = "匯出";
+"Import" = "匯入";
+"Reset" = "重設";

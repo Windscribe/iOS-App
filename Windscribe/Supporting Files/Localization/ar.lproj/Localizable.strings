@@ -443,3 +443,15 @@
 "None" = "لا شيء";
 "Bundled" = "مضمّن";
 "Custom" = "تقليد";
+
+"Unknown API error" = "خطأ غير معروف في واجهة API";
+"Login code expired. Please try again." = "انتهت صلاحية رمز تسجيل الدخول. يرجى المحاولة مرة أخرى.";
+"Aspect Ratio Mode" = "وضع نسبة العرض إلى الارتفاع";
+"When Connected" = "عند الاتصال";
+"When Disconnected" = "عند قطع الاتصال";
+"no selection" = "لا يوجد اختيار";
+"Rename Locations" = "إعادة تسمية المواقع";
+"Change location names to your liking." = "غيّر أسماء المواقع حسب رغبتك.";
+"Export" = "تصدير";
+"Import" = "استيراد";
+"Reset" = "إعادة تعيين";

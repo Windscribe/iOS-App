@@ -64,7 +64,6 @@ class CustomBackgroundEffectView: UIView {
 
     private let footerView: FooterView
 
-
     private lazy var header = SelectableHeaderView(
         type: LookAndFeelViewType.appBackground,
         isDarkMode: isDarkMode)
@@ -170,7 +169,7 @@ class CustomBackgroundEffectView: UIView {
 
         // Aspect Ratio
         setupRow(container: aspectRatioWrapperView,
-                 title: "Aspect Ratio Mode",
+                 title: TextsAsset.LookFeel.aspectRatioModeTitle,
                  valueLabel: aspectRatioValueLabel,
                  selector: #selector(tapAspectRatio))
         contentWrapperView.do {
@@ -180,7 +179,7 @@ class CustomBackgroundEffectView: UIView {
 
         // Connected
         setupRow(container: connectWrapperView,
-                 title: "When Connected",
+                 title: TextsAsset.LookFeel.connectedActionTitle,
                  valueLabel: connectValueLabel,
                  selector: #selector(tapConnected))
         contentWrapperView.addArrangedSubview(connectWrapperView)
@@ -198,7 +197,7 @@ class CustomBackgroundEffectView: UIView {
 
         // Disconnected
         setupRow(container: disconnectWrapperView,
-                 title: "When Disconnected",
+                 title: TextsAsset.LookFeel.disconnectedActionTitle,
                  valueLabel: disconnectValueLabel,
                  selector: #selector(tapDisconnected))
         contentWrapperView.addArrangedSubview(disconnectWrapperView)
@@ -372,8 +371,8 @@ class CustomBackgroundEffectView: UIView {
         connectCustomWrapperView.isHidden = connectCurrentType != .custom
         disconnectCustomWrapperView.isHidden = disconnectCurrentType != .custom
 
-        connectCustomValueLabel.text = "[no selection]"
-        disconnectCustomValueLabel.text = "[no selection]"
+        connectCustomValueLabel.text =  "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
+        disconnectCustomValueLabel.text = "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
     }
 
     // MARK: Dropdown Triggers

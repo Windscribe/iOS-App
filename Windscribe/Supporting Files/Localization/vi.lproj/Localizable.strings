@@ -455,3 +455,15 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "None" = "Không có";
 "Bundled" = "Gói sẵn";
 "Custom" = "Phong tục";
+
+"Unknown API error" = "Lỗi API không xác định";
+"Login code expired. Please try again." = "Mã đăng nhập đã hết hạn. Vui lòng thử lại.";
+"Aspect Ratio Mode" = "Chế độ Tỷ lệ Khung hình";
+"When Connected" = "Khi được kết nối";
+"When Disconnected" = "Khi ngắt kết nối";
+"no selection" = "chưa chọn";
+"Rename Locations" = "Đổi tên vị trí";
+"Change location names to your liking." = "Thay đổi tên vị trí theo ý bạn.";
+"Export" = "Xuất";
+"Import" = "Nhập";
+"Reset" = "Đặt lại";

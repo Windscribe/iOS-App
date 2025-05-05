@@ -443,3 +443,15 @@
 "None" = "Nessuno";
 "Bundled" = "Incluso";
 "Custom" = "Costume";
+
+"Unknown API error" = "Errore API sconosciuto";
+"Login code expired. Please try again." = "Il codice di accesso è scaduto. Riprova.";
+"Aspect Ratio Mode" = "Modalità proporzioni";
+"When Connected" = "Quando connesso";
+"When Disconnected" = "Quando disconnesso";
+"no selection" = "nessuna selezione";
+"Rename Locations" = "Rinomina località";
+"Change location names to your liking." = "Cambia i nomi delle località a tuo piacimento.";
+"Export" = "Esporta";
+"Import" = "Importa";
+"Reset" = "Reimposta";

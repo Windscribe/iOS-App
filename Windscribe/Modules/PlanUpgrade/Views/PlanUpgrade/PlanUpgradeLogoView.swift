@@ -77,12 +77,6 @@ class PlanUpgradeLogoView: UIView {
             $0.edges.equalToSuperview()
         }
 
-//        container.addSubview(containerBackground)
-//
-//        containerBackground.snp.makeConstraints {
-//            $0.edges.equalToSuperview()
-//        }
-
         container.addSubview(logoStackView)
 
         logoStackView.snp.makeConstraints {

@@ -461,3 +461,15 @@
 "None" = "Yok";
 "Bundled" = "Paketli";
 "Custom" = "Özel";
+
+"Unknown API error" = "Bilinmeyen API hatası";
+"Login code expired. Please try again." = "Giriş kodunun süresi doldu. Lütfen tekrar deneyin.";
+"Aspect Ratio Mode" = "En Boy Oranı Modu";
+"When Connected" = "Bağlıyken";
+"When Disconnected" = "Bağlantı Kesildiğinde";
+"no selection" = "seçim yok";
+"Rename Locations" = "Konumları Yeniden Adlandır";
+"Change location names to your liking." = "Konum adlarını istediğiniz gibi değiştirin.";
+"Export" = "Dışa Aktar";
+"Import" = "İçe Aktar";
+"Reset" = "Sıfırla";

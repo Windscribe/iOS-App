@@ -103,8 +103,6 @@ class LoginViewModelImpl: LoginViewModel {
             .sink { [weak self] completion in
                 guard let self = self else { return }
 
-                self.showLoadingView = false
-
                 if case let .failure(error) = completion {
                     self.logger.logE("LoginViewModel", "Failed to login: \(error)")
 
@@ -115,7 +113,7 @@ class LoginViewModelImpl: LoginViewModel {
                         self.failedState = .twoFactor(TextsAsset.twoFactorRequiredError)
                         self.show2FAField = true
                     case let Errors.apiError(e):
-                        self.failedState = .api(e.errorMessage ?? "Unknown API error")
+                        self.failedState = .api(e.errorMessage ?? TextsAsset.unknownAPIError)
                     default:
                         if let error = error as? Errors {
                             self.failedState = .network(error.description)
@@ -123,6 +121,8 @@ class LoginViewModelImpl: LoginViewModel {
                             self.failedState = .network(error.localizedDescription)
                         }
                     }
+
+                    self.showLoadingView = false
                 }
             } receiveValue: { [weak self] session in
                 self?.preferences.saveLoginDate(date: Date())
@@ -207,7 +207,7 @@ class LoginViewModelImpl: LoginViewModel {
 
         if secondsPassed > loginCodeResponse.ttl {
             logger.logD("LoginViewModel", "Failed to verify XPress login code in TTL. Giving up.")
-            failedState = .network("Login code expired. Please try again.")
+            failedState = .network(TextsAsset.loginCodeExpired)
         }
     }
 
