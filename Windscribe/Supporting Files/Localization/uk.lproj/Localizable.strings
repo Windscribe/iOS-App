@@ -446,3 +446,15 @@
 "None" = "Немає";
 "Bundled" = "У комплекті";
 "Custom" = "Нестандартний";
+
+"Unknown API error" = "Невідома помилка API";
+"Login code expired. Please try again." = "Термін дії коду входу закінчився. Спробуйте ще раз.";
+"Aspect Ratio Mode" = "Режим співвідношення сторін";
+"When Connected" = "Під час підключення";
+"When Disconnected" = "Після відключення";
+"no selection" = "немає вибору";
+"Rename Locations" = "Перейменувати місця";
+"Change location names to your liking." = "Змініть назви місць за вашим бажанням.";
+"Export" = "Експортувати";
+"Import" = "Імпортувати";
+"Reset" = "Скинути";

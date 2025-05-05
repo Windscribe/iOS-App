@@ -445,3 +445,15 @@
 "None" = "Tidak ada";
 "Bundled" = "Dibundel";
 "Custom" = "Adat";
+
+"Unknown API error" = "Kesalahan API tidak diketahui";
+"Login code expired. Please try again." = "Kode login telah kedaluwarsa. Silakan coba lagi.";
+"Aspect Ratio Mode" = "Mode Rasio Aspek";
+"When Connected" = "Saat Terhubung";
+"When Disconnected" = "Saat Terputus";
+"no selection" = "tidak ada pilihan";
+"Rename Locations" = "Ganti Nama Lokasi";
+"Change location names to your liking." = "Ubah nama lokasi sesuai keinginan Anda.";
+"Export" = "Ekspor";
+"Import" = "Impor";
+"Reset" = "Atur Ulang";

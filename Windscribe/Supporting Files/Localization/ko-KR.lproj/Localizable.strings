@@ -445,3 +445,15 @@
 "None" = "없음";
 "Bundled" = "번들";
 "Custom" = "관습";
+
+"Unknown API error" = "알 수 없는 API 오류";
+"Login code expired. Please try again." = "로그인 코드가 만료되었습니다. 다시 시도하세요.";
+"Aspect Ratio Mode" = "화면 비율 모드";
+"When Connected" = "연결되었을 때";
+"When Disconnected" = "연결이 끊겼을 때";
+"no selection" = "선택 없음";
+"Rename Locations" = "위치 이름 바꾸기";
+"Change location names to your liking." = "위치 이름을 원하는 대로 변경하세요.";
+"Export" = "내보내기";
+"Import" = "가져오기";
+"Reset" = "초기화";

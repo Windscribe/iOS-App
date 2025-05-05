@@ -447,3 +447,15 @@
 "None" = "Nenhum";
 "Bundled" = "Incluído";
 "Custom" = "Personalizado";
+
+"Unknown API error" = "Erro de API desconhecido";
+"Login code expired. Please try again." = "O código de login expirou. Por favor, tente novamente.";
+"Aspect Ratio Mode" = "Modo de proporção";
+"When Connected" = "Quando conectado";
+"When Disconnected" = "Quando desconectado";
+"no selection" = "nenhuma seleção";
+"Rename Locations" = "Renomear localizações";
+"Change location names to your liking." = "Altere os nomes das localizações como quiser.";
+"Export" = "Exportar";
+"Import" = "Importar";
+"Reset" = "Repor";

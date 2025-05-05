@@ -469,3 +469,15 @@
 "None" = "कोई नहीं";
 "Bundled" = "बंडल किया गया";
 "Custom" = "परम्परा";
+
+"Unknown API error" = "अज्ञात API त्रुटि";
+"Login code expired. Please try again." = "लॉगिन कोड की समय सीमा समाप्त हो गई है। कृपया पुनः प्रयास करें।";
+"Aspect Ratio Mode" = "आस्पेक्ट रेशियो मोड";
+"When Connected" = "कनेक्ट होने पर";
+"When Disconnected" = "डिस्कनेक्ट होने पर";
+"no selection" = "कोई चयन नहीं";
+"Rename Locations" = "स्थान का नाम बदलें";
+"Change location names to your liking." = "स्थान के नाम अपनी पसंद के अनुसार बदलें।";
+"Export" = "निर्यात करें";
+"Import" = "आयात करें";
+"Reset" = "रीसेट करें";

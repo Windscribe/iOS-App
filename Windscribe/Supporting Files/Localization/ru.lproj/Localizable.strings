@@ -447,3 +447,15 @@
 "None" = "Нет";
 "Bundled" = "В комплекте";
 "Custom" = "Пользовательский";
+
+"Unknown API error" = "Неизвестная ошибка API";
+"Login code expired. Please try again." = "Срок действия кода входа истёк. Пожалуйста, попробуйте снова.";
+"Aspect Ratio Mode" = "Режим соотношения сторон";
+"When Connected" = "При подключении";
+"When Disconnected" = "При отключении";
+"no selection" = "нет выбора";
+"Rename Locations" = "Переименовать местоположения";
+"Change location names to your liking." = "Измените названия местоположений по своему вкусу.";
+"Export" = "Экспорт";
+"Import" = "Импорт";
+"Reset" = "Сбросить";'

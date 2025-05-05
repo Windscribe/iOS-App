@@ -448,3 +448,15 @@
 "None" = "なし";
 "Bundled" = "バンドル";
 "Custom" = "カスタム";
+
+"Unknown API error" = "不明なAPIエラー";
+"Login code expired. Please try again." = "ログインコードの有効期限が切れました。もう一度お試しください。";
+"Aspect Ratio Mode" = "アスペクト比モード";
+"When Connected" = "接続時";
+"When Disconnected" = "切断時";
+"no selection" = "選択なし";
+"Rename Locations" = "場所の名前を変更";
+"Change location names to your liking." = "お好みで場所の名前を変更できます。";
+"Export" = "エクスポート";
+"Import" = "インポート";
+"Reset" = "リセット";

@@ -445,3 +445,15 @@
 "None" = "Keine";
 "Bundled" = "Gebündelt";
 "Custom" = "Gewohnheit";
+
+"Unknown API error" = "Unbekannter API-Fehler";
+"Login code expired. Please try again." = "Der Anmeldecode ist abgelaufen. Bitte versuche es erneut.";
+"Aspect Ratio Mode" = "Seitenverhältnis-Modus";
+"When Connected" = "Bei Verbindung";
+"When Disconnected" = "Bei Trennung";
+"no selection" = "keine Auswahl";
+"Rename Locations" = "Standorte umbenennen";
+"Change location names to your liking." = "Benennen Sie die Standorte nach Wunsch um.";
+"Export" = "Exportieren";
+"Import" = "Importieren";
+"Reset" = "Zurücksetzen";

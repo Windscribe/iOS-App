@@ -617,6 +617,42 @@ enum TextsAsset {
             "Choose sounds to play when connection events occur.".localized
         }
 
+        static var aspectRatioModeTitle: String {
+            "Aspect Ratio Mode".localized
+        }
+
+        static var connectedActionTitle: String {
+            "When Connected".localized
+        }
+
+        static var disconnectedActionTitle: String {
+            "When Disconnected".localized
+        }
+
+        static var noSelectedActionTitle: String {
+            "no selected".localized
+        }
+
+        static var renameLocationsTitle: String {
+            "Rename Locations".localized
+        }
+
+        static var renameLocationsDescription: String {
+            "Change location names to your liking.".localized
+        }
+
+        static var exportActionTitle: String {
+            "Export".localized
+        }
+
+        static var importActionTitle: String {
+            "Import".localized
+        }
+
+        static var resetActionTitle: String {
+            "Reset".localized
+        }
+
         static func getValue(displayText: String) -> String? {
             switch displayText {
             case TextsAsset.appearances[0]:
@@ -1708,6 +1744,14 @@ enum TextsAsset {
 
     static var twoFactorInvalidError: String {
         return "Invalid 2FA code, please try again.".localized
+    }
+
+    static var unknownAPIError: String {
+        return "Unknown API error".localized
+    }
+
+    static var loginCodeExpired: String {
+        return "Login code expired. Please try again.".localized
     }
 
     static var cantGetConnectedWifi: String {
