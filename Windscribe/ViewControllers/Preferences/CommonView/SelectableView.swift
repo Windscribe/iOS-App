@@ -23,7 +23,6 @@ class SelectableView: UIStackView {
 
     weak var delegate: SelectableViewDelegate?
 
-
     private lazy var mainWrapperView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false

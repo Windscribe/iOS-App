@@ -10,7 +10,7 @@ protocol SelectionViewType {
     var asset: String { get }
     var title: String { get }
     var description: String { get }
-    var listOption: [String]  { get }
+    var listOption: [String] { get }
     var type: SelectableViewType { get }
 }
 

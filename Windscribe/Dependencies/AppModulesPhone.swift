@@ -115,7 +115,8 @@ class ViewModels: Assembly {
                                  logger: r.resolve(FileLogger.self)!,
                                  alertManager: r.resolve(AlertManagerV2.self)!,
                                  localDB: r.resolve(LocalDatabase.self)!,
-                                 serverRepository: r.resolve(ServerRepository.self)!)
+                                 serverRepository: r.resolve(ServerRepository.self)!,
+                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
@@ -303,9 +304,10 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(FlagsBackgroundViewModelType.self) { r in
-            FlagsBackgroundViewModel(preferences: r.resolve(Preferences.self)!,
+            FlagsBackgroundViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                      locationsManager: r.resolve(LocationsManagerType.self)!,
-                                     vpnManager: r.resolve(VPNManager.self)!)
+                                     vpnManager: r.resolve(VPNManager.self)!,
+                                     backgroundFileManager: r.resolve(BackgroundFileManaging.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConnectButtonViewModelType.self) { r in
@@ -458,6 +460,7 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(LookAndFeelViewModelType.self)
             c.logger = r.resolve(FileLogger.self)
             c.soundFileManager = r.resolve(SoundFileManaging.self)
+            c.backgroundFileManager = r.resolve(BackgroundFileManaging.self)
         }.inObjectScope(.transient)
         container.register(AccountViewController.self) { _ in
             AccountViewController()

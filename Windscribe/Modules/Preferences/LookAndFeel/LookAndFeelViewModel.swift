@@ -9,6 +9,7 @@
 import Foundation
 import RxSwift
 import UIKit
+import PhotosUI
 
 protocol LookAndFeelViewModelType: UIDocumentPickerDelegate {
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -27,6 +28,8 @@ protocol LookAndFeelViewModelType: UIDocumentPickerDelegate {
     // Background
     func getBackgroundEffect(for domain: BackgroundAssetDomainType) -> BackgroundEffectType
     func updateBackgroundEffectType(domain: BackgroundAssetDomainType, type: BackgroundEffectType)
+    func saveCustomBackgroundPath(domain: BackgroundAssetDomainType, path: String)
+    func getCustomBackgroundPath(for domain: BackgroundAssetDomainType) -> String?
 
     // Sound Effect
     func getSoundEffect(for domain: SoundAssetDomainType) -> SoundEffectType
@@ -51,6 +54,7 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
     let logger: FileLogger
     let alertManager: AlertManagerV2
     let serverRepository: ServerRepository
+    let lookAndFeelRepository: LookAndFeelRepositoryType
 
     // State
     let disposeBag = DisposeBag()
@@ -68,13 +72,15 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
          logger: FileLogger,
          alertManager: AlertManagerV2,
          localDB: LocalDatabase,
-         serverRepository: ServerRepository) {
+         serverRepository: ServerRepository,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.preferences = preferences
         self.themeManager = themeManager
         self.localDB = localDB
         self.logger = logger
         self.alertManager = alertManager
         self.serverRepository = serverRepository
+        self.lookAndFeelRepository = lookAndFeelRepository
         super.init()
         bindViews()
     }
@@ -163,24 +169,22 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
     }
 
     // Background
-    func getBackgroundEffect(for domain: BackgroundAssetDomainType) -> BackgroundEffectType {
-        let fieldValue: String = switch domain {
+    func getCustomBackgroundPath(for domain: BackgroundAssetDomainType) -> String? {
+        switch domain {
+        case .aspectRatio:
+            nil
         case .connect:
-            preferences.getBackgroundEffectConnect() ?? ""
+            lookAndFeelRepository.backgroundCustomConnectPath
         case .disconnect:
-            preferences.getBackgroundEffectDisconnect() ?? ""
-        default:
-            ""
+            lookAndFeelRepository.backgroundCustomDisconnectPath
         }
+    }
 
-        if fieldValue == Fields.Values.none {
-            return .none
-        } else if fieldValue == Fields.Values.custom {
-            return .custom
-        } else if let subtype = BackgroundEffectSubtype(rawValue: fieldValue) {
-            return .bundled(subtype: subtype)
-        } else {
-            return .none
+    func getBackgroundEffect(for domain: BackgroundAssetDomainType) -> BackgroundEffectType {
+        switch domain {
+        case .connect: lookAndFeelRepository.backgroundEffectConnect
+        case .disconnect: lookAndFeelRepository.backgroundEffectDisconnect
+        default: .none
         }
     }
 
@@ -188,32 +192,32 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
         switch domain {
         case .connect:
             backgroundConnect.onNext(type)
-            preferences.saveBackgroundEffectConnect(value: type.preferenceValue)
+            lookAndFeelRepository.updateBackgroundEffectConnect(effect: type)
         case .disconnect:
             backgroundDisconnect.onNext(type)
-            preferences.saveBackgroundEffectDisconnect(value: type.preferenceValue)
+            lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: type)
         default:
             return
         }
     }
 
     func getAspectRatio() -> BackgroundAspectRatioType {
-        let fieldValue = preferences.getAspectRatio() ?? ""
-
-        switch fieldValue {
-        case Fields.Values.stretch:
-            return .stretch
-        case Fields.Values.fill:
-            return .fill
-        case Fields.Values.tile:
-            return .tile
-        default:
-            return .stretch
-        }
+        return lookAndFeelRepository.backgroundCustomAspectRatio
     }
 
     func updateAspectRatioType(type: BackgroundAspectRatioType) {
-        preferences.saveAspectRatio(value: type.preferenceValue)
+        lookAndFeelRepository.updateBackgroundCustomAspectRatio(aspectRatio: type)
+    }
+
+    func saveCustomBackgroundPath(domain: BackgroundAssetDomainType, path: String) {
+        switch domain {
+        case .connect:
+            lookAndFeelRepository.updateBackgroundCustomConnectPath(path: path)
+        case .disconnect:
+            lookAndFeelRepository.updateBackgroundCustomDisconnectPath(path: path)
+        case .aspectRatio:
+            return
+        }
     }
 
     func getVersion() -> String {

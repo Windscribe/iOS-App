@@ -547,6 +547,10 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.aspectRatio)
     }
 
+    func aspectRatio() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.aspectRatio) ?? Observable.empty()
+    }
+
     // Sounds
     func saveSoundEffectConnect(value: String) {
         sharedDefault?.set(value, forKey: SharedKeys.connectSoundEffect)
@@ -582,19 +586,51 @@ class SharedSecretDefaults: Preferences {
 
     // Backgrounds
     func saveBackgroundEffectConnect(value: String) {
-        UserDefaults.standard.set(value, forKey: SharedKeys.connectBackgroundEffect)
+        sharedDefault?.set(value, forKey: SharedKeys.connectBackgroundEffect)
     }
 
     func getBackgroundEffectConnect() -> String? {
-        return UserDefaults.standard.string(forKey: SharedKeys.connectBackgroundEffect)
+        return sharedDefault?.string(forKey: SharedKeys.connectBackgroundEffect)
+    }
+
+    func backgroundEffectConnect() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.connectBackgroundEffect) ?? Observable.empty()
+    }
+
+    func saveBackgroundCustomConnectPath(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.connectBackgroundCustomPath)
+    }
+
+    func getBackgroundCustomConnectPath() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.connectBackgroundCustomPath)
+    }
+
+    func backgroundCustomConnectPath() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.connectBackgroundCustomPath) ?? Observable.empty()
     }
 
     func saveBackgroundEffectDisconnect(value: String) {
-        UserDefaults.standard.set(value, forKey: SharedKeys.disconnectBackgroundEffect)
+        sharedDefault?.set(value, forKey: SharedKeys.disconnectBackgroundEffect)
     }
 
     func getBackgroundEffectDisconnect() -> String? {
-        return UserDefaults.standard.string(forKey: SharedKeys.disconnectBackgroundEffect)
+        return sharedDefault?.string(forKey: SharedKeys.disconnectBackgroundEffect)
+    }
+
+    func backgroundEffectDisconnect() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.disconnectBackgroundEffect) ?? Observable.empty()
+    }
+
+    func saveBackgroundCustomDisconnectPath(value: String) {
+        sharedDefault?.set(value, forKey: SharedKeys.disconnectBackgroundCustomPath)
+    }
+
+    func getBackgroundCustomDisconnectPath() -> String? {
+        return sharedDefault?.string(forKey: SharedKeys.disconnectBackgroundCustomPath)
+    }
+
+    func backgroundCustomDisconnectPath() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.disconnectBackgroundCustomPath) ?? Observable.empty()
     }
 
     // Custom Locations Names {
