@@ -18,6 +18,7 @@ class LookAndFeelViewController: WSNavigationViewController {
     var viewModel: LookAndFeelViewModelType!
     var logger: FileLogger!
     var soundFileManager: SoundFileManaging!
+    var backgroundFileManager: BackgroundFileManaging!
 
     // MARK: UI Elements
 
@@ -36,7 +37,9 @@ class LookAndFeelViewController: WSNavigationViewController {
     private lazy var backgroundEffectRow = CustomBackgroundEffectView(
         isDarkMode: viewModel.isDarkMode,
         aspectRatioInitialType: viewModel.getAspectRatio(),
+        connectInitialBackgroundPath: viewModel.getCustomBackgroundPath(for: .connect),
         connectInitialType: viewModel.getBackgroundEffect(for: .connect),
+        disconnectInitialBackgroundPath: viewModel.getCustomBackgroundPath(for: .disconnect),
         disconnectInitialType: viewModel.getBackgroundEffect(for: .disconnect)
     ).then {
         $0.delegate = self
@@ -257,6 +260,20 @@ extension LookAndFeelViewController: CustomSoundEffectViewDelegate {
 }
 
 extension LookAndFeelViewController: CustomBackgroundEffectViewDelegate {
+    func customBackgroundViewPickedImage(_ view: CustomBackgroundEffectView, didpickImageFile url: URL, for domain: BackgroundAssetDomainType) {
+        backgroundFileManager.saveImageFile(from: url, for: domain) { [weak self] copiedURL in
+            guard let self = self, let copiedURL = copiedURL else {
+                return
+            }
+
+            DispatchQueue.main.async {
+                view.updateFileNameLabel(copiedURL.lastPathComponent, for: domain)
+                // Save the path to preferences
+                self.viewModel.saveCustomBackgroundPath(domain: domain, path: copiedURL.path)
+            }
+        }
+    }
+
     func customBackgroundDidChangeAspectRatio(type: BackgroundAspectRatioType) {
         viewModel.updateAspectRatioType(type: type)
     }

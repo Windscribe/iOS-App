@@ -47,7 +47,12 @@ enum LookAndFeelViewType: SelectionViewType {
         }
     }
 
-    var listOption: [String] { [] }
+    var listOption: [String] {
+        if self == .appearance {
+            return TextsAsset.appearances
+        }
+        return []
+    }
 
     var type: SelectableViewType {
         switch self {

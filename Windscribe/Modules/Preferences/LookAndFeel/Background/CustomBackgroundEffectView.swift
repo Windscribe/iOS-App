@@ -12,6 +12,7 @@ import RxSwift
 protocol CustomBackgroundEffectViewDelegate: AnyObject {
     func customBackgroundDidChangeAspectRatio(type: BackgroundAspectRatioType)
     func customBackgroundDidChangeType(_ domain: BackgroundAssetDomainType, type: BackgroundEffectType)
+    func customBackgroundViewPickedImage(_ view: CustomBackgroundEffectView, didpickImageFile url: URL, for domain: BackgroundAssetDomainType)
 }
 
 class CustomBackgroundEffectView: UIView {
@@ -37,6 +38,8 @@ class CustomBackgroundEffectView: UIView {
     private var connectCurrentType: BackgroundEffectType
     private var disconnectCurrentType: BackgroundEffectType
     private var activeDropdownDomain: BackgroundAssetDomainType?
+    private var connectCurrentBackgroundPath: String?
+    private var disconnectCurrentBackgroundPath: String?
 
     // UI
     private let mainWrapperView = UIView()
@@ -88,13 +91,17 @@ class CustomBackgroundEffectView: UIView {
 
     init(isDarkMode: BehaviorSubject<Bool>,
          aspectRatioInitialType: BackgroundAspectRatioType,
+         connectInitialBackgroundPath: String?,
          connectInitialType: BackgroundEffectType,
+         disconnectInitialBackgroundPath: String?,
          disconnectInitialType: BackgroundEffectType) {
         self.isDarkMode = isDarkMode
 
         aspectRatioCurrentType = aspectRatioInitialType
         connectCurrentType = connectInitialType
         disconnectCurrentType = disconnectInitialType
+        connectCurrentBackgroundPath = connectInitialBackgroundPath
+        disconnectCurrentBackgroundPath = disconnectInitialBackgroundPath
         footerView = FooterView(isDarkMode: isDarkMode)
 
         super.init(frame: .zero)
@@ -371,8 +378,21 @@ class CustomBackgroundEffectView: UIView {
         connectCustomWrapperView.isHidden = connectCurrentType != .custom
         disconnectCustomWrapperView.isHidden = disconnectCurrentType != .custom
 
-        connectCustomValueLabel.text =  "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
-        disconnectCustomValueLabel.text = "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
+        restoreCustomBackgroundSelections()
+    }
+
+    private func restoreCustomBackgroundSelections() {
+        if let connectPath = connectCurrentBackgroundPath {
+            connectCustomValueLabel.text = URL(fileURLWithPath: connectPath).lastPathComponent
+        } else {
+            connectCustomValueLabel.text = "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
+        }
+
+        if let disconnectPath = disconnectCurrentBackgroundPath {
+            disconnectCustomValueLabel.text = URL(fileURLWithPath: disconnectPath).lastPathComponent
+        } else {
+            disconnectCustomValueLabel.text = "[\(TextsAsset.LookFeel.noSelectedActionTitle)]"
+        }
     }
 
     // MARK: Dropdown Triggers
@@ -403,11 +423,13 @@ class CustomBackgroundEffectView: UIView {
     }
 
     @objc private func tapConnectedCustom() {
-        print("Select custom BACKGROUND for CONNECTED")
+        activeDropdownDomain = .connect
+        presentFilePicker()
     }
 
     @objc private func tapDisconnectedCustom() {
-        print("Select custom BACKGROUND for DISCONNECTED")
+        activeDropdownDomain = .disconnect
+        presentFilePicker()
     }
 }
 
@@ -531,6 +553,36 @@ extension CustomBackgroundEffectView: DropdownDelegate {
             delegate?.customBackgroundDidChangeType(
                 domain,
                 type: domain == .connect ? connectCurrentType : disconnectCurrentType)
+        }
+    }
+
+    func updateFileNameLabel(_ name: String, for domain: BackgroundAssetDomainType) {
+        switch domain {
+        case .connect:
+            connectCustomValueLabel.text = name
+        case .disconnect:
+            disconnectCustomValueLabel.text = name
+        case .aspectRatio:
+            return
+        }
+    }
+}
+
+extension CustomBackgroundEffectView: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedURL = urls.first else { return }
+
+        let domain = activeDropdownDomain ?? .connect
+        delegate?.customBackgroundViewPickedImage(self, didpickImageFile: selectedURL, for: domain)
+    }
+
+    private func presentFilePicker() {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.image])
+        picker.delegate = self
+        picker.allowsMultipleSelection = false
+
+        if let vc = self.parentViewController {
+            vc.present(picker, animated: true, completion: nil)
         }
     }
 }

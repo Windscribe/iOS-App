@@ -109,6 +109,9 @@ class Repository: Assembly {
                                   ipRepository: r.resolve(IPRepository.self)!)
         }.inObjectScope(.userScope)
 
+        container.register(LookAndFeelRepositoryType.self) { r in
+            LookAndFeelRepository(preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.userScope)
     }
 }
 
@@ -127,6 +130,9 @@ class Managers: Assembly {
         }.inObjectScope(.userScope)
         container.register(SoundFileManaging.self) { r in
             SoundFileManager(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+        container.register(BackgroundFileManaging.self) { r in
+            BackgroundFileManager(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(CustomSoundPlaybackManaging.self) { r in
             CustomSoundPlaybackManager(

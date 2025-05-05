@@ -156,13 +156,18 @@ protocol Preferences {
     // AspectRatio
     func saveAspectRatio(value: String)
     func getAspectRatio() -> String?
+    func aspectRatio() -> RxSwift.Observable<String?>
 
     // Backgrounds
     func saveBackgroundEffectConnect(value: String)
     func getBackgroundEffectConnect() -> String?
+    func saveBackgroundCustomConnectPath(value: String)
+    func getBackgroundCustomConnectPath() -> String?
 
     func saveBackgroundEffectDisconnect(value: String)
     func getBackgroundEffectDisconnect() -> String?
+    func saveBackgroundCustomDisconnectPath(value: String)
+    func getBackgroundCustomDisconnectPath() -> String?
 
     // Sounds
     func saveSoundEffectConnect(value: String)

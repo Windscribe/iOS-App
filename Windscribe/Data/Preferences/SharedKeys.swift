@@ -103,6 +103,8 @@ enum SharedKeys {
     // Backgrounds
     static let connectBackgroundEffect = "connectBackgroundEffect"
     static let disconnectBackgroundEffect = "disconnectBackgroundEffect"
+    static let connectBackgroundCustomPath = "connectBackgroundCustomPath"
+    static let disconnectBackgroundCustomPath = "disconnectBackgroundCustomPath"
 
     // Custom Locations Names
     static let customLocationNames = "customLocationNames"

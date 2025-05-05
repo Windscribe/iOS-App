@@ -500,7 +500,6 @@ extension CustomSoundEffectView: DropdownDelegate {
 }
 
 extension CustomSoundEffectView: UIDocumentPickerDelegate {
-
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let selectedURL = urls.first else { return }
 

@@ -19,7 +19,7 @@ enum BackgroundAspectRatioType {
     case fill
     case tile
 
-    init(aspectRatioType: String, subtypeTitle: String? = nil) {
+    init(aspectRatioType: String) {
         switch aspectRatioType {
         case TextsAsset.General.stretch:
             self = .stretch
