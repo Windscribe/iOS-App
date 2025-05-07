@@ -13,7 +13,7 @@ extension UIView {
     private static let kRotationAnimationKey = "rotationanimationkey"
     private static let kFlashAnimationKey = "flashanimationkey"
     private static let kPulseAnimationKey = "pulseanimationkey"
-    private static let themeManager = Assembler.resolve(ThemeManager.self)
+    private static let lookAndFeelRepo = Assembler.resolve(LookAndFeelRepositoryType.self)
 
     func rotate() {
         let rotation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -253,7 +253,7 @@ extension UIView {
 extension UIView {
     static func divider(color: UIColor? = nil, height: CGFloat = 1) -> UIView {
         let view = UIView()
-        view.backgroundColor = color ?? (themeManager.getIsDarkTheme() ? UIColor.whiteWithOpacity(opacity: 0.08) : UIColor.midnightWithOpacity(opacity: 0.08))
+        view.backgroundColor = color ?? (lookAndFeelRepo.isDarkMode ? UIColor.whiteWithOpacity(opacity: 0.08) : UIColor.midnightWithOpacity(opacity: 0.08))
         view.constrainHeight(height)
         return view
     }

@@ -214,22 +214,13 @@ enum ImagesAsset {
         static let brokenHeart = "broken-heart-white"
         static let proServerIcon = "pro-server-white"
 
-        static let cellSignalBarsLow = "cell-signal-bars-connected-low-white"
-        static let cellSignalBarsMedium = "cell-signal-bars-connected-med-white"
-        static let cellSignalBarsFull = "cell-signal-bars-connected-full-white"
-        static let cellSignalBarsDown = "cell-signal-bars-down-white"
-
         static let proNodeIcon = "pro-node-white"
-        static let locationDown = "location-down-white"
-        static let staticIPdc = "static-ip-dc-white"
-        static let staticIPres = "static-ip-res-white"
         static let externalLink = "external-link-white"
         static let delete = "delete-white"
         static let edit = "edit-white"
         static let dropDownIcon = "dropdown-icon-white"
         static let prefRightIcon = "pref-right-arrow-white"
         static let prefBackIcon = "pref-back-white"
-        static let tenGig = "ten-gig-white"
         static let filterIcons = ["malware": "malware-white", "ads": "ads-white", "social": "social-white",
                                   "porn": "porn-white", "gambling": "gambling-white", "fakenews": "fake-news-white",
                                   "competitors": "other-vpn-white", "cryptominers": "crypto-white"]

@@ -6,7 +6,6 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-
 import RxSwift
 import Swinject
 import UIKit

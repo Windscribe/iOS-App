@@ -14,7 +14,7 @@ protocol GeneralViewModelType {
     var hapticFeedback: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
     var languageUpdatedTrigger: PublishSubject<Void> { get }
-    var themeManager: ThemeManager { get }
+    var lookAndFeelRepo: LookAndFeelRepositoryType { get }
     func didSelectedLocationOrder(value: String)
     func updateHapticFeedback()
     func askForPushNotificationPermission()
@@ -28,7 +28,7 @@ protocol GeneralViewModelType {
 class GeneralViewModel: GeneralViewModelType {
     // MARK: - Dependencies
 
-    let themeManager: ThemeManager
+    let lookAndFeelRepo: LookAndFeelRepositoryType
     private let preferences: Preferences
     private let languageManager: LanguageManager
     private let pushNotificationManager: PushNotificationManagerV2
@@ -45,11 +45,11 @@ class GeneralViewModel: GeneralViewModelType {
     // MARK: - Data
 
     init(preferences: Preferences,
-         themeManager: ThemeManager,
+         lookAndFeelRepo: LookAndFeelRepositoryType,
          languageManager: LanguageManager,
          pushNotificationManager: PushNotificationManagerV2) {
         self.preferences = preferences
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.languageManager = languageManager
         self.pushNotificationManager = pushNotificationManager
         load()
@@ -64,7 +64,7 @@ class GeneralViewModel: GeneralViewModelType {
             self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
         }.disposed(by: disposeBag)
 
-        themeManager.darkTheme.subscribe { [weak self] data in
+        lookAndFeelRepo.isDarkModeSubject.subscribe { [weak self] data in
             self?.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 

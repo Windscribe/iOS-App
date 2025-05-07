@@ -49,7 +49,7 @@ class LoginViewModelImpl: LoginViewModel {
     let disposeBag = DisposeBag()
     private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepo: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.connectivity = connectivity
@@ -60,7 +60,7 @@ class LoginViewModelImpl: LoginViewModel {
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.logger = logger
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         registerNetworkEventListener()
     }
 

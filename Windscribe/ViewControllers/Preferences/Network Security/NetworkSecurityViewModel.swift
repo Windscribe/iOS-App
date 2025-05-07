@@ -25,19 +25,19 @@ class NetworkSecurityViewModel: NetworkSecurityViewModelType {
     var isDarkMode: BehaviorSubject<Bool>
 
     private let localDatabase: LocalDatabase, preferences: Preferences, connectivity: Connectivity
-    var themeManager: ThemeManager
+    var lookAndFeelRepo: LookAndFeelRepositoryType
     private let disposeBag = DisposeBag()
     let networks: BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
     let currentNetwork: BehaviorSubject<AppNetwork?> = BehaviorSubject(value: nil)
     let isOnline: BehaviorSubject<Bool> = BehaviorSubject(value: false)
     private var isObserving = false
 
-    init(localDatabase: LocalDatabase, preferences: Preferences, themeManager: ThemeManager, connectivity: Connectivity) {
+    init(localDatabase: LocalDatabase, preferences: Preferences, lookAndFeelRepo: LookAndFeelRepositoryType, connectivity: Connectivity) {
         self.localDatabase = localDatabase
         self.preferences = preferences
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.connectivity = connectivity
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         load()
         loadNetwork()
     }

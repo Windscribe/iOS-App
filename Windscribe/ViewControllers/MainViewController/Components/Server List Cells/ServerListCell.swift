@@ -150,9 +150,9 @@ class ServerListCell: SwipeTableViewCell {
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(onNext: { isDark in
-            self.nameLabel.textColor = isDark ? .white : .nightBlue
-            self.actionImage.setImageColor(color: isDark ? .white : .nightBlue)
+        isDarkMode.subscribe(onNext: { _ in
+            self.nameLabel.textColor = .white
+            self.actionImage.setImageColor(color: .white)
         }).disposed(by: disposeBag)
     }
 

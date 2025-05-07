@@ -14,7 +14,7 @@ typealias CompletionHandler = () -> Void
 protocol NetworkOptionViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var networks: BehaviorSubject<[WifiNetwork]> { get set }
-    var themeManager: ThemeManager { get set }
+    var lookAndFeelRepo: LookAndFeelRepositoryType { get set }
     var displayingNetwork: WifiNetwork? { get set }
     var preferredProtocol: String? { get set }
     var preferredPort: String? { get set }
@@ -53,16 +53,16 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
     private let connectivity: Connectivity
     private let vpnManager: VPNManager
     let protocolManager: ProtocolManagerType
-    var themeManager: ThemeManager
+    var lookAndFeelRepo: LookAndFeelRepositoryType
     private let disposeBag = DisposeBag()
 
     init(localDatabase: LocalDatabase,
-         themeManager: ThemeManager,
+         lookAndFeelRepo: LookAndFeelRepositoryType,
          connectivity: Connectivity,
          vpnManager: VPNManager,
          protocolManager: ProtocolManagerType) {
         self.localDatabase = localDatabase
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.connectivity = connectivity
         self.vpnManager = vpnManager
         self.protocolManager = protocolManager
@@ -74,7 +74,7 @@ class NetworkOptionViewModel: NetworkOptionViewModelType {
             self.networks.onNext(networks)
         }.disposed(by: disposeBag)
 
-        themeManager.darkTheme.subscribe { data in
+        lookAndFeelRepo.isDarkModeSubject.subscribe { data in
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
     }

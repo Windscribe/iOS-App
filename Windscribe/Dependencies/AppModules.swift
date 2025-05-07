@@ -174,9 +174,6 @@ class Managers: Assembly {
         container.register(ReferAndShareManagerV2.self) { r in
             ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
-        container.register(ThemeManager.self) { r in
-            ThemeManagerImpl(preference: r.resolve(Preferences.self)!)
-        }.inObjectScope(.userScope)
         container.register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)

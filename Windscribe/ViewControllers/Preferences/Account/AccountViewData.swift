@@ -97,8 +97,8 @@ enum AccountItemCell {
         }
     }
 
-    private var themeManager: ThemeManager {
-        return Assembler.resolve(ThemeManager.self)
+    private var lookAndFeelRepo: LookAndFeelRepositoryType {
+        return Assembler.resolve(LookAndFeelRepositoryType.self)
     }
 
     var value: NSAttributedString? {

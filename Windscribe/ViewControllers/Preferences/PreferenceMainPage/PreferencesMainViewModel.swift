@@ -42,17 +42,17 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let disposeBag = DisposeBag()
     let alertManager: AlertManagerV2
     let preferences: Preferences
-    let themeManager: ThemeManager
+    let lookAndFeelRepo: LookAndFeelRepositoryType
     let languageManager: LanguageManager
 
-    init(sessionManager: SessionManagerV2, logger: FileLogger, alertManager: AlertManagerV2, themeManager: ThemeManager, preferences: Preferences, languageManager: LanguageManager) {
+    init(sessionManager: SessionManagerV2, logger: FileLogger, alertManager: AlertManagerV2, lookAndFeelRepo: LookAndFeelRepositoryType, preferences: Preferences, languageManager: LanguageManager) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.alertManager = alertManager
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.preferences = preferences
         self.languageManager = languageManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         observeLanguage()
     }
 
@@ -113,6 +113,6 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func isDarkTheme() -> Bool {
-        return themeManager.getIsDarkTheme()
+        return lookAndFeelRepo.isDarkMode
     }
 }

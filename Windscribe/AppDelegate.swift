@@ -40,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
 
-    private lazy var themeManager: ThemeManager = Assembler.resolve(ThemeManager.self)
+    private lazy var lookAndFeelRepo: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
     private lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
 

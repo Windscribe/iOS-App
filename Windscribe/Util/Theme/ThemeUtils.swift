@@ -1,5 +1,5 @@
 //
-//  ThemeManagerImpl.swift
+//  ThemeUtils.swift
 //  Windscribe
 //
 //  Created by Thomas on 07/09/2022.
@@ -10,30 +10,6 @@ import Foundation
 import RxSwift
 import Swinject
 import UIKit
-
-class ThemeManagerImpl: ThemeManager {
-    private let preference: Preferences
-    private let disposeBag = DisposeBag()
-    let darkTheme = BehaviorSubject(value: true)
-
-    init(preference: Preferences) {
-        self.preference = preference
-        loadTheme()
-    }
-
-    private func loadTheme() {
-        preference.getDarkMode()
-            .subscribe(onNext: { theme in
-                self.darkTheme.onNext(theme ?? DefaultValues.darkMode)
-            }, onError: { _ in
-                self.darkTheme.onNext(true)
-            }).disposed(by: disposeBag)
-    }
-
-    func getIsDarkTheme() -> Bool {
-        return (try? darkTheme.value()) ?? true
-    }
-}
 
 enum ThemeUtils {
     static func wrapperColor(isDarkMode: Bool) -> UIColor {

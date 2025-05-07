@@ -12,20 +12,20 @@ import RxSwift
 protocol ShareWithFriendViewModelType {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var referFriendManager: ReferAndShareManagerV2 { get }
-    var themeManager: ThemeManager { get }
+    var lookAndFeelRepo: LookAndFeelRepositoryType { get }
     var appStoreLink: String { get }
     var inviteMessage: String { get }
 }
 
 class ShareWithFriendViewModel: ShareWithFriendViewModelType {
-    let themeManager: ThemeManager, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2
+    let lookAndFeelRepo: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(themeManager: ThemeManager, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2) {
-        self.themeManager = themeManager
+    init(lookAndFeelRepo: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2) {
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.sessionManager = sessionManager
         self.referFriendManager = referFriendManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 
     private var username: String {

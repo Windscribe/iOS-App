@@ -48,8 +48,8 @@ class ListHeaderView: UIView {
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {
-        backgroundColor = isDarkMode ? .nightBlue : .white
-        infoLabel.textColor = isDarkMode ? UIColor.whiteWithOpacity(opacity: 0.7) : .nightBlue
+        backgroundColor = .nightBlue
+        infoLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
     }
 
     private func addViews() {

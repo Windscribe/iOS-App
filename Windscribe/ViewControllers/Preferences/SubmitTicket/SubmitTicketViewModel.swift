@@ -11,7 +11,7 @@ import RxSwift
 import UIKit
 
 protocol SubmitTicketViewModel {
-    var themeManager: ThemeManager { get }
+    var lookAndFeelRepo: LookAndFeelRepositoryType { get }
     var alertManager: AlertManagerV2 { get }
     var sessionManager: SessionManagerV2 { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -21,16 +21,16 @@ protocol SubmitTicketViewModel {
 
 class SubmitTicketViewModelImpl: SubmitTicketViewModel {
     var apiManager: APIManager
-    var themeManager: ThemeManager
+    var lookAndFeelRepo: LookAndFeelRepositoryType
     var alertManager: AlertManagerV2
     var sessionManager: SessionManagerV2
     let isDarkMode: BehaviorSubject<Bool>
-    init(apiManager: APIManager, themeManager: ThemeManager, alertManager: AlertManagerV2, sessionManager: SessionManagerV2) {
+    init(apiManager: APIManager, lookAndFeelRepo: LookAndFeelRepositoryType, alertManager: AlertManagerV2, sessionManager: SessionManagerV2) {
         self.apiManager = apiManager
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.alertManager = alertManager
         self.sessionManager = sessionManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 
     func sendTicket(email: String, subject: String, message: String, category: Int) -> Single<APIMessage> {

@@ -16,7 +16,7 @@ protocol SendDebugLogCompletedViewModelType {
 class SendDebugLogCompletedViewModel: SendDebugLogCompletedViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(themeManager: ThemeManager) {
-        isDarkMode = themeManager.darkTheme
+    init(lookAndFeelRepo: LookAndFeelRepositoryType) {
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 }

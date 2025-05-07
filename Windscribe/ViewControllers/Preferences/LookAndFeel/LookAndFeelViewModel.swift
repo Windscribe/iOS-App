@@ -14,7 +14,7 @@ import PhotosUI
 protocol LookAndFeelViewModelType: UIDocumentPickerDelegate {
     var isDarkMode: BehaviorSubject<Bool> { get }
     var alertPublishSubject: PublishSubject<CustomLocationsAlertType> { get }
-    var themeManager: ThemeManager { get }
+    var lookAndFeelRepo: LookAndFeelRepositoryType { get }
     var alertManager: AlertManagerV2 { get }
 
     // Appearance
@@ -49,12 +49,11 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
 
     // Dependencies
     let preferences: Preferences
-    let themeManager: ThemeManager
+    let lookAndFeelRepo: LookAndFeelRepositoryType
     let localDB: LocalDatabase
     let logger: FileLogger
     let alertManager: AlertManagerV2
     let serverRepository: ServerRepository
-    let lookAndFeelRepository: LookAndFeelRepositoryType
 
     // State
     let disposeBag = DisposeBag()
@@ -68,25 +67,23 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
     let backgroundDisconnect = BehaviorSubject<BackgroundEffectType>(value: .none)
 
     init(preferences: Preferences,
-         themeManager: ThemeManager,
+         lookAndFeelRepo: LookAndFeelRepositoryType,
          logger: FileLogger,
          alertManager: AlertManagerV2,
          localDB: LocalDatabase,
-         serverRepository: ServerRepository,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
+         serverRepository: ServerRepository) {
         self.preferences = preferences
-        self.themeManager = themeManager
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.localDB = localDB
         self.logger = logger
         self.alertManager = alertManager
         self.serverRepository = serverRepository
-        self.lookAndFeelRepository = lookAndFeelRepository
         super.init()
         bindViews()
     }
 
     private func bindViews() {
-        themeManager.darkTheme.subscribe { [weak self] data in
+        lookAndFeelRepo.isDarkModeSubject.subscribe { [weak self] data in
             self?.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 
@@ -174,16 +171,16 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
         case .aspectRatio:
             nil
         case .connect:
-            lookAndFeelRepository.backgroundCustomConnectPath
+            lookAndFeelRepo.backgroundCustomConnectPath
         case .disconnect:
-            lookAndFeelRepository.backgroundCustomDisconnectPath
+            lookAndFeelRepo.backgroundCustomDisconnectPath
         }
     }
 
     func getBackgroundEffect(for domain: BackgroundAssetDomainType) -> BackgroundEffectType {
         switch domain {
-        case .connect: lookAndFeelRepository.backgroundEffectConnect
-        case .disconnect: lookAndFeelRepository.backgroundEffectDisconnect
+        case .connect: lookAndFeelRepo.backgroundEffectConnect
+        case .disconnect: lookAndFeelRepo.backgroundEffectDisconnect
         default: .none
         }
     }
@@ -192,29 +189,29 @@ class LookAndFeelViewModel: NSObject, LookAndFeelViewModelType {
         switch domain {
         case .connect:
             backgroundConnect.onNext(type)
-            lookAndFeelRepository.updateBackgroundEffectConnect(effect: type)
+            lookAndFeelRepo.updateBackgroundEffectConnect(effect: type)
         case .disconnect:
             backgroundDisconnect.onNext(type)
-            lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: type)
+            lookAndFeelRepo.updateBackgroundEffectDisconnect(effect: type)
         default:
             return
         }
     }
 
     func getAspectRatio() -> BackgroundAspectRatioType {
-        return lookAndFeelRepository.backgroundCustomAspectRatio
+        return lookAndFeelRepo.backgroundCustomAspectRatio
     }
 
     func updateAspectRatioType(type: BackgroundAspectRatioType) {
-        lookAndFeelRepository.updateBackgroundCustomAspectRatio(aspectRatio: type)
+        lookAndFeelRepo.updateBackgroundCustomAspectRatio(aspectRatio: type)
     }
 
     func saveCustomBackgroundPath(domain: BackgroundAssetDomainType, path: String) {
         switch domain {
         case .connect:
-            lookAndFeelRepository.updateBackgroundCustomConnectPath(path: path)
+            lookAndFeelRepo.updateBackgroundCustomConnectPath(path: path)
         case .disconnect:
-            lookAndFeelRepository.updateBackgroundCustomDisconnectPath(path: path)
+            lookAndFeelRepo.updateBackgroundCustomDisconnectPath(path: path)
         case .aspectRatio:
             return
         }
