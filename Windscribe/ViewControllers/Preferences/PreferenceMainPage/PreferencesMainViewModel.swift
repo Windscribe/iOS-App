@@ -9,7 +9,7 @@
 import RxSwift
 import UIKit
 
-protocol PreferencesMainViewModel {
+protocol PreferencesMainViewModelOld {
     var actionDisplay: BehaviorSubject<ActionDisplay> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
     var currentLanguage: BehaviorSubject<String?> { get }
@@ -32,7 +32,7 @@ enum ActionDisplay {
     case hideAll
 }
 
-class PreferencesMainViewModelImp: PreferencesMainViewModel {
+class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let actionDisplay = BehaviorSubject<ActionDisplay>(value: .email)
     let isDarkMode: BehaviorSubject<Bool>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)

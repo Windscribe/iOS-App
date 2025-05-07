@@ -13,8 +13,10 @@ class HomeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case RouteID.mainMenu:
-            let vc = Assembler.resolve(PreferencesMainViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+//            let vc = Assembler.resolve(PreferencesMainViewControllerOld.self)
+//            from.navigationController?.pushViewController(vc, animated: true)
+            let preferencesView = Assembler.resolve(PreferencesMainCategoryView.self)
+            pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)
         case let RouteID.protocolSetPreferred(type, delegate, protocolName):

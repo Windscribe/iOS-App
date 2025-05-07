@@ -88,8 +88,8 @@ class TVViewModels: Assembly {
                 htmlParser: r.resolve(HTMLParsing.self)!)
         }.inObjectScope(.transient)
 
-        container.register(PreferencesMainViewModel.self) { r in
-            PreferencesMainViewModelImp(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
+        container.register(PreferencesMainViewModelOld.self) { r in
+            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(HelpViewModel.self) { r in
@@ -192,7 +192,7 @@ class TVViewControllers: Assembly {
         container.register(PreferencesMainViewController.self) { _ in
             PreferencesMainViewController(nibName: "PreferencesMainViewController", bundle: nil)
         }.initCompleted { r, vc in
-            vc.viewModel = r.resolve(PreferencesMainViewModel.self)
+            vc.viewModel = r.resolve(PreferencesMainViewModelOld.self)
             vc.generalViewModel = r.resolve(GeneralViewModelType.self)
             vc.accountViewModel = r.resolve(AccountViewModelType.self)
             vc.connectionsViewModel = r.resolve(ConnectionsViewModelType.self)

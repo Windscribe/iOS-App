@@ -17,7 +17,7 @@ class PreferencesOptionView: OptionSelectionView {
     var optionType: PreferencesType?
     private let disposeBag = DisposeBag()
 
-    var viewModel: PreferencesMainViewModel?
+    var viewModel: PreferencesMainViewModelOld?
 
     weak var selectionDelegate: PreferencesOptionViewDelegate?
 

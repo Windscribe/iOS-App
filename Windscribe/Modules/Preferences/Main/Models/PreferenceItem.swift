@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum PreferenceItemType: Int {
+enum PreferenceItemType: Int, Identifiable, CaseIterable {
     case general
     case account
     case connection
@@ -42,26 +42,26 @@ enum PreferenceItemType: Int {
         }
     }
 
-    var icon: UIImage? {
+    var imageName: String {
         switch self {
         case .general:
-            UIImage(named: ImagesAsset.Preferences.general)
+            ImagesAsset.Preferences.general
         case .account:
-            UIImage(named: ImagesAsset.Preferences.account)
+            ImagesAsset.Preferences.account
         case .connection:
-            UIImage(named: ImagesAsset.Preferences.connection)
+            ImagesAsset.Preferences.connection
         case .robert:
-            UIImage(named: ImagesAsset.Preferences.robert)
+            ImagesAsset.Preferences.robert
         case .referForData:
-            UIImage(named: ImagesAsset.favEmpty)
+            ImagesAsset.favEmpty
         case .lookAndFeel:
-            UIImage(named: ImagesAsset.Preferences.lookFeel)
+            ImagesAsset.Preferences.lookFeel
         case .helpMe:
-            UIImage(named: ImagesAsset.Preferences.helpMe)
+            ImagesAsset.Preferences.helpMe
         case .about:
-            UIImage(named: ImagesAsset.Preferences.about)
+            ImagesAsset.Preferences.about
         case .logout:
-            UIImage(named: ImagesAsset.Preferences.logoutRed)
+            ImagesAsset.Preferences.logoutRed
         }
     }
 
@@ -71,6 +71,24 @@ enum PreferenceItemType: Int {
                 .backgroundRed
         default:
             nil
+        }
+    }
+
+    var id: Int { rawValue }
+}
+
+extension PreferenceItemType {
+    var routeID: PreferencesRouteID? {
+        switch self {
+        case .general: return .general
+        case .account: return .account
+        case .connection: return .connection
+        case .robert: return .robert
+        case .referForData: return .referData
+        case .lookAndFeel: return .lookAndFeel
+        case .helpMe: return .help
+        case .about: return .about
+        case .logout: return nil
         }
     }
 }

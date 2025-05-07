@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension PreferencesMainViewController {
+extension PreferencesMainViewControllerOld {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.translatesAutoresizingMaskIntoConstraints = false

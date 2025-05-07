@@ -63,8 +63,11 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         }
     }
 
-    func pushViewWithoutNavigationBar<V: View>(from viewController: WSUIViewController, view: V) {
+    func pushViewWithoutNavigationBar<V: View>(from viewController: WSUIViewController, view: V, title: String? = nil) {
         let hostingController = RoutedHostingController(rootView: view)
+        if let title = title {
+            hostingController.title = title
+        }
         hostingController.onPop = { [weak viewController] in
             viewController?.changeNavigationBarStyle(isHidden: true)
         }
