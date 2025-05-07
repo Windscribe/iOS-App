@@ -54,7 +54,7 @@ extension ViewLogViewController {
 
     func displayElementsForPrefferedAppearence() {
         // self.displayForPrefferedAppearence()
-        if !themeManager.getIsDarkTheme() {
+        if !lookAndFeelRepo.isDarkMode {
             logView.textColor = UIColor.midnight
         } else {
             logView.textColor = UIColor.white

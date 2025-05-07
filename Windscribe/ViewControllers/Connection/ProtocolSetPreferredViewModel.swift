@@ -45,7 +45,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     var submitLogState = BehaviorSubject(value: SubmitLogState.initial)
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, themeManager: ThemeManager, protocolManager: ProtocolManagerType) {
+    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, lookAndFeelRepo: LookAndFeelRepositoryType, protocolManager: ProtocolManagerType) {
         self.alertManager = alertManager
         self.type = type
         self.securedNetwork = securedNetwork
@@ -54,7 +54,7 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
         self.sessionManager = sessionManager
         self.logger = logger
         self.protocolManager = protocolManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 
     let changeMessage = TextsAsset.SetPreferredProtocolPopup.changeMessage

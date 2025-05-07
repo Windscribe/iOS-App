@@ -56,7 +56,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: Connectivity, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, themeManager: ThemeManager) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: Connectivity, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepo: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.userDataRepository = userDataRepository
@@ -67,7 +67,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         self.latencyRepository = latencyRepository
         self.emergencyConnectRepository = emergencyConnectRepository
         self.logger = logger
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         registerNetworkEventListener()
         checkUserStatus()
     }

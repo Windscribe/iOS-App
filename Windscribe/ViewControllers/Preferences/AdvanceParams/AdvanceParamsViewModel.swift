@@ -36,10 +36,10 @@ class AdvanceParamsViewModelImpl: AdvanceParamsViewModel {
 
     // MARK: - Data
 
-    init(preferences: Preferences, apiManager: APIManager, themeManager: ThemeManager) {
+    init(preferences: Preferences, apiManager: APIManager, lookAndFeelRepo: LookAndFeelRepositoryType) {
         self.preferences = preferences
         self.apiManager = apiManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         load()
     }
 

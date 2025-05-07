@@ -33,7 +33,7 @@ class Dropdown: UITableView {
     var relatedIndex: Int = 0
     let reuseIdentifier = "dropdownCell"
     var attachedView: UIView?
-    lazy var themeManager = Assembler.resolve(ThemeManager.self)
+    lazy var lookAndFeelRepo = Assembler.resolve(LookAndFeelRepositoryType.self)
     var point: CGPoint {
         var minY: CGFloat = attachedView?.frame.minY ?? 0
         var maxX: CGFloat = attachedView?.frame.maxX ?? 0
@@ -85,7 +85,7 @@ class Dropdown: UITableView {
     }
 
     func displayForPrefferedAppearence() {
-        let isDark = themeManager.getIsDarkTheme()
+        let isDark = lookAndFeelRepo.isDarkMode
         if !isDark {
             backgroundColor = UIColor.midnight
         } else {
@@ -126,7 +126,7 @@ class DropDownTableViewCell: UITableViewCell {
     var button = UIButton()
     weak var delegate: DropDownTableViewCellDelegate?
     var row: Int = 0
-    lazy var themeManager = Assembler.resolve(ThemeManager.self)
+    lazy var lookAndFeelRepo = Assembler.resolve(LookAndFeelRepositoryType.self)
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -162,7 +162,7 @@ class DropDownTableViewCell: UITableViewCell {
     }
 
     func displayForPrefferedAppearence() {
-        let isDark = themeManager.getIsDarkTheme()
+        let isDark = lookAndFeelRepo.isDarkMode
         if !isDark {
             backgroundColor = UIColor.midnight
             button.setTitleColor(UIColor.white, for: .normal)

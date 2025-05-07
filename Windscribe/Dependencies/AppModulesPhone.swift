@@ -68,7 +68,7 @@ class ViewModels: Assembly {
                 pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!,
                 billingRepository: r.resolve(BillingRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                themeManager: r.resolve(ThemeManager.self)!)
+                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register((any EmergencyConnectViewModel).self) { r in
@@ -102,68 +102,70 @@ class ViewModels: Assembly {
                 sessionManager: r.resolve(SessionManagerV2.self)!,
                 alertManager: r.resolve(AlertManagerV2.self)!,
                 logger: r.resolve(FileLogger.self)!,
-                themeManager: r.resolve(ThemeManager.self)!,
+                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
                 preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
 
         container.register(AdvanceParamsViewModel.self) { r in
-            AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!)
+            AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!,
+                                       apiManager: r.resolve(APIManager.self)!,
+                                       lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
-            ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
+            ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!,
+                                 lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(PreferencesMainViewModelOld.self) { r in
-            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
+            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
         container.register(GeneralViewModelType.self) { r in
-            GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
+            GeneralViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(LookAndFeelViewModelType.self) { r in
             LookAndFeelViewModel(preferences: r.resolve(Preferences.self)!,
-                                 themeManager: r.resolve(ThemeManager.self)!,
+                                 lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
                                  logger: r.resolve(FileLogger.self)!,
                                  alertManager: r.resolve(AlertManagerV2.self)!,
                                  localDB: r.resolve(LocalDatabase.self)!,
-                                 serverRepository: r.resolve(ServerRepository.self)!,
-                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                                 serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.transient)
         container.register(AccountViewModelType.self) { r in
-            AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
+            AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
         container.register(ShareWithFriendViewModelType.self) { r in
-            ShareWithFriendViewModel(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, referFriendManager: r.resolve(ReferAndShareManagerV2.self)!)
+            ShareWithFriendViewModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, referFriendManager: r.resolve(ReferAndShareManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(LanguageViewModelType.self) { r in
-            LanguageViewModel(languageManager: r.resolve(LanguageManager.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!)
+            LanguageViewModel(languageManager: r.resolve(LanguageManager.self)!, preferences: r.resolve(Preferences.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(AboutViewModelType.self) { r in
-            AboutViewModel(themeManager: r.resolve(ThemeManager.self)!, preference: r.resolve(Preferences.self)!)
+            AboutViewModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, preference: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
         container.register(NetworkSecurityViewModelType.self) { r in
-            NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, connectivity: r.resolve(Connectivity.self)!)
+            NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(NetworkOptionViewModelType.self) { r in
             NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
-                                   themeManager: r.resolve(ThemeManager.self)!,
+                                   lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
                                    connectivity: r.resolve(Connectivity.self)!,
                                    vpnManager: r.resolve(VPNManager.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(EnterEmailViewModelOld.self) { r in
-            EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, apiManager: r.resolve(APIManager.self)!)
+            EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
         container.register(ConfirmEmailViewModelOld.self) { r in
             ConfirmEmailViewModelImplOld(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
         }.inObjectScope(.transient)
         container.register(SubmitTicketViewModel.self) { r in
-            SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
+            SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
         container.register(HelpViewModel.self) { r in
-            HelpViewModelImpl(themeManager: r.resolve(ThemeManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
+            HelpViewModelImpl(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
         container.register(BannedAccountPopupModelType.self) { r in
             BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManagerV2.self)!)
@@ -178,7 +180,7 @@ class ViewModels: Assembly {
             SetPreferredProtocolModel(connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(ProtocolSetPreferredViewModelV2.self) { r in
-            ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: .connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: ProtocolViewType.connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register((any NewsFeedViewModelProtocol).self) { r in
             NewsFeedViewModel(
@@ -203,13 +205,13 @@ class ViewModels: Assembly {
             ErrorPopupViewModel()
         }.inObjectScope(.transient)
         container.register(RobertViewModelType.self) { r in
-            RobertViewModel(apiManager: r.resolve(APIManager.self)!, localDB: r.resolve(LocalDatabase.self)!, themeManager: r.resolve(ThemeManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
+            RobertViewModel(apiManager: r.resolve(APIManager.self)!, localDB: r.resolve(LocalDatabase.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, alertManager: r.resolve(AlertManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(EnterCredentialsViewModelType.self) { r in
             EnterCredentialsViewModel(
                 vpnManager: r.resolve(VPNManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                themeManager: r.resolve(ThemeManager.self)!
+                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!
             )
         }.inObjectScope(.transient)
         container.register(PushNotificationViewModelType.self) { r in
@@ -219,7 +221,7 @@ class ViewModels: Assembly {
             )
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, themeManager: r.resolve(ThemeManager.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
+            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ShakeForDataPopupViewModelType.self) { r in
             ShakeForDataPopupViewModel(logger: r.resolve(FileLogger.self)!)
@@ -236,7 +238,7 @@ class ViewModels: Assembly {
         container.register(ViewLeaderboardViewModelType.self) { r in
             ViewLeaderboardViewModel(logger: r.resolve(FileLogger.self)!,
                                      repository: r.resolve(ShakeDataRepository.self)!,
-                                     themeManager: r.resolve(ThemeManager.self)!)
+                                     lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { _ in
             SearchLocationsViewModel()
@@ -262,10 +264,10 @@ class ViewModels: Assembly {
             ListSelectionViewModel()
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchViewModelType.self) { r in
-            ProtocolSwitchViewModel(themeManager: r.resolve(ThemeManager.self)!, vpnManager: r.resolve(VPNManager.self)!)
+            ProtocolSwitchViewModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, vpnManager: r.resolve(VPNManager.self)!)
         }.inObjectScope(.transient)
         container.register(SendDebugLogCompletedViewModelType.self) { r in
-            SendDebugLogCompletedViewModel(themeManager: r.resolve(ThemeManager.self)!)
+            SendDebugLogCompletedViewModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(CustomConfigPickerViewModelType.self) { r in
             CustomConfigPickerViewModel(logger: r.resolve(FileLogger.self)!,
@@ -310,11 +312,11 @@ class ViewModels: Assembly {
                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
         }.inObjectScope(.transient)
         container.register(PopUpMaintenanceLocationModelType.self) { r in
-            PopUpMaintenanceLocationModel(themeManager: r.resolve(ThemeManager.self)!)
+            PopUpMaintenanceLocationModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register(FlagsBackgroundViewModelType.self) { r in
-            FlagsBackgroundViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+            FlagsBackgroundViewModel(lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
                                      locationsManager: r.resolve(LocationsManagerType.self)!,
                                      vpnManager: r.resolve(VPNManager.self)!,
                                      backgroundFileManager: r.resolve(BackgroundFileManaging.self)!)
@@ -342,7 +344,7 @@ class ViewModels: Assembly {
 
         container.register(ServerInfoViewModelType.self) { r in
             ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
-                                themeManager: r.resolve(ThemeManager.self)!)
+                                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register(FreeAccountFooterViewModelType.self) { r in
@@ -439,7 +441,7 @@ class ViewControllerModule: Assembly {
                     sessionManager: r.resolve(SessionManagerV2.self)!,
                     alertManager: r.resolve(AlertManagerV2.self)!,
                     logger: r.resolve(FileLogger.self)!,
-                    themeManager: r.resolve(ThemeManager.self)!,
+                    lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
                     preferences: r.resolve(Preferences.self)!
                 ), router: r.resolve(PreferencesNavigationRouter.self)!)

@@ -31,8 +31,8 @@ class PopUpMaintenanceLocationModel: PopUpMaintenanceLocationModelType {
     var checkStatusButtonTitle = BehaviorSubject<String>(value: "")
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(themeManager: ThemeManager) {
-        isDarkMode = themeManager.darkTheme
+    init(lookAndFeelRepo: LookAndFeelRepositoryType) {
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         bindModel()
     }
 

@@ -54,14 +54,14 @@ class AccountViewModel: AccountViewModelType {
     var sessionUpdatedTrigger = PublishSubject<Void>()
     let session = BehaviorSubject<Session?>(value: nil)
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, themeManager: ThemeManager, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
+    init(apiCallManager: APIManager, alertManager: AlertManagerV2, lookAndFeelRepo: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.alertManager = alertManager
 
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         #if os(iOS)
             sections = [.info, .plan, .other]
         #else

@@ -153,11 +153,11 @@ class BaseNodeCell: ServerListCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { isDark in
-            self.icon.tintColor = isDark ? .white : .nightBlueOpacity(opacity: 0.4)
-            self.nickNameLabel.textColor = isDark ? .white : .nightBlue
-            self.latencyLabel.textColor = isDark ? .white : .nightBlue
-            self.signalBarsIcon.setImageColor(color: isDark ? .white : .nightBlue)
+        isDarkMode.subscribe(onNext: { _ in
+            self.icon.tintColor = .white
+            self.nickNameLabel.textColor = .white
+            self.latencyLabel.textColor = .white
+            self.signalBarsIcon.setImageColor(color: .white)
         }).disposed(by: disposeBag)
     }
 

@@ -31,10 +31,10 @@ class EnterCredentialsViewModel: EnterCredentialsViewModelType {
     var vpnManager: VPNManager!
     var localDatabase: LocalDatabase!
 
-    init(vpnManager: VPNManager!, localDatabase: LocalDatabase!, themeManager: ThemeManager) {
+    init(vpnManager: VPNManager!, localDatabase: LocalDatabase!, lookAndFeelRepo: LookAndFeelRepositoryType) {
         self.vpnManager = vpnManager
         self.localDatabase = localDatabase
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 
     func setup(with customConfig: CustomConfigModel, isUpdating: Bool) {

@@ -21,13 +21,13 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     let disposeBag = DisposeBag()
     let localDatabase: LocalDatabase
 
-    init(localDatabase: LocalDatabase, themeManager: ThemeManager) {
+    init(localDatabase: LocalDatabase, lookAndFeelRepo: LookAndFeelRepositoryType) {
         self.localDatabase = localDatabase
         localDatabase.getServersObservable().subscribe {
             self.serverCountSubject.onNext($0.count)
         }.disposed(by: disposeBag)
 
-        themeManager.darkTheme.subscribe { data in
+        lookAndFeelRepo.isDarkModeSubject.subscribe { data in
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
     }
@@ -78,8 +78,8 @@ class ServerInfoView: UIView {
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {
-        backgroundColor = isDarkMode ? .nightBlue : .white
-        infoLabel.textColor = isDarkMode ? UIColor.whiteWithOpacity(opacity: 0.7) : .nightBlue
+        backgroundColor = .nightBlue
+        infoLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
     }
 
     private func addViews() {

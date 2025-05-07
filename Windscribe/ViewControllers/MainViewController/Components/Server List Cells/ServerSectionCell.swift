@@ -121,8 +121,8 @@ class ServerSectionCell: ServerListCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { isDark in
-            self.p2pIcon.setImageColor(color: isDark ? .white : .nightBlue)
+        isDarkMode.subscribe(onNext: { _ in
+            self.p2pIcon.setImageColor(color: .white)
         }).disposed(by: disposeBag)
     }
 

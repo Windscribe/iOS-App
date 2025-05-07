@@ -27,11 +27,11 @@ class EnterEmailViewModelImplOld: EnterEmailViewModelOld {
         sessionManager.session?.email
     }
 
-    init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2, themeManager: ThemeManager, apiManager: APIManager) {
+    init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2, lookAndFeelRepo: LookAndFeelRepositoryType, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.apiManager = apiManager
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
     }
 
     func changeEmailAddress(email: String) -> Single<APIMessage> {

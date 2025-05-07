@@ -21,7 +21,7 @@ protocol HelpViewModel {
 
 class HelpViewModelImpl: HelpViewModel {
     var alertManager: AlertManagerV2
-    var themeManager: ThemeManager
+    var lookAndFeelRepo: LookAndFeelRepositoryType
     var sessionManager: SessionManagerV2
     var apiManager: APIManager
     let connectivity: Connectivity
@@ -31,13 +31,13 @@ class HelpViewModelImpl: HelpViewModel {
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(themeManager: ThemeManager, sessionManager: SessionManagerV2, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
-        self.themeManager = themeManager
+    init(lookAndFeelRepo: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
+        self.lookAndFeelRepo = lookAndFeelRepo
         self.sessionManager = sessionManager
         self.apiManager = apiManager
         self.alertManager = alertManager
         self.connectivity = connectivity
-        isDarkMode = themeManager.darkTheme
+        isDarkMode = lookAndFeelRepo.isDarkModeSubject
         observerConnectivity()
     }
 

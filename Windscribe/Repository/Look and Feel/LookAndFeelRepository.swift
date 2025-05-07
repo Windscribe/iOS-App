@@ -10,8 +10,11 @@ import Foundation
 import RxSwift
 
 protocol LookAndFeelRepositoryType {
+    // Subjects
     var backgroundChangedTrigger: PublishSubject<Void> { get }
+    var isDarkModeSubject: BehaviorSubject<Bool> { get }
 
+    // Getters
     var backgroundEffectConnect: BackgroundEffectType { get }
     var backgroundEffectDisconnect: BackgroundEffectType { get }
 
@@ -20,6 +23,9 @@ protocol LookAndFeelRepositoryType {
 
     var backgroundCustomAspectRatio: BackgroundAspectRatioType { get }
 
+    var isDarkMode: Bool { get }
+
+    // update funcs
     func updateBackgroundEffectConnect(effect: BackgroundEffectType)
     func updateBackgroundEffectDisconnect(effect: BackgroundEffectType)
 
@@ -31,14 +37,18 @@ protocol LookAndFeelRepositoryType {
 
 class LookAndFeelRepository: LookAndFeelRepositoryType {
     var backgroundChangedTrigger = PublishSubject<Void>()
+    var isDarkModeSubject = BehaviorSubject<Bool>(value: true)
 
     var backgroundEffectConnect: BackgroundEffectType
     var backgroundEffectDisconnect: BackgroundEffectType
     var backgroundCustomConnectPath: String?
     var backgroundCustomDisconnectPath: String?
     var backgroundCustomAspectRatio: BackgroundAspectRatioType
+    var isDarkMode: Bool
 
     let preferences: Preferences
+
+    private let disposeBag = DisposeBag()
 
     init(preferences: Preferences) {
         self.preferences = preferences
@@ -47,6 +57,17 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
         backgroundCustomConnectPath = preferences.getBackgroundCustomConnectPath()
         backgroundCustomDisconnectPath = preferences.getBackgroundCustomDisconnectPath()
         backgroundCustomAspectRatio = BackgroundAspectRatioType(aspectRatioType: preferences.getAspectRatio() ?? "")
+
+        isDarkMode = true
+
+        preferences.getDarkMode()
+            .subscribe(onNext: { theme in
+                self.isDarkMode = theme ?? DefaultValues.darkMode
+                self.isDarkModeSubject.onNext(self.isDarkMode)
+            }, onError: { _ in
+                self.isDarkMode = true
+                self.isDarkModeSubject.onNext(self.isDarkMode)
+            }).disposed(by: disposeBag)
     }
 
     func updateBackgroundEffectConnect(effect: BackgroundEffectType) {
