@@ -39,7 +39,7 @@ enum PreferencesType {
 }
 
 class PreferencesMainViewController: PreferredFocusedViewController {
-    var viewModel: PreferencesMainViewModel!, generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, helpViewModel: HelpViewModel!, logger: FileLogger!, router: HomeRouter!
+    var viewModel: PreferencesMainViewModelOld!, generalViewModel: GeneralViewModelType!, accountViewModel: AccountViewModelType!, connectionsViewModel: ConnectionsViewModelType!, viewLogViewModel: ViewLogViewModel!, helpViewModel: HelpViewModel!, logger: FileLogger!, router: HomeRouter!
 
     @IBOutlet var optionsStackView: UIStackView!
     @IBOutlet var titleLabel: UILabel!

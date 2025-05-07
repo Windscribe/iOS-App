@@ -99,7 +99,7 @@ class PreferencesTableViewCell: WSTouchTableViewCell {
         if let title = displayingItem?.title {
             titleLabel.text = title
         }
-        iconView.image = displayingItem?.icon
+        iconView.image = UIImage(named: displayingItem?.imageName ?? "")
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {

@@ -121,18 +121,27 @@ extension Color {
 
     // General Usage Colors
     static let lightMidnight = Color(red: 20 / 255.0, green: 27 / 255.0, blue: 35 / 255.0)
+    static let midnight = Color(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0)
+    static func midnightWithOpacity(opacity: CGFloat) -> Color {
+        return Color(red: 2 / 255.0, green: 13 / 255.0, blue: 28 / 255.0, opacity: opacity)
+    }
+
+    static let nightBlue = Color(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0)
+
+    static let unconfirmedYellow = Color(red: 255 / 255.0, green: 239 / 255.0, blue: 2 / 255.0)
 }
 
-// New Memefication colors
+// New Memefication Colors
+
 extension UIColor {
-    // night blue
+    // Night Blue
     static let nightBlue = UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: 1.0)
 
     static func nightBlueOpacity(opacity: CGFloat) -> UIColor {
         return UIColor(red: 5 / 255.0, green: 10 / 255.0, blue: 17 / 255.0, alpha: opacity)
     }
 
-    // cyber blue
+    // Cyber Blue
     static let cyberBlue = UIColor(red: 59 / 255.0, green: 255 / 255.0, blue: 239 / 255.0, alpha: 1.0)
 
     static func cyberBlueWithOpacity(opacity: CGFloat) -> UIColor {

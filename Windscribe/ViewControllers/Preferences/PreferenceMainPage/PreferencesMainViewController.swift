@@ -11,10 +11,10 @@ import RxCocoa
 import RxSwift
 import UIKit
 
-class PreferencesMainViewController: WSNavigationViewController {
+class PreferencesMainViewControllerOld: WSNavigationViewController {
     // MARK: - State properties
 
-    var router: PreferenceMainRouter!, viewModel: PreferencesMainViewModel!, logger: FileLogger!
+    var router: PreferenceMainRouter!, viewModel: PreferencesMainViewModelOld!, logger: FileLogger!
 
     // MARK: - UIElements
 
@@ -190,13 +190,13 @@ class PreferencesMainViewController: WSNavigationViewController {
 
 // MARK: - Extensions
 
-extension PreferencesMainViewController: ConfirmEmailViewControllerDelegate {
+extension PreferencesMainViewControllerOld: ConfirmEmailViewControllerDelegate {
     func dismissWith(action: ConfirmEmailAction) {
         router.dismissPopup(action: action, navigationVC: navigationController)
     }
 }
 
-extension PreferencesMainViewController: UITableViewDelegate, UITableViewDataSource {
+extension PreferencesMainViewControllerOld: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         if viewModel?.isUserGhost() ?? false {
             return 8

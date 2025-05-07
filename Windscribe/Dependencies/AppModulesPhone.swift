@@ -97,14 +97,24 @@ class ViewModels: Assembly {
                 sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any PreferencesMainCategoryViewModel).self) { r in
+            PreferencesMainCategoryViewModelImpl(
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                alertManager: r.resolve(AlertManagerV2.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                themeManager: r.resolve(ThemeManager.self)!,
+                languageManager: r.resolve(LanguageManager.self)!,
+                preferences: r.resolve(Preferences.self)!)
+        }.inObjectScope(.transient)
+
         container.register(AdvanceParamsViewModel.self) { r in
             AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!, apiManager: r.resolve(APIManager.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, themeManager: r.resolve(ThemeManager.self)!)
         }.inObjectScope(.transient)
-        container.register(PreferencesMainViewModel.self) { r in
-            PreferencesMainViewModelImp(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
+        container.register(PreferencesMainViewModelOld.self) { r in
+            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, themeManager: r.resolve(ThemeManager.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
         container.register(GeneralViewModelType.self) { r in
             GeneralViewModel(preferences: r.resolve(Preferences.self)!, themeManager: r.resolve(ThemeManager.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
@@ -372,6 +382,10 @@ class ViewControllerModule: Assembly {
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
+        container.register(GeneralSettingsView.self) { r in
+            GeneralSettingsView()
+        }.inObjectScope(.transient)
+
         container.register(SignUpView.self) { r in
             SignUpView(viewModel: SignUpViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
@@ -419,6 +433,18 @@ class ViewControllerModule: Assembly {
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
+        container.register(PreferencesMainCategoryView.self) { r in
+            PreferencesMainCategoryView(
+                viewModel: PreferencesMainCategoryViewModelImpl(
+                    sessionManager: r.resolve(SessionManagerV2.self)!,
+                    alertManager: r.resolve(AlertManagerV2.self)!,
+                    logger: r.resolve(FileLogger.self)!,
+                    themeManager: r.resolve(ThemeManager.self)!,
+                    languageManager: r.resolve(LanguageManager.self)!,
+                    preferences: r.resolve(Preferences.self)!
+                ), router: r.resolve(PreferencesNavigationRouter.self)!)
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -439,10 +465,10 @@ class ViewControllerModule: Assembly {
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
         }.inObjectScope(.transient)
-        container.register(PreferencesMainViewController.self) { _ in
-            PreferencesMainViewController()
+        container.register(PreferencesMainViewControllerOld.self) { _ in
+            PreferencesMainViewControllerOld()
         }.initCompleted { r, c in
-            c.viewModel = r.resolve(PreferencesMainViewModel.self)
+            c.viewModel = r.resolve(PreferencesMainViewModelOld.self)
             c.router = r.resolve(PreferenceMainRouter.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
@@ -721,6 +747,9 @@ class Routers: Assembly {
     func assemble(container: Container) {
         container.register(AuthenticationNavigationRouter.self) { _ in
             AuthenticationNavigationRouter()
+        }.inObjectScope(.transient)
+        container.register(PreferencesNavigationRouter.self) { _ in
+            PreferencesNavigationRouter()
         }.inObjectScope(.transient)
         container.register(HomeRouter.self) { _ in
             HomeRouter()

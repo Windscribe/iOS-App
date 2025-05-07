@@ -1182,7 +1182,7 @@
 		F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */; };
 		F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */; };
 		F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E312D930D75005EF149 /* BaseNavigationRouter.swift */; };
-		F4888E342D930EC3005EF149 /* NavigationRouteIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E332D930EC3005EF149 /* NavigationRouteIDs.swift */; };
+		F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E332D930EC3005EF149 /* AuthenticationRouteID.swift */; };
 		F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E352D931364005EF149 /* NavigationRouterModifier.swift */; };
 		F4888E392D9313C0005EF149 /* AuthenticationNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E382D9313C0005EF149 /* AuthenticationNavigationRouter.swift */; };
 		F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */; };
@@ -1218,6 +1218,13 @@
 		F49C45802DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
 		F49C45812DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
 		F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */; };
+		F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4693E4E2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift */; };
+		F49C45892DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45882DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift */; };
+		F49C458B2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C458A2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift */; };
+		F49C458D2DC96AF7007E5EF1 /* PreferencesCategoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C458C2DC96AF7007E5EF1 /* PreferencesCategoryRow.swift */; };
+		F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */; };
+		F49C45A82DCAD00F007E5EF1 /* PreferencesRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */; };
+		F49C45AE2DCAE78E007E5EF1 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45AD2DCAE78E007E5EF1 /* GeneralSettingsView.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -2109,7 +2116,7 @@
 		F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlanUgradeViewController+UI.swift"; sourceTree = "<group>"; };
 		F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSelectionView.swift; sourceTree = "<group>"; };
 		F4888E312D930D75005EF149 /* BaseNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationRouter.swift; sourceTree = "<group>"; };
-		F4888E332D930EC3005EF149 /* NavigationRouteIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouteIDs.swift; sourceTree = "<group>"; };
+		F4888E332D930EC3005EF149 /* AuthenticationRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRouteID.swift; sourceTree = "<group>"; };
 		F4888E352D931364005EF149 /* NavigationRouterModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouterModifier.swift; sourceTree = "<group>"; };
 		F4888E382D9313C0005EF149 /* AuthenticationNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationNavigationRouter.swift; sourceTree = "<group>"; };
 		F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
@@ -2131,6 +2138,12 @@
 		F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundEffectType.swift; sourceTree = "<group>"; };
 		F49C45752DC3D1AD007E5EF1 /* LocalizationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationService.swift; sourceTree = "<group>"; };
 		F49C457C2DC3D204007E5EF1 /* LocalizationBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationBridge.swift; sourceTree = "<group>"; };
+		F49C45882DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesCategoryViewModel.swift; sourceTree = "<group>"; };
+		F49C458A2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainCategoryView.swift; sourceTree = "<group>"; };
+		F49C458C2DC96AF7007E5EF1 /* PreferencesCategoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesCategoryRow.swift; sourceTree = "<group>"; };
+		F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesNavigationRouter.swift; sourceTree = "<group>"; };
+		F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesRouteID.swift; sourceTree = "<group>"; };
+		F49C45AD2DCAE78E007E5EF1 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -2410,6 +2423,7 @@
 				E9219FF4288A29E90026E544 /* CommonView */,
 				C50F20E02B62323300266B23 /* ViewLog */,
 				E94E34FC28BD9BDC00E76D14 /* SubmitTicket */,
+				F4693E462DB0285700ECD6C4 /* LookAndFeel */,
 				1A24561C284515FE001C66B8 /* Help */,
 				1A0FD3C6283CE75700148E39 /* Connection */,
 				1AE6D2D3283B8F5400276C7D /* R.O.B.E.R.T */,
@@ -3376,7 +3390,6 @@
 				AF04EDA221E50E99005C6576 /* PortMap.swift */,
 				AF4E91D421ED277A00A3F584 /* MobilePlan.swift */,
 				AF04982F21FA43690046D33B /* Section.swift */,
-				AF8DA7AE2204BD5700885BD8 /* PreferenceItem.swift */,
 				AFA8041D22089ED200F8E379 /* APIEmailSent.swift */,
 				AFA804252209F13100F8E379 /* WifiNetwork.swift */,
 				AF6E8A6D2215D378005887E0 /* BestNode.swift */,
@@ -4607,20 +4620,20 @@
 		F4888E302D930CA6005EF149 /* NavigationRouter */ = {
 			isa = PBXGroup;
 			children = (
-				F4888E372D93139A005EF149 /* RouterTypes */,
+				F4888E372D93139A005EF149 /* Routers */,
 				F4888E312D930D75005EF149 /* BaseNavigationRouter.swift */,
-				F4888E332D930EC3005EF149 /* NavigationRouteIDs.swift */,
 				F4888E352D931364005EF149 /* NavigationRouterModifier.swift */,
 			);
 			path = NavigationRouter;
 			sourceTree = "<group>";
 		};
-		F4888E372D93139A005EF149 /* RouterTypes */ = {
+		F4888E372D93139A005EF149 /* Routers */ = {
 			isa = PBXGroup;
 			children = (
-				F4888E382D9313C0005EF149 /* AuthenticationNavigationRouter.swift */,
+				F49C45A32DCAC6FB007E5EF1 /* Authentication */,
+				F49C45A42DCACD6F007E5EF1 /* Preferences */,
 			);
-			path = RouterTypes;
+			path = Routers;
 			sourceTree = "<group>";
 		};
 		F4888E3C2D949DA7005EF149 /* SignUp */ = {
@@ -4652,8 +4665,15 @@
 		F499351E2DA7170F00108558 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45852DC9586C007E5EF1 /* Main */,
+				F49C45AA2DCAE733007E5EF1 /* General */,
 				F499351F2DA7174000108558 /* Account */,
-				F4693E462DB0285700ECD6C4 /* LookAndFeel */,
+				F49C45912DCAB5E6007E5EF1 /* Connection */,
+				F49C45942DCAB62D007E5EF1 /* Robert */,
+				F49C45972DCAB686007E5EF1 /* ReferForData */,
+				F49C459A2DCAB6BB007E5EF1 /* LookAndFeel */,
+				F49C459B2DCAC2A0007E5EF1 /* Help */,
+				F49C459C2DCAC2AA007E5EF1 /* About */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -4661,6 +4681,7 @@
 		F499351F2DA7174000108558 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				F49C458E2DCAB5B3007E5EF1 /* AccountSettings */,
 				F49935202DA7175200108558 /* GhostAccount */,
 				F499352F2DA83E3800108558 /* EnterEmail */,
 				F45C67422DBFE848006A6D30 /* ConfirmEmail */,
@@ -4736,6 +4757,244 @@
 				F499357D2DAEE82B00108558 /* CustomSoundEffectType.swift */,
 			);
 			path = Sound;
+			sourceTree = "<group>";
+		};
+		F49C45852DC9586C007E5EF1 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45862DC95CEE007E5EF1 /* Views */,
+				F49C45872DC95CF4007E5EF1 /* ViewModels */,
+				F49C45A92DCAE27D007E5EF1 /* Models */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		F49C45862DC95CEE007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F49C458A2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift */,
+				F49C458C2DC96AF7007E5EF1 /* PreferencesCategoryRow.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45872DC95CF4007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45882DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C458E2DCAB5B3007E5EF1 /* AccountSettings */ = {
+			isa = PBXGroup;
+			children = (
+				F49C458F2DCAB5BF007E5EF1 /* Views */,
+				F49C45902DCAB5C6007E5EF1 /* ViewModels */,
+			);
+			path = AccountSettings;
+			sourceTree = "<group>";
+		};
+		F49C458F2DCAB5BF007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45902DCAB5C6007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C45912DCAB5E6007E5EF1 /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45922DCAB5F8007E5EF1 /* Views */,
+				F49C45932DCAB5FF007E5EF1 /* ViewModels */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		F49C45922DCAB5F8007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45932DCAB5FF007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C45942DCAB62D007E5EF1 /* Robert */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45952DCAB65F007E5EF1 /* Views */,
+				F49C45962DCAB668007E5EF1 /* ViewModels */,
+			);
+			path = Robert;
+			sourceTree = "<group>";
+		};
+		F49C45952DCAB65F007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45962DCAB668007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C45972DCAB686007E5EF1 /* ReferForData */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45982DCAB69E007E5EF1 /* Views */,
+				F49C45992DCAB6A4007E5EF1 /* ViewModels */,
+			);
+			path = ReferForData;
+			sourceTree = "<group>";
+		};
+		F49C45982DCAB69E007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45992DCAB6A4007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C459A2DCAB6BB007E5EF1 /* LookAndFeel */ = {
+			isa = PBXGroup;
+			children = (
+				F49C459D2DCAC3A4007E5EF1 /* Views */,
+				F49C459E2DCAC3AB007E5EF1 /* ViewModels */,
+			);
+			path = LookAndFeel;
+			sourceTree = "<group>";
+		};
+		F49C459B2DCAC2A0007E5EF1 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				F49C459F2DCAC3B4007E5EF1 /* Views */,
+				F49C45A02DCAC3E1007E5EF1 /* ViewModels */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
+		F49C459C2DCAC2AA007E5EF1 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45A12DCAC3EF007E5EF1 /* Views */,
+				F49C45A22DCAC410007E5EF1 /* ViewModels */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
+		F49C459D2DCAC3A4007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C459E2DCAC3AB007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C459F2DCAC3B4007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45A02DCAC3E1007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C45A12DCAC3EF007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45A22DCAC410007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F49C45A32DCAC6FB007E5EF1 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				F4888E382D9313C0005EF149 /* AuthenticationNavigationRouter.swift */,
+				F4888E332D930EC3005EF149 /* AuthenticationRouteID.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		F49C45A42DCACD6F007E5EF1 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */,
+				F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		F49C45A92DCAE27D007E5EF1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AF8DA7AE2204BD5700885BD8 /* PreferenceItem.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F49C45AA2DCAE733007E5EF1 /* General */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45AB2DCAE740007E5EF1 /* Views */,
+				F49C45AC2DCAE75B007E5EF1 /* ViewModels */,
+			);
+			path = General;
+			sourceTree = "<group>";
+		};
+		F49C45AB2DCAE740007E5EF1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F49C45AD2DCAE78E007E5EF1 /* GeneralSettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F49C45AC2DCAE75B007E5EF1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		F4ADA5F42D564F110077C132 /* ImageLoader */ = {
@@ -5570,6 +5829,7 @@
 				1E006BBF2C6B739B00EE6389 /* BasePopupViewModel.swift in Sources */,
 				59FC74392C515A9400021CD1 /* ServerRepository.swift in Sources */,
 				59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */,
+				F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */,
 				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
@@ -5905,7 +6165,7 @@
 				1A590581283E1C3000A79B99 /* ConnectionModeItemView.swift in Sources */,
 				1AC9DBBF283BC33600BE082B /* RobertHeaderView.swift in Sources */,
 				C5FA3E8A2684E303001D03A7 /* SubmitTicketViewController+UI.swift in Sources */,
-				F4888E342D930EC3005EF149 /* NavigationRouteIDs.swift in Sources */,
+				F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */,
 				E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
@@ -5924,6 +6184,7 @@
 				1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */,
 				1A32B4DA283D1FD600B2986E /* ConnectionSecure.swift in Sources */,
 				E9D3D371274D1DB700283285 /* MainViewController+Alert.swift in Sources */,
+				F49C45892DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift in Sources */,
 				1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */,
 				C580FDEA2B4D70EE004FA857 /* KeyChainDatabase.swift in Sources */,
 				1AE6D2BD2837E46100276C7D /* AccountViewModel.swift in Sources */,
@@ -5945,6 +6206,7 @@
 				F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */,
 				AF21995F2270B147009B42E5 /* Result.swift in Sources */,
 				F440F2F82D8CAA8E006F1A6D /* DeviceTypeProvider.swift in Sources */,
+				F49C45AE2DCAE78E007E5EF1 /* GeneralSettingsView.swift in Sources */,
 				1EE74F7E2BD6C0DE0031185F /* ShakeForDataViewModel.swift in Sources */,
 				1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */,
 				E9219FF12885AFB90026E544 /* UIStackView+Extension.swift in Sources */,
@@ -6096,6 +6358,7 @@
 				F469F0D62D7BA659004DC6AB /* ServerSectionCell.swift in Sources */,
 				C5D0E40529BB8BE70091FB14 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				E9816B6E27D8E9BE0059D275 /* WgCredentials.swift in Sources */,
+				F49C45A82DCAD00F007E5EF1 /* PreferencesRouteID.swift in Sources */,
 				E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */,
 				59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */,
 				F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */,
@@ -6106,6 +6369,7 @@
 				599BA2AB2C5D21E100F0D1E4 /* XPressLoginCodeResponse.swift in Sources */,
 				F40419382D822ECF0005EF97 /* AppReviewManaging.swift in Sources */,
 				C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */,
+				F49C458D2DC96AF7007E5EF1 /* PreferencesCategoryRow.swift in Sources */,
 				1E2696C82BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift in Sources */,
 				F440F3022D8DECE6006F1A6D /* LoginView.swift in Sources */,
 				F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */,
@@ -6169,6 +6433,7 @@
 				E9219FFC289196EF0026E544 /* SelectableView.swift in Sources */,
 				AF4E926821EFC6EC00A3F584 /* Color+Extension.swift in Sources */,
 				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
+				F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */,
 				AF3E90E1231D970F00AD192A /* PrivacyViewController.swift in Sources */,
 				59EB6D1D2B328D6400616414 /* PreferencesMainViewModel.swift in Sources */,
 				F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */,
@@ -6332,6 +6597,7 @@
 				C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */,
 				F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */,
 				AF0AED382203549000039CAF /* ServerListTableViewDataSource+Delegate.swift in Sources */,
+				F49C458B2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift in Sources */,
 				C5A930D72B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift in Sources */,
 				AF4B92F0221DB3290054580D /* EnterEmailViewController+UI.swift in Sources */,
 				C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */,
