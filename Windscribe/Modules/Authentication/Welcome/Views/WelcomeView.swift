@@ -38,12 +38,14 @@ struct WelcomeView: View {
                     }
                 }
                 .onReceive(viewModel.routeToMainView) { _ in
-                    router.routeToMainView()                }
+                    router.routeToMainView()
+                }
                 .fullScreenCover(
                     isPresented: $router.shouldNavigateToEmergency,
                     content: {
                         router.createView(for: .emergency)
-                    })
+                    }
+                )
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .dynamicTypeSize(dynamicTypeRange)
