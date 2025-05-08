@@ -41,38 +41,50 @@ extension EnvironmentValues {
 
 /// Acts as a "super parent" that injects `deviceType` into the environment
 struct DeviceTypeProvider<Content: View>: View {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
-
     let content: () -> Content
 
-    private var deviceType: DeviceType {
-        if horizontalSizeClass == .compact && verticalSizeClass == .regular {
-            return .iPhonePortrait
-        } else if horizontalSizeClass == .compact && verticalSizeClass == .compact {
-            return .iPhoneLandscape
-        } else {
-            return .unknown  // Default until geometry decides for iPad
-        }
-    }
+    @State private var cachedDeviceType: DeviceType?
+    @State private var previousSize: CGSize = .zero
+    @State private var lastOrientation: UIDeviceOrientation = UIDevice.current.orientation
 
     var body: some View {
         GeometryReader { geometry in
-            let type = determineDeviceType(geometry: geometry)
+            ZStack {
+                Color.clear
+                    .onAppear {
+                        if cachedDeviceType == nil {
+                            let newType = determineDeviceType(geometry: geometry)
+                            cachedDeviceType = newType
+                            previousSize = geometry.size
+                            lastOrientation = UIDevice.current.orientation
+                        }
+                    }
+                    .onChange(of: geometry.size) { newSize in
+                        // Only respond to orientation-relevant changes
+                        guard abs(newSize.width - previousSize.width) > 100 else { return }
 
-            content()
-                .environment(\.deviceType, type)
-                .environment(\.dynamicTypeRange, dynamicRange(for: type))
+                        let newType = determineDeviceType(geometry: geometry)
+                        if newType != cachedDeviceType {
+                            cachedDeviceType = newType
+                            previousSize = newSize
+                        }
+                    }
+
+                if let type = cachedDeviceType {
+                    content()
+                        .environment(\.deviceType, type)
+                        .environment(\.dynamicTypeRange, dynamicRange(for: type))
+                }
+            }
         }
     }
 
     /// Determines device type, including iPad orientation
     private func determineDeviceType(geometry: GeometryProxy) -> DeviceType {
-        if deviceType == .unknown { // iPad logic
-            return geometry.size.width > geometry.size.height ? .iPadLandscape : .iPadPortrait
-        } else {
-            return deviceType
-        }
+        let isPad = UIDevice.current.userInterfaceIdiom == .pad
+        return isPad
+            ? (geometry.size.width > geometry.size.height ? .iPadLandscape : .iPadPortrait)
+            : (geometry.size.width > geometry.size.height ? .iPhoneLandscape : .iPhonePortrait)
     }
 
     /// Gather  appropriate dynamic type range based on device type

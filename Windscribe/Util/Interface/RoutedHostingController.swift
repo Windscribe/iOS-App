@@ -6,7 +6,6 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-import Foundation
 import SwiftUI
 
 class RoutedHostingController<Content: View>: UIHostingController<Content> {
@@ -14,7 +13,7 @@ class RoutedHostingController<Content: View>: UIHostingController<Content> {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if self.isMovingFromParent {
+        if isMovingFromParent {
             onPop?()
         }
     }
