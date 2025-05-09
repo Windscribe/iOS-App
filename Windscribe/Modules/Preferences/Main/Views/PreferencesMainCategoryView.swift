@@ -15,6 +15,8 @@ struct PreferencesMainCategoryView: View {
     @StateObject private var viewModel: PreferencesMainCategoryViewModelImpl
     @StateObject private var router: PreferencesNavigationRouter
 
+    @State private var showConfirmEmailSheet: Bool = false
+
     init(viewModel: any PreferencesMainCategoryViewModel, router: PreferencesNavigationRouter) {
         guard let model = viewModel as? PreferencesMainCategoryViewModelImpl else {
             fatalError("PreferencesMainCategoryView must be initialized properly with ViewModelImpl")
@@ -36,8 +38,6 @@ struct PreferencesMainCategoryView: View {
                 .padding(.top, 8)
             }
 
-            Spacer(minLength: 0)
-
             VStack(spacing: 12) {
                 if viewModel.actionDisplay != .hideAll {
                     PreferencesActionButton(
@@ -46,7 +46,16 @@ struct PreferencesMainCategoryView: View {
                         textColor: .midnight,
                         icon: Image(ImagesAsset.warningBlack),
                         action: {
-                            // TODO: Action
+                            switch viewModel.actionDisplay {
+                            case .email, .emailGet10GB:
+                                router.navigate(to: .enterEmail)
+                            case .setupAccountAndLogin, .setupAccount:
+                                router.navigate(to: .signupGhost)
+                            case .confirmEmail:
+                                showConfirmEmailSheet = true
+                            default:
+                                break
+                            }
                         }
                     )
                 }
@@ -55,10 +64,10 @@ struct PreferencesMainCategoryView: View {
                     PreferencesActionButton(
                         title: TextsAsset.login,
                         backgroundColor: .midnight,
-                        textColor: .midnight,
+                        textColor: .white,
                         icon: nil,
                         action: {
-                            // TODO: Login
+                            router.navigate(to: .login)
                         }
                     )
                 }
@@ -67,10 +76,24 @@ struct PreferencesMainCategoryView: View {
             .padding(.bottom, 32)
         }
         .background(Color.lightMidnight)
-        .overlay(routeLink) // Keeps nav logic separate
+        .overlay(routeLink)
         .edgesIgnoringSafeArea(.bottom)
         .dynamicTypeSize(dynamicTypeRange)
         .withRouter(router)
+        .sheet(isPresented: $showConfirmEmailSheet) {
+            if #available(iOS 16.4, *) {
+                router.createView(for: .confirmEmail)
+                    .presentationDetents([PresentationDetent.fraction(0.65)])
+                    .presentationDragIndicator(.visible)
+                    .presentationCornerRadius(24)
+            } else if #available(iOS 16.0, *) {
+                router.createView(for: .confirmEmail)
+                    .presentationDetents([PresentationDetent.fraction(0.65)])
+                    .presentationDragIndicator(.visible)
+            } else {
+                router.createView(for: .confirmEmail)
+            }
+        }
     }
 
     @ViewBuilder
@@ -81,7 +104,10 @@ struct PreferencesMainCategoryView: View {
 
                 VStack(spacing: 0) {
                     Button {
-                        if let route = item.routeID {
+                        if index == 1 {
+                            let dynamicRoute = viewModel.getDynamicRouteForAccountRow()
+                            router.navigate(to: dynamicRoute)
+                        } else if let route = item.routeID {
                             router.navigate(to: route)
                         } else if item == .logout {
                             viewModel.logout()

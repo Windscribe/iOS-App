@@ -9,6 +9,12 @@
 import Combine
 import RxSwift
 
+// MARK: RxSwift Bridge Error
+
+enum RxBridgeError: Error {
+    case missingInitialValue
+}
+
 // MARK: Single -> Combine
 
 extension PrimitiveSequence where Trait == SingleTrait {
@@ -35,9 +41,30 @@ extension PrimitiveSequence where Trait == SingleTrait {
 
 extension BehaviorSubject {
     func asPublisher() -> AnyPublisher<Element, Error> {
-        return self
-            .asObservable()
-            .toPublisher()
+        guard let initialValue = try? self.value() else {
+            return Fail(outputType: Element.self, failure: RxBridgeError.missingInitialValue)
+                .eraseToAnyPublisher()
+        }
+
+        let subject = CurrentValueSubject<Element, Error>(initialValue)
+
+        let disposable = self.subscribe(
+            onNext: {
+                subject.send($0)
+            },
+            onError: {
+                subject.send(completion: .failure($0))
+            },
+            onCompleted: {
+                subject.send(completion: .finished)
+            }
+        )
+
+        return subject
+            .handleEvents(receiveCancel: {
+                disposable.dispose()
+            })
+            .eraseToAnyPublisher()
     }
 }
 
