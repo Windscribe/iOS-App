@@ -23,12 +23,13 @@ struct PreferencesCategoryRow: View {
             Text(item.title)
                 .foregroundColor(.white.opacity(0.5))
                 .font(.bold(.callout))
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            Spacer()
-
-            Image(ImagesAsset.serverWhiteRightArrow)
-                .renderingMode(.template)
-                .foregroundColor(.white.opacity(0.25))
+            if item != .logout {
+                Image(ImagesAsset.serverWhiteRightArrow)
+                    .renderingMode(.template)
+                    .foregroundColor(.white.opacity(0.25))
+            }
         }
         .padding(.horizontal, 16)
     }

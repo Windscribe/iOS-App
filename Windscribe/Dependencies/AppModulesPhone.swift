@@ -107,6 +107,41 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any AccountSettingsViewModel).self) { r in
+            AccountSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any ConnectionSettingsViewModel).self) { r in
+            ConnectionSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any RobertSettingsViewModel).self) { r in
+            RobertSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any ReferForDataSettingsViewModel).self) { r in
+            ReferForDataSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any LookAndFeelSettingsViewModel).self) { r in
+            LookAndFeelSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any HelpSettingsViewModel).self) { r in
+            HelpSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any AboutSettingsViewModel).self) { r in
+            AboutSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
         container.register(AdvanceParamsViewModel.self) { r in
             AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!,
                                        apiManager: r.resolve(APIManager.self)!,
@@ -384,10 +419,6 @@ class ViewControllerModule: Assembly {
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
-        container.register(GeneralSettingsView.self) { r in
-            GeneralSettingsView()
-        }.inObjectScope(.transient)
-
         container.register(SignUpView.self) { r in
             SignUpView(viewModel: SignUpViewModelImpl(
                 apiCallManager: r.resolve(APIManager.self)!,
@@ -445,6 +476,52 @@ class ViewControllerModule: Assembly {
                     languageManager: r.resolve(LanguageManager.self)!,
                     preferences: r.resolve(Preferences.self)!
                 ), router: r.resolve(PreferencesNavigationRouter.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(GeneralSettingsView.self) { _ in
+            GeneralSettingsView()
+        }.inObjectScope(.transient)
+
+        container.register(AccountSettingsView.self) { r in
+            AccountSettingsView(
+                viewModel: AccountSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(ConnectionSettingsView.self) { r in
+           ConnectionSettingsView(
+                viewModel: ConnectionSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(RobertSettingsView.self) { r in
+           RobertSettingsView(
+                viewModel: RobertSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(ReferForDataSettingsView.self) { r in
+            ReferForDataSettingsView(
+                viewModel: ReferForDataSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(LookAndFeelSettingsView.self) { r in
+           LookAndFeelSettingsView(
+                viewModel: LookAndFeelSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(HelpSettingsView.self) { r in
+            HelpSettingsView(
+                viewModel: HelpSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
+        }.inObjectScope(.transient)
+
+        container.register(AboutSettingsView.self) { r in
+            AboutSettingsView(
+                viewModel: AboutSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!))
         }.inObjectScope(.transient)
 
         container.register(MainViewController.self) { _ in

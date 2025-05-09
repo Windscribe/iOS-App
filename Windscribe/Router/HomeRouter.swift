@@ -18,6 +18,8 @@ class HomeRouter: BaseRouter, RootRouter {
 
             let preferencesView = Assembler.resolve(PreferencesMainCategoryView.self)
             pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
+//            let vc = Assembler.resolve(PreferencesMainViewControllerOld.self)
+//            from.navigationController?.pushViewController(vc, animated: true)
 
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)

@@ -1222,6 +1222,20 @@
 		F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */; };
 		F49C45A82DCAD00F007E5EF1 /* PreferencesRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */; };
 		F49C45AE2DCAE78E007E5EF1 /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45AD2DCAE78E007E5EF1 /* GeneralSettingsView.swift */; };
+		F49C45B22DCD28BF007E5EF1 /* AccountSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45B12DCD28BF007E5EF1 /* AccountSettingsView.swift */; };
+		F49C45B42DCD290D007E5EF1 /* AccountSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45B32DCD290D007E5EF1 /* AccountSettingsViewModel.swift */; };
+		F49C45B62DCD2C63007E5EF1 /* ConnectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45B52DCD2C63007E5EF1 /* ConnectionSettingsView.swift */; };
+		F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45B72DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift */; };
+		F49C45BA2DCD2E85007E5EF1 /* RobertSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45B92DCD2E85007E5EF1 /* RobertSettingsView.swift */; };
+		F49C45BC2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45BB2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift */; };
+		F49C45BE2DCD304E007E5EF1 /* ReferForDataSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45BD2DCD304E007E5EF1 /* ReferForDataSettingsView.swift */; };
+		F49C45C02DCD30B3007E5EF1 /* ReferForDataSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45BF2DCD30B3007E5EF1 /* ReferForDataSettingsViewModel.swift */; };
+		F49C45C22DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45C12DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift */; };
+		F49C45C42DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45C32DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift */; };
+		F49C45C62DCD32D4007E5EF1 /* HelpSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45C52DCD32D4007E5EF1 /* HelpSettingsView.swift */; };
+		F49C45C82DCD3311007E5EF1 /* HelpSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45C72DCD3311007E5EF1 /* HelpSettingsViewModel.swift */; };
+		F49C45CA2DCD335E007E5EF1 /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45C92DCD335E007E5EF1 /* AboutSettingsView.swift */; };
+		F49C45CE2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49C45CD2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
@@ -2139,6 +2153,20 @@
 		F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesNavigationRouter.swift; sourceTree = "<group>"; };
 		F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesRouteID.swift; sourceTree = "<group>"; };
 		F49C45AD2DCAE78E007E5EF1 /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		F49C45B12DCD28BF007E5EF1 /* AccountSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsView.swift; sourceTree = "<group>"; };
+		F49C45B32DCD290D007E5EF1 /* AccountSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45B52DCD2C63007E5EF1 /* ConnectionSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsView.swift; sourceTree = "<group>"; };
+		F49C45B72DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45B92DCD2E85007E5EF1 /* RobertSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertSettingsView.swift; sourceTree = "<group>"; };
+		F49C45BB2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RobertSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45BD2DCD304E007E5EF1 /* ReferForDataSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferForDataSettingsView.swift; sourceTree = "<group>"; };
+		F49C45BF2DCD30B3007E5EF1 /* ReferForDataSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferForDataSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45C12DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelSettingsView.swift; sourceTree = "<group>"; };
+		F49C45C32DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45C52DCD32D4007E5EF1 /* HelpSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSettingsView.swift; sourceTree = "<group>"; };
+		F49C45C72DCD3311007E5EF1 /* HelpSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSettingsViewModel.swift; sourceTree = "<group>"; };
+		F49C45C92DCD335E007E5EF1 /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
+		F49C45CD2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsViewModel.swift; sourceTree = "<group>"; };
 		F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
 		F4ADA5F52D564F300077C132 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
@@ -4791,6 +4819,7 @@
 		F49C458F2DCAB5BF007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45B12DCD28BF007E5EF1 /* AccountSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4798,6 +4827,7 @@
 		F49C45902DCAB5C6007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45B32DCD290D007E5EF1 /* AccountSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4814,6 +4844,7 @@
 		F49C45922DCAB5F8007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45B52DCD2C63007E5EF1 /* ConnectionSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4821,6 +4852,7 @@
 		F49C45932DCAB5FF007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45B72DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4837,6 +4869,7 @@
 		F49C45952DCAB65F007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45B92DCD2E85007E5EF1 /* RobertSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4844,6 +4877,7 @@
 		F49C45962DCAB668007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45BB2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4860,6 +4894,7 @@
 		F49C45982DCAB69E007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45BD2DCD304E007E5EF1 /* ReferForDataSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4867,6 +4902,7 @@
 		F49C45992DCAB6A4007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45BF2DCD30B3007E5EF1 /* ReferForDataSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4901,6 +4937,7 @@
 		F49C459D2DCAC3A4007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45C12DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4908,6 +4945,7 @@
 		F49C459E2DCAC3AB007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45C32DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4915,6 +4953,7 @@
 		F49C459F2DCAC3B4007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45C52DCD32D4007E5EF1 /* HelpSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4922,6 +4961,7 @@
 		F49C45A02DCAC3E1007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45C72DCD3311007E5EF1 /* HelpSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4929,6 +4969,7 @@
 		F49C45A12DCAC3EF007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45C92DCD335E007E5EF1 /* AboutSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4936,6 +4977,7 @@
 		F49C45A22DCAC410007E5EF1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F49C45CD2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -6104,6 +6146,7 @@
 				C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */,
 				C580FE042B4F254E004FA857 /* PushNotificationManagerV2Impl.swift in Sources */,
 				F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */,
+				F49C45C42DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift in Sources */,
 				C5A930EC2B44A2DE0001CFA0 /* FileDatabase.swift in Sources */,
 				1E2366D02BC587F5000DF098 /* SetPreferredProtocolModel.swift in Sources */,
 				C580FE182B5078B3004FA857 /* WindscribeInAppProduct.swift in Sources */,
@@ -6131,6 +6174,7 @@
 				C56FCBD02B2A428C008DE7D4 /* PreferenceMainRouter.swift in Sources */,
 				AFF410DA234F47610089F1D1 /* SetPreferredProtocolPopupViewController+UI.swift in Sources */,
 				E96AFFF22896856300B53EEE /* GeneralViewType.swift in Sources */,
+				F49C45CE2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift in Sources */,
 				AFFA716421C99B2F00349195 /* Date+Extension.swift in Sources */,
 				AF16CA1822272EBE00997A2A /* InAppPurchaseManagerImpl.swift in Sources */,
 				F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */,
@@ -6145,6 +6189,7 @@
 				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Extension.swift in Sources */,
 				AF0420EE21C1A0FD002132DE /* Node.swift in Sources */,
 				1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */,
+				F49C45BA2DCD2E85007E5EF1 /* RobertSettingsView.swift in Sources */,
 				F4888E392D9313C0005EF149 /* AuthenticationNavigationRouter.swift in Sources */,
 				AFD24CA421C179DF00BBCE1E /* APIError.swift in Sources */,
 				591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */,
@@ -6153,6 +6198,7 @@
 				E94E34F728B2817000E76D14 /* FeatureExplainer.swift in Sources */,
 				59E63A2A2BD0B762002E566F /* RobertViewModel.swift in Sources */,
 				AF54C6C8228B378B00DAAB07 /* AutomaticMode.swift in Sources */,
+				F49C45B42DCD290D007E5EF1 /* AccountSettingsViewModel.swift in Sources */,
 				C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */,
 				1A590581283E1C3000A79B99 /* ConnectionModeItemView.swift in Sources */,
 				1AC9DBBF283BC33600BE082B /* RobertHeaderView.swift in Sources */,
@@ -6193,6 +6239,7 @@
 				C5A930CD2B4332AA0001CFA0 /* User.swift in Sources */,
 				AFF410D8234F473D0089F1D1 /* SetPreferredProtocolPopupViewController.swift in Sources */,
 				1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */,
+				F49C45BC2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift in Sources */,
 				C5A930E92B44A1580001CFA0 /* FileDatabaseImpl.swift in Sources */,
 				F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */,
 				F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */,
@@ -6254,7 +6301,9 @@
 				C57668E42B2790AA004EA3D7 /* APIResult.swift in Sources */,
 				1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */,
 				E998651528A5683A0091B6A3 /* NetworkViewModel.swift in Sources */,
+				F49C45C62DCD32D4007E5EF1 /* HelpSettingsView.swift in Sources */,
 				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
+				F49C45BE2DCD304E007E5EF1 /* ReferForDataSettingsView.swift in Sources */,
 				AF443D6D22C170FD004986DA /* ImageButton.swift in Sources */,
 				C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */,
 				AF2531B42209FE830001CF96 /* Dropdown.swift in Sources */,
@@ -6370,6 +6419,7 @@
 				C580FDF62B4DB735004FA857 /* ConnectivityImpl.swift in Sources */,
 				AF4E926D21F235D600A3F584 /* UIFont+Extension.swift in Sources */,
 				1E5553C32D93118100F16AF0 /* CustomFlagsBackgroundView.swift in Sources */,
+				F49C45C22DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift in Sources */,
 				1E5553CC2D96DA0000F16AF0 /* MainViewController+Bindings.swift in Sources */,
 				C5D1C2D42BBFE1AD0083B9EC /* AdvanceRepositoryImpl.swift in Sources */,
 				C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */,
@@ -6392,6 +6442,7 @@
 				F4843A952D89F7300034330F /* SafariView.swift in Sources */,
 				AF3FC11D227B68EB0050B224 /* SessionManager.swift in Sources */,
 				E94E34F928B3E2B100E76D14 /* WSTouchView.swift in Sources */,
+				F49C45C82DCD3311007E5EF1 /* HelpSettingsViewModel.swift in Sources */,
 				AF914A7823D611DB002D3041 /* UIButton+Extension.swift in Sources */,
 				F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */,
 				AF018E0321B09B6400B225FF /* VPNProtocols.swift in Sources */,
@@ -6406,6 +6457,7 @@
 				AF16CA1E222847B700997A2A /* IAPInfoCellTableViewCell.swift in Sources */,
 				F499357B2DAEE4E900108558 /* CustomSoundEffectView.swift in Sources */,
 				AF4E926B21F2309000A3F584 /* UIConstants+Text.swift in Sources */,
+				F49C45C02DCD30B3007E5EF1 /* ReferForDataSettingsViewModel.swift in Sources */,
 				C5A930C92B42165F0001CFA0 /* APIManagerImpl+Account.swift in Sources */,
 				AF16CA22222884E700997A2A /* UITextView+Extension.swift in Sources */,
 				AF7F30842376099C0097C6D6 /* ShakeForDataViewController+UI.swift in Sources */,
@@ -6422,6 +6474,7 @@
 				AFA8041E22089ED200F8E379 /* APIEmailSent.swift in Sources */,
 				C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */,
 				E9219FFC289196EF0026E544 /* SelectableView.swift in Sources */,
+				F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */,
 				AF4E926821EFC6EC00A3F584 /* Color+Extension.swift in Sources */,
 				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */,
@@ -6454,9 +6507,12 @@
 				F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */,
 				C5D0F2FE27E1959D00DB3E49 /* WgErrorCodes.swift in Sources */,
 				F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */,
+				F49C45B62DCD2C63007E5EF1 /* ConnectionSettingsView.swift in Sources */,
 				1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
 				1E0EFF152C2C7A0F002FBC72 /* ConnectionOptions.swift in Sources */,
 				E96AFFF428A2BEB800B53EEE /* AccountEmailCell.swift in Sources */,
+				F49C45B22DCD28BF007E5EF1 /* AccountSettingsView.swift in Sources */,
+				F49C45CA2DCD335E007E5EF1 /* AboutSettingsView.swift in Sources */,
 				1EC6C7812BE268D60036248B /* ListSelectionViewModel.swift in Sources */,
 				C56FCBE82B2B8E40008DE7D4 /* SharedKeys.swift in Sources */,
 				F4888E3B2D946DB9005EF149 /* KeyboardResponder.swift in Sources */,

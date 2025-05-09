@@ -16,6 +16,7 @@ protocol PreferencesMainCategoryViewModel: ObservableObject {
     var visibleItems: [PreferenceItemType] { get set }
 
     func updateActionDisplay()
+    func getDynamicRouteForAccountRow() -> PreferencesRouteID
     func reloadItems()
     func shouldHideRow(index: Int) -> Bool
     func logout()
@@ -51,12 +52,12 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
         self.languageManager = languageManager
         self.preferences = preferences
 
-        bindSubjects()
+        bind()
         reloadItems()
         updateActionDisplay()
     }
 
-    private func bindSubjects() {
+    private func bind() {
         lookAndFeelRepo.isDarkModeSubject
             .asPublisher()
             .receive(on: DispatchQueue.main)
@@ -102,6 +103,19 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
             actionDisplay = .confirmEmail
         } else {
             actionDisplay = .hideAll
+        }
+    }
+
+    func getDynamicRouteForAccountRow() -> PreferencesRouteID {
+        let session = sessionManager.session
+        if session?.isUserGhost == true {
+            if session?.isUserPro == true && session?.hasUserAddedEmail == false {
+                return .signupGhost
+            } else {
+                return .ghostAccount
+            }
+        } else {
+            return .account
         }
     }
 
