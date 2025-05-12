@@ -1790,6 +1790,10 @@ enum TextsAsset {
         static var inviteMessage: String {
             return "is inviting you to join Windscribe. Provide their username at signup and you’ll both get 1gb of free data added to your accounts. If you go pro, they’ll go pro too!".localized
         }
+
+        static var usernamePlaceholder: String {
+            return "User".localized
+        }
     }
 
     static var emergencyConnect: String {

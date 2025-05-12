@@ -124,6 +124,9 @@ class ViewModels: Assembly {
 
         container.register((any ReferForDataSettingsViewModel).self) { r in
             ReferForDataSettingsViewModelImpl(
+                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                referFriendManager: r.resolve(ReferAndShareManagerV2.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
@@ -503,6 +506,9 @@ class ViewControllerModule: Assembly {
         container.register(ReferForDataSettingsView.self) { r in
             ReferForDataSettingsView(
                 viewModel: ReferForDataSettingsViewModelImpl(
+                    lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!,
+                    sessionManager: r.resolve(SessionManagerV2.self)!,
+                    referFriendManager: r.resolve(ReferAndShareManagerV2.self)!,
                     logger: r.resolve(FileLogger.self)!))
         }.inObjectScope(.transient)
 

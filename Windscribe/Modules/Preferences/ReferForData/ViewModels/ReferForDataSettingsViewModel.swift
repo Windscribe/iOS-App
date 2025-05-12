@@ -9,20 +9,61 @@
 import Foundation
 import Combine
 
-protocol ReferForDataSettingsViewModel: ObservableObject { }
+protocol ReferForDataSettingsViewModel: ObservableObject {
+    var isDarkMode: Bool { get }
+    var appStoreLink: String { get }
+    var inviteMessage: String { get }
+    func markShareDialogShown()
+}
 
 final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
-    private let logger: FileLogger
+    @Published var isDarkMode: Bool = false
 
+    private let lookAndFeelRepo: LookAndFeelRepositoryType
+    private let sessionManager: SessionManagerV2
+    private let referFriendManager: ReferAndShareManagerV2
+    private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
 
-    init(logger: FileLogger) {
+    var appStoreLink = Links.appStoreLink
+
+    var inviteMessage: String {
+        let username = sessionManager.session?.username ?? TextsAsset.Refer.usernamePlaceholder
+        return "\(username) \(TextsAsset.Refer.inviteMessage)"
+    }
+
+    init(
+        lookAndFeelRepo: LookAndFeelRepositoryType,
+        sessionManager: SessionManagerV2,
+        referFriendManager: ReferAndShareManagerV2,
+        logger: FileLogger
+    ) {
+        self.lookAndFeelRepo = lookAndFeelRepo
+        self.sessionManager = sessionManager
+        self.referFriendManager = referFriendManager
         self.logger = logger
 
         bind()
     }
 
-    func bind() {
-        // TODO: Bind
+    private func bind() {
+        lookAndFeelRepo.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case let .failure(error) = completion {
+                        self?.logger.logE("ReferFriendDataViewModel", "Dark mode binding error: \(error)")
+                    }
+                },
+                receiveValue: { [weak self] in
+                    self?.isDarkMode = $0
+                }
+            )
+            .store(in: &cancellables)
+    }
+
+    func markShareDialogShown() {
+        referFriendManager.setShowedShareDialog(showed: true)
     }
 }
