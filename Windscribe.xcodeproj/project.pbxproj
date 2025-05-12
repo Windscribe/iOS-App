@@ -1247,6 +1247,7 @@
 		F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B7F7AF2D833D9900CB4CEF /* WelcomeViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */; };
+		F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */; };
 		F4E48D712DB9C2B0005CB047 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */; };
 		F4E48D722DB9C2B0005CB047 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */; };
 		F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */; };
@@ -2174,6 +2175,7 @@
 		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
+		F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
 		F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
 		F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
 		F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
@@ -4606,6 +4608,7 @@
 			isa = PBXGroup;
 			children = (
 				F4843A942D89F7300034330F /* SafariView.swift */,
+				F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */,
 				F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */,
 				F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */,
 				F4888E452D9658EB005EF149 /* ViewPositionReader.swift */,
@@ -6472,6 +6475,7 @@
 				1AF57D46280FCF37004E8082 /* Language.swift in Sources */,
 				F4F51A692D9B176300407DE7 /* SignupWarningView.swift in Sources */,
 				AFA8041E22089ED200F8E379 /* APIEmailSent.swift in Sources */,
+				F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */,
 				C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */,
 				E9219FFC289196EF0026E544 /* SelectableView.swift in Sources */,
 				F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */,

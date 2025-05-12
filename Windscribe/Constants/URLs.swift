@@ -28,6 +28,7 @@ enum Links {
     static let forgotPassword =  base + "forgotpassword"
     static let learMoreAboutRobert = "features/robert"
     static let softwareLicenses = "https://windscribe.com/terms/oss"
+    static let appStoreLink = "https://apps.apple.com/us/app/windscribe-vpn/id1129435228"
     static let support = "windscribe.com/support"
     static let changelog = base + "changelog/ios"
     static let youtube = "https://www.youtube.com/c/windscribe"
