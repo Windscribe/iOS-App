@@ -86,6 +86,6 @@ class AccountPopupModel: AccountPopupModelType {
     }
 
     func cancel(navigationVC: UINavigationController?) {
-        popupRouter?.dismissPopup(action: .dismiss, navigationVC: navigationVC)
+        popupRouter?.dismissPopup(navigationVC: navigationVC)
     }
 }

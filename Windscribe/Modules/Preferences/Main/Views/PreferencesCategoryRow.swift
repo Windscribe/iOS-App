@@ -21,14 +21,14 @@ struct PreferencesCategoryRow: View {
                 .foregroundColor(tintColor)
 
             Text(item.title)
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(.white)
                 .font(.bold(.callout))
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             if item != .logout {
                 Image(ImagesAsset.serverWhiteRightArrow)
                     .renderingMode(.template)
-                    .foregroundColor(.white.opacity(0.25))
+                    .foregroundColor(.white.opacity(0.7))
             }
         }
         .padding(.horizontal, 16)

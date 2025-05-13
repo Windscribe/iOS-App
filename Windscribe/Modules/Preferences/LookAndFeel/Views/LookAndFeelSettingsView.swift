@@ -25,12 +25,14 @@ struct LookAndFeelSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
-            Text("Refer For Data Settings")
+            Text("Look And Feel Settings")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("Look And Feel")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

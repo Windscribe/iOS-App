@@ -383,10 +383,11 @@ struct SignUpView: View {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
+                    Image(systemName: "chevron.backward")
+                      .font(.system(size: 17, weight: .semibold))
+                      .foregroundColor(.white)
+                      .padding(.leading, -8)
                 })
-                .padding(.leading, 8)
             }
 
             ToolbarItemGroup(placement: .keyboard) {

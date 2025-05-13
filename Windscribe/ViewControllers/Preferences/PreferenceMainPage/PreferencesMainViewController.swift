@@ -169,7 +169,7 @@ class PreferencesMainViewControllerOld: WSNavigationViewController {
         case 4:
             router?.routeTo(to: RouteID.enterEmail, from: self)
         case 5:
-            router?.routeTo(to: RouteID.confirmEmail(delegate: self), from: self)
+            router?.routeTo(to: RouteID.confirmEmail, from: self)
         default:
             return
         }
@@ -189,12 +189,6 @@ class PreferencesMainViewControllerOld: WSNavigationViewController {
 }
 
 // MARK: - Extensions
-
-extension PreferencesMainViewControllerOld: ConfirmEmailViewControllerDelegate {
-    func dismissWith(action: ConfirmEmailAction) {
-        router.dismissPopup(action: action, navigationVC: navigationController)
-    }
-}
 
 extension PreferencesMainViewControllerOld: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {

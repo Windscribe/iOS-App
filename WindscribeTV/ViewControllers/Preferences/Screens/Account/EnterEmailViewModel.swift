@@ -1,5 +1,5 @@
 //
-//  EnterEmailViewModelOld.swift
+//  EnterEmailViewModel.swift
 //  Windscribe
 //
 //  Created by Bushra Sagir on 2024-04-01.
@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol EnterEmailViewModelOld {
+protocol EnterEmailViewModel {
     var alertManager: AlertManagerV2 { get }
     var sessionManager: SessionManagerV2 { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
@@ -17,7 +17,7 @@ protocol EnterEmailViewModelOld {
     func changeEmailAddress(email: String) -> Single<APIMessage>
 }
 
-class EnterEmailViewModelImplOld: EnterEmailViewModelOld {
+class EnterEmailViewModelImpl: EnterEmailViewModel {
     let sessionManager: SessionManagerV2
     let alertManager: AlertManagerV2
     let apiManager: APIManager

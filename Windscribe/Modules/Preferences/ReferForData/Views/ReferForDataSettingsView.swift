@@ -25,7 +25,8 @@ struct ReferForDataSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight.ignoresSafeArea()
+            Color.nightBlue
+                .edgesIgnoringSafeArea(.all)
 
             ScrollView {
                 VStack(spacing: 32) {
@@ -79,6 +80,7 @@ struct ReferForDataSettingsView: View {
             }
             .dynamicTypeSize(dynamicTypeRange)
         }
+        .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showShareSheet) {
             ShareSheetView(items: [viewModel.inviteMessage, viewModel.appStoreLink])
         }

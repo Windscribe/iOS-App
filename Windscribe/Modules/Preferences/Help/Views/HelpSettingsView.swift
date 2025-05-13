@@ -25,12 +25,14 @@ struct HelpSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
             Text("Help Settings")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("Help")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

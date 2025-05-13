@@ -25,12 +25,14 @@ struct ConnectionSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
             Text("Connection Settings")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("Connection")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

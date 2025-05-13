@@ -10,7 +10,7 @@ import RxSwift
 import UIKit
 
 class AddEmailPopupViewController: BasePopUpViewController {
-    var router: HomeRouter!, aeViewModel: EnterEmailViewModelOld!
+    var router: HomeRouter!, aeViewModel: EnterEmailViewModel!
     @IBOutlet var fieldStackView: UIStackView!
     @IBOutlet var loadingView: UIView!
     @IBOutlet var activityIndicator: UIActivityIndicatorView!

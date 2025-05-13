@@ -368,7 +368,7 @@ extension AccountViewController {
     }
 
     private func navigateToConfirmEmailVC() {
-        router?.routeTo(to: RouteID.confirmEmail(delegate: self), from: self)
+        router?.routeTo(to: RouteID.confirmEmail, from: self)
     }
 
     private func navigateUpgradeViewController() {
@@ -400,12 +400,6 @@ extension AccountViewController: AccountEmailCellDelegate, AccountTableViewCellD
         if data.needUpgradeAccount {
             navigateUpgradeViewController()
         }
-    }
-}
-
-extension AccountViewController: ConfirmEmailViewControllerDelegate {
-    func dismissWith(action: ConfirmEmailAction) {
-        router?.dismissPopup(action: action, navigationVC: navigationController)
     }
 }
 

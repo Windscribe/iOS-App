@@ -12,10 +12,9 @@ import Swinject
 class EmailRouter: BaseRouter, NavigationRouter {
     func routeTo(to: RouteID, from: WSNavigationViewController) {
         switch to {
-        case let RouteID.confirmEmail(delegate):
-            let vc = Assembler.resolve(ConfirmEmailViewController.self)
-            vc.dismissDelegate = delegate
-            from.present(vc, animated: true)
+        case .confirmEmail:
+            let confirmEmail = Assembler.resolve(ConfirmEmailView.self)
+            pushViewWithoutNavigationBar(from: from, view: confirmEmail)
         default: ()
         }
     }

@@ -10,7 +10,7 @@ import RxSwift
 import UIKit
 
 class ConfirmEmailPopupViewController: BasePopUpViewController {
-    var ceViewModel: ConfirmEmailViewModelOld!, router: HomeRouter!
+    var ceViewModel: ConfirmEmailViewModel!, router: HomeRouter!
 
     var resendButton = WSPillButton()
     var changeButton = WSPillButton()

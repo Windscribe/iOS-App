@@ -34,3 +34,15 @@ enum RouteID {
     case privacyView(completionHandler: () -> Void)
     case emergency
 }
+
+enum PreferencesRouteID {
+    case general
+    case account
+    case connection
+    case robert
+    case referData
+    case lookAndFeel
+    case help
+    case about
+    case logout
+}

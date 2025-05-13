@@ -32,7 +32,7 @@ struct PreferencesMainCategoryView: View {
                 VStack(spacing: 0) {
                     categoryRows()
                 }
-                .background(Color.white.opacity(0.08))
+                .background(Color.white.opacity(0.1))
                 .cornerRadius(8)
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
@@ -75,7 +75,7 @@ struct PreferencesMainCategoryView: View {
             .padding(.horizontal, 24)
             .padding(.bottom, 32)
         }
-        .background(Color.lightMidnight)
+        .background(Color.nightBlue)
         .overlay(routeLink)
         .edgesIgnoringSafeArea(.bottom)
         .dynamicTypeSize(dynamicTypeRange)
@@ -84,12 +84,12 @@ struct PreferencesMainCategoryView: View {
             if #available(iOS 16.4, *) {
                 router.createView(for: .confirmEmail)
                     .presentationDetents([PresentationDetent.fraction(0.65)])
-                    .presentationDragIndicator(.visible)
+                    .presentationDragIndicator(.hidden)
                     .presentationCornerRadius(24)
             } else if #available(iOS 16.0, *) {
                 router.createView(for: .confirmEmail)
                     .presentationDetents([PresentationDetent.fraction(0.65)])
-                    .presentationDragIndicator(.visible)
+                    .presentationDragIndicator(.hidden)
             } else {
                 router.createView(for: .confirmEmail)
             }

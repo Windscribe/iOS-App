@@ -25,12 +25,14 @@ struct AccountSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
             Text("Account Settings")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("Account")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -16,10 +16,9 @@ class AccountRouter: BaseRouter, NavigationRouter {
         case .enterEmail:
             let enterEmail = Assembler.resolve(EnterEmailView.self)
             pushViewWithoutNavigationBar(from: from, view: enterEmail)
-        case let .confirmEmail(delegate):
-            let vc = Assembler.resolve(ConfirmEmailViewController.self)
-            vc.dismissDelegate = delegate
-            from.present(vc, animated: true)
+        case .confirmEmail:
+            let confirmEmail = Assembler.resolve(ConfirmEmailView.self)
+            pushViewWithoutNavigationBar(from: from, view: confirmEmail)
         case .upgrade:
             let planUpgradeVC = Assembler.resolve(PlanUpgradeViewController.self)
             let navigationController = UINavigationController(rootViewController: planUpgradeVC)
