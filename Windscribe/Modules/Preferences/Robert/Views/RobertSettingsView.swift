@@ -25,12 +25,14 @@ struct RobertSettingsView: View {
 
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
             Text("Robert Settings")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("R.O.B.E.R.T")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

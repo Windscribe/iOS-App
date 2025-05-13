@@ -52,15 +52,9 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         safariVC.delegate = self
     }
 
-    func dismissPopup(action: ConfirmEmailAction, navigationVC: UINavigationController?) {
-        switch action {
-        case .dismiss:
-            navigationVC?.popToRootViewController(animated: true)
-            return
-        case .enterEmail:
-            let vc = Assembler.resolve(EnterEmailViewController.self)
-            navigationVC?.pushViewController(vc, animated: true)
-        }
+    func dismissPopup(navigationVC: UINavigationController?) {
+
+        navigationVC?.popToRootViewController(animated: true)
     }
 
     func pushViewWithoutNavigationBar<V: View>(from viewController: WSUIViewController, view: V, title: String? = nil) {
@@ -93,7 +87,7 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
                         return context.maximumDetentValue * 0.65
                     }
                 ]
-                sheet.prefersGrabberVisible = true
+                sheet.prefersGrabberVisible = false
                 sheet.preferredCornerRadius = 24
             }
             vc.modalPresentationStyle = .pageSheet

@@ -62,19 +62,16 @@ extension UIViewController {
 }
 
 extension UIApplication {
-
-    /// Finding Top View Controller for connected scenes
+    /// Finds the top-most view controller in the current key window scene
     func topMostViewController() -> UIViewController? {
-        guard let windowScene = connectedScenes.first as? UIWindowScene,
-              let rootVC = windowScene.windows.first?.rootViewController else {
+        guard let rootVC = connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .flatMap({ $0.windows })
+                .first(where: { $0.isKeyWindow })?
+                .rootViewController else {
             return nil
         }
 
-        var topController = rootVC
-        while let presentedVC = topController.presentedViewController {
-            topController = presentedVC
-        }
-
-        return topController
+        return rootVC.topMostViewController()
     }
 }

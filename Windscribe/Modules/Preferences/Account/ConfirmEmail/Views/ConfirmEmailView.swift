@@ -132,6 +132,6 @@ struct ConfirmEmailView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.lightMidnight.edgesIgnoringSafeArea(.all))
+        .background(Color.nightBlue.edgesIgnoringSafeArea(.all))
     }
 }

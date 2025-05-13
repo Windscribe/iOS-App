@@ -193,12 +193,6 @@ class ViewModels: Assembly {
                                    vpnManager: r.resolve(VPNManager.self)!,
                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(EnterEmailViewModelOld.self) { r in
-            EnterEmailViewModelImplOld(sessionManager: r.resolve(SessionManagerV2.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, apiManager: r.resolve(APIManager.self)!)
-        }.inObjectScope(.transient)
-        container.register(ConfirmEmailViewModelOld.self) { r in
-            ConfirmEmailViewModelImplOld(alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!)
-        }.inObjectScope(.transient)
         container.register(SubmitTicketViewModel.self) { r in
             SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManagerV2.self)!)
         }.inObjectScope(.transient)
@@ -633,19 +627,6 @@ class ViewControllerModule: Assembly {
             ShareWithFriendViewController()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ShareWithFriendViewModelType.self)
-        }.inObjectScope(.transient)
-        container.register(EnterEmailViewController.self) { _ in
-            EnterEmailViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(EnterEmailViewModelOld.self)
-            c.router = r.resolve(EmailRouter.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(ConfirmEmailViewController.self) { _ in
-            ConfirmEmailViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ConfirmEmailViewModelOld.self)
-            c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(PlanUpgradeViewController.self) { _ in
             PlanUpgradeViewController()

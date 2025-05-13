@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol ConfirmEmailViewModelOld {
+protocol ConfirmEmailViewModel {
     var alertManager: AlertManagerV2 { get }
     var sessionManager: SessionManagerV2 { get }
     var localDatabase: LocalDatabase { get }
@@ -18,7 +18,7 @@ protocol ConfirmEmailViewModelOld {
     func updateSession()
 }
 
-class ConfirmEmailViewModelImplOld: ConfirmEmailViewModelOld {
+class ConfirmEmailViewModelImpl: ConfirmEmailViewModel {
     var alertManager: AlertManagerV2
     var localDatabase: LocalDatabase
     var sessionManager: SessionManagerV2

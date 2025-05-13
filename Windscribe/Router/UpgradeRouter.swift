@@ -12,13 +12,12 @@ import Swinject
 class UpgradeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
-        case RouteID.enterEmail:
+        case .enterEmail:
             let enterEmail = Assembler.resolve(EnterEmailView.self)
             pushViewWithoutNavigationBar(from: from, view: enterEmail)
-        case let RouteID.confirmEmail(delegate):
-            let vc = Assembler.resolve(ConfirmEmailViewController.self)
-            vc.dismissDelegate = delegate
-            from.present(vc, animated: true)
+        case .confirmEmail:
+            let confirmEmail = Assembler.resolve(ConfirmEmailView.self)
+            pushViewWithoutNavigationBar(from: from, view: confirmEmail)
         case let RouteID.signup(claimGhostAccount):
             goToSignUp(viewController: from, claimGhostAccount: claimGhostAccount)
         default: ()

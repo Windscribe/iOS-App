@@ -92,3 +92,40 @@ extension Observable {
             .eraseToAnyPublisher()
     }
 }
+
+// MARK: Observable Initial Value -> Combine (with error propagation)
+
+extension ObservableType {
+
+    /// Converts Observable to Combine Publisher without initial value (cold start).
+    func toPublisher() -> AnyPublisher<Element, Error> {
+        let subject = PassthroughSubject<Element, Error>()
+        let disposable = self.subscribe(
+            onNext: { subject.send($0) },
+            onError: { subject.send(completion: .failure($0)) },
+            onCompleted: { subject.send(completion: .finished) }
+        )
+
+        return subject
+            .handleEvents(receiveCancel: {
+                disposable.dispose()
+            })
+            .eraseToAnyPublisher()
+    }
+
+    /// Converts Observable to Combine Publisher and immediately emits the given initial value.
+    func toPublisher(initialValue: Element) -> AnyPublisher<Element, Error> {
+        let subject = CurrentValueSubject<Element, Error>(initialValue)
+        let disposable = self.subscribe(
+            onNext: { subject.send($0) },
+            onError: { subject.send(completion: .failure($0)) },
+            onCompleted: { subject.send(completion: .finished) }
+        )
+
+        return subject
+            .handleEvents(receiveCancel: {
+                disposable.dispose()
+            })
+            .eraseToAnyPublisher()
+    }
+}

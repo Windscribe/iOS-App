@@ -95,7 +95,7 @@ struct EnterEmailView: View {
             switch result {
             case .success:
                 currentError = nil
-                // TODO: Confirm Email Navigation
+                presentationMode.wrappedValue.dismiss()
             case .failure(let error):
                 currentError = error.errorDescription
             }
@@ -116,12 +116,12 @@ struct EnterEmailView: View {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
+                    Image(systemName: "chevron.backward")
+                      .font(.system(size: 17, weight: .semibold))
+                      .foregroundColor(.white)
+                      .padding(.leading, -8)
                 })
-                .padding(.leading, 8)
             }
-
         }
     }
 }

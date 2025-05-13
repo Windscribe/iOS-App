@@ -43,11 +43,7 @@ class PreferenceMainRouter: BaseRouter, NavigationRouter {
         case RouteID.connection:
             let vc = Assembler.resolve(ConnectionViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
-        case let RouteID.confirmEmail(delegate):
-//            let vc = Assembler.resolve(ConfirmEmailViewController.self)
-//            vc.dismissDelegate = delegate
-//            from.present(vc, animated: true)
-
+        case RouteID.confirmEmail:
             presentConfirmEmail(from: from)
         case RouteID.enterEmail:
             let enterEmail = Assembler.resolve(EnterEmailView.self)

@@ -11,12 +11,14 @@ import SwiftUI
 struct GeneralSettingsView: View {
     var body: some View {
         ZStack {
-            Color.lightMidnight
+            Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
 
             Text("General")
                 .font(.title)
                 .foregroundColor(.white)
         }
+        .navigationTitle("General")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
