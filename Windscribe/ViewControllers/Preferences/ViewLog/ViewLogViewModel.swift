@@ -23,9 +23,9 @@ class ViewLogViewModelImpl: ViewLogViewModel {
     let isDarkMode: BehaviorSubject<Bool>
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
-    init(logger: FileLogger, lookAndFeelRepo: LookAndFeelRepositoryType) {
+    init(logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.logger = logger
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         load()
     }
 

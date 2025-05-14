@@ -11,7 +11,7 @@ import SwiftUI
 struct WelcomeView: View {
 
     @Environment(\.deviceType) private var deviceType
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: WelcomeViewModelImpl
     @StateObject private var router: AuthenticationNavigationRouter

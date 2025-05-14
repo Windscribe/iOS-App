@@ -19,14 +19,14 @@ class AboutViewModel: AboutViewModelType {
     // MARK: - Dependencies
 
     let preferences: Preferences
-    let lookAndFeelRepo: LookAndFeelRepositoryType
+    let lookAndFeelRepository: LookAndFeelRepositoryType
 
     let disposeBag = DisposeBag()
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
     var items = [AboutItemCell]()
 
-    init(lookAndFeelRepo: LookAndFeelRepositoryType, preference: Preferences) {
-        self.lookAndFeelRepo = lookAndFeelRepo
+    init(lookAndFeelRepository: LookAndFeelRepositoryType, preference: Preferences) {
+        self.lookAndFeelRepository = lookAndFeelRepository
         preferences = preference
         items = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses, .changelog]
         load()

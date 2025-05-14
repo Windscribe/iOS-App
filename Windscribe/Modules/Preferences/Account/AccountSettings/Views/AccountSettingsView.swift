@@ -11,7 +11,7 @@ import SwiftUI
 struct AccountSettingsView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: AccountSettingsViewModelImpl
 

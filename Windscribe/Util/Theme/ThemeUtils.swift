@@ -44,7 +44,6 @@ enum ThemeUtils {
     }
 
     // MARK: - PART 1
-
     static func getVersionBorderColor(isDarkMode: Bool) -> UIColor {
         return isDarkMode ? UIColor.whiteWithOpacity(opacity: 0.08) : UIColor.midnightWithOpacity(opacity: 0.08)
     }

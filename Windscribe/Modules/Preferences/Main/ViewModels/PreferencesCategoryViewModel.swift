@@ -33,7 +33,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     private let sessionManager: SessionManagerV2
     private let alertManager: AlertManagerV2
     private let logger: FileLogger
-    private let lookAndFeelRepo: LookAndFeelRepositoryType
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let languageManager: LanguageManager
     private let preferences: Preferences
 
@@ -41,14 +41,14 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
         sessionManager: SessionManagerV2,
         alertManager: AlertManagerV2,
         logger: FileLogger,
-        lookAndFeelRepo: LookAndFeelRepositoryType,
+        lookAndFeelRepository: LookAndFeelRepositoryType,
         languageManager: LanguageManager,
         preferences: Preferences
     ) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.logger = logger
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.languageManager = languageManager
         self.preferences = preferences
 
@@ -58,7 +58,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     }
 
     private func bind() {
-        lookAndFeelRepo.isDarkModeSubject
+        lookAndFeelRepository.isDarkModeSubject
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in

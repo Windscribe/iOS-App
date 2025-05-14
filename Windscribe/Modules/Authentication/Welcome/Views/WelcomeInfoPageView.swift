@@ -12,7 +12,7 @@ import SwiftUI
 
 struct WelcomeInfoPageView: View {
 
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     let imageName: String
     let text: String

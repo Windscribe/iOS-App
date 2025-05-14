@@ -15,7 +15,7 @@ struct LoginView: View {
     }
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @ObservedObject private var keyboard = KeyboardResponder()
     @FocusState private var focusedField: Field?

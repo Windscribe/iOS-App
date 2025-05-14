@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ReferForDataSettingsView: View {
 
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: ReferForDataSettingsViewModelImpl
     @State private var showShareSheet = false
@@ -88,7 +88,7 @@ struct ReferForDataSettingsView: View {
 }
 
 struct ReferForDataCheckRow: View {
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     let text: String
     @Binding var isDarkMode: Bool

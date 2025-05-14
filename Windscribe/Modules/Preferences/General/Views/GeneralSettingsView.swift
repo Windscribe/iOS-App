@@ -9,16 +9,35 @@
 import SwiftUI
 
 struct GeneralSettingsView: View {
+    @StateObject private var viewModel: GeneralSettingsViewModelImpl
+
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
+
+    init(viewModel: any GeneralSettingsViewModel) {
+        guard let model = viewModel as? GeneralSettingsViewModelImpl else {
+            fatalError("GeneralSettingsView must be initialized properly with ViewModelImpl")
+        }
+
+        _viewModel = StateObject(wrappedValue: model)
+    }
+
     var body: some View {
         ZStack {
             Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
-
-            Text("General")
-                .font(.title)
-                .foregroundColor(.white)
+            ScrollView {
+                VStack {
+                    ForEach(viewModel.entries, id: \.self) { entry in
+                        MenuEntryView(item: entry, action: { actionType in
+                            viewModel.entrySelected(entry, action: actionType)
+                        })
+                    }
+                    .padding(.top, 8)
+                }
+            }
+            .dynamicTypeSize(dynamicTypeRange)
         }
-        .navigationTitle("General")
+        .navigationTitle(TextsAsset.General.title)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

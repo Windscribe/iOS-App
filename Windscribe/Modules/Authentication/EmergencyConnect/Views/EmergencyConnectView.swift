@@ -12,7 +12,7 @@ import Combine
 struct EmergencyConnectView: View {
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: EmergencyConnectViewModelImpl
 

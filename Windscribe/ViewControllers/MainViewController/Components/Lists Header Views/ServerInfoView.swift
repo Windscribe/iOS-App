@@ -21,13 +21,13 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     let disposeBag = DisposeBag()
     let localDatabase: LocalDatabase
 
-    init(localDatabase: LocalDatabase, lookAndFeelRepo: LookAndFeelRepositoryType) {
+    init(localDatabase: LocalDatabase, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.localDatabase = localDatabase
         localDatabase.getServersObservable().subscribe {
             self.serverCountSubject.onNext($0.count)
         }.disposed(by: disposeBag)
 
-        lookAndFeelRepo.isDarkModeSubject.subscribe { data in
+        lookAndFeelRepository.isDarkModeSubject.subscribe { data in
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
     }

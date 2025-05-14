@@ -13,7 +13,7 @@ import UIKit
 class ViewLogViewController: WSNavigationViewController {
     var logView: UITextView!
     var logger: FileLogger?
-    lazy var lookAndFeelRepo = Assembler.resolve(LookAndFeelRepositoryType.self)
+    lazy var lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
     var viewModel: ViewLogViewModel!
 
     override func viewDidLoad() {

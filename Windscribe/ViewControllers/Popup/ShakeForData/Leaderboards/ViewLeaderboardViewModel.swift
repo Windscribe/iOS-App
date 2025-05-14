@@ -25,10 +25,10 @@ class ViewLeaderboardViewModel: ViewLeaderboardViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
     let disposeBag = DisposeBag()
 
-    init(logger: FileLogger, repository: ShakeDataRepository, lookAndFeelRepo: LookAndFeelRepositoryType) {
+    init(logger: FileLogger, repository: ShakeDataRepository, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.logger = logger
         self.repository = repository
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
     }
 
     func load() {

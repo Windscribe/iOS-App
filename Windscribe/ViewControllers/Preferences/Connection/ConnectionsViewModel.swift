@@ -53,7 +53,7 @@ protocol ConnectionsViewModelType {
 class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
 
-    let preferences: Preferences, disposeBag = DisposeBag(), lookAndFeelRepo: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType
+    let preferences: Preferences, disposeBag = DisposeBag(), lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -68,15 +68,15 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
     let languageUpdatedTrigger = PublishSubject<Void>()
 
-    init(preferences: Preferences, lookAndFeelRepo: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType) {
+    init(preferences: Preferences, lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType) {
         self.preferences = preferences
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.localDb = localDb
         self.connectivity = connectivity
         self.networkRepository = networkRepository
         self.languageManager = languageManager
         self.protocolManager = protocolManager
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadData()
     }
 

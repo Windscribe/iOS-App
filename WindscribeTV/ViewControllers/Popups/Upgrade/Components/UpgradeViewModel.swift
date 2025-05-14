@@ -73,7 +73,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlan]?
 
-    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManagerV2, billingRepository: BillingRepository, logger: FileLogger, lookAndFeelRepo: LookAndFeelRepositoryType) {
+    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManagerV2, billingRepository: BillingRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
@@ -83,7 +83,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
         self.pushNotificationManager = pushNotificationManager
         self.billingRepository = billingRepository
         self.logger = logger
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         inAppPurchaseManager.delegate = self
         checkAccountStatus()
     }

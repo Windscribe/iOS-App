@@ -22,8 +22,16 @@ private struct DeviceTypeKey: EnvironmentKey {
     static let defaultValue: DeviceType = .unknown
 }
 
-private struct DynamicTypeRangeKey: EnvironmentKey {
+private struct DynamicTypeDefaultRangeKey: EnvironmentKey {
     static let defaultValue: PartialRangeThrough<DynamicTypeSize> = ...DynamicTypeSize.medium
+}
+
+private struct DynamicTypeLargeRangeKey: EnvironmentKey {
+    static let defaultValue: PartialRangeThrough<DynamicTypeSize> = ...DynamicTypeSize.large
+}
+
+private struct DynamicTypeXLargeRangeKey: EnvironmentKey {
+    static let defaultValue: PartialRangeThrough<DynamicTypeSize> = ...DynamicTypeSize.xLarge
 }
 
 /// Injected environment value for dynamic type range, e.g., based on device type
@@ -33,9 +41,19 @@ extension EnvironmentValues {
         set { self[DeviceTypeKey.self] = newValue }
     }
 
-    var dynamicTypeRange: PartialRangeThrough<DynamicTypeSize> {
-        get { self[DynamicTypeRangeKey.self] }
-        set { self[DynamicTypeRangeKey.self] = newValue }
+    var dynamicTypeDefaultRange: PartialRangeThrough<DynamicTypeSize> {
+        get { self[DynamicTypeDefaultRangeKey.self] }
+        set { self[DynamicTypeDefaultRangeKey.self] = newValue }
+    }
+
+    var dynamicTypeLargeRange: PartialRangeThrough<DynamicTypeSize> {
+        get { self[DynamicTypeLargeRangeKey.self] }
+        set { self[DynamicTypeLargeRangeKey.self] = newValue }
+    }
+
+    var dynamicTypeXLargeRange: PartialRangeThrough<DynamicTypeSize> {
+        get { self[DynamicTypeXLargeRangeKey.self] }
+        set { self[DynamicTypeXLargeRangeKey.self] = newValue }
     }
 }
 
@@ -73,7 +91,7 @@ struct DeviceTypeProvider<Content: View>: View {
                 if let type = cachedDeviceType {
                     content()
                         .environment(\.deviceType, type)
-                        .environment(\.dynamicTypeRange, dynamicRange(for: type))
+                        .environment(\.dynamicTypeDefaultRange, dynamicRange(for: type))
                 }
             }
         }

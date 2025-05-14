@@ -37,12 +37,12 @@ class RobertViewModel: RobertViewModelType {
 
     let disposeBag = DisposeBag()
 
-    init(apiManager: APIManager, localDB: LocalDatabase, lookAndFeelRepo: LookAndFeelRepositoryType, alertManager: AlertManagerV2, logger: FileLogger) {
+    init(apiManager: APIManager, localDB: LocalDatabase, lookAndFeelRepository: LookAndFeelRepositoryType, alertManager: AlertManagerV2, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDB = localDB
         self.alertManager = alertManager
         self.logger = logger
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
     }
 
     func loadRobertFilters() {

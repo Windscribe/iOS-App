@@ -27,10 +27,10 @@ class LanguageViewModel: LanguageViewModelType {
 
     var language = Languages.english
 
-    init(languageManager: LanguageManager, preferences: Preferences, lookAndFeelRepo: LookAndFeelRepositoryType) {
+    init(languageManager: LanguageManager, preferences: Preferences, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.languageManager = languageManager
         self.preferences = preferences
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         load()
     }
 
