@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var pushNotificationManager: PushNotificationManagerV2 = Assembler.resolve(PushNotificationManagerV2.self)
 
-    private lazy var lookAndFeelRepo: LookAndFeelRepositoryType = Assembler.resolve(ThemeManager.self)
+    private lazy var lookAndFeelRepo: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
     private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
 
