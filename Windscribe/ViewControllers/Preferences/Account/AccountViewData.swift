@@ -97,7 +97,7 @@ enum AccountItemCell {
         }
     }
 
-    private var lookAndFeelRepo: LookAndFeelRepositoryType {
+    private var lookAndFeelRepository: LookAndFeelRepositoryType {
         return Assembler.resolve(LookAndFeelRepositoryType.self)
     }
 

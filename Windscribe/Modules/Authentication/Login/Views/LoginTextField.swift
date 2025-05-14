@@ -10,7 +10,7 @@ import SwiftUI
 
 struct LoginTextField: View {
 
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     var title: String
     var placeholder: String

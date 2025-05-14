@@ -61,7 +61,7 @@ protocol MainViewModelType {
 }
 
 class MainViewModel: MainViewModelType {
-    let lookAndFeelRepo: LookAndFeelRepositoryType
+    let lookAndFeelRepository: LookAndFeelRepositoryType
     let localDatabase: LocalDatabase
     let vpnManager: VPNManager
     let logger: FileLogger
@@ -107,7 +107,7 @@ class MainViewModel: MainViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
 
     let disposeBag = DisposeBag()
-    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepo: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType) {
+    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepository: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType) {
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
@@ -116,7 +116,7 @@ class MainViewModel: MainViewModelType {
         self.staticIpRepository = staticIpRepository
         self.preferences = preferences
         self.latencyRepo = latencyRepo
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.pushNotificationsManager = pushNotificationsManager
         self.notificationsRepo = notificationsRepo
         self.credentialsRepository = credentialsRepository

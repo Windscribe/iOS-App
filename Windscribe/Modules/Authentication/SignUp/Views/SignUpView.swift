@@ -16,7 +16,7 @@ struct SignUpView: View {
     }
 
     @Environment(\.presentationMode) private var presentationMode
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     @EnvironmentObject var signupFlowContext: SignupFlowContext
     @ObservedObject private var keyboard = KeyboardResponder()

@@ -19,7 +19,7 @@ protocol ReferForDataSettingsViewModel: ObservableObject {
 final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     @Published var isDarkMode: Bool = false
 
-    private let lookAndFeelRepo: LookAndFeelRepositoryType
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let sessionManager: SessionManagerV2
     private let referFriendManager: ReferAndShareManagerV2
     private let logger: FileLogger
@@ -33,12 +33,12 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     }
 
     init(
-        lookAndFeelRepo: LookAndFeelRepositoryType,
+        lookAndFeelRepository: LookAndFeelRepositoryType,
         sessionManager: SessionManagerV2,
         referFriendManager: ReferAndShareManagerV2,
         logger: FileLogger
     ) {
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.sessionManager = sessionManager
         self.referFriendManager = referFriendManager
         self.logger = logger
@@ -47,7 +47,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     }
 
     private func bind() {
-        lookAndFeelRepo.isDarkModeSubject
+        lookAndFeelRepository.isDarkModeSubject
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(

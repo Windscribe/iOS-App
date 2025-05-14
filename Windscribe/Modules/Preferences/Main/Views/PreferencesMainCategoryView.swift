@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PreferencesMainCategoryView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: PreferencesMainCategoryViewModelImpl
     @StateObject private var router: PreferencesNavigationRouter

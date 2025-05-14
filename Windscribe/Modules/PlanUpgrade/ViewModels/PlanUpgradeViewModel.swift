@@ -64,7 +64,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, upgradeRouter: UpgradeRouter,
          sessionManager: SessionManagerV2, preferences: Preferences, inAppPurchaseManager: InAppPurchaseManager,
          pushNotificationManager: PushNotificationManagerV2, billingRepository: BillingRepository, logger: FileLogger,
-         lookAndFeelRepo: LookAndFeelRepositoryType) {
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
@@ -75,7 +75,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
         self.pushNotificationManager = pushNotificationManager
         self.billingRepository = billingRepository
         self.logger = logger
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         self.inAppPurchaseManager.delegate = self
     }
 

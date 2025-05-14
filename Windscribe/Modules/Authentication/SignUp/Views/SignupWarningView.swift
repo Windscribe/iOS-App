@@ -10,7 +10,7 @@ import SwiftUI
 
 struct SignupWarningView: View {
 
-    @Environment(\.dynamicTypeRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
 
     let onContinue: () -> Void
     let onBack: () -> Void

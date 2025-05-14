@@ -26,18 +26,18 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
 
     let disposeBag = DisposeBag()
     let locationsManager: LocationsManagerType
-    let lookAndFeelRepo: LookAndFeelRepositoryType
+    let lookAndFeelRepository: LookAndFeelRepositoryType
     let backgroundFileManager: BackgroundFileManaging
 
     var currentCountry: String = ""
 
     private var isConnected = false
 
-    init(lookAndFeelRepo: LookAndFeelRepositoryType,
+    init(lookAndFeelRepository: LookAndFeelRepositoryType,
          locationsManager: LocationsManagerType,
          vpnManager: VPNManager,
          backgroundFileManager: BackgroundFileManaging) {
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.locationsManager = locationsManager
         self.backgroundFileManager = backgroundFileManager
 
@@ -46,7 +46,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             self.updateBackgroundImage(isConnected: self.isConnected)
         }).disposed(by: disposeBag)
 
-        lookAndFeelRepo.backgroundChangedTrigger.subscribe(onNext: { [weak self] _ in
+        lookAndFeelRepository.backgroundChangedTrigger.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.updateBackgroundImage(isConnected: self.isConnected)
         }).disposed(by: disposeBag)
@@ -61,9 +61,9 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     private func updateBackgroundImage(isConnected: Bool) {
         var effect = BackgroundEffectType.none
         if isConnected {
-            effect = lookAndFeelRepo.backgroundEffectConnect
+            effect = lookAndFeelRepository.backgroundEffectConnect
         } else if !isConnected {
-            effect = lookAndFeelRepo.backgroundEffectDisconnect
+            effect = lookAndFeelRepository.backgroundEffectDisconnect
         }
         backgroundInfoSubject.onNext(getBackgroundInfoModel(for: effect,
                                                             isConnected: isConnected))
@@ -72,7 +72,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     private func getBackgroundInfoModel(for effect: BackgroundEffectType,
                                         isConnected: Bool) -> BackgroundInfoModel {
         let color: UIColor = isConnected ? .navyBlue : .nightBlue
-        let aspectRatio = lookAndFeelRepo.backgroundCustomAspectRatio
+        let aspectRatio = lookAndFeelRepository.backgroundCustomAspectRatio
         switch effect {
         case .bundled(subtype: let subtype):
             if let image = UIImage(named: subtype.assetName) {

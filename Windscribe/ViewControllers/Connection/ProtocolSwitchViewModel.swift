@@ -19,9 +19,9 @@ class ProtocolSwitchViewModel: ProtocolSwitchViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
     private let vpnManager: VPNManager
 
-    init(lookAndFeelRepo: LookAndFeelRepositoryType, vpnManager: VPNManager) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType, vpnManager: VPNManager) {
         self.vpnManager = vpnManager
-        isDarkMode = lookAndFeelRepo.isDarkModeSubject
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
     }
 
     func isConnected() -> Bool {
