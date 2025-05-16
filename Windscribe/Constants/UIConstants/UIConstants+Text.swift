@@ -457,6 +457,10 @@ enum TextsAsset {
     }
 
     enum Robert {
+        static var title: String {
+            return "R.O.B.E.R.T.".localized
+        }
+
         static var learnMore: String {
             return "Learn more".localized
         }

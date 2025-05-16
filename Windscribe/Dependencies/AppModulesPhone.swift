@@ -117,7 +117,12 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register((any RobertSettingsViewModel).self) { r in
-            RobertSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+            RobertSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                localDB: r.resolve(LocalDatabase.self)!,
+                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!
+            )
         }.inObjectScope(.transient)
 
         container.register((any ReferForDataSettingsViewModel).self) { r in
@@ -496,7 +501,12 @@ class ViewControllerModule: Assembly {
 
         container.register(RobertSettingsView.self) { r in
             RobertSettingsView(
-                viewModel: RobertSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+                viewModel: RobertSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    apiManager: r.resolve(APIManager.self)!,
+                    localDB: r.resolve(LocalDatabase.self)!,
+                    lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!
+                )
             )
         }.inObjectScope(.transient)
 
