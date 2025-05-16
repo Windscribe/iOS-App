@@ -10,6 +10,7 @@ enum MenuEntryActionType: Hashable {
     case multiple(currentOption: String, options: [String])
     case single(isSelected: Bool)
     case button(title: String?)
+    case link(title: String?)
     case secondary(title: String?)
     case info(title: String?)
     case none(title: String)
@@ -22,6 +23,8 @@ enum MenuEntryActionType: Hashable {
             isSelected ? ImagesAsset.SwitchButton.on : ImagesAsset.SwitchButton.off
         case .button, .secondary:
             ImagesAsset.serverWhiteRightArrow
+        case .link:
+            ImagesAsset.externalLink
         default:
             nil
         }

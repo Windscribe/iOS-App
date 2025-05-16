@@ -42,13 +42,14 @@ struct MenuEntryInteractiveView: View {
         VStack {
             VStack {
                 HStack(spacing: 12) {
-                    Image(item.icon)
-                        .resizable()
-                        .renderingMode(.template)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
-
+                    if !item.icon.isEmpty {
+                        Image(item.icon)
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.white)
+                    }
                     Text(item.title)
                         .foregroundColor(.white)
                         .font(.bold(.callout))
@@ -140,7 +141,7 @@ struct MenuEntryActionView: View {
                         .cornerRadius(12)
                 }
             })
-        case let .button(title):
+        case let .button(title), let .link(title):
             Button(action: {
                 action(.button(title: title))
             }, label: {
@@ -161,13 +162,13 @@ struct MenuEntryActionView: View {
                 }
             })
         case let .none(title):
-                Button(action: {
-                    action(.button(title: title))
-                }, label: {
-                    Text(title)
-                        .foregroundColor(Color.white.opacity(0.7))
-                        .font(.regular(.callout))
-                })
+            Button(action: {
+                action(.button(title: title))
+            }, label: {
+                Text(title)
+                    .foregroundColor(Color.white.opacity(0.7))
+                    .font(.regular(.callout))
+            })
 
         case let .secondary(title), let .info(title):
             Button(action: {

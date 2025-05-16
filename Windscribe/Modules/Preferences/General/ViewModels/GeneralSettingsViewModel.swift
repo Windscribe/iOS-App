@@ -23,9 +23,9 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     @Published var entries: [GeneralMenuEntryType] = []
 
     private var cancellables = Set<AnyCancellable>()
-    private var currentLanguage: String = ""
-    private var locationOrder: String = ""
-    private var isHapticFeedbackEnabled = false
+    private var currentLanguage: String = DefaultValues.language
+    private var locationOrder: String = DefaultValues.orderLocationsBy
+    private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
     private var notificationsEnabled = false
 
     // MARK: - Dependencies
@@ -87,7 +87,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
                 }
             }, receiveValue: { [weak self] enabled in
                 guard let self = self else { return }
-                self.isHapticFeedbackEnabled = enabled ?? false
+                self.isHapticFeedbackEnabled = enabled ?? DefaultValues.hapticFeedback
                 self.reloadItems()
             })
             .store(in: &cancellables)
