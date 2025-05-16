@@ -11,7 +11,7 @@ import SwiftUI
 struct EnterEmailView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var keyboard = KeyboardResponder()
     @FocusState private var isEmailFocused: Bool

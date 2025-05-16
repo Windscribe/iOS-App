@@ -1889,7 +1889,7 @@ enum TextsAsset {
     }
 
     enum About {
-        static var about: String {
+        static var title: String {
             return "About".localized
         }
 

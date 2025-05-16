@@ -11,7 +11,7 @@ import SwiftUI
 struct AboutSettingsView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: AboutSettingsViewModelImpl
 
@@ -24,15 +24,34 @@ struct AboutSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
-
-            Text("About Settings")
-                .font(.title)
-                .foregroundColor(.white)
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(viewModel.entries) { item in
+                    Button {
+                        viewModel.entrySelected(item)
+                    } label: {
+                        MenuCategoryRow(item: item)
+                            .frame(height: 48)
+                    }
+                    if item != viewModel.entries.last {
+                        Rectangle()
+                            .fill(Color.white.opacity(0.05))
+                            .frame(height: 2)
+                            .padding(.leading, 16)
+                    }
+                }
+            }
+            .background(Color.white.opacity(0.1))
+            .cornerRadius(8)
+            .padding(.horizontal, 16)
+            .padding(.top, 8)
         }
-        .navigationTitle("About")
+        .background(Color.nightBlue)
+        .dynamicTypeSize(dynamicTypeRange)
+        .sheet(item: $viewModel.safariURL) { url in
+            SafariView(url: url)
+        }
+        .navigationTitle(TextsAsset.About.title)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

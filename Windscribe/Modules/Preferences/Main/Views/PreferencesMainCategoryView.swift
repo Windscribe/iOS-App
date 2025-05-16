@@ -113,7 +113,7 @@ struct PreferencesMainCategoryView: View {
                             viewModel.logout()
                         }
                     } label: {
-                        PreferencesCategoryRow(item: item)
+                        MenuCategoryRow(item: item)
                             .frame(height: 48)
                             .contentShape(Rectangle())
                     }

@@ -11,7 +11,7 @@ import SwiftUI
 struct ConfirmEmailView: View {
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject var viewModel: ConfirmEmailViewModelImpl
     @StateObject private var router: AuthenticationNavigationRouter
