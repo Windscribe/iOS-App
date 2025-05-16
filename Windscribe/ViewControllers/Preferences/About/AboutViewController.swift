@@ -31,7 +31,7 @@ class AboutViewController: WSNavigationViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logger.logD(self, "Displaying Help View")
-        titleLabel.text = TextsAsset.About.about
+        titleLabel.text = TextsAsset.About.title
         view.backgroundColor = UIColor.darkGray
         addViews()
         bindViews()

@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SwiftUI
 
-enum PreferenceItemType: Int, Identifiable, CaseIterable {
+enum PreferenceItemType: Int, MenuCategoryRowType {
     case general
     case account
     case connection
@@ -19,6 +20,7 @@ enum PreferenceItemType: Int, Identifiable, CaseIterable {
     case about
     case logout
 
+    var id: Int { rawValue }
     var title: String {
         switch self {
         case .general:
@@ -42,7 +44,7 @@ enum PreferenceItemType: Int, Identifiable, CaseIterable {
         }
     }
 
-    var imageName: String {
+    var imageName: String? {
         switch self {
         case .general:
             ImagesAsset.Preferences.general
@@ -65,6 +67,13 @@ enum PreferenceItemType: Int, Identifiable, CaseIterable {
         }
     }
 
+    var actionImageName: String? {
+        if self != .logout {
+            return ImagesAsset.serverWhiteRightArrow
+        }
+        return nil
+    }
+
     var tint: UIColor? {
         switch self {
         case .logout:
@@ -74,7 +83,14 @@ enum PreferenceItemType: Int, Identifiable, CaseIterable {
         }
     }
 
-    var id: Int { rawValue }
+    var tintColor: Color {
+        switch self {
+        case .logout:
+            return .backgroundRed
+        default:
+            return .primary
+        }
+    }
 }
 
 extension PreferenceItemType {
