@@ -12,24 +12,35 @@ struct MenuCategoryRow: View {
     let item: any MenuCategoryRowType
 
     var body: some View {
-        HStack(spacing: 12) {
-            if let imageName = item.imageName {
-                Image(imageName)
-                    .resizable()
-                    .renderingMode(.template)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 16, height: 16)
-                    .foregroundColor(item.tintColor)
+        ZStack {
+            Rectangle()
+                .foregroundColor(item.tintColor.opacity(0.05))
+                .cornerRadius(12)
+            HStack(spacing: 12) {
+                if let imageName = item.imageName {
+                    Image(imageName)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(item.tintColor)
+                }
+                if let actionImageName = item.actionImageName {
+                    Text(item.title)
+                        .foregroundColor(item.tintColor)
+                        .font(.regular(.callout))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Image(actionImageName)
+                        .renderingMode(.template)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(item.tintColor.opacity(0.4))
+                } else {
+                    Text(item.title)
+                        .foregroundColor(item.tintColor)
+                        .font(.regular(.callout))
+                }
             }
-            Text(item.title)
-                .foregroundColor(.white)
-                .font(.bold(.callout))
-                .frame(maxWidth: .infinity, alignment: .leading)
-            if let actionImageName = item.actionImageName {
-                Image(actionImageName)
-                    .renderingMode(.template)
-                    .foregroundColor(.white.opacity(0.7))
-            }
+            .padding(.horizontal, 14)
         }
         .padding(.horizontal, 16)
     }

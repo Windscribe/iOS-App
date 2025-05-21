@@ -29,12 +29,9 @@ struct PreferencesMainCategoryView: View {
     var body: some View {
         VStack(spacing: 16) {
             ScrollView {
-                VStack(spacing: 0) {
+                VStack(spacing: 14) {
                     categoryRows()
                 }
-                .background(Color.white.opacity(0.1))
-                .cornerRadius(8)
-                .padding(.horizontal, 16)
                 .padding(.top, 8)
             }
 
@@ -102,28 +99,18 @@ struct PreferencesMainCategoryView: View {
             if let index = viewModel.visibleItems.firstIndex(where: { $0.id == item.id }),
                !viewModel.shouldHideRow(index: index) {
 
-                VStack(spacing: 0) {
-                    Button {
-                        if index == 1 {
-                            let dynamicRoute = viewModel.getDynamicRouteForAccountRow()
-                            router.navigate(to: dynamicRoute)
-                        } else if let route = item.routeID {
-                            router.navigate(to: route)
-                        } else if item == .logout {
-                            viewModel.logout()
-                        }
-                    } label: {
-                        MenuCategoryRow(item: item)
-                            .frame(height: 48)
-                            .contentShape(Rectangle())
+                Button {
+                    if index == 1 {
+                        let dynamicRoute = viewModel.getDynamicRouteForAccountRow()
+                        router.navigate(to: dynamicRoute)
+                    } else if let route = item.routeID {
+                        router.navigate(to: route)
+                    } else if item == .logout {
+                        viewModel.logout()
                     }
-
-                    if index < viewModel.visibleItems.count - 1 {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.05))
-                            .frame(height: 2)
-                            .padding(.leading, 16)
-                    }
+                } label: {
+                    MenuCategoryRow(item: item)
+                        .frame(height: 44)
                 }
             }
         }

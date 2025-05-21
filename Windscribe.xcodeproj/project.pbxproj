@@ -4857,8 +4857,8 @@
 		F49C45862DC95CEE007E5EF1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */,
 				F49C458A2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift */,
+				1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
