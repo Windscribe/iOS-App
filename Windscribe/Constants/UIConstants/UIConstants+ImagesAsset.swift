@@ -219,7 +219,7 @@ enum ImagesAsset {
         static let externalLink = "external-link-white"
         static let delete = "delete-white"
         static let edit = "edit-white"
-        static let dropDownIcon = "dropdown-icon-white"
+        static let dropDownIcon = "dropdown-icon"
         static let prefRightIcon = "pref-right-arrow-white"
         static let prefBackIcon = "pref-back-white"
         static let filterIcons = ["malware": "malware-white", "ads": "ads-white", "social": "social-white",
@@ -228,8 +228,8 @@ enum ImagesAsset {
     }
 
     enum SwitchButton {
-        static let on = "switch-button-on"
-        static let off = "switch-button-off"
+        static let on = "toggle-on"
+        static let off = "toggle-off"
         static let offBlack = "switch-button-off-black"
     }
 

@@ -128,6 +128,7 @@ extension Color {
     static let seaGreen = Color(red: 97 / 255.0, green: 255 / 255.0, blue: 138 / 255.0)
     static let backgroundRed = Color(red: 255 / 255.0, green: 59 / 255.0, blue: 59 / 255.0)
     static let orangeYellow = Color(red: 254 / 255.0, green: 188 / 255.0, blue: 46 / 255.0)
+    static let infoGrey = Color(red: 160 / 255.0, green: 170 / 255.0, blue: 188 / 255.0)
 }
 
 // New Memefication Colors

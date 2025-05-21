@@ -6,7 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
-enum GeneralMenuEntryType: MenuEntryItemType, Hashable {
+enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
     case locationOrder(currentOption: String, options: [String]),
          language(currentOption: String, options: [String]),
          hapticFeedback(isSelected: Bool),
@@ -53,7 +53,7 @@ enum GeneralMenuEntryType: MenuEntryItemType, Hashable {
         switch self {
         case let .locationOrder(currentOption, options): .multiple(currentOption: currentOption, options: options)
         case let .language(currentOption, options): .multiple(currentOption: currentOption, options: options)
-        case let .hapticFeedback(isSelected): .single(isSelected: isSelected)
+        case let .hapticFeedback(isSelected): .toggle(isSelected: isSelected)
         case let .notification(title): .none(title: title)
         case .version: nil
         }

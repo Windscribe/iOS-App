@@ -10,7 +10,7 @@ import Foundation
 import Combine
 import RxSwift
 
-struct CustomRulesEntry: MenuEntryItemType {
+struct CustomRulesEntry: MenuEntryHeaderType {
     let id: Int = 0
     let mainAction: MenuEntryActionType? = .link(title: nil)
     let message: String? = nil

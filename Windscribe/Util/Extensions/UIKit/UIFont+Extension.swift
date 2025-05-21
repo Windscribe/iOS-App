@@ -122,7 +122,7 @@ extension Font {
         case .body: return 17
         case .callout: return 16
         case .subheadline: return 15
-        case .footnote: return 13
+        case .footnote: return 14
         case .caption1: return 12
         case .caption2: return 11
         default: return 17

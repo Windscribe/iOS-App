@@ -24,12 +24,12 @@ struct PreferencesActionButton: View {
                 Text(title)
                     .font(.text(.callout))
                     .multilineTextAlignment(.center)
-                    .padding()
+                    .padding(12)
             }
             .frame(maxWidth: .infinity)
             .background(backgroundColor)
             .foregroundColor(textColor)
-            .cornerRadius(25)
+            .cornerRadius(12)
         }
     }
 }

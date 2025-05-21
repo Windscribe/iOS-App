@@ -26,14 +26,14 @@ struct GeneralSettingsView: View {
             Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
             ScrollView {
-                VStack {
+                VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { entry in
                         MenuEntryView(item: entry, action: { actionType in
                             viewModel.entrySelected(entry, action: actionType)
                         })
                     }
-                    .padding(.top, 8)
                 }
+                .padding(.top, 8)
             }
             .dynamicTypeSize(dynamicTypeRange)
         }
