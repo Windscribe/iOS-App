@@ -134,8 +134,9 @@ enum ImagesAsset {
         static let debug = "pref-debug"
         static let logOut = "pref-logout"
         static let helpMe = "pref-help-me"
-        static let about = "about"
+        static let about = "pref-about"
         static let logoutRed = "pref-logout-red"
+        static let logout = "pref-logout"
         static let advanceParams = "advance-params"
     }
 

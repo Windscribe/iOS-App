@@ -89,7 +89,7 @@ extension Font {
     }
 
     static func regular(_ textStyle: UIFont.TextStyle) -> Font {
-        .custom("IBMPlexSans-Regular", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
+        .custom("IBMPlexSans", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }
 
     static func light(_ textStyle: UIFont.TextStyle) -> Font {

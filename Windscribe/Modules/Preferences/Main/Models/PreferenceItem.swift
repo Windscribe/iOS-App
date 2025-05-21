@@ -63,15 +63,17 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
         case .about:
             ImagesAsset.Preferences.about
         case .logout:
-            ImagesAsset.Preferences.logoutRed
+            ImagesAsset.Preferences.logout
         }
     }
 
     var actionImageName: String? {
-        if self != .logout {
-            return ImagesAsset.serverWhiteRightArrow
+        switch self {
+        case .logout:
+            nil
+        default:
+            ImagesAsset.serverWhiteRightArrow
         }
-        return nil
     }
 
     var tint: UIColor? {
@@ -86,9 +88,9 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
     var tintColor: Color {
         switch self {
         case .logout:
-            return .backgroundRed
+                .orangeYellow
         default:
-            return .primary
+                .white
         }
     }
 }
