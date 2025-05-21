@@ -8,20 +8,18 @@
 
 enum MenuEntryActionType: Hashable {
     case multiple(currentOption: String, options: [String])
-    case single(isSelected: Bool)
+    case toggle(isSelected: Bool)
     case button(title: String?)
     case link(title: String?)
-    case secondary(title: String?)
-    case info(title: String?)
     case none(title: String)
 
     var imageName: String? {
         switch self {
         case .multiple:
-            ImagesAsset.DarkMode.dropDownIcon
-        case let .single(isSelected):
+            ImagesAsset.dropDownIcon
+        case let .toggle(isSelected):
             isSelected ? ImagesAsset.SwitchButton.on : ImagesAsset.SwitchButton.off
-        case .button, .secondary:
+        case .button:
             ImagesAsset.serverWhiteRightArrow
         case .link:
             ImagesAsset.externalLink
@@ -31,7 +29,7 @@ enum MenuEntryActionType: Hashable {
     }
 }
 
-protocol MenuEntryItemType: Hashable {
+protocol MenuEntryHeaderType: Hashable {
     var id: Int { get }
     var title: String { get }
     var icon: String { get }

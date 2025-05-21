@@ -153,7 +153,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionType) {
         switch entry {
         case .hapticFeedback:
-            if case .single(let isSelected) = action {
+            if case .toggle(let isSelected) = action {
                 preferences.saveHapticFeedback(haptic: isSelected)
             }
         case .locationOrder:

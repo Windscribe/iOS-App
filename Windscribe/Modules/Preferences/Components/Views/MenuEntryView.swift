@@ -9,10 +9,10 @@
 import SwiftUI
 
 struct MenuEntryView: View {
-    let item: any MenuEntryItemType
+    let item: any MenuEntryHeaderType
     let action: (MenuEntryActionType) -> Void
 
-    init(item: any MenuEntryItemType, action: @escaping (MenuEntryActionType) -> Void) {
+    init(item: any MenuEntryHeaderType, action: @escaping (MenuEntryActionType) -> Void) {
         self.item = item
         self.action = action
     }
@@ -25,80 +25,64 @@ struct MenuEntryView: View {
                 MenuEntryInfoView(item: item)
             }
         }
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.1), lineWidth: 1)
-        )
+        .padding(14)
+        .background(.white.opacity(0.05))
+        .cornerRadius(12)
         .padding(.horizontal, 16)
     }
 }
 
 struct MenuEntryInteractiveView: View {
-    let item: any MenuEntryItemType
+    let item: any MenuEntryHeaderType
     let mainAction: MenuEntryActionType
     let action: (MenuEntryActionType) -> Void
 
     var body: some View {
-        VStack {
-            VStack {
-                HStack(spacing: 12) {
-                    if !item.icon.isEmpty {
-                        Image(item.icon)
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.white)
-                    }
-                    Text(item.title)
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
+                if !item.icon.isEmpty {
+                    Image(item.icon)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
                         .foregroundColor(.white)
-                        .font(.bold(.callout))
-                    Spacer()
-                    MenuEntryActionView(actionType: mainAction, action: { actionType in
-                        action(actionType)
-                    })
                 }
-                if item.secondaryAction.count > 0 {
-                    VStack {
-                        ForEach(item.secondaryAction, id: \.self) { actionType in
-                            MenuEntryActionView(actionType: actionType, action: { actionType in
-                                action(actionType)
-                            })
-                        }
-                    }
-                }
+                Text(item.title)
+                    .foregroundColor(.white)
+                    .font(.medium(.callout))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                MenuEntryActionView(actionType: mainAction, action: { actionType in
+                    action(actionType)
+                })
             }
-            .padding(16)
-            .background(Color.white.opacity(0.1))
-            .cornerRadius(12)
+            .frame(height: 24)
             if let message = item.message {
                 HStack {
                     Text(message)
-                        .foregroundColor(Color.white.opacity(0.7))
+                        .foregroundColor(.infoGrey)
                         .font(.regular(.footnote))
-                    Spacer()
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .padding(16)
             }
         }
     }
 }
 
 struct MenuEntryInfoView: View {
-    let item: any MenuEntryItemType
+    let item: any MenuEntryHeaderType
     var body: some View {
         HStack {
             Text(item.title)
                 .foregroundColor(.white)
-                .font(.regular(.callout))
+                .font(.medium(.callout))
             Spacer()
             if let message = item.message {
                 Text(message)
-                    .foregroundColor(.white)
                     .font(.regular(.callout))
+                    .foregroundColor(.infoGrey)
             }
         }
-        .padding(16)
     }
 }
 
@@ -118,7 +102,7 @@ struct MenuEntryActionView: View {
             } label: {
                 HStack(spacing: 8) {
                     Text(currentOption)
-                        .foregroundColor(Color.white.opacity(0.7))
+                        .foregroundColor(.infoGrey)
                         .font(.regular(.callout))
                     if let imageName = actionType.imageName {
                         Image(imageName)
@@ -126,19 +110,18 @@ struct MenuEntryActionView: View {
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 16, height: 16)
-                            .foregroundColor(Color.white.opacity(0.7))
+                            .foregroundColor(.infoGrey)
                     }
                 }
             }
-        case let .single(isSelected):
+        case let .toggle(isSelected):
             Button(action: {
-                action(.single(isSelected: !isSelected))
+                action(.toggle(isSelected: !isSelected))
             }, label: {
                 if let imageName = actionType.imageName {
                     Image(imageName)
                         .resizable()
-                        .frame(width: 45, height: 25)
-                        .cornerRadius(12)
+                        .frame(width: 40, height: 22)
                 }
             })
         case let .button(title), let .link(title):
@@ -148,7 +131,7 @@ struct MenuEntryActionView: View {
                 HStack {
                     if let title = title {
                         Text(title)
-                            .foregroundColor(Color.white.opacity(0.7))
+                            .foregroundColor(.infoGrey)
                             .font(.regular(.callout))
                     }
                     if let imageName = actionType.imageName {
@@ -157,7 +140,7 @@ struct MenuEntryActionView: View {
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 16, height: 16)
-                            .foregroundColor(Color.white.opacity(0.7))
+                            .foregroundColor(.infoGrey)
                     }
                 }
             })
@@ -166,30 +149,8 @@ struct MenuEntryActionView: View {
                 action(.button(title: title))
             }, label: {
                 Text(title)
-                    .foregroundColor(Color.white.opacity(0.7))
+                    .foregroundColor(.infoGrey)
                     .font(.regular(.callout))
-            })
-
-        case let .secondary(title), let .info(title):
-            Button(action: {
-                action(.button(title: title))
-            }, label: {
-                HStack {
-                    if let title = title {
-                        Text(title)
-                            .foregroundColor(Color.white.opacity(0.7))
-                            .font(.regular(.callout))
-                    }
-                    Spacer()
-                    if let imageName = actionType.imageName {
-                        Image(imageName)
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(Color.white.opacity(0.7))
-                    }
-                }
             })
         }
     }

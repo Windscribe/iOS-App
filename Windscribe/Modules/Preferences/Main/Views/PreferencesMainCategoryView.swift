@@ -69,7 +69,7 @@ struct PreferencesMainCategoryView: View {
                     )
                 }
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 16)
             .padding(.bottom, 32)
         }
         .background(Color.nightBlue)
