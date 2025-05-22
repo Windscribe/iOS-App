@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum SignUpErrorState: Equatable {
     case username(String), password(String), email(String), api(String), network(String), none
@@ -49,6 +50,11 @@ class SignUpViewModelImpl: SignUpViewModel {
     @Published var isReferralVisible: Bool = false
     @Published var showLoadingView: Bool = false
     @Published var failedState: SignUpErrorState = .none
+
+    @Published var showCaptchaPopup: Bool = false
+    @Published var captchaData: CaptchaPopupModel?
+
+    private var secureToken: String = ""
 
     // Routing
     let routeTo = PassthroughSubject<SignupRoutes, Never>()
@@ -143,31 +149,119 @@ class SignUpViewModelImpl: SignUpViewModel {
     // MARK: Networking
 
     private func signUpUser() {
-        logger.logD("SignUpViewModel", "Signing up for account.")
+        logger.logD("SignUpViewModel", "Requesting auth token for signup")
         showLoadingView = true
 
-        apiCallManager.signup(username: username,
-                              password: password,
-                              referringUsername: referralUsername,
-                              email: email,
-                              voucherCode: voucherCode)
-        .asPublisher()
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { [weak self] result in
-            guard let self = self else { return }
+        apiCallManager.authTokenSignup()
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] result in
+                guard let self = self else { return }
 
-            self.showLoadingView = false
-            if case .failure(let error) = result {
-                self.logger.logI("SignIpViewModel", "Failed to signup: \(error)")
-                self.handleError(error)
-            }
-        }, receiveValue: { [weak self] session in
-            guard let self = self else { return }
+                if case .failure(let error) = result {
+                    self.logger.logE("SignUpViewModel", "Failed to get auth token: \(error)")
+                    self.failedState = .network("Authentication Token retrieval failed. \(error)")
+                    self.showLoadingView = false
+                }
+            }, receiveValue: { [weak self] tokenResponse in
+                guard let self = self else { return }
 
-            self.userRepository.login(session: session)
-            self.logger.logI("SignUp View Model", "Signup successful for \(session.username)")
-            self.prepareUserData()
-        }).store(in: &cancellables)
+                self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token)")
+                self.secureToken = tokenResponse.data.token
+
+                // CAPTCHA required
+                if let captcha = tokenResponse.data.captcha {
+                    self.logger.logI("SignUpViewModel", "Captcha required before signup.")
+                    if let popupModel = CaptchaPopupModel(from: captcha) {
+                        self.captchaData = popupModel
+                        self.showCaptchaPopup = true
+                    } else {
+                        self.logger.logE("SignUpViewModel", "Failed to decode captcha images.")
+                        self.failedState = .network("Captcha image decode failed")
+                    }
+                    self.showLoadingView = false
+                    return
+                }
+
+                // No captcha, proceed directly
+                self.signUpWithCredentials(
+                    username: username,
+                    password: password,
+                    referringUsername: referralUsername,
+                    email: email,
+                    voucherCode: voucherCode,
+                    secureToken: secureToken)
+            })
+            .store(in: &cancellables)
+    }
+
+    /// Called when user completes the captcha interaction during signup.
+    /// Sends the slider's final X offset (`captchaSolution`) and movement trail data to the server.
+    func submitCaptcha(captchaSolution: CGFloat, trailX: [CGFloat], trailY: [CGFloat]) {
+        // Step 1: Close the captcha popup
+        showCaptchaPopup = false
+
+        // Step 2: Show loading while performing signup
+        showLoadingView = true
+
+        // Step 3: Convert slider offset to backend-friendly Int string
+        let solution = "\(Int(captchaSolution))"
+
+        logger.logI("SignUpViewModel", "Submitting captcha solution with offset \(solution)")
+
+        // Step 4: Call signup with full captcha metadata and secure token
+        signUpWithCredentials(
+            username: username,
+            password: password,
+            referringUsername: referralUsername,
+            email: email,
+            voucherCode: voucherCode,
+            secureToken: secureToken,           // Comes from authTokenSignup
+            captchaSolution: solution,          // Final X drag offset
+            captchaTrailX: trailX,              // X movement samples
+            captchaTrailY: trailY               // Y movement samples
+        )
+    }
+
+    private func signUpWithCredentials(
+        username: String,
+        password: String,
+        referringUsername: String,
+        email: String,
+        voucherCode: String,
+        secureToken: String,
+        captchaSolution: String = "",
+        captchaTrailX: [CGFloat] = [],
+        captchaTrailY: [CGFloat] = []) {
+            apiCallManager.signup(
+                username: username,
+                password: password,
+                referringUsername: referralUsername,
+                email: email,
+                voucherCode: voucherCode,
+                secureToken: secureToken,
+                captchaSolution: captchaSolution,
+                captchaTrailX: captchaTrailX,
+                captchaTrailY: captchaTrailY
+            )
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] result in
+                guard let self = self else { return }
+
+                self.showLoadingView = false
+                if case .failure(let error) = result {
+                    self.logger.logI("SignUpViewModel", "Failed to signup: \(error)")
+                    self.handleError(error)
+                }
+            }, receiveValue: { [weak self] session in
+                guard let self = self else { return }
+
+                self.userRepository.login(session: session)
+                self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
+                self.prepareUserData()
+            })
+            .store(in: &cancellables)
     }
 
     private func claimGhostAccount() {

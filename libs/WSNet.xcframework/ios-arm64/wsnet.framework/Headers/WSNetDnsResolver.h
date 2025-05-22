@@ -5,6 +5,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class WSNetRequestError;
 @class WSNetDnsRequestResult;
 @class WSNetCancelableCallback;
 

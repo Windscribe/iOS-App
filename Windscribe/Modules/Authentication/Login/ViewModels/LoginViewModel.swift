@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum LoginErrorState: Equatable {
     case username(String), network(String), twoFactor(String), api(String), loginCode(String)
@@ -36,6 +37,11 @@ class LoginViewModelImpl: LoginViewModel {
     @Published var showLoadingView = false
     @Published var failedState: LoginErrorState?
     @Published var show2FAField = false
+
+    @Published var showCaptchaPopup: Bool = false
+    @Published var captchaData: CaptchaPopupModel?
+
+    private var secureToken: String = ""
 
     var isContinueButtonEnabled: Bool {
         username.count > 2 && password.count > 2
@@ -85,7 +91,6 @@ class LoginViewModelImpl: LoginViewModel {
         registerNetworkEventListener()
     }
 
-    /// Continue Button Logic
     func continueButtonTapped() {
         if username.contains("@") {
             failedState = .username(TextsAsset.SignInError.usernameExpectedEmailProvided)
@@ -95,9 +100,109 @@ class LoginViewModelImpl: LoginViewModel {
         failedState = nil
         showLoadingView = true
 
-        let code2FA = show2FAField && !twoFactorCode.isEmpty ? twoFactorCode : ""
+        apiCallManager.authTokenLogin()
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self = self else { return }
 
-        apiCallManager.login(username: username, password: password, code2fa: code2FA)
+                if case let .failure(error) = completion {
+                    self.logger.logE("LoginViewModel", "Failed to get auth token: \(error)")
+                    self.failedState = .network("Authentication Token retrieval failed. \(error)")
+                    self.showLoadingView = false
+                }
+            } receiveValue: { [weak self] tokenResponse in
+                guard let self = self else { return }
+
+                self.logger.logD("LoginViewModel", "Token received: \(tokenResponse.data.token)")
+                self.secureToken = tokenResponse.data.token
+
+                // If CAPTCHA required
+                if let captcha = tokenResponse.data.captcha {
+                    self.logger.logI("LoginViewModel", "Captcha required before login.")
+                    if let popupModel = CaptchaPopupModel(from: captcha) {
+                        self.captchaData = popupModel
+                        self.showCaptchaPopup = true
+                    } else {
+                        self.logger.logE("LoginViewModel", "Failed to decode captcha images.")
+                        self.failedState = .network("Captcha image decoding failed. Please try again later.")
+                    }
+                    self.showLoadingView = false
+                    return
+                }
+
+                // No captcha → proceed to login
+                let code2fa = show2FAField && !twoFactorCode.isEmpty ? twoFactorCode : ""
+                self.loginWithCredentials(
+                    username: username,
+                    password: password,
+                    code2fa: code2fa,
+                    secureToken: secureToken)
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Submits the captcha result from the user interaction in the popup.
+    /// Sends the final slider offset (`captchaSolution`) and the user's movement trails (`trailX`, `trailY`) to the server.
+    func submitCaptcha(captchaSolution: CGFloat, trailX: [CGFloat], trailY: [CGFloat]) {
+        // Step 1: Close the captcha popup
+        showCaptchaPopup = false
+
+        // Step 2: Show loading view while waiting for login to complete
+        showLoadingView = true
+
+        // Step 3: Determine if 2FA code should be included
+        let code2fa = show2FAField ? twoFactorCode : ""
+
+        // Step 4: Convert slider's final horizontal offset to stringified Int for backend format
+        let solution = "\(Int(captchaSolution))"
+
+        // Step 5: Call login API with all required fields including captcha metadata
+        loginWithCredentials(
+            username: username,
+            password: password,
+            code2fa: code2fa,
+            secureToken: secureToken, // Provided from authTokenLogin()
+            captchaSolution: solution, // X offset of the slider
+            captchaTrailX: trailX, // Array of user X-axis movements
+            captchaTrailY: trailY) // Array of user Y-axis movements
+    }
+
+    /// Common logic that runs after a successful login, shared between normal login and captcha login flows.
+    private func handleSuccessfulLogin(session: Session) {
+        // Save login time to preferences
+        preferences.saveLoginDate(date: Date())
+
+        // Cache current Wi-Fi state to use for reconnect logic
+        WifiManager.shared.saveCurrentWifiNetworks()
+
+        // Store authenticated session
+        userRepository.login(session: session)
+
+        // Log the success with the username
+        logger.logI("LoginViewModel", "Login successful, preparing user data for \(session.username)")
+
+        // Continue with user-specific data preparation and transition to main app screen
+        prepareUserData()
+    }
+
+    private func loginWithCredentials(
+        username: String,
+        password: String,
+        code2fa: String,
+        secureToken: String,
+        captchaSolution: String = "",
+        captchaTrailX: [CGFloat] = [],
+        captchaTrailY: [CGFloat] = []) {
+            apiCallManager.login(
+                username: username,
+                password: password,
+                code2fa: code2fa,
+                secureToken: secureToken,
+                captchaSolution: captchaSolution,
+                captchaTrailX: captchaTrailX,
+                captchaTrailY: captchaTrailY
+            )
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
@@ -125,12 +230,7 @@ class LoginViewModelImpl: LoginViewModel {
                     self.showLoadingView = false
                 }
             } receiveValue: { [weak self] session in
-                self?.preferences.saveLoginDate(date: Date())
-                WifiManager.shared.saveCurrentWifiNetworks()
-                self?.userRepository.login(session: session)
-                self?.logger.logI("LoginViewModel",
-                                  "Login successful, Preparing user data for \(session.username)")
-                self?.prepareUserData()
+                self?.handleSuccessfulLogin(session: session)
             }
             .store(in: &cancellables)
     }

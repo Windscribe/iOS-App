@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(BOOL)isWhiteListIps;
 -(void)setIsDebugLogCurlError:(BOOL)isEnabled;
 -(BOOL)isDebugLogCurlError;
+-(void)setIsEnableFreshConnect:(BOOL)bEnabled;
+-(BOOL)isEnableFreshConnect;
 
 @end
 

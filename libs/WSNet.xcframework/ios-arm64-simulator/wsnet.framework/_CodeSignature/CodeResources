@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/WSNet.h</key>
 		<data>
-		Sv37EHleksrvj7rUJM1x/3p8q18=
+		GPwvCJ5c5Ou+1D+m4lZnkpDyCPU=
 		</data>
 		<key>Headers/WSNetAdvancedParameters.h</key>
 		<data>
@@ -26,11 +26,11 @@
 		</data>
 		<key>Headers/WSNetDnsRequestResult.h</key>
 		<data>
-		bvJ/cMfmF7jRiqAGyvA7oVzWZsk=
+		TpSYd+X/XxA2a/RXKbOpYRb5L3s=
 		</data>
 		<key>Headers/WSNetDnsResolver.h</key>
 		<data>
-		trmY8Ug/UG7yUOYAZTTJ/LoEFZM=
+		AblZGRtEMF3V9lHeWDL9ANtPQ4M=
 		</data>
 		<key>Headers/WSNetEmergencyConnect.h</key>
 		<data>
@@ -42,19 +42,23 @@
 		</data>
 		<key>Headers/WSNetHttpNetworkManager.h</key>
 		<data>
-		9T/EkoCj7vYNWAwgck6eCLd2YPc=
+		KLMQszUc27bbhkODaxHUHT9keKU=
 		</data>
 		<key>Headers/WSNetHttpRequest.h</key>
 		<data>
-		yPpygLDK5gqhuit48iusjAHQHrc=
+		c4xgnSpr2ShQ1vb/HxJsMy7Q7UA=
 		</data>
 		<key>Headers/WSNetPingManager.h</key>
 		<data>
 		CnXfRJmZsHGzA8rmAUV9zoSc4hs=
 		</data>
+		<key>Headers/WSNetRequestError.h</key>
+		<data>
+		XCY2dWEuUysJXeBUSwgTlKfzNl4=
+		</data>
 		<key>Headers/WSNetServerAPI.h</key>
 		<data>
-		nJ61NNtCEpkr1XH6oIXC2yTshQs=
+		ZdzzTtKTOI0Dlz7hgf/A4bKf5Fk=
 		</data>
 		<key>Headers/WSNetUtils.h</key>
 		<data>
@@ -62,7 +66,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		SfY8aS4OvzBwgpGKcvvx3Govpfo=
+		Bks/JEUaQKZonszchNvtTFxRmX8=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -71,7 +75,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			X4C4CpdMxggPYlwzZECax/9jiSjEket7ETVHt71l9HA=
+			34RcikNYh+Zy9Hw006wCJJNvJQRzor6iq01Sc7z/Gko=
 			</data>
 		</dict>
 		<key>Headers/WSNetAdvancedParameters.h</key>
@@ -106,14 +110,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JSTZZHG8ncaDyjioLR/fm9ZvsRz5EjIXJvdDoTqiJG0=
+			McyFYPK9BlV8+BKmXx8wPKqh3d52+5LpFTAVXxmKAzs=
 			</data>
 		</dict>
 		<key>Headers/WSNetDnsResolver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			SZL13GsA4HUUZduCpsAfpneaMxdkNQbcvp7zsowXon0=
+			Viyth4IcjMeHmXiXBppVJzp7N47Qfrg64bSE30J7OTM=
 			</data>
 		</dict>
 		<key>Headers/WSNetEmergencyConnect.h</key>
@@ -134,14 +138,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			SRGUw/DK3yH6QCQJ63aMbM0T37UPTkJJHWLzCcAB57c=
+			fMnuND5Sh0dVlhz8lT14URdxIHeqQUOCJTJrFj5kuwM=
 			</data>
 		</dict>
 		<key>Headers/WSNetHttpRequest.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Ta6YfNeHlLnfzT5alIcqs/obQJqvqlPw5XEUE0RSnGo=
+			2kwkwaoS3dQhLvF0Tcozn1xBmdvLhXcPnvHP+R8wVPg=
 			</data>
 		</dict>
 		<key>Headers/WSNetPingManager.h</key>
@@ -151,11 +155,18 @@
 			DhSbSvpUHdIPhdLbvDXYxfPiDNVr4/6WluFlIbKi8fs=
 			</data>
 		</dict>
+		<key>Headers/WSNetRequestError.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			9hMkJxFzR+L1n4JEKcMtrIDyUReVICgMp3M4zLRq4lk=
+			</data>
+		</dict>
 		<key>Headers/WSNetServerAPI.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			A3WtNff096WDWMMP6oC+TQmpXzA95EEvxh+wK+1OyYg=
+			atPT3qQl1EYjh5zsYwWvPR4hzu0W/rq2qPzmUtrSjKk=
 			</data>
 		</dict>
 		<key>Headers/WSNetUtils.h</key>

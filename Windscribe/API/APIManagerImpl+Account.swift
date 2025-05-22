@@ -10,15 +10,91 @@ import Foundation
 import RxSwift
 
 extension APIManagerImpl {
-    func login(username: String, password: String, code2fa: String) -> RxSwift.Single<Session> {
-        return makeApiCall(modalType: Session.self) { completion in
-            self.api.login(username, password: password, code2fa: code2fa, callback: completion)
+    func login(username: String,
+               password: String,
+               code2fa: String,
+               secureToken: String,
+               captchaSolution: String,
+               captchaTrailX: [CGFloat],
+               captchaTrailY: [CGFloat]) -> Single<Session> {
+
+        return makeApiCall(modalType: Session.self) { [weak self] completion in
+            guard let self = self else {
+                return nil
+            }
+
+            return self.api.login(
+                username,
+                password: password,
+                code2fa: code2fa,
+                secureToken: secureToken,
+                captchaSolution: captchaSolution,
+                captchaTrailX: captchaTrailX.asNSNumberArray,
+                captchaTrailY: captchaTrailY.asNSNumberArray,
+                callback: completion
+            )
         }
     }
 
-    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String) -> RxSwift.Single<Session> {
+    func signup(username: String,
+                password: String,
+                referringUsername: String,
+                email: String,
+                voucherCode: String,
+                secureToken: String,
+                captchaSolution: String,
+                captchaTrailX: [CGFloat],
+                captchaTrailY: [CGFloat]) -> Single<Session> {
+
+        return makeApiCall(modalType: Session.self) { [weak self] completion in
+            guard let self = self else {
+                return nil
+            }
+
+            return self.api.signup(
+                username,
+                password: password,
+                referringUsername: referringUsername,
+                email: email,
+                voucherCode: voucherCode,
+                secureToken: secureToken,
+                captchaSolution: captchaSolution,
+                captchaTrailX: captchaTrailX.asNSNumberArray,
+                captchaTrailY: captchaTrailY.asNSNumberArray,
+                callback: completion
+            )
+        }
+    }
+    func authTokenLogin() -> RxSwift.Single<AuthTokenResponse> {
+        return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
+            guard let self = self else {
+                return nil
+            }
+
+            return self.api.authTokenLogin(completion)
+
+        }
+    }
+
+    func authTokenSignup() -> RxSwift.Single<AuthTokenResponse> {
+        return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
+            guard let self = self else {
+                return nil
+            }
+
+            return self.api.authTokenSignup(completion)
+        }
+    }
+
+    func regToken() -> RxSwift.Single<Token> {
+        return makeApiCall(modalType: Token.self) { completion in
+            self.api.regToken(completion)
+        }
+    }
+
+    func signUpUsingToken(token: String) -> RxSwift.Single<Session> {
         return makeApiCall(modalType: Session.self) { completion in
-            self.api.signup(username, password: password, referringUsername: referringUsername, email: email, voucherCode: voucherCode, callback: completion)
+            self.api.signup(usingToken: token, callback: completion)
         }
     }
 
@@ -37,18 +113,6 @@ extension APIManagerImpl {
         }
         return makeApiCall(modalType: APIMessage.self) { completion in
             self.api.confirmEmail(sessionAuth, callback: completion)
-        }
-    }
-
-    func regToken() -> RxSwift.Single<Token> {
-        return makeApiCall(modalType: Token.self) { completion in
-            self.api.regToken(completion)
-        }
-    }
-
-    func signUpUsingToken(token: String) -> RxSwift.Single<Session> {
-        return makeApiCall(modalType: Session.self) { completion in
-            self.api.signup(usingToken: token, callback: completion)
         }
     }
 
