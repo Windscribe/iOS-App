@@ -48,10 +48,12 @@ struct MenuEntryInteractiveView: View {
                         .frame(width: 16, height: 16)
                         .foregroundColor(.white)
                 }
-                Text(item.title)
-                    .foregroundColor(.white)
-                    .font(.medium(.callout))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if !item.title.isEmpty {
+                    Text(item.title)
+                        .foregroundColor(.white)
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 MenuEntryActionView(actionType: mainAction, action: { actionType in
                     action(actionType)
                 })
@@ -149,8 +151,9 @@ struct MenuEntryActionView: View {
                 action(.button(title: title))
             }, label: {
                 Text(title)
-                    .foregroundColor(.infoGrey)
-                    .font(.regular(.callout))
+                    .foregroundColor(.white)
+                    .font(.medium(.callout))
+                    .frame(maxWidth: .infinity, alignment: .center)
             })
         }
     }
