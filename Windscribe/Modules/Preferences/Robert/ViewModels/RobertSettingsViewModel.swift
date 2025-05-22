@@ -12,16 +12,16 @@ import RxSwift
 
 struct CustomRulesEntry: MenuEntryHeaderType {
     let id: Int = 0
-    let mainAction: MenuEntryActionType? = .link(title: nil)
+    let mainAction: MenuEntryActionType? = .none(title: TextsAsset.Robert.manageCustomRules)
     let message: String? = nil
     let secondaryAction: [MenuEntryActionType] = []
-    let title: String = TextsAsset.Robert.manageCustomRules
+    let title: String = ""
     let icon: String = ""
 }
 
 protocol RobertSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get set }
-    var description: String { get set }
+    var description: AttributedString { get set }
     var errorMessage: String? { get set }
     var safariURL: URL? { get }
     var entries: [RobertFilter] { get set }
@@ -34,7 +34,7 @@ protocol RobertSettingsViewModel: ObservableObject {
 
 final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     @Published var isDarkMode: Bool = false
-    @Published var description: String = TextsAsset.Robert.description
+    @Published var description: AttributedString = AttributedString("")
     @Published var errorMessage: String?
     @Published var safariURL: URL?
     @Published var entries: [RobertFilter] = []
@@ -60,6 +60,14 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
 
         entries = localDB.getRobertFilters()?.getRules() ?? []
         bindSubjects()
+
+        description = AttributedString(TextsAsset.Robert.description
+                                       + " "
+                                       + TextsAsset.Robert.learnMore)
+
+        if let range = description.range(of: TextsAsset.Robert.learnMore) {
+            description[range].foregroundColor = .learnBlue
+        }
     }
 
     func bindSubjects() {

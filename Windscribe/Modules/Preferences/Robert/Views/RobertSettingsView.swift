@@ -31,18 +31,21 @@ struct RobertSettingsView: View {
                     Button {
                         viewModel.infoSelected()
                     } label: {
-                        HStack {
+                        ZStack {
                             Text(viewModel.description)
-                                .foregroundColor(Color.white.opacity(0.5))
-                                .font(.text(.footnote))
-                            Image(ImagesAsset.learnMoreIcon)
-                                .resizable()
-                                .renderingMode(.template)
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 16, height: 16)
-                                .foregroundColor(.white)
+                                .foregroundColor(.infoGrey)
+                                .multilineTextAlignment(.leading)
+                                .font(.regular(.footnote))
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 12)
+                            HStack {
+                                Spacer()
+                                Image(ImagesAsset.Robert.mask)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 189)
+                            }
                         }
-                        .padding(16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
                                 .stroke(Color.white.opacity(0.1), lineWidth: 1)
@@ -83,26 +86,23 @@ struct FilterView: View {
             Image(ImagesAsset.DarkMode.filterIcons[filter.id] ?? "")
                 .resizable()
                 .frame(width: 16, height: 16)
-            VStack(alignment: .leading, spacing: 8) {
-                Text(filter.title)
-                    .foregroundColor(.white)
-                    .font(.bold(.callout))
-                Text(filter.enabled ? TextsAsset.Robert.allowing : TextsAsset.Robert.blocking)
-                    .foregroundColor(filter.enabled ? .green : .white.opacity(0.7))
-                    .font(.regular(.footnote))
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            Text(filter.title)
+                .font(.medium(.callout))
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text(filter.enabled ? TextsAsset.Robert.blocking : TextsAsset.Robert.allowing)
+                .font(.regular(.footnote))
+                .foregroundColor(filter.enabled ? .eletricBlue : .infoGrey)
             Button(action: {
                 action(filter)
             }, label: {
                 Image(filter.enabled ? ImagesAsset.SwitchButton.on : ImagesAsset.SwitchButton.off)
                     .resizable()
-                    .frame(width: 45, height: 25)
-                    .cornerRadius(12)
+                    .frame(width: 40, height: 22)
             })
         }
         .padding(16)
-        .background(Color.white.opacity(0.1))
+        .background(Color.white.opacity(0.05))
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }
