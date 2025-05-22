@@ -1248,6 +1248,8 @@
 		F4B4F3472D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B7F7AF2D833D9900CB4CEF /* WelcomeViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */; };
 		F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */; };
+		F4B8E21C2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */; };
+		F4B8E2212DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
 		F4E48D712DB9C2B0005CB047 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */; };
 		F4E48D722DB9C2B0005CB047 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */; };
 		F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */; };
@@ -2179,6 +2181,8 @@
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B7F7AE2D833D9900CB4CEF /* WelcomeViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModal.swift; sourceTree = "<group>"; };
 		F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
+		F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationCaptchaPopupView.swift; sourceTree = "<group>"; };
+		F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationTokenResponse.swift; sourceTree = "<group>"; };
 		F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
 		F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
 		F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
@@ -3802,6 +3806,7 @@
 				F440F2FE2D8DE70D006F1A6D /* Login */,
 				F4888E3C2D949DA7005EF149 /* SignUp */,
 				F4F51A732D9D7E2B00407DE7 /* EmergencyConnect */,
+				F4B8E21D2DD6A277004D9BF6 /* Shared */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -5083,6 +5088,31 @@
 			path = ImageLoader;
 			sourceTree = "<group>";
 		};
+		F4B8E21D2DD6A277004D9BF6 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				F4B8E21E2DD6A282004D9BF6 /* Views */,
+				F4B8E21F2DD6A288004D9BF6 /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		F4B8E21E2DD6A282004D9BF6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F4B8E21F2DD6A288004D9BF6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		F4E48D702DB9C2B0005CB047 /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
@@ -6304,6 +6334,7 @@
 				1E2CBFEC2CBFE1F000748D9F /* SiriIntents.intentdefinition in Sources */,
 				F469F0EA2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
 				1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */,
+				F4B8E2212DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift in Sources */,
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
 				F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */,
 				C535D29927E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
@@ -6393,6 +6424,7 @@
 				E96FEB26276CE78700D0BC54 /* ErrorPopupViewController.swift in Sources */,
 				1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */,
 				E9425B9927437024008B8786 /* APIParameters.swift in Sources */,
+				F4B8E21C2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift in Sources */,
 				1E7918BF2CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */,
 				59A2186E2C3C9D7D000D89FA /* AppModulesPhone.swift in Sources */,
 				C56FCC0A2B2CF3DF008DE7D4 /* UpgradeRouter.swift in Sources */,

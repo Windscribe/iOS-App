@@ -7,6 +7,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class WSNetHttpRequest;
 @class WSNetCancelableCallback;
+@class WSNetRequestError;
 
 @interface WSNetHttpNetworkManager : BridgeObject
 
@@ -14,8 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetHttpRequest*)createPostRequest:(NSString*)url timeoutMs:(uint32_t)timeoutMs data:(NSString*)data isIgnoreSslErrors:(BOOL)isIgnoreSslErrors;
 -(WSNetHttpRequest*)createPutRequest:(NSString*)url timeoutMs:(uint32_t)timeoutMs data:(NSString*)data isIgnoreSslErrors:(BOOL)isIgnoreSslErrors;
 -(WSNetHttpRequest*)createDeleteRequest:(NSString*)url timeoutMs:(uint32_t)timeoutMs isIgnoreSslErrors:(BOOL)isIgnoreSslErrors;
--(WSNetCancelableCallback*)executeRequest:(WSNetHttpRequest*)request requestId:(uint64_t)requestId finishedCallback:(void(^)(unsigned long long, unsigned int, int, NSString*, NSString*))finishedCallback;
--(WSNetCancelableCallback*)executeRequestEx:(WSNetHttpRequest*)request requestId:(uint64_t)requestId finishedCallback:(void(^)(unsigned long long, unsigned int, int, NSString*, NSString*))finishedCallback progressCallback:(void(^)(unsigned long long, unsigned long long, unsigned long long))progressCallback readyDataCallback:(void(^)(unsigned long long, NSString*))readyDataCallback;
+-(WSNetCancelableCallback*)executeRequest:(WSNetHttpRequest*)request requestId:(uint64_t)requestId finishedCallback:(void(^)(unsigned long long, unsigned int, WSNetRequestError*, NSString*))finishedCallback;
+-(WSNetCancelableCallback*)executeRequestEx:(WSNetHttpRequest*)request requestId:(uint64_t)requestId finishedCallback:(void(^)(unsigned long long, unsigned int, WSNetRequestError*, NSString*))finishedCallback progressCallback:(void(^)(unsigned long long, unsigned long long, unsigned long long))progressCallback readyDataCallback:(void(^)(unsigned long long, NSString*))readyDataCallback;
 -(void)setProxySettings:(NSString*)address username:(NSString*)username password:(NSString*)password;
 -(WSNetCancelableCallback*)setWhitelistIpsCallback:(void(^)(NSOrderedSet<NSString*>*))whitelistIpsCallback;
 -(WSNetCancelableCallback*)setWhitelistSocketsCallback:(void(^)(NSOrderedSet<NSNumber*>*))whitelistSocketsCallback;

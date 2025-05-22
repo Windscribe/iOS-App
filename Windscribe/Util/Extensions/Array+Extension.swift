@@ -27,3 +27,9 @@ extension Array where Element: Hashable {
         return Array(thisSet.symmetricDifference(otherSet))
     }
 }
+
+extension Array where Element == CGFloat {
+    var asNSNumberArray: [NSNumber] {
+        return self.map { NSNumber(value: Double($0)) }
+    }
+}

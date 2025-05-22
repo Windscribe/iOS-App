@@ -16,6 +16,7 @@ func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T? {
     do {
         return try JSONDecoder().decode(modeType, from: json.utf8Encoded)
     } catch {
+        print("Decoding Error: \(error)")
         return nil
     }
 }
@@ -31,9 +32,10 @@ func mapToAPIError(error: String?) -> Errors {
     return Errors.parsingError
 }
 
-func makeApiCall<T: Decodable>(modalType _: T.Type, apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback) -> Single<T> {
+func makeApiCall<T: Decodable>(modalType _: T.Type,
+                               apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) -> Single<T> {
     return Single<T>.create { callback in
-        _ = apiCall { statusCode, responseData in
+        let cancelable = apiCall { statusCode, responseData in
             if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
                 callback(.failure(wsNetError))
             } else {
@@ -43,6 +45,8 @@ func makeApiCall<T: Decodable>(modalType _: T.Type, apiCall: @escaping (@escapin
                 callback(.success(apiResult))
             }
         }
-        return Disposables.create {}
+        return Disposables.create {
+            cancelable?.cancel()
+        }
     }
 }

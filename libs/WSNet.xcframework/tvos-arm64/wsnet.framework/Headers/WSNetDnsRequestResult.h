@@ -5,13 +5,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class WSNetRequestError;
+
 @interface WSNetDnsRequestResult : BridgeObject
 
 -(NSArray<NSString*>*)ips;
 -(uint32_t)elapsedMs;
--(BOOL)isError;
--(BOOL)isConnectionRefusedError;
--(NSString*)errorString;
+-(WSNetRequestError*)error;
 
 @end
 

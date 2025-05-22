@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setIgnoreSslErrors:(BOOL)bIgnore;
 -(void)resetFailover;
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
--(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)session:(NSString*)authHash appleId:(NSString*)appleId gpDeviceId:(NSString*)gpDeviceId callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)claimVoucherCode:(NSString*)authHash voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)deleteSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)recordInstall:(BOOL)isDesktop callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)addEmail:(NSString*)authHash email:(NSString*)email callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)confirmEmail:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
--(WSNetCancelableCallback*)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email voucherCode:(NSString*)voucherCode callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)signup:(NSString*)username password:(NSString*)password referringUsername:(NSString*)referringUsername email:(NSString*)email voucherCode:(NSString*)voucherCode secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)webSession:(NSString*)authHash callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)checkUpdate:(int)updateChannel appVersion:(NSString*)appVersion appBuild:(NSString*)appBuild osVersion:(NSString*)osVersion osBuild:(NSString*)osBuild callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)debugLog:(NSString*)username strLog:(NSString*)strLog callback:(void(^)(int, NSString*))callback;
@@ -52,6 +52,9 @@ NS_ASSUME_NONNULL_BEGIN
 -(WSNetCancelableCallback*)recordShakeForDataScore:(NSString*)authHash score:(NSString*)score signature:(NSString*)signature callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)verifyTvLoginCode:(NSString*)authHash xpressCode:(NSString*)xpressCode callback:(void(^)(int, NSString*))callback;
 -(WSNetCancelableCallback*)cancelAccount:(NSString*)authHash password:(NSString*)password callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)sso:(NSString*)provider token:(NSString*)token callback:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)authTokenLogin:(void(^)(int, NSString*))callback;
+-(WSNetCancelableCallback*)authTokenSignup:(void(^)(int, NSString*))callback;
 
 @end
 

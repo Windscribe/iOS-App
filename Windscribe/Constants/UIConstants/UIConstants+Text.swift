@@ -240,6 +240,10 @@ enum TextsAsset {
         return "Voucher Code".localized
     }
 
+    static var submit: String {
+        return "Submit".localized
+    }
+
     enum SignInError {
         static var usernameExpectedEmailProvided: String {
             return "Please login with your username, not your email".localized
@@ -832,10 +836,6 @@ enum TextsAsset {
 
         static var sentLog: String {
             return "Sent, Thanks!".localized
-        }
-
-        static var submit: String {
-            return "Submit".localized
         }
     }
 

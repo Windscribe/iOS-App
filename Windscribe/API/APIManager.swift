@@ -15,19 +15,39 @@ protocol APIManager {
     func getWebSession() -> Single<WebSession>
     func deleteSession() -> Single<APIMessage>
     func getSession(sessionAuth: String) -> Single<Session>
-    // Account
-    func login(username: String, password: String, code2fa: String) -> Single<Session>
-    func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String) -> RxSwift.Single<Session>
-    func addEmail(email: String) -> Single<APIMessage>
-    func confirmEmail() -> Single<APIMessage>
+
+    // Signup and Login
+    func login(username: String,
+               password: String,
+               code2fa: String,
+               secureToken: String,
+               captchaSolution: String,
+               captchaTrailX: [CGFloat],
+               captchaTrailY: [CGFloat]) -> Single<Session>
+    func signup(username: String,
+                password: String,
+                referringUsername: String,
+                email: String,
+                voucherCode: String,
+                secureToken: String,
+                captchaSolution: String,
+                captchaTrailX: [CGFloat],
+                captchaTrailY: [CGFloat]) -> Single<Session>
+    func authTokenLogin() -> RxSwift.Single<AuthTokenResponse>
+    func authTokenSignup() -> RxSwift.Single<AuthTokenResponse>
     func regToken() -> RxSwift.Single<Token>
     func signUpUsingToken(token: String) -> RxSwift.Single<Session>
+
+    // Account
+    func addEmail(email: String) -> Single<APIMessage>
+    func confirmEmail() -> Single<APIMessage>
     func claimAccount(username: String, password: String, email: String) -> RxSwift.Single<APIMessage>
     func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse>
     func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     func cancelAccount(password: String) -> RxSwift.Single<APIMessage>
     func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse>
     func claimVoucherCode(code: String) -> RxSwift.Single<ClaimVoucherCodeResponse>
+
     // VPN
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
     func getStaticIpList() -> Single<StaticIPList>
@@ -35,14 +55,17 @@ protocol APIManager {
     func getIKEv2ServerCredentials() -> Single<IKEv2ServerCredentials>
     func getOpenVPNServerCredentials() -> Single<OpenVPNServerCredentials>
     func getPortMap(version: Int, forceProtocols: [String]) -> Single<PortMapList>
+
     // Billing
     func getMobileBillingPlans(promo: String?) -> Single<MobilePlanList>
     func postBillingCpID(pcpID: String) -> Single<APIMessage>
     func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) -> Single<APIMessage>
+
     // Robert
     func getRobertFilters() -> Single<RobertFilters>
     func updateRobertSettings(id: String, status: Int32) -> Single<APIMessage>
     func syncRobertFilters() -> Single<APIMessage>
+
     // Other
     func recordInstall(platform: String) -> Single<APIMessage>
     func getNotifications(pcpid: String) -> Single<NoticeList>

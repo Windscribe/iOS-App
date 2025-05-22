@@ -135,195 +135,20 @@ struct SignUpView: View {
             GeometryReader { geometry in
                 ScrollView {
                     VStack(spacing: 20) {
-                        // Username Field
-                        LoginTextField(
-                            title: TextsAsset.chooseUsername,
-                            placeholder: TextsAsset.Authentication.enterUsername,
-                            showError: isUsernameError,
-                            errorMessage: usernameErrorMessage,
-                            showWarningIcon: showUsernameIcon,
-                            text: $viewModel.username
-                        )
-                        .focused($focusedField, equals: .username)
-                        .id(Field.username)
-                        .readingFrame(id: "username-anchor")
-
-                        // Password Field
-                        LoginTextField(
-                            title: TextsAsset.choosePassword,
-                            placeholder: TextsAsset.Authentication.enterPassword,
-                            isSecure: true,
-                            showError: isPasswordError,
-                            errorMessage: passwordErrorMessage,
-                            showWarningIcon: showPasswordIcon,
-                            text: $viewModel.password
-                        )
-                        .focused($focusedField, equals: .password)
-                        .id(Field.password)
-                        .readingFrame(id: "password-anchor")
-
-                        // Email Field
-                        VStack(spacing: 6) {
-                            LoginTextField(
-                                title: "\(TextsAsset.email) (\(TextsAsset.optional))",
-                                placeholder: TextsAsset.Authentication.enterEmailAddress,
-                                showError: isEmailError,
-                                errorMessage: emailErrorMessage,
-                                showWarningIcon: showEmailIcon,
-                                text: $viewModel.email,
-                                keyboardType: .emailAddress,
-                                trailingView: AnyView(
-                                    Text(TextsAsset.get10GbAMonth)
-                                        .font(.medium(.callout))
-                                        .foregroundColor(.white.opacity(0.5))
-                                )
-                            )
-                            .focused($focusedField, equals: .email)
-                            .id(Field.email)
-                            .readingFrame(id: "email-anchor")
-
-                            Text(TextsAsset.emailInfoLabel)
-                                .font(.regular(.footnote))
-                                .foregroundColor(.white.opacity(0.5))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-
-                        // Voucher Code Field
-                        LoginTextField(
-                            title: "\(TextsAsset.voucherCode) (\(TextsAsset.optional))",
-                            placeholder: TextsAsset.Authentication.enterVoucherCode,
-                            text: $viewModel.voucherCode
-                        )
-                        .focused($focusedField, equals: .voucher)
-                        .id(Field.voucher)
-                        .readingFrame(id: "voucher-anchor")
-
-                        if !signupFlowContext.isFromGhostAccount {
-                            // Referral Toggle
-                            Button(action: {
-                                withAnimation(.easeInOut(duration: 0.25)) {
-                                    viewModel.referralViewTapped()
-                                }
-                            },label: {
-                                HStack(spacing: 8) {
-                                    Text(TextsAsset.referredBySomeone)
-                                        .font(.medium(.callout))
-                                        .foregroundColor(.white)
-
-                                    Image(systemName: "chevron.down")
-                                        .rotationEffect(.degrees(viewModel.isReferralVisible ? 180 : 0))
-                                        .foregroundColor(.white.opacity(0.5))
-                                        .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
-                                }
-                            })
-                            .buttonStyle(.plain)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-
-                        // Referral Section
-                        if viewModel.isReferralVisible {
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack(alignment: .top, spacing: 6) {
-                                    Text("✓")
-                                        .foregroundColor(.green)
-                                        .font(.regular(.callout))
-                                    Text(TextsAsset.youWillBothGetTenGb)
-                                        .foregroundColor(.white.opacity(0.5))
-                                        .font(.regular(.callout))
-                                        .fixedSize(horizontal: false, vertical: true)
-                                }
-
-                                HStack(alignment: .top, spacing: 6) {
-                                    Text("✓")
-                                        .foregroundColor(.green)
-                                        .font(.regular(.callout))
-                                    Text(TextsAsset.ifYouGoPro)
-                                        .foregroundColor(.white.opacity(0.5))
-                                        .font(.regular(.callout))
-                                        .fixedSize(horizontal: false, vertical: true)
-                                }
-
-                                // TextField
-                                LoginTextField(
-                                    title: "",
-                                    placeholder: viewModel.isEmailValid(viewModel.email)
-                                        ? TextsAsset.referringUsername
-                                        : TextsAsset.pleaseEnterEmailFirst,
-                                    showError: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
-                                    errorMessage: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email)
-                                        ? TextsAsset.pleaseEnterEmailFirst
-                                        : nil,
-                                    showWarningIcon: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
-                                    text: $viewModel.referralUsername
-                                )
-                                .disabled(!viewModel.isEmailValid(viewModel.email))
-                                .focused($focusedField, equals: .referral)
-                                .id(Field.referral)
-                                .readingFrame(id: "referral-anchor")
-
-                                // Info
-                                Text(TextsAsset.mustConfirmEmail)
-                                    .font(.regular(.footnote))
-                                    .foregroundColor(.white.opacity(0.5))
-                            }
-                            .transition(.opacity)
-                            .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
-                        }
-
-                        // API or Network Error
-                        if let errorText = apiOrNetworkError {
-                            Text(errorText)
-                                .font(.regular(.footnote))
-                                .foregroundColor(.loginRegisterFailedField)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-
-                        // Continue Button
-                        Button {
-                            focusedField = nil
-                            viewModel.continueButtonTapped(ignoreEmailCheck: false, claimAccount: false)
-                        } label: {
-                            ZStack {
-                                if viewModel.showLoadingView {
-                                    ProgressView()
-                                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                                } else {
-                                    Text(TextsAsset.continue)
-                                        .font(.bold(.body))
-                                        .foregroundColor(.black)
-                                }
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(viewModel.isContinueButtonEnabled ? Color.loginRegisterEnabledButtonColor : Color.white)
-                            .clipShape(Capsule())
-                        }
-                        .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
-
-                        if signupFlowContext.isFromGhostAccount {
-                            Button(action: {
-                                presentationMode.wrappedValue.dismiss()
-                            }, label: {
-                                Text(TextsAsset.setupLater)
-                                    .foregroundColor(.welcomeButtonTextColor)
-                                    .font(.bold(.title3))
-                                    .padding(.top, 12)
-                            })
-                            .buttonStyle(.plain)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                        }
+                        usernameField
+                        passwordField
+                        emailField
+                        voucherField
+                        referralToggle
+                        referralSection
+                        apiOrNetworkErrorLabel
+                        continueButton
+                        setupLaterButton
                     }
                     .padding()
                     .padding(.bottom, keyboard.currentHeight) // Dynamic keyboard-aware padding
                     .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
-                    .background( // Needed for anchor resolution
-                        GeometryReader { _ in
-                            Color.clear
-                                .onPreferenceChange(ViewFrameKey.self) { prefs in
-                                    self.fieldPositions = prefs
-                                }
-                        }
-                    )
+                    .background(attachPreferenceReader())
                 }
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     Color.clear.frame(height: keyboard.currentHeight == 0 ? 0 : 60)
@@ -355,17 +180,6 @@ struct SignUpView: View {
                         showEmailWarning = true
                     }
                 }
-                .fullScreenCover(isPresented: $showEmailWarning) {
-                    SignupWarningView(
-                        onContinue: {
-                            showEmailWarning = false
-                            viewModel.continueButtonTapped(ignoreEmailCheck: true, claimAccount: false)
-                        },
-                        onBack: {
-                            showEmailWarning = false
-                        }
-                    )
-                }
             }
         }
         .background(Color.loginRegisterBackgroundColor)
@@ -373,47 +187,285 @@ struct SignUpView: View {
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
-                    .foregroundColor(.white)
-                    .font(.headline)
+            signupToolbar()
+        }
+        .fullScreenCover(isPresented: $viewModel.showCaptchaPopup) {
+            if let data = viewModel.captchaData {
+                CaptchaSheetContent(
+                    background: data.background,
+                    slider: data.slider,
+                    topOffset: CGFloat(data.top),
+                    onSubmit: { xOffset, trailX, trailY in
+                        viewModel.submitCaptcha(captchaSolution: xOffset, trailX: trailX, trailY: trailY)
+                    }
+                )
             }
-
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "chevron.backward")
-                      .font(.system(size: 17, weight: .semibold))
-                      .foregroundColor(.white)
-                      .padding(.leading, -8)
-                })
-            }
-
-            ToolbarItemGroup(placement: .keyboard) {
-                Button(action: {
-                    moveFocus(up: true)
-                }, label: {
-                    Image(systemName: "chevron.up")
-                })
-                .disabled(focusedField == .username)
-
-                Button(action: {
-                    moveFocus(up: false)
-                }, label: {
-                    Image(systemName: "chevron.down")
-                })
-                .disabled(isLastFieldFocused)
-
-                Spacer()
-
-                Button(TextsAsset.Authentication.done) {
-                    focusedField = nil
+        }
+        .fullScreenCover(isPresented: $showEmailWarning) {
+            SignupWarningView(
+                onContinue: {
+                    showEmailWarning = false
+                    viewModel.continueButtonTapped(ignoreEmailCheck: true, claimAccount: false)
+                },
+                onBack: {
+                    showEmailWarning = false
                 }
-            }
+            )
         }
 
     }
+}
+
+private extension SignUpView {
+
+    @ViewBuilder
+    var usernameField: some View {
+        LoginTextField(
+            title: TextsAsset.chooseUsername,
+            placeholder: TextsAsset.Authentication.enterUsername,
+            showError: isUsernameError,
+            errorMessage: usernameErrorMessage,
+            showWarningIcon: showUsernameIcon,
+            text: $viewModel.username
+        )
+        .focused($focusedField, equals: .username)
+        .id(Field.username)
+        .readingFrame(id: "username-anchor")
+    }
+
+    @ViewBuilder
+    var passwordField: some View {
+        LoginTextField(
+            title: TextsAsset.choosePassword,
+            placeholder: TextsAsset.Authentication.enterPassword,
+            isSecure: true,
+            showError: isPasswordError,
+            errorMessage: passwordErrorMessage,
+            showWarningIcon: showPasswordIcon,
+            text: $viewModel.password
+        )
+        .focused($focusedField, equals: .password)
+        .id(Field.password)
+        .readingFrame(id: "password-anchor")
+    }
+
+    @ViewBuilder
+    var emailField: some View {
+        VStack(spacing: 6) {
+            LoginTextField(
+                title: "\(TextsAsset.email) (\(TextsAsset.optional))",
+                placeholder: TextsAsset.Authentication.enterEmailAddress,
+                showError: isEmailError,
+                errorMessage: emailErrorMessage,
+                showWarningIcon: showEmailIcon,
+                text: $viewModel.email,
+                keyboardType: .emailAddress,
+                trailingView: AnyView(
+                    Text(TextsAsset.get10GbAMonth)
+                        .font(.medium(.callout))
+                        .foregroundColor(.white.opacity(0.5))
+                )
+            )
+            .focused($focusedField, equals: .email)
+            .id(Field.email)
+            .readingFrame(id: "email-anchor")
+
+            Text(TextsAsset.emailInfoLabel)
+                .font(.regular(.footnote))
+                .foregroundColor(.white.opacity(0.5))
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    var voucherField: some View {
+        LoginTextField(
+            title: "\(TextsAsset.voucherCode) (\(TextsAsset.optional))",
+            placeholder: TextsAsset.Authentication.enterVoucherCode,
+            text: $viewModel.voucherCode
+        )
+        .focused($focusedField, equals: .voucher)
+        .id(Field.voucher)
+        .readingFrame(id: "voucher-anchor")
+    }
+
+    @ViewBuilder
+    var referralToggle: some View {
+        if !signupFlowContext.isFromGhostAccount {
+            Button(action: {
+                withAnimation(.easeInOut(duration: 0.25)) {
+                    viewModel.referralViewTapped()
+                }
+            }, label: {
+                HStack(spacing: 8) {
+                    Text(TextsAsset.referredBySomeone)
+                        .font(.medium(.callout))
+                        .foregroundColor(.white)
+
+                    Image(systemName: "chevron.down")
+                        .rotationEffect(.degrees(viewModel.isReferralVisible ? 180 : 0))
+                        .foregroundColor(.white.opacity(0.5))
+                        .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
+                }
+            })
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    var referralSection: some View {
+        if viewModel.isReferralVisible {
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach([
+                    TextsAsset.youWillBothGetTenGb,
+                    TextsAsset.ifYouGoPro
+                ], id: \.self) { text in
+                    HStack(alignment: .top, spacing: 6) {
+                        Text("✓")
+                            .foregroundColor(.green)
+                            .font(.regular(.callout))
+                        Text(text)
+                            .foregroundColor(.white.opacity(0.5))
+                            .font(.regular(.callout))
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
+                LoginTextField(
+                    title: "",
+                    placeholder: viewModel.isEmailValid(viewModel.email)
+                        ? TextsAsset.referringUsername
+                        : TextsAsset.pleaseEnterEmailFirst,
+                    showError: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
+                    errorMessage: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email)
+                        ? TextsAsset.pleaseEnterEmailFirst
+                        : nil,
+                    showWarningIcon: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
+                    text: $viewModel.referralUsername
+                )
+                .disabled(!viewModel.isEmailValid(viewModel.email))
+                .focused($focusedField, equals: .referral)
+                .id(Field.referral)
+                .readingFrame(id: "referral-anchor")
+
+                Text(TextsAsset.mustConfirmEmail)
+                    .font(.regular(.footnote))
+                    .foregroundColor(.white.opacity(0.5))
+            }
+            .transition(.opacity)
+            .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
+        }
+    }
+
+    @ViewBuilder
+    var apiOrNetworkErrorLabel: some View {
+        if let errorText = apiOrNetworkError {
+            Text(errorText)
+                .font(.regular(.footnote))
+                .foregroundColor(.loginRegisterFailedField)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
+    @ViewBuilder
+    var continueButton: some View {
+        Button {
+            focusedField = nil
+            viewModel.continueButtonTapped(ignoreEmailCheck: false, claimAccount: false)
+        } label: {
+            ZStack {
+                if viewModel.showLoadingView {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                } else {
+                    Text(TextsAsset.continue)
+                        .font(.bold(.body))
+                        .foregroundColor(.black)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(viewModel.isContinueButtonEnabled ? Color.loginRegisterEnabledButtonColor : Color.white)
+            .clipShape(Capsule())
+        }
+        .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
+    }
+
+    @ViewBuilder
+    var setupLaterButton: some View {
+        if signupFlowContext.isFromGhostAccount {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }, label: {
+                Text(TextsAsset.setupLater)
+                    .foregroundColor(.welcomeButtonTextColor)
+                    .font(.bold(.title3))
+                    .padding(.top, 12)
+            })
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+}
+
+private extension SignUpView {
+    func attachPreferenceReader() -> some View {
+        GeometryReader { _ in
+            Color.clear
+                .onPreferenceChange(ViewFrameKey.self) { prefs in
+                    self.fieldPositions = prefs
+                }
+        }
+    }
+}
+
+private extension SignUpView {
+
+    @ToolbarContentBuilder
+    func signupToolbar() -> some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Text(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
+                .foregroundColor(.white)
+                .font(.headline)
+        }
+
+        ToolbarItem(placement: .navigationBarLeading) {
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                Image(systemName: "chevron.backward")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.white)
+                    .padding(.leading, -8)
+            }
+        }
+
+        ToolbarItemGroup(placement: .keyboard) {
+            Button(action: {
+                moveFocus(up: true)
+            }) {
+                Image(systemName: "chevron.up")
+            }
+            .disabled(focusedField == .username)
+
+            Button(action: {
+                moveFocus(up: false)
+            }) {
+                Image(systemName: "chevron.down")
+            }
+            .disabled(isLastFieldFocused)
+
+            Spacer()
+
+            Button(TextsAsset.Authentication.done) {
+                focusedField = nil
+            }
+        }
+    }
+}
+
+extension SignUpView {
 
     private func moveFocus(up: Bool) {
         guard let current = focusedField else { return }
