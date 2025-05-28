@@ -108,7 +108,14 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register((any AccountSettingsViewModel).self) { r in
-            AccountSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+            AccountSettingsViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                sessionManager: r.resolve(SessionManagerV2.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                languageManager: r.resolve(LanguageManager.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register((any ConnectionSettingsViewModel).self) { r in
@@ -489,7 +496,14 @@ class ViewControllerModule: Assembly {
 
         container.register(AccountSettingsView.self) { r in
             AccountSettingsView(
-                viewModel: AccountSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+                viewModel: AccountSettingsViewModelImpl(
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    preferences: r.resolve(Preferences.self)!,
+                    sessionManager: r.resolve(SessionManagerV2.self)!,
+                    apiManager: r.resolve(APIManager.self)!,
+                    localDatabase: r.resolve(LocalDatabase.self)!,
+                    languageManager: r.resolve(LanguageManager.self)!,
+                    logger: r.resolve(FileLogger.self)!)
             )
         }.inObjectScope(.transient)
 

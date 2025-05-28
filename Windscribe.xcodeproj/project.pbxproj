@@ -1179,6 +1179,9 @@
 		F485CBCC2D5146E30063EA3A /* PlanUpgradeLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBCB2D5146E30063EA3A /* PlanUpgradeLogoView.swift */; };
 		F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */; };
 		F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */; };
+		F48705B22DDF9B52007435EB /* AccountSettingsActionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48705B12DDF9B52007435EB /* AccountSettingsActionModel.swift */; };
+		F48705B62DE61A67007435EB /* MenuTextFieldDialogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48705B52DE61A67007435EB /* MenuTextFieldDialogView.swift */; };
+		F48705B82DE61AA4007435EB /* MenuLoadingOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48705B72DE61AA4007435EB /* MenuLoadingOverlayView.swift */; };
 		F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E312D930D75005EF149 /* BaseNavigationRouter.swift */; };
 		F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E332D930EC3005EF149 /* AuthenticationRouteID.swift */; };
 		F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E352D931364005EF149 /* NavigationRouterModifier.swift */; };
@@ -2131,6 +2134,9 @@
 		F485CBCB2D5146E30063EA3A /* PlanUpgradeLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeLogoView.swift; sourceTree = "<group>"; };
 		F485CBCD2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlanUgradeViewController+UI.swift"; sourceTree = "<group>"; };
 		F485CBD12D51509C0063EA3A /* PlanUpgradeSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSelectionView.swift; sourceTree = "<group>"; };
+		F48705B12DDF9B52007435EB /* AccountSettingsActionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsActionModel.swift; sourceTree = "<group>"; };
+		F48705B52DE61A67007435EB /* MenuTextFieldDialogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTextFieldDialogView.swift; sourceTree = "<group>"; };
+		F48705B72DE61AA4007435EB /* MenuLoadingOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuLoadingOverlayView.swift; sourceTree = "<group>"; };
 		F4888E312D930D75005EF149 /* BaseNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNavigationRouter.swift; sourceTree = "<group>"; };
 		F4888E332D930EC3005EF149 /* AuthenticationRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationRouteID.swift; sourceTree = "<group>"; };
 		F4888E352D931364005EF149 /* NavigationRouterModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRouterModifier.swift; sourceTree = "<group>"; };
@@ -3046,6 +3052,8 @@
 			children = (
 				F49C458C2DC96AF7007E5EF1 /* MenuCategoryRow.swift */,
 				1ED616492DCA70E2006CDC99 /* MenuEntryView.swift */,
+				F48705B52DE61A67007435EB /* MenuTextFieldDialogView.swift */,
+				F48705B72DE61AA4007435EB /* MenuLoadingOverlayView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -4706,6 +4714,14 @@
 			path = UIKit;
 			sourceTree = "<group>";
 		};
+		F48705B02DDF9B04007435EB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F48705B12DDF9B52007435EB /* AccountSettingsActionModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		F4888E302D930CA6005EF149 /* NavigationRouter */ = {
 			isa = PBXGroup;
 			children = (
@@ -4881,6 +4897,7 @@
 			children = (
 				F49C458F2DCAB5BF007E5EF1 /* Views */,
 				F49C45902DCAB5C6007E5EF1 /* ViewModels */,
+				F48705B02DDF9B04007435EB /* Models */,
 			);
 			path = AccountSettings;
 			sourceTree = "<group>";
@@ -6229,6 +6246,7 @@
 				F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */,
 				1ED23F7B2DBAA20F00C7BEE5 /* LookAndFeelViewType.swift in Sources */,
 				AF16CA202228488700997A2A /* IAPInfoSectionCell.swift in Sources */,
+				F48705B82DE61AA4007435EB /* MenuLoadingOverlayView.swift in Sources */,
 				C5D983C22B34DA3F0069FF3A /* APIUtil.swift in Sources */,
 				E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */,
 				F45BA5A02D54000400CFDB82 /* UpgradeSuccessBenefitView.swift in Sources */,
@@ -6310,6 +6328,7 @@
 				C5A930CD2B4332AA0001CFA0 /* User.swift in Sources */,
 				AFF410D8234F473D0089F1D1 /* SetPreferredProtocolPopupViewController.swift in Sources */,
 				1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */,
+				F48705B22DDF9B52007435EB /* AccountSettingsActionModel.swift in Sources */,
 				F49C45BC2DCD2F15007E5EF1 /* RobertSettingsViewModel.swift in Sources */,
 				C5A930E92B44A1580001CFA0 /* FileDatabaseImpl.swift in Sources */,
 				F46C28602D4C09A60073207E /* PlanUpgradeViewController.swift in Sources */,
@@ -6561,6 +6580,7 @@
 				C580FE022B4F2536004FA857 /* PushNotificationManagerV2.swift in Sources */,
 				C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */,
 				F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */,
+				F48705B62DE61A67007435EB /* MenuTextFieldDialogView.swift in Sources */,
 				1E3F77652DB13CD1008308A8 /* ExportedLocations+Init.swift in Sources */,
 				C5592B892B394BF100F2F110 /* LocalDatabase.swift in Sources */,
 				AF4E927121F26A1400A3F584 /* AlertManager.swift in Sources */,

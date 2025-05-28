@@ -9,20 +9,299 @@
 import Foundation
 import Combine
 
-protocol AccountSettingsViewModel: ObservableObject { }
+protocol AccountSettingsViewModel: ObservableObject {
+    var isDarkMode: Bool { get }
+    var sections: [AccountSectionModel] { get }
+    var loadingState: ManageAccountState { get }
+
+    func reloadSession()
+    func handleRowAction(_ action: AccountRowAction)
+}
 
 final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
-    private let logger: FileLogger
+
+    @Published var isDarkMode: Bool = false
+    @Published var sections: [AccountSectionModel] = []
+    @Published var loadingState: ManageAccountState = .initial
+    @Published var activeDialog: AccountDialogType?
+    @Published var alertMessage: AccountSettingsAlertContent?
 
     private var cancellables = Set<AnyCancellable>()
+    private var currentSession: Session?
 
-    init(logger: FileLogger) {
-        self.logger = logger
+    // Dependencies
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let preferences: Preferences
+    private let sessionManager: SessionManagerV2
+    private let apiManager: APIManager
+    private let localDatabase: LocalDatabase
+    private let languageManager: LanguageManager
+    private let logger: FileLogger
 
-        bind()
+    var accountEmailStatus: AccountEmailStatusType {
+        guard let session = currentSession else {
+            return .missing
+        }
+
+        if session.email.isEmpty {
+            return .missing
+        } else if !session.emailStatus {
+            return .unverified
+        } else {
+            return .verified
+        }
     }
 
-    func bind() {
-        // TODO: Bind
+    var shouldShowAddEmailButton: Bool {
+        currentSession?.email.isEmpty == true
+    }
+
+    var shouldShowPlanActionButtons: Bool {
+        accountEmailStatus == .missing || accountEmailStatus == .unverified
+    }
+
+    init(lookAndFeelRepository: LookAndFeelRepositoryType,
+         preferences: Preferences,
+         sessionManager: SessionManagerV2,
+         apiManager: APIManager,
+         localDatabase: LocalDatabase,
+         languageManager: LanguageManager,
+         logger: FileLogger) {
+        self.lookAndFeelRepository = lookAndFeelRepository
+        self.preferences = preferences
+        self.sessionManager = sessionManager
+        self.apiManager = apiManager
+        self.localDatabase = localDatabase
+        self.languageManager = languageManager
+        self.logger = logger
+
+        bindSubjects()
+        reloadSession()
+    }
+
+    private func bindSubjects() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("AccountViewModel", "Theme Adjustment Change: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
+    }
+
+    func reloadSession() {
+        apiManager.getSession(nil)
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("AccountViewModel", "Failed to load session: \(error)")
+                }
+            }, receiveValue: { [weak self] session in
+                self?.currentSession = session
+                self?.buildSections(from: session)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func buildSections(from session: Session) {
+        var infoRows: [AccountRowModel] = [
+            .init(
+                type: .textRow(
+                    title: TextsAsset.Authentication.username,
+                    value: session.username
+                ),
+                action: nil
+            )
+        ]
+
+        if session.email.isEmpty {
+            infoRows.append(.init(
+                type: .textRow(
+                    title: TextsAsset.email,
+                    value: TextsAsset.General.none
+                ),
+                action: nil
+            ))
+
+        } else if !session.emailStatus {
+            infoRows.append(.init(
+                type: .confirmEmail(
+                    email: session.email
+                ),
+                action: nil
+            ))
+        } else {
+            infoRows.append(.init(
+                type: .textRow(
+                    title: TextsAsset.email,
+                    value: session.email
+                ),
+                action: nil
+            ))
+        }
+
+        var planRows: [AccountRowModel] = []
+
+        planRows.append(.init(
+            type: .textRow(
+                title: session.isUserPro
+                    ? TextsAsset.UpgradeView.unlimitedData
+                    : "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)",
+                value: session.isUserPro
+                    ? (session.billingPlanId == -9 ? TextsAsset.unlimited : TextsAsset.pro)
+                    : TextsAsset.Account.freeAccountDescription
+            ),
+            action: nil
+        ))
+
+        planRows.append(.init(
+            type: .textRow(
+                title: session.isPremium ? TextsAsset.Account.expiryDate : TextsAsset.Account.resetDate,
+                value: session.isPremium ? session.premiumExpiryDate : session.getNextReset()
+            ),
+            action: nil
+        ))
+
+        if !session.isUserPro {
+            planRows.append(.init(
+                type: .textRow(title: TextsAsset.Account.dataLeft, value: session.getDataLeft()),
+                action: nil
+            ))
+        }
+
+        let otherRows: [AccountRowModel] = [
+            .init(type: .navigation(title: TextsAsset.voucherCode,
+                                    subtitle: TextsAsset.Account.voucherCodeDescription),
+                  action: .openVoucher),
+            .init(type: .navigation(title: TextsAsset.Account.lazyLogin,
+                                    subtitle: TextsAsset.Account.lazyLoginDescription),
+                  action: .openLazyLogin)
+        ]
+
+        sections = [
+            .init(type: .info, items: infoRows)
+        ]
+
+        sections.append(.init(type: .plan, items: planRows))
+        sections.append(.init(type: .other, items: otherRows))
+    }
+
+    func handleRowAction(_ action: AccountRowAction) {
+        if action == .resendEmail {
+            resendConfirmationEmail()
+        }
+    }
+
+    private func resendConfirmationEmail() {
+        apiManager.confirmEmail()
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.ConfirmationEmailSentAlert.title,
+                        message: error.localizedDescription,
+                        buttonText: TextsAsset.okay
+                    )
+                }
+            }, receiveValue: { [weak self] _ in
+                self?.alertMessage = AccountSettingsAlertContent(
+                    title: TextsAsset.ConfirmationEmailSentAlert.title,
+                    message: TextsAsset.ConfirmationEmailSentAlert.message,
+                    buttonText: TextsAsset.okay
+                )
+            })
+            .store(in: &cancellables)
+    }
+
+    func confirmCancelAccount(password: String) {
+        loadingState = .loading
+        apiManager.cancelAccount(password: password)
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    self?.loadingState = .error(error.localizedDescription)
+                    self?.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.error,
+                        message: error.localizedDescription,
+                        buttonText: TextsAsset.okay)
+                case .finished:
+                    break
+                }
+            }, receiveValue: { [weak self] _ in
+                self?.loadingState = .success
+                self?.logoutUser()
+            })
+            .store(in: &cancellables)
+    }
+
+    func verifyLazyLogin(code: String) {
+        apiManager.verifyTvLoginCode(code: code)
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.error,
+                        message: error.localizedDescription,
+                        buttonText: TextsAsset.okay)
+                }
+            }, receiveValue: { [weak self] _ in
+                self?.alertMessage = AccountSettingsAlertContent(
+                    title: TextsAsset.Account.lazyLogin,
+                    message: TextsAsset.Account.lazyLoginSuccess,
+                    buttonText: TextsAsset.okay)
+            })
+            .store(in: &cancellables)
+    }
+
+    func verifyVoucher(code: String) {
+        apiManager.claimVoucherCode(code: code)
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.voucherCode,
+                        message: error.localizedDescription,
+                        buttonText: TextsAsset.okay)
+                }
+            }, receiveValue: { [weak self] response in
+                guard let self else { return }
+
+                if response.isClaimed {
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.voucherCode,
+                        message: TextsAsset.Account.voucherCodeSuccessful,
+                        buttonText: TextsAsset.okay)
+                    self.reloadSession()
+                } else if response.emailRequired == true {
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.voucherCode,
+                        message: TextsAsset.Account.emailRequired,
+                        buttonText: TextsAsset.okay)
+                } else if response.isUsed {
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.voucherCode,
+                        message: TextsAsset.Account.voucherUsedMessage,
+                        buttonText: TextsAsset.okay)
+                } else {
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.voucherCode,
+                        message: TextsAsset.Account.invalidVoucherCode,
+                        buttonText: TextsAsset.okay)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    private func logoutUser() {
+        sessionManager.logoutUser()
     }
 }

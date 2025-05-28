@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-enum ManageAccountState {
+enum ManageAccountState: Equatable {
     case initial
     case loading
     case error(String)

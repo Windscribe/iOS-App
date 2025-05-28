@@ -244,6 +244,10 @@ enum TextsAsset {
         return "Submit".localized
     }
 
+    static var confirm: String {
+        return "Confirm".localized
+    }
+
     enum SignInError {
         static var usernameExpectedEmailProvided: String {
             return "Please login with your username, not your email".localized
@@ -695,7 +699,7 @@ enum TextsAsset {
         }
 
         static var info: String {
-            return "INFO".localized
+            return "ACCOUNT INFO".localized
         }
 
         static var editAccount: String {
@@ -788,6 +792,42 @@ enum TextsAsset {
 
         static var emailRequired: String {
             return "Confirmed email is required.".localized
+        }
+
+        static var freeAccountDescription: String {
+            return "Free".localized
+        }
+
+        static var includeEmailDesciption: String {
+            return "Add your Email to get 10 GB/Month of data and gain the ability to reset a forgotten password. No Spam".localized
+        }
+
+        static var addEmailActionTitle: String {
+            "Add Email (Get 10 GB/Month)".localized
+        }
+
+        static var upgradeToProActionTitle: String {
+            "Upgrade to Pro".localized
+        }
+
+        static var defaultDialogTitle: String {
+            "Enter here".localized
+        }
+
+        static var defaultDialogMessage: String {
+            "Enter your information".localized
+        }
+
+        static var voucherCodeTitle: String {
+            "Voucher Code".localized
+        }
+
+        static var accountPasswordTitle: String {
+            "Account Password".localized
+        }
+
+        static var loginCodeTitle: String {
+            "Login Code".localized
         }
     }
 
