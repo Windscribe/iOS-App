@@ -13,7 +13,7 @@ import Swinject
 import UIKit
 import SwiftUI
 
-class SessionManager: SessionManagerV2 {
+class SessionManager: SessionManaging {
     var session: Session?
     var sessionNotificationToken: NotificationToken?
     var sessionTimer: Timer?

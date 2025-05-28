@@ -15,6 +15,8 @@ struct WelcomeView: View {
 
     @StateObject private var viewModel: WelcomeViewModelImpl
     @StateObject private var router: AuthenticationNavigationRouter
+    @State private var showSSOErrorAlert = false
+    @State private var errorMessage = ""
 
     init(viewModel: any WelcomeViewModel, router: AuthenticationNavigationRouter) {
         guard let model = viewModel as? WelcomeViewModelImpl else {
@@ -39,6 +41,20 @@ struct WelcomeView: View {
                 }
                 .onReceive(viewModel.routeToMainView) { _ in
                     router.routeToMainView()
+                }
+                .onReceive(viewModel.$failedState.compactMap { $0 }) { message in
+                    self.showSSOErrorAlert = true
+                    self.errorMessage = message
+                }
+                .alert(isPresented: $showSSOErrorAlert) {
+                    Alert(title: Text(TextsAsset.Welcome.ssoErrorAppleTitle),
+                          message: Text(errorMessage),
+                          dismissButton:
+                            .default(Text(TextsAsset.ok)) {
+                                showSSOErrorAlert = false
+                                errorMessage = ""
+                          }
+                    )
                 }
                 .fullScreenCover(
                     isPresented: $router.shouldNavigateToEmergency,
@@ -161,7 +177,7 @@ extension WelcomeView {
         VStack(spacing: 12) {
             // Apple Authentication
             Button(action: {
-                router.shouldNavigateToLogin = true
+                viewModel.continueWithAppleTapped()
             }, label: {
                 HStack(alignment: .center, spacing: 10) {
                     Image(viewModel.signupAppleImage)
@@ -224,7 +240,7 @@ extension WelcomeView {
                 // SignUp Button
                 ZStack {
                     Button(action: {
-                        viewModel.continueButtonTapped()
+                        router.shouldNavigateToSignup = true
                     }, label: {
                         ZStack {
                             Text(viewModel.signupText)

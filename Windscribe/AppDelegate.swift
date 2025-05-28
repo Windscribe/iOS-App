@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
-    private lazy var sessionManager: SessionManagerV2 = Assembler.resolve(SessionManagerV2.self)
+    private lazy var sessionManager: SessionManaging = Assembler.resolve(SessionManaging.self)
 
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 

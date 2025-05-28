@@ -13,7 +13,7 @@ import UIKit
 protocol SubmitTicketViewModel {
     var lookAndFeelRepository: LookAndFeelRepositoryType { get }
     var alertManager: AlertManagerV2 { get }
-    var sessionManager: SessionManagerV2 { get }
+    var sessionManager: SessionManaging { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
 
     func sendTicket(email: String, subject: String, message: String, category: Int) -> Single<APIMessage>
@@ -23,9 +23,9 @@ class SubmitTicketViewModelImpl: SubmitTicketViewModel {
     var apiManager: APIManager
     var lookAndFeelRepository: LookAndFeelRepositoryType
     var alertManager: AlertManagerV2
-    var sessionManager: SessionManagerV2
+    var sessionManager: SessionManaging
     let isDarkMode: BehaviorSubject<Bool>
-    init(apiManager: APIManager, lookAndFeelRepository: LookAndFeelRepositoryType, alertManager: AlertManagerV2, sessionManager: SessionManagerV2) {
+    init(apiManager: APIManager, lookAndFeelRepository: LookAndFeelRepositoryType, alertManager: AlertManagerV2, sessionManager: SessionManaging) {
         self.apiManager = apiManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.alertManager = alertManager

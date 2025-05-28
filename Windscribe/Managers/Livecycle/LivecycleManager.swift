@@ -22,7 +22,7 @@ protocol LivecycleManagerType {
 
 class LivecycleManager: LivecycleManagerType {
     let logger: FileLogger
-    let sessionManager: SessionManagerV2
+    let sessionManager: SessionManaging
     let preferences: Preferences
     let vpnManager: VPNManager
     let connectivity: Connectivity
@@ -42,7 +42,7 @@ class LivecycleManager: LivecycleManagerType {
     var testTask: Task<Void, Error>?
 
     init(logger: FileLogger,
-         sessionManager: SessionManagerV2,
+         sessionManager: SessionManaging,
          preferences: Preferences,
          vpnManager: VPNManager,
          connectivity: Connectivity,

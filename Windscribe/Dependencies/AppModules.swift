@@ -94,7 +94,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(ShakeDataRepository.self) { r in
             ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
-                                    sessionManager: r.resolve(SessionManagerV2.self)!)
+                                    sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.userScope)
         container.register(ConfigurationsManager.self) { r in
             ConfigurationsManager(logger: r.resolve(FileLogger.self)!,
@@ -142,7 +142,7 @@ class Managers: Assembly {
         container.register(HTMLParsing.self) { r in
             HTMLParser(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
-        container.register(SessionManagerV2.self) { _ in
+        container.register(SessionManaging.self) { _ in
             SessionManager()
         }.inObjectScope(.userScope)
         #if os(iOS)
@@ -172,7 +172,7 @@ class Managers: Assembly {
                        locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManagerV2.self) { r in
-            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManagerV2.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
+            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManaging.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
@@ -184,7 +184,7 @@ class Managers: Assembly {
             return LanguageManagerImpl(preference: prefs, localizationService: localizer)
         }.inObjectScope(.userScope)
         container.register(PushNotificationManagerV2.self) { r in
-            PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
+            PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
             ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManagerType.self)!)
@@ -192,7 +192,7 @@ class Managers: Assembly {
 
         container.register(LivecycleManagerType.self) { r in
             LivecycleManager(logger: r.resolve(FileLogger.self)!,
-                             sessionManager: r.resolve(SessionManagerV2.self)!,
+                             sessionManager: r.resolve(SessionManaging.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              vpnManager: r.resolve(VPNManager.self)!,
                              connectivity: r.resolve(Connectivity.self)!,
@@ -202,6 +202,11 @@ class Managers: Assembly {
                              configManager: r.resolve(ConfigurationsManager.self)!,
                              connectivityManager: r.resolve(ProtocolManagerType.self)!,
                              locationsManager: r.resolve(LocationsManagerType.self)!)
+        }.inObjectScope(.userScope)
+
+        container.register(SSOManaging.self) { r in
+            SSOManager(logger: r.resolve(FileLogger.self)!,
+                       apiManager: r.resolve(APIManager.self )!)
         }.inObjectScope(.userScope)
     }
 }

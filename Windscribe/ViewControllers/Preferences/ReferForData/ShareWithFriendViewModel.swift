@@ -18,10 +18,10 @@ protocol ShareWithFriendViewModelType {
 }
 
 class ShareWithFriendViewModel: ShareWithFriendViewModelType {
-    let lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2
+    let lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManaging, referFriendManager: ReferAndShareManagerV2
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, referFriendManager: ReferAndShareManagerV2) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManaging, referFriendManager: ReferAndShareManagerV2) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.sessionManager = sessionManager
         self.referFriendManager = referFriendManager

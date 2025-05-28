@@ -12,7 +12,7 @@ import Swinject
 
 protocol HelpViewModel {
     var isDarkMode: BehaviorSubject<Bool> { get }
-    var sessionManager: SessionManagerV2 { get }
+    var sessionManager: SessionManaging { get }
     var apiManager: APIManager { get }
     var alertManager: AlertManagerV2 { get }
     var networkStatus: NetworkStatus { get }
@@ -22,7 +22,7 @@ protocol HelpViewModel {
 class HelpViewModelImpl: HelpViewModel {
     var alertManager: AlertManagerV2
     var lookAndFeelRepository: LookAndFeelRepositoryType
-    var sessionManager: SessionManagerV2
+    var sessionManager: SessionManaging
     var apiManager: APIManager
     let connectivity: Connectivity
 
@@ -31,7 +31,7 @@ class HelpViewModelImpl: HelpViewModel {
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManagerV2, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManaging, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.sessionManager = sessionManager
         self.apiManager = apiManager

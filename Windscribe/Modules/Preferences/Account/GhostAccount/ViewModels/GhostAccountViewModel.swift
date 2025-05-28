@@ -15,13 +15,13 @@ protocol GhostAccountViewModel: ObservableObject {
 
 class GhostAccountViewModelImpl: GhostAccountViewModel {
 
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
 
     var isUserPro: Bool {
         sessionManager.session?.isUserPro ?? false
     }
 
-    init(sessionManager: SessionManagerV2) {
+    init(sessionManager: SessionManaging) {
         self.sessionManager = sessionManager
     }
 }

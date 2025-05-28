@@ -30,7 +30,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
 
     private var cancellables = Set<AnyCancellable>()
 
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let alertManager: AlertManagerV2
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -38,7 +38,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     private let preferences: Preferences
 
     init(
-        sessionManager: SessionManagerV2,
+        sessionManager: SessionManaging,
         alertManager: AlertManagerV2,
         logger: FileLogger,
         lookAndFeelRepository: LookAndFeelRepositoryType,

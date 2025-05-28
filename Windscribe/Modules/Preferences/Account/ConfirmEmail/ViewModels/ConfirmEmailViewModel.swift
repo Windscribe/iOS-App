@@ -11,7 +11,7 @@ import Combine
 import UIKit
 
 protocol ConfirmEmailViewModel {
-    var sessionManager: SessionManagerV2 { get }
+    var sessionManager: SessionManaging { get }
     var localDatabase: LocalDatabase { get }
     var apiManager: APIManager { get }
 
@@ -22,7 +22,7 @@ protocol ConfirmEmailViewModel {
 final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     // MARK: Dependencies
-    let sessionManager: SessionManagerV2
+    let sessionManager: SessionManaging
     let localDatabase: LocalDatabase
     let apiManager: APIManager
 
@@ -34,7 +34,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionManager: SessionManagerV2, localDatabase: LocalDatabase, apiManager: APIManager) {
+    init(sessionManager: SessionManaging, localDatabase: LocalDatabase, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager

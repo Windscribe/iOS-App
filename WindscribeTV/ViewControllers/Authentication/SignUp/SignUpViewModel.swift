@@ -104,15 +104,25 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
         showLoadingView.onNext(true)
         logger.logD(self, "Signing up for account.")
-        apiCallManager.signup(username: username, password: password, referringUsername: referralUsername, email: email, voucherCode: voucherCode).observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] session in
-                self?.userRepository.login(session: session)
-                self?.logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
-                self?.prepareUserData()
-            }, onFailure: { [weak self] error in
-                self?.logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
-                self?.handleError(error: error)
-            }).disposed(by: disposeBag)
+        apiCallManager.signup(
+            username: username,
+            password: password,
+            referringUsername: referralUsername,
+            email: email,
+            voucherCode: voucherCode,
+            secureToken: "",
+            captchaSolution: "",
+            captchaTrailX: [],
+            captchaTrailY: [])
+        .observe(on: MainScheduler.instance)
+        .subscribe(onSuccess: { [weak self] session in
+            self?.userRepository.login(session: session)
+            self?.logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
+            self?.prepareUserData()
+        }, onFailure: { [weak self] error in
+            self?.logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
+            self?.handleError(error: error)
+        }).disposed(by: disposeBag)
     }
 
     private func claimGhostAccount(username: String, password: String, email: String) {
