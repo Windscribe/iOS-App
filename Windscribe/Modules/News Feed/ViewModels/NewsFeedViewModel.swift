@@ -24,12 +24,12 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     let localDatabase: LocalDatabase
-    let sessionManager: SessionManagerV2
+    let sessionManager: SessionManaging
     let logger: FileLogger
     let router: AccountRouter
     let htmlParser: HTMLParsing
 
-    init(localDatabase: LocalDatabase, sessionManager: SessionManagerV2, logger: FileLogger, router: AccountRouter, htmlParser: HTMLParsing) {
+    init(localDatabase: LocalDatabase, sessionManager: SessionManaging, logger: FileLogger, router: AccountRouter, htmlParser: HTMLParsing) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.logger = logger

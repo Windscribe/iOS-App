@@ -512,7 +512,7 @@
 		59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930E52B44711A0001CFA0 /* ServerRepositoryImpl.swift */; };
 		59FC743B2C515B7E00021CD1 /* StaticIpRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D92B43EF0D0001CFA0 /* StaticIpRepository.swift */; };
 		59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930DB2B43EF390001CFA0 /* StaticIpRepositoryImpl.swift */; };
-		59FC743D2C515B9B00021CD1 /* SessionManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManagerV2.swift */; };
+		59FC743D2C515B9B00021CD1 /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManaging.swift */; };
 		59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930DE2B43F00A0001CFA0 /* CredentialsRepository.swift */; };
 		59FC74402C515BB000021CD1 /* CredentialsRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930E02B43F0270001CFA0 /* CredentialsRepositoryImpl.swift */; };
 		59FC74412C515BC000021CD1 /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2531B5220A27FB0001CF96 /* WifiManager.swift */; };
@@ -795,6 +795,10 @@
 		C50F20D22B62110700266B23 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDE2281F1DD00378058 /* Bundle+Extension.swift */; };
 		C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDE2281F1DD00378058 /* Bundle+Extension.swift */; };
 		C50F20E22B62328F00266B23 /* ViewLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */; };
+		C512546B2DE76C8A003A58BD /* SSOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546A2DE76C7A003A58BD /* SSOManager.swift */; };
+		C512546C2DE76C8A003A58BD /* SSOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546A2DE76C7A003A58BD /* SSOManager.swift */; };
+		C512546E2DE76D06003A58BD /* SSOSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546D2DE76D05003A58BD /* SSOSession.swift */; };
+		C512546F2DE76D06003A58BD /* SSOSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546D2DE76D05003A58BD /* SSOSession.swift */; };
 		C51704BF27694B4000556040 /* ServerHealthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51704BE27694B4000556040 /* ServerHealthView.swift */; };
 		C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
 		C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AF57D42280FCBE2004E8082 /* LanguageManager.swift */; };
@@ -931,7 +935,7 @@
 		C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1B2B50794B004FA857 /* InAppPurchaseManager+Observer.swift */; };
 		C580FE1E2B50799C004FA857 /* SKPaymentTransaction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */; };
 		C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */; };
-		C580FE252B507E46004FA857 /* SessionManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManagerV2.swift */; };
+		C580FE252B507E46004FA857 /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManaging.swift */; };
 		C580FE282B50829B004FA857 /* LatencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE272B50829B004FA857 /* LatencyRepository.swift */; };
 		C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE2B2B5101CC004FA857 /* PingData.swift */; };
@@ -1118,6 +1122,9 @@
 		F434A1BF2D84A7210059415F /* HTMLParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419392D822F0F0005EF97 /* HTMLParsing.swift */; };
 		F434A1C52D84AB200059415F /* NewsFeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1C42D84AB200059415F /* NewsFeedModel.swift */; };
 		F434A1C72D84AEF70059415F /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3FC11C227B68EB0050B224 /* SessionManager.swift */; };
+		F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
+		F440BCFF2DE790250057A01F /* MenuCategoryRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616782DD7585E006CDC99 /* MenuCategoryRowType.swift */; };
+		F440BD002DE7933D0057A01F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0CA558223C49020048D71C /* Array+Extension.swift */; };
 		F440F2F82D8CAA8E006F1A6D /* DeviceTypeProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */; };
 		F440F2FC2D8CB4E4006F1A6D /* WelcomeInfoPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F2FB2D8CB4E4006F1A6D /* WelcomeInfoPageView.swift */; };
 		F440F3022D8DECE6006F1A6D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3012D8DECE6006F1A6D /* LoginView.swift */; };
@@ -1868,6 +1875,8 @@
 		C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAPIManagerImpl.swift; sourceTree = "<group>"; };
 		C50F20C52B61760000266B23 /* CoreModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModule.swift; sourceTree = "<group>"; };
 		C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLogViewModel.swift; sourceTree = "<group>"; };
+		C512546A2DE76C7A003A58BD /* SSOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOManager.swift; sourceTree = "<group>"; };
+		C512546D2DE76D05003A58BD /* SSOSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOSession.swift; sourceTree = "<group>"; };
 		C51704BE27694B4000556040 /* ServerHealthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHealthView.swift; sourceTree = "<group>"; };
 		C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyViewModel.swift; sourceTree = "<group>"; };
 		C51EEDD22C1C88DD00B01F8F /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
@@ -1950,7 +1959,7 @@
 		C580FE1B2B50794B004FA857 /* InAppPurchaseManager+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InAppPurchaseManager+Observer.swift"; sourceTree = "<group>"; };
 		C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKPaymentTransaction+Ext.swift"; sourceTree = "<group>"; };
 		C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManager.swift; sourceTree = "<group>"; };
-		C580FE242B507E46004FA857 /* SessionManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerV2.swift; sourceTree = "<group>"; };
+		C580FE242B507E46004FA857 /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
 		C580FE272B50829B004FA857 /* LatencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepository.swift; sourceTree = "<group>"; };
 		C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C580FE2B2B5101CC004FA857 /* PingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingData.swift; sourceTree = "<group>"; };
@@ -3466,7 +3475,6 @@
 				1E2366D32BC5A1C6000DF098 /* Wifi */,
 				C50F208D2B60E36800266B23 /* Haptic */,
 				C50F208C2B60E34100266B23 /* Alert */,
-				C580FE232B507DE3004FA857 /* Session */,
 				C580FE142B507846004FA857 /* Payment */,
 				C580FE002B4F250D004FA857 /* PushNotification */,
 				C580FDF22B4DB630004FA857 /* Connectivity */,
@@ -3475,6 +3483,8 @@
 				1AF57D44280FCF25004E8082 /* Language */,
 				59C3115D2BC5BFF9004B16B3 /* Protocols */,
 				591CF9A72BB47951004DEB48 /* ReferAndShareManager */,
+				C580FE232B507DE3004FA857 /* Session */,
+				C51254662DE76C4C003A58BD /* SSO */,
 				F42ADD1E2D5BB47F0021AF6E /* AppReview */,
 				F40419352D822CE90005EF97 /* HTMLParser */,
 				1ED23F852DC3C99D00C7BEE5 /* Background */,
@@ -3499,11 +3509,9 @@
 		AF018E0B21B1917300B225FF /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F440BCFC2DE786A70057A01F /* API */,
+				F440BCFD2DE786E50057A01F /* Session */,
 				1E5553D52DA6AA0000F16AF0 /* Locations */,
-				C57668E32B2790AA004EA3D7 /* APIResult.swift */,
-				AF018E0C21B1921600B225FF /* Session.swift */,
-				AFD24CA321C179DF00BBCE1E /* APIError.swift */,
-				AFFA716921CD4D7C00349195 /* APIDebug.swift */,
 				AFFA715B21C407E700349195 /* Notice.swift */,
 				AFFA715F21C43A8E00349195 /* ServerCredentials.swift */,
 				AF04ED9E21DFD1AE005C6576 /* StaticIP.swift */,
@@ -3521,8 +3529,6 @@
 				AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */,
 				AF2C1868234F5429008657FA /* VPNConnection.swift */,
 				AF36A1AC237C7FC500BDDCDB /* Score.swift */,
-				AF36A1FC237DC02200BDDCDB /* APIMessage.swift */,
-				AF914A7323CE2011002D3041 /* Token.swift */,
 				AFA0D7BF243CA9F2007C912E /* SuggestedPorts.swift */,
 				AFC75F7E24BD9FCD00897C18 /* WireGuardConfig.swift */,
 				E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */,
@@ -3530,7 +3536,6 @@
 				C5FA3E832684BB90001D03A7 /* HelpItem.swift */,
 				C5FA3E8B268789EE001D03A7 /* Ticket.swift */,
 				C524AA5D26B231AC00FCB1B6 /* AboutItem.swift */,
-				C59BBFC8273F30D60078BB72 /* WebSession.swift */,
 				C51F7B73276D0AAB0074A025 /* RobertFilters.swift */,
 				C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */,
 				E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */,
@@ -3917,6 +3922,14 @@
 			path = ViewLog;
 			sourceTree = "<group>";
 		};
+		C51254662DE76C4C003A58BD /* SSO */ = {
+			isa = PBXGroup;
+			children = (
+				C512546A2DE76C7A003A58BD /* SSOManager.swift */,
+			);
+			path = SSO;
+			sourceTree = "<group>";
+		};
 		C52DA5252B638FC700E5C571 /* CustomConfig */ = {
 			isa = PBXGroup;
 			children = (
@@ -4128,8 +4141,8 @@
 		C580FE232B507DE3004FA857 /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				C580FE242B507E46004FA857 /* SessionManagerV2.swift */,
 				AF3FC11C227B68EB0050B224 /* SessionManager.swift */,
+				C580FE242B507E46004FA857 /* SessionManaging.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -4498,6 +4511,28 @@
 				F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F440BCFC2DE786A70057A01F /* API */ = {
+			isa = PBXGroup;
+			children = (
+				C57668E32B2790AA004EA3D7 /* APIResult.swift */,
+				AFD24CA321C179DF00BBCE1E /* APIError.swift */,
+				AFFA716921CD4D7C00349195 /* APIDebug.swift */,
+				AF36A1FC237DC02200BDDCDB /* APIMessage.swift */,
+				AF914A7323CE2011002D3041 /* Token.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		F440BCFD2DE786E50057A01F /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				AF018E0C21B1921600B225FF /* Session.swift */,
+				C512546D2DE76D05003A58BD /* SSOSession.swift */,
+				C59BBFC8273F30D60078BB72 /* WebSession.swift */,
+			);
+			path = Session;
 			sourceTree = "<group>";
 		};
 		F440F2F92D8CB473006F1A6D /* Views */ = {
@@ -5925,7 +5960,7 @@
 				59FC74682C5167D300021CD1 /* BillingRepositoryImpl.swift in Sources */,
 				59FC74332C515A3B00021CD1 /* LocalDatabaseImpl.swift in Sources */,
 				59FC747A2C51741F00021CD1 /* Date+Extension.swift in Sources */,
-				59FC743D2C515B9B00021CD1 /* SessionManagerV2.swift in Sources */,
+				59FC743D2C515B9B00021CD1 /* SessionManaging.swift in Sources */,
 				59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */,
 				59FC746C2C5167F500021CD1 /* CustomConfigRepositoryImpl.swift in Sources */,
 				59FC74312C51571600021CD1 /* UIDevice+Extension.swift in Sources */,
@@ -6040,6 +6075,7 @@
 				59DA7FB72C3D896E00042E57 /* FileLoggerImpl.swift in Sources */,
 				5998C6252C8807C000558233 /* StaticIPListViewModel.swift in Sources */,
 				599BA2A72C5B1E6E00F0D1E4 /* ForgotPasswordViewController.swift in Sources */,
+				F440BCFF2DE790250057A01F /* MenuCategoryRowType.swift in Sources */,
 				59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */,
 				F469F0EB2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
 				59FC73FB2C51538F00021CD1 /* Group.swift in Sources */,
@@ -6053,6 +6089,7 @@
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
 				59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */,
+				C512546E2DE76D06003A58BD /* SSOSession.swift in Sources */,
 				1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */,
 				59FC74532C51605300021CD1 /* UIStackView+Extension.swift in Sources */,
 				59FC73DB2C514B9D00021CD1 /* FilePaths.swift in Sources */,
@@ -6112,6 +6149,7 @@
 				1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */,
 				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
 				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
+				F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */,
 				59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */,
 				F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */,
 				59DA7FB92C3D898A00042E57 /* FileDatabase.swift in Sources */,
@@ -6192,6 +6230,7 @@
 				59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */,
 				59A218682C3C8011000D89FA /* MainViewController.swift in Sources */,
 				59FC74442C515D9A00021CD1 /* LatencyRepository.swift in Sources */,
+				C512546B2DE76C8A003A58BD /* SSOManager.swift in Sources */,
 				59FC741B2C51545000021CD1 /* PingData.swift in Sources */,
 				59DA7FC52C3DC4BE00042E57 /* WireguardAPIManager.swift in Sources */,
 				1E79CA5E2C63D7A3006D4DE7 /* AccountSectionView.swift in Sources */,
@@ -6199,6 +6238,7 @@
 				59FC74402C515BB000021CD1 /* CredentialsRepositoryImpl.swift in Sources */,
 				59FC746E2C51693200021CD1 /* ShakeDataRepositoryImpl.swift in Sources */,
 				59FC741D2C51546B00021CD1 /* AdvanceRepository.swift in Sources */,
+				F440BD002DE7933D0057A01F /* Array+Extension.swift in Sources */,
 				59FC74792C51741000021CD1 /* ReferAndShareManager.swift in Sources */,
 				59DA7FC82C3DC4EA00042E57 /* APIError.swift in Sources */,
 				59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */,
@@ -6283,6 +6323,7 @@
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
 				F4693E4F2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift in Sources */,
 				C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
+				C512546F2DE76D06003A58BD /* SSOSession.swift in Sources */,
 				C5592B7E2B38838500F2F110 /* MyIP.swift in Sources */,
 				F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */,
 				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Extension.swift in Sources */,
@@ -6423,7 +6464,7 @@
 				C52DA5292B63902B00E5C571 /* CustomConfigRepositoryImpl.swift in Sources */,
 				E9219FED2885A3AE0026E544 /* UIView+Constraints.swift in Sources */,
 				E90FD02527394FA800721874 /* UIConstants+Fields.swift in Sources */,
-				C580FE252B507E46004FA857 /* SessionManagerV2.swift in Sources */,
+				C580FE252B507E46004FA857 /* SessionManaging.swift in Sources */,
 				AF914A7223CD0C7D002D3041 /* PromptBackgroundView.swift in Sources */,
 				C5A930D02B43C5880001CFA0 /* BillingRepository.swift in Sources */,
 				AF4B92F2221DCBEC0054580D /* Email.swift in Sources */,
@@ -6648,6 +6689,7 @@
 				E9219FEF2885AF900026E544 /* UIEdgeInsets+ Extension.swift in Sources */,
 				C545A0DD2D47639500F3333E /* Completable+Extension.swift in Sources */,
 				C56FCBF22B2B9F37008DE7D4 /* AppModules.swift in Sources */,
+				C512546C2DE76C8A003A58BD /* SSOManager.swift in Sources */,
 				1ED6166D2DCD117C006CDC99 /* GeneralMenuEntryType.swift in Sources */,
 				AF36BF0C22FC969300FCC6F4 /* EnterCredentialsViewController.swift in Sources */,
 				1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */,

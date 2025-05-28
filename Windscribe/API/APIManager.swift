@@ -37,6 +37,7 @@ protocol APIManager {
     func authTokenSignup() -> RxSwift.Single<AuthTokenResponse>
     func regToken() -> RxSwift.Single<Token>
     func signUpUsingToken(token: String) -> RxSwift.Single<Session>
+    func ssoSession(token: String) -> RxSwift.Single<SSOSession>
 
     // Account
     func addEmail(email: String) -> Single<APIMessage>

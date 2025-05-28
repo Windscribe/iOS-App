@@ -86,6 +86,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case ipNotAvailable
     case missingRemoteAddress
     case wgLimitExceeded
+    case appleSsoError(String)
 
     public var description: String {
         switch self {
@@ -123,6 +124,8 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return "2FA code required to login."
         case .invalid2FA:
             return "Invalid 2FA Code provided."
+        case .appleSsoError(let error):
+            return error
         default:
             return "Unknown error."
         }

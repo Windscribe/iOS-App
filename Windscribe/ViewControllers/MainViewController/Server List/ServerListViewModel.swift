@@ -30,7 +30,7 @@ class ServerListViewModel: ServerListViewModelType {
     private let vpnManager: VPNManager
     private let connectivity: Connectivity
     private let localDataBase: LocalDatabase
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let locationsManager: LocationsManagerType
     private let protocolManager: ProtocolManagerType
 
@@ -40,7 +40,7 @@ class ServerListViewModel: ServerListViewModelType {
          vpnManager: VPNManager,
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
-         sessionManager: SessionManagerV2,
+         sessionManager: SessionManaging,
          locationsManager: LocationsManagerType,
          protocolManager: ProtocolManagerType) {
         self.logger = logger

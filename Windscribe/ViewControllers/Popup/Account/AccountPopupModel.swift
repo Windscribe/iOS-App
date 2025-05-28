@@ -60,14 +60,14 @@ class ProPlanExpiredAccountPopupModel: AccountPopupModel, ProPlanExpiredAccountP
 class AccountPopupModel: AccountPopupModelType {
     // MARK: - Dependencies
 
-    let popupRouter: PopupRouter?, sessionManager: SessionManagerV2
+    let popupRouter: PopupRouter?, sessionManager: SessionManaging
     let imageName = BehaviorSubject<String>(value: "")
     let title = BehaviorSubject<String>(value: "")
     let description = BehaviorSubject<String>(value: "")
     let actionButtonTitle = BehaviorSubject<String>(value: "")
     let cancelButtonTitle = BehaviorSubject<String>(value: "")
 
-    init(popupRouter: PopupRouter?, sessionManager: SessionManagerV2) {
+    init(popupRouter: PopupRouter?, sessionManager: SessionManaging) {
         self.popupRouter = popupRouter
         self.sessionManager = sessionManager
         bindModel()

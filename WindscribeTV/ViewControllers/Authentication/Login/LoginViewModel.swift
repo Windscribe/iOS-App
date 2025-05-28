@@ -72,32 +72,41 @@ class LoginViewModelImpl: LoginViewModel {
         }
         showLoadingView.onNext(true)
         logger.logD(self, "Logging in user.")
-        apiCallManager.login(username: username, password: password, code2fa: twoFactorCode ?? "").observe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [weak self] session in
-                self?.preferences.saveLoginDate(date: Date())
-                WifiManager.shared.saveCurrentWifiNetworks()
-                self?.userRepository.login(session: session)
-                self?.logger.logI(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
-                self?.prepareUserData()
-            }, onFailure: { [weak self] error in
-                self?.logger.logE(LoginViewModelImpl.self, "Failed to login: \(error)")
-                self?.showLoadingView.onNext(false)
-                switch error {
-                case Errors.invalid2FA:
-                    self?.failedState.onNext(.twoFa(TextsAsset.twoFactorInvalidError))
-                case Errors.twoFactorRequired:
-                    self?.failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
-                    self?.show2faCodeField.onNext(true)
-                case let Errors.apiError(e):
-                    self?.failedState.onNext(.api(e.errorMessage ?? ""))
-                default:
-                    if let error = error as? Errors {
-                        self?.failedState.onNext(.network(error.description))
-                    } else {
-                        self?.failedState.onNext(.network(error.localizedDescription))
-                    }
+
+        apiCallManager.login(
+            username: username,
+            password: password,
+            code2fa: twoFactorCode ?? "",
+            secureToken: "",
+            captchaSolution: "",
+            captchaTrailX: [],
+            captchaTrailY: [])
+        .observe(on: MainScheduler.instance)
+        .subscribe(onSuccess: { [weak self] session in
+            self?.preferences.saveLoginDate(date: Date())
+            WifiManager.shared.saveCurrentWifiNetworks()
+            self?.userRepository.login(session: session)
+            self?.logger.logI(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
+            self?.prepareUserData()
+        }, onFailure: { [weak self] error in
+            self?.logger.logE(LoginViewModelImpl.self, "Failed to login: \(error)")
+            self?.showLoadingView.onNext(false)
+            switch error {
+            case Errors.invalid2FA:
+                self?.failedState.onNext(.twoFa(TextsAsset.twoFactorInvalidError))
+            case Errors.twoFactorRequired:
+                self?.failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
+                self?.show2faCodeField.onNext(true)
+            case let Errors.apiError(e):
+                self?.failedState.onNext(.api(e.errorMessage ?? ""))
+            default:
+                if let error = error as? Errors {
+                    self?.failedState.onNext(.network(error.description))
+                } else {
+                    self?.failedState.onNext(.network(error.localizedDescription))
                 }
-            }).disposed(by: disposeBag)
+            }
+        }).disposed(by: disposeBag)
     }
 
     func generateCodeTapped() {

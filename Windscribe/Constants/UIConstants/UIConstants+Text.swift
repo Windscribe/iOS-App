@@ -2034,6 +2034,7 @@ enum TextsAsset {
         static let emergencyConnectOn = "Emergency Connect On".localized
         static let continueWithGoogle = "Continue with Google".localized
         static let continueWithApple = "Continue with Apple".localized
+        static let ssoErrorAppleTitle = "Apple Sign-In Unsuccesful"
     }
 
     enum Authentication {

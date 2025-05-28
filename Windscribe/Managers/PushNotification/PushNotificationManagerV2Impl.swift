@@ -13,10 +13,10 @@ import UIKit
 class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     let notification: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
     let vpnManager: VPNManager
-    let session: SessionManagerV2
+    let session: SessionManaging
     let logger: FileLogger
 
-    init(vpnManager: VPNManager, session: SessionManagerV2, logger: FileLogger) {
+    init(vpnManager: VPNManager, session: SessionManaging, logger: FileLogger) {
         self.vpnManager = vpnManager
         self.session = session
         self.logger = logger

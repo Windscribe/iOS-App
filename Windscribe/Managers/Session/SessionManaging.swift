@@ -9,7 +9,7 @@
 import Foundation
 import RxSwift
 
-protocol SessionManagerV2 {
+protocol SessionManaging {
     var session: Session? { get }
     func setSessionTimer()
     func listenForSessionChanges()

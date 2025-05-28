@@ -28,7 +28,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     @Published var email: String = ""
     @Published private(set) var showLoading: Bool = false
 
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let alertManager: AlertManagerV2
     private let apiManager: APIManager
     private var cancellables = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
         !(sessionManager.session?.isUserPro ?? false)
     }
 
-    init(sessionManager: SessionManagerV2, alertManager: AlertManagerV2, apiManager: APIManager) {
+    init(sessionManager: SessionManaging, alertManager: AlertManagerV2, apiManager: APIManager) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.apiManager = apiManager

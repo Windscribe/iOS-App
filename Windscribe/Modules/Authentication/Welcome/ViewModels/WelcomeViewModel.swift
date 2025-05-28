@@ -18,7 +18,7 @@ protocol WelcomeViewModel: ObservableObject {
     var emergencyConnectStatus: Bool { get }
     var failedState: String? { get }
 
-    func continueButtonTapped()
+    func continueWithAppleTapped()
 }
 
 class WelcomeViewModelImpl: WelcomeViewModel {
@@ -61,6 +61,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private let apiManager: APIManager
     private let preferences: Preferences
     private let vpnManager: VPNManager
+    private let ssoManager: SSOManaging
     private let logger: FileLogger
 
     private var presentingController: UIViewController?
@@ -71,6 +72,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          apiManager: APIManager,
          preferences: Preferences,
          vpnManager: VPNManager,
+         ssoManager: SSOManaging,
          logger: FileLogger) {
         self.userRepository = userRepository
         self.keyChainDatabase = keyChainDatabase
@@ -78,53 +80,30 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         self.apiManager = apiManager
         self.preferences = preferences
         self.vpnManager = vpnManager
+        self.ssoManager = ssoManager
         self.logger = logger
 
         listenForVPNStateChange()
     }
 
-    func continueButtonTapped() {
-        if keyChainDatabase.isGhostAccountCreated() {
-            logger.logD(self, "Ghost account already created from this device.")
-            routeToSignup.send(true)
-            return
-        }
-
+    func continueWithAppleTapped() {
         showLoadingView = true
-
-        apiManager.regToken()
-            .asPublisher()
+        ssoManager.getSession()
             .receive(on: DispatchQueue.main)
-            .flatMap { [weak self] token -> AnyPublisher<Session, Error> in
-                guard let self = self else {
-                    return Fail(error: NSError(domain: "APIManagerError", code: -1, userInfo: nil) as Error)
-                        .eraseToAnyPublisher()
-                }
-
-                return self.apiManager.signUpUsingToken(token: token.token).asPublisher()
-            }
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
+                self.showLoadingView = false
                 if case .failure(let error) = completion {
+                    self.logger.logI("WelcomeViewModel", "Apple sign in error: \(error)")
                     self.handleError(error)
                 }
-
-                self.showLoadingView = false
-                self.routeToSignup.send(true)
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-
-                self.keyChainDatabase.setGhostAccountCreated()
                 self.userRepository.login(session: session)
-                self.logger.logI("WelcomeViewModel", "Ghost account registration successful")
+                self.logger.logI("WelcomeViewModel", "Apple sign in successful")
                 self.prepareUserData()
             })
             .store(in: &cancellables)
-    }
-
-    func continueWithAppleTapped() {
-        // TODO: Change with Apple Authentication
-        continueButtonTapped()
     }
 
     private func prepareUserData() {
@@ -146,7 +125,19 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func handleError(_ error: Error) {
-        self.logger.logE("WelcomeViewModel", "Error: \(error.localizedDescription)")
+        logger.logE("WelcomeViewModel", "Failed to login: \(error.localizedDescription)")
+        showLoadingView = false
+
+        if let error = error as? Errors {
+            switch error {
+            case let Errors.apiError(apiError):
+                // API errors
+                failedState = apiError.errorMessage ?? TextsAsset.unknownAPIError
+            default:
+                // Networking(Wsnet) + Apple Authorization
+                failedState = error.description
+            }
+        }
     }
 
     private func listenForVPNStateChange() {

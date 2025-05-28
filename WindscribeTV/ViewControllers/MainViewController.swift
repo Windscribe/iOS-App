@@ -54,7 +54,7 @@ class MainViewController: PreferredFocusedViewController {
     let disposeBag = DisposeBag()
     var logger: FileLogger!
     var isFromServer: Bool = false
-    lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
+    lazy var sessionManager = Assembler.resolve(SessionManaging.self)
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     override func viewDidLoad() {

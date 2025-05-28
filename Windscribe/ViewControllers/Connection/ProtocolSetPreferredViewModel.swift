@@ -38,14 +38,14 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
     var securedNetwork: SecuredNetworkRepository
     var localDatabase: LocalDatabase
     var logger: FileLogger
-    var sessionManager: SessionManagerV2
+    var sessionManager: SessionManaging
     var apiManager: APIManager
     var protocolManager: ProtocolManagerType
     var disposeBag = DisposeBag()
     var submitLogState = BehaviorSubject(value: SubmitLogState.initial)
     let isDarkMode: BehaviorSubject<Bool>
 
-    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManagerV2, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType, protocolManager: ProtocolManagerType) {
+    init(alertManager: AlertManagerV2, type: ProtocolViewType, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManaging, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType, protocolManager: ProtocolManagerType) {
         self.alertManager = alertManager
         self.type = type
         self.securedNetwork = securedNetwork

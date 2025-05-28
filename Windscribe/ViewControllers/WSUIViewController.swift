@@ -26,7 +26,7 @@ class WSUIViewController: UIViewController {
     }()
 
     lazy var apiManager = Assembler.resolve(APIManager.self)
-    lazy var sessionManager = Assembler.resolve(SessionManagerV2.self)
+    lazy var sessionManager = Assembler.resolve(SessionManaging.self)
     let disposeBag = DisposeBag()
 
     override func viewDidLoad() {

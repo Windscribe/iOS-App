@@ -32,7 +32,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     // Dependencies
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
@@ -62,7 +62,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
-         sessionManager: SessionManagerV2,
+         sessionManager: SessionManaging,
          apiManager: APIManager,
          localDatabase: LocalDatabase,
          languageManager: LanguageManager,

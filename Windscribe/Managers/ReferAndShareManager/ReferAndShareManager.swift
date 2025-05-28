@@ -13,14 +13,14 @@ import Swinject
 class ReferAndShareManager: ReferAndShareManagerV2 {
     private let disposeBag = DisposeBag()
 
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let preference: Preferences
     private let vpnManager: VPNManager
 	private let logger: FileLogger
 
-    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManagerV2.self), vpnManager: Assembler.resolve(VPNManager.self), logger: Assembler.resolve(FileLogger.self))
+    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManaging.self), vpnManager: Assembler.resolve(VPNManager.self), logger: Assembler.resolve(FileLogger.self))
 
-    init(preferences: Preferences, sessionManager: SessionManagerV2, vpnManager: VPNManager, logger: FileLogger) {
+    init(preferences: Preferences, sessionManager: SessionManaging, vpnManager: VPNManager, logger: FileLogger) {
         preference = preferences
         self.sessionManager = sessionManager
         self.vpnManager = vpnManager

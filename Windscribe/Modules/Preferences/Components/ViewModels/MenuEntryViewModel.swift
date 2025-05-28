@@ -62,7 +62,7 @@ enum MenuEntryActionType: Hashable {
             nil
         }
     }
-    
+
     var parentId: Int {
         switch self {
         case let .multiple(_, _, parentId),
@@ -86,7 +86,7 @@ enum MenuEntryActionResponseType {
     case none(parentId: Int)
     case file(selecteURL: URL, parentId: Int)
     case fileExport(parentId: Int)
-    
+
     var parentId: Int {
         switch self {
         case let .multiple(_, parentId),

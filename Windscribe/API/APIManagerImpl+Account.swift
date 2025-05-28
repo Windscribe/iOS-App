@@ -98,6 +98,16 @@ extension APIManagerImpl {
         }
     }
 
+    func ssoSession(token: String) -> RxSwift.Single<SSOSession> {
+        return makeApiCall(modalType: SSOSession.self) {  [weak self] completion in
+            guard let self = self else {
+                return nil
+            }
+
+            return self.api.sso(SSOSessionType.apple.ssoID, token: token, callback: completion)
+        }
+    }
+
     func addEmail(email: String) -> RxSwift.Single<APIMessage> {
         guard let sessionAuth = userRepository?.sessionAuth else {
             return Single.error(Errors.validationFailure)

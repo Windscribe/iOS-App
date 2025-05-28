@@ -11,10 +11,10 @@ import RxSwift
 
 struct ShakeDataRepositoryImpl: ShakeDataRepository {
     private let apiManager: APIManager
-    private let sessionManager: SessionManagerV2
+    private let sessionManager: SessionManaging
     private let disposeBag = DisposeBag()
 
-    init(apiManager: APIManager, sessionManager: SessionManagerV2) {
+    init(apiManager: APIManager, sessionManager: SessionManaging) {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
     }
