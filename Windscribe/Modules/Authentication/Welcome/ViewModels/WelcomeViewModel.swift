@@ -40,7 +40,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         ImagesAsset.Welcome.tabInfo3,
         ImagesAsset.Welcome.tabInfo4
     ]
-    let signupGoogleImage = ImagesAsset.Welcome.googleIcon
     let signupAppleImage = ImagesAsset.Welcome.appleIcon
 
     // Text Assets
@@ -121,11 +120,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 self.prepareUserData()
             })
             .store(in: &cancellables)
-    }
-
-    func continueWithGoogleTapped() {
-        // TODO: Change with Google Authentication
-        continueButtonTapped()
     }
 
     func continueWithAppleTapped() {
