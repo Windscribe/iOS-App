@@ -25,25 +25,15 @@ struct AboutSettingsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 0) {
+            VStack(spacing: 14) {
                 ForEach(viewModel.entries) { item in
                     Button {
                         viewModel.entrySelected(item)
                     } label: {
                         MenuCategoryRow(item: item)
-                            .frame(height: 48)
-                    }
-                    if item != viewModel.entries.last {
-                        Rectangle()
-                            .fill(Color.white.opacity(0.05))
-                            .frame(height: 2)
-                            .padding(.leading, 16)
                     }
                 }
             }
-            .background(Color.white.opacity(0.1))
-            .cornerRadius(8)
-            .padding(.horizontal, 16)
             .padding(.top, 8)
         }
         .background(Color.nightBlue)

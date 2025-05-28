@@ -110,7 +110,6 @@ struct PreferencesMainCategoryView: View {
                     }
                 } label: {
                     MenuCategoryRow(item: item)
-                        .frame(height: 44)
                 }
             }
         }
