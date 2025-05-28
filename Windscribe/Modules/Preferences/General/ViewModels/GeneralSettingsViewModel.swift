@@ -56,7 +56,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "darkTheme error: \(error)")
+                    self?.logger.logE("GeneralSettingsViewModel", "Theme Adjustment Change error: \(error)")
                 }
             }, receiveValue: { [weak self] isDark in
                 self?.isDarkMode = isDark
@@ -70,7 +70,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "language error: \(error)")
+                    self?.logger.logE("GeneralSettingsViewModel", "Language change error: \(error)")
                 }
             }, receiveValue: { [weak self] name in
                 self?.currentLanguage = name
@@ -83,7 +83,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Happtic Feedback error: \(error)")
+                    self?.logger.logE("GeneralSettingsViewModel", "Haptic Feedback error: \(error)")
                 }
             }, receiveValue: { [weak self] enabled in
                 guard let self = self else { return }
@@ -97,7 +97,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Oder Location By error: \(error)")
+                    self?.logger.logE("GeneralSettingsViewModel", "Order Location By error: \(error)")
                 }
             }, receiveValue: { [weak self] order in
                 guard let self = self else { return }

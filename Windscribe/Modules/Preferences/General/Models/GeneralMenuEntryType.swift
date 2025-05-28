@@ -7,6 +7,7 @@
 //
 
 enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
+
     case locationOrder(currentOption: String, options: [String]),
          language(currentOption: String, options: [String]),
          hapticFeedback(isSelected: Bool),
@@ -22,6 +23,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .version: 5
         }
     }
+
     var title: String {
         switch self {
         case .locationOrder: TextsAsset.General.orderLocationsBy
