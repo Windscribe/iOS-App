@@ -159,26 +159,6 @@ extension WelcomeView {
     @ViewBuilder
     private func authenticationButtonView() -> some View {
         VStack(spacing: 12) {
-            // Google Authentication
-            Button(action: {
-                router.shouldNavigateToLogin = true
-            }, label: {
-                HStack(alignment: .center, spacing: 10) {
-                    Image(viewModel.signupGoogleImage)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24, height: 24)
-
-                    Text(TextsAsset.Welcome.continueWithGoogle)
-                        .font(.medium(.body))
-                        .foregroundColor(.black.opacity(0.54))
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.white)
-                .clipShape(Capsule())
-            })
-
             // Apple Authentication
             Button(action: {
                 router.shouldNavigateToLogin = true
@@ -191,16 +171,37 @@ extension WelcomeView {
 
                     Text(TextsAsset.Welcome.continueWithApple)
                         .font(.medium(.body))
-                        .foregroundColor(.white)
+                        .foregroundColor(.black)
                 }
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.black)
+                .background(Color.white)
                 .clipShape(Capsule())
                 .overlay(
                     Capsule().stroke(Color.white.opacity(0.3), lineWidth: 0.5)
                 )
             })
+
+            // Login Button
+            NavigationLink(
+                destination: router.createView(for: .login),
+                isActive: $router.shouldNavigateToLogin
+            ) {
+                Button(action: {
+                    router.shouldNavigateToLogin = true
+                }, label: {
+                    Text(viewModel.loginText)
+                        .font(.medium(.body))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.black)
+                        .clipShape(Capsule())
+                        .overlay(
+                            Capsule().stroke(Color.white.opacity(0.3), lineWidth: 0.5)
+                        )
+                })
+            }
 
             // Emergency & Sign-Up/Login Section
             HStack {
@@ -220,55 +221,33 @@ extension WelcomeView {
                 })
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                HStack(spacing: 12) {
-                    // SignUp Button
-                    ZStack {
-                        Button(action: {
-                            viewModel.continueButtonTapped()
-                        }, label: {
-                            ZStack {
-                                Text(viewModel.signupText)
-                                    .font(.semiBold(.callout))
-                                    .foregroundColor(Color.welcomeButtonTextColor)
-                                    .opacity(viewModel.showLoadingView ? 0 : 1)
-
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    .padding()
-                                    .opacity(viewModel.showLoadingView ? 1 : 0)
-                            }
-                        })
-                        .disabled(viewModel.showLoadingView)
-
-                        // Navigation trigger (invisible)
-                        NavigationLink(
-                            destination: router.createView(for: .signup(claimGhostAccount: false)),
-                            isActive: $router.shouldNavigateToSignup
-                        ) {
-                            EmptyView()
-                        }
-                        .hidden()
-                    }
-
-                    // Seperators
-                    Rectangle()
-                        .fill(Color.white.opacity(0.3))
-                        .frame(width: 1, height: 14)
-
-                    // Login Button
-                    NavigationLink(
-                        destination: router.createView(for: .login),
-                        isActive: $router.shouldNavigateToLogin
-                    ) {
-                        Button(action: {
-                            router.shouldNavigateToLogin = true
-                        }, label: {
-                            Text(viewModel.loginText)
+                // SignUp Button
+                ZStack {
+                    Button(action: {
+                        viewModel.continueButtonTapped()
+                    }, label: {
+                        ZStack {
+                            Text(viewModel.signupText)
                                 .font(.semiBold(.callout))
-                                .foregroundColor(.welcomeButtonTextColor)
+                                .foregroundColor(Color.welcomeButtonTextColor)
+                                .opacity(viewModel.showLoadingView ? 0 : 1)
 
-                        })
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .padding()
+                                .opacity(viewModel.showLoadingView ? 1 : 0)
+                        }
+                    })
+                    .disabled(viewModel.showLoadingView)
+
+                    // Navigation trigger (invisible)
+                    NavigationLink(
+                        destination: router.createView(for: .signup(claimGhostAccount: false)),
+                        isActive: $router.shouldNavigateToSignup
+                    ) {
+                        EmptyView()
                     }
+                    .hidden()
                 }
             }
             .padding(.top, 16)
