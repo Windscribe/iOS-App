@@ -15,7 +15,7 @@ protocol GeneralSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get set }
     var entries: [GeneralMenuEntryType] { get set }
 
-    func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionType)
+    func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionResponseType)
 }
 
 class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
@@ -150,10 +150,10 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
         return "v\(releaseNumber) (\(buildNumber))"
     }
 
-    func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionType) {
+    func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionResponseType) {
         switch entry {
         case .hapticFeedback:
-            if case .toggle(let isSelected) = action {
+            if case .toggle(let isSelected, _) = action {
                 preferences.saveHapticFeedback(haptic: isSelected)
             }
         case .locationOrder:

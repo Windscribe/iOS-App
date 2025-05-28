@@ -14,7 +14,7 @@ enum BackgroundAssetDomainType {
     case disconnect
 }
 
-enum BackgroundAspectRatioType {
+enum BackgroundAspectRatioType: String, CaseIterable {
     case stretch
     case fill
     case tile
@@ -55,8 +55,9 @@ enum BackgroundAspectRatioType {
     }
 }
 
-enum BackgroundEffectType {
+enum BackgroundEffectType: Hashable {
     case none
+    case flag
     case bundled(subtype: BackgroundEffectSubtype)
     case custom
 
@@ -64,6 +65,8 @@ enum BackgroundEffectType {
         switch mainCategory {
         case TextsAsset.General.none:
             self = .none
+        case TextsAsset.General.flag:
+            self = .flag
         case TextsAsset.General.bundled:
             if let subtypeTitle = subtypeTitle {
                 let subtype = BackgroundEffectSubtype(rawValue: subtypeTitle) ?? .square
@@ -84,6 +87,8 @@ enum BackgroundEffectType {
         switch self {
         case .none:
             return TextsAsset.General.none
+        case .flag:
+            return TextsAsset.General.flag
         case .bundled:
             return TextsAsset.General.bundled
         case .custom:
@@ -103,6 +108,8 @@ extension BackgroundEffectType {
     static func fromRaw(value: String) -> BackgroundEffectType {
         if value == Fields.Values.none {
             return .none
+        } else if value == Fields.Values.flag {
+            return .flag
         } else if value == Fields.Values.custom {
             return .custom
         } else if let subtype = BackgroundEffectSubtype(rawValue: value) {
@@ -116,6 +123,8 @@ extension BackgroundEffectType {
         switch self {
         case .none:
             return Fields.Values.none
+        case .flag:
+            return Fields.Values.flag
         case .custom:
             return Fields.Values.custom
         case .bundled(let subtype):

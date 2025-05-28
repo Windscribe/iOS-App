@@ -24,7 +24,7 @@ extension SoundAssetDomainType {
     }
 }
 
-enum SoundEffectType {
+enum SoundEffectType: Hashable {
     case none
     case bundled(subtype: SoundEffectSubtype)
     case custom
