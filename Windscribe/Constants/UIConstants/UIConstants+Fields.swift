@@ -37,6 +37,7 @@ enum Fields {
         static let manual = "Manual"
         static let custom = "Custom"
         static let none = "None"
+        static let flag = "Flags"
         static let stretch = "Stretch"
         static let fill = "Fill"
         static let tile = "Tile"

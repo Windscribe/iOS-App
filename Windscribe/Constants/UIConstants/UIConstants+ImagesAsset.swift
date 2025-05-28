@@ -107,6 +107,7 @@ enum ImagesAsset {
     static let customConfigOVPN = "custom-config-ovpn"
     static let customConfigWG = "custom-config-wg"
     static let learnMoreIcon = "learn-more-ic"
+    static let editPencil = "edit-pencil"
 
     enum IPMenu {
         static let open = "ip-menu-open"
@@ -172,6 +173,7 @@ enum ImagesAsset {
         static let appearance = "appearance_ic_white"
         static let appBackground = "app_background_ic_white"
         static var soundNotification = "sound_notification"
+        static var customLocation = "location_order_ic_white"
     }
 
     enum General {

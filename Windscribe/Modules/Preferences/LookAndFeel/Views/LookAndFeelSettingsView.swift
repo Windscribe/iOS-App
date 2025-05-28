@@ -11,7 +11,7 @@ import SwiftUI
 struct LookAndFeelSettingsView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: LookAndFeelSettingsViewModelImpl
 
@@ -27,12 +27,19 @@ struct LookAndFeelSettingsView: View {
         ZStack {
             Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
-
-            Text("Look And Feel Settings")
-                .font(.title)
-                .foregroundColor(.white)
+            ScrollView {
+                VStack {
+                    ForEach(viewModel.entries, id: \.self) { entry in
+                        MenuEntryView(item: entry, action: { actionType in
+                            viewModel.entrySelected(entry, actionSelected: actionType)
+                        })
+                    }
+                    .padding(.top, 8)
+                }
+            }
+            .dynamicTypeSize(dynamicTypeRange)
         }
-        .navigationTitle("Look And Feel")
+        .navigationTitle(TextsAsset.LookFeel.title)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

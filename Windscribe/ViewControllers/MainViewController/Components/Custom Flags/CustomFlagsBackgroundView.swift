@@ -14,7 +14,7 @@ struct BackgroundInfoModel {
     let animates: Bool
     let color: UIColor
     let aspectRatioType: BackgroundAspectRatioType
-    var effect: BackgroundEffectType = .none
+    var effect: BackgroundEffectType = .flag
 }
 
 protocol FlagsBackgroundViewModelType {
@@ -59,7 +59,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     }
 
     private func updateBackgroundImage(isConnected: Bool) {
-        var effect = BackgroundEffectType.none
+        var effect = BackgroundEffectType.flag
         if isConnected {
             effect = lookAndFeelRepository.backgroundEffectConnect
         } else if !isConnected {
@@ -86,6 +86,10 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
                                            color: color, aspectRatioType: aspectRatio,
                                            effect: effect)
             }
+        case .none:
+            return BackgroundInfoModel(image: nil, animates: false,
+                                       color: .clear, aspectRatioType: aspectRatio,
+                                       effect: effect)
         default: break
         }
         return getLocationInfo(color: color)
@@ -160,7 +164,14 @@ class FlagsBackgroundView: UIView {
     }
 
     func changebackground(for info: BackgroundInfoModel) {
-        backgroundImageView.alpha = info.effect != .none ? 1.0: 0.15
+        switch info.effect {
+        case .none:
+            backgroundImageView.alpha = 0.0
+        case .flag:
+            backgroundImageView.alpha = 0.15
+        default:
+            backgroundImageView.alpha = 1.0
+        }
         if info.animates, let newImage = info.image {
             if backgroundImageView.image == nil {
                 backgroundImageView.image = newImage

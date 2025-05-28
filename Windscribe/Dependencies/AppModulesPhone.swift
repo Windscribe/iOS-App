@@ -142,7 +142,13 @@ class ViewModels: Assembly {
 
         container.register((any LookAndFeelSettingsViewModel).self) { r in
             LookAndFeelSettingsViewModelImpl(
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                preferences: r.resolve(Preferences.self)!,
+                backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
+                soundFileManager: r.resolve(SoundFileManaging.self)!,
+                serverRepository: r.resolve(ServerRepository.self)!
+            )
         }.inObjectScope(.transient)
 
         container.register((any HelpSettingsViewModel).self) { r in
@@ -534,9 +540,16 @@ class ViewControllerModule: Assembly {
         }.inObjectScope(.transient)
 
         container.register(LookAndFeelSettingsView.self) { r in
-           LookAndFeelSettingsView(
+            LookAndFeelSettingsView(
                 viewModel: LookAndFeelSettingsViewModelImpl(
-                    logger: r.resolve(FileLogger.self)!))
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    preferences: r.resolve(Preferences.self)!,
+                    backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
+                    soundFileManager: r.resolve(SoundFileManaging.self)!,
+                    serverRepository: r.resolve(ServerRepository.self)!
+                )
+            )
         }.inObjectScope(.transient)
 
         container.register(HelpSettingsView.self) { r in

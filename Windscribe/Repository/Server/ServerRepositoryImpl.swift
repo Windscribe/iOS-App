@@ -83,12 +83,19 @@ class ServerRepositoryImpl: ServerRepository {
                     if let city = region.cities.first(where: { $0.id == group.id }) {
                         mergedGroups.append(group.getGroupModel(customCity: city.name,
                                                                 customNick: city.nickname))
+                    } else {
+                        mergedGroups.append(group.getGroupModel())
                     }
                 }
                 if server.groups.count == mergedGroups.count {
                     mergedModels.append(server.getServerModel(customName: region.country,
                                                               groupModels: mergedGroups))
+                } else {
+                    mergedModels.append(server.getServerModel(customName: region.country,
+                                                              groupModels: server.getServerModel().groups))
                 }
+            } else {
+                mergedModels.append(server.getServerModel())
             }
         }
         if mergedModels.count == servers.count {

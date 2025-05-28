@@ -10,13 +10,15 @@ import Foundation
 import Combine
 import RxSwift
 
-struct CustomRulesEntry: MenuEntryHeaderType {
-    let id: Int = 0
-    let mainAction: MenuEntryActionType? = .none(title: TextsAsset.Robert.manageCustomRules)
-    let message: String? = nil
-    let secondaryAction: [MenuEntryActionType] = []
-    let title: String = ""
-    let icon: String = ""
+enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
+    case customRules
+
+    var id: Int { 0 }
+    var action: MenuEntryActionType? { .none(title: TextsAsset.Robert.manageCustomRules, parentId: id) }
+    var message: String? { nil }
+    var secondaryEntries: [MenuSecondaryEntryItem] { [] }
+    var title: String { "" }
+    var icon: String { "" }
 }
 
 protocol RobertSettingsViewModel: ObservableObject {
@@ -25,7 +27,7 @@ protocol RobertSettingsViewModel: ObservableObject {
     var errorMessage: String? { get set }
     var safariURL: URL? { get }
     var entries: [RobertFilter] { get set }
-    var customRulesEntry: CustomRulesEntry { get }
+    var customRulesEntry: RobertEntryType { get }
 
     func filterSelected(_ filter: RobertFilter)
     func infoSelected()
@@ -38,7 +40,7 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     @Published var errorMessage: String?
     @Published var safariURL: URL?
     @Published var entries: [RobertFilter] = []
-    @Published var customRulesEntry = CustomRulesEntry()
+    @Published var customRulesEntry: RobertEntryType = .customRules
 
     private let logger: FileLogger
     private let apiManager: APIManager

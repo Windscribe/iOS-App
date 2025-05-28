@@ -528,6 +528,7 @@ enum TextsAsset {
         static var bundled: String { "Bundled".localized }
         static var custom: String { "Custom".localized }
         static var none: String { "None".localized }
+        static var flag: String { "Flags".localized }
         static var stretch: String { "Stretch".localized }
         static var fill: String { "Fill".localized }
         static var tile: String { "Tile".localized }
@@ -1265,6 +1266,9 @@ enum TextsAsset {
     static let wireGuard = "WireGuard"
     static var appearances: [String] {
         return ["Light".localized, "Dark".localized]
+    }
+    static var lightAppearance: String {
+        "Light".localized
     }
 
     static var connectionModes: [String] {

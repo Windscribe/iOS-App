@@ -51,16 +51,16 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case let .version(message): message
         }
     }
-    var mainAction: MenuEntryActionType? {
+    var action: MenuEntryActionType? {
         switch self {
-        case let .locationOrder(currentOption, options): .multiple(currentOption: currentOption, options: options)
-        case let .language(currentOption, options): .multiple(currentOption: currentOption, options: options)
-        case let .hapticFeedback(isSelected): .toggle(isSelected: isSelected)
-        case let .notification(title): .none(title: title)
+        case let .locationOrder(currentOption, options): .multiple(currentOption: currentOption, options: options, parentId: id)
+        case let .language(currentOption, options): .multiple(currentOption: currentOption, options: options, parentId: id)
+        case let .hapticFeedback(isSelected): .toggle(isSelected: isSelected, parentId: id)
+        case let .notification(title): .none(title: title, parentId: id)
         case .version: nil
         }
     }
-    var secondaryAction: [MenuEntryActionType] {
+    var secondaryEntries: [MenuSecondaryEntryItem] {
         []
     }
 }
