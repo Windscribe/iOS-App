@@ -41,6 +41,7 @@ struct MenuCategoryRow: View {
                 }
             }
             .padding(.horizontal, 14)
+            .padding(.vertical, 10)
         }
         .padding(.horizontal, 16)
     }
