@@ -219,7 +219,7 @@ extension ConnectionViewController: ConnectedDNSViewDelegate {
                             self.connectedDNSView.cancelUpdateValue()
                         }
                     }
-                    AlertManager().showAlert(title: TextsAsset.connectedDNSInvalidAlertTitle, message: TextsAsset.connectedDNSInvalidAlertBody, buttonText: TextsAsset.okay, actions: [cancelAction])
+                    AlertManager().showAlert(title: TextsAsset.Connection.connectedDNSInvalidAlertTitle, message: TextsAsset.Connection.connectedDNSInvalidAlertBody, buttonText: TextsAsset.okay, actions: [cancelAction])
                 }
             }
         }

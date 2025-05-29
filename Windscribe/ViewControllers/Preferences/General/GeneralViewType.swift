@@ -31,10 +31,10 @@ enum GeneralViewType: SelectionViewType {
         case .notification: ImagesAsset.notifications
         case .hapticFeedback: ImagesAsset.General.hapticFeedback
         case .firewall: ImagesAsset.General.firewall
-        case .killSwitch: ImagesAsset.General.killSwitch
-        case .allowLan: ImagesAsset.General.allowLan
+        case .killSwitch: ImagesAsset.Connection.killSwitch
+        case .allowLan: ImagesAsset.Connection.allowLan
         case .autoConnection: ImagesAsset.General.autoSecureNew
-        case .connectionMode: ImagesAsset.General.connectionMode
+        case .connectionMode: ImagesAsset.Connection.connectionMode
         case .autoSecure: ImagesAsset.General.autoSecure
         case .preferredProtocol: ImagesAsset.General.preferredProtocol
         case .connectedDNS: ImagesAsset.customDns
@@ -49,13 +49,13 @@ enum GeneralViewType: SelectionViewType {
         case .notification: TextsAsset.General.pushNotificationSettings
         case .hapticFeedback: TextsAsset.General.hapticFeedback
         case .firewall: TextsAsset.firewall
-        case .killSwitch: TextsAsset.killSwitch
-        case .allowLan: TextsAsset.allowLan
+        case .killSwitch: TextsAsset.Connection.killSwitch
+        case .allowLan: TextsAsset.Connection.allowLan
         case .autoConnection: TextsAsset.autoSecureNew
-        case .connectionMode: TextsAsset.General.connectionMode
+        case .connectionMode: TextsAsset.Connection.connectionMode
         case .autoSecure: TextsAsset.General.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.title
-        case .connectedDNS: TextsAsset.connectedDNS
+        case .connectedDNS: TextsAsset.Connection.connectedDNS
         case .version: TextsAsset.LookFeel.versionTitle
         }
     }
@@ -67,13 +67,13 @@ enum GeneralViewType: SelectionViewType {
         case .notification: TextsAsset.PreferencesDescription.notificationStats
         case .hapticFeedback: TextsAsset.PreferencesDescription.hapticFeedback
         case .firewall: TextsAsset.firewallDescription
-        case .killSwitch: TextsAsset.killSwitchDescription
-        case .allowLan: TextsAsset.allowLanDescription
+        case .killSwitch: TextsAsset.Connection.killSwitchDescription
+        case .allowLan: TextsAsset.Connection.allowLanDescription
         case .autoConnection: TextsAsset.autoSecureNewDescription
-        case .connectionMode: TextsAsset.PreferencesDescription.connectionMode
+        case .connectionMode: TextsAsset.Connection.connectionMode
         case .autoSecure: TextsAsset.PreferencesDescription.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.newDescription
-        case .connectedDNS: TextsAsset.connectedDNSDescription
+        case .connectedDNS: TextsAsset.Connection.connectedDNSDescription
         case .version: ""
         }
     }

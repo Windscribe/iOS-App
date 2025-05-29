@@ -121,7 +121,10 @@ class ViewModels: Assembly {
 
         container.register((any ConnectionSettingsViewModel).self) { r in
             ConnectionSettingsViewModelImpl(
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                preferences: r.resolve(Preferences.self)!
+            )
         }.inObjectScope(.transient)
 
         container.register((any RobertSettingsViewModel).self) { r in
@@ -518,7 +521,11 @@ class ViewControllerModule: Assembly {
         container.register(ConnectionSettingsView.self) { r in
            ConnectionSettingsView(
                 viewModel: ConnectionSettingsViewModelImpl(
-                    logger: r.resolve(FileLogger.self)!))
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    preferences: r.resolve(Preferences.self)!
+                )
+           )
         }.inObjectScope(.transient)
 
         container.register(RobertSettingsView.self) { r in

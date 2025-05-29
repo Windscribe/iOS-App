@@ -11,7 +11,7 @@ import SwiftUI
 struct ConnectionSettingsView: View {
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: ConnectionSettingsViewModelImpl
 
@@ -27,12 +27,22 @@ struct ConnectionSettingsView: View {
         ZStack {
             Color.nightBlue
                 .edgesIgnoringSafeArea(.all)
-
-            Text("Connection Settings")
-                .font(.title)
-                .foregroundColor(.white)
+            ScrollView {
+                VStack(spacing: 14) {
+                    ForEach(viewModel.entries, id: \.self) { entry in
+                        MenuEntryView(item: entry, action: { actionType in
+                            viewModel.entrySelected(entry, action: actionType)
+                        })
+                    }
+                }
+                .padding(.top, 8)
+            }
+            .dynamicTypeSize(dynamicTypeRange)
         }
-        .navigationTitle("Connection")
+        .sheet(item: $viewModel.safariURL) { url in
+            SafariView(url: url)
+        }
+        .navigationTitle(TextsAsset.Connection.title)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

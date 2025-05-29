@@ -45,6 +45,8 @@ enum MenuEntryActionType: Hashable {
     case link(title: String?, parentId: Int)
     case none(title: String, parentId: Int)
     case file(value: String, fileTypes: [UTType], parentId: Int)
+    case infoLink(message: AttributedString, parentId: Int)
+    case field(value: String, placeHolder: String, parentId: Int)
 
     var imageName: String? {
         switch self {
@@ -72,7 +74,9 @@ enum MenuEntryActionType: Hashable {
             let .none(_, parentId),
             let .file(_, _, parentId),
             let .buttonFile(_, _, parentId),
-            let .buttonFileExport(_, _, parentId):
+            let .buttonFileExport(_, _, parentId),
+            let .infoLink(_, parentId),
+            let .field(_, _, parentId):
             return parentId
         }
     }
@@ -86,6 +90,8 @@ enum MenuEntryActionResponseType {
     case none(parentId: Int)
     case file(selecteURL: URL, parentId: Int)
     case fileExport(parentId: Int)
+    case infoLink(parentId: Int)
+    case field(value: String, parentId: Int)
 
     var parentId: Int {
         switch self {
@@ -95,7 +101,9 @@ enum MenuEntryActionResponseType {
             let .link(parentId),
             let .none(parentId),
             let .file(_, parentId),
-            let .fileExport(parentId):
+            let .fileExport(parentId),
+            let .infoLink(parentId),
+            let .field(_, parentId):
             return parentId
         }
     }
@@ -119,8 +127,12 @@ struct MenuSecondaryEntryItem: MenuEntryItemType {
     }
 
     var hasSeparator: Bool {
+        !(title.isEmpty && icon.isEmpty)
+    }
+
+    var isFixedHeight: Bool {
         switch action {
-        case .file:
+        case .infoLink:
             return false
         default:
             return true
@@ -137,15 +149,19 @@ protocol MenuEntryHeaderType: MenuEntryItemType {
     var secondaryEntries: [MenuSecondaryEntryItem] { get }
 }
 
-extension MenuEntryHeaderType {
-    func hasSeparator(for entry: MenuSecondaryEntryItem) -> Bool {
-        entry != secondaryEntries.last
-    }
-}
-
 protocol MenuEntryItemType: Hashable {
     var id: Int { get }
     var title: String { get }
     var icon: String { get }
     var action: MenuEntryActionType? { get }
+}
+
+extension MenuEntryItemType {
+    func makeInfoLink(from description: String) -> AttributedString {
+        var info = AttributedString("\(description) \(TextsAsset.learnMore)")
+        if let range = info.range(of: TextsAsset.learnMore) {
+            info[range].foregroundColor = .learnBlue
+        }
+        return info
+    }
 }
