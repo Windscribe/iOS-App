@@ -79,7 +79,7 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
     var tint: UIColor? {
         switch self {
         case .logout:
-                .backgroundRed
+            .backgroundRed
         default:
             nil
         }
@@ -88,9 +88,9 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
     var tintColor: Color {
         switch self {
         case .logout:
-                .orangeYellow
+            .orangeYellow
         default:
-                .white
+            .white
         }
     }
 }
