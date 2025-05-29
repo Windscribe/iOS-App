@@ -182,13 +182,18 @@ enum ImagesAsset {
         static let appBackground = "app_background_ic_white"
         static let hapticFeedback = "haptic_feedback_ic_white"
         static let firewall = "firewall-ic-white"
-        static let killSwitch = "kill-switch-white"
-        static let allowLan = "allow-lan-white"
         static let autoConnection = "auto-connection-ic-white"
-        static let connectionMode = "connection-mode-ic-white"
         static let autoSecure = "wifi"
         static let preferredProtocol = "preferred_protocol"
         static let autoSecureNew = "auto_secure_new"
+    }
+
+    enum Connection {
+        static let connectionMode = "connection-mode-ic-white"
+        static let connectedDNS = "custom-dns"
+        static let killSwitch = "kill-switch-white"
+        static let allowLan = "allow-lan-white"
+        static let circumventCensorship = "circumvent-censorship"
     }
 
     enum SignalBars {

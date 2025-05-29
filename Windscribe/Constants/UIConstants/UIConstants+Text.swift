@@ -452,7 +452,6 @@ enum TextsAsset {
         static var robert: String { return "R.O.B.E.R.T.".localized }
         static var lookFeel: String { return "Look & Feel".localized }
         static var connection: String { return "Connection".localized }
-        static var networkSecurity: String { return "Network Options".localized }
         static var debug: String { return "Debug".localized }
         static var logout: String { return "Log Out".localized }
         static var helpMe: String { return "Help Me!".localized }
@@ -462,15 +461,51 @@ enum TextsAsset {
         static var logOutAlert: String { return "Are you sure you want to log out of Windscribe?".localized }
         static var referForData: String { return "Refer for Data".localized }
         static var advanceParameters: String { return "Advanced Parameters".localized }
+        static var networkSecurity: String { return "Network Options".localized }
+    }
+
+    enum Connection {
+        static var title: String { return "Connection".localized }
+        static var networkOptions: String { return "Network Options".localized }
+        static var connectionMode: String { return "Connection Mode".localized }
+        static var killSwitch: String { return "Always on VPN".localized }
+        static var connectedDNS: String { return "Connected DNS".localized }
+        static var allowLan: String { return "Allow LAN Traffic".localized }
+        static var circumventCensorship: String { return "Circumvent Censorship".localized }
+
+        static var connectionModeDescription: String {
+            return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
+        }
+        static var killSwitchDescription: String {
+            return "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services.".localized
+        }
+        static var connectedDNSDescription: String {
+            return "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting.".localized
+        }
+        static var allowLanDescription: String {
+            return "Allow access to local services and printers while connected to Windscribe.".localized
+        }
+        static var circumventCensorshipDescription: String {
+            return "Connect to the VPN even in hostile environment".localized
+        }
+        static var connectedDNSValueFieldDescription: String {
+            return "IP/DNS-over-HTTPS/TLS".localized
+        }
+        static var connectedDNSInvalidAlertTitle: String {
+            return "Invalid DNS server".localized
+        }
+        static var connectedDNSInvalidAlertBody: String {
+            return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
+        }
+    }
+
+    static var learnMore: String {
+        return "Learn more".localized
     }
 
     enum Robert {
         static var title: String {
             return "R.O.B.E.R.T.".localized
-        }
-
-        static var learnMore: String {
-            return "Learn more".localized
         }
 
         static var manageCustomRules: String {
@@ -508,7 +543,6 @@ enum TextsAsset {
 
     enum General {
         static var title: String { return "General".localized }
-        static var connectionMode: String { return "Connection Mode".localized }
         static var language: String { return "Language".localized }
         static var displayLatency: String { return "Latency Display".localized }
         static var sendLog: String { return "Send Log".localized }
@@ -592,9 +626,8 @@ enum TextsAsset {
         static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localized }
         static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localized }
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localized }
-        static var connectionMode: String { return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized }
-        static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localized }
         static var customBackground: String { return "Use the app custom background instead of the locations flag.".localized }
+        static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localized }
     }
 
     enum LookFeel {
@@ -1357,52 +1390,8 @@ enum TextsAsset {
         return "Firewall".localized
     }
 
-    static var killSwitch: String {
-        return "Always on VPN".localized
-    }
-
-    static var allowLan: String {
-        return "Allow LAN Traffic".localized
-    }
-
     static var firewallDescription: String {
         return "This turns on the on-demand mode.".localized
-    }
-
-    static var killSwitchDescription: String {
-        return "Tunnel all traffic via Windscribe at all times. Recommended only for high-risk use-cases and may cause issues with some Apple services.".localized
-    }
-
-    static var allowLanDescription: String {
-        return "Allow access to local services and printers while connected to Windscribe.".localized
-    }
-
-    static var circumventCensorship: String {
-        return "Circumvent Censorship".localized
-    }
-
-    static var circumventCensorshipDescription: String {
-        return "Connect to the VPN even in hostile environment".localized
-    }
-
-    static var connectedDNS: String {
-        return "Connected DNS".localized
-    }
-
-    static var connectedDNSDescription: String {
-        return "Select the DNS server while connected to Windscribe. NOTE: IKEv2 protocol will override this setting.".localized
-    }
-
-    static var connectedDNSValueFieldDescription: String {
-        return "IP/DNS-over-HTTPS/TLS".localized
-    }
-
-    static var connectedDNSInvalidAlertTitle: String {
-        return "Invalid DNS server".localized
-    }
-
-    static var connectedDNSInvalidAlertBody: String {
-        return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
     }
 
     static var configuredLocation: String {

@@ -263,6 +263,7 @@
 		1ED616792DD75868006CDC99 /* MenuCategoryRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616782DD7585E006CDC99 /* MenuCategoryRowType.swift */; };
 		1ED6167C2DD75B78006CDC99 /* AboutItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6167B2DD75B77006CDC99 /* AboutItemType.swift */; };
 		1ED6167E2DD75BF9006CDC99 /* PreferencesActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */; };
+		1ED616812DE4906A006CDC99 /* ConnectionsEntryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */; };
 		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
@@ -1564,6 +1565,7 @@
 		1ED616782DD7585E006CDC99 /* MenuCategoryRowType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuCategoryRowType.swift; sourceTree = "<group>"; };
 		1ED6167B2DD75B77006CDC99 /* AboutItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItemType.swift; sourceTree = "<group>"; };
 		1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesActionButton.swift; sourceTree = "<group>"; };
+		1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsEntryType.swift; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -3098,6 +3100,14 @@
 			isa = PBXGroup;
 			children = (
 				1ED6167B2DD75B77006CDC99 /* AboutItemType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1ED6167F2DE4904B006CDC99 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -4966,6 +4976,7 @@
 		F49C45912DCAB5E6007E5EF1 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
+				1ED6167F2DE4904B006CDC99 /* Models */,
 				F49C45922DCAB5F8007E5EF1 /* Views */,
 				F49C45932DCAB5FF007E5EF1 /* ViewModels */,
 			);
@@ -6586,6 +6597,7 @@
 				AF3FC11D227B68EB0050B224 /* SessionManager.swift in Sources */,
 				E94E34F928B3E2B100E76D14 /* WSTouchView.swift in Sources */,
 				F49C45C82DCD3311007E5EF1 /* HelpSettingsViewModel.swift in Sources */,
+				1ED616812DE4906A006CDC99 /* ConnectionsEntryType.swift in Sources */,
 				AF914A7823D611DB002D3041 /* UIButton+Extension.swift in Sources */,
 				F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */,
 				AF018E0321B09B6400B225FF /* VPNProtocols.swift in Sources */,

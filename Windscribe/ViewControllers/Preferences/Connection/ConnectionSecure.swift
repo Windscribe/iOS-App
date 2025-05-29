@@ -23,17 +23,17 @@ enum ConnectionSecure {
         case .firewall:
             return TextsAsset.firewall
         case .killSwitch:
-            return TextsAsset.killSwitch
+            return TextsAsset.Connection.killSwitch
         case .allowLan:
-            return TextsAsset.allowLan
+            return TextsAsset.Connection.allowLan
         case .autoSecure:
             return TextsAsset.autoSecureNew
         case .hapticFeeback:
             return TextsAsset.General.hapticFeedback
         case .circumventCensorship:
-            return TextsAsset.circumventCensorship
+            return TextsAsset.Connection.circumventCensorship
         case .connectedDNS:
-            return TextsAsset.connectedDNS
+            return TextsAsset.Connection.connectedDNS
         case .customBackground:
             return TextsAsset.General.customBackground
         }
@@ -44,17 +44,17 @@ enum ConnectionSecure {
         case .firewall:
             return TextsAsset.firewallDescription
         case .killSwitch:
-            return TextsAsset.killSwitchDescription
+            return TextsAsset.Connection.killSwitchDescription
         case .allowLan:
-            return TextsAsset.allowLanDescription
+            return TextsAsset.Connection.allowLanDescription
         case .autoSecure:
             return TextsAsset.autoSecureNewDescription
         case .hapticFeeback:
             return "Explain me!".localized
         case .circumventCensorship:
-            return TextsAsset.circumventCensorshipDescription
+            return TextsAsset.Connection.circumventCensorshipDescription
         case .connectedDNS:
-            return TextsAsset.connectedDNSDescription
+            return TextsAsset.Connection.connectedDNSDescription
         case .customBackground:
             return TextsAsset.PreferencesDescription.customBackground
         }

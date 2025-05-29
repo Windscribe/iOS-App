@@ -42,7 +42,7 @@ class ConnectedDNSView: UIStackView {
         view.explainTapped = { [weak self] in
             self?.delegate?.connectedDNSViewExplain()
         }
-        view.content = TextsAsset.connectedDNSDescription
+        view.content = TextsAsset.Connection.connectedDNSDescription
         return view
     }()
 
@@ -145,14 +145,14 @@ class ConnectedDNSView: UIStackView {
 
     private func bindViews() {
         // Darm Mode Binding
-        isDarkMode.subscribe {
-            self.editButton.setImage(ThemeUtils.editImage(isDarkMode: $0), for: .normal)
-            self.cancelButton.tintColor = ThemeUtils.primaryTextColor50(isDarkMode: $0)
-            self.valueTextField.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
-            self.valueTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.connectedDNSValueFieldDescription, attributes: [NSAttributedString.Key.foregroundColor: ThemeUtils.primaryTextColor50(isDarkMode: $0)])
-            self.mainWrapperView.layer.borderColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0).cgColor
-            self.editWrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: $0)
-        }.disposed(by: disposeBag)
+        isDarkMode.subscribe(onNext: { isDarkMode in
+            self.editButton.setImage(ThemeUtils.editImage(isDarkMode: isDarkMode), for: .normal)
+            self.cancelButton.tintColor = ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)
+            self.valueTextField.textColor = ThemeUtils.primaryTextColor(isDarkMode: isDarkMode)
+            self.valueTextField.attributedPlaceholder = NSAttributedString(string: TextsAsset.Connection.connectedDNSValueFieldDescription, attributes: [NSAttributedString.Key.foregroundColor: ThemeUtils.primaryTextColor50(isDarkMode: isDarkMode)])
+            self.mainWrapperView.layer.borderColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode).cgColor
+            self.editWrapperView.backgroundColor = ThemeUtils.getVersionBorderColor(isDarkMode: isDarkMode)
+        }).disposed(by: disposeBag)
 
         // Button edit tap binding
         editButton.rx.tap.bind { _ in

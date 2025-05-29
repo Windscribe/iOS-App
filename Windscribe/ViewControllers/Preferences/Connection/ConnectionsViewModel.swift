@@ -59,7 +59,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
     private var firewall = BehaviorSubject<Bool>(value: DefaultValues.firewallMode)
     private var killSwitch = BehaviorSubject<Bool>(value: DefaultValues.killSwitch)
-    private var allowLane = BehaviorSubject<Bool>(value: DefaultValues.allowLaneMode)
+    private var allowLane = BehaviorSubject<Bool>(value: DefaultValues.allowLANMode)
     private var autoSecure = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
     private var connectionMode = ConnectionModeType.defaultValue()
     private var connectedDNS = ConnectedDNSType.defaultValue()
@@ -93,8 +93,8 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         preferences.getKillSwitch().subscribe { [weak self] data in
             self?.killSwitch.onNext(data ?? DefaultValues.killSwitch)
         }.disposed(by: disposeBag)
-        preferences.getAllowLane().subscribe { [weak self] data in
-            self?.allowLane.onNext(data ?? DefaultValues.allowLaneMode)
+        preferences.getAllowLAN().subscribe { [weak self] data in
+            self?.allowLane.onNext(data ?? DefaultValues.allowLANMode)
         }.disposed(by: disposeBag)
         preferences.getAutoSecureNewNetworks().subscribe { [weak self] data in
             self?.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
@@ -162,7 +162,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func getAllowLanStatus() -> Bool {
-        return (try? allowLane.value()) ?? DefaultValues.allowLaneMode
+        return (try? allowLane.value()) ?? DefaultValues.allowLANMode
     }
 
     func getAutoSecureNetworkStatus() -> Bool {

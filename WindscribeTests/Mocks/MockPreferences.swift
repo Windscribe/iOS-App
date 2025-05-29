@@ -104,7 +104,7 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func getAllowLane() -> Observable<Bool?> {
+    func getAllowLAN() -> Observable<Bool?> {
         return Observable.just(nil)
     }
 

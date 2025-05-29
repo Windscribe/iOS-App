@@ -118,20 +118,22 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
 }
 
 enum LookAndFeelSecondaryEntryIDs: Int {
-    case backgroundRatio = 1
-    case backgroundConnected
-    case backgroundDisconnected
-    case soundConnected
-    case soundDisconnected
-    case customNameImport
-    case customNameExport
-    case customNameReset
-    case fileContentConnect
-    case fileContentDisconnect
-    case bundledConnectedBackgrounds
-    case bundledDisconnectedBackgrounds
-    case bundledConnectedSounds
-    case bundledDisconnectedSounds
+    case backgroundRatio = 1,
+         backgroundConnected,
+         backgroundDisconnected,
+         soundConnected,
+         soundDisconnected,
+         customNameImport,
+         customNameExport,
+         customNameReset,
+         fileContentConnect,
+         fileContentDisconnect,
+         bundledConnectedBackgrounds,
+         bundledDisconnectedBackgrounds,
+         bundledConnectedSounds,
+         bundledDisconnectedSounds
+
+    var id: Int { rawValue }
 }
 
 enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
@@ -174,33 +176,33 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
     var id: Int {
         switch self {
         case .backgroundRatio:
-            LookAndFeelSecondaryEntryIDs.backgroundRatio.rawValue
+            LookAndFeelSecondaryEntryIDs.backgroundRatio.id
         case .backgroundConnected:
-            LookAndFeelSecondaryEntryIDs.backgroundConnected.rawValue
+            LookAndFeelSecondaryEntryIDs.backgroundConnected.id
         case .backgroundDisconnected:
-            LookAndFeelSecondaryEntryIDs.backgroundDisconnected.rawValue
+            LookAndFeelSecondaryEntryIDs.backgroundDisconnected.id
         case .soundConnected:
-            LookAndFeelSecondaryEntryIDs.soundConnected.rawValue
+            LookAndFeelSecondaryEntryIDs.soundConnected.id
         case .soundDisconnected:
-            LookAndFeelSecondaryEntryIDs.soundDisconnected.rawValue
+            LookAndFeelSecondaryEntryIDs.soundDisconnected.id
         case .customNameImport:
-            LookAndFeelSecondaryEntryIDs.customNameImport.rawValue
+            LookAndFeelSecondaryEntryIDs.customNameImport.id
         case .customNameExport:
-            LookAndFeelSecondaryEntryIDs.customNameExport.rawValue
+            LookAndFeelSecondaryEntryIDs.customNameExport.id
         case .customNameReset:
-            LookAndFeelSecondaryEntryIDs.customNameReset.rawValue
+            LookAndFeelSecondaryEntryIDs.customNameReset.id
         case .fileContentConnect:
-            LookAndFeelSecondaryEntryIDs.fileContentConnect.rawValue
+            LookAndFeelSecondaryEntryIDs.fileContentConnect.id
         case .fileContentDisconnect:
-            LookAndFeelSecondaryEntryIDs.fileContentDisconnect.rawValue
+            LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id
         case .bundledConnectedBackgrounds:
-            LookAndFeelSecondaryEntryIDs.bundledConnectedBackgrounds.rawValue
+            LookAndFeelSecondaryEntryIDs.bundledConnectedBackgrounds.id
         case .bundledDisconnectedBackgrounds:
-            LookAndFeelSecondaryEntryIDs.bundledDisconnectedBackgrounds.rawValue
+            LookAndFeelSecondaryEntryIDs.bundledDisconnectedBackgrounds.id
         case .bundledConnectedSounds:
-            LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.rawValue
+            LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.id
         case .bundledDisconnectedSounds:
-            LookAndFeelSecondaryEntryIDs.bundledDisconnectedSounds.rawValue
+            LookAndFeelSecondaryEntryIDs.bundledDisconnectedSounds.id
         }
     }
 

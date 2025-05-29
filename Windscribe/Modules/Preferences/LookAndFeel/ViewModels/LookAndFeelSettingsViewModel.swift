@@ -116,60 +116,60 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
             }
         case .background:
             if case let .multiple(newOption, parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.backgroundRatio.rawValue {
+                if parentId == LookAndFeelSecondaryEntryIDs.backgroundRatio.id {
                     aspectRatio = BackgroundAspectRatioType(aspectRatioType: newOption)
                     lookAndFeelRepository.updateBackgroundCustomAspectRatio(aspectRatio: aspectRatio)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.backgroundConnected.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.backgroundConnected.id {
                     backgroundConnect = BackgroundEffectType(mainCategory: newOption)
                     lookAndFeelRepository.updateBackgroundEffectConnect(effect: backgroundConnect)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.backgroundDisconnected.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.backgroundDisconnected.id {
                     backgroundDisconnect = BackgroundEffectType(mainCategory: newOption)
                     lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: backgroundDisconnect)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedBackgrounds.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedBackgrounds.id {
                     guard let subtype = BackgroundEffectSubtype(rawValue: newOption) else { return }
                     backgroundConnect = BackgroundEffectType.bundled(subtype: subtype)
                     lookAndFeelRepository.updateBackgroundEffectConnect(effect: backgroundConnect)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledDisconnectedBackgrounds.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledDisconnectedBackgrounds.id {
                     guard let subtype = BackgroundEffectSubtype(rawValue: newOption) else { return }
                     backgroundDisconnect = BackgroundEffectType.bundled(subtype: subtype)
                     lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: backgroundDisconnect)
                 }
             } else if case let .file(selecteURL, parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.rawValue {
+                if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.id {
                     saveImageURL(pickedImageFile: selecteURL, for: .connect)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id {
                     saveImageURL(pickedImageFile: selecteURL, for: .disconnect)
                 }
             }
         case .sound:
             if case let .multiple(newOption, parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.soundConnected.rawValue {
+                if parentId == LookAndFeelSecondaryEntryIDs.soundConnected.id {
                     preferences.saveSoundEffectConnect(value: newOption)
                     soundEffectConnect = SoundEffectType(mainCategory: newOption, subtypeTitle: nil)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.soundDisconnected.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.soundDisconnected.id {
                     preferences.saveSoundEffectDisconnect(value: newOption)
                     soundEffectDisconnect = SoundEffectType(mainCategory: newOption, subtypeTitle: nil)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.id {
                     guard let subtype = SoundEffectSubtype(rawValue: newOption) else { return }
                     soundEffectConnect = SoundEffectType.bundled(subtype: subtype)
                     preferences.saveSoundEffectConnect(value: newOption)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledDisconnectedSounds.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.bundledDisconnectedSounds.id {
                     guard let subtype = SoundEffectSubtype(rawValue: newOption) else { return }
                     soundEffectDisconnect = SoundEffectType.bundled(subtype: subtype)
                     preferences.saveSoundEffectDisconnect(value: newOption)
                 }
             } else if case let .file(selecteURL, parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.rawValue {
+                if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.id {
                     saveSoundURL(pickedSoundFile: selecteURL, for: .connect)
-                } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id {
                     saveSoundURL(pickedSoundFile: selecteURL, for: .disconnect)
                 }
             }
         case .customLocation:
             if case let .button(parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.customNameExport.rawValue {
+                if parentId == LookAndFeelSecondaryEntryIDs.customNameExport.id {
 
-                } else if parentId == LookAndFeelSecondaryEntryIDs.customNameReset.rawValue {
+                } else if parentId == LookAndFeelSecondaryEntryIDs.customNameReset.id {
                     resetLocations()
                 }
             } else if case let .file(selecteURL, _) = actionSelected {

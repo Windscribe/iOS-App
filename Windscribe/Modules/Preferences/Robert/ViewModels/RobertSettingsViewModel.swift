@@ -13,7 +13,7 @@ import RxSwift
 enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
     case customRules
 
-    var id: Int { 0 }
+    var id: Int { 1 }
     var action: MenuEntryActionType? { .none(title: TextsAsset.Robert.manageCustomRules, parentId: id) }
     var message: String? { nil }
     var secondaryEntries: [MenuSecondaryEntryItem] { [] }
@@ -65,9 +65,9 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
 
         description = AttributedString(TextsAsset.Robert.description
                                        + " "
-                                       + TextsAsset.Robert.learnMore)
+                                       + TextsAsset.learnMore)
 
-        if let range = description.range(of: TextsAsset.Robert.learnMore) {
+        if let range = description.range(of: TextsAsset.learnMore) {
             description[range].foregroundColor = .learnBlue
         }
     }

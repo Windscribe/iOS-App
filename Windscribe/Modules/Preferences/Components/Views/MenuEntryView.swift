@@ -59,7 +59,6 @@ struct MenuEntryHeaderView: View {
                 })
             }
         }
-        .frame(height: 24)
     }
 }
 
@@ -72,21 +71,18 @@ struct MenuEntryInteractiveView: View {
             VStack(spacing: 12) {
                 MenuEntryHeaderView(item: item, action: action)
                 if let message = item.message {
-                    HStack {
-                        Text(message)
-                            .foregroundColor(.infoGrey)
-                            .font(.regular(.footnote))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
+                    MenuInfoText(text: message)
                 }
             }
             .padding(14)
             if item.secondaryEntries.count > 0 {
                 VStack(spacing: 14) {
                     ForEach(item.secondaryEntries, id: \.self) { entry in
-                        Rectangle()
-                            .fill(Color.nightBlue)
-                            .frame(height: 1)
+                        if entry.hasSeparator {
+                            Rectangle()
+                                .fill(Color.nightBlue)
+                                .frame(height: 1)
+                        }
                         MenuEntryHeaderView(item: entry, action: action)
                             .padding(.horizontal, 14)
                     }
@@ -190,6 +186,89 @@ struct MenuEntryActionView: View {
                                   fileTypes: fileType,
                                   actionType: actionType,
                                   action: action)
+        case let .infoLink(message, parentId):
+            Button {
+                action(.infoLink(parentId: parentId))
+            } label: {
+                Text(message)
+                    .foregroundColor(.infoGrey)
+                    .font(.regular(.footnote))
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        case let .field(value, placeHolder, parentId):
+            MenuFieldView(value: value, placeHolder: placeHolder, parentId: parentId, action: action)
+        }
+    }
+}
+
+struct MenuFieldView: View {
+    let value: String
+    let placeHolder: String
+    let parentId: Int
+    let action: (MenuEntryActionResponseType) -> Void
+
+    @State private var isEditing = false
+    @State private var editedValue = ""
+    @FocusState private var isTextFieldFocused: Bool
+
+    var body: some View {
+        if isEditing {
+            HStack(spacing: 4) {
+                TextField(placeHolder, text: $editedValue)
+                    .foregroundColor(.infoGrey)
+                    .font(.regular(.callout))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .focused($isTextFieldFocused)
+                Button(action: {
+                    isEditing = false
+                    isTextFieldFocused = false
+                    editedValue = value == placeHolder ? "" : value
+                }, label: {
+                    HStack {
+                        Image(ImagesAsset.closeCross)
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.infoGrey)
+                    }
+                })
+                Button(action: {
+                    isEditing = false
+                    isTextFieldFocused = false
+                    action(.field(value: editedValue, parentId: parentId))
+                }, label: {
+                    HStack {
+                        Image(ImagesAsset.greenCheckMark)
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.eletricBlue)
+                    }
+                })
+            }
+        } else {
+            Button(action: {
+                isEditing = true
+                isTextFieldFocused = true
+                editedValue = value == placeHolder ? "" : value
+            }, label: {
+                HStack {
+                    Text(value)
+                        .foregroundColor(.infoGrey)
+                        .font(.regular(.callout))
+                    Image(ImagesAsset.editPencil)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.infoGrey)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            })
         }
     }
 }
@@ -219,6 +298,17 @@ struct MenuButtonActionView: View {
                 }
             }
         })
+    }
+}
+
+struct MenuInfoText: View {
+    var text: String
+
+    var body: some View {
+        Text(text)
+            .foregroundColor(.infoGrey)
+            .font(.regular(.footnote))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

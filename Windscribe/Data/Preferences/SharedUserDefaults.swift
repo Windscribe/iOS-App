@@ -352,11 +352,11 @@ class SharedSecretDefaults: Preferences {
     }
 
     func getAllowLaneSync() -> Bool {
-        return sharedDefault?.bool(forKey: SharedKeys.allowLanMode) ?? DefaultValues.allowLaneMode
+        return sharedDefault?.bool(forKey: SharedKeys.allowLanMode) ?? DefaultValues.allowLANMode
     }
 
-    func getAllowLane() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.allowLanMode) ?? Observable.just(DefaultValues.allowLaneMode)
+    func getAllowLAN() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.allowLanMode) ?? Observable.just(DefaultValues.allowLANMode)
     }
 
     func saveHapticFeedback(haptic: Bool) {

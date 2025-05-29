@@ -24,7 +24,7 @@ enum DefaultValues {
     static let serverHealth = false
     static let firewallMode = true
     static let killSwitch = false
-    static let allowLaneMode = false
+    static let allowLANMode = false
     static let autoSecureNewNetworks = true
     static let hapticFeedback = true
     static let showServerHealth = false
