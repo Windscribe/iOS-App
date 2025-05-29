@@ -132,7 +132,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     }
 
     func logout() {
-        logger.logD(self, "User tapped logout")
+        logger.logD("PreferencesViewModel", "User tapped logout")
 
         alertManager.showYesNoAlert(
             title: TextsAsset.Preferences.logout,

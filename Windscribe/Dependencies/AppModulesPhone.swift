@@ -156,7 +156,12 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register((any HelpSettingsViewModel).self) { r in
-            HelpSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+            HelpSettingsViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                sessionManager: r.resolve(SessionManaging.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                connectivity: r.resolve(Connectivity.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register((any AboutSettingsViewModel).self) { r in
@@ -563,7 +568,12 @@ class ViewControllerModule: Assembly {
 
         container.register(HelpSettingsView.self) { r in
             HelpSettingsView(
-                viewModel: HelpSettingsViewModelImpl(logger: r.resolve(FileLogger.self)!)
+                viewModel: HelpSettingsViewModelImpl(
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    sessionManager: r.resolve(SessionManaging.self)!,
+                    apiManager: r.resolve(APIManager.self)!,
+                    connectivity: r.resolve(Connectivity.self)!,
+                    logger: r.resolve(FileLogger.self)!)
                 )
         }.inObjectScope(.transient)
 

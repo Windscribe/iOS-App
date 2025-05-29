@@ -396,7 +396,8 @@ struct AccountRowView: View {
             }
 
             if showDivider {
-                Divider().background(Color.black)
+                Divider()
+                    .background(.black)
             }
         }
         .onTapGesture {
