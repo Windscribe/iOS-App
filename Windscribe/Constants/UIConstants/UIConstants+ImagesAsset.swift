@@ -185,7 +185,6 @@ enum ImagesAsset {
         static let autoConnection = "auto-connection-ic-white"
         static let autoSecure = "wifi"
         static let preferredProtocol = "preferred_protocol"
-        static let autoSecureNew = "auto_secure_new"
     }
 
     enum Connection {
@@ -194,6 +193,7 @@ enum ImagesAsset {
         static let killSwitch = "kill-switch-white"
         static let allowLan = "allow-lan-white"
         static let circumventCensorship = "circumvent-censorship"
+        static let autoSecure = "wifi"
     }
 
     enum SignalBars {

@@ -123,7 +123,8 @@ class ViewModels: Assembly {
             ConnectionSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                preferences: r.resolve(Preferences.self)!
+                preferences: r.resolve(Preferences.self)!,
+                router: r.resolve(PreferencesNavigationRouter.self)!
             )
         }.inObjectScope(.transient)
 
@@ -528,9 +529,22 @@ class ViewControllerModule: Assembly {
                 viewModel: ConnectionSettingsViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                    preferences: r.resolve(Preferences.self)!
+                    preferences: r.resolve(Preferences.self)!,
+                    router: r.resolve(PreferencesNavigationRouter.self)!
                 )
            )
+        }.inObjectScope(.transient)
+
+        container.register(NetworkSecurityView.self) { r in
+            NetworkSecurityView(
+                viewModel: NetworkOptionsSecurityViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    preferences: r.resolve(Preferences.self)!,
+                    connectivity: r.resolve(Connectivity.self)!,
+                    localDatabase: r.resolve(LocalDatabase.self)!
+                )
+            )
         }.inObjectScope(.transient)
 
         container.register(RobertSettingsView.self) { r in

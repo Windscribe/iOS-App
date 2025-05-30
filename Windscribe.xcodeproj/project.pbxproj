@@ -264,6 +264,9 @@
 		1ED6167C2DD75B78006CDC99 /* AboutItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6167B2DD75B77006CDC99 /* AboutItemType.swift */; };
 		1ED6167E2DD75BF9006CDC99 /* PreferencesActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */; };
 		1ED616812DE4906A006CDC99 /* ConnectionsEntryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */; };
+		1ED616872DE61B8E006CDC99 /* NetworkOptionsSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616862DE61B77006CDC99 /* NetworkOptionsSettingsViewModel.swift */; };
+		1ED616892DE61B98006CDC99 /* NetworkOptionsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616882DE61B97006CDC99 /* NetworkOptionsSettingsView.swift */; };
+		1ED6168B2DE61BAB006CDC99 /* NetworkOptionsEntryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6168A2DE61B9E006CDC99 /* NetworkOptionsEntryType.swift */; };
 		1EDAA91A2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */; };
 		1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */; };
@@ -1568,6 +1571,9 @@
 		1ED6167B2DD75B77006CDC99 /* AboutItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutItemType.swift; sourceTree = "<group>"; };
 		1ED6167D2DD75BF7006CDC99 /* PreferencesActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesActionButton.swift; sourceTree = "<group>"; };
 		1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsEntryType.swift; sourceTree = "<group>"; };
+		1ED616862DE61B77006CDC99 /* NetworkOptionsSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOptionsSettingsViewModel.swift; sourceTree = "<group>"; };
+		1ED616882DE61B97006CDC99 /* NetworkOptionsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOptionsSettingsView.swift; sourceTree = "<group>"; };
+		1ED6168A2DE61B9E006CDC99 /* NetworkOptionsEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOptionsEntryType.swift; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
 		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
@@ -3114,6 +3120,40 @@
 				1ED616802DE49069006CDC99 /* ConnectionsEntryType.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		1ED616822DE61B51006CDC99 /* Network Options */ = {
+			isa = PBXGroup;
+			children = (
+				1ED616852DE61B68006CDC99 /* ViewModels */,
+				1ED616842DE61B63006CDC99 /* Models */,
+				1ED616832DE61B5D006CDC99 /* Views */,
+			);
+			path = "Network Options";
+			sourceTree = "<group>";
+		};
+		1ED616832DE61B5D006CDC99 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1ED616882DE61B97006CDC99 /* NetworkOptionsSettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1ED616842DE61B63006CDC99 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1ED6168A2DE61B9E006CDC99 /* NetworkOptionsEntryType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1ED616852DE61B68006CDC99 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1ED616862DE61B77006CDC99 /* NetworkOptionsSettingsViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		1EE74F742BD67B1D0031185F /* Push Notifications */ = {
@@ -4988,6 +5028,7 @@
 		F49C45912DCAB5E6007E5EF1 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
+				1ED616822DE61B51006CDC99 /* Network Options */,
 				1ED6167F2DE4904B006CDC99 /* Models */,
 				F49C45922DCAB5F8007E5EF1 /* Views */,
 				F49C45932DCAB5FF007E5EF1 /* ViewModels */,
@@ -6296,6 +6337,7 @@
 			files = (
 				59E63A0F2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift in Sources */,
 				59E63A0E2BCEBFF3002E566F /* PopUpMaintenanceLocationVC.swift in Sources */,
+				1ED616872DE61B8E006CDC99 /* NetworkOptionsSettingsViewModel.swift in Sources */,
 				AF34694E22384AF400A2BDC1 /* StaticIPListFooterView.swift in Sources */,
 				1E60E01A2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
 				C580FDFA2B4DE80A004FA857 /* AppNetwork.swift in Sources */,
@@ -6515,6 +6557,7 @@
 				E998651328A565130091B6A3 /* NetworkViewController.swift in Sources */,
 				C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */,
+				1ED6168B2DE61BAB006CDC99 /* NetworkOptionsEntryType.swift in Sources */,
 				F469F0D42D7BA5E0004DC6AB /* BestLocationCell.swift in Sources */,
 				F469F0D92D7BA74E004DC6AB /* UIImage+GIF.swift in Sources */,
 				AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */,
@@ -6804,6 +6847,7 @@
 				1EA91DDA2BEA7F2C00496DF8 /* MainViewController+Status.swift in Sources */,
 				F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */,
+				1ED616892DE61B98006CDC99 /* NetworkOptionsSettingsView.swift in Sources */,
 				AF36A1AD237C7FC500BDDCDB /* Score.swift in Sources */,
 				1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */,
 				AF1442B1220CAE9B006B8B5C /* Group.swift in Sources */,

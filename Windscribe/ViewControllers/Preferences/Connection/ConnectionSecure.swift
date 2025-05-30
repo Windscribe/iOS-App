@@ -48,7 +48,7 @@ enum ConnectionSecure {
         case .allowLan:
             return TextsAsset.Connection.allowLanDescription
         case .autoSecure:
-            return TextsAsset.autoSecureNewDescription
+            return TextsAsset.Connection.autoSecureNewDescription
         case .hapticFeeback:
             return "Explain me!".localized
         case .circumventCensorship:

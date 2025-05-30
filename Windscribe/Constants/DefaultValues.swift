@@ -27,6 +27,7 @@ enum DefaultValues {
     static let allowLANMode = false
     static let autoSecureNewNetworks = true
     static let hapticFeedback = true
+    static let autoSecure = true
     static let showServerHealth = false
     static let circumventCensorship = false
     static let aspectRatio = "Stretch"
