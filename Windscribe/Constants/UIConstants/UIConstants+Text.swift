@@ -472,6 +472,7 @@ enum TextsAsset {
         static var connectedDNS: String { return "Connected DNS".localized }
         static var allowLan: String { return "Allow LAN Traffic".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
+        static var autoSecure: String { "Auto-Secure".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
@@ -496,6 +497,9 @@ enum TextsAsset {
         }
         static var connectedDNSInvalidAlertBody: String {
             return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
+        }
+        static var autoSecureNewDescription: String {
+            return "Mark all newly encountered networks as Secured.".localized
         }
     }
 
@@ -570,7 +574,6 @@ enum TextsAsset {
         static let languagesList: [Languages] = Languages.allCases
         static var hapticFeedback: String { "Haptic Feedback".localized }
         static var showServerHealth: String { "Show Location Load".localized }
-        static var autoSecure: String { "Auto-Secure".localized }
         static var enabled: String { "Enabled".localized }
         static var disabled: String { "Disabled".localized }
         static var customBackground: String { "Custom Background".localized }
@@ -870,12 +873,16 @@ enum TextsAsset {
             return "Network Security".localized
         }
 
+        static var header: String {
+            return "Windscribe will auto-disconnect when you join a network tagged \"Unsecured\".".localized
+        }
+
         static var trusted: String {
-            return "Unsecured".localized
+            return "Secured".localized
         }
 
         static var untrusted: String {
-            return "Secured".localized
+            return "Unsecured".localized
         }
 
         static var forget: String {
@@ -1693,10 +1700,6 @@ enum TextsAsset {
 
     static var autoSecureNew: String {
         return "Auto-Secure New Networks".localized
-    }
-
-    static var autoSecureNewDescription: String {
-        return "Mark all newly encountered networks as Secured.".localized
     }
 
     enum NoEmailPrompt {

@@ -40,6 +40,8 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
             return AnyView(Assembler.resolve(EnterEmailView.self))
         case .login:
             return AnyView(Assembler.resolve(LoginView.self))
+        case .networkSecurity:
+            return AnyView(Assembler.resolve(NetworkSecurityView.self))
         case .signupGhost:
             let context = SignupFlowContext()
             context.isFromGhostAccount = true

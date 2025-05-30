@@ -33,7 +33,7 @@ enum GeneralViewType: SelectionViewType {
         case .firewall: ImagesAsset.General.firewall
         case .killSwitch: ImagesAsset.Connection.killSwitch
         case .allowLan: ImagesAsset.Connection.allowLan
-        case .autoConnection: ImagesAsset.General.autoSecureNew
+        case .autoConnection: ImagesAsset.Connection.autoSecure
         case .connectionMode: ImagesAsset.Connection.connectionMode
         case .autoSecure: ImagesAsset.General.autoSecure
         case .preferredProtocol: ImagesAsset.General.preferredProtocol
@@ -53,7 +53,7 @@ enum GeneralViewType: SelectionViewType {
         case .allowLan: TextsAsset.Connection.allowLan
         case .autoConnection: TextsAsset.autoSecureNew
         case .connectionMode: TextsAsset.Connection.connectionMode
-        case .autoSecure: TextsAsset.General.autoSecure
+        case .autoSecure: TextsAsset.Connection.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.title
         case .connectedDNS: TextsAsset.Connection.connectedDNS
         case .version: TextsAsset.LookFeel.versionTitle
@@ -69,7 +69,7 @@ enum GeneralViewType: SelectionViewType {
         case .firewall: TextsAsset.firewallDescription
         case .killSwitch: TextsAsset.Connection.killSwitchDescription
         case .allowLan: TextsAsset.Connection.allowLanDescription
-        case .autoConnection: TextsAsset.autoSecureNewDescription
+        case .autoConnection: TextsAsset.Connection.autoSecureNewDescription
         case .connectionMode: TextsAsset.Connection.connectionMode
         case .autoSecure: TextsAsset.PreferencesDescription.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.newDescription

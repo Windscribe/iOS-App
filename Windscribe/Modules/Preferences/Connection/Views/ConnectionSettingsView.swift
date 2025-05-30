@@ -14,6 +14,7 @@ struct ConnectionSettingsView: View {
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: ConnectionSettingsViewModelImpl
+    @StateObject private var router: PreferencesNavigationRouter
 
     init(viewModel: any ConnectionSettingsViewModel) {
         guard let model = viewModel as? ConnectionSettingsViewModelImpl else {
@@ -21,28 +22,54 @@ struct ConnectionSettingsView: View {
         }
 
         _viewModel = StateObject(wrappedValue: model)
+        _router = StateObject(wrappedValue: viewModel.router)
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
-            ScrollView {
-                VStack(spacing: 14) {
-                    ForEach(viewModel.entries, id: \.self) { entry in
-                        MenuEntryView(item: entry, action: { actionType in
-                            viewModel.entrySelected(entry, action: actionType)
-                        })
-                    }
+        ScrollView {
+            VStack(spacing: 14) {
+                ForEach(viewModel.entries, id: \.self) { entry in
+                    MenuEntryView(item: entry, action: { actionType in
+                        viewModel.entrySelected(entry, action: actionType)
+                    })
                 }
                 .padding(.top, 8)
             }
-            .dynamicTypeSize(dynamicTypeRange)
+            .padding(.top, 8)
         }
+        .dynamicTypeSize(dynamicTypeRange)
+        .background(Color.nightBlue)
+        .navigationTitle(TextsAsset.Connection.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .overlay(routeLink)
         .sheet(item: $viewModel.safariURL) { url in
             SafariView(url: url)
         }
-        .navigationTitle(TextsAsset.Connection.title)
-        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private var routeLink: some View {
+        NavigationLink(
+            destination: routeDestination,
+            isActive: Binding(
+                get: { viewModel.router.activeRoute != nil },
+                set: { newValue in
+                    if !newValue {
+                        viewModel.router.pop()
+                    }
+                }
+            )
+        ) {
+            EmptyView()
+        }
+        .hidden()
+    }
+    @ViewBuilder
+    private var routeDestination: some View {
+        if let route = viewModel.router.activeRoute {
+            viewModel.router.createView(for: route)
+        } else {
+            EmptyView()
+        }
     }
 }
