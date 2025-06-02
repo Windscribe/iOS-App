@@ -886,7 +886,6 @@
 		C56FCBCE2B2A41BB008DE7D4 /* Routers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBCD2B2A41BB008DE7D4 /* Routers.swift */; };
 		C56FCBD02B2A428C008DE7D4 /* PreferenceMainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBCF2B2A428C008DE7D4 /* PreferenceMainRouter.swift */; };
 		C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBD12B2A42B9008DE7D4 /* RouteIDs.swift */; };
-		C56FCBDB2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDA2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift */; };
 		C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBDF2B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
 		C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */; };
@@ -1177,6 +1176,16 @@
 		F47D8E752D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */; };
 		F47EC5242DE7B69900AF5089 /* HelpSettingsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5232DE7B69900AF5089 /* HelpSettingsItem.swift */; };
 		F47EC5262DE8D74700AF5089 /* HelpInfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5252DE8D74700AF5089 /* HelpInfoCardView.swift */; };
+		F47EC5322DEA1B6000AF5089 /* SendTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5312DEA1B6000AF5089 /* SendTicketView.swift */; };
+		F47EC5342DEA1B6900AF5089 /* SendTicketViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5332DEA1B6900AF5089 /* SendTicketViewModel.swift */; };
+		F47EC5362DEA1B7800AF5089 /* AdvancedParametersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5352DEA1B7800AF5089 /* AdvancedParametersView.swift */; };
+		F47EC5382DEA1B8400AF5089 /* AdvancedParametersViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5372DEA1B8400AF5089 /* AdvancedParametersViewModel.swift */; };
+		F47EC53A2DEA1B9100AF5089 /* DebugLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5392DEA1B9100AF5089 /* DebugLogView.swift */; };
+		F47EC53C2DEA1BA300AF5089 /* DebugLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC53B2DEA1BA300AF5089 /* DebugLogViewModel.swift */; };
+		F47EC53F2DEA27A400AF5089 /* HelpNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC53E2DEA27A400AF5089 /* HelpNavigationRouter.swift */; };
+		F47EC5412DEA27B200AF5089 /* HelpRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5402DEA27B200AF5089 /* HelpRouteID.swift */; };
+		F47EC5432DEA47B100AF5089 /* Task+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5422DEA47B100AF5089 /* Task+Extension.swift */; };
+		F47EC5442DEA47B100AF5089 /* Task+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47EC5422DEA47B100AF5089 /* Task+Extension.swift */; };
 		F4843A952D89F7300034330F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A942D89F7300034330F /* SafariView.swift */; };
 		F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A972D89F7DE0034330F /* URL+Extension.swift */; };
 		F4843A992D89F7DE0034330F /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A972D89F7DE0034330F /* URL+Extension.swift */; };
@@ -1929,7 +1938,6 @@
 		C56FCBCD2B2A41BB008DE7D4 /* Routers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routers.swift; sourceTree = "<group>"; };
 		C56FCBCF2B2A428C008DE7D4 /* PreferenceMainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferenceMainRouter.swift; sourceTree = "<group>"; };
 		C56FCBD12B2A42B9008DE7D4 /* RouteIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteIDs.swift; sourceTree = "<group>"; };
-		C56FCBDA2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceParamsErrors.swift; sourceTree = "<group>"; };
 		C56FCBDC2B2B8C52008DE7D4 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		C56FCBE72B2B8E40008DE7D4 /* SharedKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeys.swift; sourceTree = "<group>"; };
 		C56FCBEF2B2B9F11008DE7D4 /* Assembler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembler.swift; sourceTree = "<group>"; };
@@ -2149,6 +2157,15 @@
 		F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+Accessibility.swift"; sourceTree = "<group>"; };
 		F47EC5232DE7B69900AF5089 /* HelpSettingsItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSettingsItem.swift; sourceTree = "<group>"; };
 		F47EC5252DE8D74700AF5089 /* HelpInfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpInfoCardView.swift; sourceTree = "<group>"; };
+		F47EC5312DEA1B6000AF5089 /* SendTicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTicketView.swift; sourceTree = "<group>"; };
+		F47EC5332DEA1B6900AF5089 /* SendTicketViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendTicketViewModel.swift; sourceTree = "<group>"; };
+		F47EC5352DEA1B7800AF5089 /* AdvancedParametersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedParametersView.swift; sourceTree = "<group>"; };
+		F47EC5372DEA1B8400AF5089 /* AdvancedParametersViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedParametersViewModel.swift; sourceTree = "<group>"; };
+		F47EC5392DEA1B9100AF5089 /* DebugLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogView.swift; sourceTree = "<group>"; };
+		F47EC53B2DEA1BA300AF5089 /* DebugLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugLogViewModel.swift; sourceTree = "<group>"; };
+		F47EC53E2DEA27A400AF5089 /* HelpNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpNavigationRouter.swift; sourceTree = "<group>"; };
+		F47EC5402DEA27B200AF5089 /* HelpRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpRouteID.swift; sourceTree = "<group>"; };
+		F47EC5422DEA47B100AF5089 /* Task+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Extension.swift"; sourceTree = "<group>"; };
 		F4843A942D89F7300034330F /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		F4843A972D89F7DE0034330F /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		F485CBB92D4D52D40063EA3A /* Then.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Then.swift; sourceTree = "<group>"; };
@@ -3516,6 +3533,7 @@
 				F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */,
 				F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */,
 				1E09747C2D7F33F1003F7AA7 /* RxRealm+Extension.swift */,
+				F47EC5422DEA47B100AF5089 /* Task+Extension.swift */,
 				F469F0E92D7F8FFC004DC6AB /* View+Extension.swift */,
 			);
 			path = Extensions;
@@ -4108,7 +4126,6 @@
 			children = (
 				C57668ED2B28F3C4004EA3D7 /* AdvanceParamsViewController.swift */,
 				C57668EF2B28F3F2004EA3D7 /* AdvanceParamsViewModel.swift */,
-				C56FCBDA2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift */,
 			);
 			path = AdvanceParams;
 			sourceTree = "<group>";
@@ -4784,6 +4801,100 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		F47EC5272DEA198200AF5089 /* DebugLog */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC52F2DEA1A5400AF5089 /* Views */,
+				F47EC5302DEA1A5B00AF5089 /* ViewModels */,
+			);
+			path = DebugLog;
+			sourceTree = "<group>";
+		};
+		F47EC5282DEA198800AF5089 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				F49C459F2DCAC3B4007E5EF1 /* Views */,
+				F49C45A02DCAC3E1007E5EF1 /* ViewModels */,
+				F47EC5202DE7B66C00AF5089 /* Models */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		F47EC5292DEA19A200AF5089 /* AdvancedParameter */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC52D2DEA1A4400AF5089 /* Views */,
+				F47EC52E2DEA1A4A00AF5089 /* ViewModels */,
+			);
+			path = AdvancedParameter;
+			sourceTree = "<group>";
+		};
+		F47EC52A2DEA19FA00AF5089 /* SendTicket */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC52B2DEA1A0B00AF5089 /* Views */,
+				F47EC52C2DEA1A1200AF5089 /* ViewModels */,
+			);
+			path = SendTicket;
+			sourceTree = "<group>";
+		};
+		F47EC52B2DEA1A0B00AF5089 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC5312DEA1B6000AF5089 /* SendTicketView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F47EC52C2DEA1A1200AF5089 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC5332DEA1B6900AF5089 /* SendTicketViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F47EC52D2DEA1A4400AF5089 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC5352DEA1B7800AF5089 /* AdvancedParametersView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F47EC52E2DEA1A4A00AF5089 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC5372DEA1B8400AF5089 /* AdvancedParametersViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F47EC52F2DEA1A5400AF5089 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC5392DEA1B9100AF5089 /* DebugLogView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F47EC5302DEA1A5B00AF5089 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC53B2DEA1BA300AF5089 /* DebugLogViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F47EC53D2DEA276400AF5089 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				F47EC53E2DEA27A400AF5089 /* HelpNavigationRouter.swift */,
+				F47EC5402DEA27B200AF5089 /* HelpRouteID.swift */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
 		F4843A932D89F7160034330F /* Interface */ = {
 			isa = PBXGroup;
 			children = (
@@ -5115,9 +5226,10 @@
 		F49C459B2DCAC2A0007E5EF1 /* Help */ = {
 			isa = PBXGroup;
 			children = (
-				F49C459F2DCAC3B4007E5EF1 /* Views */,
-				F49C45A02DCAC3E1007E5EF1 /* ViewModels */,
-				F47EC5202DE7B66C00AF5089 /* Models */,
+				F47EC5282DEA198800AF5089 /* Main */,
+				F47EC52A2DEA19FA00AF5089 /* SendTicket */,
+				F47EC5292DEA19A200AF5089 /* AdvancedParameter */,
+				F47EC5272DEA198200AF5089 /* DebugLog */,
 			);
 			path = Help;
 			sourceTree = "<group>";
@@ -5195,6 +5307,7 @@
 			children = (
 				F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */,
 				F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */,
+				F47EC53D2DEA276400AF5089 /* Help */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -6258,6 +6371,7 @@
 				59FC742B2C51564700021CD1 /* AppConstants.swift in Sources */,
 				59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */,
 				1E0D9D6F2C6103A3008AFF2D /* SettingsSection.swift in Sources */,
+				F47EC5442DEA47B100AF5089 /* Task+Extension.swift in Sources */,
 				59FC74712C516D9000021CD1 /* InAppPurchaseManager.swift in Sources */,
 				5986AB512C473FBC00167023 /* UIFont+Extension.swift in Sources */,
 				F40419372D822ECF0005EF97 /* AppReviewManaging.swift in Sources */,
@@ -6344,6 +6458,7 @@
 				F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */,
 				1A9DB34B28115D8500C3EC1C /* LanguageViewController.swift in Sources */,
 				AF36A1FD237DC02200BDDCDB /* APIMessage.swift in Sources */,
+				F47EC5322DEA1B6000AF5089 /* SendTicketView.swift in Sources */,
 				C5A930F42B45A3880001CFA0 /* FileLogger.swift in Sources */,
 				AF0CA559223C49020048D71C /* Array+Extension.swift in Sources */,
 				C50F20C62B61760000266B23 /* CoreModule.swift in Sources */,
@@ -6388,6 +6503,7 @@
 				1AE6D2C12838BBF900276C7D /* AccountEditCell.swift in Sources */,
 				C59C074429424CF300D6C3C1 /* Proxy.swift in Sources */,
 				AFFA716021C43A8E00349195 /* ServerCredentials.swift in Sources */,
+				F47EC53F2DEA27A400AF5089 /* HelpNavigationRouter.swift in Sources */,
 				F4693E4F2DB7CD2800ECD6C4 /* CustomBackgroundEffectType.swift in Sources */,
 				C59C073F29406EB800D6C3C1 /* ProxyInfo.swift in Sources */,
 				C512546F2DE76D06003A58BD /* SSOSession.swift in Sources */,
@@ -6476,6 +6592,7 @@
 				F4B8E2212DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift in Sources */,
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
 				F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */,
+				F47EC5342DEA1B6900AF5089 /* SendTicketViewModel.swift in Sources */,
 				C535D29927E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				C5D0E40729BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				1AE6D2B5283771D000276C7D /* AboutViewModel.swift in Sources */,
@@ -6511,6 +6628,7 @@
 				C57668E42B2790AA004EA3D7 /* APIResult.swift in Sources */,
 				1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */,
 				E998651528A5683A0091B6A3 /* NetworkViewModel.swift in Sources */,
+				F47EC5362DEA1B7800AF5089 /* AdvancedParametersView.swift in Sources */,
 				F49C45C62DCD32D4007E5EF1 /* HelpSettingsView.swift in Sources */,
 				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
 				F49C45BE2DCD304E007E5EF1 /* ReferForDataSettingsView.swift in Sources */,
@@ -6554,6 +6672,7 @@
 				F485CBCA2D51411B0063EA3A /* PlanUpgradeBenefitView.swift in Sources */,
 				F4693E4C2DB028CE00ECD6C4 /* LookAndFeelViewModel.swift in Sources */,
 				AF2531B6220A27FB0001CF96 /* WifiManager.swift in Sources */,
+				F47EC53A2DEA1B9100AF5089 /* DebugLogView.swift in Sources */,
 				E998651328A565130091B6A3 /* NetworkViewController.swift in Sources */,
 				C56FCBDD2B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */,
@@ -6578,6 +6697,7 @@
 				AF0AED3F22035E9700039CAF /* FavNodesListTableViewDataSource+Delegate.swift in Sources */,
 				AF36BF0422FB11FE00FCC6F4 /* RefreshControlViewBack.swift in Sources */,
 				AF6E8A6E2215D378005887E0 /* BestNode.swift in Sources */,
+				F47EC53C2DEA1BA300AF5089 /* DebugLogViewModel.swift in Sources */,
 				E9B5AD3827DBAA7C009C6BC3 /* DynamicWireGuardConnect.swift in Sources */,
 				1A9DB3502816859E00C3EC1C /* LanguageViewModel.swift in Sources */,
 				AF0420EC21C19FE0002132DE /* Server.swift in Sources */,
@@ -6662,7 +6782,6 @@
 				AF018E0621B09FB300B225FF /* String+Extension.swift in Sources */,
 				AF3E90E3231D974C00AD192A /* PrivacyViewController+UI.swift in Sources */,
 				C5A930E42B44710E0001CFA0 /* ServerRepository.swift in Sources */,
-				C56FCBDB2B2A94FA008DE7D4 /* AdvanceParamsErrors.swift in Sources */,
 				1E3F776A2DB7E5E2008308A8 /* FreeAccountFooterView.swift in Sources */,
 				C5A930F72B45A4FC0001CFA0 /* FileLogFormater.swift in Sources */,
 				598F173329EEF500007137A4 /* OpenVPNConnectionInfo.swift in Sources */,
@@ -6798,6 +6917,7 @@
 				F499353F2DA9953900108558 /* SoundManaging.swift in Sources */,
 				E998651B28AB29540091B6A3 /* NetworkSecurityViewModel.swift in Sources */,
 				AFD16F1122775E9F00E9FAD3 /* Notifications.swift in Sources */,
+				F47EC5412DEA27B200AF5089 /* HelpRouteID.swift in Sources */,
 				C571C6642C1212FF00786DA5 /* ConnectivityImpl+Hotspot.swift in Sources */,
 				C580FE1E2B50799C004FA857 /* SKPaymentTransaction+Ext.swift in Sources */,
 				59E63A2E2BD145F1002E566F /* MainViewModel.swift in Sources */,
@@ -6824,6 +6944,7 @@
 				E9425BA227437064008B8786 /* FilePaths.swift in Sources */,
 				AF36A1A7237C7C2800BDDCDB /* ViewLeaderboardViewController.swift in Sources */,
 				F4693E512DB7CDB700ECD6C4 /* CustomBackgroundEffectView.swift in Sources */,
+				F47EC5432DEA47B100AF5089 /* Task+Extension.swift in Sources */,
 				C5A930DA2B43EF0D0001CFA0 /* StaticIpRepository.swift in Sources */,
 				1E5553BD2D8D883700F16AF0 /* ConnectionStateInfoView.swift in Sources */,
 				1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */,
@@ -6852,6 +6973,7 @@
 				1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */,
 				AF1442B1220CAE9B006B8B5C /* Group.swift in Sources */,
 				F4888E362D931364005EF149 /* NavigationRouterModifier.swift in Sources */,
+				F47EC5382DEA1B8400AF5089 /* AdvancedParametersViewModel.swift in Sources */,
 				1E60E0172CAD664300623CD5 /* ContainerResolver.swift in Sources */,
 				1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */,
 				AF36A1FF237DC3FE00BDDCDB /* MainViewController+Motion.swift in Sources */,
