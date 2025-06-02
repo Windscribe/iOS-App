@@ -25,6 +25,7 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
     @Published private(set) var sendLogStatus: HelpLogStatus = .idle
     @Published var alert: HelpAlert?
     @Published var safariURL: URL?
+    @Published var selectedRoute: HelpRoute?
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let sessionManager: SessionManaging
@@ -92,7 +93,7 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
             .navigation(icon: ImagesAsset.Preferences.advanceParams,
                         title: TextsAsset.Preferences.advanceParameters,
                         subtitle: TextsAsset.Help.advanceParamDescription,
-                        route: .advanceParams),
+                        route: .advancedParams),
 
             .navigation(icon: ImagesAsset.Help.debugView,
                         title: TextsAsset.Debug.viewLog,
@@ -107,7 +108,7 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
             baseEntries.insert(.navigation(icon: ImagesAsset.Help.ticket,
                                            title: TextsAsset.Help.sendTicket,
                                            subtitle: TextsAsset.Help.sendUsATicket,
-                                           route: .submitTicket), at: 2)
+                                           route: .sendTicket), at: 2)
         }
 
         entries = baseEntries
@@ -119,9 +120,8 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
             if let url = URL(string: urlString) {
                 safariURL = url
             }
-        case let .navigation(_, title, _, route):
-            print("Navigate to: \(title) \(route)")
-            // TODO: Call navigation closure / delegate if needed later
+        case let .navigation(_, _, _, route):
+            selectedRoute = route
         case .sendDebugLog:
             submitDebugLog()
         default: break

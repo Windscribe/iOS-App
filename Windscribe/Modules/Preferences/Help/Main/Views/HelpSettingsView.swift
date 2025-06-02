@@ -12,13 +12,16 @@ struct HelpSettingsView: View {
 
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
-    @StateObject private var viewModel: HelpSettingsViewModelImpl
 
-    init(viewModel: any HelpSettingsViewModel) {
+    @StateObject private var viewModel: HelpSettingsViewModelImpl
+    @StateObject private var router: HelpNavigationRouter
+
+    init(viewModel: any HelpSettingsViewModel, router: HelpNavigationRouter) {
         guard let model = viewModel as? HelpSettingsViewModelImpl else {
             fatalError("HelpSettingsView must be initialized properly with ViewModelImpl")
         }
         _viewModel = StateObject(wrappedValue: model)
+        _router = StateObject(wrappedValue: router)
     }
 
     var body: some View {
@@ -38,6 +41,8 @@ struct HelpSettingsView: View {
         }
 
         .dynamicTypeSize(dynamicTypeRange)
+        .withRouter(router)
+        .overlay(routeLink)
         .navigationTitle(TextsAsset.Help.helpMe)
         .navigationBarTitleDisplayMode(.inline)
         .alert(item: $viewModel.alert) { alert in
@@ -49,12 +54,26 @@ struct HelpSettingsView: View {
         .sheet(item: $viewModel.safariURL) { url in
             SafariView(url: url)
         }
+        .onChange(of: viewModel.selectedRoute) { route in
+            switch route {
+            case .sendTicket:
+                router.navigate(to: .sendTicket)
+            case .advancedParams:
+                router.navigate(to: .advancedParameters)
+            case .viewLog:
+                router.navigate(to: .debugLog)
+            default:
+                break
+            }
+
+            viewModel.selectedRoute = nil
+        }
     }
 
     @ViewBuilder
     private func renderEntry(_ entry: HelpMenuEntryType) -> some View {
         switch entry {
-        case let .link(icon, title, subtitle, urlString):
+        case let .link(icon, title, subtitle, _):
             HelpInfoCardView(icon: icon, title: title, subtitle: subtitle) {
                 viewModel.entrySelected(entry)
             }
@@ -84,6 +103,32 @@ struct HelpSettingsView: View {
                                  status: viewModel.sendLogStatus) {
                 viewModel.entrySelected(.sendDebugLog(icon: icon, title: title))
             }
+        }
+    }
+
+    @ViewBuilder
+    private var routeLink: some View {
+        NavigationLink(
+            destination: routeDestination,
+            isActive: Binding(
+                get: { router.activeRoute != nil },
+                set: { newValue in
+                    if !newValue {
+                        router.pop()
+                    }
+                }
+            )
+        ) {
+            EmptyView()
+        }
+        .hidden()
+    }
+    @ViewBuilder
+    private var routeDestination: some View {
+        if let route = router.activeRoute {
+            router.createView(for: route)
+        } else {
+            EmptyView()
         }
     }
 }

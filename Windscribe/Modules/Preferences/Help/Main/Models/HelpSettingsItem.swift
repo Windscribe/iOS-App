@@ -23,8 +23,8 @@ enum HelpMenuEntryType: Hashable {
 }
 
 enum HelpRoute: Hashable {
-    case submitTicket
-    case advanceParams
+    case sendTicket
+    case advancedParams
     case viewLog
 }
 

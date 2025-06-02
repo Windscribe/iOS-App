@@ -129,3 +129,20 @@ extension ObservableType {
             .eraseToAnyPublisher()
     }
 }
+
+
+// MARK: Utility Publisher for Synchronous Void-Returning Functions
+
+/// Wraps a synchronous, non-throwing `Void`-returning function into a Combine-compatible `AnyPublisher`.
+/// This is useful when integrating legacy imperative APIs into Combine pipelines without altering the original function.
+func asVoidPublisher(_ action: @escaping () -> Void) -> AnyPublisher<Void, Error> {
+    return Deferred {
+        Future<Void, Error> { promise in
+            // Execute the synchronous function
+            action()
+            // Immediately succeed with an empty value
+            promise(.success(()))
+        }
+    }
+    .eraseToAnyPublisher()
+}

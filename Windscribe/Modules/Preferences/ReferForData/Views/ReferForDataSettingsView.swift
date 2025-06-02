@@ -65,6 +65,7 @@ struct ReferForDataSettingsView: View {
                             .background(Color.seaGreen)
                             .foregroundColor(.midnight)
                             .cornerRadius(24)
+
                     })
                     .frame(height: 48)
                     .padding(.horizontal, 24)

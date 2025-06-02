@@ -165,6 +165,24 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any SendTicketViewModel).self) { r in
+            SendTicketViewModelImpl(
+                logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any AdvancedParametersViewModel).self) { r in
+            AdvancedParametersViewModelImpl(
+                preferences: r.resolve(Preferences.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.transient)
+
+        container.register((any DebugLogViewModel).self) { r in
+            DebugLogViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any AboutSettingsViewModel).self) { r in
             AboutSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!)
@@ -587,7 +605,31 @@ class ViewControllerModule: Assembly {
                     sessionManager: r.resolve(SessionManaging.self)!,
                     apiManager: r.resolve(APIManager.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
+                    logger: r.resolve(FileLogger.self)!),
+                router: r.resolve(HelpNavigationRouter.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(SendTicketView.self) { r in
+            SendTicketView(
+                viewModel: SendTicketViewModelImpl(
                     logger: r.resolve(FileLogger.self)!)
+                )
+        }.inObjectScope(.transient)
+
+        container.register(AdvancedParametersView.self) { r in
+            AdvancedParametersView(
+                viewModel: AdvancedParametersViewModelImpl(
+                    preferences: r.resolve(Preferences.self)!,
+                    apiManager: r.resolve(APIManager.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                )
+        }.inObjectScope(.transient)
+
+        container.register(DebugLogView.self) { r in
+            DebugLogView(
+                viewModel: DebugLogViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
                 )
         }.inObjectScope(.transient)
 
@@ -889,6 +931,9 @@ class Routers: Assembly {
         }.inObjectScope(.transient)
         container.register(PreferencesNavigationRouter.self) { _ in
             PreferencesNavigationRouter()
+        }.inObjectScope(.transient)
+        container.register(HelpNavigationRouter.self) { _ in
+            HelpNavigationRouter()
         }.inObjectScope(.transient)
         container.register(HomeRouter.self) { _ in
             HomeRouter()
