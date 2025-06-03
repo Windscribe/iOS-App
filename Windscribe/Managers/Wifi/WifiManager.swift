@@ -169,7 +169,8 @@ class WifiManager {
     }
 
     private func updateSelectedPreferences() {
-        guard let result = connectedSecuredNetwork else { return }
+        guard let result = connectedSecuredNetwork,
+        !result.isInvalidated else { return }
         if (result.protocolType != selectedProtocol) || (result.port != selectedPort) {
             logger.logI(self, "Protocol for \"\(result.SSID)\" is set to \(result.protocolType):\(result.port)")
             selectedProtocol = result.protocolType

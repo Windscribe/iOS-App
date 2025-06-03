@@ -14,7 +14,7 @@ struct ConnectionSettingsView: View {
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: ConnectionSettingsViewModelImpl
-    @StateObject private var router: PreferencesNavigationRouter
+    @StateObject private var router: ConnectionsNavigationRouter
 
     init(viewModel: any ConnectionSettingsViewModel) {
         guard let model = viewModel as? ConnectionSettingsViewModelImpl else {

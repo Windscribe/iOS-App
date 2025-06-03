@@ -41,7 +41,7 @@ class ConnectionModeView: UIStackView {
 
     lazy var protocolView: ConnectionModeItemView = {
         let vw = ConnectionModeItemView(isDarkMode: isDarkMode)
-        vw.titleLabel.text = TextsAsset.General.protocolType
+        vw.titleLabel.text = TextsAsset.Connection.protocolType
         vw.dropdownView.setTitle(currentProtocol)
         vw.delegate = self
         vw.addBottomDivider()
@@ -51,7 +51,7 @@ class ConnectionModeView: UIStackView {
 
     lazy var portView: ConnectionModeItemView = {
         let vw = ConnectionModeItemView(isDarkMode: isDarkMode)
-        vw.titleLabel.text = TextsAsset.General.port
+        vw.titleLabel.text = TextsAsset.Connection.port
         vw.delegate = self
         vw.dropdownView.setTitle(currentPort)
         vw.anchor(height: 48)
