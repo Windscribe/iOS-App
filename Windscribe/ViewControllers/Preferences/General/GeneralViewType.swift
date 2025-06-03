@@ -36,7 +36,7 @@ enum GeneralViewType: SelectionViewType {
         case .autoConnection: ImagesAsset.Connection.autoSecure
         case .connectionMode: ImagesAsset.Connection.connectionMode
         case .autoSecure: ImagesAsset.General.autoSecure
-        case .preferredProtocol: ImagesAsset.General.preferredProtocol
+        case .preferredProtocol: ImagesAsset.Connection.preferredProtocol
         case .connectedDNS: ImagesAsset.customDns
         default: ""
         }
@@ -71,7 +71,7 @@ enum GeneralViewType: SelectionViewType {
         case .allowLan: TextsAsset.Connection.allowLanDescription
         case .autoConnection: TextsAsset.Connection.autoSecureNewDescription
         case .connectionMode: TextsAsset.Connection.connectionMode
-        case .autoSecure: TextsAsset.PreferencesDescription.autoSecure
+        case .autoSecure: TextsAsset.Connection.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.newDescription
         case .connectedDNS: TextsAsset.Connection.connectedDNSDescription
         case .version: ""

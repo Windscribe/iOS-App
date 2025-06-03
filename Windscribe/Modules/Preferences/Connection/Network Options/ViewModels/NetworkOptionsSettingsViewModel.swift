@@ -16,8 +16,10 @@ protocol NetworkOptionsSecurityViewModel: ObservableObject {
     var autoSecureEntry: NetworkOptionsEntryType? { get set }
     var currentNetworkEntry: NetworkOptionsEntryType? { get set }
     var networkListEntry: NetworkOptionsEntryType? { get set }
+    var router: ConnectionsNavigationRouter { get }
 
     func entrySelected(_ entry: NetworkOptionsEntryType, action: MenuEntryActionResponseType)
+    func loadEntries()
 }
 
 class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
@@ -25,11 +27,13 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
     @Published var autoSecureEntry: NetworkOptionsEntryType?
     @Published var currentNetworkEntry: NetworkOptionsEntryType?
     @Published var networkListEntry: NetworkOptionsEntryType?
+    @Published var router: ConnectionsNavigationRouter
 
     private var cancellables = Set<AnyCancellable>()
     private var networks: [WifiNetwork] = []
     private var currentNetwork: AppNetwork?
     private var isAutoSecureEnabled = DefaultValues.autoSecure
+    private var hasLoaded = false
 
     // MARK: - Dependencies
     private let logger: FileLogger
@@ -42,15 +46,16 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
          lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
          connectivity: Connectivity,
-         localDatabase: LocalDatabase) {
+         localDatabase: LocalDatabase,
+         router: ConnectionsNavigationRouter) {
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
         self.connectivity = connectivity
         self.localDatabase = localDatabase
+        self.router = router
 
         bindSubjects()
-        reloadItems()
     }
 
     private func bindSubjects() {
@@ -63,7 +68,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
                 }
             }, receiveValue: { [weak self] isDark in
                 self?.isDarkMode = isDark
-                self?.reloadItems()
+                self?.reloadEntries()
             })
             .store(in: &cancellables)
 
@@ -77,7 +82,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] enabled in
                 guard let self = self else { return }
                 self.isAutoSecureEnabled = enabled ?? DefaultValues.autoSecure
-                self.reloadItems()
+                self.reloadEntries()
             })
             .store(in: &cancellables)
 
@@ -91,7 +96,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] network in
                 guard let self = self else { return }
                 self.currentNetwork = network
-                self.reloadItems()
+                self.reloadEntries()
             })
             .store(in: &cancellables)
 
@@ -105,26 +110,40 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] networks in
                 guard let self = self else { return }
                 self.networks = networks
-                self.reloadItems()
+                self.reloadEntries()
             })
             .store(in: &cancellables)
     }
 
-    private func reloadItems() {
+    private func reloadEntries() {
         autoSecureEntry = .autoSecure(isSelected: isAutoSecureEnabled)
         if let network = getCurrentWifiNetwork() {
             currentNetworkEntry = .network(info: NetworkEntryInfo(name: network.SSID, isSecured: !network.status))
+        } else {
+            currentNetworkEntry = nil
         }
 
         if networks.count > 0 {
             var mappedNetworks = networks
                 .filter { currentNetwork?.name != $0.SSID }
                 .map { NetworkEntryInfo(name: $0.SSID, isSecured: !$0.status) }
-            let firstInfo = mappedNetworks.removeFirst()
-            networkListEntry = .networkList(info: firstInfo, otherNetworks: mappedNetworks)
+            if mappedNetworks.count >= 1 {
+                let firstInfo = mappedNetworks.removeFirst()
+                networkListEntry = .networkList(info: firstInfo, otherNetworks: mappedNetworks)
+            } else {
+                networkListEntry = nil
+            }
+        } else {
+            networkListEntry = nil
         }
+        hasLoaded = true
     }
-
+    
+    func loadEntries() {
+        guard !hasLoaded else { return }
+        reloadEntries()
+    }
+    
     private func getCurrentWifiNetwork() -> WifiNetwork? {
         guard let currentSSID = currentNetwork?.name else { return nil }
         return networks.first { $0.SSID == currentSSID }
@@ -136,10 +155,25 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             if case .toggle(let isSelected, _) = action {
                 preferences.saveAutoSecureNewNetworks(autoSecure: isSelected)
             }
-        case .network:
-            print("Current network pressed")
-        case .networkList:
-            print("Other network pressed")
+        case let .network(info):
+            navigateToNetwork(named: info.name)
+        case let .networkList(info, otherNetworks):
+            if case .button(let parentId) = action {
+                if entry.id == parentId {
+                    navigateToNetwork(named: info.name)
+                } else {
+                    let index = parentId / 10
+                    if index < networks.count {
+                        navigateToNetwork(named: otherNetworks[index].name)
+                    }
+                }
+            }
+        }
+    }
+
+    private func navigateToNetwork(named: String) {
+        if let network = networks.first(where: { $0.SSID == named }) {
+            router.navigate(to: .networkSettings(network: network))
         }
     }
 }

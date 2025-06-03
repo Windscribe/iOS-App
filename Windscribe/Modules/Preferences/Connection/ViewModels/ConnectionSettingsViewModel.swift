@@ -15,7 +15,7 @@ protocol ConnectionSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get set }
     var entries: [ConnectionsEntryType] { get set }
     var safariURL: URL? { get }
-    var router: PreferencesNavigationRouter { get }
+    var router: ConnectionsNavigationRouter { get }
 
     func entrySelected(_ entry: ConnectionsEntryType, action: MenuEntryActionResponseType)
 }
@@ -24,7 +24,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     @Published var isDarkMode: Bool = false
     @Published var entries: [ConnectionsEntryType] = []
     @Published var safariURL: URL?
-    @Published var router: PreferencesNavigationRouter
+    @Published var router: ConnectionsNavigationRouter
 
     private var cancellables = Set<AnyCancellable>()
     private var killSwitchSelected = DefaultValues.killSwitch
@@ -42,7 +42,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
-         router: PreferencesNavigationRouter) {
+         router: ConnectionsNavigationRouter) {
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
@@ -192,7 +192,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     }
 
     private func networkOptionsSelected() {
-        router.navigate(to: .networkSecurity)
+        router.navigate(to: .networkOptions)
     }
 
     private func openLink(_ linkType: FeatureExplainer) {

@@ -473,6 +473,8 @@ enum TextsAsset {
         static var allowLan: String { return "Allow LAN Traffic".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
         static var autoSecure: String { "Auto-Secure".localized }
+        static var protocolType: String { "Protocol".localized }
+        static var port: String { "Port".localized }
 
         static var connectionModeDescription: String {
             return "Automatically choose the VPN protocol, or select one manually. NOTE: \"Preferred Protocol\" will override this setting.".localized
@@ -501,6 +503,7 @@ enum TextsAsset {
         static var autoSecureNewDescription: String {
             return "Mark all newly encountered networks as Secured.".localized
         }
+        static var autoSecureSettingsDescription: String { return "Windscribe auto-connects if the device connects to this network.".localized }
     }
 
     static var learnMore: String {
@@ -556,8 +559,6 @@ enum TextsAsset {
         static var pushNotificationSettings: String { "Enable Notifications".localized }
         static var openSettings: String { return "Open Settings".localized }
         static var orderLocationsBy: String { "Location Order".localized }
-        static var protocolType: String { "Protocol".localized }
-        static var port: String { "Port".localized }
         static let protocols = ["WireGuard", "IKEv2", "UDP", "TCP", "Stealth", "WStunnel"]
         static let openVpnProtocols = ["UDP", "TCP", "Stealth", "WStunnel"]
         static var version: String { "Version".localized }
@@ -630,7 +631,6 @@ enum TextsAsset {
         static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localized }
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localized }
         static var customBackground: String { return "Use the app custom background instead of the locations flag.".localized }
-        static var autoSecure: String { return "Windscribe auto-connects if the device connects to this network.".localized }
     }
 
     enum LookFeel {
@@ -865,6 +865,11 @@ enum TextsAsset {
 
         static var loginCodeTitle: String {
             "Login Code".localized
+        }
+    }
+    enum NetworkDetails {
+        static var title: String {
+            return "Network Details".localized
         }
     }
 

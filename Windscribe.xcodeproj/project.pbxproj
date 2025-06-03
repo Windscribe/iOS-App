@@ -209,6 +209,11 @@
 		1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7292C87375200566A93 /* AccountPopupModel.swift */; };
 		1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */; };
 		1EA9D72D2C8739AC00566A93 /* AccountPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */; };
+		1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */; };
+		1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */; };
+		1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */; };
+		1EB67FAB2DE9E29200729052 /* ConnectionsNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FAA2DE9E28700729052 /* ConnectionsNavigationRouter.swift */; };
+		1EB67FAD2DE9E29D00729052 /* ConnectionsRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FAC2DE9E29600729052 /* ConnectionsRouteID.swift */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -1555,6 +1560,11 @@
 		1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupViewController.swift; sourceTree = "<group>"; };
 		1EA9D7292C87375200566A93 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
 		1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountPopupViewController.xib; sourceTree = "<group>"; };
+		1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsView.swift; sourceTree = "<group>"; };
+		1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsViewModel.swift; sourceTree = "<group>"; };
+		1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsEntryTpe.swift; sourceTree = "<group>"; };
+		1EB67FAA2DE9E28700729052 /* ConnectionsNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsNavigationRouter.swift; sourceTree = "<group>"; };
+		1EB67FAC2DE9E29600729052 /* ConnectionsRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsRouteID.swift; sourceTree = "<group>"; };
 		1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Migration.swift"; sourceTree = "<group>"; };
 		1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocalDatabaseImpl+Utility.swift"; sourceTree = "<group>"; };
 		1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchLocationsViewModel.swift; sourceTree = "<group>"; };
@@ -3003,6 +3013,49 @@
 				1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */,
 			);
 			path = Account;
+			sourceTree = "<group>";
+		};
+		1EB67F9E2DE8C24300729052 /* Network Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67FA12DE8C26E00729052 /* Views */,
+				1EB67FA02DE8C26200729052 /* ViewModels */,
+				1EB67F9F2DE8C25800729052 /* Models */,
+			);
+			path = "Network Settings";
+			sourceTree = "<group>";
+		};
+		1EB67F9F2DE8C25800729052 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1EB67FA02DE8C26200729052 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		1EB67FA12DE8C26E00729052 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1EB67FA92DE9E27800729052 /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				1EB67FAC2DE9E29600729052 /* ConnectionsRouteID.swift */,
+				1EB67FAA2DE9E28700729052 /* ConnectionsNavigationRouter.swift */,
+			);
+			path = Connection;
 			sourceTree = "<group>";
 		};
 		1EC6C77C2BE10DB00036248B /* Search Locations */ = {
@@ -5139,6 +5192,7 @@
 		F49C45912DCAB5E6007E5EF1 /* Connection */ = {
 			isa = PBXGroup;
 			children = (
+				1EB67F9E2DE8C24300729052 /* Network Settings */,
 				1ED616822DE61B51006CDC99 /* Network Options */,
 				1ED6167F2DE4904B006CDC99 /* Models */,
 				F49C45922DCAB5F8007E5EF1 /* Views */,
@@ -5305,6 +5359,7 @@
 		F49C45A42DCACD6F007E5EF1 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				1EB67FA92DE9E27800729052 /* Connection */,
 				F49C45A52DCACFA7007E5EF1 /* PreferencesNavigationRouter.swift */,
 				F49C45A72DCAD00F007E5EF1 /* PreferencesRouteID.swift */,
 				F47EC53D2DEA276400AF5089 /* Help */,
@@ -6487,6 +6542,7 @@
 				AFA804262209F13100F8E379 /* WifiNetwork.swift in Sources */,
 				AF97EFDB2280E70300378058 /* Realm+Extension.swift in Sources */,
 				C56FCBFA2B2CDD9E008DE7D4 /* BaseRouter.swift in Sources */,
+				1EB67FAD2DE9E29D00729052 /* ConnectionsRouteID.swift in Sources */,
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
 				C50F20782B606B3000266B23 /* WireguardConfigRepositoryImpl.swift in Sources */,
@@ -6553,6 +6609,7 @@
 				C56FCC062B2CF358008DE7D4 /* NetworkSecurityRouter.swift in Sources */,
 				AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */,
 				E9219FF32885BD4D0026E544 /* WSFillLayoutView.swift in Sources */,
+				1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */,
 				F47EC5262DE8D74700AF5089 /* HelpInfoCardView.swift in Sources */,
 				F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */,
 				1ED6167C2DD75B78006CDC99 /* AboutItemType.swift in Sources */,
@@ -6908,6 +6965,7 @@
 				AF018E0121B09A6100B225FF /* AppConstants.swift in Sources */,
 				C585F3E12C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				591CF9B72BBE02E4004DEB48 /* SubmitTicketViewModel.swift in Sources */,
+				1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */,
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
 				C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */,
 				AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */,
@@ -6929,6 +6987,7 @@
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
 				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
 				E97ABD4B28D47AE600B38587 /* ShareWithFriendViewController.swift in Sources */,
+				1EB67FAB2DE9E29200729052 /* ConnectionsNavigationRouter.swift in Sources */,
 				AF97EFDF2281F1DD00378058 /* Bundle+Extension.swift in Sources */,
 				E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */,
 				AF21995E2270B147009B42E5 /* yudpsocket.c in Sources */,
@@ -7010,6 +7069,7 @@
 				AF36BF1022FC971E00FCC6F4 /* WSTextField.swift in Sources */,
 				E9219FF8288A2BCD0026E544 /* InfoFooterView.swift in Sources */,
 				F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */,
+				1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */,
 				1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */,
 				C5D1C2D62BBFE2F40083B9EC /* AdvanceKeys.swift in Sources */,
 				C57BDE3B29B93E2400337E63 /* SiriIdentifiers.swift in Sources */,

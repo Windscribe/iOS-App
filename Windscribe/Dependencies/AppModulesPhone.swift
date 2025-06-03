@@ -124,7 +124,7 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                router: r.resolve(PreferencesNavigationRouter.self)!
+                router: r.resolve(ConnectionsNavigationRouter.self)!
             )
         }.inObjectScope(.transient)
 
@@ -548,7 +548,7 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     preferences: r.resolve(Preferences.self)!,
-                    router: r.resolve(PreferencesNavigationRouter.self)!
+                    router: r.resolve(ConnectionsNavigationRouter.self)!
                 )
            )
         }.inObjectScope(.transient)
@@ -560,7 +560,21 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
-                    localDatabase: r.resolve(LocalDatabase.self)!
+                    localDatabase: r.resolve(LocalDatabase.self)!,
+                    router: r.resolve(ConnectionsNavigationRouter.self)!
+                )
+            )
+        }.inObjectScope(.transient)
+
+        container.register(NetworkSettingsView.self) { r in
+            NetworkSettingsView(
+                viewModel: NetworkSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    connectivity: r.resolve(Connectivity.self)!,
+                    localDatabase: r.resolve(LocalDatabase.self)!,
+                    vpnManager: r.resolve(VPNManager.self)!,
+                    protocolManager: r.resolve(ProtocolManagerType.self)!
                 )
             )
         }.inObjectScope(.transient)
@@ -931,6 +945,9 @@ class Routers: Assembly {
         }.inObjectScope(.transient)
         container.register(PreferencesNavigationRouter.self) { _ in
             PreferencesNavigationRouter()
+        }.inObjectScope(.transient)
+        container.register(ConnectionsNavigationRouter.self) { _ in
+            ConnectionsNavigationRouter()
         }.inObjectScope(.transient)
         container.register(HelpNavigationRouter.self) { _ in
             HelpNavigationRouter()
