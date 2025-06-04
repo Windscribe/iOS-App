@@ -15,12 +15,8 @@ class HomeRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
         case RouteID.mainMenu:
-
             let preferencesView = Assembler.resolve(PreferencesMainCategoryView.self)
             pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
-//            let vc = Assembler.resolve(PreferencesMainViewControllerOld.self)
-//            from.navigationController?.pushViewController(vc, animated: true)
-
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)
         case let RouteID.protocolSetPreferred(type, delegate, protocolName):
@@ -55,9 +51,9 @@ class HomeRouter: BaseRouter, RootRouter {
             let vc = Assembler.resolve(ShareWithFriendViewController.self)
             from.navigationController?.pushViewController(vc, animated: true)
         case let RouteID.network(network):
-            let vc = Assembler.resolve(NetworkViewController.self)
-            vc.viewModel.displayingNetwork = network
-            from.navigationController?.pushViewController(vc, animated: true)
+            let networkView = Assembler.resolve(NetworkSettingsView.self)
+                .environmentObject(NetworkFlowContext(displayNetwork: network))
+            pushViewWithoutNavigationBar(from: from, view: networkView, title: TextsAsset.NetworkDetails.title)
         default: ()
         }
     }
