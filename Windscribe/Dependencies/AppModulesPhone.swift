@@ -167,7 +167,9 @@ class ViewModels: Assembly {
 
         container.register((any SendTicketViewModel).self) { r in
             SendTicketViewModelImpl(
-                logger: r.resolve(FileLogger.self)!)
+                apiManager: r.resolve(APIManager.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
 
         container.register((any AdvancedParametersViewModel).self) { r in
@@ -626,8 +628,10 @@ class ViewControllerModule: Assembly {
         container.register(SendTicketView.self) { r in
             SendTicketView(
                 viewModel: SendTicketViewModelImpl(
-                    logger: r.resolve(FileLogger.self)!)
-                )
+                    apiManager: r.resolve(APIManager.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    sessionManager: r.resolve(SessionManaging.self)!)
+           )
         }.inObjectScope(.transient)
 
         container.register(AdvancedParametersView.self) { r in
