@@ -138,12 +138,12 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
         }
         hasLoaded = true
     }
-    
+
     func loadEntries() {
         guard !hasLoaded else { return }
         reloadEntries()
     }
-    
+
     private func getCurrentWifiNetwork() -> WifiNetwork? {
         guard let currentSSID = currentNetwork?.name else { return nil }
         return networks.first { $0.SSID == currentSSID }

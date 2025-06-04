@@ -119,30 +119,12 @@ struct MenuEntryActionView: View {
     var body: some View {
         switch actionType {
         case let .multiple(currentOption, options, parentId):
-            Menu {
-                ForEach(options, id: \.self) { option in
-                    Button(option, action: {
-                        action(.multiple(newOption: option, parentId: parentId))
-                    })
-                }
-            } label: {
-                HStack(spacing: 8) {
-                    Text(currentOption)
-                        .foregroundColor(.infoGrey)
-                        .font(.regular(.callout))
-                    if let imageName = actionType.imageName {
-                        Image(imageName)
-                            .resizable()
-                            .renderingMode(.template)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 16, height: 16)
-                            .foregroundColor(.infoGrey)
-                    }
-                    if isAlignLeading {
-                        Spacer()
-                    }
-                }
-            }
+            MenuMultipleActionView(currentOption: currentOption,
+                                   options: options,
+                                   parentId: parentId,
+                                   isAlignLeading: isAlignLeading,
+                                   actionType: actionType,
+                                   action: action)
         case let .toggle(isSelected, parentId):
             Button(action: {
                 action(.toggle(isSelected: !isSelected, parentId: parentId))
@@ -198,6 +180,49 @@ struct MenuEntryActionView: View {
             }
         case let .field(value, placeHolder, parentId):
             MenuFieldView(value: value, placeHolder: placeHolder, parentId: parentId, action: action)
+        }
+    }
+}
+
+struct MenuMultipleActionView: View {
+    let currentOption: String
+    let options: [String]
+    let parentId: Int
+    let isAlignLeading: Bool
+    let actionType: MenuEntryActionType
+    let action: (MenuEntryActionResponseType) -> Void
+
+    var body: some View {
+        Menu {
+            ForEach(options, id: \.self) { option in
+                Button(action: {
+                    action(.multiple(newOption: option, parentId: parentId))
+                }, label: {
+                    HStack {
+                        Text(option)
+                        if option == currentOption {
+                            Image(ImagesAsset.CheckMarkButton.off)
+                        }
+                    }
+                })
+            }
+        } label: {
+            HStack(spacing: 8) {
+                Text(currentOption)
+                    .foregroundColor(.infoGrey)
+                    .font(.regular(.callout))
+                if let imageName = actionType.imageName {
+                    Image(imageName)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.infoGrey)
+                }
+                if isAlignLeading {
+                    Spacer()
+                }
+            }
         }
     }
 }
