@@ -14,7 +14,6 @@ struct AdvancedParametersView: View {
     @Environment(\.dynamicTypeXLargeRange) private var dynamicTypeRange
 
     @ObservedObject private var keyboard = KeyboardResponder()
-
     @StateObject private var viewModel: AdvancedParametersViewModelImpl
 
     init(viewModel: any AdvancedParametersViewModel) {
@@ -66,8 +65,8 @@ struct AdvancedParametersView: View {
             .onAppear {
                 viewModel.load()
             }
+            .overlay(loadingOverlay)
         }
-        .overlay(loadingOverlay)
     }
 
     @ViewBuilder
@@ -90,6 +89,7 @@ struct TextEditorInputModifiers: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 17.0, *) {
             content
+                .background(Color.clear)
                 .autocorrectionDisabled(true)
                 .textInputAutocapitalization(.never)
                 .tint(.white)

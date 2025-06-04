@@ -240,6 +240,10 @@ enum TextsAsset {
         return "Voucher Code".localized
     }
 
+    static var send: String {
+        return "Send".localized
+    }
+
     static var submit: String {
         return "Submit".localized
     }
