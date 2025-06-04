@@ -21,42 +21,40 @@ struct AdvancedParametersView: View {
         guard let model = viewModel as? AdvancedParametersViewModelImpl else {
             fatalError("AdvancedParametersView must be initialized properly with ViewModelImpl")
         }
-
         _viewModel = StateObject(wrappedValue: model)
     }
 
     var body: some View {
-        ScrollView {
-            ZStack {
-                VStack(alignment: .leading, spacing: 16) {
-                    TextEditor(text: $viewModel.advanceParams)
-                        .modifier(TextEditorInputModifiers())
-                        .padding(12)
-                        .foregroundColor(viewModel.showError ? .red : (viewModel.isDarkMode ? .white : .black))
-                        .background(Color.nightBlue)
-                        .cornerRadius(16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(viewModel.showError ? Color.red : Color.gray.opacity(0.5), lineWidth: 1)
-                        )
-                        .frame(height: 200)
-                        .onChange(of: viewModel.advanceParams) { newValue in
-                            viewModel.onAdvanceParamsTextChange(text: newValue)
-                        }
-
-                    Button(action: {
-                        viewModel.saveButtonTap()
-                    }, label: {
-                        Text(TextsAsset.save)
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            ScrollView {
+                ZStack {
+                    VStack(alignment: .leading, spacing: 16) {
+                        TextEditor(text: $viewModel.advanceParams)
                             .font(.text(.callout))
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.seaGreen)
-                            .foregroundColor(.midnight)
-                            .cornerRadius(24)
-                    })
+                            .transparentScrolling()
+                            .modifier(TextEditorInputModifiers())
+                            .padding(12)
+                            .foregroundColor(viewModel.showError ? .red : (.from(.titleColor, viewModel.isDarkMode)))
+                            .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                            .cornerRadius(16)
+                            .onChange(of: viewModel.advanceParams) { newValue in
+                                viewModel.onAdvanceParamsTextChange(text: newValue)
+                            }
+                            .frame(height: 200)
+                        Button(action: {
+                            viewModel.saveButtonTap()
+                        }, label: {
+                            Text(TextsAsset.save)
+                                .font(.text(.callout))
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.seaGreen)
+                                .foregroundColor(.midnight)
+                                .cornerRadius(24)
+                        })
+                    }
+                    .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
                 }
-                .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 8)
@@ -65,7 +63,6 @@ struct AdvancedParametersView: View {
             .navigationTitle(viewModel.titleText)
             .navigationBarTitleDisplayMode(.inline)
             .dynamicTypeSize(dynamicTypeRange)
-            .background(Color.nightBlue)
             .onAppear {
                 viewModel.load()
             }
@@ -98,6 +95,18 @@ struct TextEditorInputModifiers: ViewModifier {
                 .tint(.white)
         } else {
             content
+        }
+    }
+}
+
+public extension View {
+    func transparentScrolling() -> some View {
+        if #available(iOS 16.0, *) {
+            return scrollContentBackground(.hidden)
+        } else {
+            return onAppear {
+                UITextView.appearance().backgroundColor = .clear
+            }
         }
     }
 }

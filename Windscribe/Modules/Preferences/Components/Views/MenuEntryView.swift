@@ -11,22 +11,24 @@ import UniformTypeIdentifiers
 
 struct MenuEntryView: View {
     let item: any MenuEntryHeaderType
+    let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
 
-    init(item: any MenuEntryHeaderType, action: @escaping (MenuEntryActionResponseType) -> Void) {
+    init(item: any MenuEntryHeaderType, isDarkMode: Bool, action: @escaping (MenuEntryActionResponseType) -> Void) {
         self.item = item
         self.action = action
+        self.isDarkMode = isDarkMode
     }
 
     var body: some View {
         VStack {
             if item.action != nil || item.secondaryEntries.count != 0 {
-                MenuEntryInteractiveView(item: item, action: action)
+                MenuEntryInteractiveView(item: item, isDarkMode: isDarkMode, action: action)
             } else {
-                MenuEntryInfoView(item: item)
+                MenuEntryInfoView(item: item, isDarkMode: isDarkMode)
             }
         }
-        .background(.white.opacity(0.05))
+        .background(Color.from(.backgroundColor, isDarkMode))
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }
@@ -34,6 +36,7 @@ struct MenuEntryView: View {
 
 struct MenuEntryHeaderView: View {
     let item: any MenuEntryItemType
+    let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
     var isActionLeading: Bool { item.title.isEmpty && item.icon.isEmpty}
 
@@ -45,16 +48,16 @@ struct MenuEntryHeaderView: View {
                     .renderingMode(.template)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 16, height: 16)
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.iconColor, isDarkMode))
             }
             if !item.title.isEmpty {
                 Text(item.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             if let mainAction = item.action {
-                MenuEntryActionView(actionType: mainAction, isAlignLeading: isActionLeading, action: { actionType in
+                MenuEntryActionView(actionType: mainAction, isAlignLeading: isActionLeading, isDarkMode: isDarkMode, action: { actionType in
                     action(actionType)
                 })
             }
@@ -64,14 +67,16 @@ struct MenuEntryHeaderView: View {
 
 struct MenuEntryInteractiveView: View {
     let item: any MenuEntryHeaderType
+    let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 12) {
-                MenuEntryHeaderView(item: item, action: action)
+                MenuEntryHeaderView(item: item, isDarkMode: isDarkMode, action: action)
                 if let message = item.message {
-                    MenuInfoText(text: message)
+                    MenuInfoText(isDarkMode: isDarkMode,
+                                 text: message)
                 }
             }
             .padding(14)
@@ -80,10 +85,10 @@ struct MenuEntryInteractiveView: View {
                     ForEach(item.secondaryEntries, id: \.self) { entry in
                         if entry.hasSeparator {
                             Rectangle()
-                                .fill(Color.nightBlue)
+                                .fill(Color.from(.separatorColor, isDarkMode))
                                 .frame(height: 1)
                         }
-                        MenuEntryHeaderView(item: entry, action: action)
+                        MenuEntryHeaderView(item: entry, isDarkMode: isDarkMode, action: action)
                             .padding(.horizontal, 14)
                     }
                 }
@@ -95,10 +100,11 @@ struct MenuEntryInteractiveView: View {
 
 struct MenuEntryInfoView: View {
     let item: any MenuEntryHeaderType
+    let isDarkMode: Bool
     var body: some View {
         HStack {
             Text(item.title)
-                .foregroundColor(.white)
+                .foregroundColor(.from(.titleColor, isDarkMode))
                 .font(.medium(.callout))
             Spacer()
             if let message = item.message {
@@ -114,6 +120,7 @@ struct MenuEntryInfoView: View {
 struct MenuEntryActionView: View {
     let actionType: MenuEntryActionType
     let isAlignLeading: Bool
+    let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
 
     var body: some View {
@@ -136,18 +143,23 @@ struct MenuEntryActionView: View {
                 }
             })
         case let .button(title, parentId), let .link(title, parentId):
-            MenuButtonActionView(title: title, actionType: actionType, action: {
+            MenuButtonActionView(isDarkMode: isDarkMode,
+                                 title: title,
+                                 actionType: actionType,
+                                 action: {
                 action(.button(parentId: parentId))
             })
         case let .buttonFile(title, fileTypes, parentId):
-            MenuFileButtonActionView(title: title,
+            MenuFileButtonActionView(isDarkMode: isDarkMode,
+                                     title: title,
                                      parentId: parentId,
                                      fileTypes: fileTypes,
                                      actionType: actionType,
                                      action: action)
         case let .buttonFileExport(title, documentInfo, parentId):
             if let documentInfo = documentInfo {
-                MenuFileExportButtonActionView(title: title,
+                MenuFileExportButtonActionView(isDarkMode: isDarkMode,
+                                               title: title,
                                                parentId: parentId,
                                                documentInfo: documentInfo,
                                                actionType: actionType,
@@ -158,12 +170,13 @@ struct MenuEntryActionView: View {
                 action(.none(parentId: parentId))
             }, label: {
                 Text(title)
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
             })
             .frame(maxWidth: .infinity, alignment: .center)
         case let .file(value, fileType, parentId):
-            MenuFileSelectionView(value: value,
+            MenuFileSelectionView(isDarkMode: isDarkMode,
+                                  value: value,
                                   parentId: parentId,
                                   fileTypes: fileType,
                                   actionType: actionType,
@@ -173,13 +186,17 @@ struct MenuEntryActionView: View {
                 action(.infoLink(parentId: parentId))
             } label: {
                 Text(message)
-                    .foregroundColor(.infoGrey)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.footnote))
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         case let .field(value, placeHolder, parentId):
-            MenuFieldView(value: value, placeHolder: placeHolder, parentId: parentId, action: action)
+            MenuFieldView(isDarkMode: isDarkMode,
+                          value: value,
+                          placeHolder: placeHolder,
+                          parentId: parentId,
+                          action: action)
         }
     }
 }
@@ -209,7 +226,7 @@ struct MenuMultipleActionView: View {
         } label: {
             HStack(spacing: 8) {
                 Text(currentOption)
-                    .foregroundColor(.infoGrey)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.callout))
                 if let imageName = actionType.imageName {
                     Image(imageName)
@@ -217,7 +234,7 @@ struct MenuMultipleActionView: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                 }
                 if isAlignLeading {
                     Spacer()
@@ -228,6 +245,7 @@ struct MenuMultipleActionView: View {
 }
 
 struct MenuFieldView: View {
+    let isDarkMode: Bool
     let value: String
     let placeHolder: String
     let parentId: Int
@@ -241,7 +259,7 @@ struct MenuFieldView: View {
         if isEditing {
             HStack(spacing: 4) {
                 TextField(placeHolder, text: $editedValue)
-                    .foregroundColor(.infoGrey)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.callout))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .focused($isTextFieldFocused)
@@ -256,7 +274,7 @@ struct MenuFieldView: View {
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 16, height: 16)
-                            .foregroundColor(.infoGrey)
+                            .foregroundColor(.from(.infoColor, isDarkMode))
                     }
                 })
                 Button(action: {
@@ -282,14 +300,14 @@ struct MenuFieldView: View {
             }, label: {
                 HStack {
                     Text(value)
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
                     Image(ImagesAsset.editPencil)
                         .resizable()
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -299,6 +317,7 @@ struct MenuFieldView: View {
 }
 
 struct MenuButtonActionView: View {
+    let isDarkMode: Bool
     let title: String?
     let actionType: MenuEntryActionType
     let action: () -> Void
@@ -310,7 +329,7 @@ struct MenuButtonActionView: View {
             HStack {
                 if let title = title {
                     Text(title)
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
                 }
                 if let imageName = actionType.imageName {
@@ -319,7 +338,7 @@ struct MenuButtonActionView: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                 }
             }
         })
@@ -327,17 +346,19 @@ struct MenuButtonActionView: View {
 }
 
 struct MenuInfoText: View {
+    let isDarkMode: Bool
     var text: String
 
     var body: some View {
         Text(text)
-            .foregroundColor(.infoGrey)
+            .foregroundColor(.from(.infoColor, isDarkMode))
             .font(.regular(.footnote))
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 
 struct MenuFileButtonActionView: View {
+    let isDarkMode: Bool
     let title: String?
     let parentId: Int
     let fileTypes: [UTType]
@@ -347,7 +368,7 @@ struct MenuFileButtonActionView: View {
     @State private var isImporterPresented = false
 
     var body: some View {
-        MenuButtonActionView(title: title, actionType: actionType, action: {
+        MenuButtonActionView(isDarkMode: isDarkMode, title: title, actionType: actionType, action: {
             isImporterPresented = true
         })
         .fileImporter(
@@ -363,6 +384,7 @@ struct MenuFileButtonActionView: View {
 }
 
 struct MenuFileExportButtonActionView: View {
+    let isDarkMode: Bool
     let title: String?
     let parentId: Int
     let documentInfo: DocumentFormatInfo
@@ -374,7 +396,7 @@ struct MenuFileExportButtonActionView: View {
     @State private var document: MultiFormatDocument?
 
     var body: some View {
-        MenuButtonActionView(title: title, actionType: actionType, action: {
+        MenuButtonActionView(isDarkMode: isDarkMode, title: title, actionType: actionType, action: {
             document = MultiFormatDocument(documentInfo: documentInfo)
             isExporterPresented = true
         })
@@ -393,6 +415,7 @@ struct MenuFileExportButtonActionView: View {
 }
 
 struct MenuFileSelectionView: View {
+    let isDarkMode: Bool
     let value: String
     let parentId: Int
     let fileTypes: [UTType]
@@ -407,7 +430,7 @@ struct MenuFileSelectionView: View {
         }, label: {
             HStack {
                 Text(value)
-                    .foregroundColor(Color.white.opacity(0.7))
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.callout))
                 if let imageName = actionType.imageName {
                     Image(imageName)
@@ -415,7 +438,7 @@ struct MenuFileSelectionView: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 14, height: 14)
-                        .foregroundColor(Color.white.opacity(0.7))
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                 }
                 Spacer()
             }

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 
 struct HelpInfoCardView: View {
+    let isDarkMode: Bool
     let icon: String
     let title: String
     let subtitle: String?
@@ -23,35 +24,36 @@ struct HelpInfoCardView: View {
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.iconColor, isDarkMode))
 
                     Text(title)
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
                         .font(.bold(.callout))
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Image(ImagesAsset.serverWhiteRightArrow)
                         .renderingMode(.template)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.white.opacity(0.4))
+                        .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.4))
                 }
 
                 if let subtitle = subtitle {
                     Text(subtitle)
                         .font(.regular(.footnote))
-                        .foregroundColor(.white.opacity(0.6))
+                        .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.6))
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .padding(14)
-            .background(Color.white.opacity(0.05))
+            .background(Color.from(.backgroundColor, isDarkMode))
             .cornerRadius(12)
         }
     }
 }
 
 struct HelpExpandableListView: View {
+    let isDarkMode: Bool
     let icon: String
     let title: String
     let subtitle: String
@@ -66,22 +68,22 @@ struct HelpExpandableListView: View {
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.iconColor, isDarkMode))
 
                     Text(title)
                         .font(.bold(.callout))
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(.horizontal, 14)
 
                 Text(subtitle)
                     .font(.regular(.footnote))
-                    .foregroundColor(.white.opacity(0.6))
+                    .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.6))
                     .padding(.horizontal, 14)
 
                 Rectangle()
-                    .fill(Color.nightBlue)
+                    .fill(Color.from(.separatorColor, isDarkMode))
                     .frame(height: 1)
             }
             .padding(.top, 14)
@@ -89,7 +91,7 @@ struct HelpExpandableListView: View {
             ForEach(subItems.indices, id: \.self) { index in
                 if index > 0 {
                     Rectangle()
-                        .fill(Color.nightBlue)
+                        .fill(Color.from(.separatorColor, isDarkMode))
                         .frame(height: 1)
                 }
 
@@ -99,25 +101,26 @@ struct HelpExpandableListView: View {
                     HStack {
                         Text(subItems[index].title)
                             .font(.regular(.callout))
-                            .foregroundColor(.white.opacity(0.8))
+                            .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.8))
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         Image(ImagesAsset.serverWhiteRightArrow)
                             .renderingMode(.template)
                             .frame(width: 16, height: 16)
-                            .foregroundColor(.white.opacity(0.4))
+                            .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.4))
                     }
                     .padding(.horizontal, 14)
                     .padding(.vertical, 12)
                 })
             }
         }
-        .background(Color.white.opacity(0.05))
+        .background(Color.from(.backgroundColor, isDarkMode))
         .cornerRadius(12)
     }
 }
 
 struct HelpNavigationRowView: View {
+    let isDarkMode: Bool
     let icon: String
     let title: String
     let subtitle: String?
@@ -132,35 +135,36 @@ struct HelpNavigationRowView: View {
                         .renderingMode(.template)
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.iconColor, isDarkMode))
 
                     Text(title)
                         .font(.bold(.callout))
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
                         .frame(maxWidth: .infinity, alignment: .leading)
 
                     Image(ImagesAsset.serverWhiteRightArrow)
                         .renderingMode(.template)
                         .frame(width: 16, height: 16)
-                        .foregroundColor(.white.opacity(0.4))
+                        .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.4))
                 }
 
                 if let subtitle = subtitle {
                     Text(subtitle)
                         .font(.regular(.footnote))
-                        .foregroundColor(.white.opacity(0.6))
+                        .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.6))
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .padding(14)
-            .background(Color.white.opacity(0.05))
+            .background(Color.from(.backgroundColor, isDarkMode))
             .cornerRadius(12)
         }
     }
 }
 
 struct HelpSendDebugLogView: View {
+    let isDarkMode: Bool
     let icon: String
     let title: String
     let progressText: String
@@ -180,17 +184,17 @@ struct HelpSendDebugLogView: View {
                     .renderingMode(.template)
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 16, height: 16)
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.iconColor, isDarkMode))
 
                 Text(rowTitle)
                     .font(.bold(.callout))
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.titleColor, isDarkMode))
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 rightAccessory
             }
             .padding(14)
-            .background(Color.white.opacity(0.05))
+            .background(Color.from(.backgroundColor, isDarkMode))
             .cornerRadius(12)
         })
         .disabled(!isEnabled)
@@ -216,13 +220,13 @@ struct HelpSendDebugLogView: View {
         case .success:
             Text(sentText)
                 .font(.regular(.footnote))
-                .foregroundColor(.white.opacity(0.6))
+                .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.6))
 
         default:
             Image(ImagesAsset.serverWhiteRightArrow)
                 .renderingMode(.template)
                 .frame(width: 16, height: 16)
-                .foregroundColor(.white.opacity(0.4))
+                .foregroundColor(.from(.iconColor, isDarkMode).opacity(0.4))
         }
     }
 

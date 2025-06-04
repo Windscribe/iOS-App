@@ -24,13 +24,13 @@ struct LookAndFeelSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack {
                     ForEach(viewModel.entries, id: \.self) { entry in
-                        MenuEntryView(item: entry, action: { actionType in
+                        MenuEntryView(item: entry,
+                                      isDarkMode: viewModel.isDarkMode,
+                                      action: { actionType in
                             viewModel.entrySelected(entry, actionSelected: actionType)
                         })
                     }

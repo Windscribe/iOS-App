@@ -85,12 +85,10 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
         }
     }
 
-    var tintColor: Color {
+    func tintColor(_ isDarkMode: Bool) -> Color {
         switch self {
-        case .logout:
-            .orangeYellow
-        default:
-            .white
+        case .logout: .orangeYellow
+        default: .from(.titleColor, isDarkMode)
         }
     }
 }

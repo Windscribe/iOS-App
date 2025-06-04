@@ -45,20 +45,21 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     private let logger: FileLogger
     private let apiManager: APIManager
     private let localDB: LocalDatabase
-    private let lookAndFeelRepo: LookAndFeelRepositoryType
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
 
     private let disposeBag = DisposeBag()
 
     private var cancellables = Set<AnyCancellable>()
+    private var robertFilters: RobertFilters?
 
     init(logger: FileLogger,
          apiManager: APIManager,
          localDB: LocalDatabase,
-         lookAndFeelRepo: LookAndFeelRepositoryType) {
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.logger = logger
         self.apiManager = apiManager
         self.localDB = localDB
-        self.lookAndFeelRepo = lookAndFeelRepo
+        self.lookAndFeelRepository = lookAndFeelRepository
 
         entries = localDB.getRobertFilters()?.getRules() ?? []
         bindSubjects()
@@ -73,6 +74,19 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     }
 
     func bindSubjects() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("RobertSettingsViewModel", "Theme Adjustment Change error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+                self?.reloadEntries()
+            })
+            .store(in: &cancellables)
+
         apiManager.getRobertFilters()
             .asPublisher()
             .receive(on: DispatchQueue.main)
@@ -96,9 +110,15 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
             }, receiveValue: { [weak self] robertFilters in
                 guard let self = self else { return }
                 self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
-                self.entries = robertFilters.getRules()
+                self.robertFilters = robertFilters
+                self.reloadEntries()
             })
             .store(in: &cancellables)
+    }
+
+    private func reloadEntries() {
+        guard let robertFilters = robertFilters else { return }
+        entries = robertFilters.getRules()
     }
 
     func filterSelected(_ filter: RobertFilter) {

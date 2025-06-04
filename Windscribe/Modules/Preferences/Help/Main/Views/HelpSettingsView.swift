@@ -25,10 +25,7 @@ struct HelpSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
-
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { entry in
@@ -39,7 +36,6 @@ struct HelpSettingsView: View {
                 .padding(.horizontal, 16)
             }
         }
-
         .dynamicTypeSize(dynamicTypeRange)
         .withRouter(router)
         .overlay(routeLink)
@@ -74,11 +70,15 @@ struct HelpSettingsView: View {
     private func renderEntry(_ entry: HelpMenuEntryType) -> some View {
         switch entry {
         case let .link(icon, title, subtitle, _):
-            HelpInfoCardView(icon: icon, title: title, subtitle: subtitle) {
+            HelpInfoCardView(isDarkMode: viewModel.isDarkMode,
+                             icon: icon,
+                             title: title,
+                             subtitle: subtitle) {
                 viewModel.entrySelected(entry)
             }
         case let .communitySupport(redditURLString, discordURLString):
             HelpExpandableListView(
+                isDarkMode: viewModel.isDarkMode,
                 icon: ImagesAsset.Help.community,
                 title: TextsAsset.Help.communitySupport,
                 subtitle: TextsAsset.Help.bestPlacesTohelp,
@@ -92,11 +92,15 @@ struct HelpSettingsView: View {
                 }
             }
         case let .navigation(icon, title, subtitle, route):
-            HelpNavigationRowView(icon: icon, title: title, subtitle: subtitle) {
+            HelpNavigationRowView(isDarkMode: viewModel.isDarkMode,
+                                  icon: icon,
+                                  title: title,
+                                  subtitle: subtitle) {
                 viewModel.entrySelected(.navigation(icon: icon, title: title, subtitle: subtitle, route: route))
             }
         case let .sendDebugLog(icon, title):
-            HelpSendDebugLogView(icon: icon,
+            HelpSendDebugLogView(isDarkMode: viewModel.isDarkMode,
+                                 icon: icon,
                                  title: title,
                                  progressText: TextsAsset.Debug.sendingLog,
                                  sentText: TextsAsset.Debug.sentLog,

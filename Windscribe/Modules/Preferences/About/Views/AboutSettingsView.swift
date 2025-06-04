@@ -24,19 +24,20 @@ struct AboutSettingsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                ForEach(viewModel.entries) { item in
-                    Button {
-                        viewModel.entrySelected(item)
-                    } label: {
-                        MenuCategoryRow(item: item)
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            ScrollView {
+                VStack(spacing: 14) {
+                    ForEach(viewModel.entries) { item in
+                        Button {
+                            viewModel.entrySelected(item)
+                        } label: {
+                            MenuCategoryRow(isDarkMode: viewModel.isDarkMode, item: item)
+                        }
                     }
                 }
+                .padding(.top, 8)
             }
-            .padding(.top, 8)
         }
-        .background(Color.nightBlue)
         .dynamicTypeSize(dynamicTypeRange)
         .sheet(item: $viewModel.safariURL) { url in
             SafariView(url: url)

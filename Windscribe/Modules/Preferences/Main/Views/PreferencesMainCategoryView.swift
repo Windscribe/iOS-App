@@ -27,52 +27,53 @@ struct PreferencesMainCategoryView: View {
     }
 
     var body: some View {
-        VStack(spacing: 16) {
-            ScrollView {
-                VStack(spacing: 14) {
-                    categoryRows()
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            VStack(spacing: 16) {
+                ScrollView {
+                    VStack(spacing: 14) {
+                        categoryRows()
+                    }
+                    .padding(.top, 8)
                 }
-                .padding(.top, 8)
-            }
 
-            VStack(spacing: 12) {
-                if viewModel.actionDisplay != .hideAll {
-                    PreferencesActionButton(
-                        title: actionButtonTitle(),
-                        backgroundColor: .unconfirmedYellow,
-                        textColor: .midnight,
-                        icon: Image(ImagesAsset.warningBlack),
-                        action: {
-                            switch viewModel.actionDisplay {
-                            case .email, .emailGet10GB:
-                                router.navigate(to: .enterEmail)
-                            case .setupAccountAndLogin, .setupAccount:
-                                router.navigate(to: .signupGhost)
-                            case .confirmEmail:
-                                showConfirmEmailSheet = true
-                            default:
-                                break
+                VStack(spacing: 12) {
+                    if viewModel.actionDisplay != .hideAll {
+                        PreferencesActionButton(
+                            title: actionButtonTitle(),
+                            backgroundColor: .unconfirmedYellow,
+                            textColor: .midnight,
+                            icon: Image(ImagesAsset.warningBlack),
+                            action: {
+                                switch viewModel.actionDisplay {
+                                case .email, .emailGet10GB:
+                                    router.navigate(to: .enterEmail)
+                                case .setupAccountAndLogin, .setupAccount:
+                                    router.navigate(to: .signupGhost)
+                                case .confirmEmail:
+                                    showConfirmEmailSheet = true
+                                default:
+                                    break
+                                }
                             }
-                        }
-                    )
-                }
+                        )
+                    }
 
-                if viewModel.actionDisplay == .setupAccountAndLogin || viewModel.actionDisplay == .setupAccount {
-                    PreferencesActionButton(
-                        title: TextsAsset.login,
-                        backgroundColor: .midnight,
-                        textColor: .white,
-                        icon: nil,
-                        action: {
-                            router.navigate(to: .login)
-                        }
-                    )
+                    if viewModel.actionDisplay == .setupAccountAndLogin || viewModel.actionDisplay == .setupAccount {
+                        PreferencesActionButton(
+                            title: TextsAsset.login,
+                            backgroundColor: .from(.actionBackgroundColor, viewModel.isDarkMode),
+                            textColor: .from(.titleColor, viewModel.isDarkMode),
+                            icon: nil,
+                            action: {
+                                router.navigate(to: .login)
+                            }
+                        )
+                    }
                 }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 32)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 32)
         }
-        .background(Color.nightBlue)
         .overlay(routeLink)
         .edgesIgnoringSafeArea(.bottom)
         .dynamicTypeSize(dynamicTypeRange)
@@ -109,7 +110,7 @@ struct PreferencesMainCategoryView: View {
                         viewModel.logout()
                     }
                 } label: {
-                    MenuCategoryRow(item: item)
+                    MenuCategoryRow(isDarkMode: viewModel.isDarkMode, item: item)
                 }
             }
         }

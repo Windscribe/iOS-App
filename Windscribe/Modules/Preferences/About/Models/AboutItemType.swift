@@ -42,7 +42,6 @@ enum AboutItemType: Int, MenuCategoryRowType {
 
     var imageName: String? { nil }
     var actionImageName: String? { ImagesAsset.externalLink }
-    var tintColor: Color { .primary }
 
     var url: String {
         switch self {
@@ -63,5 +62,9 @@ enum AboutItemType: Int, MenuCategoryRowType {
         case .changelog:
             return Links.changelog
         }
+    }
+
+    func tintColor(_ isDarkMode: Bool) -> Color {
+        .from(.titleColor, isDarkMode)
     }
 }

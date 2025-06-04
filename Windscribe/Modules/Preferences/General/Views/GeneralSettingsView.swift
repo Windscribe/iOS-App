@@ -22,13 +22,11 @@ struct GeneralSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { entry in
-                        MenuEntryView(item: entry, action: { actionType in
+                        MenuEntryView(item: entry, isDarkMode: viewModel.isDarkMode, action: { actionType in
                             viewModel.entrySelected(entry, action: actionType)
                         })
                     }
