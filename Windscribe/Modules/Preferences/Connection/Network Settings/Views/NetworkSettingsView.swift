@@ -24,15 +24,19 @@ struct NetworkSettingsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 14) {
-                ForEach(viewModel.entries, id: \.self) { entry in
-                    MenuEntryView(item: entry, action: { actionType in
-                        viewModel.entrySelected(entry, action: actionType)
-                    })
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            ScrollView {
+                VStack(spacing: 14) {
+                    ForEach(viewModel.entries, id: \.self) { entry in
+                        MenuEntryView(item: entry,
+                                      isDarkMode: viewModel.isDarkMode,
+                                      action: { actionType in
+                            viewModel.entrySelected(entry, action: actionType)
+                        })
+                    }
                 }
+                .padding(.top, 8)
             }
-            .padding(.top, 8)
         }
         .onAppear {
             viewModel.updateDisplayingNetworks(with: networkFlowContext.displayNetwork)
@@ -43,7 +47,6 @@ struct NetworkSettingsView: View {
             }
         }
         .dynamicTypeSize(dynamicTypeRange)
-        .background(Color.nightBlue)
         .navigationTitle(TextsAsset.NetworkDetails.title)
         .navigationBarTitleDisplayMode(.inline)
     }

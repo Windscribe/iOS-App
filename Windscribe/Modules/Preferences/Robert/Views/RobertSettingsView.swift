@@ -23,9 +23,7 @@ struct RobertSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 16) {
                     Button {
@@ -33,7 +31,7 @@ struct RobertSettingsView: View {
                     } label: {
                         ZStack {
                             Text(viewModel.description)
-                                .foregroundColor(.infoGrey)
+                                .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
                                 .multilineTextAlignment(.leading)
                                 .font(.regular(.footnote))
                                 .padding(.horizontal, 14)
@@ -44,23 +42,27 @@ struct RobertSettingsView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 189)
+                                    .frame(maxHeight: .infinity, alignment: .top)
+                                    .foregroundColor(.from(.backgroundColor, viewModel.isDarkMode))
                             }
                         }
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                                .stroke(Color.from(.backgroundColor, viewModel.isDarkMode), lineWidth: 1)
                         )
                         .padding(.horizontal, 16)
                     }
                     ForEach(viewModel.entries, id: \.self) { entry in
-                        FilterView(filter: entry, action: { filter in
+                        FilterView(isDarkMode: viewModel.isDarkMode,
+                                   filter: entry,
+                                   action: { filter in
                             viewModel.filterSelected(filter)
                         })
                     }
                     Button {
                         viewModel.customRulesSelected()
                     } label: {
-                        MenuEntryView(item: viewModel.customRulesEntry, action: { _ in
+                        MenuEntryView(item: viewModel.customRulesEntry, isDarkMode: viewModel.isDarkMode, action: { _ in
                             viewModel.customRulesSelected()
                         })
                     }
@@ -78,21 +80,23 @@ struct RobertSettingsView: View {
 }
 
 struct FilterView: View {
+    let isDarkMode: Bool
     let filter: RobertFilter
     let action: @MainActor (RobertFilter) -> Void
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(ImagesAsset.DarkMode.filterIcons[filter.id] ?? "")
+            Image(ImagesAsset.Robert.filterIcons[filter.id] ?? "")
                 .resizable()
                 .frame(width: 16, height: 16)
+                .foregroundColor(.from(.infoColor, isDarkMode))
             Text(filter.title)
                 .font(.medium(.callout))
-                .foregroundColor(.white)
+                .foregroundColor(.from(.titleColor, isDarkMode))
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(filter.enabled ? TextsAsset.Robert.blocking : TextsAsset.Robert.allowing)
                 .font(.regular(.footnote))
-                .foregroundColor(filter.enabled ? .eletricBlue : .infoGrey)
+                .foregroundColor(.from(.allowedColor(isEnabled: filter.enabled), isDarkMode))
             Button(action: {
                 action(filter)
             }, label: {
@@ -102,7 +106,7 @@ struct FilterView: View {
             })
         }
         .padding(16)
-        .background(Color.white.opacity(0.05))
+        .background(Color.from(.backgroundColor, isDarkMode))
         .cornerRadius(12)
         .padding(.horizontal, 16)
     }

@@ -13,5 +13,12 @@ protocol MenuCategoryRowType: Identifiable, CaseIterable {
     var title: String { get }
     var imageName: String? { get }
     var actionImageName: String? { get }
-    var tintColor: Color { get }
+
+    func tintColor(_ isDarkMode: Bool) -> Color
+}
+
+extension MenuCategoryRowType {
+    func backgroundTintColor(_ isDarkMode: Bool) -> Color {
+        tintColor(isDarkMode).opacity( isDarkMode ? 0.05 : 0.1)
+    }
 }

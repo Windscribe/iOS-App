@@ -31,11 +31,12 @@ struct AccountSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     ForEach(viewModel.sections) { section in
                         AccountSectionView(
+                            isDarkMode: viewModel.isDarkMode,
                             section: section,
                             accountStatus: viewModel.accountEmailStatus,
                             handleRowAction: viewModel.handleRowAction,
@@ -55,56 +56,55 @@ struct AccountSettingsView: View {
                 }
                 .padding(.top, 8)
             }
-            .background(Color.nightBlue.ignoresSafeArea())
-            .dynamicTypeSize(dynamicTypeRange)
-            .navigationTitle(TextsAsset.Account.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .alert(item: $viewModel.alertMessage) { alert in
-                Alert(
-                    title: Text(alert.title),
-                    message: Text(alert.message),
-                    dismissButton: .default(Text(alert.buttonText))
-                )
-            }
-            .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
-                get: { dialog != nil },
-                set: { if !$0 { dialog = nil } }
-            ), actions: {
-                TextField(dialogPlaceHolder(dialog), text: $inputText)
+        }
+        .dynamicTypeSize(dynamicTypeRange)
+        .navigationTitle(TextsAsset.Account.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(item: $viewModel.alertMessage) { alert in
+            Alert(
+                title: Text(alert.title),
+                message: Text(alert.message),
+                dismissButton: .default(Text(alert.buttonText))
+            )
+        }
+        .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
+            get: { dialog != nil },
+            set: { if !$0 { dialog = nil } }
+        ), actions: {
+            TextField(dialogPlaceHolder(dialog), text: $inputText)
 
-                Button("Confirm") {
-                    handleConfirm(dialog: dialog, input: inputText)
+            Button("Confirm") {
+                handleConfirm(dialog: dialog, input: inputText)
+            }
+
+            Button(TextsAsset.cancel, role: .cancel) { }
+        }, message: {
+            Text(dialogDescription(dialog))
+        })
+        .id(dialog?.id)
+        .sheet(item: $fallbackDialog) { dialog in
+            MenuTextFieldDialogView(
+                title: dialogTitle(dialog),
+                description: dialogDescription(dialog),
+                placeholder: dialogPlaceHolder(dialog),
+                isSecure: dialog == .password,
+                onConfirm: { input in
+                    handleConfirm(dialog: dialog, input: input)
+                },
+                onCancel: {
+                    fallbackDialog = nil
                 }
+            )
+        }
+        .sheet(isPresented: $showUpgradeModal) {
+            PlanUpgradeViewControllerWrapper()
+                .edgesIgnoringSafeArea(.all)
+        }
 
-                Button(TextsAsset.cancel, role: .cancel) { }
-            }, message: {
-                Text(dialogDescription(dialog))
-            })
-            .id(dialog?.id)
-            .sheet(item: $fallbackDialog) { dialog in
-                MenuTextFieldDialogView(
-                    title: dialogTitle(dialog),
-                    description: dialogDescription(dialog),
-                    placeholder: dialogPlaceHolder(dialog),
-                    isSecure: dialog == .password,
-                    onConfirm: { input in
-                        handleConfirm(dialog: dialog, input: input)
-                    },
-                    onCancel: {
-                        fallbackDialog = nil
-                    }
-                )
-            }
-            .sheet(isPresented: $showUpgradeModal) {
-                PlanUpgradeViewControllerWrapper()
-                    .edgesIgnoringSafeArea(.all)
-            }
-
-            if case .loading = viewModel.loadingState {
-                MenuLoadingOverlayView()
-                    .transition(.opacity)
-                    .animation(.easeInOut, value: viewModel.loadingState)
-            }
+        if case .loading = viewModel.loadingState {
+            MenuLoadingOverlayView()
+                .transition(.opacity)
+                .animation(.easeInOut, value: viewModel.loadingState)
         }
     }
 
@@ -135,31 +135,31 @@ struct AccountSettingsView: View {
     @ViewBuilder
     private func planActionButtons() -> some View {
         VStack(spacing: 12) {
-          Button(action: {
-              showUpgradeModal = true
-          }, label: {
-              Text(TextsAsset.Account.upgradeToProActionTitle)
-                  .foregroundColor(.actionGreen)
-                  .font(.medium(.callout))
-                  .frame(maxWidth: .infinity, alignment: .center)
-                  .padding(14)
-                  .background(Color.actionGreen.opacity(0.05))
-                  .cornerRadius(12)
-                  .padding(.horizontal, 16)
-          })
+            Button(action: {
+                showUpgradeModal = true
+            }, label: {
+                Text(TextsAsset.Account.upgradeToProActionTitle)
+                    .foregroundColor(.actionGreen)
+                    .font(.medium(.callout))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(14)
+                    .background(Color.actionGreen.opacity(0.05))
+                    .cornerRadius(12)
+                    .padding(.horizontal, 16)
+            })
 
-          Button(action: {
-              presentDialog(for: .password)
-          }, label: {
-              Text("Delete Account")
-                  .foregroundColor(.white)
-                  .font(.medium(.callout))
-                  .frame(maxWidth: .infinity, alignment: .center)
-                  .padding(14)
-                  .background(Color.white.opacity(0.05))
-                  .cornerRadius(12)
-                  .padding(.horizontal, 16)
-          })
+            Button(action: {
+                presentDialog(for: .password)
+            }, label: {
+                Text("Delete Account")
+                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                    .font(.medium(.callout))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(14)
+                    .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                    .cornerRadius(12)
+                    .padding(.horizontal, 16)
+            })
         }
     }
 
@@ -234,6 +234,7 @@ struct AccountSettingsView: View {
 }
 
 struct AccountSectionView: View {
+    let isDarkMode: Bool
     let section: AccountSectionModel
     let accountStatus: AccountEmailStatusType
     let handleRowAction: (AccountRowAction) -> Void
@@ -243,7 +244,7 @@ struct AccountSectionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(section.type.title.uppercased())
                 .font(.caption)
-                .foregroundColor(.infoGrey)
+                .foregroundColor(.from(.infoColor, isDarkMode))
                 .padding(.horizontal, 16)
                 .padding(.bottom, 8)
 
@@ -258,7 +259,7 @@ struct AccountSectionView: View {
                             showDivider: false,
                             accountStatus: accountStatus)
                     }
-                    .background(Color.white.opacity(0.05))
+                    .background(Color.from(.backgroundColor, isDarkMode))
                     .cornerRadius(12)
                     .padding(.horizontal, 16)
                 }
@@ -277,7 +278,7 @@ struct AccountSectionView: View {
                             accountStatus: accountStatus)
                     }
                 }
-                .background(Color.white.opacity(0.05))
+                .background(Color.from(.backgroundColor, isDarkMode))
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
             }
@@ -291,6 +292,7 @@ struct AccountSectionView: View {
         showDivider: Bool,
         accountStatus: AccountEmailStatusType) -> some View {
             AccountRowView(
+                isDarkMode: isDarkMode,
                 row: row,
                 section: sectionType,
                 showDivider: showDivider,
@@ -308,10 +310,11 @@ struct AccountSectionView: View {
                 default: break
                 }
             }
-    }
+        }
 }
 
 struct AccountRowView: View {
+    let isDarkMode: Bool
     let row: AccountRowModel
     let section: AccountSectionType
     let showDivider: Bool
@@ -324,11 +327,11 @@ struct AccountRowView: View {
                 HStack(spacing: 6) {
                     if row.needsWarningIcon(accountStatus: accountStatus) {
                         Image(systemName: "exclamationmark.circle")
-                            .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .white)
+                            .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .from(.iconColor, isDarkMode))
                     }
 
                     Text(row.title)
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
                         .font(.medium(.callout))
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -336,15 +339,15 @@ struct AccountRowView: View {
                 if let message = row.message, section != .other {
                     Text(message)
                         .foregroundColor(section == .plan
-                                         ? (message == TextsAsset.pro ? .actionGreen : (message == "Free") ? .white : .infoGrey)
-                                         : .infoGrey)
+                                         ? (message == TextsAsset.pro ? .actionGreen : (message == "Free") ? .from(.titleColor, isDarkMode) : .infoGrey)
+                                         : .from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
 
                 }
 
                 if row.action != nil {
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.infoGrey)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
                 }
             }
             .padding(.horizontal, 16)
@@ -352,7 +355,7 @@ struct AccountRowView: View {
 
             if let message = row.message, section == .other {
                 Text(message)
-                    .foregroundColor(.infoGrey)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.subheadline))
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -362,10 +365,10 @@ struct AccountRowView: View {
 
             if let subtitle = row.descriptionText(accountStatus: accountStatus) {
                 Text(subtitle)
-                    .foregroundColor(.infoGrey)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
                     .font(.regular(.footnote))
                     .padding(12)
-                    .background(Color.white.opacity(0.05))
+                    .background(Color.from(.backgroundColor, isDarkMode))
                     .cornerRadius(10)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -378,13 +381,13 @@ struct AccountRowView: View {
                 }, label: {
                     HStack {
                         Text(TextsAsset.EmailView.info)
-                            .foregroundColor(.black)
+                            .foregroundColor(.from(.dark, isDarkMode))
                             .font(.medium(.footnote))
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         Text(TextsAsset.Account.resend)
                             .font(.bold(.footnote))
-                            .foregroundColor(.black)
+                            .foregroundColor(.from(.dark, isDarkMode))
                     }
                     .padding(12)
                     .background(Color.orangeYellow)
@@ -397,7 +400,7 @@ struct AccountRowView: View {
 
             if showDivider {
                 Divider()
-                    .background(.black)
+                    .background(Color.from(.separatorColor, isDarkMode))
             }
         }
         .onTapGesture {

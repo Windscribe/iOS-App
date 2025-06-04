@@ -133,7 +133,7 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 localDB: r.resolve(LocalDatabase.self)!,
-                lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
             )
         }.inObjectScope(.transient)
 
@@ -585,7 +585,7 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     apiManager: r.resolve(APIManager.self)!,
                     localDB: r.resolve(LocalDatabase.self)!,
-                    lookAndFeelRepo: r.resolve(LookAndFeelRepositoryType.self)!
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
                 )
             )
         }.inObjectScope(.transient)

@@ -24,23 +24,22 @@ struct ReferForDataSettingsView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue
-                .edgesIgnoringSafeArea(.all)
-
+        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 32) {
                     Image(ImagesAsset.windscribeHeart)
+                        .renderingMode(.template)
                         .resizable()
                         .frame(width: 104, height: 86)
                         .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                         .padding(.top, 75)
 
                     VStack(spacing: 16) {
                         Text(TextsAsset.Refer.shareWindscribeWithFriend)
                             .font(.bold(.title2))
                             .multilineTextAlignment(.center)
-                            .foregroundColor(viewModel.isDarkMode ? .white : .midnight)
+                            .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                             .padding(.bottom, 16)
 
                         ReferForDataCheckRow(
@@ -73,7 +72,7 @@ struct ReferForDataSettingsView: View {
 
                     Text(TextsAsset.Refer.refereeMustProvideUsername)
                         .font(.text(.footnote))
-                        .foregroundColor(viewModel.isDarkMode ? .white.opacity(0.5) : .midnight.opacity(0.5))
+                        .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                 }
@@ -102,7 +101,7 @@ struct ReferForDataCheckRow: View {
 
             Text(text)
                 .font(.text(.subheadline))
-                .foregroundColor(isDarkMode ? .white.opacity(0.5) : .midnight.opacity(0.5))
+                .foregroundColor(.from(.infoColor, isDarkMode))
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
