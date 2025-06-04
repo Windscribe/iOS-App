@@ -41,6 +41,7 @@ class ServerRepositoryImpl: ServerRepository {
         }
         let countryCode = advanceRepository.getCountryOverride() ?? ""
         return apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
+            .observe(on: MainScheduler.instance)
             .map { serverList in
                 let servers = Array(serverList.servers)
                 for s in servers {
@@ -62,46 +63,52 @@ class ServerRepositoryImpl: ServerRepository {
     }
 
     func updateRegions(with regions: [ExportedRegion]) {
-        preferences.saveCustomLocationsNames(value: regions)
-        guard let servers = localDatabase.getServers() else { return }
-        updateServerModels(servers: servers)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.preferences.saveCustomLocationsNames(value: regions)
+            guard let servers = self.localDatabase.getServers() else { return }
+            self.updateServerModels(servers: servers)
+        }
     }
 
     private func updateServerModels(servers: [Server]) {
-        logger.logI("ServerRepositoryImpl", "Stating merge of local and external servers")
-        let regions = preferences.getCustomLocationsNames()
-        if regions.isEmpty {
-            updatedServerModelsSubject.onNext(servers.compactMap { $0.getServerModel() })
-            return
-        }
-
-        var mergedModels: [ServerModel] = []
-        servers.forEach { server in
-            if let region = regions.first(where: { $0.id == server.id }) {
-                var mergedGroups = [GroupModel]()
-                server.groups.forEach { group in
-                    if let city = region.cities.first(where: { $0.id == group.id }) {
-                        mergedGroups.append(group.getGroupModel(customCity: city.name,
-                                                                customNick: city.nickname))
-                    } else {
-                        mergedGroups.append(group.getGroupModel())
-                    }
-                }
-                if server.groups.count == mergedGroups.count {
-                    mergedModels.append(server.getServerModel(customName: region.country,
-                                                              groupModels: mergedGroups))
-                } else {
-                    mergedModels.append(server.getServerModel(customName: region.country,
-                                                              groupModels: server.getServerModel().groups))
-                }
-            } else {
-                mergedModels.append(server.getServerModel())
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            logger.logI("ServerRepositoryImpl", "Stating merge of local and external servers")
+            let regions = preferences.getCustomLocationsNames()
+            if regions.isEmpty {
+                updatedServerModelsSubject.onNext(servers.compactMap { $0.getServerModel() })
+                return
             }
-        }
-        if mergedModels.count == servers.count {
-            logger.logI("ServerRepositoryImpl", "Merge of local and external servers successful")
-            updatedServerModelsSubject.onNext(mergedModels)
-            return
+
+            var mergedModels: [ServerModel] = []
+            servers.forEach { server in
+                if let region = regions.first(where: { $0.id == server.id }) {
+                    var mergedGroups = [GroupModel]()
+                    server.groups.forEach { group in
+                        if let city = region.cities.first(where: { $0.id == group.id }) {
+                            mergedGroups.append(group.getGroupModel(customCity: city.name,
+                                                                    customNick: city.nickname))
+                        } else {
+                            mergedGroups.append(group.getGroupModel())
+                        }
+                    }
+                    if server.groups.count == mergedGroups.count {
+                        mergedModels.append(server.getServerModel(customName: region.country,
+                                                                  groupModels: mergedGroups))
+                    } else {
+                        mergedModels.append(server.getServerModel(customName: region.country,
+                                                                  groupModels: server.getServerModel().groups))
+                    }
+                } else {
+                    mergedModels.append(server.getServerModel())
+                }
+            }
+            if mergedModels.count == servers.count {
+                logger.logI("ServerRepositoryImpl", "Merge of local and external servers successful")
+                updatedServerModelsSubject.onNext(mergedModels)
+                return
+            }
         }
     }
 

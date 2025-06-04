@@ -44,7 +44,9 @@ class UserDataRepositoryImpl: UserDataRepository {
         return serverRepository.getUpdatedServers().flatMap { _ in
             self.latencyRepository.pickBestLocation()
             self.logger.logD(UserDataRepositoryImpl.self, "Getting iKEv2 credentials.")
-            return self.credentialsRepository.getUpdatedIKEv2Crendentials().catchAndReturn(nil)
+            return self.credentialsRepository
+                .getUpdatedIKEv2Crendentials()
+                .catchAndReturn(nil)
         }.flatMap { _ in
             self.logger.logD(UserDataRepositoryImpl.self, "Getting OpenVPN Server config.")
             return self.credentialsRepository.getUpdatedServerConfig()
