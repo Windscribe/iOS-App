@@ -126,7 +126,8 @@ struct MenuEntryActionView: View {
     var body: some View {
         switch actionType {
         case let .multiple(currentOption, options, parentId):
-            MenuMultipleActionView(currentOption: currentOption,
+            MenuMultipleActionView(isDarkMode: isDarkMode,
+                                   currentOption: currentOption,
                                    options: options,
                                    parentId: parentId,
                                    isAlignLeading: isAlignLeading,
@@ -202,6 +203,7 @@ struct MenuEntryActionView: View {
 }
 
 struct MenuMultipleActionView: View {
+    let isDarkMode: Bool
     let currentOption: String
     let options: [String]
     let parentId: Int
