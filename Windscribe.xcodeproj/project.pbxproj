@@ -216,6 +216,7 @@
 		1EB67FAD2DE9E29D00729052 /* ConnectionsRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FAC2DE9E29600729052 /* ConnectionsRouteID.swift */; };
 		1EB67FAF2DEDD6E800729052 /* PreferencesBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FAE2DEDD6D000729052 /* PreferencesBaseView.swift */; };
 		1EB67FB22DEDDDDC00729052 /* MenuThemeManagerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FB12DEDDDC700729052 /* MenuThemeManagerRepository.swift */; };
+		1EB67FB32DF0A92A00729052 /* MenuThemeManagerRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FB12DEDDDC700729052 /* MenuThemeManagerRepository.swift */; };
 		1EBD1FB32C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB22C417D9400E90A4E /* LocalDatabaseImpl+Migration.swift */; };
 		1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1FB42C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift */; };
 		1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C77A2BDAC2D50036248B /* SearchLocationsViewModel.swift */; };
@@ -6340,6 +6341,7 @@
 				C512546E2DE76D06003A58BD /* SSOSession.swift in Sources */,
 				1EF7BB312C6D0D750032A4DF /* UpgradePricingView.swift in Sources */,
 				59FC74532C51605300021CD1 /* UIStackView+Extension.swift in Sources */,
+				1EB67FB32DF0A92A00729052 /* MenuThemeManagerRepository.swift in Sources */,
 				59FC73DB2C514B9D00021CD1 /* FilePaths.swift in Sources */,
 				1E79CA622C63D942006D4DE7 /* AccountItemView.swift in Sources */,
 				59FC746A2C5167E200021CD1 /* EmergencyRepositoryImpl.swift in Sources */,
