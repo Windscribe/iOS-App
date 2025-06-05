@@ -30,7 +30,7 @@ class PreferencesConnectionView: UIView {
         connectionModeView.populate(with: GeneralViewType.connectionMode.listOption,
                                     title: GeneralViewType.connectionMode.title)
 
-        circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
+        circumventCensorshipView.populate(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.Connection.circumventCensorship)
 
         protocolsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
         portsView.isHidden = viewModel.getCurrentConnectionMode() == .auto
@@ -73,7 +73,7 @@ class PreferencesConnectionView: UIView {
 
         portsView.updateText(with: viewModel.getPorts(), title: nil)
 
-        circumventCensorshipView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.circumventCensorship)
+        circumventCensorshipView.updateText(with: [TextsAsset.General.enabled, TextsAsset.General.disabled], title: TextsAsset.Connection.circumventCensorship)
     }
 
     private func bindViews() {
