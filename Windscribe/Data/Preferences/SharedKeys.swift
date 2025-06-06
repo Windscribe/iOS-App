@@ -29,7 +29,6 @@ enum SharedKeys {
 
     // UserPreferenceManager
     static let orderLocationsBy = "OrderLocationsBy"
-    static let appearance = "appearance"
     static let language = "language"
     static let firewall = "firewall"
     static let killSwitch = "killSwitch"

@@ -111,7 +111,6 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
         switch entry {
         case .appearance:
             if case let .multiple(newOption, _) = actionSelected {
-                preferences.saveAppearance(appearance: newOption)
                 preferences.saveDarkMode(darkMode: newOption == DefaultValues.appearance)
             }
         case .background:

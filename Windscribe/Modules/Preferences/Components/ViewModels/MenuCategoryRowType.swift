@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-protocol MenuCategoryRowType: Identifiable, CaseIterable {
+protocol MenuCategoryRowType: Hashable {
     var id: Int { get }
     var title: String { get }
     var imageName: String? { get }

@@ -22,16 +22,41 @@ final class AboutSettingsViewModelImpl: AboutSettingsViewModel {
     @Published var entries: [AboutItemType] = []
     @Published var safariURL: URL?
 
+    // MARK: - Dependencies
     private let logger: FileLogger
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(logger: FileLogger) {
+    init(logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.logger = logger
-        entries = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses, .changelog]
+        self.lookAndFeelRepository = lookAndFeelRepository
+
+        bindSubjects()
+        reloadItems()
     }
 
     func entrySelected(_ entry: AboutItemType) {
         safariURL = URL(string: entry.url)
+    }
+
+    private func bindSubjects() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("GeneralSettingsViewModel", "Theme Adjustment Change error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+                self?.reloadItems()
+            })
+            .store(in: &cancellables)
+    }
+
+    private func reloadItems() {
+        entries = [.status, .aboutUs, .privacyPolicy, .terms, .blog, .jobs, .softwareLicenses, .changelog]
     }
 }

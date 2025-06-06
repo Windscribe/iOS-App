@@ -84,7 +84,6 @@ class GeneralViewModel: GeneralViewModelType {
 
     func didSelectedAppearance(value: String) {
         guard let valueToSave = TextsAsset.General.getValue(displayText: value) else { return }
-        preferences.saveAppearance(appearance: valueToSave)
         preferences.saveDarkMode(darkMode: valueToSave == DefaultValues.appearance)
     }
 

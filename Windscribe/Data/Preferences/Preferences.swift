@@ -19,8 +19,6 @@ protocol Preferences {
     // UserPreferenceManager
     func saveOrderLocationsBy(order: String)
     func getOrderLocationsBy() -> Observable<String?>
-    func saveAppearance(appearance: String)
-    func getAppearance() -> Observable<String?>
     func saveLanguage(language: String)
     func getLanguage() -> Observable<String?>
     func saveFirewallMode(firewall: Bool)

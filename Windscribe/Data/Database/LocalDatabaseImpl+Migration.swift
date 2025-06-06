@@ -188,7 +188,7 @@ extension LocalDatabaseImpl {
                             self.preferences.saveOrderLocationsBy(order: orderLocationsBy)
                         }
                         if let appearance = oldObject?["appearance"] as? String {
-                            self.preferences.saveAppearance(appearance: appearance)
+                            self.preferences.saveDarkMode(darkMode: appearance == DefaultValues.appearance)
                         }
                         if let firewall = oldObject?["firewall"] as? Bool {
                             self.preferences.saveFirewallMode(firewall: firewall)
