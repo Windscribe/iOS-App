@@ -12,6 +12,8 @@ import SwiftUI
 protocol NewsFeedViewModelProtocol: ObservableObject {
     func didTapToExpand(id: Int, allowMultipleExpansions: Bool )
     func didTapAction(action: ActionLinkModel)
+
+    var isDarkMode: Bool { get set }
 }
 
 class NewsFeedViewModel: NewsFeedViewModelProtocol {
@@ -20,24 +22,47 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     @Published var viewToLaunch: NewsFeedViewToLaunch = .unknown
     @Published var loadState: NewsFeedLoadState = .idle
     @Published private(set) var readStatus: Set<Int> = []
-
-    private var cancellables = Set<AnyCancellable>()
+    @Published var isDarkMode: Bool = false
 
     let localDatabase: LocalDatabase
     let sessionManager: SessionManaging
+    let lookAndFeelRepository: LookAndFeelRepositoryType
     let logger: FileLogger
     let router: AccountRouter
     let htmlParser: HTMLParsing
 
-    init(localDatabase: LocalDatabase, sessionManager: SessionManaging, logger: FileLogger, router: AccountRouter, htmlParser: HTMLParsing) {
+    private var cancellables = Set<AnyCancellable>()
+
+    init(localDatabase: LocalDatabase,
+         sessionManager: SessionManaging,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         logger: FileLogger,
+         router: AccountRouter,
+         htmlParser: HTMLParsing) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
         self.router = router
         self.htmlParser = htmlParser
 
+        bind()
         loadReadStatus()
         loadNewsFeedData()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("SignUpViewModel", "darkTheme error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Data Loading

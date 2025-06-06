@@ -16,7 +16,7 @@ struct SignUpView: View {
     }
 
     @Environment(\.presentationMode) private var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
 
     @EnvironmentObject var signupFlowContext: SignupFlowContext
     @ObservedObject private var keyboard = KeyboardResponder()
@@ -133,59 +133,60 @@ struct SignUpView: View {
     var body: some View {
         ScrollViewReader { proxy in
             GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: 20) {
-                        usernameField
-                        passwordField
-                        emailField
-                        voucherField
-                        referralToggle
-                        referralSection
-                        apiOrNetworkErrorLabel
-                        continueButton
-                        setupLaterButton
+                PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            usernameField
+                            passwordField
+                            emailField
+                            voucherField
+                            referralToggle
+                            referralSection
+                            apiOrNetworkErrorLabel
+                            continueButton
+                            setupLaterButton
+                        }
+                        .padding()
+                        .padding(.bottom, keyboard.currentHeight) // Dynamic keyboard-aware padding
+                        .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
+                        .background(attachPreferenceReader())
                     }
-                    .padding()
-                    .padding(.bottom, keyboard.currentHeight) // Dynamic keyboard-aware padding
-                    .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
-                    .background(attachPreferenceReader())
-                }
-                .safeAreaInset(edge: .bottom, spacing: 0) {
-                    Color.clear.frame(height: keyboard.currentHeight == 0 ? 0 : 60)
-                }
-                .onChange(of: viewModel.email) { _ in
-                    if viewModel.isEmailValid(viewModel.email) {
-                        viewModel.failedState = .none
+                    .safeAreaInset(edge: .bottom, spacing: 0) {
+                        Color.clear.frame(height: keyboard.currentHeight == 0 ? 0 : 60)
                     }
-                }
-                .onChange(of: focusedField) { field in
-                    if field != nil {
-                        viewModel.failedState = .none
+                    .onChange(of: viewModel.email) { _ in
+                        if viewModel.isEmailValid(viewModel.email) {
+                            viewModel.failedState = .none
+                        }
                     }
+                    .onChange(of: focusedField) { field in
+                        if field != nil {
+                            viewModel.failedState = .none
+                        }
 
-                    guard let field = field else { return }
+                        guard let field = field else { return }
 
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        scrollToField(field, proxy: proxy, geometry: geometry)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                            scrollToField(field, proxy: proxy, geometry: geometry)
+                        }
                     }
-                }
-                .onTapGesture {
-                    focusedField = nil
-                }
-                .onReceive(viewModel.routeTo) { route in
-                    switch route {
-                    case .main:
-                        router.routeToMainView()
-                    case .confirmEmail:
-                        showEmailWarning = true
+                    .onTapGesture {
+                        focusedField = nil
+                    }
+                    .onReceive(viewModel.routeTo) { route in
+                        switch route {
+                        case .main:
+                            router.routeToMainView()
+                        case .confirmEmail:
+                            showEmailWarning = true
+                        }
                     }
                 }
             }
         }
-        .background(Color.loginRegisterBackgroundColor)
         .dynamicTypeSize(dynamicTypeRange)
+        .navigationTitle(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
         .toolbar {
             signupToolbar()
         }
@@ -197,7 +198,8 @@ struct SignUpView: View {
                     topOffset: CGFloat(data.top),
                     onSubmit: { xOffset, trailX, trailY in
                         viewModel.submitCaptcha(captchaSolution: xOffset, trailX: trailX, trailY: trailY)
-                    }
+                    },
+                    isDarkMode: $viewModel.isDarkMode
                 )
             }
         }
@@ -226,7 +228,8 @@ private extension SignUpView {
             showError: isUsernameError,
             errorMessage: usernameErrorMessage,
             showWarningIcon: showUsernameIcon,
-            text: $viewModel.username
+            text: $viewModel.username,
+            isDarkMode: $viewModel.isDarkMode
         )
         .focused($focusedField, equals: .username)
         .id(Field.username)
@@ -242,7 +245,8 @@ private extension SignUpView {
             showError: isPasswordError,
             errorMessage: passwordErrorMessage,
             showWarningIcon: showPasswordIcon,
-            text: $viewModel.password
+            text: $viewModel.password,
+            isDarkMode: $viewModel.isDarkMode
         )
         .focused($focusedField, equals: .password)
         .id(Field.password)
@@ -259,11 +263,12 @@ private extension SignUpView {
                 errorMessage: emailErrorMessage,
                 showWarningIcon: showEmailIcon,
                 text: $viewModel.email,
+                isDarkMode: $viewModel.isDarkMode,
                 keyboardType: .emailAddress,
                 trailingView: AnyView(
                     Text(TextsAsset.get10GbAMonth)
                         .font(.medium(.callout))
-                        .foregroundColor(.white.opacity(0.5))
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
                 )
             )
             .focused($focusedField, equals: .email)
@@ -272,7 +277,7 @@ private extension SignUpView {
 
             Text(TextsAsset.emailInfoLabel)
                 .font(.regular(.footnote))
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
@@ -282,7 +287,8 @@ private extension SignUpView {
         LoginTextField(
             title: "\(TextsAsset.voucherCode) (\(TextsAsset.optional))",
             placeholder: TextsAsset.Authentication.enterVoucherCode,
-            text: $viewModel.voucherCode
+            text: $viewModel.voucherCode,
+            isDarkMode: $viewModel.isDarkMode
         )
         .focused($focusedField, equals: .voucher)
         .id(Field.voucher)
@@ -300,11 +306,11 @@ private extension SignUpView {
                 HStack(spacing: 8) {
                     Text(TextsAsset.referredBySomeone)
                         .font(.medium(.callout))
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
                     Image(systemName: "chevron.down")
                         .rotationEffect(.degrees(viewModel.isReferralVisible ? 180 : 0))
-                        .foregroundColor(.white.opacity(0.5))
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
                         .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
                 }
             })
@@ -323,10 +329,10 @@ private extension SignUpView {
                 ], id: \.self) { text in
                     HStack(alignment: .top, spacing: 6) {
                         Text("✓")
-                            .foregroundColor(.green)
+                            .foregroundColor(.loginRegisterEnabledButtonColor)
                             .font(.regular(.callout))
                         Text(text)
-                            .foregroundColor(.white.opacity(0.5))
+                            .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
                             .font(.regular(.callout))
                             .fixedSize(horizontal: false, vertical: true)
                     }
@@ -342,7 +348,8 @@ private extension SignUpView {
                         ? TextsAsset.pleaseEnterEmailFirst
                         : nil,
                     showWarningIcon: viewModel.isReferralVisible && !viewModel.isEmailValid(viewModel.email),
-                    text: $viewModel.referralUsername
+                    text: $viewModel.referralUsername,
+                    isDarkMode: $viewModel.isDarkMode
                 )
                 .disabled(!viewModel.isEmailValid(viewModel.email))
                 .focused($focusedField, equals: .referral)
@@ -351,7 +358,7 @@ private extension SignUpView {
 
                 Text(TextsAsset.mustConfirmEmail)
                     .font(.regular(.footnote))
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode).opacity(0.5))
             }
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.25), value: viewModel.isReferralVisible)
@@ -381,12 +388,14 @@ private extension SignUpView {
                 } else {
                     Text(TextsAsset.continue)
                         .font(.bold(.body))
-                        .foregroundColor(.black)
+                        .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
                 }
             }
             .frame(maxWidth: .infinity)
             .padding()
-            .background(viewModel.isContinueButtonEnabled ? Color.loginRegisterEnabledButtonColor : Color.white)
+            .background(viewModel.isContinueButtonEnabled
+                        ? Color.loginRegisterEnabledButtonColor
+                        : .from(.iconColor, viewModel.isDarkMode))
             .clipShape(Capsule())
         }
         .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
@@ -424,36 +433,19 @@ private extension SignUpView {
 
     @ToolbarContentBuilder
     func signupToolbar() -> some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Text(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
-                .foregroundColor(.white)
-                .font(.headline)
-        }
-
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }) {
-                Image(systemName: "chevron.backward")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.leading, -8)
-            }
-        }
-
         ToolbarItemGroup(placement: .keyboard) {
             Button(action: {
                 moveFocus(up: true)
-            }) {
+            },label: {
                 Image(systemName: "chevron.up")
-            }
+            })
             .disabled(focusedField == .username)
 
             Button(action: {
                 moveFocus(up: false)
-            }) {
+            },label: {
                 Image(systemName: "chevron.down")
-            }
+            })
             .disabled(isLastFieldFocused)
 
             Spacer()

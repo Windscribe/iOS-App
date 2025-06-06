@@ -118,3 +118,10 @@ enum AccountInputDialog: String, Identifiable, CaseIterable {
 
     var id: String { rawValue }
 }
+
+enum AccountState: Equatable {
+    case initial
+    case loading(isFullScreen: Bool)
+    case error(String)
+    case success
+}

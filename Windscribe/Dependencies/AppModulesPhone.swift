@@ -27,6 +27,7 @@ class ViewModels: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 connectivity: r.resolve(Connectivity.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
@@ -41,6 +42,7 @@ class ViewModels: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
@@ -76,6 +78,7 @@ class ViewModels: Assembly {
             EmergencyConnectViewModelImpl(
                 vpnManager: r.resolve(VPNManager.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
@@ -83,19 +86,24 @@ class ViewModels: Assembly {
             EnterEmailViewModelImpl(
                 sessionManager: r.resolve(SessionManaging.self)!,
                 alertManager: r.resolve(AlertManagerV2.self)!,
-                apiManager: r.resolve(APIManager.self)!)
+                apiManager: r.resolve(APIManager.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register((any ConfirmEmailViewModel).self) { r in
             ConfirmEmailViewModelImpl(
                 sessionManager: r.resolve(SessionManaging.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
-                apiManager: r.resolve(APIManager.self)!)
+                apiManager: r.resolve(APIManager.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register((any GhostAccountViewModel).self) { r in
             GhostAccountViewModelImpl(
-                sessionManager: r.resolve(SessionManaging.self)!)
+                sessionManager: r.resolve(SessionManaging.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
         container.register((any PreferencesMainCategoryViewModel).self) { r in
@@ -263,6 +271,7 @@ class ViewModels: Assembly {
             NewsFeedViewModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManaging.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 router: r.resolve(AccountRouter.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!)
@@ -458,6 +467,7 @@ class ViewControllerModule: Assembly {
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
                     latencyRepository: r.resolve(LatencyRepository.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     logger: r.resolve(FileLogger.self)!
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
@@ -473,6 +483,7 @@ class ViewControllerModule: Assembly {
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
                 emergencyConnectRepository: r.resolve(EmergencyRepository.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!
             ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
@@ -481,6 +492,7 @@ class ViewControllerModule: Assembly {
             EmergencyConnectView(viewModel: EmergencyConnectViewModelImpl(
                 vpnManager: r.resolve(VPNManager.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!
             ))
         }.inObjectScope(.transient)
@@ -488,7 +500,9 @@ class ViewControllerModule: Assembly {
         container.register(GhostAccountView.self) { r in
             GhostAccountView(
                 viewModel: GhostAccountViewModelImpl(
-                    sessionManager: r.resolve(SessionManaging.self)!),
+                    sessionManager: r.resolve(SessionManaging.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    logger: r.resolve(FileLogger.self)!),
                 router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
@@ -496,7 +510,8 @@ class ViewControllerModule: Assembly {
             EnterEmailView(viewModel: EnterEmailViewModelImpl(
                 sessionManager: r.resolve(SessionManaging.self)!,
                 alertManager: r.resolve(AlertManagerV2.self)!,
-                apiManager: r.resolve(APIManager.self)!
+                apiManager: r.resolve(APIManager.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
             ))
         }.inObjectScope(.transient)
 
@@ -505,7 +520,9 @@ class ViewControllerModule: Assembly {
                 viewModel: ConfirmEmailViewModelImpl(
                     sessionManager: r.resolve(SessionManaging.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
-                    apiManager: r.resolve(APIManager.self)!
+                    apiManager: r.resolve(APIManager.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    logger: r.resolve(FileLogger.self)!
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
@@ -800,6 +817,7 @@ class ViewControllerModule: Assembly {
             NewsFeedView(viewModel: NewsFeedViewModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 sessionManager: r.resolve(SessionManaging.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 router: r.resolve(AccountRouter.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!)

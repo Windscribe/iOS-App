@@ -25,6 +25,7 @@ protocol SignUpViewModel: ObservableObject {
     var email: String { get set }
     var voucherCode: String { get set }
     var referralUsername: String { get set }
+    var isDarkMode: Bool { get set }
     var isReferralVisible: Bool { get set }
     var isContinueButtonEnabled: Bool { get }
     var showLoadingView: Bool { get set }
@@ -46,6 +47,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     @Published var voucherCode: String = ""
     @Published var referralUsername: String = ""
 
+    @Published var isDarkMode: Bool = false
     @Published var isPremiumUser: Bool = false
     @Published var isReferralVisible: Bool = false
     @Published var showLoadingView: Bool = false
@@ -74,6 +76,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private let vpnManager: VPNManager
     private let protocolManager: ProtocolManagerType
     private let latencyRepository: LatencyRepository
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
@@ -87,6 +90,7 @@ class SignUpViewModelImpl: SignUpViewModel {
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
          emergencyConnectRepository: EmergencyRepository,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
 
         self.apiCallManager = apiCallManager
@@ -98,10 +102,26 @@ class SignUpViewModelImpl: SignUpViewModel {
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.emergencyConnectRepository = emergencyConnectRepository
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
 
+        bind()
         registerNetworkEventListener()
         checkUserStatus()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("SignUpViewModel", "darkTheme error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Actions

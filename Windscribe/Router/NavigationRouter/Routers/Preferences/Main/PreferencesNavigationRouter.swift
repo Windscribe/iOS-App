@@ -50,11 +50,6 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
     }
 
     func navigate(to destination: Route) {
-        if let navVC = UIApplication.shared.topMostViewController()?.navigationController {
-            navVC.topViewController?.navigationItem.backBarButtonItem =
-                UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        }
-
         activeRoute = destination
     }
 

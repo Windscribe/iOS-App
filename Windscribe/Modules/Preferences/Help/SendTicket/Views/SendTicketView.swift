@@ -26,7 +26,7 @@ struct SendTicketView: View {
 
     var body: some View {
         if viewModel.showSuccess {
-            PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
 
                 VStack(spacing: 24) {
                     Image(ImagesAsset.checkCircleGreen)
@@ -43,7 +43,7 @@ struct SendTicketView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         } else {
-            PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
                         // Description

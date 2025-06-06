@@ -22,7 +22,7 @@ struct GeneralSettingsView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 14) {
                     ForEach(viewModel.entries, id: \.self) { entry in

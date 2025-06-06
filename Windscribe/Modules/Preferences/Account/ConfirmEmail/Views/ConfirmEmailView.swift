@@ -28,25 +28,27 @@ struct ConfirmEmailView: View {
 
     var body: some View {
         NavigationView {
-            contentView
-                .onReceive(viewModel.$shouldDismiss) { action in
-                    if action {
-                        dismiss()
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                contentView
+                    .onReceive(viewModel.$shouldDismiss) { action in
+                        if action {
+                            dismiss()
+                        }
                     }
-                }
-                .onReceive(viewModel.$resendEmailSuccess) { success in
-                    if success {
-                        showingResendSuccessAlert = true
-                        viewModel.resendEmailSuccess = false
+                    .onReceive(viewModel.$resendEmailSuccess) { success in
+                        if success {
+                            showingResendSuccessAlert = true
+                            viewModel.resendEmailSuccess = false
+                        }
                     }
-                }
-                .alert(isPresented: $showingResendSuccessAlert) {
-                    Alert(
-                        title: Text(TextsAsset.ConfirmationEmailSentAlert.title),
-                        message: Text(TextsAsset.ConfirmationEmailSentAlert.message),
-                        dismissButton: .default(Text(TextsAsset.okay))
-                    )
-                }
+                    .alert(isPresented: $showingResendSuccessAlert) {
+                        Alert(
+                            title: Text(TextsAsset.ConfirmationEmailSentAlert.title),
+                            message: Text(TextsAsset.ConfirmationEmailSentAlert.message),
+                            dismissButton: .default(Text(TextsAsset.okay))
+                        )
+                    }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .dynamicTypeSize(dynamicTypeRange)
@@ -61,18 +63,20 @@ struct ConfirmEmailView: View {
             VStack(spacing: 24) {
                 Image(ImagesAsset.confirmEmail)
                     .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                     .frame(width: 68, height: 68)
 
                 Text(TextsAsset.EmailView.confirmEmail)
                     .font(.bold(.title2))
                     .dynamicTypeSize(dynamicTypeRange)
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                     .multilineTextAlignment(.center)
 
                 Text(viewModel.session?.isUserPro == true ? TextsAsset.EmailView.infoPro : TextsAsset.EmailView.info)
                     .font(.text(.callout))
                     .dynamicTypeSize(dynamicTypeRange)
-                    .foregroundColor(Color.white.opacity(0.5))
+                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 48)
 
@@ -82,14 +86,14 @@ struct ConfirmEmailView: View {
                     Text(TextsAsset.EmailView.resendEmail)
                         .font(.text(.callout))
                         .dynamicTypeSize(dynamicTypeRange)
-                        .foregroundColor(Color.white.opacity(0.5))
+                        .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.clear)
                         .clipShape(Capsule())
                         .overlay(
                             Capsule()
-                                .stroke(Color.white, lineWidth: 2)
+                                .stroke(Color.from(.titleColor, viewModel.isDarkMode), lineWidth: 2)
                         )
                 })
                 .disabled(viewModel.resendButtonDisabled)
@@ -106,14 +110,14 @@ struct ConfirmEmailView: View {
                         Text(TextsAsset.EmailView.changeEmail)
                             .font(.text(.callout))
                             .dynamicTypeSize(dynamicTypeRange)
-                            .foregroundColor(Color.white.opacity(0.5))
+                            .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.clear)
                             .clipShape(Capsule())
                             .overlay(
                                 Capsule()
-                                    .stroke(Color.white, lineWidth: 2)
+                                    .stroke(Color.from(.titleColor, viewModel.isDarkMode), lineWidth: 2)
                             )
                     })
                     .opacity(1.0)
@@ -126,12 +130,11 @@ struct ConfirmEmailView: View {
                 }, label: {
                     Text(TextsAsset.EmailView.close)
                         .font(.bold(.callout))
-                        .foregroundColor(Color.white.opacity(0.5))
+                        .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                 })
                 .padding(.bottom, 24)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.nightBlue.edgesIgnoringSafeArea(.all))
     }
 }

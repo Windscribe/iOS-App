@@ -68,6 +68,7 @@ class PlanUpgradeViewController: WSUIViewController {
         super.viewWillAppear(animated)
 
         changeNavigationBarStyle(isHidden: false)
+        setTransparentNavigationBar()
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -87,6 +88,22 @@ class PlanUpgradeViewController: WSUIViewController {
         }
 
         return super.traitCollection
+    }
+
+    private func setTransparentNavigationBar() {
+        guard let navBar = navigationController?.navigationBar else { return }
+
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.shadowColor = .clear
+
+        navBar.standardAppearance = appearance
+        navBar.scrollEdgeAppearance = appearance
+        navBar.isTranslucent = true
+        navBar.backgroundColor = .clear
+
+        view.backgroundColor = .clear
+        navigationController?.view.backgroundColor = .clear
     }
 
     private func createViews() {
