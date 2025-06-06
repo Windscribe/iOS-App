@@ -66,6 +66,7 @@ class LanguageManagerImpl: LanguageManager {
                 self.language = Languages(rawValue: languageCode) ?? Languages.english
                 self.activelanguage.onNext(self.language)
                 self.currentLanguage = self.getCurrentLanguage()
+                self.localizationService.updateLanguage(self.currentLanguage)
             }, onError: { _ in
                 self.language = Languages.english
                 self.activelanguage.onNext(Languages.english)
