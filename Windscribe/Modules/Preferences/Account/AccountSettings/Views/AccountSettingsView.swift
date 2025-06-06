@@ -333,7 +333,7 @@ struct AccountRowView: View {
         VStack(spacing: 0) {
             HStack(alignment: .top) {
                 HStack(spacing: 6) {
-                    if row.needsWarningIcon(accountStatus: accountStatus) {
+                    if row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) {
                         Image(systemName: "exclamationmark.circle")
                             .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .from(.iconColor, isDarkMode))
                     }
@@ -389,7 +389,7 @@ struct AccountRowView: View {
                     actionHandler(.resendEmail)
                 }, label: {
                     HStack {
-                        Text(TextsAsset.EmailView.info)
+                        Text(TextsAsset.EmailView.infoPro)
                             .foregroundColor(.from(.dark, isDarkMode))
                             .font(.medium(.footnote))
                             .frame(maxWidth: .infinity, alignment: .leading)

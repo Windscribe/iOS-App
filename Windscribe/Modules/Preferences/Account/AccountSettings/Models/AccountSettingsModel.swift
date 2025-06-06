@@ -61,18 +61,14 @@ struct AccountRowModel: Identifiable, Hashable {
     }
 
     func descriptionText(accountStatus: AccountEmailStatusType) -> String? {
-        if title.lowercased() == TextsAsset.email && accountStatus == .missing {
+        if title.lowercased() == TextsAsset.email.lowercased() && accountStatus == .missing {
             return TextsAsset.Account.includeEmailDesciption
         }
         return nil
     }
 
-    func needsWarningIcon(accountStatus: AccountEmailStatusType) -> Bool {
-        title.lowercased() == TextsAsset.email && (accountStatus == .missing || accountStatus == .unverified)
-    }
-
     func shouldShowConfirmEmailBanner(accountStatus: AccountEmailStatusType) -> Bool {
-        title.lowercased() == TextsAsset.email && accountStatus == .unverified
+        title.lowercased() == TextsAsset.email.lowercased()  && accountStatus == .unverified
     }
 }
 
