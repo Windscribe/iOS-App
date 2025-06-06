@@ -117,7 +117,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
                 }
             }, receiveValue: { [weak self] mode in
                 guard let self = self else { return }
-                self.connectionMode = mode ?? DefaultValues.connectionMode
+                self.connectionMode = (mode ?? DefaultValues.connectionMode).localized
                 self.reloadItems()
             })
             .store(in: &cancellables)
@@ -131,7 +131,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
                 }
             }, receiveValue: { [weak self] mode in
                 guard let self = self else { return }
-                self.connectedDNS = mode ?? DefaultValues.connectedDNS
+                self.connectedDNS = (mode ?? DefaultValues.connectedDNS).localized
                 self.reloadItems()
             })
             .store(in: &cancellables)
@@ -139,10 +139,20 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
 
     private func reloadItems() {
         let customDNSValue = preferences.getCustomDNSValue().value
+        let connectionModes = zip(TextsAsset.connectionModes,
+                                        Fields.connectionModes)
+            .map { MenuOption(title: $0, fieldKey: $1) }
+        let connectedDNSOptions = zip(TextsAsset.connectedDNSOptions,
+                                        Fields.connectedDNSOptions)
+            .map { MenuOption(title: $0, fieldKey: $1) }
+
         entries = [
             .networkOptions,
-            .connectionMode(currentOption: connectionMode, options: TextsAsset.connectionModes),
-            .connectedDns(currentOption: connectedDNS, customValue: customDNSValue, options: TextsAsset.connectedDNSOptions),
+            .connectionMode(currentOption: connectionMode,
+                            options: connectionModes),
+            .connectedDns(currentOption: connectedDNS,
+                          customValue: customDNSValue,
+                          options: connectedDNSOptions),
             .alwaysOn(isSelected: killSwitchSelected),
             .allowLan(isSelected: allowLanSelected),
             .circunventCensorship(isSelected: circumventCensorshipSelected)

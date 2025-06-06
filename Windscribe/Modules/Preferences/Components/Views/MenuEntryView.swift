@@ -207,7 +207,7 @@ struct MenuEntryActionView: View {
 struct MenuMultipleActionView: View {
     let isDarkMode: Bool
     let currentOption: String
-    let options: [String]
+    let options: [MenuOption]
     let parentId: Int
     let isAlignLeading: Bool
     let actionType: MenuEntryActionType
@@ -217,11 +217,11 @@ struct MenuMultipleActionView: View {
         Menu {
             ForEach(options, id: \.self) { option in
                 Button(action: {
-                    action(.multiple(newOption: option, parentId: parentId))
+                    action(.multiple(newOption: option.fieldKey, parentId: parentId))
                 }, label: {
                     HStack {
-                        Text(option)
-                        if option == currentOption {
+                        Text(option.title)
+                        if option.title == currentOption {
                             Image(ImagesAsset.CheckMarkButton.off)
                         }
                     }

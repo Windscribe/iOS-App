@@ -8,8 +8,8 @@
 
 enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
 
-    case locationOrder(currentOption: String, options: [String]),
-         language(currentOption: String, options: [String]),
+    case locationOrder(currentOption: String, options: [MenuOption]),
+         language(currentOption: String, options: [MenuOption]),
          hapticFeedback(isSelected: Bool),
          notification(title: String),
          version(message: String)

@@ -9,8 +9,8 @@
 enum NetworkSettingsEntryTpe: MenuEntryHeaderType, Hashable {
     case autoSecure(isSelected: Bool),
          preferredProtocol(isSelected: Bool,
-                           protocolSelected: String, protocolOptions: [String],
-                           portSelected: String, portOptions: [String]),
+                           protocolSelected: String, protocolOptions: [MenuOption],
+                           portSelected: String, portOptions: [MenuOption]),
          forget
 
     var id: Int {
@@ -77,8 +77,8 @@ enum NetworkSettingsSecondaryIDs: Int {
 }
 
 enum NetworkSettingsSecondaryType: MenuEntryItemType, Hashable {
-    case protocolMenu(currentOption: String, options: [String]),
-         portMenu(currentOption: String, options: [String])
+    case protocolMenu(currentOption: String, options: [MenuOption]),
+         portMenu(currentOption: String, options: [MenuOption])
     var id: Int {
         switch self {
         case .protocolMenu: NetworkSettingsSecondaryIDs.protocolMenu.id

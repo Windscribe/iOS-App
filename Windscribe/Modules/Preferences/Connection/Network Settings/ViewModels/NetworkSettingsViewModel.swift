@@ -92,13 +92,17 @@ class NetworkSettingsViewModelImpl: NetworkSettingsViewModel {
 
     private func reloadItems() {
         guard let network = displayingNetwork else { return }
+        let protocolOptions = getProtocols()
+            .map { MenuOption(title: $0, fieldKey: $0) }
+        let portOptions = getPorts(by: network.preferredProtocol)
+            .map { MenuOption(title: $0, fieldKey: $0) }
 
         entries = [.autoSecure(isSelected: !network.status),
                    .preferredProtocol(isSelected: network.preferredProtocolStatus == true && network.status == false,
                                       protocolSelected: network.preferredProtocol,
-                                      protocolOptions: getProtocols(),
+                                      protocolOptions: protocolOptions,
                                       portSelected: network.preferredPort,
-                                      portOptions: getPorts(by: network.preferredProtocol))]
+                                      portOptions: portOptions)]
         if connectivity.getWifiSSID() != displayingNetwork?.SSID {
             entries.append(.forget)
         }

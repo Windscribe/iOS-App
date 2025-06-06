@@ -24,6 +24,22 @@ enum Fields {
     static let hapticFeedback = "Haptic Feedback"
     static let showServerHealth = "Show Server Health"
 
+    static var appearances: [String] {
+        return ["Light", "Dark"]
+    }
+
+    static var connectionModes: [String] {
+        [Values.auto, Values.manual]
+    }
+
+    static var connectedDNSOptions: [String] {
+        [Values.auto, Values.custom]
+    }
+
+    static var orderPreferences: [String] {
+        return [Values.geography, Values.alphabet, Values.latency]
+    }
+
     enum WifiNetwork {
         static let trustStatus = "Trust Status"
         static let preferredProtocolStatus = "Pref Proto Status"
@@ -38,6 +54,7 @@ enum Fields {
         static let custom = "Custom"
         static let none = "None"
         static let flag = "Flags"
+        static let bundled = "Bundled"
         static let stretch = "Stretch"
         static let fill = "Fill"
         static let tile = "Tile"

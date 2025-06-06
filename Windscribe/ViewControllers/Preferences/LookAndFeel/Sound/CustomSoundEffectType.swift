@@ -31,9 +31,9 @@ enum SoundEffectType: Hashable {
 
     init(mainCategory: String, subtypeTitle: String? = nil) {
         switch mainCategory {
-        case TextsAsset.General.none:
+        case Fields.Values.none:
             self = .none
-        case TextsAsset.General.bundled:
+        case Fields.Values.bundled:
             if let subtypeTitle = subtypeTitle {
                 let subtype = SoundEffectSubtype(rawValue: subtypeTitle) ?? .arcade
                 self = .bundled(subtype: subtype)
@@ -42,7 +42,7 @@ enum SoundEffectType: Hashable {
                 self = .bundled(subtype: .arcade)
                 return
             }
-        case TextsAsset.General.custom:
+        case Fields.Values.custom:
             self = .custom
         default:
             self = .none
@@ -124,6 +124,10 @@ enum SoundEffectSubtype: String, CaseIterable {
 
     var displayName: String {
         return rawValue
+    }
+
+    var menuOption: MenuOption {
+        MenuOption(title: rawValue, fieldKey: rawValue)
     }
 
     var turnOnAssetName: String {

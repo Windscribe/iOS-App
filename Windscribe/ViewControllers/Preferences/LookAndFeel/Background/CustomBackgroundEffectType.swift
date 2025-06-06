@@ -53,6 +53,20 @@ enum BackgroundAspectRatioType: String, CaseIterable {
             return TextsAsset.General.tile
         }
     }
+
+    var menuOption: MenuOption {
+        switch self {
+        case .stretch:
+            return MenuOption(title: TextsAsset.General.stretch,
+                              fieldKey: Fields.Values.stretch)
+        case .fill:
+            return MenuOption(title: TextsAsset.General.fill,
+                              fieldKey: Fields.Values.fill)
+        case .tile:
+            return MenuOption(title: TextsAsset.General.tile,
+                              fieldKey: Fields.Values.tile)
+        }
+    }
 }
 
 enum BackgroundEffectType: Hashable {
@@ -63,11 +77,11 @@ enum BackgroundEffectType: Hashable {
 
     init(mainCategory: String, subtypeTitle: String? = nil) {
         switch mainCategory {
-        case TextsAsset.General.none:
+        case Fields.Values.none:
             self = .none
-        case TextsAsset.General.flag:
+        case Fields.Values.flag:
             self = .flag
-        case TextsAsset.General.bundled:
+        case Fields.Values.bundled:
             if let subtypeTitle = subtypeTitle {
                 let subtype = BackgroundEffectSubtype(rawValue: subtypeTitle) ?? .square
                 self = .bundled(subtype: subtype)
@@ -76,7 +90,7 @@ enum BackgroundEffectType: Hashable {
                 self = .bundled(subtype: .square)
                 return
             }
-        case TextsAsset.General.custom:
+        case Fields.Values.custom:
             self = .custom
         default:
             self = .none
@@ -165,5 +179,9 @@ enum BackgroundEffectSubtype: String, CaseIterable {
         case .stars: return "bg_stars"
         case .windscribe: return "bg_windscribe"
         }
+    }
+
+    var menuOption: MenuOption {
+        MenuOption(title: rawValue, fieldKey: rawValue)
     }
 }
