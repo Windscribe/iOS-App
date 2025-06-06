@@ -27,96 +27,80 @@ struct GhostAccountView: View {
     }
 
     var body: some View {
-        VStack {
-            Spacer()
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
 
-            Text(TextsAsset.Account.ghostInfo)
-                .font(.text(.body))
-                .dynamicTypeSize(dynamicTypeRange)
-                .foregroundColor(.white)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal, 28)
+            VStack {
+                Spacer()
 
-            Spacer()
+                Text(TextsAsset.Account.ghostInfo)
+                    .font(.text(.body))
+                    .dynamicTypeSize(dynamicTypeRange)
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 28)
 
-            if viewModel.isUserPro {
-                Button(action: {
-                    showUpgradeModal = true
-                },label: {
-                    Text(TextsAsset.signUp)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.loginRegisterEnabledButtonColor)
-                        .foregroundColor(.black)
-                        .font(.bold(.title3))
-                        .dynamicTypeSize(dynamicTypeRange)
-                        .clipShape(Capsule())
-                })
-                .padding(.horizontal, 28)
-                .padding(.bottom, 12)
-            } else {
-                NavigationLink(
-                    destination: router.createView(for: .signup(claimGhostAccount: true)),
-                    isActive: $router.shouldNavigateToSignup
-                ) {
+                Spacer()
+
+                if viewModel.isUserPro {
                     Button(action: {
-                        router.shouldNavigateToSignup = true
+                        showUpgradeModal = true
                     },label: {
                         Text(TextsAsset.signUp)
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(Color.loginRegisterEnabledButtonColor)
-                            .foregroundColor(.black)
+                            .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
                             .font(.bold(.title3))
                             .dynamicTypeSize(dynamicTypeRange)
                             .clipShape(Capsule())
                     })
                     .padding(.horizontal, 28)
                     .padding(.bottom, 12)
+                } else {
+                    NavigationLink(
+                        destination: router.createView(for: .signup(claimGhostAccount: true)),
+                        isActive: $router.shouldNavigateToSignup
+                    ) {
+                        Button(action: {
+                            router.shouldNavigateToSignup = true
+                        },label: {
+                            Text(TextsAsset.signUp)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.loginRegisterEnabledButtonColor)
+                                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                                .font(.bold(.title3))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .clipShape(Capsule())
+                        })
+                        .padding(.horizontal, 28)
+                        .padding(.bottom, 12)
+                    }
                 }
+
+                NavigationLink(
+                    destination: router.createView(for: .login),
+                    isActive: $router.shouldNavigateToLogin
+                ) {
+                    Button(action: {
+                        router.shouldNavigateToLogin = true
+                    },label: {
+                        Text(TextsAsset.login)
+                            .foregroundColor(.welcomeButtonTextColor)
+                            .font(.bold(.title3))
+                            .dynamicTypeSize(dynamicTypeRange)
+                    })
+                    .padding(.bottom, 24)
+                }
+
             }
-
-            NavigationLink(
-                destination: router.createView(for: .login),
-                isActive: $router.shouldNavigateToLogin
-            ) {
-                Button(action: {
-                    router.shouldNavigateToLogin = true
-                },label: {
-                    Text(TextsAsset.login)
-                        .foregroundColor(.welcomeButtonTextColor)
-                        .font(.bold(.title3))
-                        .dynamicTypeSize(dynamicTypeRange)
-                })
-                .padding(.bottom, 24)
+            .padding(.top, 1)
+            .dynamicTypeSize(dynamicTypeRange)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(TextsAsset.Account.title)
+            .sheet(isPresented: $showUpgradeModal) {
+                PlanUpgradeViewControllerWrapper()
             }
-
-        }
-        .padding(.top, 1)
-        .background(Color.loginRegisterBackgroundColor.ignoresSafeArea())
-        .dynamicTypeSize(dynamicTypeRange)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .sheet(isPresented: $showUpgradeModal) {
-            PlanUpgradeViewControllerWrapper()
-        }
-        .toolbar {
-          ToolbarItem(placement: .principal) {
-              Text(TextsAsset.Account.title)
-                  .foregroundColor(.white)
-                  .font(.headline)
-          }
-
-          ToolbarItem(placement: .navigationBarLeading) {
-              Button(action: {
-                  presentationMode.wrappedValue.dismiss()
-              }, label: {
-                  Image(systemName: "chevron.backward")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.leading, -8)
-              })
-          }
         }
     }
 }

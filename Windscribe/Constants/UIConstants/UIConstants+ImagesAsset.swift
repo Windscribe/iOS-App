@@ -13,7 +13,6 @@ enum ImagesAsset {
     static let logoText = "logo-text"
     static let failExIcon = "fail-ex"
     static let rightArrow = "right-arrow"
-    static let backArrow = "back-arrow"
     static let upArrow = "small-white-up-arrow"
     static let downArrow = "small-white-down-arrow"
     static let loginInActive = "login-inactive"

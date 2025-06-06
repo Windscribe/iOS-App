@@ -11,9 +11,7 @@ import Combine
 import UIKit
 
 protocol ConfirmEmailViewModel {
-    var sessionManager: SessionManaging { get }
-    var localDatabase: LocalDatabase { get }
-    var apiManager: APIManager { get }
+    var isDarkMode: Bool { get set }
 
     func getSession()
     func updateSession()
@@ -21,25 +19,57 @@ protocol ConfirmEmailViewModel {
 
 final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
-    // MARK: Dependencies
-    let sessionManager: SessionManaging
-    let localDatabase: LocalDatabase
-    let apiManager: APIManager
-
-    // MARK: Published Properties
     @Published var session: Session?
     @Published var resendButtonDisabled: Bool = false
     @Published var resendEmailSuccess: Bool = false
     @Published var shouldDismiss: Bool = false
+    @Published var isDarkMode: Bool = false
+
+    private let sessionManager: SessionManaging
+    private let localDatabase: LocalDatabase
+    private let apiManager: APIManager
+    private let logger: FileLogger
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionManager: SessionManaging, localDatabase: LocalDatabase, apiManager: APIManager) {
+    init(sessionManager: SessionManaging,
+         localDatabase: LocalDatabase,
+         apiManager: APIManager,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         logger: FileLogger) {
         self.sessionManager = sessionManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
+        self.logger = logger
+        self.lookAndFeelRepository = lookAndFeelRepository
 
+        bind()
         observeSession()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ConfirmEmailViewModel", "darkTheme error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
+    }
+
+    private func observeSession() {
+        getSession()
+
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { [weak self] _ in
+                self?.updateSession()
+            }
+            .store(in: &cancellables)
     }
 
     func getSession() {
@@ -72,16 +102,6 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
             }, receiveValue: { [weak self] _ in
                 self?.resendEmailSuccess = true
             })
-            .store(in: &cancellables)
-    }
-
-    private func observeSession() {
-        getSession()
-
-        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .sink { [weak self] _ in
-                self?.updateSession()
-            }
             .store(in: &cancellables)
     }
 }

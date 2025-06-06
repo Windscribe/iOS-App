@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PreferencesBaseView<Content: View>: View {
-    let isDarkMode: Bool
+    @Binding var isDarkMode: Bool
     let content: () -> Content
 
     var body: some View {

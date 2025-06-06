@@ -12,9 +12,9 @@ import Combine
 protocol AccountSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get }
     var sections: [AccountSectionModel] { get }
-    var loadingState: ManageAccountState { get }
+    var loadingState: AccountState { get }
 
-    func reloadSession()
+    func loadSession()
     func handleRowAction(_ action: AccountRowAction)
 }
 
@@ -22,7 +22,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
 
     @Published var isDarkMode: Bool = false
     @Published var sections: [AccountSectionModel] = []
-    @Published var loadingState: ManageAccountState = .initial
+    @Published var loadingState: AccountState = .initial
     @Published var activeDialog: AccountDialogType?
     @Published var alertMessage: AccountSettingsAlertContent?
 
@@ -76,7 +76,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
         self.logger = logger
 
         bindSubjects()
-        reloadSession()
     }
 
     private func bindSubjects() {
@@ -92,17 +91,21 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .store(in: &cancellables)
     }
 
-    func reloadSession() {
+    func loadSession() {
+        loadingState = .loading(isFullScreen: true)
+
         apiManager.getSession(nil)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
+                    self?.loadingState = .error(error.localizedDescription)
                     self?.logger.logE("AccountViewModel", "Failed to load session: \(error)")
                 }
             }, receiveValue: { [weak self] session in
                 self?.currentSession = session
                 self?.buildSections(from: session)
+                self?.loadingState = .success
             })
             .store(in: &cancellables)
     }
@@ -197,11 +200,14 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     }
 
     private func resendConfirmationEmail() {
+        loadingState = .loading(isFullScreen: false)
+
         apiManager.confirmEmail()
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
+                    self?.loadingState = .error(error.localizedDescription)
                     self?.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.ConfirmationEmailSentAlert.title,
                         message: error.localizedDescription,
@@ -209,6 +215,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                     )
                 }
             }, receiveValue: { [weak self] _ in
+                self?.loadingState = .success
                 self?.alertMessage = AccountSettingsAlertContent(
                     title: TextsAsset.ConfirmationEmailSentAlert.title,
                     message: TextsAsset.ConfirmationEmailSentAlert.message,
@@ -219,7 +226,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     }
 
     func confirmCancelAccount(password: String) {
-        loadingState = .loading
+        loadingState = .loading(isFullScreen: false)
         apiManager.cancelAccount(password: password)
             .asPublisher()
             .receive(on: DispatchQueue.main)
@@ -242,17 +249,21 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     }
 
     func verifyLazyLogin(code: String) {
+        loadingState = .loading(isFullScreen: false)
+
         apiManager.verifyTvLoginCode(code: code)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
+                    self?.loadingState = .error(error.localizedDescription)
                     self?.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
                         message: error.localizedDescription,
                         buttonText: TextsAsset.okay)
                 }
             }, receiveValue: { [weak self] _ in
+                self?.loadingState = .success
                 self?.alertMessage = AccountSettingsAlertContent(
                     title: TextsAsset.Account.lazyLogin,
                     message: TextsAsset.Account.lazyLoginSuccess,
@@ -262,11 +273,14 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     }
 
     func verifyVoucher(code: String) {
+        loadingState = .loading(isFullScreen: false)
+
         apiManager.claimVoucherCode(code: code)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
+                    self?.loadingState = .error(error.localizedDescription)
                     self?.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,
                         message: error.localizedDescription,
@@ -275,12 +289,13 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             }, receiveValue: { [weak self] response in
                 guard let self else { return }
 
+                self.loadingState = .success
                 if response.isClaimed {
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,
                         message: TextsAsset.Account.voucherCodeSuccessful,
                         buttonText: TextsAsset.okay)
-                    self.reloadSession()
+                    self.loadSession()
                 } else if response.emailRequired == true {
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,

@@ -27,7 +27,7 @@ struct PreferencesMainCategoryView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             VStack(spacing: 16) {
                 ScrollView {
                     VStack(spacing: 14) {
@@ -84,6 +84,10 @@ struct PreferencesMainCategoryView: View {
                     .presentationDetents([PresentationDetent.fraction(0.65)])
                     .presentationDragIndicator(.hidden)
                     .presentationCornerRadius(24)
+                    .presentationBackground {
+                        Color.from(.screenBackgroundColor, viewModel.isDarkMode)
+                            .padding(.bottom, -1000) // Extend background to cover peek area
+                    }
             } else if #available(iOS 16.0, *) {
                 router.createView(for: .confirmEmail)
                     .presentationDetents([PresentationDetent.fraction(0.65)])

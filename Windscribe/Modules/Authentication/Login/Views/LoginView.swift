@@ -15,7 +15,7 @@ struct LoginView: View {
     }
 
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
 
     @ObservedObject private var keyboard = KeyboardResponder()
     @FocusState private var focusedField: Field?
@@ -91,40 +91,40 @@ struct LoginView: View {
     var body: some View {
         ScrollViewReader { proxy in
             GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: 20) {
-                        usernameField()
-                        passwordField()
-                        twoFactorView()
-                        twoFaAndForgotFooter()
-                        errorDisplayView()
-                        continueButton()
+                PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                    ScrollView {
+                        VStack(spacing: 20) {
+                            usernameField()
+                            passwordField()
+                            twoFactorView()
+                            twoFaAndForgotFooter()
+                            errorDisplayView()
+                            continueButton()
+                        }
+                        .padding()
+                        .padding(.bottom, keyboard.currentHeight + 16)
+                        .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
+                        .background(attachPreferenceReader())
                     }
-                    .padding()
-                    .padding(.bottom, keyboard.currentHeight + 16)
-                    .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
-                    .background(attachPreferenceReader())
-                }
-                .onChange(of: focusedField) { field in
-                    guard let field = field else { return }
+                    .onChange(of: focusedField) { field in
+                        guard let field = field else { return }
 
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                        scrollToField(field, proxy: proxy, geometry: geometry)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                            scrollToField(field, proxy: proxy, geometry: geometry)
+                        }
+
+                        viewModel.failedState = nil
                     }
-
-                    viewModel.failedState = nil
-                }
-                .onTapGesture {
-                    focusedField = nil
-                }
-                .onReceive(viewModel.routeToMainView) { _ in
-                    router.routeToMainView()
+                    .onTapGesture {
+                        focusedField = nil
+                    }
+                    .onReceive(viewModel.routeToMainView) { _ in
+                        router.routeToMainView()
+                    }
                 }
             }
-            .padding(.top, 1)
-            .background(Color.loginRegisterBackgroundColor)
+            .navigationTitle(TextsAsset.Welcome.login)
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
             .toolbar { loginToolbar() }
             .sheet(item: $safariURL) { url in
                 SafariView(url: url)
@@ -137,7 +137,8 @@ struct LoginView: View {
                         topOffset: CGFloat(data.top),
                         onSubmit: { xOffset, trailX, trailY in
                             viewModel.submitCaptcha(captchaSolution: xOffset, trailX: trailX, trailY: trailY)
-                        }
+                        },
+                        isDarkMode: $viewModel.isDarkMode
                     )
                 }
             }
@@ -156,7 +157,8 @@ private extension LoginView {
             errorMessage: usernameErrorMessage,
             showWarningIcon: showUsernameIcon,
             showFieldErrorText: false,
-            text: $viewModel.username
+            text: $viewModel.username,
+            isDarkMode: $viewModel.isDarkMode
         )
         .focused($focusedField, equals: .username)
         .id(Field.username)
@@ -173,7 +175,8 @@ private extension LoginView {
             errorMessage: passwordErrorMessage,
             showWarningIcon: showPasswordIcon,
             showFieldErrorText: false,
-            text: $viewModel.password
+            text: $viewModel.password,
+            isDarkMode: $viewModel.isDarkMode
         )
         .focused($focusedField, equals: .password)
         .id(Field.password)
@@ -191,6 +194,7 @@ private extension LoginView {
                     showWarningIcon: showTwoFaIcon,
                     showFieldErrorText: false,
                     text: $viewModel.twoFactorCode,
+                    isDarkMode: $viewModel.isDarkMode,
                     titleTapAction: {
                         withAnimation {
                             viewModel.twoFactorCode = ""
@@ -206,7 +210,7 @@ private extension LoginView {
 
                 Text(TextsAsset.Authentication.twoFactorDescription)
                     .font(.regular(.footnote))
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
             }
             .transition(.opacity)
             .animation(.easeInOut(duration: 0.25), value: viewModel.show2FAField)
@@ -225,7 +229,7 @@ private extension LoginView {
                         }
                     }
                 }
-                .foregroundColor(.white.opacity(0.5))
+                .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                 .font(.medium(.callout))
             }
 
@@ -234,7 +238,7 @@ private extension LoginView {
             Button(TextsAsset.Authentication.forgotPassword) {
                 safariURL = URL(string: Links.forgotPassword)
             }
-            .foregroundColor(.white.opacity(0.5))
+            .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
             .font(.medium(.callout))
         }
         .transition(.opacity)
@@ -264,14 +268,14 @@ private extension LoginView {
                 } else {
                     Text(TextsAsset.continue)
                         .font(.bold(.body))
-                        .foregroundColor(.black)
+                        .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
                 }
             }
             .frame(maxWidth: .infinity)
             .padding()
             .background(viewModel.isContinueButtonEnabled
                         ? Color.loginRegisterEnabledButtonColor
-                        : Color.white)
+                        : .from(.iconColor, viewModel.isDarkMode))
             .clipShape(Capsule())
         }
         .disabled(!viewModel.isContinueButtonEnabled || viewModel.showLoadingView)
@@ -292,23 +296,6 @@ private extension LoginView {
 private extension LoginView {
     @ToolbarContentBuilder
     func loginToolbar() -> some ToolbarContent {
-        ToolbarItem(placement: .principal) {
-            Text(TextsAsset.Welcome.login)
-                .foregroundColor(.white)
-                .font(.headline)
-        }
-
-        ToolbarItem(placement: .navigationBarLeading) {
-            Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }, label: {
-                Image(systemName: "chevron.backward")
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(.leading, -8)
-            })
-        }
-
         ToolbarItemGroup(placement: .keyboard) {
             Button(action: {
                 moveFocus(up: true)

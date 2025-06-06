@@ -28,100 +28,83 @@ struct EnterEmailView: View {
     }
 
     var body: some View {
-        ScrollView {
-
-            VStack(alignment: .leading, spacing: 20) {
-                // Email Input
-                LoginTextField(
-                    title: TextsAsset.yourEmail,
-                    placeholder: TextsAsset.Authentication.enterEmailAddress,
-                    showError: currentError != nil,
-                    errorMessage: currentError,
-                    showWarningIcon: currentError != nil,
-                    showFieldErrorText: true,
-                    text: $viewModel.email,
-                    keyboardType: .emailAddress,
-                    trailingView: viewModel.showGet10GBPromo
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+          ScrollView {
+                VStack(alignment: .leading, spacing: 20) {
+                    // Email Input
+                    LoginTextField(
+                        title: TextsAsset.yourEmail,
+                        placeholder: TextsAsset.Authentication.enterEmailAddress,
+                        showError: currentError != nil,
+                        errorMessage: currentError,
+                        showWarningIcon: currentError != nil,
+                        showFieldErrorText: true,
+                        text: $viewModel.email,
+                        isDarkMode: $viewModel.isDarkMode,
+                        keyboardType: .emailAddress,
+                        trailingView: viewModel.showGet10GBPromo
                         ? AnyView(
                             Text(TextsAsset.get10GbAMonth)
                                 .font(.medium(.callout))
-                                .foregroundColor(.white.opacity(0.5))
+                                .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
                         )
                         : nil
-                )
-                .focused($isEmailFocused)
+                    )
+                    .focused($isEmailFocused)
 
-                // Info Text
-                Text(viewModel.infoLabelText)
-                    .font(.regular(.footnote))
-                    .dynamicTypeSize(dynamicTypeRange)
-                    .foregroundColor(.white.opacity(0.5))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    // Info Text
+                    Text(viewModel.infoLabelText)
+                        .font(.regular(.footnote))
+                        .foregroundColor(.from(.titleColor, viewModel.isDarkMode).opacity(0.5))
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
+                    Spacer()
 
-                // Continue Button
-                Button {
-                    isEmailFocused = false
-                    viewModel.submit()
-                } label: {
-                    ZStack {
-                        if viewModel.showLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .black))
-                        } else {
-                            Text(TextsAsset.continue)
-                                .font(.bold(.body))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.black)
+                    // Continue Button
+                    Button {
+                        isEmailFocused = false
+                        viewModel.submit()
+                    } label: {
+                        ZStack {
+                            if viewModel.showLoading {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .black))
+                            } else {
+                                Text(TextsAsset.continue)
+                                    .font(.bold(.body))
+                                    .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+
+                            }
                         }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(viewModel.emailIsValid
+                                    ? Color.loginRegisterEnabledButtonColor
+                                    : .from(.iconColor, viewModel.isDarkMode))
+                        .clipShape(Capsule())
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(viewModel.emailIsValid ? Color.loginRegisterEnabledButtonColor : Color.white)
-                    .clipShape(Capsule())
+                    .disabled(!viewModel.emailIsValid)
                 }
-                .disabled(!viewModel.emailIsValid)
+                .padding()
+                .padding(.bottom, keyboard.currentHeight + 16)
+                .dynamicTypeSize(dynamicTypeRange)
+                .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
             }
-            .padding()
-            .padding(.bottom, keyboard.currentHeight + 16)
-            .dynamicTypeSize(dynamicTypeRange)
-            .animation(.easeInOut(duration: 0.25), value: keyboard.currentHeight)
-        }
-        .onTapGesture {
-            isEmailFocused = false
-        }
-        .onReceive(viewModel.submitEmailResult) { result in
-            switch result {
-            case .success:
-                currentError = nil
-                presentationMode.wrappedValue.dismiss()
-            case .failure(let error):
-                currentError = error.errorDescription
+            .onTapGesture {
+                isEmailFocused = false
             }
-        }
-        .padding(.top, 1)
-        .background(Color.loginRegisterBackgroundColor)
-        .dynamicTypeSize(dynamicTypeRange)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text("Add Email")
-                    .foregroundColor(.white)
-                    .font(.headline)
-            }
-
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
+            .onReceive(viewModel.submitEmailResult) { result in
+                switch result {
+                case .success:
+                    currentError = nil
                     presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Image(systemName: "chevron.backward")
-                      .font(.system(size: 17, weight: .semibold))
-                      .foregroundColor(.white)
-                      .padding(.leading, -8)
-                })
+                case .failure(let error):
+                    currentError = error.errorDescription
+                }
             }
+            .dynamicTypeSize(dynamicTypeRange)
+            .navigationTitle(TextsAsset.addEmail)
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

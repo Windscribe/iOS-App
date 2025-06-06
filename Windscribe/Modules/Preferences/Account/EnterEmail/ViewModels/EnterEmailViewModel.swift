@@ -12,6 +12,7 @@ import Combine
 protocol EnterEmailViewModel: ObservableObject {
     var email: String { get set }
     var emailIsValid: Bool { get }
+    var isDarkMode: Bool { get set }
     var showLoading: Bool { get }
     var showGet10GBPromo: Bool { get }
     var emailInfoText: String { get }
@@ -26,11 +27,15 @@ protocol EnterEmailViewModel: ObservableObject {
 final class EnterEmailViewModelImpl: EnterEmailViewModel {
 
     @Published var email: String = ""
+    @Published var isDarkMode: Bool = false
     @Published private(set) var showLoading: Bool = false
 
     private let sessionManager: SessionManaging
     private let alertManager: AlertManagerV2
     private let apiManager: APIManager
+
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+
     private var cancellables = Set<AnyCancellable>()
 
     let submitEmailResult = PassthroughSubject<Result<Void, EmailError>, Never>()
@@ -47,11 +52,28 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
         !(sessionManager.session?.isUserPro ?? false)
     }
 
-    init(sessionManager: SessionManaging, alertManager: AlertManagerV2, apiManager: APIManager) {
+    init(sessionManager: SessionManaging,
+         alertManager: AlertManagerV2,
+         apiManager: APIManager,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
         self.apiManager = apiManager
+        self.lookAndFeelRepository = lookAndFeelRepository
+
         self.email = sessionManager.session?.email ?? ""
+
+        bind()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in}, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
     }
 
     func submit() {

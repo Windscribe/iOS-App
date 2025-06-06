@@ -18,6 +18,7 @@ protocol LoginViewModel: ObservableObject {
     var username: String { get set }
     var password: String { get set }
     var twoFactorCode: String { get set }
+    var isDarkMode: Bool { get set }
     var showLoadingView: Bool { get set }
     var failedState: LoginErrorState? { get set }
     var show2FAField: Bool { get set }
@@ -34,6 +35,7 @@ class LoginViewModelImpl: LoginViewModel {
     @Published var password = ""
     @Published var twoFactorCode = ""
 
+    @Published var isDarkMode: Bool = false
     @Published var showLoadingView = false
     @Published var failedState: LoginErrorState?
     @Published var show2FAField = false
@@ -57,6 +59,7 @@ class LoginViewModelImpl: LoginViewModel {
     private let protocolManager: ProtocolManagerType
     private let latencyRepository: LatencyRepository
     private let connectivity: Connectivity
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
@@ -75,6 +78,7 @@ class LoginViewModelImpl: LoginViewModel {
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
          connectivity: Connectivity,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
 
         self.apiCallManager = apiCallManager
@@ -86,9 +90,25 @@ class LoginViewModelImpl: LoginViewModel {
         self.protocolManager = protocolManager
         self.latencyRepository = latencyRepository
         self.connectivity = connectivity
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
 
+        bind()
         registerNetworkEventListener()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("LoginViewModel", "darkTheme error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
     }
 
     func continueButtonTapped() {

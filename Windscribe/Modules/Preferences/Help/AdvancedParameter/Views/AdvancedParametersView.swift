@@ -24,7 +24,7 @@ struct AdvancedParametersView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             ScrollView {
                 ZStack {
                     VStack(alignment: .leading, spacing: 16) {

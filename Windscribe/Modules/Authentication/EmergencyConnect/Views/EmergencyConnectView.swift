@@ -12,7 +12,7 @@ import Combine
 struct EmergencyConnectView: View {
 
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: EmergencyConnectViewModelImpl
 
@@ -26,78 +26,80 @@ struct EmergencyConnectView: View {
 
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 24) {
-                headerSection
-
-                Spacer()
-
-                ZStack(alignment: .top) {
-                    VStack(spacing: 16) {
-                        Spacer()
-                            .frame(height: geometry.size.height * 0.12)
-
-                        Image(ImagesAsset.Welcome.emergencyConnectIcon)
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .foregroundColor(.white)
-
-                        Text(TextsAsset.connect)
-                            .font(.bold(.title1))
-                            .dynamicTypeSize(dynamicTypeRange)
-                            .foregroundColor(.white)
-
-                        descriptionSection
-
-                        Spacer()
-                    }
-
-                    if viewModel.connectionState == .connecting {
-                        VStack(spacing: 4) {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .gray))
-                                .padding(.top, 12)
-
-                            Text(TextsAsset.connecting.uppercased())
-                                .font(.semiBold(.callout))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.welcomeButtonTextColor)
-                                .padding(.top, 4)
-                        }
-                        .frame(maxHeight: .infinity, alignment: .top)
-                        .padding(.top, geometry.size.height * 0.4)
-                    }
-                }
-
-                Spacer()
-
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 VStack(spacing: 24) {
-                    Button(action: {
-                        viewModel.connectButtonTapped()
-                    }, label: {
-                        Text(connectButtonText)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.loginRegisterEnabledButtonColor)
-                            .foregroundColor(.black)
-                            .font(.bold(.title3))
-                            .dynamicTypeSize(dynamicTypeRange)
-                            .clipShape(Capsule())
-                    })
+                    headerSection
 
-                    Button(TextsAsset.cancel) {
-                        dismiss()
+                    Spacer()
+
+                    ZStack(alignment: .top) {
+                        VStack(spacing: 16) {
+                            Spacer()
+                                .frame(height: geometry.size.height * 0.12)
+
+                            Image(ImagesAsset.Welcome.emergencyConnectIcon)
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+
+                            Text(TextsAsset.connect)
+                                .font(.bold(.title1))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+
+                            descriptionSection
+
+                            Spacer()
+                        }
+
+                        if viewModel.connectionState == .connecting {
+                            VStack(spacing: 4) {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: .gray))
+                                    .padding(.top, 12)
+
+                                Text(TextsAsset.connecting.uppercased())
+                                    .font(.semiBold(.callout))
+                                    .dynamicTypeSize(dynamicTypeRange)
+                                    .foregroundColor(.welcomeButtonTextColor)
+                                    .padding(.top, 4)
+                            }
+                            .frame(maxHeight: .infinity, alignment: .top)
+                            .padding(.top, geometry.size.height * 0.4)
+                        }
                     }
-                    .foregroundColor(.welcomeButtonTextColor)
-                    .font(.bold(.title3))
-                    .dynamicTypeSize(dynamicTypeRange)
+
+                    Spacer()
+
+                    VStack(spacing: 24) {
+                        Button(action: {
+                            viewModel.connectButtonTapped()
+                        }, label: {
+                            Text(connectButtonText)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.loginRegisterEnabledButtonColor)
+                                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                                .font(.bold(.title3))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .clipShape(Capsule())
+                        })
+
+                        Button(TextsAsset.cancel) {
+                            dismiss()
+                        }
+                        .foregroundColor(.welcomeButtonTextColor)
+                        .font(.bold(.title3))
+                        .dynamicTypeSize(dynamicTypeRange)
+                    }
+                    .padding(.bottom, 24)
                 }
-                .padding(.bottom, 24)
-            }
-            .padding()
-            .background(Color.loginRegisterBackgroundColor.ignoresSafeArea())
-            .dynamicTypeSize(dynamicTypeRange)
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                viewModel.appEnteredForeground()
+                .padding()
+                .dynamicTypeSize(dynamicTypeRange)
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    viewModel.appEnteredForeground()
+                }
             }
         }
     }
@@ -139,7 +141,7 @@ struct EmergencyConnectView: View {
             }, label: {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(.title))
-                    .foregroundColor(.white)
+                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
             })
         }
     }

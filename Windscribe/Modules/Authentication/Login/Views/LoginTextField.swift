@@ -21,6 +21,7 @@ struct LoginTextField: View {
     var showFieldErrorText: Bool = true
 
     @Binding var text: String
+    @Binding var isDarkMode: Bool
     @State private var isPasswordVisible: Bool = false
 
     var titleTapAction: (() -> Void)?
@@ -38,14 +39,18 @@ struct LoginTextField: View {
                     }, label: {
                         Text(title)
                             .font(.medium(.callout))
-                            .foregroundColor(showError ? .loginRegisterFailedField : .white)
+                            .foregroundColor(showError
+                                             ? .loginRegisterFailedField
+                                             : .from(.titleColor, isDarkMode))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     })
                     .buttonStyle(.plain)
                 } else {
                     Text(title)
                         .font(.medium(.callout))
-                        .foregroundColor(showError ? .loginRegisterFailedField : .white)
+                        .foregroundColor(showError
+                                         ? .loginRegisterFailedField
+                                         : .from(.titleColor, isDarkMode))
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
@@ -64,16 +69,16 @@ struct LoginTextField: View {
                             .opacity(isPasswordVisible || !isSecure ? 1 : 0)
                             .disabled(isSecure && !isPasswordVisible)
                             .keyboardType(keyboardType)
-                            .tint(.white)
+                            .tint(.from(.iconColor, isDarkMode))
 
                         SecureField("", text: $text)
                             .opacity(isPasswordVisible || !isSecure ? 0 : 1)
                             .disabled(!(!isPasswordVisible && isSecure))
                             .keyboardType(keyboardType)
-                            .tint(.white)
+                            .tint(.from(.iconColor, isDarkMode))
                     }
-                    .foregroundColor(showError ? .loginRegisterFailedField : .white)
-                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text))
+                    .foregroundColor(showError ? .loginRegisterFailedField : .from(.titleColor, isDarkMode))
+                    .modifier(LoginTextFieldModifiers(placeholder: placeholder, text: text, isDarkMode: isDarkMode))
 
                     if isSecure {
                         Button(action: {
@@ -89,7 +94,7 @@ struct LoginTextField: View {
                     }
                 }
                 .padding()
-                .background(Color.white.opacity(0.05))
+                .background(Color.from(.backgroundColor, isDarkMode))
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
@@ -114,6 +119,7 @@ struct LoginTextField: View {
 private struct LoginTextFieldModifiers: ViewModifier {
     var placeholder: String
     var text: String
+    var isDarkMode: Bool
 
     func body(content: Content) -> some View {
         content
@@ -122,7 +128,7 @@ private struct LoginTextFieldModifiers: ViewModifier {
             .submitLabel(.return)
             .placeholder(when: text.isEmpty) {
                 Text(placeholder)
-                    .foregroundColor(.white.opacity(0.5))
+                    .foregroundColor(.from(.titleColor, isDarkMode).opacity(0.5))
             }
     }
 }

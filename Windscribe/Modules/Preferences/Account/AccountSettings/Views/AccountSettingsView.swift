@@ -21,6 +21,7 @@ struct AccountSettingsView: View {
     @State private var fallbackDialog: AccountInputDialog?
     @State private var isShowingEnterEmailView = false
     @State private var showUpgradeModal = false
+    @State private var hasLoaded = false
 
     init(viewModel: any AccountSettingsViewModel) {
         guard let model = viewModel as? AccountSettingsViewModelImpl else {
@@ -31,80 +32,87 @@ struct AccountSettingsView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 14) {
-                    ForEach(viewModel.sections) { section in
-                        AccountSectionView(
-                            isDarkMode: viewModel.isDarkMode,
-                            section: section,
-                            accountStatus: viewModel.accountEmailStatus,
-                            handleRowAction: viewModel.handleRowAction,
-                            presentDialog: { dialogType in
-                                presentDialog(for: dialogType)
-                            }
-                        )
-
-                        if section.type == .info, viewModel.shouldShowAddEmailButton {
-                            infoActionButtons()
-                        }
-
-                        if section.type == .plan, viewModel.shouldShowPlanActionButtons {
-                            planActionButtons()
-                        }
-                    }
-                }
-                .padding(.top, 8)
-            }
-        }
-        .dynamicTypeSize(dynamicTypeRange)
-        .navigationTitle(TextsAsset.Account.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .alert(item: $viewModel.alertMessage) { alert in
-            Alert(
-                title: Text(alert.title),
-                message: Text(alert.message),
-                dismissButton: .default(Text(alert.buttonText))
-            )
-        }
-        .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
-            get: { dialog != nil },
-            set: { if !$0 { dialog = nil } }
-        ), actions: {
-            TextField(dialogPlaceHolder(dialog), text: $inputText)
-
-            Button("Confirm") {
-                handleConfirm(dialog: dialog, input: inputText)
-            }
-
-            Button(TextsAsset.cancel, role: .cancel) { }
-        }, message: {
-            Text(dialogDescription(dialog))
-        })
-        .id(dialog?.id)
-        .sheet(item: $fallbackDialog) { dialog in
-            MenuTextFieldDialogView(
-                title: dialogTitle(dialog),
-                description: dialogDescription(dialog),
-                placeholder: dialogPlaceHolder(dialog),
-                isSecure: dialog == .password,
-                onConfirm: { input in
-                    handleConfirm(dialog: dialog, input: input)
-                },
-                onCancel: {
-                    fallbackDialog = nil
-                }
-            )
-        }
-        .sheet(isPresented: $showUpgradeModal) {
-            PlanUpgradeViewControllerWrapper()
-                .edgesIgnoringSafeArea(.all)
-        }
-
-        if case .loading = viewModel.loadingState {
-            MenuLoadingOverlayView()
+        if case let .loading(isFullScreen) = viewModel.loadingState {
+            MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: isFullScreen)
                 .transition(.opacity)
                 .animation(.easeInOut, value: viewModel.loadingState)
+        } else {
+
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 14) {
+                        ForEach(viewModel.sections) { section in
+                            AccountSectionView(
+                                isDarkMode: viewModel.isDarkMode,
+                                section: section,
+                                accountStatus: viewModel.accountEmailStatus,
+                                handleRowAction: viewModel.handleRowAction,
+                                presentDialog: { dialogType in
+                                    presentDialog(for: dialogType)
+                                }
+                            )
+
+                            if section.type == .info, viewModel.shouldShowAddEmailButton {
+                                infoActionButtons()
+                            }
+
+                            if section.type == .plan, viewModel.shouldShowPlanActionButtons {
+                                planActionButtons()
+                            }
+                        }
+                    }
+                    .onAppear {
+                        if !hasLoaded {
+                            viewModel.loadSession()
+                            hasLoaded = true
+                        }
+                    }
+                    .padding(.top, 8)
+                }
+            }
+            .dynamicTypeSize(dynamicTypeRange)
+            .navigationTitle(TextsAsset.Account.title)
+            .navigationBarTitleDisplayMode(.inline)
+            .alert(item: $viewModel.alertMessage) { alert in
+                Alert(
+                    title: Text(alert.title),
+                    message: Text(alert.message),
+                    dismissButton: .default(Text(alert.buttonText))
+                )
+            }
+            .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
+                get: { dialog != nil },
+                set: { if !$0 { dialog = nil } }
+            ), actions: {
+                TextField(dialogPlaceHolder(dialog), text: $inputText)
+
+                Button(TextsAsset.confirm) {
+                    handleConfirm(dialog: dialog, input: inputText)
+                }
+
+                Button(TextsAsset.cancel, role: .cancel) { }
+            }, message: {
+                Text(dialogDescription(dialog))
+            })
+            .id(dialog?.id)
+            .sheet(item: $fallbackDialog) { dialog in
+                MenuTextFieldDialogView(
+                    title: dialogTitle(dialog),
+                    description: dialogDescription(dialog),
+                    placeholder: dialogPlaceHolder(dialog),
+                    isSecure: dialog == .password,
+                    onConfirm: { input in
+                        handleConfirm(dialog: dialog, input: input)
+                    },
+                    onCancel: {
+                        fallbackDialog = nil
+                    }
+                )
+            }
+            .sheet(isPresented: $showUpgradeModal) {
+                PlanUpgradeViewControllerWrapper()
+                    .edgesIgnoringSafeArea(.all)
+            }
         }
     }
 
@@ -114,11 +122,11 @@ struct AccountSettingsView: View {
             isShowingEnterEmailView = true
         }, label: {
             Text(TextsAsset.Account.addEmailActionTitle)
-                .foregroundColor(.white)
+                .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                 .font(.medium(.callout))
                 .frame(maxWidth: .infinity, alignment: .center)
                 .padding(14)
-                .background(Color.white.opacity(0.05))
+                .background(Color.from(.backgroundColor, viewModel.isDarkMode))
                 .cornerRadius(12)
                 .padding(.horizontal, 16)
         })
@@ -151,7 +159,7 @@ struct AccountSettingsView: View {
             Button(action: {
                 presentDialog(for: .password)
             }, label: {
-                Text("Delete Account")
+                Text(TextsAsset.Account.cancelAccount)
                     .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                     .font(.medium(.callout))
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -334,12 +342,13 @@ struct AccountRowView: View {
                         .foregroundColor(.from(.titleColor, isDarkMode))
                         .font(.medium(.callout))
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
 
                 if let message = row.message, section != .other {
                     Text(message)
                         .foregroundColor(section == .plan
-                                         ? (message == TextsAsset.pro ? .actionGreen : (message == "Free") ? .from(.titleColor, isDarkMode) : .infoGrey)
+                                         ? (message == TextsAsset.pro ? .actionGreen : (message == TextsAsset.Account.freeAccountDescription) ? .from(.titleColor, isDarkMode) : .infoGrey)
                                          : .from(.infoColor, isDarkMode))
                         .font(.regular(.callout))
 

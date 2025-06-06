@@ -13,14 +13,17 @@ struct NewsFeedDetailView: View {
     let didTapExpand: () -> Void
     let didTapAction: (ActionLinkModel) -> Void
 
+    @Binding var isDarkMode: Bool
     @State private var showRotation: Bool
 
     init(item: NewsFeedDataModel,
          didTapExpand: @escaping () -> Void,
-         didTapAction: @escaping (ActionLinkModel) -> Void) {
+         didTapAction: @escaping (ActionLinkModel) -> Void,
+         isDarkMode: Binding<Bool>) {
         self.item = item
         self.didTapExpand = didTapExpand
         self.didTapAction = didTapAction
+        self._isDarkMode = isDarkMode
         _showRotation = State(initialValue: item.expanded)
     }
 
@@ -37,7 +40,7 @@ struct NewsFeedDetailView: View {
                     HStack(spacing: 16) {
                         Text(item.title)
                             .font(.medium(.callout))
-                            .foregroundColor(.white.opacity(item.expanded ? 1 : 0.8))
+                            .foregroundColor(.from(.titleColor, isDarkMode).opacity(item.expanded ? 1 : 0.8))
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -50,7 +53,7 @@ struct NewsFeedDetailView: View {
                     if item.expanded {
                         Text(item.description)
                             .font(.regular(.callout))
-                            .foregroundColor(.white.opacity(item.expanded ? 1 : 0.8))
+                            .foregroundColor(.from(.titleColor, isDarkMode).opacity(item.expanded ? 1 : 0.8))
                             .padding(.top, 4)
                     }
 
@@ -60,12 +63,12 @@ struct NewsFeedDetailView: View {
                                 didTapAction(actionLink)
                             }, label: {
                                 Text(actionLink.title)
-                                    .foregroundColor(.newsFeedButtonActionColor)
+                                    .foregroundColor(isDarkMode ? .newsFeedButtonActionColor : .green)
                                     .font(.regular(.footnote))
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .background(
-                                        Color.newsFeedButtonActionColor.opacity(0.05)
+                                        Color.newsFeedButtonActionColor.opacity(isDarkMode ? 0.05: 0.35)
                                     )
                                     .clipShape(Capsule())
                             }
@@ -77,8 +80,12 @@ struct NewsFeedDetailView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .background(item.expanded
-                        ? Color.newsFeedDetailExpandedBackgroundColor
-                        : Color.newsFeedDetailBackgroundColor)
+                        ? isDarkMode
+                            ? Color.newsFeedDetailExpandedBackgroundColor
+                            : Color.newsFeedDetailExpandedBackgroundColorLight
+                        : isDarkMode
+                            ? Color.newsFeedDetailBackgroundColor
+                            : Color.newsFeedDetailBackgroundColorLight)
             .onChange(of: item.expanded) { isExpanded in
                 showRotation = isExpanded
             }

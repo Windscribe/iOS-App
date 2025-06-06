@@ -61,9 +61,10 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         let hostingController = RoutedHostingController(rootView: view)
         if let title = title {
             hostingController.title = title
-        }
 
-        viewController.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            let backItem = UIBarButtonItem(title: title, style: .plain, target: nil, action: nil)
+            viewController.navigationItem.backBarButtonItem = backItem
+        }
 
         hostingController.onPop = { [weak viewController] in
             viewController?.changeNavigationBarStyle(isHidden: true)

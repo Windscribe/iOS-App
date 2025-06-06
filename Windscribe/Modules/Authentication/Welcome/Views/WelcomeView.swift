@@ -62,6 +62,7 @@ struct WelcomeView: View {
                         router.createView(for: .emergency)
                     }
                 )
+
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .dynamicTypeSize(dynamicTypeRange)

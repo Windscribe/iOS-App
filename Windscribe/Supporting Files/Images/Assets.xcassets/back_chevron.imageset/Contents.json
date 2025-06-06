@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "back_chevron_white.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

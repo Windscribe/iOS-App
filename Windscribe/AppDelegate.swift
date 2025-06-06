@@ -42,8 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
-    private lazy var sessionManager: SessionManaging = Assembler.resolve(SessionManaging.self)
-
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     var window: UIWindow?
@@ -270,6 +268,8 @@ extension AppDelegate {
     /// Setting up main application window
     /// Checking if there is user session or login should be executed
     func setApplicationWindow() {
+        bindThemeChange()
+
         DispatchQueue.global(qos: .userInitiated).async {
             _ = try? Realm() // Ensure Realm is ready before proceeding so it will not block I/O
 
@@ -280,13 +280,23 @@ extension AppDelegate {
         }
     }
 
+    private func bindThemeChange() {
+        lookAndFeelRepository.isDarkModeSubject
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { isDark in
+                UINavigationBar.setStyleNavigationBackButton(isDarkMode: isDark)
+            }, onError: { [weak self] error in
+                self?.logger.logE("AppDelegate", "Theme Change error: \(error)")
+            })
+            .disposed(by: disposeBag)
+    }
+
     /// Method to present a SwiftUI view on top a window
     /// - Parameters:
     ///   - contentView: The main  view that will be presented
     private func presentMainView<T: View>(with view: T) {
-
         let window = UIWindow(frame: UIScreen.main.bounds).then {
-            $0.backgroundColor = .black
+            $0.backgroundColor = UIColor(.from(.actionBackgroundColor, lookAndFeelRepository.isDarkMode))
         }
 
         let rootViewController: UIViewController

@@ -15,6 +15,8 @@ enum EmergencyConnectState {
 
 protocol EmergencyConnectViewModel: ObservableObject {
     var connectionState: EmergencyConnectState { get set }
+    var isDarkMode: Bool { get set }
+
     func connectButtonTapped()
     func appEnteredForeground()
 }
@@ -22,19 +24,40 @@ protocol EmergencyConnectViewModel: ObservableObject {
 class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
 
     @Published var connectionState: EmergencyConnectState = .disconnected
+    @Published var isDarkMode: Bool = false
 
     private let vpnManager: VPNManager
     private let emergencyRepository: EmergencyRepository
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
     private var ovpnInfoList: [OpenVPNConnectionInfo] = []
 
-    init(vpnManager: VPNManager, emergencyRepository: EmergencyRepository, logger: FileLogger) {
+    init(vpnManager: VPNManager,
+         emergencyRepository: EmergencyRepository,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         logger: FileLogger) {
         self.vpnManager = vpnManager
         self.emergencyRepository = emergencyRepository
+        self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
 
+        bind()
         observeVPNStateChanges()
+    }
+
+    private func bind() {
+        lookAndFeelRepository.isDarkModeSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("EmergencyConnectViewModel", "darkTheme error: \(error)")
+                }
+            }, receiveValue: { [weak self] isDark in
+                self?.isDarkMode = isDark
+            })
+            .store(in: &cancellables)
     }
 
     private func observeVPNStateChanges() {

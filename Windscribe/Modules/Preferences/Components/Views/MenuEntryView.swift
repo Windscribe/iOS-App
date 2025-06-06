@@ -54,8 +54,10 @@ struct MenuEntryHeaderView: View {
                 Text(item.title)
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+
+            Spacer()
+
             if let mainAction = item.action {
                 MenuEntryActionView(actionType: mainAction, isAlignLeading: isActionLeading, isDarkMode: isDarkMode, action: { actionType in
                     action(actionType)
@@ -174,7 +176,7 @@ struct MenuEntryActionView: View {
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
             })
-            .frame(maxWidth: .infinity, alignment: .center)
+            .frame(alignment: .trailing)
         case let .file(value, fileType, parentId):
             MenuFileSelectionView(isDarkMode: isDarkMode,
                                   value: value,

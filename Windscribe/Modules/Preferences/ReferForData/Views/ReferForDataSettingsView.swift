@@ -24,7 +24,7 @@ struct ReferForDataSettingsView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: viewModel.isDarkMode) {
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 32) {
                     Image(ImagesAsset.windscribeHeart)

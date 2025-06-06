@@ -21,14 +21,12 @@ struct NewsFeedView: View {
 
     var body: some View {
         NavigationView {
-            ZStack {
-                Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
-                    .ignoresSafeArea()
-
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 VStack {
                     if viewModel.loadState == .loading {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .progressViewStyle(CircularProgressViewStyle(
+                                tint: .from(.iconColor, viewModel.isDarkMode)))
                             .scaleEffect(2)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                     } else if case .error(let errorMessage) = viewModel.loadState {
@@ -45,14 +43,14 @@ struct NewsFeedView: View {
                                         },
                                         didTapAction: { actionLink in
                                             viewModel.didTapAction(action: actionLink)
-                                        }
+                                        },
+                                        isDarkMode: $viewModel.isDarkMode
                                     )
                                 }
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.horizontal)
                             .padding(.vertical, 4)
-                            .background(Color(red: 24 / 255.0, green: 27 / 255.0, blue: 33 / 255.0, opacity: 1.0))
                             .mask(
                                 RoundedRectangle(cornerRadius: 12)
                                     .padding(.horizontal)
@@ -87,21 +85,15 @@ struct NewsFeedView: View {
                 .sheet(item: $safariURL) { url in
                     SafariView(url: url)
                 }
-                .toolbar {
-                    ToolbarItem(placement: .principal) {
-                        Text(TextsAsset.NewsFeed.title)
-                            .font(.medium(.body))
-                            .foregroundColor(.white)
-                    }
-                }
                 .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(TextsAsset.NewsFeed.title)
                 .navigationBarItems(
                     trailing: Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Image(systemName: "xmark")
                             .imageScale(.medium)
-                            .foregroundColor(.gray.opacity(0.8))
+                            .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                     })
                     .padding(.trailing, 16)
                 )
@@ -116,17 +108,19 @@ struct NewsFeedListItem: View {
     let didTapExpand: () -> Void
     let didTapAction: (ActionLinkModel) -> Void
 
+    @Binding var isDarkMode: Bool
+
     var body: some View {
         NewsFeedDetailView(
             item: item,
             didTapExpand: didTapExpand,
-            didTapAction: didTapAction
+            didTapAction: didTapAction,
+            isDarkMode: $isDarkMode
         )
-        .background(Color.newsFeedDetailBackgroundColor)
 
         if !item.isLast {
             Rectangle()
-                .foregroundColor(.newsFeedSeperatorColor)
+                .foregroundColor(.from(.separatorColor, isDarkMode))
                 .frame(height: 0.5)
         }
     }

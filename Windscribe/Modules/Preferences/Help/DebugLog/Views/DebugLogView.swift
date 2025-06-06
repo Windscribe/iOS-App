@@ -29,43 +29,43 @@ struct DebugLogView: View {
     }
 
     var body: some View {
-        ZStack {
-            Color.nightBlue.ignoresSafeArea()
+        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+            ZStack {
+                if viewModel.showProgress {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                } else {
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            Text(viewModel.logContent)
+                                .font(.system(size: pinchFontSize, design: .monospaced))
+                                .foregroundColor(viewModel.isDarkMode ? .white : .black)
+                                .padding()
+                                .id(logID)
+                                .drawingGroup(opaque: false)
+                                .gesture(
+                                    MagnificationGesture()
+                                        .onChanged { value in
+                                            let delta = value - lastMagnificationValue
+                                            lastMagnificationValue = value
 
-            if viewModel.showProgress {
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-            } else {
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        Text(viewModel.logContent)
-                            .font(.system(size: pinchFontSize, design: .monospaced))
-                            .foregroundColor(viewModel.isDarkMode ? .white : .black)
-                            .padding()
-                            .id(logID)
-                            .drawingGroup(opaque: false)
-                            .gesture(
-                                MagnificationGesture()
-                                    .onChanged { value in
-                                        let delta = value - lastMagnificationValue
-                                        lastMagnificationValue = value
-
-                                        let adjustmentFactor: CGFloat = 6.0
-                                        let adjustment = delta * adjustmentFactor
-                                        let newFont = pinchFontSize + adjustment
-                                        pinchFontSize = min(max(newFont, minFontSize), maxFontSize)
-                                    }
-                                    .onEnded { _ in
-                                        lastMagnificationValue = 1.0
-                                    }
-                            )
-                    }
-                    .onAppear {
-                        scrollProxy = proxy
-                        scrollToBottom()
-                    }
-                    .onChange(of: viewModel.logContent) { _ in
-                        scrollToBottom()
+                                            let adjustmentFactor: CGFloat = 6.0
+                                            let adjustment = delta * adjustmentFactor
+                                            let newFont = pinchFontSize + adjustment
+                                            pinchFontSize = min(max(newFont, minFontSize), maxFontSize)
+                                        }
+                                        .onEnded { _ in
+                                            lastMagnificationValue = 1.0
+                                        }
+                                )
+                        }
+                        .onAppear {
+                            scrollProxy = proxy
+                            scrollToBottom()
+                        }
+                        .onChange(of: viewModel.logContent) { _ in
+                            scrollToBottom()
+                        }
                     }
                 }
             }
@@ -81,7 +81,7 @@ struct DebugLogView: View {
                     shareLog()
                 },label: {
                     Image(systemName: "square.and.arrow.up")
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                 })
             }
         }
