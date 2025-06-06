@@ -15,6 +15,11 @@ struct DocumentFormatInfo: Hashable {
     let tempFileName: String
 }
 
+struct MenuOption: Hashable {
+    let title: String
+    let fieldKey: String
+}
+
 struct MultiFormatDocument: FileDocument {
     static var readableContentTypes: [UTType] = [.plainText, .json]
 
@@ -35,7 +40,7 @@ struct MultiFormatDocument: FileDocument {
 }
 
 enum MenuEntryActionType: Hashable {
-    case multiple(currentOption: String, options: [String], parentId: Int)
+    case multiple(currentOption: String, options: [MenuOption], parentId: Int)
     case toggle(isSelected: Bool, parentId: Int)
     case button(title: String?, parentId: Int)
     case buttonFile(title: String, fileTypes: [UTType], parentId: Int)

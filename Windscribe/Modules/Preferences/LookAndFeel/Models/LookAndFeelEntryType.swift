@@ -56,7 +56,7 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
     var action: MenuEntryActionType? {
         if case let .appearance(currentOption) = self {
             return .multiple(currentOption: currentOption,
-                             options: TextsAsset.appearances,
+                             options: zip(TextsAsset.appearances, Fields.appearances).map { MenuOption(title: $0, fieldKey: $1) } ,
                              parentId: id)
         }
         return nil
@@ -152,25 +152,25 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
          customNameExport(documentInfo: DocumentFormatInfo?),
          customNameReset
 
-    var backgroundEffectOptions: [String] {
-        [TextsAsset.General.none,
-         TextsAsset.General.flag,
-         TextsAsset.General.bundled,
-         TextsAsset.General.custom]
+    var backgroundEffectOptions: [MenuOption] {
+        [MenuOption(title: TextsAsset.General.none, fieldKey: Fields.Values.none),
+         MenuOption(title: TextsAsset.General.flag, fieldKey: Fields.Values.flag),
+         MenuOption(title: TextsAsset.General.bundled, fieldKey: Fields.Values.bundled),
+         MenuOption(title: TextsAsset.General.custom, fieldKey: Fields.Values.custom)]
     }
-    var soundEffectOptions: [String] {
-        [TextsAsset.General.none,
-         TextsAsset.General.bundled,
-         TextsAsset.General.custom]
+    var soundEffectOptions: [MenuOption] {
+        [MenuOption(title: TextsAsset.General.none, fieldKey: Fields.Values.none),
+         MenuOption(title: TextsAsset.General.bundled, fieldKey: Fields.Values.bundled),
+         MenuOption(title: TextsAsset.General.custom, fieldKey: Fields.Values.custom)]
     }
-    var ratioOptions: [String] {
-        BackgroundAspectRatioType.allCases.map { $0.category }
+    var ratioOptions: [MenuOption] {
+        BackgroundAspectRatioType.allCases.map { $0.menuOption }
     }
-    var bundledBackgroundOptions: [String] {
-        BackgroundEffectSubtype.allCases.map { $0.displayName }
+    var bundledBackgroundOptions: [MenuOption] {
+        BackgroundEffectSubtype.allCases.map { $0.menuOption }
     }
-    var bundledSoundsOptions: [String] {
-        SoundEffectSubtype.allCases.map { $0.displayName }
+    var bundledSoundsOptions: [MenuOption] {
+        SoundEffectSubtype.allCases.map { $0.menuOption }
     }
 
     var id: Int {

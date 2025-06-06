@@ -74,6 +74,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
                 }
             }, receiveValue: { [weak self] name in
                 self?.currentLanguage = name
+                self?.setLocationOrder(with: self?.locationOrder ?? DefaultValues.orderLocationsBy)
                 self?.reloadItems()
             })
             .store(in: &cancellables)
@@ -101,16 +102,26 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
                 }
             }, receiveValue: { [weak self] order in
                 guard let self = self else { return }
-                self.locationOrder = order ?? DefaultValues.orderLocationsBy
+                self.setLocationOrder(with: order ?? DefaultValues.orderLocationsBy)
                 self.reloadItems()
             })
             .store(in: &cancellables)
     }
 
+    private func setLocationOrder(with value: String) {
+        locationOrder = value.localized
+    }
+
     private func reloadItems() {
+        let orderPreferences = zip(TextsAsset.orderPreferences,
+                                        Fields.orderPreferences)
+            .map { MenuOption(title: $0, fieldKey: $1) }
+        let languages = TextsAsset.General.languages
+            .map { MenuOption(title: $0, fieldKey: $0) }
+
         entries = [
-            .locationOrder(currentOption: locationOrder, options: TextsAsset.orderPreferences),
-            .language(currentOption: currentLanguage, options: TextsAsset.General.languages),
+            .locationOrder(currentOption: locationOrder, options: orderPreferences),
+            .language(currentOption: currentLanguage, options: languages),
             .hapticFeedback(isSelected: isHapticFeedbackEnabled),
             .notification(title: TextsAsset.General.openSettings),
             .version(message: getVersion())
@@ -118,8 +129,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     }
 
     private func didSelectedLocationOrder(value: String) {
-        guard let valueToSave = TextsAsset.General.getValue(displayText: value) else { return }
-        preferences.saveOrderLocationsBy(order: valueToSave)
+        preferences.saveOrderLocationsBy(order: value)
     }
 
     private func selectLanguage(with value: String) {

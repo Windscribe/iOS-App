@@ -8,9 +8,9 @@
 
 enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
     case networkOptions,
-         connectionMode(currentOption: String, options: [String]),
+         connectionMode(currentOption: String, options: [MenuOption]),
          alwaysOn(isSelected: Bool),
-         connectedDns(currentOption: String, customValue: String, options: [String]),
+         connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
          circunventCensorship(isSelected: Bool)
 

@@ -69,7 +69,7 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
             }, receiveValue: { [weak self] isDark in
                 guard let self = self else { return }
                 self.isDarkMode = isDark
-                self.appearance = isDark ? DefaultValues.appearance : TextsAsset.lightAppearance
+                self.appearance = isDark ? DefaultValues.appearance.localized : TextsAsset.lightAppearance
                 self.reloadItems()
             })
             .store(in: &cancellables)
