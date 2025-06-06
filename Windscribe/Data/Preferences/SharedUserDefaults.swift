@@ -311,14 +311,6 @@ class SharedSecretDefaults: Preferences {
         sharedDefault?.rx.observe(String.self, SharedKeys.appSkinType) ?? Observable.just(DefaultValues.appSkin)
     }
 
-    func saveAppearance(appearance: String) {
-        setString(appearance, forKey: SharedKeys.appearance)
-    }
-
-    func getAppearance() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.appearance) ?? Observable.just(DefaultValues.appearance)
-    }
-
     func saveLanguage(language: String) {
         setString(language, forKey: SharedKeys.language)
     }

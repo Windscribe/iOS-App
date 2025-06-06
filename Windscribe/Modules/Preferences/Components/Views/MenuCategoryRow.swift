@@ -9,8 +9,15 @@
 import SwiftUI
 
 struct MenuCategoryRow: View {
-    let isDarkMode: Bool
     let item: any MenuCategoryRowType
+    let isDarkMode: Bool
+    let title: String
+
+    init(item: any MenuCategoryRowType, isDarkMode: Bool) {
+        self.item = item
+        self.isDarkMode = isDarkMode
+        self.title = item.title
+    }
 
     var body: some View {
         ZStack {
@@ -27,7 +34,7 @@ struct MenuCategoryRow: View {
                         .foregroundColor(item.tintColor(isDarkMode))
                 }
                 if let actionImageName = item.actionImageName {
-                    Text(item.title)
+                    Text(title)
                         .foregroundColor(item.tintColor(isDarkMode))
                         .font(.regular(.callout))
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -36,7 +43,7 @@ struct MenuCategoryRow: View {
                         .frame(width: 16, height: 16)
                         .foregroundColor(item.tintColor(isDarkMode).opacity(0.4))
                 } else {
-                    Text(item.title)
+                    Text(title)
                         .foregroundColor(item.tintColor(isDarkMode))
                         .font(.regular(.callout))
                 }

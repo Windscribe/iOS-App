@@ -195,7 +195,8 @@ class ViewModels: Assembly {
 
         container.register((any AboutSettingsViewModel).self) { r in
             AboutSettingsViewModelImpl(
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register(AdvanceParamsViewModel.self) { r in
@@ -671,7 +672,8 @@ class ViewControllerModule: Assembly {
         container.register(AboutSettingsView.self) { r in
             AboutSettingsView(
                 viewModel: AboutSettingsViewModelImpl(
-                    logger: r.resolve(FileLogger.self)!))
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!))
         }.inObjectScope(.transient)
 
         container.register(MainViewController.self) { _ in

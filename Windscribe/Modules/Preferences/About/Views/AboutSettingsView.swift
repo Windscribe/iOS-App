@@ -27,11 +27,11 @@ struct AboutSettingsView: View {
         PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 14) {
-                    ForEach(viewModel.entries) { item in
+                    ForEach(viewModel.entries, id: \.self) { item in
                         Button {
                             viewModel.entrySelected(item)
                         } label: {
-                            MenuCategoryRow(isDarkMode: viewModel.isDarkMode, item: item)
+                            MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
                         }
                     }
                 }

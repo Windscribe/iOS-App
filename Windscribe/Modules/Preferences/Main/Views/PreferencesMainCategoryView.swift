@@ -100,7 +100,7 @@ struct PreferencesMainCategoryView: View {
 
     @ViewBuilder
     private func categoryRows() -> some View {
-        ForEach(viewModel.visibleItems) { item in
+        ForEach(viewModel.visibleItems, id: \.self) { item in
             if let index = viewModel.visibleItems.firstIndex(where: { $0.id == item.id }),
                !viewModel.shouldHideRow(index: index) {
 
@@ -114,7 +114,7 @@ struct PreferencesMainCategoryView: View {
                         viewModel.logout()
                     }
                 } label: {
-                    MenuCategoryRow(isDarkMode: viewModel.isDarkMode, item: item)
+                    MenuCategoryRow(item: item, isDarkMode: viewModel.isDarkMode)
                 }
             }
         }

@@ -70,12 +70,6 @@ class MockPreferences: Preferences {
         return Observable.just(nil)
     }
 
-    func saveAppearance(appearance: String) {}
-
-    func getAppearance() -> Observable<String?> {
-        return Observable.just(nil)
-    }
-
     func saveLanguage(language: String) {}
 
     func getLanguage() -> Observable<String?> {

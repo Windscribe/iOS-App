@@ -17,7 +17,6 @@ protocol PreferencesMainCategoryViewModel: ObservableObject {
 
     func updateActionDisplay()
     func getDynamicRouteForAccountRow() -> PreferencesRouteID
-    func reloadItems()
     func shouldHideRow(index: Int) -> Bool
     func logout()
 }
@@ -79,8 +78,10 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
                     self?.logger.logE("PreferencesViewModel", "language error: \(error)")
                 }
             }, receiveValue: { [weak self] name in
-                self?.currentLanguage = name
-                self?.updateActionDisplay()
+                guard let self = self else { return }
+                self.reloadItems()
+                self.currentLanguage = name
+                self.updateActionDisplay()
             })
             .store(in: &cancellables)
     }

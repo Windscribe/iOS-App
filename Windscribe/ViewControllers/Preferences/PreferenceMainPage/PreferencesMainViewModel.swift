@@ -109,7 +109,8 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     func getPreferenceItem(for row: Int) -> PreferenceItemType? {
-        PreferenceItemType(rawValue: row)
+        .general
+//        PreferenceItemType(rawValue: row)
     }
 
     func isDarkTheme() -> Bool {
