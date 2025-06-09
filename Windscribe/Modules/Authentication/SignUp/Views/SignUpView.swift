@@ -185,7 +185,7 @@ struct SignUpView: View {
             }
         }
         .dynamicTypeSize(dynamicTypeRange)
-        .navigationTitle(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.createAccount)
+        .navigationTitle(signupFlowContext.isFromGhostAccount ? TextsAsset.accountSetupTitle : TextsAsset.Welcome.signup)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             signupToolbar()
@@ -389,10 +389,11 @@ private extension SignUpView {
                     Text(TextsAsset.continue)
                         .font(.bold(.body))
                         .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding()
             .background(viewModel.isContinueButtonEnabled
                         ? Color.loginRegisterEnabledButtonColor
                         : .from(.iconColor, viewModel.isDarkMode))
