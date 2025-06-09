@@ -130,21 +130,22 @@ extension MainViewController {
         case 0:
             selectedHeaderViewTab = .all
             tableViewScrolled(toTop: serverListTableView.contentOffset.y <= 0)
-            listSelectionView.viewModel.setSelectedAction(selectedAction: .all)
         case view.frame.width:
             selectedHeaderViewTab = .fav
             tableViewScrolled(toTop: favTableView.contentOffset.y <= 0)
-            listSelectionView.viewModel.setSelectedAction(selectedAction: .fav)
         case view.frame.width * 2:
             selectedHeaderViewTab = .staticIP
             tableViewScrolled(toTop: staticIpTableView.contentOffset.y <= 0)
-            listSelectionView.viewModel.setSelectedAction(selectedAction: .staticIP)
         case view.frame.width * 3:
             selectedHeaderViewTab = .config
             tableViewScrolled(toTop: customConfigTableView.contentOffset.y <= 0)
-            listSelectionView.viewModel.setSelectedAction(selectedAction: .config)
         default:
             return
+        }
+        if let headerType = selectedHeaderViewTab {
+            listSelectionView.viewModel
+                .setSelectedAction(selectedAction: headerType)
+            ipInfoView.viewModel.updateCardHeaderType(with: headerType)
         }
     }
 

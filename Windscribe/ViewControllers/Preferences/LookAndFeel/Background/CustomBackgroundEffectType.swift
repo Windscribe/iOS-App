@@ -93,7 +93,7 @@ enum BackgroundEffectType: Hashable {
         case Fields.Values.custom:
             self = .custom
         default:
-            self = .none
+            self = .flag
         }
     }
 
@@ -129,7 +129,7 @@ extension BackgroundEffectType {
         } else if let subtype = BackgroundEffectSubtype(rawValue: value) {
             return .bundled(subtype: subtype)
         } else {
-            return .none
+            return .flag
         }
     }
 

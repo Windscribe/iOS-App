@@ -173,6 +173,7 @@ class ListSelectionView: UIView {
             self.favButton.imageView.layer.opacity = cardButtonType == .fav ? 1.0 : 0.7
             self.staticIpButton.imageView.layer.opacity = cardButtonType == .staticIP ? 1.0 : 0.7
             self.configButton.imageView.layer.opacity = cardButtonType == .config ? 1.0 : 0.7
+            self.startSearchButton.imageView.layer.opacity = 0.7
         }
     }
 

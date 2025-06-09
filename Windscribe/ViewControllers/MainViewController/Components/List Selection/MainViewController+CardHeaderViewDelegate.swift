@@ -22,6 +22,8 @@ extension MainViewController {
 extension MainViewController: ListSelectionViewDelegate {
     func cardHeaderWasSelected(with type: CardHeaderButtonType) {
         lastSelectedHeaderViewTab = type
+        listSelectionView.viewModel.setSelectedAction(selectedAction: type)
+        ipInfoView.viewModel.updateCardHeaderType(with: type)
         switch type {
         case .all:
             scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
