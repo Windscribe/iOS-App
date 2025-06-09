@@ -75,6 +75,9 @@ extension Observable {
         let subject = PassthroughSubject<Element, Error>()
         let disposable = self.subscribe(
             onNext: { value in
+                if let array = value as? [Any], array.isEmpty {
+                    return
+                }
                 subject.send(value)
             },
             onError: { error in
