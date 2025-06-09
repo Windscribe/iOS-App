@@ -233,7 +233,7 @@ enum TextsAsset {
     }
 
     static var referringUsername: String {
-        return "Referring Username".localized
+        return "Referring username".localized
     }
 
     static var voucherCode: String {
@@ -2040,14 +2040,14 @@ enum TextsAsset {
 
     enum Authentication {
         static let username = "Username".localized
-        static let enterUsername = "Enter Username".localized
+        static let enterUsername = "Enter username".localized
         static let password = "Password".localized
-        static let enterPassword = "Enter Password".localized
-        static let twoFactorCode = "2FA Code".localized
+        static let enterPassword = "Enter password".localized
+        static let twoFactorCode = "2FA code".localized
         static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localized
         static let forgotPassword = "Forgot password?".localized
-        static let enterEmailAddress = "Enter Email".localized
-        static let enterVoucherCode = "Enter Voucher Code".localized
+        static let enterEmailAddress = "Enter email".localized
+        static let enterVoucherCode = "Enter voucher code".localized
         static let done = "Done".localized
     }
 }
