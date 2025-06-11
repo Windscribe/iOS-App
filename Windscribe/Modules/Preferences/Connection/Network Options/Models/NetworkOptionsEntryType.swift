@@ -24,7 +24,7 @@ enum NetworkOptionsEntryType: MenuEntryHeaderType, Hashable {
         }}
     var title: String {
         switch self {
-        case .autoSecure: TextsAsset.Connection.autoSecure
+        case .autoSecure: TextsAsset.Connection.autoSecureNew
         case .network(let info), .networkList(let info, _): info.name
         }
     }

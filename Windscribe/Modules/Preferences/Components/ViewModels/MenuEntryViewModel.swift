@@ -85,6 +85,16 @@ enum MenuEntryActionType: Hashable {
             return parentId
         }
     }
+
+    func getImageName(for isDarkMode: Bool) -> String? {
+        switch self {
+        case let .toggle(isSelected, _):
+            isDarkMode ? imageName :
+            (isSelected ? ImagesAsset.SwitchButton.onLight : ImagesAsset.SwitchButton.offLight)
+        default:
+            imageName
+        }
+    }
 }
 
 enum MenuEntryActionResponseType {

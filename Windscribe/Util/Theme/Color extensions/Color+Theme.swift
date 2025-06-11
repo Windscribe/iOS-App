@@ -47,14 +47,14 @@ extension Color {
                 .actionBackgroundColor:
             return isDarkMode ? .nightBlue : .white
         case .infoColor:
-            return isDarkMode ? .infoGrey : .darkInfoColor
+            return .infoGrey
         case .dark:
             return isDarkMode ? .black : .infoGrey
         case .allowedColor(let isEnabled):
              if isEnabled {
                  return .eletricBlue
             } else {
-                return isDarkMode ? .infoGrey : .darkInfoColor
+                return .infoGrey
             }
         }
     }

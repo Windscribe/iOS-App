@@ -28,17 +28,6 @@ struct NetworkSecurityView: View {
         PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
             ScrollView {
                 VStack(spacing: 14) {
-                    ZStack {
-                        Text(TextsAsset.NetworkSecurity.header)
-                            .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
-                            .multilineTextAlignment(.leading)
-                            .font(.regular(.footnote))
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 12)
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.from(.backgroundColor, viewModel.isDarkMode), lineWidth: 1)
-                    }
-                    .padding(.horizontal, 16)
                     if let entry = viewModel.autoSecureEntry {
                         MenuEntryView(item: entry,
                                       isDarkMode: viewModel.isDarkMode,
@@ -63,7 +52,7 @@ struct NetworkSecurityView: View {
                     }
                     if let entry = viewModel.networkListEntry {
                         VStack(spacing: 0) {
-                            Text(TextsAsset.NetworkSecurity.otherNetwork.uppercased())
+                            Text(TextsAsset.NetworkSecurity.allNetwork.uppercased())
                                 .font(.caption)
                                 .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
                                 .padding(.horizontal, 14)

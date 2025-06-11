@@ -54,7 +54,7 @@ class NetworkSecurityViewController: WSNavigationViewController {
         return stack
     }()
 
-    lazy var otherNetworkTitle = createHeader(text: TextsAsset.NetworkSecurity.otherNetwork)
+    lazy var otherNetworkTitle = createHeader(text: TextsAsset.NetworkSecurity.allNetwork)
     lazy var otherNetworkStackView: UIStackView = makeNetworkStackView()
 
     // MARK: - Life cycle

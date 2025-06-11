@@ -3074,13 +3074,6 @@
 			path = Connection;
 			sourceTree = "<group>";
 		};
-		1EB67FB02DEDDDC100729052 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		1EC6C77C2BE10DB00036248B /* Search Locations */ = {
 			isa = PBXGroup;
 			children = (
@@ -3133,7 +3126,6 @@
 			children = (
 				1ED616722DD4C040006CDC99 /* Views */,
 				1ED616732DD4C048006CDC99 /* ViewModels */,
-				1EB67FB02DEDDDC100729052 /* Models */,
 			);
 			path = Components;
 			sourceTree = "<group>";
