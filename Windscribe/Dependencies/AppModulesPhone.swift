@@ -327,8 +327,8 @@ class ViewModels: Assembly {
                                      repository: r.resolve(ShakeDataRepository.self)!,
                                      lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
-        container.register(SearchLocationsViewModelType.self) { _ in
-            SearchLocationsViewModel()
+        container.register(SearchLocationsViewModelType.self) { r in
+            SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(LocationManagingViewModelType.self) { r in
             LocationManagingViewModel(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
@@ -347,8 +347,10 @@ class ViewModels: Assembly {
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
-        container.register(ListSelectionViewModelType.self) { _ in
-            ListSelectionViewModel()
+        container.register(ListSelectionViewModelType.self) { r in
+            ListSelectionViewModel(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+            )
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchViewModelType.self) { r in
             ProtocolSwitchViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, vpnManager: r.resolve(VPNManager.self)!)
@@ -432,6 +434,10 @@ class ViewModels: Assembly {
         container.register(ServerInfoViewModelType.self) { r in
             ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.transient)
+
+        container.register(ListHeaderViewModelType.self) { r in
+            ListHeaderViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register(FreeAccountFooterViewModelType.self) { r in
@@ -950,6 +956,12 @@ class ViewControllerModule: Assembly {
             ServerInfoView()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ServerInfoViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ListHeaderView.self) { _ in
+            ListHeaderView()
+        }.initCompleted { r, c in
+            c.viewModel = r.resolve(ListHeaderViewModelType.self)
         }.inObjectScope(.transient)
 
         container.register(FreeAccountFooterView.self) { _ in

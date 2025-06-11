@@ -14,6 +14,7 @@ import UIKit
 protocol ServerCellModelType {
     var name: String { get }
     var iconImage: UIImage? { get }
+    var shouldTintIcon: Bool { get }
     var iconAspect: UIView.ContentMode { get }
     var clipIcon: Bool { get }
     var actionImage: UIImage? { get }
@@ -21,8 +22,8 @@ protocol ServerCellModelType {
     var actionSize: CGFloat { get }
     var actionRightOffset: CGFloat { get }
     var actionOpacity: Float { get }
-    var nameOpacity: Float { get }
     var serverHealth: CGFloat { get }
+    func nameColor(for isDarkMode: Bool) -> UIColor
 }
 
 class HealthCircleView: CompletionCircleView {
@@ -48,7 +49,7 @@ class HealthCircleView: CompletionCircleView {
 
 class ServerListCell: SwipeTableViewCell {
     var icon = UIImageView()
-    var locationLoadImage = UIImageView()
+    var circleView = UIView()
     var actionImage = UIImageView()
     var nameLabel = UILabel()
     var nameInfoStackView = UIStackView()
@@ -59,23 +60,28 @@ class ServerListCell: SwipeTableViewCell {
 
     var disposeBag = DisposeBag()
 
+    private var isDarkMode: Bool = DefaultValues.darkMode
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
         backgroundColor = .clear
 
-        locationLoadImage.image = UIImage(named: ImagesAsset.locationLoad)
         actionImage.image = UIImage(named: ImagesAsset.cellExpand)
         actionImage.contentMode = .scaleAspectFit
 
-        nameLabel.font = UIFont.bold(size: 14)
-        nameLabel.textColor = UIColor.nightBlue
+        nameLabel.font = UIFont.medium(size: 16)
 
         nameInfoStackView.addArrangedSubview(nameLabel)
         nameInfoStackView.spacing = 5
 
+        circleView.backgroundColor = .clear
+        circleView.layer.cornerRadius = 12
+        circleView.layer.borderWidth = 1
+        circleView.clipsToBounds = true
+
         contentView.addSubview(icon)
-        contentView.addSubview(locationLoadImage)
+        contentView.addSubview(circleView)
         contentView.addSubview(healthCircle)
         contentView.addSubview(actionImage)
         contentView.addSubview(nameInfoStackView)
@@ -97,7 +103,7 @@ class ServerListCell: SwipeTableViewCell {
         icon.contentMode = viewModel.iconAspect
 
         icon.translatesAutoresizingMaskIntoConstraints = false
-        locationLoadImage.translatesAutoresizingMaskIntoConstraints = false
+        circleView.translatesAutoresizingMaskIntoConstraints = false
         actionImage.translatesAutoresizingMaskIntoConstraints = false
         nameInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         healthCircle.translatesAutoresizingMaskIntoConstraints = false
@@ -110,17 +116,17 @@ class ServerListCell: SwipeTableViewCell {
             icon.heightAnchor.constraint(equalToConstant: viewModel.iconSize),
             icon.widthAnchor.constraint(equalToConstant: viewModel.iconSize),
 
-            // locationLoadImage
-            locationLoadImage.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
-            locationLoadImage.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
-            locationLoadImage.heightAnchor.constraint(equalToConstant: 24),
-            locationLoadImage.widthAnchor.constraint(equalToConstant: 24),
+            // circleView
+            circleView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            circleView.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
+            circleView.heightAnchor.constraint(equalToConstant: 24),
+            circleView.widthAnchor.constraint(equalToConstant: 24),
 
             // healthCircle
             healthCircle.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
             healthCircle.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
-            healthCircle.heightAnchor.constraint(equalTo: locationLoadImage.heightAnchor),
-            healthCircle.widthAnchor.constraint(equalTo: locationLoadImage.widthAnchor),
+            healthCircle.heightAnchor.constraint(equalTo: circleView.heightAnchor),
+            healthCircle.widthAnchor.constraint(equalTo: circleView.widthAnchor),
 
             // nameLabel
             nameLabel.heightAnchor.constraint(equalToConstant: 20),
@@ -141,18 +147,23 @@ class ServerListCell: SwipeTableViewCell {
         guard let viewModel = viewModel else { return }
         nameLabel.text = viewModel.name
         icon.image = viewModel.iconImage
+        if viewModel.shouldTintIcon {
+            icon.setImageColor(color: .from(.locationColor, isDarkMode))
+        }
         actionImage.image = viewModel.actionImage
+        actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
 
-        nameLabel.layer.opacity = viewModel.nameOpacity
+        nameLabel.textColor = viewModel.nameColor(for: isDarkMode)
         actionImage.layer.opacity = viewModel.actionOpacity
 
         healthCircle.health = viewModel.serverHealth
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        isDarkMode.subscribe(onNext: { _ in
-            self.nameLabel.textColor = .white
-            self.actionImage.setImageColor(color: .white)
+        isDarkMode.subscribe(onNext: { isDarkMode in
+            self.actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
+            self.circleView.layer.borderColor = UIColor.from(.loadCircleColor, isDarkMode).cgColor
+            self.isDarkMode = isDarkMode
         }).disposed(by: disposeBag)
     }
 
@@ -173,8 +184,9 @@ class ServerListCell: SwipeTableViewCell {
 
     func setPressState(active: Bool) {
         DispatchQueue.main.asyncAfter(deadline: .now() + (active ? 0.0 : 0.3)) { [weak self] in
-            self?.updateUI()
-            self?.backgroundColor = active ? .whiteWithOpacity(opacity: 0.05) : .clear
+            guard let self = self else { return }
+            self.updateUI()
+            self.backgroundColor = active ? .from(.pressStateColor, self.isDarkMode): .clear
         }
     }
 }

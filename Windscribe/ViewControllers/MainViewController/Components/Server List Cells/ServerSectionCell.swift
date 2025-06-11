@@ -34,6 +34,8 @@ class ServerSectionCellModel: ServerSectionCellModelType {
         return UIImage(named: "\(countryCode)-s")
     }
 
+    var shouldTintIcon: Bool { false }
+
     var actionImage: UIImage? {
         UIImage(named: !isExpanded ? ImagesAsset.cellExpand : ImagesAsset.cellCollapse)
     }
@@ -66,6 +68,12 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 
     func setDisplayingServer(_ value: ServerModel?) {
         displayingServer = value
+    }
+
+    func nameColor(for isDarkMode: Bool) -> UIColor {
+        isExpanded ?
+            .from( .textColor, isDarkMode) :
+            .from( .infoColor, isDarkMode)
     }
 }
 
@@ -121,8 +129,8 @@ class ServerSectionCell: ServerListCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { _ in
-            self.p2pIcon.setImageColor(color: .white)
+        isDarkMode.subscribe(onNext: { isDarkMode in
+            self.p2pIcon.setImageColor(color: .from(.iconColor, isDarkMode))
         }).disposed(by: disposeBag)
     }
 

@@ -78,14 +78,12 @@ class ServerInfoView: UIView {
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {
-        backgroundColor = .nightBlue
-        infoLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
+        backgroundColor = .from(.backgroundColor, isDarkMode)
+        infoLabel.textColor = .from(.infoColor, isDarkMode)
     }
 
     private func addViews() {
-        backgroundColor = .clear
         infoLabel.font = UIFont.regular(size: 12)
-
         addSubview(infoLabel)
     }
 

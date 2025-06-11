@@ -25,6 +25,8 @@ class BestLocationCellModel: ServerCellModelType {
         return UIImage(named: "\(countryCode)-s")
     }
 
+    var shouldTintIcon: Bool { false }
+
     var actionImage = UIImage(named: ImagesAsset.serverWhiteRightArrow)
 
     var iconSize: CGFloat = 20.0
@@ -35,10 +37,12 @@ class BestLocationCellModel: ServerCellModelType {
 
     var actionOpacity: Float = 0.4
 
-    var nameOpacity: Float = 0.8
-
     var serverHealth: CGFloat {
         CGFloat(self.displayingBestLocation?.health ?? 0)
+    }
+
+    func nameColor(for isDarkMode: Bool) -> UIColor {
+        .from( .infoColor, isDarkMode)
     }
 }
 

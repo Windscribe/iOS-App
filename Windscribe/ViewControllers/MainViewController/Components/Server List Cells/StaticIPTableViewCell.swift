@@ -60,6 +60,6 @@ class StaticIPTableViewCell: BaseNodeCell {
         nameInfoStackView.axis = .vertical
         nameInfoStackView.spacing = 0
         healthCircle.health = -1
-        locationLoadImage.isHidden = true
+        circleView.isHidden = true
     }
 }

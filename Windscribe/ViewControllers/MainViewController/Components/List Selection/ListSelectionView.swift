@@ -58,7 +58,7 @@ class ListSelectionView: UIView {
     fileprivate lazy var favButton = ButtonImageView(imageName: ImagesAsset.favEmpty, imageSize: 24, tapAction: viewModel.favSelected)
     fileprivate lazy var staticIpButton = ButtonImageView(imageName: ImagesAsset.Servers.staticIP, imageWidth: 18, imageHeight: 22, tapAction: viewModel.staticSelected)
     fileprivate lazy var configButton = ButtonImageView(imageName: ImagesAsset.Servers.config, imageSize: 24, tapAction: viewModel.configSelected)
-    fileprivate lazy var startSearchButton = ButtonImageView(imageName: ImagesAsset.search, imageSize: 20, tapAction: viewModel.startSearchSelected)
+    fileprivate lazy var startSearchButton = ButtonImageView(imageName: ImagesAsset.search, imageSize: 18, tapAction: viewModel.startSearchSelected)
     var spacerView = UIView()
     var gradientView = UIView()
 
@@ -79,24 +79,26 @@ class ListSelectionView: UIView {
         addViews()
         addViewConstraints()
         bindView()
-        drawGradientView()
     }
 
     func redrawGradientView() {
         gradientView.layer.sublayers = []
-        drawGradientView()
+        drawGradientView(with: getIsDarkMode())
     }
 
-    private func drawGradientView() {
+    private func drawGradientView(with isDarkMode: Bool) {
         let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.nightBlueOpacity(opacity: 0.3).cgColor, UIColor.nightBlue.cgColor]
+        gradient.colors = [
+            UIColor.from(.gradientStartColor, isDarkMode).cgColor,
+            UIColor.from(.gradientEndColor, isDarkMode).cgColor
+        ]
         gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width + 2, height: 54)
         gradientView.layer.addSublayer(gradient)
         gradientView.layer.cornerRadius = 24
         gradientView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         gradientView.layer.masksToBounds = true
         gradientView.layer.borderWidth = 1
-        gradientView.layer.borderColor = UIColor.whiteWithOpacity(opacity: 0.1).cgColor
+        gradientView.layer.borderColor = UIColor.from(.gradientBorderColor, isDarkMode).cgColor
     }
 
     private func addViews() {
@@ -109,12 +111,6 @@ class ListSelectionView: UIView {
         addSubview(stackContainerView)
 
         stackContainerView.addArrangedSubviews([allButton, favButton, staticIpButton, configButton, spacerView, startSearchButton])
-
-        allButton.imageView.setImageColor(color: .white)
-        favButton.imageView.setImageColor(color: .white)
-        staticIpButton.imageView.setImageColor(color: .white)
-        configButton.imageView.setImageColor(color: .white)
-        startSearchButton.imageView.setImageColor(color: .white)
 
     }
 
@@ -169,6 +165,8 @@ class ListSelectionView: UIView {
             self.configButton.imageView.image = UIImage(named: cardButtonType == .config ?
                                                         ImagesAsset.Servers.configSelected : ImagesAsset.Servers.config)
 
+            self.updateIconsTheme(with: self.getIsDarkMode())
+
             self.allButton.imageView.layer.opacity = cardButtonType == .all ? 1.0 : 0.7
             self.favButton.imageView.layer.opacity = cardButtonType == .fav ? 1.0 : 0.7
             self.staticIpButton.imageView.layer.opacity = cardButtonType == .staticIP ? 1.0 : 0.7
@@ -186,5 +184,25 @@ class ListSelectionView: UIView {
         viewModel.selectedAction.subscribe {
             self.showPresentingListIcon(cardButtonType: $0)
         }.disposed(by: disposeBag)
+
+        viewModel.isDarkMode.subscribe { isDarkMode in
+            self.updateTheme(with: isDarkMode)
+        }.disposed(by: disposeBag)
+    }
+
+    private func updateTheme(with isDarkMode: Bool) {
+        updateIconsTheme(with: isDarkMode)
+        redrawGradientView()
+    }
+
+    private func updateIconsTheme(with isDarkMode: Bool) {
+        [allButton, favButton, staticIpButton, configButton, startSearchButton]
+            .forEach {
+                $0.imageView.setImageColor(color: .from(.iconColor, isDarkMode))
+            }
+    }
+
+    private func getIsDarkMode() -> Bool {
+        return ( try? viewModel.isDarkMode.value()) ?? DefaultValues.darkMode
     }
 }

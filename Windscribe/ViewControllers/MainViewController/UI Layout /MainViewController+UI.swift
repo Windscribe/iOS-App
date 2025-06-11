@@ -65,7 +65,9 @@ extension MainViewController {
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         favTableViewRefreshControl.backView = RefreshControlViewBack(frame: favTableViewRefreshControl.bounds)
-        favTableView.tableHeaderView = ListHeaderView(type: .favNodes, isDarkMode: viewModel.isDarkMode)
+        let favHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        favHeaderView.viewModel.updateType(with: .favNodes)
+        favTableView.tableHeaderView = favHeaderView
 
         staticIpTableView = PlainTableView()
         staticIpTableView.tag = 3
@@ -82,7 +84,9 @@ extension MainViewController {
         staticIpTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         staticIpTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         staticIpTableViewRefreshControl.backView = RefreshControlViewBack(frame: staticIpTableViewRefreshControl.bounds)
-        staticIpTableView.tableHeaderView = ListHeaderView(type: .staticIP, isDarkMode: viewModel.isDarkMode)
+        let staticHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        staticHeaderView.viewModel.updateType(with: .staticIP)
+        staticIpTableView.tableHeaderView = staticHeaderView
 
         customConfigTableView = PlainTableView()
         customConfigTableView.tag = 4
@@ -99,7 +103,9 @@ extension MainViewController {
         customConfigsTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         customConfigsTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
         customConfigsTableViewRefreshControl.backView = RefreshControlViewBack(frame: customConfigsTableViewRefreshControl.bounds)
-        customConfigTableView.tableHeaderView = ListHeaderView(type: .customConfig, isDarkMode: viewModel.isDarkMode)
+        let customHeaderView = Assembler.container.resolve(ListHeaderView.self)!
+        customHeaderView.viewModel.updateType(with: .customConfig)
+        customConfigTableView.tableHeaderView = customHeaderView
 
         addRefreshControls()
 

@@ -81,6 +81,9 @@ extension UIColor {
     // Background Gray
     static let backgroundGray = UIColor(red: 216 / 255.0, green: 216 / 255.0, blue: 216 / 255.0, alpha: 1.0)
 
+    // Info Gray
+    static let infoGray = UIColor(red: 114 / 255.0, green: 121 / 255.0, blue: 129 / 255.0, alpha: 1.0)
+
     // Dark Mode
     static let darkBlack = UIColor(red: 12 / 255.0, green: 19 / 255.0, blue: 29 / 255.0, alpha: 1.0)
 
