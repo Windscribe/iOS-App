@@ -237,6 +237,8 @@ enum ImagesAsset {
     enum SwitchButton {
         static let on = "toggle-on"
         static let off = "toggle-off"
+        static let onLight = "toggle-on-light"
+        static let offLight = "toggle-off-light"
         static let offBlack = "switch-button-off-black"
     }
 

@@ -54,9 +54,8 @@ struct MenuEntryHeaderView: View {
                 Text(item.title)
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-
-            Spacer()
 
             if let mainAction = item.action {
                 MenuEntryActionView(actionType: mainAction, isAlignLeading: isActionLeading, isDarkMode: isDarkMode, action: { actionType in
@@ -139,7 +138,7 @@ struct MenuEntryActionView: View {
             Button(action: {
                 action(.toggle(isSelected: !isSelected, parentId: parentId))
             }, label: {
-                if let imageName = actionType.imageName {
+                if let imageName = actionType.getImageName(for: isDarkMode) {
                     Image(imageName)
                         .resizable()
                         .frame(width: 40, height: 22)
@@ -176,7 +175,7 @@ struct MenuEntryActionView: View {
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
             })
-            .frame(alignment: .trailing)
+            .frame(maxWidth: .infinity, alignment: .center)
         case let .file(value, fileType, parentId):
             MenuFileSelectionView(isDarkMode: isDarkMode,
                                   value: value,

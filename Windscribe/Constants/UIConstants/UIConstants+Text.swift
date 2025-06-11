@@ -477,6 +477,7 @@ enum TextsAsset {
         static var allowLan: String { return "Allow LAN Traffic".localized }
         static var circumventCensorship: String { return "Circumvent Censorship".localized }
         static var autoSecure: String { "Auto-Secure".localized }
+        static var autoSecureNew: String { "Auto-Secure New Networks".localized }
         static var protocolType: String { "Protocol".localized }
         static var port: String { "Port".localized }
 
@@ -505,9 +506,9 @@ enum TextsAsset {
             return "Something went wrong. Please make sure you have entered a valid DNS server.".localized
         }
         static var autoSecureNewDescription: String {
-            return "Mark all newly encountered networks as Secured.".localized
+            return "Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them.".localized
         }
-        static var autoSecureSettingsDescription: String { return "Windscribe auto-connects if the device connects to this network.".localized }
+        static var autoSecureSettingsDescription: String { return "Windscribe will turn ON automatically if your device connects to this network.".localized }
     }
 
     static var learnMore: String {
@@ -902,8 +903,8 @@ enum TextsAsset {
             return "current network".localized
         }
 
-        static var otherNetwork: String {
-            return "other network".localized
+        static var allNetwork: String {
+            return "all network".localized
         }
 
         static var unknownNetwork: String {
@@ -1575,7 +1576,7 @@ enum TextsAsset {
         }
 
         static var newDescription: String {
-            return "Select the preferred protocol for this network. This overrides global connection preferences.".localized
+            return "Windscribe will always use this protocol to connect for this network. This overrides global connection preferences.".localized
         }
     }
 
@@ -1705,10 +1706,6 @@ enum TextsAsset {
         static var play: String {
             return "Play".localized
         }
-    }
-
-    static var autoSecureNew: String {
-        return "Auto-Secure New Networks".localized
     }
 
     enum NoEmailPrompt {

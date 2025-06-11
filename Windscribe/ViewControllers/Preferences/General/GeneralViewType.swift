@@ -51,7 +51,7 @@ enum GeneralViewType: SelectionViewType {
         case .firewall: TextsAsset.firewall
         case .killSwitch: TextsAsset.Connection.killSwitch
         case .allowLan: TextsAsset.Connection.allowLan
-        case .autoConnection: TextsAsset.autoSecureNew
+        case .autoConnection: TextsAsset.Connection.autoSecureNew
         case .connectionMode: TextsAsset.Connection.connectionMode
         case .autoSecure: TextsAsset.Connection.autoSecure
         case .preferredProtocol: TextsAsset.PreferredProtocol.title
