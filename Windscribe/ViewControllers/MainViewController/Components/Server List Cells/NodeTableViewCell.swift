@@ -122,8 +122,8 @@ class NodeTableViewCell: BaseNodeCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { _ in
-            self.speedIcon.setImageColor(color: .white)
+        isDarkMode.subscribe(onNext: { isDarkMode in
+            self.speedIcon.setImageColor(color: .from(.iconColor, isDarkMode))
         }).disposed(by: disposeBag)
     }
 

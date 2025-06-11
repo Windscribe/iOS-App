@@ -31,7 +31,7 @@ extension MainViewController {
     private func addSearchViewConstraints() {
         searchLocationsView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            searchLocationsView.bottomAnchor.constraint(equalTo: listSelectionView.bottomAnchor, constant: -1),
+            searchLocationsView.bottomAnchor.constraint(equalTo: listSelectionView.bottomAnchor),
             searchLocationsView.topAnchor.constraint(equalTo: view.topAnchor),
             searchLocationsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             searchLocationsView.trailingAnchor.constraint(equalTo: view.trailingAnchor)

@@ -16,10 +16,12 @@ class SearchLocationsView: UIView {
     var searchTextfield = UITextField()
     var clearSearchButton = UIButton()
     var spacerView = UIView()
+    var separatorView = UIView()
     var exitSearchButton = ImageButton()
 
     var viewModel: SearchLocationsViewModelType
     let serverSectionOpacity: Float
+    private var isDarkMode: Bool = DefaultValues.darkMode
 
     var disposeBag = DisposeBag()
 
@@ -33,6 +35,8 @@ class SearchLocationsView: UIView {
         self.serverSectionOpacity = serverSectionOpacity
         super.init(frame: .zero)
         isUserInteractionEnabled = false
+
+        bindViews()
     }
 
     func loadView() {
@@ -41,21 +45,32 @@ class SearchLocationsView: UIView {
         bindTextFieldDelegates()
     }
 
+    private func bindViews() {
+        viewModel.isDarkMode.subscribe(onNext: { [weak self] isDarkMode in
+            guard let self = self else { return }
+            separatorView.backgroundColor = .from(.loadCircleColor, isDarkMode)
+            searchTextfield.textColor = .from(.textColor, isDarkMode)
+            searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
+                                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.from(.placeholderColor, isDarkMode)])
+            searchIcon.setImageColor(color: .from(.infoColor, isDarkMode))
+            exitSearchButton.imageView?.setImageColor(color: .from(.infoColor, isDarkMode))
+            searchTextfield.textColor = .from(.textColor, isDarkMode)
+            backgroundColor = isUserInteractionEnabled ? .from(.backgroundColor, isDarkMode) : .clear
+            self.isDarkMode = isDarkMode
+        }).disposed(by: disposeBag)
+    }
+
     private func addViews() {
+        addSubview(separatorView)
         stackContainerView.axis = .horizontal
         stackContainerView.spacing = 0
         addSubview(stackContainerView)
 
-        searchTextfield.textColor = UIColor.white
-        searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
-                                                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5)])
         searchIcon.image = UIImage(named: ImagesAsset.search)
         searchIcon.contentMode = .scaleAspectFit
-        searchIcon.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
         exitSearchButton.setImage(UIImage(named: ImagesAsset.exitSearch)?.withRenderingMode(.alwaysTemplate)
                                   , for: .normal)
-        exitSearchButton.imageView?.setImageColor(color: .whiteWithOpacity(opacity: 0.7))
 
         var config = UIButton.Configuration.plain()
         config.title = TextsAsset.clearSearch
@@ -72,10 +87,7 @@ class SearchLocationsView: UIView {
 
         searchTextfield.autocorrectionType = .no
         searchTextfield.autocapitalizationType = .none
-        searchTextfield.textColor = UIColor.white
         searchTextfield.returnKeyType = .done
-        searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
-                                                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.whiteWithOpacity(opacity: 0.5)])
         searchTextfield.font = UIFont.text(size: 14)
 
         exitSearchButton.imageView?.contentMode = .scaleAspectFit
@@ -85,6 +97,7 @@ class SearchLocationsView: UIView {
     }
 
     private func addViewConstraints() {
+        separatorView.translatesAutoresizingMaskIntoConstraints = false
         stackContainerView.translatesAutoresizingMaskIntoConstraints = false
         searchIcon.translatesAutoresizingMaskIntoConstraints = false
         searchTextfield.translatesAutoresizingMaskIntoConstraints = false
@@ -93,8 +106,14 @@ class SearchLocationsView: UIView {
         spacerView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            // separatorView
+            separatorView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            separatorView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 1),
+
             // stackContainerView
-            stackContainerView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackContainerView.bottomAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 1),
             stackContainerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             stackContainerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             stackContainerView.heightAnchor.constraint(equalToConstant: 54),
@@ -147,7 +166,7 @@ class SearchLocationsView: UIView {
     }
 
     func setSearchSelected(isSelected: Bool) {
-        backgroundColor = isSelected ? .nightBlue : .clear
+        backgroundColor = isSelected ? .from(.backgroundColor, isDarkMode) : .clear
         isUserInteractionEnabled = isSelected
     }
 

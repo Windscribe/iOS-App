@@ -46,6 +46,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
         UIImage(named: ImagesAsset.cityImage)?.withRenderingMode(.alwaysTemplate)
     }
 
+    var shouldTintIcon: Bool { true }
+
     var actionImage: UIImage? {
         UIImage(named: isFavourited ? ImagesAsset.favFull : ImagesAsset.favEmpty)
     }
@@ -59,8 +61,6 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var actionOpacity: Float {
         0.4
     }
-
-    var nameOpacity: Float { 1.0 }
 
     var serverHealth: CGFloat { 0.0 }
 
@@ -107,6 +107,10 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
         }
         return signalLevel
     }
+
+    func nameColor(for isDarkMode: Bool) -> UIColor {
+        .from( .textColor, isDarkMode)
+    }
 }
 
 class BaseNodeCell: ServerListCell {
@@ -133,14 +137,12 @@ class BaseNodeCell: ServerListCell {
         favButton.layer.opacity = 0.4
         contentView.addSubview(favButton)
 
-        nickNameLabel.font = UIFont.text(size: 14)
+        nickNameLabel.font = UIFont.text(size: 16)
         nickNameLabel.layer.opacity = 1
-        nickNameLabel.textColor = UIColor.nightBlue
         nameInfoStackView.addArrangedSubview(nickNameLabel)
 
         latencyLabel.font = UIFont.medium(size: 9)
         latencyLabel.layer.opacity = 0.7
-        latencyLabel.textColor = UIColor.nightBlue
         contentView.addSubview(latencyLabel)
 
         signalBarsIcon.image = UIImage(named: ImagesAsset.CellSignalBars.full)
@@ -153,11 +155,12 @@ class BaseNodeCell: ServerListCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { _ in
-            self.icon.tintColor = .white
-            self.nickNameLabel.textColor = .white
-            self.latencyLabel.textColor = .white
-            self.signalBarsIcon.setImageColor(color: .white)
+        isDarkMode.subscribe(onNext: { isDarkMode in
+            self.nickNameLabel.textColor = .from(.textColor, isDarkMode)
+            self.latencyLabel.textColor = .from(.textColor, isDarkMode)
+            self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDarkMode))
+            self.favButton.imageView?.setImageColor(color: .from(.iconColor, isDarkMode))
+            self.icon.setImageColor(color: .from(.iconColor, isDarkMode))
         }).disposed(by: disposeBag)
     }
 

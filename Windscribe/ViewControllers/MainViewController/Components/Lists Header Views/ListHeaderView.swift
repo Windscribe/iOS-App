@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 
 enum ListHeaderViewType {
-    case staticIP, customConfig, favNodes
+    case staticIP, customConfig, favNodes, empty
 
     var description: String {
         switch self {
@@ -20,42 +20,71 @@ enum ListHeaderViewType {
             return "Custom Configs"
         case .favNodes:
             return "Favorite Locations"
+        case .empty:
+            return ""
         }
     }
 }
 
-class ListHeaderView: UIView {
-    let isDarkMode: BehaviorSubject<Bool>
-    let type: ListHeaderViewType
+protocol ListHeaderViewModelType {
+    var isDarkMode: BehaviorSubject<Bool> { get }
+    var type: BehaviorSubject<ListHeaderViewType> { get }
+    func updateType(with type: ListHeaderViewType)
+}
 
+class ListHeaderViewModel: ListHeaderViewModelType {
+    let isDarkMode: BehaviorSubject<Bool>
+    let type = BehaviorSubject<ListHeaderViewType>(value: .empty)
     let disposeBag = DisposeBag()
+
+    init(lookAndFeelRepository: LookAndFeelRepositoryType) {
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
+    }
+
+    func updateType(with type: ListHeaderViewType) {
+        self.type.onNext(type)
+    }
+}
+
+class ListHeaderView: UIView {
+    let disposeBag = DisposeBag()
+
     let infoLabel = UILabel()
+
+    var viewModel: ListHeaderViewModelType! {
+        didSet {
+            bindViewModel()
+        }
+    }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    init(type: ListHeaderViewType, isDarkMode: BehaviorSubject<Bool>) {
-        self.isDarkMode = isDarkMode
-        self.type = type
+    init() {
         super.init(frame: .zero)
         addViews()
         setLayout()
+    }
 
-        isDarkMode.subscribe { isDarkMode in
+    private func bindViewModel() {
+        viewModel.type.observe(on: MainScheduler.asyncInstance)
+            .subscribe(onNext: {
+                self.infoLabel.text = $0.description
+            }).disposed(by: disposeBag)
+
+        viewModel.isDarkMode.subscribe { isDarkMode in
             self.updateLayourForTheme(isDarkMode: isDarkMode)
         }.disposed(by: disposeBag)
     }
 
     private func updateLayourForTheme(isDarkMode: Bool) {
-        backgroundColor = .nightBlue
-        infoLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
+        backgroundColor = .from(.backgroundColor, isDarkMode)
+        infoLabel.textColor = .from(.infoColor, isDarkMode)
     }
 
     private func addViews() {
-        backgroundColor = .clear
         infoLabel.font = UIFont.regular(size: 12)
-        infoLabel.text = type.description
         addSubview(infoLabel)
     }
 

@@ -128,7 +128,7 @@ class MainViewModel: MainViewModelType {
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
         becameActiveTrigger = livecycleManager.becameActiveTrigger
 
-        isDarkMode = BehaviorSubject<Bool>(value: true)
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadNotifications()
         loadServerList()
         loadFavNode()

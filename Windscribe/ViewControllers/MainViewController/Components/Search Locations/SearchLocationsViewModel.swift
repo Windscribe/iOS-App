@@ -17,6 +17,7 @@ protocol SearchCountryViewDelegate: AnyObject {
 
 protocol SearchLocationsViewModelType {
     var isSearchActive: BehaviorSubject<Bool> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
 
     var delegate: SearchCountryViewDelegate? { get set }
 
@@ -29,8 +30,13 @@ protocol SearchLocationsViewModelType {
 
 class SearchLocationsViewModel: SearchLocationsViewModelType {
     var isSearchActive = BehaviorSubject<Bool>(value: false)
+    let isDarkMode: BehaviorSubject<Bool>
 
     weak var delegate: SearchCountryViewDelegate?
+
+    init(lookAndFeelRepository: LookAndFeelRepositoryType) {
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
+    }
 
     func toggleSearch() {
         let isSearchActive = (try? isSearchActive.value()) ?? false

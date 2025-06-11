@@ -24,6 +24,7 @@ protocol ListSelectionViewDelegate {
 protocol ListSelectionViewModelType {
     var delegate: ListSelectionViewDelegate? { get set }
     var isActive: BehaviorSubject<Bool> { get }
+    var isDarkMode: BehaviorSubject<Bool> { get }
     var selectedAction: BehaviorSubject<CardHeaderButtonType> { get }
 
     func setActive()
@@ -38,8 +39,13 @@ protocol ListSelectionViewModelType {
 class ListSelectionViewModel: ListSelectionViewModelType {
     var delegate: ListSelectionViewDelegate?
     var isActive = BehaviorSubject<Bool>(value: true)
+    var isDarkMode: BehaviorSubject<Bool>
     var selectedAction = BehaviorSubject<CardHeaderButtonType>(value: .all)
     let disposeBag = DisposeBag()
+
+    init (lookAndFeelRepository: LookAndFeelRepositoryType) {
+        isDarkMode = lookAndFeelRepository.isDarkModeSubject
+    }
 
     func setSelectedAction(selectedAction: CardHeaderButtonType) {
         self.selectedAction.onNext(selectedAction)

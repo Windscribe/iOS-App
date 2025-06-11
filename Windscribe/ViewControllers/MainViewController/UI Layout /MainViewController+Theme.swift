@@ -14,7 +14,7 @@ extension MainViewController {
             serverRefreshControl.backView.label.backgroundColor = .clear
         }
 
-        let backgroundColor: UIColor =  isDarkMode ? .nightBlue : .white
+        let backgroundColor: UIColor =  .from(.backgroundColor, isDarkMode)
         favTableView.backgroundColor = backgroundColor
         staticIpTableView.backgroundColor = backgroundColor
         customConfigTableView.backgroundColor = backgroundColor
