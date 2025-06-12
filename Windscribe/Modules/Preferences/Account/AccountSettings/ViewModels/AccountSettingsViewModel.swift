@@ -38,7 +38,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
     private let logger: FileLogger
-    
+
     private let disposeBag = DisposeBag()
 
     var accountEmailStatus: AccountEmailStatusType {

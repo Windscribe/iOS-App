@@ -45,19 +45,21 @@ struct SendTicketView: View {
         } else {
             PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 ScrollView {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 0) {
                         // Description
                         Text(TextsAsset.SubmitTicket.fillInTheFields)
                             .font(.text(.footnote))
                             .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
-                            .padding(12)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 12)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(
-                                RoundedRectangle(cornerRadius: 8)
+                                RoundedRectangle(cornerRadius: 12)
+                                    .inset(by: 0.5)
                                     .stroke(Color.from(.backgroundColor, viewModel.isDarkMode),
                                             lineWidth: 1)
                             )
-                            .padding(.bottom, 12)
+                            .padding(.bottom, 14)
 
                         // Category Dropdown
                         HStack {
@@ -86,67 +88,68 @@ struct SendTicketView: View {
                                 }
                             }
                         }
-                        .padding()
+                        .padding(14)
                         .background(Color.from(.backgroundColor, viewModel.isDarkMode))
                         .cornerRadius(12)
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 14)
 
                         // Email
                         Text("\(TextsAsset.SubmitTicket.email) (\(TextsAsset.SubmitTicket.required))")
-                            .font(.semiBold(.subheadline))
+                            .font(.medium(.callout))
                             .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                            .padding(.bottom, 4)
 
-                        TextField(TextsAsset.SubmitTicket.email, text: $viewModel.email)
+                        TextField(TextsAsset.SubmitTicket.enterEmail, text: $viewModel.email)
                             .keyboardType(.emailAddress)
                             .textContentType(.emailAddress)
                             .autocapitalization(.none)
                             .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                             .padding()
                             .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-                            .cornerRadius(12)
-                            .padding(.bottom, 4)
+                            .cornerRadius(9)
+                            .padding(.bottom, 8)
 
                         Text(TextsAsset.SubmitTicket.soWeCanContactYou)
                             .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
-                            .font(.regular(.footnote))
+                            .font(.regular(.caption1))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 12)
+                            .padding(.bottom, 14)
 
                         // Subject
                         Text("\(TextsAsset.SubmitTicket.subject) (\(TextsAsset.SubmitTicket.required))")
-                            .font(.semiBold(.subheadline))
+                            .font(.medium(.callout))
                             .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-                            .padding(.bottom, 4)
+                            .padding(.bottom, 8)
 
-                        TextField(TextsAsset.SubmitTicket.subject, text: $viewModel.subject)
+                        TextField(TextsAsset.SubmitTicket.enterSubject, text: $viewModel.subject)
                             .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
                             .padding()
                             .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-                            .cornerRadius(12)
-                            .padding(.bottom, 12)
+                            .cornerRadius(9)
+                            .padding(.bottom, 14)
 
                         // Message
-                        Text(TextsAsset.SubmitTicket.whatsTheIssue)
-                            .font(.text(.headline))
+                        Text("\(TextsAsset.SubmitTicket.whatsTheMatter) (\(TextsAsset.SubmitTicket.required))")
+                            .font(.medium(.callout))
                             .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-                            .padding(.bottom, 4)
+                            .padding(.bottom, 8)
 
-                        TextEditor(text: $viewModel.message)
-                            .font(.text(.callout))
-                            .transparentScrolling()
-                            .modifier(TextEditorInputModifiers())
-                            .padding(12)
-                            .foregroundColor(viewModel.showError ? .red : (.from(.titleColor, viewModel.isDarkMode)))
+                        PlaceholderTextEditor(isDarkMode: viewModel.isDarkMode,
+                                              placeholderText: TextsAsset.SubmitTicket.tellUs,
+                                              textColor: viewModel.showError ? .red : (.from(.titleColor, viewModel.isDarkMode)),
+                                              text: viewModel.message)
+                            .padding(16)
                             .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-                            .cornerRadius(16)
+                            .cornerRadius(9)
                             .frame(height: 200)
-                            .padding(.bottom, 12)
+                            .padding(.bottom, 14)
 
                         // Error Display
                         if viewModel.showError {
                             Text(viewModel.errorMessage)
                                 .foregroundColor(.red)
                                 .font(.text(.caption1))
+                                .padding(.bottom, 8)
                         }
 
                         // Submit Button
@@ -164,7 +167,7 @@ struct SendTicketView: View {
                                     .foregroundColor(viewModel.isFormValid ?
                                         .from(.titleColor, viewModel.isDarkMode) :
                                             .from(.infoColor, viewModel.isDarkMode))
-                                    .cornerRadius(24)
+                                    .cornerRadius(12)
                             }
                         }
                         .disabled(!viewModel.isFormValid)
@@ -179,6 +182,26 @@ struct SendTicketView: View {
                     .navigationBarTitleDisplayMode(.inline)
                 }
             }
+        }
+    }
+}
+
+struct PlaceholderTextEditor: View {
+    let isDarkMode: Bool
+    let placeholderText: String
+    let textColor: Color
+    @State var text: String = ""
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            if text.isEmpty {
+                Text(placeholderText)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
+            }
+            TextEditor(text: $text)
+                .font(.text(.callout))
+                .transparentScrolling()
+                .modifier(TextEditorInputModifiers())
         }
     }
 }

@@ -2043,6 +2043,10 @@ enum TextsAsset {
             return "Email".localized
         }
 
+        static var enterEmail: String {
+            return "Enter email".localized
+        }
+
         static var required: String {
             return "Required".localized
         }
@@ -2055,8 +2059,16 @@ enum TextsAsset {
             return "Subject".localized
         }
 
-        static var whatsTheIssue: String {
-            return "What’s the issue?".localized
+        static var enterSubject: String {
+            return "Enter subject".localized
+        }
+
+        static var whatsTheMatter: String {
+            return "What’s the matter?".localized
+        }
+
+        static var tellUs: String {
+            return "Tell us what’s wrong".localized
         }
 
         static var message: String {

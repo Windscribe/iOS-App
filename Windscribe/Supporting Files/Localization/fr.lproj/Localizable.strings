@@ -524,5 +524,8 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Sweet, we’ll get back to you as soon as one of our agents is back from lunch." = "Super ! Nous vous répondrons dès que l’un de nos agents sera revenu de déjeuner.";
 "Required" = "Requis";
 "So we can contact you, we won’t use it for anything else" = "Afin de vous contacter. Nous ne l’utiliserons à aucune autre fin";
-"What’s the issue?" = "Quel est le problème ?";
 "Send" = "Envoyer";
+
+"Enter subject" = "Saisissez le sujet";
+"What’s the matter?" = "Quel est le problème ?";
+"Tell us what’s wrong" = "Dites-nous ce qui ne va pas";
