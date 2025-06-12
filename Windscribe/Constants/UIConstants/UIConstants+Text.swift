@@ -258,6 +258,48 @@ enum TextsAsset {
         }
     }
 
+    enum ProtocolVariation {
+        static var connectionFailureTitle: String {
+            return "Connection Failure!".localized
+        }
+
+        static var protocolChangeTitle: String {
+            return "Change Protocol".localized
+        }
+
+        static var connectionFailureDescription: String {
+            return "The protocol you’ve chosen has failed to connect. Windscribe will attempt to reconnect using the first protocol below.".localized
+        }
+
+        static var protocolChangeDescription: String {
+            return "Quickly re-connect using a different protocol.".localized
+        }
+
+        static var ikev2ProtocolDescription: String {
+            return "IKEv2 is an IPsec based tunnelling protocol.".localized
+        }
+
+        static var udpProtocolDescription: String {
+            return "Balanced speed and security.".localized
+        }
+
+        static var tcpProtocolDescription: String {
+            return "Use it if OpenVPN UDP fails.".localized
+        }
+
+        static var wsTunnelProtocolDescription: String {
+            return "Wraps your HTTPS traffic with web sockets.".localized
+        }
+
+        static var stealthProtocolDescription: String {
+            return "Disguises your traffic as HTTPS traffic with TLS".localized
+        }
+
+        static var wireGuardProtocolDescription: String {
+            return "Extremely simple yet fast and modern VPN protocol.".localized
+        }
+    }
+
     enum Permission {
         static var locationDescription: String {
             return "Location permission is denied . Settings > Privacy > Location services > Windscribe > check while in use and presise location.".localized
@@ -508,7 +550,9 @@ enum TextsAsset {
         static var autoSecureNewDescription: String {
             return "Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them.".localized
         }
-        static var autoSecureSettingsDescription: String { return "Windscribe will turn ON automatically if your device connects to this network.".localized }
+        static var autoSecureSettingsDescription: String {
+            return "Windscribe will turn ON automatically if your device connects to this network.".localized
+        }
     }
 
     static var learnMore: String {
@@ -904,7 +948,7 @@ enum TextsAsset {
         }
 
         static var allNetwork: String {
-            return "all network".localized
+            return "all networks".localized
         }
 
         static var unknownNetwork: String {
@@ -930,12 +974,27 @@ enum TextsAsset {
         }
     }
 
-    static let noNetworksAvailable = NSLocalizedString("NO INTERNET!", comment: "")
-    static let cellular = NSLocalizedString("Cellular", comment: "")
-    static let wifi = NSLocalizedString("Wi-fi", comment: "")
-    static let noNetworkDetected = NSLocalizedString("No Network Detected", comment: "")
-    static let noInternetConnection = NSLocalizedString("No Internet", comment: "")
-    static let unknownNetworkName = "unknown"
+    static var noNetworksAvailable: String {
+        return "NO INTERNET!".localized
+    }
+    static var cellular: String {
+        return "Cellular".localized
+    }
+
+    static var wifi: String {
+        return "Wi-fi".localized
+    }
+
+    static var noNetworkDetected: String {
+        return "No Network Detected".localized
+    }
+    static var noInternetConnection: String {
+        return "No Internet".localized
+    }
+
+    static var unknownNetworkName: String {
+        return "unknown".localized
+    }
 
     enum NewsFeed {
         static var title: String {
@@ -1011,7 +1070,7 @@ enum TextsAsset {
         }
 
         static var action: String {
-            return "Learn More".localized
+            return "Learn more".localized
         }
     }
 
@@ -1129,7 +1188,6 @@ enum TextsAsset {
             return "Promo is not valid anymore.".localized
         }
 
-        // TODO: Need to add localizable languages
         static var yearly: String {
             return "Yearly".localized
         }
@@ -2005,13 +2063,30 @@ enum TextsAsset {
             return "Message".localized
         }
 
-        static let `continue` = "Continue"
-        static let acount = "Account"
-        static let sales = "Sales"
-        static let technical = "Technical"
-        static let feedback = "Feedback"
-        static let categories = [acount, technical, sales, feedback]
-        static let categoryValues = [acount: 1, technical: 2, sales: 3, feedback: 4]
+        static var `continue`: String {
+            return "Continue".localized
+        }
+
+        static var acount: String {
+            return "Account".localized
+        }
+
+        static var sales: String {
+            return "Sales".localized
+        }
+
+        static var technical: String {
+            return "Technical".localized
+        }
+
+        static var feedback: String {
+            return "Feedback".localized
+        }
+
+        static var categories = [acount, technical, sales, feedback]
+
+        static var categoryValues = [acount: 1, technical: 2, sales: 3, feedback: 4]
+
         static var weWillGetBackToYou: String {
             return "Sweet, we’ll get back to you as soon as one of our agents is back from lunch.".localized
         }
@@ -2022,30 +2097,98 @@ enum TextsAsset {
     }
 
     enum Welcome {
-        static let tabInfo1 = "Servers in over 69 countries and 134 cities.".localized
-        static let tabInfo2 = "Automatically Secure any Network".localized
-        static let tabInfo3 = "No-Logging Policy".localized
-        static let tabInfo4 = "Works with Siri, Shortcuts & Widgets".localized
-        static let signup = "Sign Up".localized
-        static let login = "Login".localized
-        static let connectionFault = "Can't Connect?".localized
-        static let emergencyConnectOn = "Emergency Connect On".localized
-        static let continueWithGoogle = "Continue with Google".localized
-        static let continueWithApple = "Continue with Apple".localized
-        static let ssoErrorAppleTitle = "Apple Sign-In Unsuccesful"
+        static var tabInfo1: String {
+            return "Servers in over 69 countries and 134 cities.".localized
+        }
+
+        static var tabInfo2: String {
+            return "Automatically Secure any Network".localized
+        }
+
+        static var tabInfo3: String {
+            return "No-Logging Policy".localized
+        }
+
+        static var tabInfo4: String {
+            return "Works with Siri, Shortcuts & Widgets".localized
+        }
+
+        static var signup: String {
+            return "Sign Up".localized
+        }
+
+        static var login: String {
+            return "Login".localized
+        }
+
+        static var connectionFault: String {
+            return "Can't Connect?".localized
+        }
+
+        static var emergencyConnectOn: String {
+            return "Emergency Connect On".localized
+        }
+
+        static var continueWithGoogle: String {
+            return "Continue with Google".localized
+        }
+        static var continueWithApple: String {
+            return "Continue with Apple".localized
+
+        }
+        static var ssoErrorAppleTitle: String {
+            return "Apple Sign-In Unsuccesful"
+        }
     }
 
     enum Authentication {
-        static let username = "Username".localized
-        static let enterUsername = "Enter username".localized
-        static let password = "Password".localized
-        static let enterPassword = "Enter password".localized
-        static let twoFactorCode = "2FA code".localized
-        static let twoFactorDescription = "If enabled, use an authentication app to generate the code.".localized
-        static let forgotPassword = "Forgot password?".localized
-        static let enterEmailAddress = "Enter email".localized
-        static let enterVoucherCode = "Enter voucher code".localized
-        static let done = "Done".localized
+        static var username: String {
+            return "Username".localized
+        }
+
+        static var enterUsername: String {
+            return "Enter username".localized
+        }
+
+        static var password: String {
+            return "Password".localized
+        }
+
+        static var enterPassword: String {
+            return "Enter password".localized
+        }
+
+        static var twoFactorCode: String {
+            return "2FA code".localized
+        }
+
+        static var twoFactorDescription: String {
+            return "If enabled, use an authentication app to generate the code.".localized
+        }
+
+        static var forgotPassword: String {
+            return "Forgot password?".localized
+        }
+
+        static var enterEmailAddress: String {
+            return "Enter email".localized
+        }
+
+        static var enterVoucherCode: String {
+            return "Enter voucher code".localized
+        }
+
+        static var done: String {
+            return "Done".localized
+        }
+
+        static var appleLoginCanceled: String {
+            return "Apple login canceled".localized
+        }
+
+        static var appleLoginFailed: String {
+            return "Unable to obtain Apple identity token.".localized
+        }
     }
 }
 

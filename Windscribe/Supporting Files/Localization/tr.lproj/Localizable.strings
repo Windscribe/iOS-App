@@ -103,7 +103,6 @@
 "Please login with your username, not your email" = "Email adresi girdiniz. Lütfen kullanıcı adınızla giriş yapın.";
 
 "Loading" = "Yükleniyor";
-"Login" = "Giriş Yap";
 "Get 10GB/ Mo" = "10 GB Aylık";
 "10GB/ Mo" = "Aylık 10 GB";
 "Continue without account" = "Üyeliksiz devam et";
@@ -222,7 +221,6 @@
 
 "You’ve been banned" = "Erişime Yasaklandınız";
 "Your account has been disabled for violating our Terms of Service" = "Kullanım kurallarına uymadığınız için hesabınız devre dışı bırakıldı.";
-"Learn More" = "Daha Fazla Öğren";
 
 "Stay Protected" = "Korunmaya Devam Et";
 "Set up push notifications to receive connection updates in case of an interruption" = "Bildirimleri aktif ederek herhangi bir sorun oluştuğunda bağlantınız ile ilgili güncellemeler hakkında bilgi edinin";
@@ -381,7 +379,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Destekle ilgili tüm sorularınız için telefonunuzda veya bilgisayarınızda yukarıdaki adrese gidin.";
 "Enter Code" = "Kodu Girin";
 "Enter code here" = "Kodu buraya girin";
-"Login into Windscribe's TV apps with a short code" = "Windscribe\\\\ın TV uygulamalarına kısa bir kodla giriş yapın";
+"Login into Windscribe's TV apps with a short code" = "Windscribe'ın TV uygulamalarına kısa bir kodla giriş yapın";
 "Sweet, you should be all good to go now" = "Tatlım, artık gidebilirsin";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Bu konum bakım altındadır. Daha sonra tekrar deneyin veya daha fazla bilgi için Durum sayfamıza gidin. https://windscribe.com/status";
 "Location Maintenance" = "Konum Bakımı";
@@ -473,3 +471,73 @@
 "Export" = "Dışa Aktar";
 "Import" = "İçe Aktar";
 "Reset" = "Sıfırla";
+
+"Enter username" = "Kullanıcı adını girin";
+"Enter password" = "Şifreyi girin";
+"2FA code" = "2FA kodu";
+"If enabled, use an authentication app to generate the code." = "Etkinleştirildiyse, kodu oluşturmak için bir kimlik doğrulama uygulaması kullanın.";
+"Can't access Windscribe? Connect to our servers to unblock your restrictive network." = "Windscribe'a erişemiyor musunuz? Kısıtlayıcı ağınızın engelini kaldırmak için sunucularımıza bağlanın.";
+"Enter email" = "E-posta girin";
+"Get 10GB/Mo" = "Aylık 10GB Alın";
+"Enter voucher code" = "Kupon kodunu girin";
+"Referred by someone?" = "Biri sizi mi yönlendirdi?";
+"You will both get an additional 1GB per month when you sign up." = "Kaydolduğunuzda ikiniz de aylık fazladan 1GB alacaksınız.";
+"If you go Pro, they’ll go Pro too!" = "Siz Pro olursanız, onlar da Pro olur!";
+"Please provide an email first" = "Lütfen önce bir e-posta adresi girin";
+"You must confirm your email in order for the benefits above to apply to you and the referrer." = "Yukarıdaki avantajların size ve yönlendiren kişiye uygulanabilmesi için e-postanızı onaylamalısınız.";
+"Apple login cancelled." = "Apple ile giriş iptal edildi.";
+"Unable to obtain Apple identity token." = "Apple kimlik belirteci alınamadı.";
+"Unlock full access to Windscribe" = "Windscribe'a tam erişimin kilidini açın";
+"Go Pro for unlimited everything" = "Her şeyin sınırsızı için Pro'ya geçin";
+"Refer for Data" = "Veri kazanmak için yönlendir";
+"Look & Feel" = "Görünüm ve His";
+"ACCOUNT INFO" = "HESAP BİLGİLERİ";
+"Add your Email to get 10 GB/Month of data and gain the ability to reset a forgotten password. No Spam" = "Aylık 10 GB veri kazanmak ve unutulan şifreyi sıfırlama imkanı için e-postanızı ekleyin. Spam yok.";
+"Add Email (Get 10 GB/Month)" = "E-posta Ekle (Aylık 10 GB Al)";
+"Free" = "Ücretsiz";
+"Upgrade to Pro" = "Pro'ya Yükselt";
+"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe her yeni ağı \"Güvenli\" olarak işaretleyecek ve cihazınız bağlandığında otomatik olarak açılacaktır.";
+"Windscribe will turn ON automatically if your device connects to this network." = "Cihazınız bu ağa bağlanırsa Windscribe otomatik olarak açılır.";
+"Something went wrong. Please make sure you have entered a valid DNS server." = "Bir şeyler ters gitti. Lütfen geçerli bir DNS sunucusu girdiğinizden emin olun.";
+"Invalid DNS server" = "Geçersiz DNS sunucusu";
+"Windscribe will always use this protocol to connect for this network. This overrides global connection preferences." = "Windscribe bu ağa bağlanmak için her zaman bu protokolü kullanacaktır. Bu, genel bağlantı tercihlerini geçersiz kılar.";
+"current network" = "mevcut ağ";
+"all networks" = "tüm ağlar";
+"Share Windscribe with a friend!" = "Windscribe'ı bir arkadaşınızla paylaşın!";
+"You will both get an additional 1GB per month when they sign up." = "Kaydolduklarında ikiniz de aylık fazladan 1GB alacaksınız.";
+"If they go Pro, you'll go Pro too!" = "Onlar Pro olursa, siz de Pro olursunuz!";
+"Share Invite Link" = "Davet Bağlantısını Paylaş";
+"Referee must provide your username at sign up and confirm their email in order for the benefits above to apply to your account." = "Yönlendirilen kişi, yukarıdaki avantajların hesabınıza uygulanabilmesi için kayıt sırasında kullanıcı adınızı girmeli ve e-postasını onaylamalıdır.";
+"is inviting you to join Windscribe. Provide their username at signup and you'll both get 1gb of free data added to your accounts. If you go pro, they'll go pro too!" = "sizi Windscribe'a katılmaya davet ediyor. Kayıt sırasında kullanıcı adını girin, böylece ikinizin hesabına da 1GB ücretsiz veri eklensin. Siz Pro olursanız, onlar da olur!";
+"User" = "Kullanıcı";
+"Flags" = "Bayraklar";
+"Customize the background of the main app screen." = "Uygulamanın ana ekranının arka planını özelleştirin.";
+"Choose sounds to play when connection events occur." = "Bağlantı olayları gerçekleştiğinde çalacak sesleri seçin.";
+"Please confirm your email to get 10GB/Mo" = "Aylık 10GB almak için lütfen e-postanızı onaylayın.";
+
+"Learn more" = "Daha Fazla Öğren";
+"Stretch" = "Uzat";
+"Fill" = "Doldur";
+"Tile" = "Döşe";
+
+"Change Protocol" = "Protokolü Değiştir";
+"Connection Failure!" = "Bağlantı Hatası!";
+"Quickly re-connect using a different protocol." = "Farklı bir protokol kullanarak hızlıca yeniden bağlanın.";
+"The protocol you’ve chosen has failed to connect. Windscribe will attempt to reconnect using the first protocol below." = "Seçtiğiniz protokol bağlantı kuramadı. Windscribe aşağıdaki ilk protokolü kullanarak yeniden bağlanmayı deneyecek.";
+"IKEv2 is an IPsec based tunnelling protocol." = "IKEv2, IPsec tabanlı bir tünelleme protokolüdür.";
+"Balanced speed and security." = "Hız ve güvenlik dengesi.";
+"Use it if OpenVPN UDP fails." = "OpenVPN UDP başarısız olursa bunu kullanın.";
+"Wraps your HTTPS traffic with web sockets." = "HTTPS trafiğinizi WebSocket ile sarar.";
+"Disguises your traffic as HTTPS traffic with TLS" = "Trafiğinizi TLS ile HTTPS trafiği gibi gösterir";
+"Extremely simple yet fast and modern VPN protocol." = "Son derece basit ama hızlı ve modern bir VPN protokolü.";
+"One line description." = "Tek satırlık açıklama.";
+
+"Technical" = "Teknik";
+"Sales" = "Satış";
+"Feedback" = "Geri Bildirim";
+"Category" = "Kategori";
+"Sweet, we’ll get back to you as soon as one of our agents is back from lunch." = "Harika, temsilcilerimizden biri öğle yemeğinden döner dönmez size geri döneceğiz.";
+"Required" = "Zorunlu";
+"So we can contact you, we won’t use it for anything else" = "Sizinle iletişime geçebilmemiz için, başka hiçbir amaçla kullanılmayacaktır";
+"What’s the issue?" = "Sorun nedir?";
+"Send" = "Gönder";
