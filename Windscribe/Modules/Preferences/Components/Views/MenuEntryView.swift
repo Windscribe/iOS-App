@@ -66,6 +66,34 @@ struct MenuEntryHeaderView: View {
     }
 }
 
+struct MenuEntryHeaderActionView: View {
+    let item: any MenuEntryItemType
+    let isDarkMode: Bool
+    let action: (MenuEntryActionResponseType) -> Void
+    var isActionLeading: Bool { item.title.isEmpty && item.icon.isEmpty}
+
+    var body: some View {
+        if let parentId = getButtonParentId() {
+            Button {
+                action(.button(parentId: parentId))
+            } label: {
+                MenuEntryHeaderView(item: item, isDarkMode: isDarkMode, action: action)
+            }
+        } else {
+            MenuEntryHeaderView(item: item, isDarkMode: isDarkMode, action: action)
+        }
+    }
+
+    func getButtonParentId() -> Int? {
+        switch item.action {
+        case let .button(_, parentId):
+            return parentId
+        default:
+            return nil
+        }
+    }
+}
+
 struct MenuEntryInteractiveView: View {
     let item: any MenuEntryHeaderType
     let isDarkMode: Bool
@@ -74,7 +102,7 @@ struct MenuEntryInteractiveView: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(spacing: 12) {
-                MenuEntryHeaderView(item: item, isDarkMode: isDarkMode, action: action)
+                MenuEntryHeaderActionView(item: item, isDarkMode: isDarkMode, action: action)
                 if let message = item.message {
                     MenuInfoText(isDarkMode: isDarkMode,
                                  text: message)
@@ -89,7 +117,7 @@ struct MenuEntryInteractiveView: View {
                                 .fill(Color.from(.separatorColor, isDarkMode))
                                 .frame(height: 1)
                         }
-                        MenuEntryHeaderView(item: entry, isDarkMode: isDarkMode, action: action)
+                        MenuEntryHeaderActionView(item: entry, isDarkMode: isDarkMode, action: action)
                             .padding(.horizontal, 14)
                     }
                 }

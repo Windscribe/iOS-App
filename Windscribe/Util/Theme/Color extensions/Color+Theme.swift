@@ -52,7 +52,7 @@ extension Color {
             return isDarkMode ? .black : .infoGrey
         case .allowedColor(let isEnabled):
              if isEnabled {
-                 return .eletricBlue
+                 return .positiveGreen
             } else {
                 return .infoGrey
             }
