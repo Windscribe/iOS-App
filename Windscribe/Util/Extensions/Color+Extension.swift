@@ -137,6 +137,7 @@ extension Color {
     static let learnBlue = Color(red: 93 / 255.0, green: 135 / 255.0, blue: 208 / 255.0)
     static let orangeYellow = Color(red: 254 / 255.0, green: 188 / 255.0, blue: 46 / 255.0)
     static let actionGreen = Color(red: 59 / 255, green: 255 / 255, blue: 239 / 255)
+    static let positiveGreen = Color(red: 28 / 255, green: 223 / 255, blue: 142 / 255)
 }
 
 // New Memefication Colors

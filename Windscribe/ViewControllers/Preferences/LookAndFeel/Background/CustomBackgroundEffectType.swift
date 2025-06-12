@@ -166,6 +166,8 @@ enum BackgroundEffectSubtype: String, CaseIterable {
     case city = "City"
     case stars = "Drip"
     case windscribe = "Windscribe"
+    case abstract = "Abstract"
+    case centered = "Microchip"
 
     var displayName: String {
         rawValue
@@ -178,6 +180,8 @@ enum BackgroundEffectSubtype: String, CaseIterable {
         case .city: return "bg_city"
         case .stars: return "bg_stars"
         case .windscribe: return "bg_windscribe"
+        case .abstract: return "bg_abstract"
+        case .centered: return "bg_center"
         }
     }
 

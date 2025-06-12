@@ -88,8 +88,10 @@ struct FilterView: View {
         HStack(spacing: 12) {
             Image(ImagesAsset.Robert.filterIcons[filter.id] ?? "")
                 .resizable()
+                .renderingMode(.template)
+                .aspectRatio(contentMode: .fit)
                 .frame(width: 16, height: 16)
-                .foregroundColor(.from(.infoColor, isDarkMode))
+                .foregroundColor(.from(.iconColor, isDarkMode))
             Text(filter.title)
                 .font(.medium(.callout))
                 .foregroundColor(.from(.titleColor, isDarkMode))
