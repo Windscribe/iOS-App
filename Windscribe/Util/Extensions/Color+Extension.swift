@@ -104,6 +104,9 @@ extension UIColor {
     static let planUpgradeBackground = UIColor(red: 9 / 255.0, green: 14 / 255.0, blue: 25 / 255.0, alpha: 1.0)
     static let planUpgradeSelectionHighlight = UIColor(red: 202 / 255.0, green: 223 / 255.0, blue: 242 / 255.0, alpha: 1.0)
     static let planUpgradeSelectionShadow = UIColor(red: 0 / 255.0, green: 221 / 255.0, blue: 255 / 255.0, alpha: 0.53)
+
+    //Pro color
+    static let proStarColor = UIColor(red: 242 / 255.0, green: 183 / 255.0, blue: 21 / 255.0, alpha: 1)
 }
 
 extension Color {

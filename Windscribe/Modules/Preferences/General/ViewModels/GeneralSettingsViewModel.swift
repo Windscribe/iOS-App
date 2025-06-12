@@ -26,6 +26,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     private var currentLanguage: String = DefaultValues.language
     private var locationOrder: String = DefaultValues.orderLocationsBy
     private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
+    private var isLocationLoadEnabled = DefaultValues.showServerHealth
     private var notificationsEnabled = false
 
     // MARK: - Dependencies
@@ -79,6 +80,20 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
             })
             .store(in: &cancellables)
 
+        preferences.getShowServerHealth()
+            .toPublisher(initialValue: DefaultValues.showServerHealth)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("GeneralSettingsViewModel", "Location Load error: \(error)")
+                }
+            }, receiveValue: { [weak self] enabled in
+                guard let self = self else { return }
+                self.isLocationLoadEnabled = enabled ?? DefaultValues.showServerHealth
+                self.reloadItems()
+            })
+            .store(in: &cancellables)
+
         preferences.getHapticFeedback()
             .toPublisher(initialValue: DefaultValues.hapticFeedback)
             .receive(on: DispatchQueue.main)
@@ -122,6 +137,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
         entries = [
             .locationOrder(currentOption: locationOrder, options: orderPreferences),
             .language(currentOption: currentLanguage, options: languages),
+            .locationLoad(isSelected: isLocationLoadEnabled),
             .hapticFeedback(isSelected: isHapticFeedbackEnabled),
             .notification(title: TextsAsset.General.openSettings),
             .version(message: getVersion())
@@ -165,6 +181,10 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
         case .hapticFeedback:
             if case .toggle(let isSelected, _) = action {
                 preferences.saveHapticFeedback(haptic: isSelected)
+            }
+        case .locationLoad:
+            if case .toggle(let isSelected, _) = action {
+                preferences.saveShowServerHealth(show: isSelected)
             }
         case .locationOrder:
             if case .multiple(let currentOption, _) = action {

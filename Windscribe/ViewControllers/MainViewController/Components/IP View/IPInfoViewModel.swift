@@ -12,17 +12,14 @@ protocol IPInfoViewModelType {
     var isBlurStaticIpAddress: Bool { get }
     var statusSubject: BehaviorSubject<ConnectionState?> { get }
     var ipAddressSubject: PublishSubject<String> { get }
-    var cardHeaderTypeSubject: BehaviorSubject<CardHeaderButtonType?> { get }
 
     func markBlurStaticIpAddress(isBlured: Bool)
-    func updateCardHeaderType(with headerType: CardHeaderButtonType)
 }
 
 class IPInfoViewModel: IPInfoViewModelType {
     let preferences: Preferences
     let ipRepository: IPRepository
     let statusSubject = BehaviorSubject<ConnectionState?>(value: nil)
-    let cardHeaderTypeSubject = BehaviorSubject<CardHeaderButtonType?>(value: nil)
     let ipAddressSubject = PublishSubject<String>()
     let disposeBag = DisposeBag()
 
@@ -52,9 +49,5 @@ class IPInfoViewModel: IPInfoViewModelType {
 
     func markBlurStaticIpAddress(isBlured: Bool) {
         preferences.saveBlurStaticIpAddress(bool: isBlured)
-    }
-
-    func updateCardHeaderType(with headerType: CardHeaderButtonType) {
-        cardHeaderTypeSubject.onNext(headerType)
     }
 }

@@ -62,11 +62,6 @@ class IPInfoView: UIView {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        viewModel.cardHeaderTypeSubject.bind(onNext: {
-            guard let headerType = $0 else { return }
-            self.updateView(for: headerType)
-        }).disposed(by: disposeBag)
-
         ipLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.markBlurStaticIpAddress(isBlured: !viewModel.isBlurStaticIpAddress)
@@ -96,20 +91,6 @@ class IPInfoView: UIView {
         }.disposed(by: disposeBag)
     }
 
-    private func updateView(for headerType: CardHeaderButtonType) {
-        if headerType == .fav {
-            self.stackView.spacing = 0
-            self.favoriteButton.isHidden = true
-            self.refreshButton.isHidden = true
-            self.closeButton.isHidden = true
-
-            self.openButton.isHidden = true
-            self.ipLabel.isHidden = false
-        } else if !ipLabel.isHidden {
-            self.openButton.isHidden = false
-        }
-    }
-
     private func addViews() {
         ipLabel.isUserInteractionEnabled = true
         ipLabel.tag = 0
@@ -130,8 +111,9 @@ class IPInfoView: UIView {
         favoriteButton.isHidden = true
         refreshButton.isHidden = true
         closeButton.isHidden = true
+        openButton.isHidden = true
 
-        stackView.addArrangedSubviews([favoriteButton, refreshButton, closeButton, ipLabel, openButton])
+        stackView.addArrangedSubviews([ipLabel])
         stackView.axis = .horizontal
         addSubview(stackView)
     }

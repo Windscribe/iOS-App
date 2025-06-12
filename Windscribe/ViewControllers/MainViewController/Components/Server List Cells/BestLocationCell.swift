@@ -11,8 +11,12 @@ import Swinject
 import UIKit
 
 class BestLocationCellModel: ServerCellModelType {
-    var preferences = Assembler.resolve(Preferences.self)
+    let preferences = Assembler.resolve(Preferences.self)
+    let disposeBag = DisposeBag()
+    let updateUISubject = PublishSubject<Void>()
+
     var displayingBestLocation: BestLocationModel?
+    var showServerHealth: Bool = DefaultValues.showServerHealth
 
     var name: String {
         TextsAsset.bestLocation
@@ -41,14 +45,30 @@ class BestLocationCellModel: ServerCellModelType {
         CGFloat(self.displayingBestLocation?.health ?? 0)
     }
 
+    init() {
+        preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
+            guard let self = self else { return }
+            self.showServerHealth = enabled ?? DefaultValues.showServerHealth
+            self.updateUISubject.onNext(())
+        }).disposed(by: disposeBag)
+    }
+
     func nameColor(for isDarkMode: Bool) -> UIColor {
         .from( .infoColor, isDarkMode)
     }
 }
 
 class BestLocationCell: ServerListCell {
-
-    let bestCellViewModel = BestLocationCellModel()
+    var bestCellViewModel: BestLocationCellModel? {
+        didSet {
+            viewModel = bestCellViewModel
+            updateLayout()
+            updateUI()
+            bestCellViewModel?.updateUISubject.subscribe { [weak self] _ in
+                self?.updateUI()
+            }.disposed(by: disposeBag)
+        }
+    }
 
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
@@ -63,7 +83,7 @@ class BestLocationCell: ServerListCell {
     }
 
     func updateBestLocation(_ value: BestLocationModel?) {
-        bestCellViewModel.displayingBestLocation = value
+        bestCellViewModel?.displayingBestLocation = value
     }
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {

@@ -19,7 +19,13 @@ protocol ServerSectionCellModelType: ServerCellModelType {
 }
 
 class ServerSectionCellModel: ServerSectionCellModelType {
+    let preferences = Assembler.resolve(Preferences.self)
+    var sessionManager = Assembler.resolve(SessionManaging.self)
+    let disposeBag = DisposeBag()
+    let updateUISubject = PublishSubject<Void>()
+
     var isExpanded: Bool = false
+    var showServerHealth: Bool = DefaultValues.showServerHealth
 
     var displayingServer: ServerModel?
 
@@ -62,6 +68,22 @@ class ServerSectionCellModel: ServerSectionCellModelType {
         displayingServer?.p2p ?? false
     }
 
+    var hasProLocked: Bool {
+        let hasPro = displayingServer?.groups.first {
+            $0.premiumOnly
+        }
+        return (hasPro?.premiumOnly ?? false) &&
+        !(sessionManager.session?.isPremium ?? false)
+    }
+
+    init() {
+        preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
+            guard let self = self else { return }
+            self.showServerHealth = enabled ?? DefaultValues.showServerHealth
+            self.updateUISubject.onNext(())
+        }).disposed(by: disposeBag)
+    }
+
     func setIsExpanded(_ value: Bool) {
         isExpanded = value
     }
@@ -78,8 +100,19 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 }
 
 class ServerSectionCell: ServerListCell {
-    var serverCellViewModel = ServerSectionCellModel()
     var p2pIcon = UIImageView()
+    var proIcon = UIImageView()
+
+    var serverCellViewModel: ServerSectionCellModel? {
+        didSet {
+            viewModel = serverCellViewModel
+            updateLayout()
+            updateUI()
+            serverCellViewModel?.updateUISubject.subscribe { [weak self] _ in
+                self?.updateUI()
+            }.disposed(by: disposeBag)
+        }
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -90,6 +123,10 @@ class ServerSectionCell: ServerListCell {
         p2pIcon.layer.opacity = 0.7
         contentView.addSubview(p2pIcon)
 
+        proIcon.image = UIImage(named: ImagesAsset.proMiniImage)
+        proIcon.setImageColor(color: .proStarColor)
+        contentView.addSubview(proIcon)
+
         updateUI()
         updateLayout()
     }
@@ -99,31 +136,40 @@ class ServerSectionCell: ServerListCell {
     }
 
     func updateServerModel(_ value: ServerModel?) {
-        serverCellViewModel.setDisplayingServer(value)
+        serverCellViewModel?.setDisplayingServer(value)
         updateUI()
     }
 
     func setCollapsed(collapsed: Bool, completion _: @escaping () -> Void = {}) {
-        serverCellViewModel.setIsExpanded(!collapsed)
+        serverCellViewModel?.setIsExpanded(!collapsed)
         updateUI()
     }
 
     override func updateUI() {
         super.updateUI()
+        guard let serverCellViewModel = serverCellViewModel else { return }
         p2pIcon.isHidden = serverCellViewModel.isP2pHidden
+        proIcon.isHidden = !serverCellViewModel.hasProLocked
     }
 
     override func updateLayout() {
         super.updateLayout()
 
         p2pIcon.translatesAutoresizingMaskIntoConstraints = false
+        proIcon.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // p2pIcon
             p2pIcon.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
             p2pIcon.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
             p2pIcon.heightAnchor.constraint(equalToConstant: 16),
-            p2pIcon.widthAnchor.constraint(equalToConstant: 16)
+            p2pIcon.widthAnchor.constraint(equalToConstant: 16),
+
+                // proIcon
+            proIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            proIcon.leftAnchor.constraint(equalTo: leftAnchor, constant: 11),
+            proIcon.heightAnchor.constraint(equalToConstant: 16),
+            proIcon.widthAnchor.constraint(equalToConstant: 16)
         ])
     }
 
@@ -131,24 +177,28 @@ class ServerSectionCell: ServerListCell {
         super.bindViews(isDarkMode: isDarkMode)
         isDarkMode.subscribe(onNext: { isDarkMode in
             self.p2pIcon.setImageColor(color: .from(.iconColor, isDarkMode))
+            let proImageName = isDarkMode ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
+            self.proIcon.image = UIImage(named: proImageName)
         }).disposed(by: disposeBag)
     }
 
     private func animateExpansion(completion: @escaping () -> Void = {}) {
+        guard let serverCellViewModel = serverCellViewModel else { return }
         UIView.animate(withDuration: 0.35, animations: {
-            self.nameLabel.layer.opacity = self.serverCellViewModel.nameOpacity
-            self.actionImage.layer.opacity = self.serverCellViewModel.actionOpacity
+            self.nameLabel.layer.opacity = serverCellViewModel.nameOpacity
+            self.actionImage.layer.opacity = serverCellViewModel.actionOpacity
         }, completion: { _ in
             completion()
         })
         UIView.transition(with: actionImage,
                           duration: 0.35,
                           options: .transitionCrossDissolve,
-                          animations: { self.actionImage.image = self.serverCellViewModel.actionImage },
+                          animations: { self.actionImage.image = serverCellViewModel.actionImage },
                           completion: nil)
     }
 
     func expand(completion: @escaping () -> Void = {}) {
+        guard let serverCellViewModel = serverCellViewModel else { return }
         if !serverCellViewModel.isExpanded {
             serverCellViewModel.setIsExpanded(true)
             animateExpansion(completion: completion)
@@ -158,6 +208,7 @@ class ServerSectionCell: ServerListCell {
     }
 
     func collapse(completion: @escaping () -> Void = {}) {
+        guard let serverCellViewModel = serverCellViewModel else { return }
         if serverCellViewModel.isExpanded {
             serverCellViewModel.setIsExpanded(false)
             animateExpansion(completion: completion)

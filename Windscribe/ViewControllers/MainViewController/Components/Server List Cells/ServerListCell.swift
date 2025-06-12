@@ -23,6 +23,7 @@ protocol ServerCellModelType {
     var actionRightOffset: CGFloat { get }
     var actionOpacity: Float { get }
     var serverHealth: CGFloat { get }
+    var showServerHealth: Bool { get }
     func nameColor(for isDarkMode: Bool) -> UIColor
 }
 
@@ -48,6 +49,7 @@ class HealthCircleView: CompletionCircleView {
 }
 
 class ServerListCell: SwipeTableViewCell {
+    var disposeBag = DisposeBag()
     var icon = UIImageView()
     var circleView = UIView()
     var actionImage = UIImageView()
@@ -58,7 +60,6 @@ class ServerListCell: SwipeTableViewCell {
 
     var viewModel: ServerCellModelType?
 
-    var disposeBag = DisposeBag()
 
     private var isDarkMode: Bool = DefaultValues.darkMode
 
@@ -157,6 +158,9 @@ class ServerListCell: SwipeTableViewCell {
         actionImage.layer.opacity = viewModel.actionOpacity
 
         healthCircle.health = viewModel.serverHealth
+
+        circleView.isHidden = !viewModel.showServerHealth
+        healthCircle.isHidden = !viewModel.showServerHealth
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {

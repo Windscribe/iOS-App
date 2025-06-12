@@ -25,14 +25,16 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
 }
 
 class BaseNodeCellViewModel: BaseNodeCellViewModelType {
-    var localDB = Assembler.resolve(LocalDatabase.self)
-    var preferences = Assembler.resolve(Preferences.self)
-    var favNodes: [FavNode] = []
-    var isFavourited: Bool = false
-    var minTime = -1
+    let localDB = Assembler.resolve(LocalDatabase.self)
+    let preferences = Assembler.resolve(Preferences.self)
 
     let updateUISubject = PublishSubject<Void>()
     let disposeBag = DisposeBag()
+
+    var showServerHealth: Bool = DefaultValues.showServerHealth
+    var favNodes: [FavNode] = []
+    var isFavourited: Bool = false
+    var minTime = -1
 
     var groupId: String { "" }
 
@@ -90,6 +92,12 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
             guard let self = self else { return }
             self.favNodes = favNodes
             self.isFavourited = favNodes.map({ $0.groupId }).contains("\(groupId)")
+            self.updateUISubject.onNext(())
+        }).disposed(by: disposeBag)
+
+        preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
+            guard let self = self else { return }
+            self.showServerHealth = enabled ?? DefaultValues.showServerHealth
             self.updateUISubject.onNext(())
         }).disposed(by: disposeBag)
     }
@@ -206,6 +214,8 @@ class BaseNodeCell: ServerListCell {
 
         latencyLabel.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
         signalBarsIcon.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
+
+
         super.updateUI()
     }
 

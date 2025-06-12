@@ -119,6 +119,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
                 ?? BestLocationCell(
                     style: .default,
                     reuseIdentifier: ReuseIdentifiers.bestLocationCellReuseIdentifier)
+            bestLocationCell.bestCellViewModel = BestLocationCellModel()
             bestLocationCell.updateBestLocation(bestLocation)
             bestLocationCell.bindViews(isDarkMode: viewModel.isDarkMode)
             return bestLocationCell
@@ -128,6 +129,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
                 ?? ServerSectionCell(
                     style: .default,
                     reuseIdentifier: ReuseIdentifiers.serverSectionCellReuseIdentifier)
+            cell.serverCellViewModel = ServerSectionCellModel()
             if let expanded = tableView.expandedSections[section] {
                 serverSections[section].collapsed = !expanded
             }

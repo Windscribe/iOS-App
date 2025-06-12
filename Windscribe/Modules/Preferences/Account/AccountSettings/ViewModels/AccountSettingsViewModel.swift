@@ -8,6 +8,7 @@
 
 import Foundation
 import Combine
+import RxSwift
 
 protocol AccountSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get }
@@ -37,6 +38,8 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
     private let logger: FileLogger
+    
+    private let disposeBag = DisposeBag()
 
     var accountEmailStatus: AccountEmailStatusType {
         guard let session = currentSession else {
@@ -103,9 +106,11 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                     self?.logger.logE("AccountViewModel", "Failed to load session: \(error)")
                 }
             }, receiveValue: { [weak self] session in
-                self?.currentSession = session
-                self?.buildSections(from: session)
-                self?.loadingState = .success
+                guard let self = self else { return }
+                self.currentSession = session
+                self.buildSections(from: session)
+                self.loadingState = .success
+                self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
             })
             .store(in: &cancellables)
     }
