@@ -128,17 +128,17 @@ class ProtocolSwitchViewController: WSNavigationViewController {
                 var protocolDescription: String
                 switch dt.protocolPort.protocolName {
                 case iKEv2:
-                    protocolDescription = "IKEv2 is an IPsec based tunneling protocol.".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.ikev2ProtocolDescription
                 case udp:
-                    protocolDescription = "Balanced speed and security.".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.udpProtocolDescription
                 case tcp:
-                    protocolDescription = "Use it if OpenVPN UDP fails.".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.tcpProtocolDescription
                 case wsTunnel:
-                    protocolDescription = "Wraps your HTTPS traffic with web sockets.".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.wsTunnelProtocolDescription
                 case stealth:
-                    protocolDescription = "Disguises your traffic as HTTPS traffic with TLS".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.stealthProtocolDescription
                 case wireGuard:
-                    protocolDescription = "Extremely simple yet fast and modern VPN protocol.".localized
+                    protocolDescription = TextsAsset.ProtocolVariation.wireGuardProtocolDescription
                 default:
                     protocolDescription = "One line description.".localized
                 }

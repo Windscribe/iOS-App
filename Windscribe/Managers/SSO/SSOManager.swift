@@ -95,7 +95,7 @@ extension SSOManager: ASAuthorizationControllerDelegate {
         if error is ASAuthorizationError {
             if let authorizationError = error as? ASAuthorizationError {
                 if authorizationError.code == .canceled {
-                    ssoSession?.send(completion: .failure(Errors.appleSsoError("Apple login cancelled.")))
+                    ssoSession?.send(completion: .failure(Errors.appleSsoError(TextsAsset.Authentication.appleLoginCanceled)))
                     return
                 }
             }
