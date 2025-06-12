@@ -527,5 +527,8 @@
 "Sweet, we’ll get back to you as soon as one of our agents is back from lunch." = "了解しました。担当者が昼食から戻り次第、ご連絡いたします。";
 "Required" = "必須";
 "So we can contact you, we won’t use it for anything else" = "連絡のためだけに使用し、それ以外には使用しません";
-"What’s the issue?" = "問題は何ですか？";
 "Send" = "送信";
+
+"Enter subject" = "件名を入力してください";
+"What’s the matter?" = "どうしましたか？";
+"Tell us what’s wrong" = "何が問題か教えてください";

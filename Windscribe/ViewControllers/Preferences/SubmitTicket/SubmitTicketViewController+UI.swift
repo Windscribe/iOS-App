@@ -105,7 +105,7 @@ extension SubmitTicketViewController: UITextViewDelegate, UITextFieldDelegate {
         view.addSubview(subjectInputView)
 
         messageTitleView = UILabel()
-        messageTitleView.text = TextsAsset.SubmitTicket.whatsTheIssue
+        messageTitleView.text = TextsAsset.SubmitTicket.whatsTheMatter
         messageTitleView.font = UIFont.bold(size: 16)
         messageTitleView.textColor = UIColor.whiteWithOpacity(opacity: 0.5)
         view.addSubview(messageTitleView)
