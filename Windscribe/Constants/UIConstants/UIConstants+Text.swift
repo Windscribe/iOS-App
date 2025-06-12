@@ -579,7 +579,7 @@ enum TextsAsset {
         static let languages: [String] = Languages.allCases.map { $0.name }
         static let languagesList: [Languages] = Languages.allCases
         static var hapticFeedback: String { "Haptic Feedback".localized }
-        static var showServerHealth: String { "Show Location Load".localized }
+        static var showServerHealth: String { "Location Load".localized }
         static var enabled: String { "Enabled".localized }
         static var disabled: String { "Disabled".localized }
         static var customBackground: String { "Custom Background".localized }

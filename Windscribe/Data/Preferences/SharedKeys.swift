@@ -35,6 +35,7 @@ enum SharedKeys {
     static let allowLanMode = "allowLanMode"
     static let hapticFeedback = "hapticFeedback"
     static let selectedProtocol = "selectedProtocol"
+    static let serverHealth = "serverHealth"
     static let darkMode = "darkMode"
     static let connectedDNSValue = "connectedDNSValue"
     static let appSkinType = "appSkinType"

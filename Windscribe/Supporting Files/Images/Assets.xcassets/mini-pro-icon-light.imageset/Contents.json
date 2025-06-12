@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "mini-pro-icon-light.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

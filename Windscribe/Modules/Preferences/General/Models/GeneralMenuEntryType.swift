@@ -10,6 +10,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
 
     case locationOrder(currentOption: String, options: [MenuOption]),
          language(currentOption: String, options: [MenuOption]),
+         locationLoad(isSelected: Bool),
          hapticFeedback(isSelected: Bool),
          notification(title: String),
          version(message: String)
@@ -21,6 +22,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .notification: 3
         case .hapticFeedback: 4
         case .version: 5
+        case .locationLoad: 6
         }
     }
 
@@ -30,6 +32,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .language: TextsAsset.General.language
         case .notification: TextsAsset.General.pushNotificationSettings
         case .hapticFeedback: TextsAsset.General.hapticFeedback
+        case .locationLoad: TextsAsset.General.showServerHealth
         case .version: TextsAsset.General.version
         }
     }
@@ -39,6 +42,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .language: ImagesAsset.General.language
         case .notification: ImagesAsset.notifications
         case .hapticFeedback: ImagesAsset.General.hapticFeedback
+        case .locationLoad: ImagesAsset.General.locationLoad
         case .version: ""
         }
     }
@@ -48,6 +52,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case .language: TextsAsset.PreferencesDescription.language
         case .notification: TextsAsset.PreferencesDescription.notificationStats
         case .hapticFeedback: TextsAsset.PreferencesDescription.hapticFeedback
+        case .locationLoad: TextsAsset.PreferencesDescription.locationLoad
         case let .version(message): message
         }
     }
@@ -56,6 +61,7 @@ enum GeneralMenuEntryType: MenuEntryHeaderType, Hashable {
         case let .locationOrder(currentOption, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .language(currentOption, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .hapticFeedback(isSelected): .toggle(isSelected: isSelected, parentId: id)
+        case let .locationLoad(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .notification(title): .none(title: title, parentId: id)
         case .version: nil
         }

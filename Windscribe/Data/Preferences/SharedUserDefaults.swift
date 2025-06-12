@@ -399,6 +399,15 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.rx.observe(Bool.self, SharedKeys.darkMode) ?? Observable.just(DefaultValues.darkMode)
     }
 
+
+    func saveShowServerHealth(show: Bool) {
+        setBool(show, forKey: SharedKeys.serverHealth)
+    }
+
+    func getShowServerHealth() -> RxSwift.Observable<Bool?> {
+        return sharedDefault?.rx.observe(Bool.self, SharedKeys.serverHealth) ?? Observable.just(DefaultValues.showServerHealth)
+    }
+
     func saveAdvanceParams(params: String) {
         setString(params, forKey: SharedKeys.advanceParams)
     }

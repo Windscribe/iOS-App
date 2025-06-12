@@ -37,6 +37,9 @@ enum ImagesAsset {
     static let notifications = "notifications"
     static let locationLoad = "location-load"
     static let cityImage = "city-image"
+    static let proCityImage = "pro-icon"
+    static let proMiniImage = "mini-pro-icon"
+    static let proMiniLightImage = "mini-pro-icon-light"
     static let cellExpand = "cell-expand"
     static let cellCollapse = "cell-collapse"
     static let p2p = "p2p"
@@ -183,6 +186,7 @@ enum ImagesAsset {
         static let firewall = "firewall-ic-white"
         static let autoConnection = "auto-connection-ic-white"
         static let autoSecure = "wifi"
+        static let locationLoad = "menu-location-load"
     }
 
     enum Connection {

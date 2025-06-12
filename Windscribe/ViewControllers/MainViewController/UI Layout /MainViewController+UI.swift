@@ -151,7 +151,6 @@ extension MainViewController {
         if let headerType = selectedHeaderViewTab {
             listSelectionView.viewModel
                 .setSelectedAction(selectedAction: headerType)
-            ipInfoView.viewModel.updateCardHeaderType(with: headerType)
         }
     }
 

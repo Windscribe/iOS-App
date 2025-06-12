@@ -37,6 +37,8 @@ protocol Preferences {
     func getSelectedPort() -> Observable<String?>
     func saveDarkMode(darkMode: Bool)
     func getDarkMode() -> Observable<Bool?>
+    func saveShowServerHealth(show: Bool)
+    func getShowServerHealth() -> Observable<Bool?>
 
     // PersistenceManager+UserDefaults
     func getConnectionCount() -> Int?

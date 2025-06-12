@@ -56,8 +56,8 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         displayingGroup?.nick ?? ""
     }
 
-    override var actionImage: UIImage? {
-        !isProLocked ? super.actionImage : UIImage(named: ImagesAsset.proNodeIcon)?.withRenderingMode(.alwaysTemplate)
+    override var iconImage: UIImage? {
+        !isProLocked ? super.iconImage : UIImage(named: ImagesAsset.proCityImage)?.withRenderingMode(.alwaysTemplate)
     }
 
     var isProLocked: Bool {
@@ -139,6 +139,13 @@ class NodeTableViewCell: BaseNodeCell {
             speedIcon.heightAnchor.constraint(equalToConstant: 20),
             speedIcon.widthAnchor.constraint(equalToConstant: 20)
         ])
+    }
+
+    override func updateUI() {
+        super.updateUI()
+        if (nodeCellViewModel?.isProLocked ?? false) {
+            icon.setImageColor(color: .proStarColor)
+        }
     }
 
     override func setPressState(active: Bool) {
