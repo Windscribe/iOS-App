@@ -11,6 +11,7 @@ import Foundation
 struct NewsFeedDataModel: Identifiable {
     var id: Int
     var title: String
+    var date: Date
     var description: String
     var expanded: Bool = false
     var readStatus: Bool = false

@@ -389,10 +389,10 @@ private extension SignUpView {
                     Text(TextsAsset.continue)
                         .font(.bold(.body))
                         .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 12)
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
             .frame(maxWidth: .infinity)
             .background(viewModel.isContinueButtonEnabled
                         ? Color.loginRegisterEnabledButtonColor

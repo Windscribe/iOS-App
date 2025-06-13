@@ -58,9 +58,14 @@ struct MenuEntryHeaderView: View {
             }
 
             if let mainAction = item.action {
-                MenuEntryActionView(actionType: mainAction, isAlignLeading: isActionLeading, isDarkMode: isDarkMode, action: { actionType in
-                    action(actionType)
-                })
+                MenuEntryActionView(
+                    actionType: mainAction,
+                    isAlignLeading: isActionLeading,
+                    isDarkMode: isDarkMode,
+                    action: { actionType in
+                        action(actionType)
+                    }
+                )
             }
         }
     }
@@ -70,7 +75,6 @@ struct MenuEntryHeaderActionView: View {
     let item: any MenuEntryItemType
     let isDarkMode: Bool
     let action: (MenuEntryActionResponseType) -> Void
-    var isActionLeading: Bool { item.title.isEmpty && item.icon.isEmpty}
 
     var body: some View {
         if let parentId = getButtonParentId() {
@@ -203,7 +207,7 @@ struct MenuEntryActionView: View {
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .font(.medium(.callout))
             })
-            .frame(maxWidth: .infinity, alignment: .center)
+            .frame(alignment: .trailing)
         case let .file(value, fileType, parentId):
             MenuFileSelectionView(isDarkMode: isDarkMode,
                                   value: value,

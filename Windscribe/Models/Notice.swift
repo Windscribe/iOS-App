@@ -60,14 +60,24 @@ struct NoticeModel {
     required convenience init(from decoder: Decoder) throws {
         self.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decodeIfPresent(Int.self, forKey: .id) ?? 0
-        title = try container.decodeIfPresent(String.self, forKey: .title) ?? ""
-        message = try container.decodeIfPresent(String.self, forKey: .message) ?? ""
-        date = try container.decodeIfPresent(Int.self, forKey: .date) ?? 0
-        popup = try container.decodeIfPresent(Int.self, forKey: .popup) == 1 ? true : false
-        permPro = try container.decodeIfPresent(Int.self, forKey: .permPro) == 1 ? true : false
-        permFree = try container.decodeIfPresent(Int.self, forKey: .permFree) == 1 ? true : false
-        action = try container.decodeIfPresent(NoticeAction.self, forKey: .action)
+
+        let decodedID = try container.decode(Int.self, forKey: .id)
+        let decodedTitle = try container.decode(String.self, forKey: .title)
+        let decodedMessage = try container.decode(String.self, forKey: .message)
+        let decodedDate = try container.decode(Int.self, forKey: .date)
+        let decodedPopup = try container.decodeIfPresent(Int.self, forKey: .popup) == 1
+        let decodedPermPro = try container.decodeIfPresent(Int.self, forKey: .permPro) == 1
+        let decodedPermFree = try container.decodeIfPresent(Int.self, forKey: .permFree) == 1
+        let decodedAction = try container.decodeIfPresent(NoticeAction.self, forKey: .action)
+
+        setValue(decodedID, forKey: "id")
+        setValue(decodedTitle, forKey: "title")
+        setValue(decodedMessage, forKey: "message")
+        setValue(decodedDate, forKey: "date")
+        setValue(decodedPopup, forKey: "popup")
+        setValue(decodedPermPro, forKey: "permPro")
+        setValue(decodedPermFree, forKey: "permFree")
+        setValue(decodedAction, forKey: "action")
     }
 
     func getModel() -> NoticeModel {

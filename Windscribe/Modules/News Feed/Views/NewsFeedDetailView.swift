@@ -45,10 +45,15 @@ struct NewsFeedDetailView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         Image(systemName: "chevron.down")
-                            .foregroundColor(.gray.opacity(0.8))
+                            .foregroundColor(item.expanded ? .from(.iconColor, isDarkMode) : .gray.opacity(0.8))
                             .rotationEffect(.degrees(showRotation ? 180 : 0))
                             .animation(.easeInOut(duration: 0.3), value: showRotation)
                     }
+
+                    Text(DateFormatter.customNoticeFormat.string(from: item.date))
+                        .font(.regular(.footnote))
+                        .foregroundColor(.gray.opacity(0.8))
+
                     // Description (Hidden for Collapsed State)
                     if item.expanded {
                         Text(item.description)
@@ -79,13 +84,6 @@ struct NewsFeedDetailView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(item.expanded
-                        ? isDarkMode
-                            ? Color.newsFeedDetailExpandedBackgroundColor
-                            : Color.newsFeedDetailExpandedBackgroundColorLight
-                        : isDarkMode
-                            ? Color.newsFeedDetailBackgroundColor
-                            : Color.newsFeedDetailBackgroundColorLight)
             .onChange(of: item.expanded) { isExpanded in
                 showRotation = isExpanded
             }

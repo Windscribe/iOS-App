@@ -34,7 +34,7 @@ struct NewsFeedView: View {
                             .foregroundColor(.red)
                     } else {
                         ScrollView {
-                            VStack(spacing: 0) {
+                            VStack(spacing: 14) {
                                 ForEach(viewModel.newsFeedData) { item in
                                     NewsFeedListItem(
                                         item: item,
@@ -51,11 +51,6 @@ struct NewsFeedView: View {
                             .frame(maxWidth: .infinity)
                             .padding(.horizontal)
                             .padding(.vertical, 4)
-                            .mask(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 3)
-                            )
                         }
                     }
                 }
@@ -117,11 +112,14 @@ struct NewsFeedListItem: View {
             didTapAction: didTapAction,
             isDarkMode: $isDarkMode
         )
-
-        if !item.isLast {
-            Rectangle()
-                .foregroundColor(.from(.separatorColor, isDarkMode))
-                .frame(height: 0.5)
-        }
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(
+                    item.expanded
+                    ? isDarkMode ? Color.newsFeedDetailExpandedBackgroundColor : Color.newsFeedDetailExpandedBackgroundColorLight
+                    : isDarkMode ? Color.newsFeedDetailBackgroundColor : Color.newsFeedDetailBackgroundColorLight
+                )
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
