@@ -15,11 +15,6 @@ struct DocumentFormatInfo: Hashable {
     let tempFileName: String
 }
 
-struct MenuOption: Hashable {
-    let title: String
-    let fieldKey: String
-}
-
 struct MultiFormatDocument: FileDocument {
     static var readableContentTypes: [UTType] = [.plainText, .json]
 

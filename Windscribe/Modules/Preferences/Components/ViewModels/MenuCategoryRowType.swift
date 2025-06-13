@@ -22,3 +22,8 @@ extension MenuCategoryRowType {
         tintColor(isDarkMode).opacity( isDarkMode ? 0.05 : 0.1)
     }
 }
+
+struct MenuOption: Hashable {
+    let title: String
+    let fieldKey: String
+}
