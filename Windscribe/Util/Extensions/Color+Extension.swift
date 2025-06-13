@@ -105,7 +105,7 @@ extension UIColor {
     static let planUpgradeSelectionHighlight = UIColor(red: 202 / 255.0, green: 223 / 255.0, blue: 242 / 255.0, alpha: 1.0)
     static let planUpgradeSelectionShadow = UIColor(red: 0 / 255.0, green: 221 / 255.0, blue: 255 / 255.0, alpha: 0.53)
 
-    //Pro color
+    // Pro color
     static let proStarColor = UIColor(red: 242 / 255.0, green: 183 / 255.0, blue: 21 / 255.0, alpha: 1)
 }
 
@@ -141,6 +141,8 @@ extension Color {
     static let orangeYellow = Color(red: 254 / 255.0, green: 188 / 255.0, blue: 46 / 255.0)
     static let actionGreen = Color(red: 59 / 255, green: 255 / 255, blue: 239 / 255)
     static let positiveGreen = Color(red: 28 / 255, green: 223 / 255, blue: 142 / 255)
+    static let darkInfoColor = Color(red: 0.50, green: 0.53, blue: 0.56)
+    static let grayishDarkColor = Color(red: 11 / 255.0, green: 15 / 255.0, blue: 22 / 255.0)
 }
 
 // New Memefication Colors

@@ -8,33 +8,39 @@
 
 import SwiftUI
 import UIKit
+import Combine
 
 struct CaptchaSheetContent: View {
     let background: UIImage
-    let slider: UIImage
-    let topOffset: CGFloat // Reference referenceHeight space
+    let puzzlePiece: UIImage
+    let topOffset: CGFloat
     let onSubmit: (CGFloat, [CGFloat], [CGFloat]) -> Void
+    let onCancel: () -> Void
 
     @Binding var isDarkMode: Bool
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        AuthenticationCaptchaPopupView(
-            background: background,
-            slider: slider,
-            topOffset: topOffset,
-            onSubmit: onSubmit,
-            isDarkMode: $isDarkMode
-        )
+        ZStack {
+            AuthenticationCaptchaPopupView(
+                background: background,
+                puzzlePiece: puzzlePiece,
+                topOffset: topOffset,
+                onSubmit: onSubmit,
+                onCancel: onCancel,
+                isDarkMode: $isDarkMode
+            )
+            .transition(.scale.combined(with: .opacity))
+        }
     }
 }
 
 struct AuthenticationCaptchaPopupView: View {
     let background: UIImage
-    let slider: UIImage
-    let topOffset: CGFloat
+    let puzzlePiece: UIImage
+    let topOffset: CGFloat  // Reference referenceHeight space
     let onSubmit: (_ finalX: CGFloat, _ trailX: [CGFloat], _ trailY: [CGFloat]) -> Void
-
-    @Environment(\.dismiss) private var dismiss
+    let onCancel: () -> Void
 
     @Binding var isDarkMode: Bool
 
@@ -51,102 +57,91 @@ struct AuthenticationCaptchaPopupView: View {
     private let maxSlideRange: CGFloat = 230 // referenceWidth - sliderWidth
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: $isDarkMode) {
-            ZStack {
-                VStack {
-                    Spacer()
+        GeometryReader { geo in
+            let maxWidth = min(geo.size.width - 32, 400)
+            let aspectRatio = referenceHeight / referenceWidth
+            let displayedHeight = maxWidth * aspectRatio
+            let displayedSliderWidth = sliderWidth * (displayedHeight / referenceHeight)
+            let actualRange = maxWidth - displayedSliderWidth
+            let topOffsetScaled = topOffset * (displayedHeight / referenceHeight)
 
-                    GeometryReader { geo in
-                        let horizontalPadding: CGFloat = 20
-                        let maxWidth = min(geo.size.width - horizontalPadding * 2, 450)
+            VStack(spacing: 20) {
+                Text(TextsAsset.Authentication.captchaDescription)
+                    .font(.headline.bold())
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.from(.titleColor, isDarkMode))
+                    .padding(.top, 12)
 
-                        let aspectRatio = referenceHeight / referenceWidth
-                        let displayedHeight = maxWidth * aspectRatio
-                        let displayedSliderWidth = sliderWidth * (displayedHeight / referenceHeight)
-                        let actualRange = maxWidth - displayedSliderWidth
+                ZStack(alignment: .topLeading) {
+                    Image(uiImage: background)
+                        .resizable()
+                        .frame(width: maxWidth, height: displayedHeight)
+                        .cornerRadius(8)
 
-                        let topOffsetScaled = topOffset * (displayedHeight / referenceHeight)
+                    Image(uiImage: puzzlePiece)
+                        .resizable()
+                        .frame(width: displayedSliderWidth, height: displayedSliderWidth)
+                        .offset(x: sliderOffsetX, y: topOffsetScaled + sliderOffsetY)
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    let newOffsetX = (startDragOffsetX + value.translation.width)
+                                        .clamped(to: 0...actualRange)
+                                    let deltaX = newOffsetX - previousTrailX
+                                    previousTrailX = newOffsetX
 
-                        VStack(spacing: 20) {
-                            Text("Move the puzzle piece to solve the captcha")
-                                .foregroundColor(.from(.titleColor, isDarkMode))
-                                .font(.headline.bold())
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 16)
-                                .padding(.top, 8)
+                                    sliderOffsetX = newOffsetX
+                                    sliderOffsetY = value.translation.height
 
-                            ZStack(alignment: .topLeading) {
-                                Image(uiImage: background)
-                                    .resizable()
-                                    .frame(width: maxWidth, height: displayedHeight)
+                                    dragTrailX.append(deltaX)
+                                    dragTrailY.append(value.translation.height)
+                                }
+                                .onEnded { _ in
+                                    startDragOffsetX = sliderOffsetX
+                                    previousTrailX = sliderOffsetX
 
-                                Image(uiImage: slider)
-                                    .resizable()
-                                    .frame(width: displayedSliderWidth, height: displayedSliderWidth)
-                                    .offset(x: sliderOffsetX, y: topOffsetScaled + sliderOffsetY)
-                                    .gesture(
-                                        DragGesture()
-                                            .onChanged { value in
-                                                let translationX = value.translation.width
-                                                let translationY = value.translation.height
+                                    Task {
+                                        try? await Task.sleep(nanoseconds: 100_000_000) // 100 ms delay
+                                        let sliderRatio = sliderOffsetX / actualRange
+                                        let finalX = sliderRatio * maxSlideRange
 
-                                                let newOffsetX = (startDragOffsetX + translationX).clamped(to: 0...actualRange)
-                                                let newOffsetY = translationY
-
-                                                let deltaX = newOffsetX - previousTrailX
-                                                //  Calculate delta from previous
-                                                previousTrailX = newOffsetX
-
-                                                sliderOffsetX = newOffsetX
-                                                sliderOffsetY = newOffsetY
-
-                                                dragTrailX.append(deltaX)
-                                                dragTrailY.append(translationY)
-                                            }
-                                            .onEnded { _ in
-                                                startDragOffsetX = sliderOffsetX
-                                                previousTrailX = sliderOffsetX
-                                            }
-                                    )
-                            }
-
-                            Button(TextsAsset.submit) {
-                                // Scale sliderOffsetX to ref space
-                                let sliderRatio = sliderOffsetX / actualRange
-                                let finalX = sliderRatio * maxSlideRange
-
-                                let scaledTrailX = dragTrailX.map { $0 * (maxSlideRange / actualRange) }
-                                let scaledTrailY = dragTrailY.map { $0 * (referenceHeight / displayedHeight) }
-
-                                onSubmit(finalX, scaledTrailX, scaledTrailY)
-                                dismiss()
-                            }
-                            .font(.headline.bold())
-                            .foregroundColor(.from(.titleColor, isDarkMode))
-                            .padding()
-                            .background(Color.from(.actionBackgroundColor, isDarkMode))
-                            .cornerRadius(8)
-                        }
-                        .frame(width: maxWidth)
-                        .padding()
-                        .background(Color.from(.backgroundColor, isDarkMode))
-                        .cornerRadius(12)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    }
-                    Spacer()
+                                        let scaledTrailX = dragTrailX.map { $0 * (maxSlideRange / actualRange) }
+                                        let scaledTrailY = dragTrailY.map {
+                                            $0 * (referenceHeight / displayedHeight)
+                                        }
+                                        onSubmit(finalX, scaledTrailX, scaledTrailY)
+                                    }
+                                }
+                        )
                 }
+                .frame(width: maxWidth, height: displayedHeight)
 
-                Button(action: {
-                    dismiss()
-                },label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(.from(.titleColor, isDarkMode))
-                        .padding(16)
-                })
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                AuthenticationSliderView(
+                    isDarkMode: $isDarkMode,
+                    trackColor: .from(.dark, isDarkMode).opacity(0.5),
+                    thumbColor: .seaGreen,
+                    arrowImage: Image(systemName: "arrow.right"),
+                    hintText: TextsAsset.Authentication.captchaSliderDescription
+                )
+                .frame(width: maxWidth, height: 48)
+
+                Button(TextsAsset.cancel, action: onCancel)
+                    .font(.callout)
+                    .foregroundColor(.from(.infoColor, isDarkMode))
+                    .padding(.bottom, 4)
             }
+            .padding()
+            .background(Color.from(.popUpBackgroundColor, isDarkMode))
+            .cornerRadius(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .inset(by: 0.5)
+                    .stroke(Color.from(.iconColor, isDarkMode).opacity(0.05), lineWidth: 1)
+            )
+            .frame(width: maxWidth)
+            .position(x: geo.size.width / 2, y: geo.size.height / 2)
         }
+        .padding(.horizontal, 16)
     }
 }
 

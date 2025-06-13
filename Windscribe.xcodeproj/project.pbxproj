@@ -1319,6 +1319,7 @@
 		F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
 		F4F51A792D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
 		F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */; };
+		F4F84CD92DF7A2FF00E46464 /* AuthenticationSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F84CD82DF7A2FF00E46464 /* AuthenticationSliderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2276,6 +2277,7 @@
 		F4F51A682D9B176300407DE7 /* SignupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWarningView.swift; sourceTree = "<group>"; };
 		F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectViewModel.swift; sourceTree = "<group>"; };
 		F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyConnectView.swift; sourceTree = "<group>"; };
+		F4F84CD82DF7A2FF00E46464 /* AuthenticationSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationSliderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5416,6 +5418,7 @@
 			isa = PBXGroup;
 			children = (
 				F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */,
+				F4F84CD82DF7A2FF00E46464 /* AuthenticationSliderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -6886,6 +6889,7 @@
 				AF8DA7AF2204BD5700885BD8 /* PreferenceItem.swift in Sources */,
 				C5BF0D52277454EB009C95DF /* PushNotificationPayload.swift in Sources */,
 				C5FA3E8C268789EE001D03A7 /* Ticket.swift in Sources */,
+				F4F84CD92DF7A2FF00E46464 /* AuthenticationSliderView.swift in Sources */,
 				F44F275C2D84B79E00A47E37 /* NewsFeedDetailView.swift in Sources */,
 				AF36BF0222FA0DB700FCC6F4 /* WScrollView.swift in Sources */,
 				C5D0E40929BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,

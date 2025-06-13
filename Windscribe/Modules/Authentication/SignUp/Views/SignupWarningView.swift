@@ -10,7 +10,9 @@ import SwiftUI
 
 struct SignupWarningView: View {
 
-    @Environment(\.dynamicTypeDefaultRange) private var dynamicTypeRange
+    @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
+
+    @Binding var isDarkMode: Bool
 
     let onContinue: () -> Void
     let onBack: () -> Void
@@ -20,13 +22,13 @@ struct SignupWarningView: View {
             Spacer()
 
             Image(systemName: "exclamationmark.octagon.fill")
-                .font(.system(size: 40))
-                .foregroundColor(.white)
+                .font(.regular(.largeTitle))
+                .foregroundColor(.from(.iconColor, isDarkMode))
 
             Text(TextsAsset.NoEmailPrompt.title)
                 .font(.text(.callout))
                 .multilineTextAlignment(.center)
-                .foregroundColor(.white)
+                .foregroundColor(.from(.titleColor, isDarkMode))
                 .padding(.horizontal, 32)
 
             Spacer()
@@ -35,27 +37,27 @@ struct SignupWarningView: View {
                 Button(action: onContinue) {
                     Text(TextsAsset.NoEmailPrompt.action)
                         .font(.text(.headline))
-                        .foregroundColor(.black)
+                        .foregroundColor(.from(.dark, isDarkMode))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.white)
+                        .background(Color.from(.titleColor, isDarkMode))
                         .clipShape(Capsule())
                 }
 
                 Button(action: onBack) {
                     Text(TextsAsset.back)
                         .font(.text(.headline))
-                        .foregroundColor(.white)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.white.opacity(0.2))
+                        .background(Color.from(.backgroundColor, isDarkMode))
                         .clipShape(Capsule())
                 }
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 64)
         }
-        .background(Color.loginRegisterBackgroundColor)
+        .background(Color.from(.screenBackgroundColor, isDarkMode))
         .dynamicTypeSize(dynamicTypeRange)
     }
 }

@@ -129,19 +129,36 @@ struct LoginView: View {
             .sheet(item: $safariURL) { url in
                 SafariView(url: url)
             }
-            .fullScreenCover(isPresented: $viewModel.showCaptchaPopup) {
-                if let data = viewModel.captchaData {
-                    CaptchaSheetContent(
-                        background: data.background,
-                        slider: data.slider,
-                        topOffset: CGFloat(data.top),
-                        onSubmit: { xOffset, trailX, trailY in
-                            viewModel.submitCaptcha(captchaSolution: xOffset, trailX: trailX, trailY: trailY)
-                        },
-                        isDarkMode: $viewModel.isDarkMode
-                    )
+            .overlay(
+                ZStack {
+                    if viewModel.showCaptchaPopup, let data = viewModel.captchaData {
+                        Color.from(.dark, viewModel.isDarkMode)
+                            .opacity(0.65)
+                            .ignoresSafeArea()
+                            .zIndex(1)
+
+                        CaptchaSheetContent(
+                            background: data.background,
+                            puzzlePiece: data.slider,
+                            topOffset: CGFloat(data.top),
+                            onSubmit: { xOffset, trailX, trailY in
+                                viewModel.submitCaptcha(
+                                    captchaSolution: xOffset,
+                                    trailX: trailX,
+                                    trailY: trailY
+                                )
+                            },
+                            onCancel: {
+                                viewModel.showCaptchaPopup = false
+                            },
+                            isDarkMode: $viewModel.isDarkMode
+                        )
+                        .transition(.scale.combined(with: .opacity))
+                        .zIndex(2)
+                    }
                 }
-            }
+                .animation(.easeInOut(duration: 0.3), value: viewModel.showCaptchaPopup)
+            )
         }
         .dynamicTypeSize(dynamicTypeRange)
     }
