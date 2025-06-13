@@ -12,9 +12,32 @@ import Combine
 struct EmergencyConnectView: View {
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.deviceType) private var deviceType
     @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: EmergencyConnectViewModelImpl
+
+    private let maxIphoneWidth: CGFloat = 430
+
+    func getMaxWidth(for geometry: GeometryProxy) -> CGFloat {
+        return min(geometry.size.width, maxIphoneWidth)
+    }
+
+    func getBottomPadding(for geometry: GeometryProxy) -> CGFloat {
+        if deviceType == .iPadPortrait {
+            return geometry.size.height * 0.24
+        } else if deviceType == .iPadLandscape {
+            return geometry.size.height * 0.12
+        }
+        return 24
+    }
+
+    func getTopSpacerHeight(for geometry: GeometryProxy) -> CGFloat {
+        if deviceType == .iPadPortrait {
+            return geometry.size.height * 0.24
+        }
+        return geometry.size.height * 0.12
+    }
 
     init(viewModel: any EmergencyConnectViewModel) {
         guard let model = viewModel as? EmergencyConnectViewModelImpl else {
@@ -35,7 +58,7 @@ struct EmergencyConnectView: View {
                     ZStack(alignment: .top) {
                         VStack(spacing: 16) {
                             Spacer()
-                                .frame(height: geometry.size.height * 0.12)
+                                .frame(height: getTopSpacerHeight(for: geometry))
 
                             Image(ImagesAsset.Welcome.emergencyConnectIcon)
                                 .renderingMode(.template)
@@ -72,7 +95,7 @@ struct EmergencyConnectView: View {
 
                     Spacer()
 
-                    VStack(spacing: 24) {
+                    VStack(spacing: 8) {
                         Button(action: {
                             viewModel.connectButtonTapped()
                         }, label: {
@@ -85,15 +108,22 @@ struct EmergencyConnectView: View {
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
                         })
+                        .frame(maxWidth: getMaxWidth(for: geometry))
 
-                        Button(TextsAsset.cancel) {
+                        Button(action: {
                             dismiss()
-                        }
-                        .foregroundColor(.welcomeButtonTextColor)
-                        .font(.bold(.title3))
-                        .dynamicTypeSize(dynamicTypeRange)
+                        }, label: {
+                            Text(TextsAsset.cancel)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .foregroundColor(.welcomeButtonTextColor)
+                                .font(.bold(.title3))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .clipShape(Capsule())
+                        })
+                        .frame(maxWidth: getMaxWidth(for: geometry))
                     }
-                    .padding(.bottom, 24)
+                    .padding(.bottom, getBottomPadding(for: geometry))
                 }
                 .padding()
                 .dynamicTypeSize(dynamicTypeRange)
@@ -136,13 +166,15 @@ struct EmergencyConnectView: View {
     private var headerSection: some View {
         HStack {
             Spacer()
-            Button(action: {
-                dismiss()
-            }, label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.system(.title))
-                    .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
-            })
+            if !(deviceType == .iPadLandscape || deviceType == .iPadPortrait) {
+                Button(action: {
+                    dismiss()
+                }, label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(.title))
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                })
+            }
         }
     }
 }
