@@ -117,6 +117,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
             return NewsFeedDataModel(
                 id: notification.id,
                 title: notification.title,
+                date: Date(timeIntervalSince1970: TimeInterval(notification.date)),
                 description: message.0,
                 expanded: notification.id == openByDefaultID,
                 readStatus: status,
