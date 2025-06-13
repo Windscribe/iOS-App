@@ -2201,6 +2201,14 @@ enum TextsAsset {
         static var appleLoginFailed: String {
             return "Unable to obtain Apple identity token.".localized
         }
+
+        static var captchaDescription: String {
+            return "Complete Puzzle \n to continue".localized
+        }
+
+        static var captchaSliderDescription: String {
+            return "Slide puzzle piece into place".localized
+        }
     }
 }
 

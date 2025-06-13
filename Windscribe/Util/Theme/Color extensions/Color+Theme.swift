@@ -18,6 +18,7 @@ enum MenuColorsType {
     case allowedColor(isEnabled: Bool)
     case actionBackgroundColor
     case dark
+    case popUpBackgroundColor
 }
 
 enum MainColorsType {
@@ -56,6 +57,8 @@ extension Color {
             } else {
                 return .infoGrey
             }
+        case .popUpBackgroundColor:
+            return isDarkMode ? .grayishDarkColor : .white
         }
     }
 }
