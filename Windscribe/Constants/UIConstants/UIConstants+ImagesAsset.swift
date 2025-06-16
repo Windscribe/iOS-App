@@ -43,7 +43,6 @@ enum ImagesAsset {
     static let cellExpand = "cell-expand"
     static let cellCollapse = "cell-collapse"
     static let p2p = "p2p"
-    static let p2pWhite = "p2p-white"
     static let whiteExpand = "white-expand"
     static let topNavRight = "top-nav-bar-right"
     static let topNavLeft = "top-nav-bar-left"

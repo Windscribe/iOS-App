@@ -60,7 +60,6 @@ class ServerListCell: SwipeTableViewCell {
 
     var viewModel: ServerCellModelType?
 
-
     private var isDarkMode: Bool = DefaultValues.darkMode
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
