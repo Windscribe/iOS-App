@@ -67,7 +67,7 @@ struct AuthenticationCaptchaPopupView: View {
 
             VStack(spacing: 20) {
                 Text(TextsAsset.Authentication.captchaDescription)
-                    .font(.headline.bold())
+                    .font(.medium(.headline))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.from(.titleColor, isDarkMode))
                     .padding(.top, 12)
@@ -115,18 +115,10 @@ struct AuthenticationCaptchaPopupView: View {
                         )
                 }
                 .frame(width: maxWidth, height: displayedHeight)
-
-                AuthenticationSliderView(
-                    isDarkMode: $isDarkMode,
-                    trackColor: .from(.dark, isDarkMode).opacity(0.5),
-                    thumbColor: .seaGreen,
-                    arrowImage: Image(systemName: "arrow.right"),
-                    hintText: TextsAsset.Authentication.captchaSliderDescription
-                )
-                .frame(width: maxWidth, height: 48)
+                .padding(.bottom, 8)
 
                 Button(TextsAsset.cancel, action: onCancel)
-                    .font(.callout)
+                    .font(.regular(.callout))
                     .foregroundColor(.from(.infoColor, isDarkMode))
                     .padding(.bottom, 4)
             }
