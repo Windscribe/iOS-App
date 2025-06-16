@@ -118,6 +118,7 @@ class ServerSectionCell: ServerListCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         viewModel = serverCellViewModel
 
+        p2pIcon.contentMode = .scaleAspectFit
         p2pIcon.image = UIImage(named: ImagesAsset.p2p)
         p2pIcon.setImageColor(color: .white)
         p2pIcon.layer.opacity = 0.7
