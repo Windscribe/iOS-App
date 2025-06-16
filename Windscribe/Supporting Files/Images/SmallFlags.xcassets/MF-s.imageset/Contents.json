@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "filename": "MF-s.png",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
+      "filename": "MF-s@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    },
+    {
+      "filename": "MF-s@3x.png",
+      "idiom": "universal",
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
