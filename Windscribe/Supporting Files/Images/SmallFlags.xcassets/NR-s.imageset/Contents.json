@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "filename": "NR-s.png",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
+      "filename": "NR-s@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    },
+    {
+      "filename": "NR-s@3x.png",
+      "idiom": "universal",
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}

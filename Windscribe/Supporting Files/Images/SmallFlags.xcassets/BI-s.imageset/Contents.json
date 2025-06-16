@@ -1,0 +1,23 @@
+{
+  "images": [
+    {
+      "filename": "BI-s.png",
+      "idiom": "universal",
+      "scale": "1x"
+    },
+    {
+      "filename": "BI-s@2x.png",
+      "idiom": "universal",
+      "scale": "2x"
+    },
+    {
+      "filename": "BI-s@3x.png",
+      "idiom": "universal",
+      "scale": "3x"
+    }
+  ],
+  "info": {
+    "author": "xcode",
+    "version": 1
+  }
+}
