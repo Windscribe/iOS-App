@@ -1,0 +1,16 @@
+"1gHj39" = "ShowLocation.intentTitle";
+
+"4LgglN" = "ShowLocation.intentDescription";
+
+"EXlsIo" = "Sorry, but I couldn't the find the information you are looking for.";
+
+"PpoTA2" = "Connection State";
+
+"fGUZfS" = "You are not connected to VPN. Your  IP address is ${ipAddress}.";
+
+"fkI17L" = "Connection State";
+
+"pxpnWk" = "View connected location and ip address";
+
+"xUxV69" = "You are connected to ${cityName}, ${nickName} and your IP address is ${ipAddress}.";
+
