@@ -223,7 +223,8 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 router: r.resolve(AccountRouter.self)!,
-                htmlParser: r.resolve(HTMLParsing.self)!)
+                htmlParser: r.resolve(HTMLParsing.self)!,
+                notificationRepository: r.resolve(NotificationRepository.self)!)
         }.inObjectScope(.transient)
         container.register(PrivacyViewModelType.self) { r in
             PrivacyViewModel(
@@ -684,7 +685,8 @@ class ViewControllerModule: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 router: r.resolve(AccountRouter.self)!,
-                htmlParser: r.resolve(HTMLParsing.self)!)
+                htmlParser: r.resolve(HTMLParsing.self)!,
+                notificationRepository: r.resolve(NotificationRepository.self)!)
             )
         }.inObjectScope(.transient)
         container.register(SetPreferredProtocolPopupViewController.self) { _ in

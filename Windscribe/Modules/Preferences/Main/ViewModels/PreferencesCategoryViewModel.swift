@@ -9,8 +9,17 @@
 import Foundation
 import Combine
 
+enum PreferencesActionDisplay {
+    case email
+    case emailGet10GB
+    case setupAccountAndLogin
+    case setupAccount
+    case confirmEmail
+    case hideAll
+}
+
 protocol PreferencesMainCategoryViewModel: ObservableObject {
-    var actionDisplay: ActionDisplay { get set }
+    var actionDisplay: PreferencesActionDisplay { get set }
     var isDarkMode: Bool { get set }
     var currentLanguage: String? { get set }
     var visibleItems: [PreferenceItemType] { get set }
@@ -22,7 +31,7 @@ protocol PreferencesMainCategoryViewModel: ObservableObject {
 }
 
 final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewModel {
-    @Published var actionDisplay: ActionDisplay = .hideAll
+    @Published var actionDisplay: PreferencesActionDisplay = .hideAll
     @Published var isDarkMode: Bool = false
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []

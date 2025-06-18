@@ -72,10 +72,11 @@ class ServerDetailViewController: UIViewController {
 
     func bindData() {
         viewModel?.favNode.bind(onNext: { favNodes in
-            self.favNodes = favNodes?.compactMap { $0.getFavNodeModel() }
+            self.favNodes = favNodes?.compactMap { $0 }
         }).disposed(by: disposeBag)
     }
 }
+
 
 extension ServerDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {

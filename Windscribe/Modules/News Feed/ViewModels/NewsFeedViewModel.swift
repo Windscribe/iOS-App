@@ -8,6 +8,7 @@
 
 import Combine
 import SwiftUI
+import RxSwift
 
 protocol NewsFeedViewModelProtocol: ObservableObject {
     func didTapToExpand(id: Int, allowMultipleExpansions: Bool )
@@ -30,6 +31,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     let logger: FileLogger
     let router: AccountRouter
     let htmlParser: HTMLParsing
+    let notificationRepository: NotificationRepository
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -38,17 +40,17 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
          router: AccountRouter,
-         htmlParser: HTMLParsing) {
+         htmlParser: HTMLParsing,
+         notificationRepository: NotificationRepository) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
         self.router = router
         self.htmlParser = htmlParser
+        self.notificationRepository = notificationRepository
 
         bind()
-        loadReadStatus()
-        loadNewsFeedData()
     }
 
     private func bind() {
@@ -70,14 +72,14 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     func loadNewsFeedData() {
         loadState = .loading
 
-        localDatabase.getNotificationsObservable()
-            .toPublisher()
+        notificationRepository.getUpdatedNotifications(pcpid: "")
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
             .tryMap { notifications in
                 try self.validateNotifications(notifications)
             }
             .map { self.sortAndLimitNotifications($0) }
             .map { self.mapToNewsFeedDataModels($0) }
-            .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
                     self?.handleCompletion(completion)
@@ -87,6 +89,8 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
                 }
             )
             .store(in: &cancellables)
+
+        loadReadStatus()
     }
 
     // Step 1: Extract Sorting Logic

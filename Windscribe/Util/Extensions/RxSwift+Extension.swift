@@ -133,7 +133,6 @@ extension ObservableType {
     }
 }
 
-
 // MARK: Utility Publisher for Synchronous Void-Returning Functions
 
 /// Wraps a synchronous, non-throwing `Void`-returning function into a Combine-compatible `AnyPublisher`.

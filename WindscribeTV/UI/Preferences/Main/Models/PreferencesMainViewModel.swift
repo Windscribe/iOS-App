@@ -9,8 +9,17 @@
 import RxSwift
 import UIKit
 
+enum PreferencesActionDisplay {
+    case email
+    case emailGet10GB
+    case setupAccountAndLogin
+    case setupAccount
+    case confirmEmail
+    case hideAll
+}
+
 protocol PreferencesMainViewModelOld {
-    var actionDisplay: BehaviorSubject<ActionDisplay> { get }
+    var actionDisplay: BehaviorSubject<PreferencesActionDisplay> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
     var currentLanguage: BehaviorSubject<String?> { get }
     var alertManager: AlertManagerV2 { get }
@@ -24,7 +33,7 @@ protocol PreferencesMainViewModelOld {
 }
 
 class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
-    let actionDisplay = BehaviorSubject<ActionDisplay>(value: .email)
+    let actionDisplay = BehaviorSubject<PreferencesActionDisplay>(value: .email)
     let isDarkMode: BehaviorSubject<Bool>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
@@ -101,7 +110,6 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
 
     func getPreferenceItem(for row: Int) -> PreferenceItemType? {
         .general
-//        PreferenceItemType(rawValue: row)
     }
 
     func isDarkTheme() -> Bool {

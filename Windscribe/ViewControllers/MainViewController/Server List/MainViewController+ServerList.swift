@@ -12,11 +12,13 @@ import UIKit
 extension MainViewController: ServerListTableViewDelegate {
     func setSelectedServerAndGroup(server: ServerModel, group: GroupModel) {
         searchLocationsView.viewModel.dismiss()
+        customSoundPlaybackManager.playSound(for: .connect)
         serverListViewModel.setSelectedServerAndGroup(server: server, group: group)
     }
 
     func connectToBestLocation() {
         searchLocationsView.viewModel.dismiss()
+        customSoundPlaybackManager.playSound(for: .connect)
         serverListViewModel.connectToBestLocation()
     }
 
