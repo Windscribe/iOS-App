@@ -55,6 +55,7 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
     }
 
     func pop() {
+        HapticFeedbackGenerator.shared.run(level: .medium)
         activeRoute = nil
     }
 }

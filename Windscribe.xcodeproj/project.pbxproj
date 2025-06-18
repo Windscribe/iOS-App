@@ -1045,8 +1045,6 @@
 		F404193E2D822F1A0005EF97 /* HTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F404193C2D822F1A0005EF97 /* HTMLParser.swift */; };
 		F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419412D8231DA0005EF97 /* MockHTMLParser.swift */; };
 		F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419442D8232460005EF97 /* HTMLParserTests.swift */; };
-		F41001952E01EE18007D6580 /* ActionDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41001932E01EE18007D6580 /* ActionDisplay.swift */; };
-		F41001992E01EE18007D6580 /* ActionDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41001932E01EE18007D6580 /* ActionDisplay.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -2004,7 +2002,6 @@
 		F404193C2D822F1A0005EF97 /* HTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParser.swift; sourceTree = "<group>"; };
 		F40419412D8231DA0005EF97 /* MockHTMLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTMLParser.swift; sourceTree = "<group>"; };
 		F40419442D8232460005EF97 /* HTMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParserTests.swift; sourceTree = "<group>"; };
-		F41001932E01EE18007D6580 /* ActionDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionDisplay.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
@@ -2673,14 +2670,6 @@
 				1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */,
 			);
 			path = DNS;
-			sourceTree = "<group>";
-		};
-		1E7A7A8B2DF856D300A6EAA6 /* Color extensions */ = {
-			isa = PBXGroup;
-			children = (
-				1E7A7A8C2DF856E100A6EAA6 /* Color+Theme.swift */,
-			);
-			path = "Color extensions";
 			sourceTree = "<group>";
 		};
 		1E8C8F342C64EFAD00CBFDC5 /* Connection */ = {
@@ -3734,7 +3723,7 @@
 		C50F208E2B60E37E00266B23 /* Theme */ = {
 			isa = PBXGroup;
 			children = (
-				1E7A7A8B2DF856D300A6EAA6 /* Color extensions */,
+				1E7A7A8C2DF856E100A6EAA6 /* Color+Theme.swift */,
 				E97ABD4228C822C300B38587 /* ThemeUtils.swift */,
 			);
 			path = Theme;
@@ -3887,7 +3876,6 @@
 				F4843A932D89F7160034330F /* Interface */,
 				C57BDE4129B93FBB00337E63 /* LinkProvider.swift */,
 				F485CBB92D4D52D40063EA3A /* Then.swift */,
-				F41001932E01EE18007D6580 /* ActionDisplay.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -6092,7 +6080,6 @@
 				59FC742C2C51565D00021CD1 /* NETunnelProviderManager+Ext.swift in Sources */,
 				1E7A7A8E2DF856EF00A6EAA6 /* Color+Theme.swift in Sources */,
 				59FC74662C5167BB00021CD1 /* IPRepositoryImpl.swift in Sources */,
-				F41001992E01EE18007D6580 /* ActionDisplay.swift in Sources */,
 				5986AB3B2C41C0B900167023 /* CoreModule.swift in Sources */,
 				59FC73F42C51527500021CD1 /* User.swift in Sources */,
 				59FC73E22C51504600021CD1 /* APIManager.swift in Sources */,
@@ -6691,7 +6678,6 @@
 				F499357F2DAEE82C00108558 /* CustomSoundEffectType.swift in Sources */,
 				C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */,
 				F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */,
-				F41001952E01EE18007D6580 /* ActionDisplay.swift in Sources */,
 				1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */,
 				E97ABD5B28E819D900B38587 /* SendDebugLogCompletedViewController.swift in Sources */,
 				C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */,

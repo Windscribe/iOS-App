@@ -51,10 +51,10 @@ struct AuthenticationCaptchaPopupView: View {
     @State private var startDragOffsetX: CGFloat = 0
     @State private var previousTrailX: CGFloat = 0
 
-    private let referenceWidth: CGFloat = 350
-    private let referenceHeight: CGFloat = 200
+    private let referenceWidth: CGFloat = 700
+    private let referenceHeight: CGFloat = 400
     private let sliderWidth: CGFloat = 120
-    private let maxSlideRange: CGFloat = 230 // referenceWidth - sliderWidth
+    private let maxSlideRange: CGFloat = 580 // referenceWidth - sliderWidth
 
     var body: some View {
         GeometryReader { geo in

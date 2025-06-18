@@ -24,7 +24,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         self.pushNotificationsManager = pushNotificationsManager
     }
 
-    func getUpdatedNotifications(pcpid: String) -> Single<[Notice]> {
+    func getUpdatedNotifications(pcpid: String = "") -> Single<[Notice]> {
         logger.logD(self, "Getting notifications from API.")
         return apiManager.getNotifications(pcpid: pcpid).map {
             self.localDatabase.saveNotifications(notifications: Array($0.notices))

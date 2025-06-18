@@ -409,7 +409,7 @@ class MainViewController: PreferredFocusedViewController {
 
     func setFlagImages() {
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [self] results in
-            self.viewModel.sortServerListUsingUserPreferences(isForStreaming: false, servers: results) { serverSectionsOrdered in
+            self.viewModel.sortServerListUsingUserPreferences(ignoreStreaming: true, isForStreaming: false, servers: results) { serverSectionsOrdered in
                 if serverSectionsOrdered.count > 2 {
                     self.firstServer.image = UIImage(named: "\(serverSectionsOrdered[0].server?.countryCode.lowercased() ?? "")-s")
                     self.secondServer.image = UIImage(named: "\(serverSectionsOrdered[1].server?.countryCode.lowercased() ?? "")-s")
