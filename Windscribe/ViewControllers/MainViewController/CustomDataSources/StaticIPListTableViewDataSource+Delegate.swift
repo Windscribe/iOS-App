@@ -19,7 +19,7 @@ protocol StaticIPListTableViewDelegate: AnyObject {
     func addStaticIP()
 }
 
-class StaticIPListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
+class StaticIPListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
     var staticIPs: [StaticIPModel]?
     weak var delegate: StaticIPListTableViewDelegate?
     var scrollHappened = false

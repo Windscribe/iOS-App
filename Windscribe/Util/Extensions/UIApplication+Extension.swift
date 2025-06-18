@@ -16,3 +16,5 @@ extension UIApplication {
         return allWindows.count
     }
 }
+
+extension UIApplication: OpensURlType {}

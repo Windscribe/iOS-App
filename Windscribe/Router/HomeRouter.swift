@@ -48,8 +48,8 @@ class HomeRouter: BaseRouter, RootRouter {
             vc.modalTransitionStyle = .crossDissolve
             from.present(vc, animated: true, completion: nil)
         case RouteID.shareWithFriends:
-            let vc = Assembler.resolve(ShareWithFriendViewController.self)
-            from.navigationController?.pushViewController(vc, animated: true)
+            let referForDataView = Assembler.resolve(ReferForDataSettingsView.self)
+            pushViewWithoutNavigationBar(from: from, view: referForDataView, title: "")
         case let RouteID.network(network):
             let networkView = Assembler.resolve(NetworkSettingsView.self)
                 .environmentObject(NetworkFlowContext(displayNetwork: network))

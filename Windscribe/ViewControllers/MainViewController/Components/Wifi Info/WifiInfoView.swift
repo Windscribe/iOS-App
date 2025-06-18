@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxGesture
 
 protocol WifiInfoViewModelType {
     var trustedNetworkImage: String { get }
@@ -89,12 +90,13 @@ class WifiInfoView: UIView {
 
     private func bindViewModel() {
         trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)
-        nameLabel.isBlurring = viewModel.isBlur
 
+        nameLabel.isBlurring = viewModel.isBlur
         nameLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             nameLabel.isBlurring = viewModel.nameLabelTapped(networkName: nameLabel.text) ?? false
         }).disposed(by: disposeBag)
+
         actionButton.rx.tap.bind { [weak self] _ in
             guard let network = self?.network else { return }
             self?.wifiTriggerSubject.onNext(network)

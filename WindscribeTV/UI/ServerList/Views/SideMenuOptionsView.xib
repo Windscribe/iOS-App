@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.AppleTV.XIB" version="3.0" toolsVersion="23504" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="appleTV" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SideMenuOptionsView" customModule="WindscribeTV" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="748" height="188"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XVU-Od-wxL">
+                    <rect key="frame" x="0.0" y="15" width="4" height="158"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="4" id="AWC-ZW-tCY"/>
+                    </constraints>
+                </view>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="servers-fav-white" translatesAutoresizingMaskIntoConstraints="NO" id="FH6-Cl-YCD">
+                    <rect key="frame" x="34" y="76.5" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="35" id="JNi-kk-tb7"/>
+                        <constraint firstAttribute="height" constant="35" id="xfP-Dq-aIT"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i4p-8L-Ov2">
+                    <rect key="frame" x="99" y="94" width="639" height="0.0"/>
+                    <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="Pmt-tb-8Ig"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="i4p-8L-Ov2" firstAttribute="leading" secondItem="FH6-Cl-YCD" secondAttribute="trailing" priority="750" constant="30" id="AV8-o9-9I8"/>
+                <constraint firstItem="FH6-Cl-YCD" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Lkx-WR-t0L"/>
+                <constraint firstItem="XVU-Od-wxL" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="U7v-kL-3gQ"/>
+                <constraint firstItem="XVU-Od-wxL" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="15" id="XSf-0H-i7p"/>
+                <constraint firstAttribute="bottom" secondItem="XVU-Od-wxL" secondAttribute="bottom" constant="15" id="ckJ-G3-hJW"/>
+                <constraint firstItem="i4p-8L-Ov2" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="fje-mK-unq"/>
+                <constraint firstItem="FH6-Cl-YCD" firstAttribute="leading" secondItem="XVU-Od-wxL" secondAttribute="trailing" constant="30" id="ne7-Sm-ZIC"/>
+                <constraint firstItem="Pmt-tb-8Ig" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="FH6-Cl-YCD" secondAttribute="trailing" constant="10" id="qeZ-cf-Oc4"/>
+                <constraint firstItem="Pmt-tb-8Ig" firstAttribute="trailing" secondItem="i4p-8L-Ov2" secondAttribute="trailing" constant="10" id="vac-pP-ly0"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="imgView" destination="FH6-Cl-YCD" id="AJD-yY-XT3"/>
+                <outlet property="selectionView" destination="XVU-Od-wxL" id="67c-1g-iWf"/>
+                <outlet property="titleLabel" destination="i4p-8L-Ov2" id="1bE-PR-GIZ"/>
+            </connections>
+            <point key="canvasLocation" x="-735" y="383"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="servers-fav-white" width="16" height="16"/>
+    </resources>
+</document>

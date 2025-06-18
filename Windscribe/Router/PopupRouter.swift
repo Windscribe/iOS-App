@@ -65,12 +65,11 @@ class PopupRouter: BaseRouter, RootRouter {
             let logger = Assembler.resolve(FileLogger.self)
             logger.logD(self, "Not implemented")
         case .networkSecurity:
-            vc = Assembler.resolve(NetworkViewController.self)
+            view = Assembler.resolve(NetworkSecurityView.self)
         default: return
         }
 
         if let vc = vc {
-            // Presentation Style
             switch to {
             case .networkSecurity:
                 vc.modalTransitionStyle = .coverVertical
@@ -110,9 +109,7 @@ class PopupRouter: BaseRouter, RootRouter {
                     from.navigationController?.pushViewController(vc, animated: true)
                 }
             }
-        }
-
-        if let view = view {
+        } else if let view = view {
             let hostingController = UIHostingController(rootView: AnyView(view))
             hostingController.modalPresentationStyle = .fullScreen
             from.present(hostingController, animated: true, completion: nil)

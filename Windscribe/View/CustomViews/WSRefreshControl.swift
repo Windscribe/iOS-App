@@ -13,7 +13,7 @@ import UIKit
 class WSRefreshControl: UIRefreshControl {
     var disposeBag = DisposeBag()
 
-    var backView: RefreshControlViewBack! {
+    var backView: RefreshControlBackView! {
         didSet {
             subviews[0].addSubview(backView)
         }

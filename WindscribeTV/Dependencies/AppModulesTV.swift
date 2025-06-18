@@ -20,7 +20,7 @@ class TVViewModels: Assembly {
         container.register(LoginViewModel.self) { r in
             LoginViewModelImpl(apiCallManager: r.resolve(APIManager.self)!, userRepository: r.resolve(UserRepository.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, emergencyConnectRepository: r.resolve(EmergencyRepository.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, latencyRepository: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
-        container.register(WelcomeViewModal.self) { r in
+        container.register(WelcomeViewModel.self) { r in
             WelcomeViewModelImpl(userRepository: r.resolve(UserRepository.self)!, keyChainDatabase: r.resolve(KeyChainDatabase.self)!, userDataRepository: r.resolve(UserDataRepository.self)!, apiManager: r.resolve(APIManager.self)!, preferences: r.resolve(Preferences.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
         container.register(SignUpViewModel.self) { r in
@@ -92,8 +92,8 @@ class TVViewModels: Assembly {
             PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
-        container.register(HelpViewModel.self) { r in
-            HelpViewModelImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManaging.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
+        container.register(SubmitLogViewModel.self) { r in
+            SubmitLogViewModelImpl(sessionManager: r.resolve(SessionManaging.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
 
         container.register(PrivacyViewModelType.self) { r in
@@ -165,7 +165,7 @@ class TVViewControllers: Assembly {
         container.register(WelcomeViewController.self) { _ in
             UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
         }.initCompleted { r, vc in
-            vc.viewmodal = r.resolve(WelcomeViewModal.self)
+            vc.viewmodal = r.resolve(WelcomeViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(WelcomeRouter.self)
         }.inObjectScope(.transient)
@@ -197,7 +197,7 @@ class TVViewControllers: Assembly {
             vc.accountViewModel = r.resolve(AccountViewModelType.self)
             vc.connectionsViewModel = r.resolve(ConnectionsViewModelType.self)
             vc.viewLogViewModel = r.resolve(ViewLogViewModel.self)
-            vc.helpViewModel = r.resolve(HelpViewModel.self)
+            vc.helpViewModel = r.resolve(SubmitLogViewModel.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.router = r.resolve(HomeRouter.self)
         }.inObjectScope(.transient)
