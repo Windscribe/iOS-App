@@ -18,7 +18,7 @@ protocol FavNodesListTableViewDelegate: AnyObject {
     func tableViewScrolled(toTop: Bool)
 }
 
-class FavNodesListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
+class FavNodesListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
     var favNodes: [FavNodeModel]?
     weak var delegate: FavNodesListTableViewDelegate?
     var scrollHappened = false

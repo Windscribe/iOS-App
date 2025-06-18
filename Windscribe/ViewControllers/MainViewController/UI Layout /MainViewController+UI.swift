@@ -26,7 +26,7 @@ extension MainViewController {
         view.backgroundColor = UIColor.nightBlue
         addConnectionViews()
 
-        scrollView = WScrollView()
+        scrollView = WSScrollView()
         scrollView.isPagingEnabled = true
         scrollView.delegate = self
         scrollView.bounces = false
@@ -64,7 +64,7 @@ extension MainViewController {
 
         favTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         favTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        favTableViewRefreshControl.backView = RefreshControlViewBack(frame: favTableViewRefreshControl.bounds)
+        favTableViewRefreshControl.backView = RefreshControlBackView(frame: favTableViewRefreshControl.bounds)
         let favHeaderView = Assembler.container.resolve(ListHeaderView.self)!
         favHeaderView.viewModel.updateType(with: .favNodes)
         favTableView.tableHeaderView = favHeaderView
@@ -83,7 +83,7 @@ extension MainViewController {
 
         staticIpTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         staticIpTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        staticIpTableViewRefreshControl.backView = RefreshControlViewBack(frame: staticIpTableViewRefreshControl.bounds)
+        staticIpTableViewRefreshControl.backView = RefreshControlBackView(frame: staticIpTableViewRefreshControl.bounds)
         let staticHeaderView = Assembler.container.resolve(ListHeaderView.self)!
         staticHeaderView.viewModel.updateType(with: .staticIP)
         staticIpTableView.tableHeaderView = staticHeaderView
@@ -102,7 +102,7 @@ extension MainViewController {
 
         customConfigsTableViewRefreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         customConfigsTableViewRefreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
-        customConfigsTableViewRefreshControl.backView = RefreshControlViewBack(frame: customConfigsTableViewRefreshControl.bounds)
+        customConfigsTableViewRefreshControl.backView = RefreshControlBackView(frame: customConfigsTableViewRefreshControl.bounds)
         let customHeaderView = Assembler.container.resolve(ListHeaderView.self)!
         customHeaderView.viewModel.updateType(with: .customConfig)
         customConfigTableView.tableHeaderView = customHeaderView

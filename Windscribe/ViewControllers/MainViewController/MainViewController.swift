@@ -27,7 +27,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var flagBackgroundView: FlagsBackgroundView!
 
     // MARK: table views
-    var scrollView: WScrollView!
+    var scrollView: WSScrollView!
     var favTableViewRefreshControl, staticIpTableViewRefreshControl, customConfigsTableViewRefreshControl: WSRefreshControl!
     var serverListTableView: PlainExpyTableView!
     var favTableView, staticIpTableView, customConfigTableView: PlainTableView!
@@ -131,7 +131,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     lazy var serverListTableViewRefreshControl: WSRefreshControl = {
         let refreshControl = WSRefreshControl(isDarkMode: viewModel.isDarkMode)
         refreshControl.addTarget(self, action: #selector(serverRefreshControlValueChanged), for: .valueChanged)
-        refreshControl.backView = RefreshControlViewBack(frame: refreshControl.bounds)
+        refreshControl.backView = RefreshControlBackView(frame: refreshControl.bounds)
         return refreshControl
     }()
 

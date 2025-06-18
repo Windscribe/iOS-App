@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import UserNotifications
 import UIKit
+import RxSwift
 
 protocol ConnectionSettingsViewModel: ObservableObject {
     var isDarkMode: Bool { get set }

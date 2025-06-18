@@ -199,60 +199,6 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
-        container.register(AdvanceParamsViewModel.self) { r in
-            AdvanceParamsViewModelImpl(preferences: r.resolve(Preferences.self)!,
-                                       apiManager: r.resolve(APIManager.self)!,
-                                       lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.transient)
-        container.register(ViewLogViewModel.self) { r in
-            ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!,
-                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.transient)
-        container.register(PreferencesMainViewModelOld.self) { r in
-            PreferencesMainViewModelImpOld(sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, preferences: r.resolve(Preferences.self)!, languageManager: r.resolve(LanguageManager.self)!)
-        }.inObjectScope(.transient)
-        container.register(GeneralViewModelType.self) { r in
-            GeneralViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, languageManager: r.resolve(LanguageManager.self)!, pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!)
-        }.inObjectScope(.transient)
-        container.register(LookAndFeelViewModelType.self) { r in
-            LookAndFeelViewModel(preferences: r.resolve(Preferences.self)!,
-                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                                 logger: r.resolve(FileLogger.self)!,
-                                 alertManager: r.resolve(AlertManagerV2.self)!,
-                                 localDB: r.resolve(LocalDatabase.self)!,
-                                 serverRepository: r.resolve(ServerRepository.self)!)
-        }.inObjectScope(.transient)
-        container.register(AccountViewModelType.self) { r in
-            AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
-        }.inObjectScope(.transient)
-        container.register(ShareWithFriendViewModelType.self) { r in
-            ShareWithFriendViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManaging.self)!, referFriendManager: r.resolve(ReferAndShareManagerV2.self)!)
-        }.inObjectScope(.transient)
-        container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
-        }.inObjectScope(.transient)
-        container.register(LanguageViewModelType.self) { r in
-            LanguageViewModel(languageManager: r.resolve(LanguageManager.self)!, preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.transient)
-        container.register(AboutViewModelType.self) { r in
-            AboutViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, preference: r.resolve(Preferences.self)!)
-        }.inObjectScope(.transient)
-        container.register(NetworkSecurityViewModelType.self) { r in
-            NetworkSecurityViewModel(localDatabase: r.resolve(LocalDatabase.self)!, preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, connectivity: r.resolve(Connectivity.self)!)
-        }.inObjectScope(.transient)
-        container.register(NetworkOptionViewModelType.self) { r in
-            NetworkOptionViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
-                                   lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                                   connectivity: r.resolve(Connectivity.self)!,
-                                   vpnManager: r.resolve(VPNManager.self)!,
-                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
-        }.inObjectScope(.transient)
-        container.register(SubmitTicketViewModel.self) { r in
-            SubmitTicketViewModelImpl(apiManager: r.resolve(APIManager.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, alertManager: r.resolve(AlertManagerV2.self)!, sessionManager: r.resolve(SessionManaging.self)!)
-        }.inObjectScope(.transient)
-        container.register(HelpViewModel.self) { r in
-            HelpViewModelImpl(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManaging.self)!, apiManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, connectivity: r.resolve(Connectivity.self)!)
-        }.inObjectScope(.transient)
         container.register(BannedAccountPopupModelType.self) { r in
             BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
@@ -291,9 +237,7 @@ class ViewModels: Assembly {
         container.register(ErrorPopupViewModelType.self) { _ in
             ErrorPopupViewModel()
         }.inObjectScope(.transient)
-        container.register(RobertViewModelType.self) { r in
-            RobertViewModel(apiManager: r.resolve(APIManager.self)!, localDB: r.resolve(LocalDatabase.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, alertManager: r.resolve(AlertManagerV2.self)!, logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.transient)
+
         container.register(EnterCredentialsViewModelType.self) { r in
             EnterCredentialsViewModel(
                 vpnManager: r.resolve(VPNManager.self)!,
@@ -702,101 +646,13 @@ class ViewControllerModule: Assembly {
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
         }.inObjectScope(.transient)
-        container.register(PreferencesMainViewControllerOld.self) { _ in
-            PreferencesMainViewControllerOld()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(PreferencesMainViewModelOld.self)
-            c.router = r.resolve(PreferenceMainRouter.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(GeneralViewController.self) { _ in
-            GeneralViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(GeneralViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-            c.router = r.resolve(GeneralRouter.self)
-            c.popupRouter = r.resolve(PopupRouter.self)
-        }.inObjectScope(.transient)
-        container.register(LookAndFeelViewController.self) { _ in
-            LookAndFeelViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(LookAndFeelViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-            c.soundFileManager = r.resolve(SoundFileManaging.self)
-            c.backgroundFileManager = r.resolve(BackgroundFileManaging.self)
-        }.inObjectScope(.transient)
-        container.register(AccountViewController.self) { _ in
-            AccountViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(AccountViewModelType.self)
-            c.router = r.resolve(AccountRouter.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(AdvanceParamsViewController.self) { _ in
-            AdvanceParamsViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(AdvanceParamsViewModel.self)
-        }.inObjectScope(.transient)
-        container.register(HelpViewController.self) { _ in
-            HelpViewController()
-        }.initCompleted { r, c in
-            c.router = r.resolve(HelpRouter.self)
-            c.logger = r.resolve(FileLogger.self)
-            c.viewModel = r.resolve(HelpViewModel.self)
-        }.inObjectScope(.transient)
-        container.register(ViewLogViewController.self) { _ in
-            ViewLogViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ViewLogViewModel.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(LanguageViewController.self) { _ in
-            LanguageViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(LanguageViewModelType.self)
-        }.inObjectScope(.transient)
-        container.register(AboutViewController.self) { _ in
-            AboutViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(AboutViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(ConnectionViewController.self) { _ in
-            ConnectionViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ConnectionsViewModelType.self)
-            c.router = r.resolve(ConnectionRouter.self)
-            c.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(NetworkSecurityViewController.self) { _ in
-            NetworkSecurityViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(NetworkSecurityViewModelType.self)
-            c.router = r.resolve(NetworkSecurityRouter.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(NetworkViewController.self) { _ in
-            NetworkViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(NetworkOptionViewModelType.self)
-        }.inObjectScope(.transient)
-        container.register(ShareWithFriendViewController.self) { _ in
-            ShareWithFriendViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ShareWithFriendViewModelType.self)
-        }.inObjectScope(.transient)
+
         container.register(PlanUpgradeViewController.self) { _ in
             PlanUpgradeViewController()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(PlanUpgradeViewModel.self)
         }.inObjectScope(.transient)
-        container.register(SubmitTicketViewController.self) { _ in
-            SubmitTicketViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(SubmitTicketViewModel.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
+
         container.register(BannedAccountPopupViewController.self) { _ in
             BannedAccountPopupViewController()
         }.initCompleted { r, c in
@@ -815,12 +671,7 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ProPlanExpiredAccountPopupModelType.self)
             c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
-        container.register(RobertViewController.self) { _ in
-            RobertViewController()
-        }.initCompleted { r, c in
-            c.logger = r.resolve(FileLogger.self)
-            c.viewModel = r.resolve(RobertViewModelType.self)
-        }.inObjectScope(.transient)
+
         container.register(NewsFeedView.self) { r in
             NewsFeedView(viewModel: NewsFeedViewModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
@@ -842,7 +693,7 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.protocolManager = ProtocolManager.shared
             c.viewModel = r.resolve(ProtocolSwitchViewModelType.self)
-            c.router = r.resolve(ProtocolSwitchViewRouter.self)
+            c.router = r.resolve(ProtocolSwitchRouter.self)
             c.type = .change
         }.inObjectScope(.transient)
         container.register(ProtocolSetPreferredViewController.self) { _ in
@@ -850,7 +701,7 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ProtocolSetPreferredViewModelV2.self)
             c.type = .connected
-            c.router = r.resolve(ProtocolSwitchViewRouter.self)
+            c.router = r.resolve(ProtocolSwitchRouter.self)
         }.inObjectScope(.transient)
         container.register(ErrorPopupViewController.self) { _ in
             ErrorPopupViewController()
@@ -991,35 +842,17 @@ class Routers: Assembly {
         container.register(HomeRouter.self) { _ in
             HomeRouter()
         }.inObjectScope(.transient)
-        container.register(PreferenceMainRouter.self) { _ in
-            PreferenceMainRouter()
-        }.inObjectScope(.transient)
         container.register(AccountRouter.self) { _ in
             AccountRouter()
-        }.inObjectScope(.transient)
-        container.register(HelpRouter.self) { _ in
-            HelpRouter()
         }.inObjectScope(.transient)
         container.register(UpgradeRouter.self) { _ in
             UpgradeRouter()
         }.inObjectScope(.transient)
-        container.register(ConnectionRouter.self) { _ in
-            ConnectionRouter()
-        }.inObjectScope(.transient)
-        container.register(GeneralRouter.self) { _ in
-            GeneralRouter()
-        }.inObjectScope(.transient)
-        container.register(NetworkSecurityRouter.self) { _ in
-            NetworkSecurityRouter()
-        }.inObjectScope(.transient)
-        container.register(EmailRouter.self) { _ in
-            EmailRouter()
-        }.inObjectScope(.transient)
         container.register(PopupRouter.self) { _ in
             PopupRouter()
         }.inObjectScope(.transient)
-        container.register(ProtocolSwitchViewRouter.self) { _ in
-            ProtocolSwitchViewRouter()
+        container.register(ProtocolSwitchRouter.self) { _ in
+            ProtocolSwitchRouter()
         }.inObjectScope(.transient)
     }
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import RxGesture
 
 class IPInfoView: UIView {
     let disposeBag = DisposeBag()

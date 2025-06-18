@@ -52,7 +52,6 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     }
 
     func isGhostAccountCreated() -> Bool {
-        // return JNKeychain.loadValue(forKey: KeyChainkeys.ghostAccountCreated) as? Bool ?? false
         if let value = try? simpleKeychain.data(forKey: KeyChainkeys.ghostAccountCreated) {
             let isGhostAccountCreated = String(data: value, encoding: .utf8).flatMap(Bool.init) ?? false
             return isGhostAccountCreated
@@ -62,6 +61,5 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
 
     func setGhostAccountCreated() {
         try? simpleKeychain.set(true.data, forKey: KeyChainkeys.ghostAccountCreated)
-        // JNKeychain.saveValue(true, forKey: KeyChainkeys.ghostAccountCreated)
     }
 }

@@ -22,7 +22,7 @@ protocol CustomConfigListViewDelegate: WTableViewDataSourceDelegate, AnyObject {
     func showCustomConfigRefreshControl()
 }
 
-class CustomConfigListTableViewDataSource: WTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate, SwipeTableViewCellDelegate {
+class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate, SwipeTableViewCellDelegate {
     var customConfigs: [CustomConfigModel]?
     weak var logicDelegate: CustomConfigListModelDelegate?
     weak var uiDelegate: CustomConfigListViewDelegate?
