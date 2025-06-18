@@ -19,6 +19,7 @@ struct ServerModel {
     let groups: [GroupModel]
     let locType: String
     let p2p: Bool
+    let wasEdited: Bool
 
     init(id: Int,
          name: String,
@@ -28,7 +29,8 @@ struct ServerModel {
          dnsHostname: String,
          groups: [GroupModel],
          locType: String,
-         p2p: Bool) {
+         p2p: Bool,
+         wasEdited: Bool) {
         self.id = id
         self.name = name
         self.countryCode = countryCode
@@ -38,6 +40,7 @@ struct ServerModel {
         self.groups = groups
         self.locType = locType
         self.p2p = p2p
+        self.wasEdited = wasEdited
     }
 
     init(name: String, serverModel: ServerModel) {
@@ -50,6 +53,7 @@ struct ServerModel {
         groups = serverModel.groups
         locType = serverModel.locType
         p2p = serverModel.p2p
+        wasEdited = serverModel.wasEdited
     }
 
     func isForStreaming() -> Bool {
@@ -136,6 +140,7 @@ struct ServerModel {
 
     func getServerModel(customName: String = "", groupModels: [GroupModel] = []) -> ServerModel {
         let groupModelList = groupModels.isEmpty ? groups.map { $0.getGroupModel() } : groupModels
+        let wasEdited = !customName.isEmpty && customName != name
         return ServerModel(id: id,
                            name: customName.isEmpty ? name : customName,
                            countryCode: countryCode,
@@ -144,7 +149,8 @@ struct ServerModel {
                            dnsHostname: dnsHostname,
                            groups: groupModelList,
                            locType: locType,
-                           p2p: p2p)
+                           p2p: p2p,
+                           wasEdited: wasEdited)
     }
 }
 

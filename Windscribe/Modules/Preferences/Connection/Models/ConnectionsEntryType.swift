@@ -8,7 +8,9 @@
 
 enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
     case networkOptions,
-         connectionMode(currentOption: String, options: [MenuOption]),
+         connectionMode(currentOption: String, options: [MenuOption],
+                        protocolSelected: String, protocolOptions: [MenuOption],
+                        portSelected: String, portOptions: [MenuOption]),
          alwaysOn(isSelected: Bool),
          connectedDns(currentOption: String, customValue: String, options: [MenuOption]),
          allowLan(isSelected: Bool),
@@ -57,7 +59,7 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
     var action: MenuEntryActionType? {
         switch self {
         case .networkOptions: .button(title: "", parentId: id)
-        case let .connectionMode(currentOption, options): .multiple(currentOption: currentOption, options: options, parentId: id)
+        case let .connectionMode(currentOption, options, _, _, _, _): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .alwaysOn(isSelected): .toggle(isSelected: isSelected, parentId: id)
         case let .connectedDns(currentOption, _, options): .multiple(currentOption: currentOption, options: options, parentId: id)
         case let .allowLan(isSelected): .toggle(isSelected: isSelected, parentId: id)
@@ -73,7 +75,12 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
 
     func makeSecondaryEntries() -> [ConnectionSecondaryType] {
         switch self {
-        case .connectionMode:
+        case let .connectionMode(currentOption, _, protocolSelected, protocolOptions, portSelected, portOptions):
+            if currentOption == TextsAsset.General.manual {
+                return [.connectionModeInfo,
+                        .protocolMenu(currentOption: protocolSelected, options: protocolOptions),
+                        .portMenu(currentOption: portSelected, options: portOptions)]
+            }
             return [.connectionModeInfo]
         case let .connectedDns(currentOption, customValue, _):
             if currentOption == TextsAsset.General.custom {
@@ -94,26 +101,34 @@ enum ConnectionsEntryType: MenuEntryHeaderType, Hashable {
 }
 
 enum ConnectionSecondaryEntryIDs: Int {
-    case connectionModeInfo = 1,
-    connectedDnsInfo,
-    connectedDnsCustom,
-    allowLanInfo,
-    circunventCensorshipInfo
+    case connectionModeInfo = 100,
+         protocolMenu,
+         portMenu,
+         connectedDnsInfo,
+         connectedDnsCustom,
+         allowLanInfo,
+         circunventCensorshipInfo
 
     var id: Int { rawValue }
 }
 
 enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
     case connectionModeInfo,
-    connectedDnsInfo,
-    connectedDnsCustom(value: String),
-    allowLanInfo,
-    circunventCensorshipInfo
+         protocolMenu(currentOption: String, options: [MenuOption]),
+         portMenu(currentOption: String, options: [MenuOption]),
+         connectedDnsInfo,
+         connectedDnsCustom(value: String),
+         allowLanInfo,
+         circunventCensorshipInfo
 
     var id: Int {
         switch self {
         case .connectionModeInfo:
             ConnectionSecondaryEntryIDs.connectionModeInfo.id
+        case .protocolMenu:
+            ConnectionSecondaryEntryIDs.protocolMenu.id
+        case .portMenu:
+            ConnectionSecondaryEntryIDs.portMenu.id
         case .connectedDnsInfo:
             ConnectionSecondaryEntryIDs.connectedDnsInfo.id
         case .connectedDnsCustom:
@@ -124,13 +139,22 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
             ConnectionSecondaryEntryIDs.circunventCensorshipInfo.id
         }
     }
-    var title: String { "" }
+    var title: String {
+        switch self {
+        case .protocolMenu: TextsAsset.Connection.protocolType
+        case .portMenu: TextsAsset.Connection.port
+        default: ""
+        }
+    }
     var icon: String { "" }
     var message: String? { nil }
     var action: MenuEntryActionType? {
         switch self {
         case .connectionModeInfo:
                 .infoLink(message: makeInfoLink(from: TextsAsset.Connection.connectionModeDescription), parentId: id)
+        case let .protocolMenu(currentOption, options),
+            let .portMenu(currentOption, options):
+                .multiple(currentOption: currentOption, options: options, parentId: id)
         case .connectedDnsInfo:
                 .infoLink(message: makeInfoLink(from: TextsAsset.Connection.connectedDNSDescription), parentId: id)
         case let .connectedDnsCustom(value):

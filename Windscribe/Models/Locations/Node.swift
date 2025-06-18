@@ -216,6 +216,21 @@ struct FavNodeModel {
                             health: health,
                             isPremiumOnly: isPremiumOnly)
     }
+
+    func getFavNodeModel(with customCity: String?, and customNick: String?) -> FavNodeModel? {
+        return FavNodeModel(groupId: groupId,
+                            serverName: serverName,
+                            countryCode: countryCode,
+                            hostname: hostname,
+                            cityName: customCity ?? cityName,
+                            nickName: customNick ?? nickName,
+                            dnsHostname: dnsHostname,
+                            ipAddress: ipAddress,
+                            pingIp: pingIp,
+                            linkSpeed: linkSpeed,
+                            health: health,
+                            isPremiumOnly: isPremiumOnly)
+    }
 }
 
 class LastConnectedNode: FavNode {

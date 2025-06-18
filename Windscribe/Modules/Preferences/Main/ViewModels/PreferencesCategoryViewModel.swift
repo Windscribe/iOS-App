@@ -135,6 +135,8 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     func logout() {
         logger.logD("PreferencesViewModel", "User tapped logout")
 
+        HapticFeedbackGenerator.shared.run(level: .medium)
+
         alertManager.showYesNoAlert(
             title: TextsAsset.Preferences.logout,
             message: TextsAsset.Preferences.logOutAlert

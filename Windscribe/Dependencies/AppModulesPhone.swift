@@ -132,7 +132,9 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                router: r.resolve(ConnectionsNavigationRouter.self)!
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                router: r.resolve(ConnectionsNavigationRouter.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!
             )
         }.inObjectScope(.transient)
 
@@ -377,6 +379,7 @@ class ViewModels: Assembly {
 
         container.register(ServerInfoViewModelType.self) { r in
             ServerInfoViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
+                                languageManager: r.resolve(LanguageManager.self)!,
                                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
@@ -518,7 +521,9 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     preferences: r.resolve(Preferences.self)!,
-                    router: r.resolve(ConnectionsNavigationRouter.self)!
+                    localDatabase: r.resolve(LocalDatabase.self)!,
+                    router: r.resolve(ConnectionsNavigationRouter.self)!,
+                    protocolManager: r.resolve(ProtocolManagerType.self)!
                 )
            )
         }.inObjectScope(.transient)

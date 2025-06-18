@@ -61,11 +61,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             return $0
         })
 
-        viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { favNodes in
-                if favNodes?.count(where: {$0.isInvalidated}) ?? 0  > 0 {
-                    return
-                }
-            self.favNodes = favNodes?.compactMap { $0.getFavNodeModel() }
+        viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.favNodes = $0
         }).disposed(by: disposeBag)
     }
 

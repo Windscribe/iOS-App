@@ -24,6 +24,7 @@ struct GroupModel {
     let linkSpeed: String
     let health: Int
     let pingHost: String
+    let wasEdited: Bool
 
     init(id: Int,
          city: String,
@@ -37,7 +38,8 @@ struct GroupModel {
          pingIp: String,
          linkSpeed: String,
          health: Int,
-         pingHost: String) {
+         pingHost: String,
+         wasEdited: Bool) {
         self.id = id
         self.city = city
         self.nick = nick
@@ -51,6 +53,7 @@ struct GroupModel {
         self.linkSpeed = linkSpeed
         self.health = health
         self.pingHost = pingHost
+        self.wasEdited = wasEdited
     }
 
     func canConnect() -> Bool {
@@ -168,6 +171,8 @@ struct GroupModel {
     }
 
     func getGroupModel(customCity: String = "", customNick: String = "") -> GroupModel {
+        let wasEdited = (!customCity.isEmpty && customCity != city) ||
+        (!customNick.isEmpty && customNick != nick)
         return GroupModel(id: id,
                           city: customCity.isEmpty ? city : customCity,
                           nick: customNick.isEmpty ? nick : customNick,
@@ -180,6 +185,7 @@ struct GroupModel {
                           pingIp: pingIp,
                           linkSpeed: linkSpeed,
                           health: health,
-                          pingHost: pingHost)
+                          pingHost: pingHost,
+                          wasEdited: wasEdited)
     }
 }

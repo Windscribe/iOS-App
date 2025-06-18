@@ -116,7 +116,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
         self.viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe( onNext: { [weak self] results in
             guard let self else { return }
 
-            viewModel.sortServerListUsingUserPreferences(
+            viewModel.sortServerListUsingUserPreferences(ignoreStreaming: false,
                 isForStreaming: isStreaming, servers: results) { [weak self] serverSectionsOrdered in
                     guard let self else { return }
 
