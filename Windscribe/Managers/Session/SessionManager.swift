@@ -34,6 +34,7 @@ class SessionManager: SessionManaging {
     let locationsManager = Assembler.resolve(LocationsManagerType.self)
 
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+    private lazy var ssoManager = Assembler.resolve(SSOManaging.self)
 
     func setSessionTimer() {
         sessionTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.keepSessionUpdated), userInfo: nil, repeats: true)
@@ -240,20 +241,53 @@ class SessionManager: SessionManaging {
 #endif
         }
 
-        NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
-        session = nil
-        wgCredentials.delete()
-        preferences.saveConnectionCount(count: 0)
-        Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
+        // Disconnect VPN
+        NotificationCenter.default.post(Notification(name: Notifications.disconnectVPN))
 
+        // Reset VPN Profiles
         Task { @MainActor in
             await vpnManager.resetProfiles()
         }
 
+        // Clear Apple SSO Session
+        ssoManager.signOut()
+
+        // Delete Session
+        apiManager.deleteSession()
+            .retry(3) // Retry up to 3 times if an error occurs
+            .subscribe(on: MainScheduler.asyncInstance)
+            .observe(on: MainScheduler.asyncInstance)
+            .subscribe(onSuccess: { [self] response in
+                if response.success {
+                    logger.logI(self, "Session successfully deleted: \(response.message)")
+                } else {
+                    logger.logI(self, "Delete session API returned failure: \(response.message)")
+                }
+            }, onFailure: { [self] error in
+                logger.logE(self, "Failed to delete session after retries: \(error.localizedDescription)")
+            })
+            .disposed(by: disposeBag)
+
+        NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
+
+        // Clear the session
+        session = nil
+
+        // Delete WireGuard Credentials
+        wgCredentials.delete()
+
+        // Clear Connection and notification count
+        preferences.saveConnectionCount(count: 0)
+        Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
+
+        // Clear the local data base
         localDatabase.clean()
+
+        // Clearn favourites, Saved session location
         preferences.clearFavourites()
         preferences.saveUserSessionAuth(sessionAuth: nil)
         preferences.clearSelectedLocations()
+
         Assembler.container.resetObjectScope(.userScope)
     }
 
