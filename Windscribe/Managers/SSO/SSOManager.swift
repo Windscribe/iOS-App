@@ -11,6 +11,7 @@ import RxSwift
 
 protocol SSOManaging {
     func getSession() -> AnyPublisher<Session, Errors>
+    func signOut()
 }
 
 class SSOManager: NSObject, ObservableObject, SSOManaging {
@@ -47,6 +48,12 @@ class SSOManager: NSObject, ObservableObject, SSOManaging {
                 self?.ssoSession = nil
             })
             .eraseToAnyPublisher()
+    }
+
+    func signOut() {
+        logger.logI("SSOManager", "Signing out user.")
+        cancellables.removeAll()
+        ssoSession = nil
     }
 }
 
