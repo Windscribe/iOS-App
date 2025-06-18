@@ -151,10 +151,10 @@ class ServerListCell: SwipeTableViewCell {
             icon.setImageColor(color: .from(.locationColor, isDarkMode))
         }
         actionImage.image = viewModel.actionImage
+        actionImage.layer.opacity = viewModel.actionOpacity
         actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
 
         nameLabel.textColor = viewModel.nameColor(for: isDarkMode)
-        actionImage.layer.opacity = viewModel.actionOpacity
 
         healthCircle.health = viewModel.serverHealth
 

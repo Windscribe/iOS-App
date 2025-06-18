@@ -154,11 +154,13 @@ class ConnectionStateInfoView: UIView {
         }
         actionIcon.isHidden = !isEnabled
         actionButton.isUserInteractionEnabled = isEnabled
+        actionIcon.setImageColor(color: state.statusColor)
 
         protocolLabel.textColor = state.statusColor
         portLabel.textColor = state.statusColor
 
         preferredIcon.image = UIImage(named: state.preferredProtocolBadge)
+        preferredIcon.setImageColor(color: state.statusColor)
         setCircumventCensorshipBadge(color: state.statusColor.withAlphaComponent(state.statusAlpha))
     }
 
@@ -238,7 +240,8 @@ class ConnectionStateInfoView: UIView {
         portLabel.text = WifiManager.shared.getConnectedNetwork()?.port ?? "443"
 
         actionIcon.image = UIImage(named: ImagesAsset.serverWhiteRightArrow)
-        actionIcon.setImageColor(color: .whiteWithOpacity(opacity: 0.4))
+        actionIcon.layer.opacity = 0.4
+        actionIcon.setImageColor(color: .white)
         actionIcon.contentMode = .scaleAspectFit
 
         preferredIcon.isHidden = false
@@ -322,7 +325,7 @@ class ConnectionStateInfoView: UIView {
     }
 }
 
-extension MainViewController:ConnectionStateInfoViewDelegate {
+extension MainViewController: ConnectionStateInfoViewDelegate {
     func protocolPortTapped() {
         openConnectionChangeDialog()
     }

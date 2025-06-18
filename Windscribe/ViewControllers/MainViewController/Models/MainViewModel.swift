@@ -14,7 +14,7 @@ protocol MainViewModelType {
     var serverList: BehaviorSubject<[ServerModel]> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
     var portMap: BehaviorSubject<[PortMap]?> { get }
-    var favNode: BehaviorSubject<[FavNode]?> { get }
+    var favNode: BehaviorSubject<[FavNodeModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
     var oldSession: OldSession? { get }
@@ -39,7 +39,7 @@ protocol MainViewModelType {
     var didShowOutOfDataPopup: Bool { get set }
     var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
     func loadServerList()
-    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
+    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
     func loadPortMap()
     func loadStaticIPLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
     func loadCustomConfigLatencyValues(completion: @escaping (_ result: Bool?, _ error: String?) -> Void)
@@ -80,7 +80,7 @@ class MainViewModel: MainViewModelType {
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMap = BehaviorSubject<[PortMap]?>(value: nil)
-    var favNode = BehaviorSubject<[FavNode]?>(value: nil)
+    var favNode = BehaviorSubject<[FavNodeModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
@@ -205,7 +205,7 @@ class MainViewModel: MainViewModelType {
         return latencyRepo.getPingData(ip: ip ?? "")?.latency ?? -1
     }
 
-    func sortServerListUsingUserPreferences(isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void) {
+    func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void) {
         DispatchQueue.main.async {
             var serverSections = [ServerSection]()
             var serverSectionsOrdered = [ServerSection]()
@@ -213,7 +213,13 @@ class MainViewModel: MainViewModelType {
                 completion(serverSectionsOrdered)
                 return
             }
-            serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
+
+            if ignoreStreaming {
+                serverSections = servers.map { ServerSection(server: $0, collapsed: true) }
+            } else {
+                serverSections = servers.filter { $0.isForStreaming() == isForStreaming }.map { ServerSection(server: $0, collapsed: true) }
+            }
+
             let orderBy = (try? self.locationOrderBy.value()) ?? DefaultValues.orderLocationsBy
             switch orderBy {
             case Fields.Values.geography:
@@ -272,7 +278,7 @@ class MainViewModel: MainViewModelType {
                     return $0.city < $1.city
                 }
             }
-            let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p)
+            let sortedServerModel = ServerModel(id: serverModel.id, name: serverModel.name, countryCode: serverModel.countryCode, status: serverModel.status, premiumOnly: serverModel.premiumOnly, dnsHostname: serverModel.dnsHostname, groups: sortedGroups, locType: serverModel.locType, p2p: serverModel.p2p, wasEdited: serverModel.wasEdited)
             return ServerSection(server: sortedServerModel, collapsed: $0.collapsed)
         }
     }
@@ -310,12 +316,20 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadFavNode() {
-        localDatabase.getFavNode()
+        Observable.combineLatest(serverRepository.updatedServerModelsSubject.asObservable(),
+                                 localDatabase.getFavNode())
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { [self] data in
-                favNode.onNext(data)
-            }, onError: { _ in }).disposed(by: disposeBag)
+            .subscribe(onNext: { [weak self] (serverModels, favList) in
+                guard let self = self else { return }
+                let favModels = favList.filter { !$0.isInvalidated }
+                    .compactMap { favNode in
+                    let group = serverModels.flatMap { $0.groups }
+                        .first { "\($0.id)" == favNode.groupId }
+                    return favNode.getFavNodeModel(with: group?.city, and: group?.nick)
+                }
+                favNode.onNext(favModels)
+        }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func loadStaticIps() {

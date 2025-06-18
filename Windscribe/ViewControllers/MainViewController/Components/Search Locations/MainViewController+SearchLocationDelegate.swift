@@ -158,7 +158,8 @@ extension MainViewController: SearchCountryViewDelegate {
                 dnsHostname: group.dnsHostname,
                 groups: cities,
                 locType: group.locType,
-                p2p: group.p2p
+                p2p: group.p2p,
+                wasEdited: group.wasEdited
             )
             return (newServer, match)
         }

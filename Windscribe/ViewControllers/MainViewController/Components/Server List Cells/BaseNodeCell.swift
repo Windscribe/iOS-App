@@ -31,7 +31,9 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     let updateUISubject = PublishSubject<Void>()
     let disposeBag = DisposeBag()
 
-    var showServerHealth: Bool = DefaultValues.showServerHealth
+    private var locationLoad: Bool = DefaultValues.showServerHealth
+
+    var showServerHealth: Bool { locationLoad }
     var favNodes: [FavNode] = []
     var isFavourited: Bool = false
     var minTime = -1
@@ -88,21 +90,29 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     }
 
     init() {
+        favNodes = localDB.getFavNodeSync()
         localDB.getFavNode().subscribe(onNext: { [weak self] favNodes in
             guard let self = self else { return }
             self.favNodes = favNodes
-            self.isFavourited = favNodes.map({ $0.groupId }).contains("\(groupId)")
-            self.updateUISubject.onNext(())
+            let prevIsFavourited = self.isFavourited
+            self.isFavourited = isNodeFavorited()
+            if prevIsFavourited != self.isFavourited {
+                self.updateUISubject.onNext(())
+            }
         }).disposed(by: disposeBag)
 
         preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
             guard let self = self else { return }
-            self.showServerHealth = enabled ?? DefaultValues.showServerHealth
+            self.locationLoad = enabled ?? DefaultValues.showServerHealth
             self.updateUISubject.onNext(())
         }).disposed(by: disposeBag)
     }
 
     func favoriteSelected() { }
+
+    func isNodeFavorited() -> Bool {
+        favNodes.map({ $0.groupId }).contains(groupId)
+    }
 
     private func getSignalLevel(minTime: Int) -> Int {
         var signalLevel = 0
@@ -167,7 +177,6 @@ class BaseNodeCell: ServerListCell {
             self.nickNameLabel.textColor = .from(.textColor, isDarkMode)
             self.latencyLabel.textColor = .from(.textColor, isDarkMode)
             self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-            self.favButton.imageView?.setImageColor(color: .from(.iconColor, isDarkMode))
             self.icon.setImageColor(color: .from(.iconColor, isDarkMode))
         }).disposed(by: disposeBag)
     }
@@ -182,7 +191,7 @@ class BaseNodeCell: ServerListCell {
 
         NSLayoutConstraint.activate([
             // nickNameLabel
-            nickNameLabel.heightAnchor.constraint(equalToConstant: 16),
+            nickNameLabel.heightAnchor.constraint(equalToConstant: 20),
 
             // favButton
             favButton.centerYAnchor.constraint(equalTo: actionImage.centerYAnchor),
@@ -191,15 +200,16 @@ class BaseNodeCell: ServerListCell {
             favButton.widthAnchor.constraint(equalTo: actionImage.widthAnchor, constant: 8),
 
             // latencyLabel
-            latencyLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 6),
-            latencyLabel.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
-            latencyLabel.heightAnchor.constraint(equalToConstant: 12),
-
-            // latencyLabel
             signalBarsIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: -6),
             signalBarsIcon.centerXAnchor.constraint(equalTo: latencyLabel.centerXAnchor),
+            signalBarsIcon.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
             signalBarsIcon.heightAnchor.constraint(equalToConstant: 11),
-            signalBarsIcon.widthAnchor.constraint(equalToConstant: 11)
+            signalBarsIcon.widthAnchor.constraint(equalToConstant: 11),
+
+            // latencyLabel
+            latencyLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 6),
+            latencyLabel.heightAnchor.constraint(equalToConstant: 12)
+
         ])
     }
 

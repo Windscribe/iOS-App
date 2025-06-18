@@ -19,16 +19,27 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     let serverCountSubject = PublishSubject<Int>()
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
     let disposeBag = DisposeBag()
-    let localDatabase: LocalDatabase
+    private let localDatabase: LocalDatabase
+    private let languageManager: LanguageManager
 
-    init(localDatabase: LocalDatabase, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    private var count = 0
+
+    init(localDatabase: LocalDatabase,
+         languageManager: LanguageManager,
+         lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.localDatabase = localDatabase
+        self.languageManager = languageManager
         localDatabase.getServersObservable().subscribe {
-            self.serverCountSubject.onNext($0.count)
+            self.count = $0.count
+            self.serverCountSubject.onNext(self.count)
         }.disposed(by: disposeBag)
 
         lookAndFeelRepository.isDarkModeSubject.subscribe { data in
             self.isDarkMode.onNext(data)
+        }.disposed(by: disposeBag)
+
+        languageManager.activelanguage.subscribe { _ in
+            self.serverCountSubject.onNext(self.count)
         }.disposed(by: disposeBag)
     }
 

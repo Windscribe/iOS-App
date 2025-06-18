@@ -17,19 +17,24 @@ class StaticIPListFooterView: WSView {
     lazy var actionButton = UIButton(type: .system)
     lazy var deviceNameLabel = UILabel()
     lazy var label = UILabel()
-    var viewModel: MainViewModelType?
-    let disposeBag = DisposeBag()
+    lazy var backgroundView = UIView()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
+    let disposeBag = DisposeBag()
+    var viewModel: MainViewModelType? {
+        didSet {
+            bindViews()
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .whiteWithOpacity(opacity: 0.05)
+
+        addSubview(backgroundView)
 
         actionButton.backgroundColor = .clear
         addSubview(actionButton)
 
         deviceNameLabel.font = UIFont.text(size: 16)
-        deviceNameLabel.textColor = UIColor.white
         deviceNameLabel.layer.opacity = 0.7
         addSubview(deviceNameLabel)
 
@@ -37,7 +42,9 @@ class StaticIPListFooterView: WSView {
         label.textColor = UIColor.cyberBlue
         label.layer.opacity = 0.7
         addSubview(label)
+    }
 
+    private func bindViews() {
         viewModel?.staticIPs.subscribe { [weak self] _ in
             self?.updateDeviceName()
         }.disposed(by: disposeBag)
@@ -46,6 +53,11 @@ class StaticIPListFooterView: WSView {
         }.disposed(by: disposeBag)
         languageManager.activelanguage.subscribe { [weak self] _ in
             self?.label.text = TextsAsset.addStaticIP
+        }.disposed(by: disposeBag)
+        viewModel?.isDarkMode.subscribe { [weak self] isDarkMode in
+            self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
+            self?.backgroundColor = .from(.backgroundColor, isDarkMode)
+            self?.deviceNameLabel.textColor = .from(.textColor, isDarkMode)
         }.disposed(by: disposeBag)
     }
 
@@ -68,10 +80,17 @@ class StaticIPListFooterView: WSView {
         super.layoutSubviews()
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         deviceNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
 
         let centerYConstant = UIScreen.hasTopNotch ? -10.0 : 0.0
         NSLayoutConstraint.activate([
+            // backgroundView
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundView.rightAnchor.constraint(equalTo: rightAnchor),
+            backgroundView.leftAnchor.constraint(equalTo: leftAnchor),
+
             // label
             label.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor, constant: centerYConstant),
             label.rightAnchor.constraint(equalTo: rightAnchor, constant: -16),

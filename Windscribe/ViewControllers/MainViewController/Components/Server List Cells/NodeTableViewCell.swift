@@ -32,9 +32,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         if let pingIP = displayingGroup?.pingIp {
             minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
         }
-        if let groupId = displayingGroup?.id {
-            isFavourited = favNodes.map { $0.groupId }.contains("\(groupId)")
-        }
+        isFavourited = isNodeFavorited()
     }
 
     override var serverHealth: CGFloat {
@@ -61,7 +59,8 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     }
 
     var isProLocked: Bool {
-        return(displayingGroup?.premiumOnly ?? false) &&
+        guard let group = displayingGroup else { return false }
+        return group.premiumOnly &&
         !(sessionManager.session?.isPremium ?? false)
     }
 
@@ -75,8 +74,6 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
             if isFavourited {
                 let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
                     guard let self = self else { return }
-                    self.isFavourited = false
-                    updateUISubject.onNext(())
                     if group.id >= 0,
                        let favNodeHostname = self.favNodes.filter({ $0.groupId == "\(self.groupId)" }).first?.hostname {
                         self.localDB.removeFavNode(hostName: favNodeHostname)
@@ -86,8 +83,6 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
                                               message: TextsAsset.Favorites.removeMessage,
                                               buttonText: TextsAsset.cancel, actions: [yesAction])
             } else {
-                isFavourited = true
-                updateUISubject.onNext(())
                 if let bestNode = group.bestNode {
                     let favNode = FavNode(node: bestNode, group: group, server: server)
                     localDB.saveFavNode(favNode: favNode).disposed(by: disposeBag)

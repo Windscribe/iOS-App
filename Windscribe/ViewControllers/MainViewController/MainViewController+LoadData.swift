@@ -42,20 +42,14 @@ extension MainViewController {
 
     @objc func reloadFavNodeOrder() {
         viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] favNodes in
-                let invalidatedNodes = favNodes?.count(where: {  $0.isInvalidated}) ?? 0  > 0
-                if favNodes?.count == 0 ||  invalidatedNodes {
+                if favNodes?.count == 0 {
                 favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: [], viewModel: viewModel)
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.reloadData()
                 return
             }
-            var favNodeModels = [FavNodeModel]()
             if let favnodes = favNodes {
-                for result in favnodes {
-                    guard let favNodeModel = result.getFavNodeModel() else { return }
-                    favNodeModels.append(favNodeModel)
-                }
-                favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: viewModel.sortFavouriteNodesUsingUserPreferences(favNodes: favNodeModels), viewModel: viewModel)
+                favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: viewModel.sortFavouriteNodesUsingUserPreferences(favNodes: favnodes), viewModel: viewModel)
                 favNodesListTableViewDataSource?.delegate = self
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.delegate = favNodesListTableViewDataSource

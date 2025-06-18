@@ -21,7 +21,6 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
             minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
         }
     }
-
     override var name: String {
         displayingCustomConfig?.name ?? ""
     }
@@ -30,6 +29,7 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
         ""
     }
 
+    override var showServerHealth: Bool { false }
     override var clipIcon: Bool { false }
     override var iconAspect: UIView.ContentMode { .scaleAspectFit }
 

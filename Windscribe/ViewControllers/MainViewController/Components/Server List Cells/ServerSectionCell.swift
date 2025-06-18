@@ -56,9 +56,7 @@ class ServerSectionCellModel: ServerSectionCellModelType {
         isExpanded ? 1.0 : 0.4
     }
 
-    var nameOpacity: Float {
-        isExpanded ? 1.0 : 0.7
-    }
+    var nameOpacity: Float { 1.0 }
 
     var serverHealth: CGFloat {
         CGFloat(self.displayingServer?.getServerHealth() ?? 0)
@@ -69,11 +67,9 @@ class ServerSectionCellModel: ServerSectionCellModelType {
     }
 
     var hasProLocked: Bool {
-        let hasPro = displayingServer?.groups.first {
-            $0.premiumOnly
-        }
-        return (hasPro?.premiumOnly ?? false) &&
-        !(sessionManager.session?.isPremium ?? false)
+        guard let server = displayingServer else { return false }
+        let hasNoPro = server.groups.first(where: { !$0.premiumOnly }) == nil
+        return hasNoPro && !(sessionManager.session?.isPremium ?? false)
     }
 
     init() {
@@ -186,7 +182,6 @@ class ServerSectionCell: ServerListCell {
     private func animateExpansion(completion: @escaping () -> Void = {}) {
         guard let serverCellViewModel = serverCellViewModel else { return }
         UIView.animate(withDuration: 0.35, animations: {
-            self.nameLabel.layer.opacity = serverCellViewModel.nameOpacity
             self.actionImage.layer.opacity = serverCellViewModel.actionOpacity
         }, completion: { _ in
             completion()

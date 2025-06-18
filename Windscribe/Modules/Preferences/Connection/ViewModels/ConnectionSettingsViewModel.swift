@@ -28,6 +28,8 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     @Published var router: ConnectionsNavigationRouter
 
     private var cancellables = Set<AnyCancellable>()
+    private var currentProtocol = DefaultValues.protocol
+    private var currentPort = DefaultValues.port
     private var killSwitchSelected = DefaultValues.killSwitch
     private var allowLanSelected = DefaultValues.allowLANMode
     private var circumventCensorshipSelected = DefaultValues.circumventCensorship
@@ -39,15 +41,21 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
+    private let localDatabase: LocalDatabase
+    private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
-         router: ConnectionsNavigationRouter) {
+         localDatabase: LocalDatabase,
+         router: ConnectionsNavigationRouter,
+         protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
+        self.localDatabase = localDatabase
         self.router = router
+        self.protocolManager = protocolManager
 
         bindSubjects()
         reloadItems()
@@ -64,6 +72,34 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
             }, receiveValue: { [weak self] isDark in
                 self?.isDarkMode = isDark
                 self?.reloadItems()
+            })
+            .store(in: &cancellables)
+
+            preferences.getSelectedProtocol()
+            .toPublisher(initialValue: DefaultValues.protocol)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ConnectionSettingsViewModel", "Preferred Protocol error: \(error)")
+                }
+            }, receiveValue: { [weak self] preferredProtocol in
+                guard let self = self else { return }
+                self.currentProtocol = preferredProtocol ?? DefaultValues.protocol
+                self.reloadItems()
+            })
+            .store(in: &cancellables)
+
+            preferences.getSelectedPort()
+            .toPublisher(initialValue: DefaultValues.port)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ConnectionSettingsViewModel", "Preferred Port error: \(error)")
+                }
+            }, receiveValue: { [weak self] port in
+                guard let self = self else { return }
+                self.currentPort = port ?? DefaultValues.port
+                self.reloadItems()
             })
             .store(in: &cancellables)
 
@@ -147,17 +183,28 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
                                         Fields.connectedDNSOptions)
             .map { MenuOption(title: $0, fieldKey: $1) }
 
+        let protocolOptions = getProtocols()
+            .map { MenuOption(title: $0, fieldKey: $0) }
+        let portOptions = getPorts(by: currentProtocol)
+            .map { MenuOption(title: $0, fieldKey: $0) }
+
         entries = [
             .networkOptions,
             .connectionMode(currentOption: connectionMode,
-                            options: connectionModes),
-            .connectedDns(currentOption: connectedDNS,
-                          customValue: customDNSValue,
-                          options: connectedDNSOptions),
-            .alwaysOn(isSelected: killSwitchSelected),
-            .allowLan(isSelected: allowLanSelected),
-            .circunventCensorship(isSelected: circumventCensorshipSelected)
-        ]
+                            options: connectionModes,
+                            protocolSelected: currentProtocol,
+                            protocolOptions: protocolOptions,
+                            portSelected: currentPort,
+                            portOptions: portOptions)]
+        if currentProtocol != TextsAsset.iKEv2 || connectionMode == Fields.Values.auto {
+            entries.append(.connectedDns(currentOption: connectedDNS,
+                                         customValue: customDNSValue,
+                                         options: connectedDNSOptions))
+        }
+        entries.append(contentsOf: [.alwaysOn(isSelected: killSwitchSelected),
+                                    .allowLan(isSelected: allowLanSelected),
+                                    .circunventCensorship(isSelected: circumventCensorshipSelected)
+        ])
     }
 
     func entrySelected(_ entry: ConnectionsEntryType, action: MenuEntryActionResponseType) {
@@ -165,8 +212,15 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
         case .networkOptions:
             networkOptionsSelected()
         case .connectionMode:
-            if case .multiple(let currentOption, _) = action {
-                preferences.saveConnectionMode(mode: currentOption)
+            if case .multiple(let currentOption, let parentId) = action {
+                if parentId == ConnectionSecondaryEntryIDs.protocolMenu.id {
+                    updateProtocol(value: currentOption)
+                } else if parentId == ConnectionSecondaryEntryIDs.portMenu.id {
+                    updatePort(value: currentOption)
+                } else {
+                    updateConnectionMode(value: currentOption)
+                    preferences.saveConnectionMode(mode: currentOption)
+                }
             }
             if case .infoLink = action {
                 openLink(.connectionModes)
@@ -208,6 +262,39 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
 
     private func openLink(_ linkType: FeatureExplainer) {
         safariURL = URL(string: linkType.getUrl())
+    }
+
+    private func getPorts(by protocolType: String) -> [String] {
+        guard let portsArray = localDatabase.getPorts(protocolType: protocolType) else { return [] }
+        return portsArray
+    }
+
+    private func getProtocols() -> [String] {
+        return TextsAsset.General.protocols
+    }
+
+    private func updateConnectionMode(value: String) {
+        preferences.saveConnectionMode(mode: value)
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
+    }
+
+    private func updateProtocol(value: String) {
+        preferences.saveSelectedProtocol(selectedProtocol: value)
+        if let port = localDatabase.getPorts(protocolType: value) {
+            preferences.saveSelectedPort(port: port[0])
+        }
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
+    }
+
+    private func updatePort(value: String) {
+        preferences.saveSelectedPort(port: value)
+        Task {
+            await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
     }
 
     private func saveConnectedDNSValue(value: String) {
