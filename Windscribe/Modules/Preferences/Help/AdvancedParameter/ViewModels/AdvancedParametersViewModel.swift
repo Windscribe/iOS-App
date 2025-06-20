@@ -64,7 +64,7 @@ final class AdvancedParametersViewModelImpl: AdvancedParametersViewModel {
         hasLoaded = true
 
         preferences.getAdvanceParams()
-            .toPublisher()
+            .toInitialPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] params in
                 self?.advanceParams = params ?? ""
@@ -100,7 +100,9 @@ final class AdvancedParametersViewModelImpl: AdvancedParametersViewModel {
                    error == .invalidKeyValuePair {
                     self?.showError = true
                 }
-            }, receiveValue: { _ in })
+            }, receiveValue: { [weak self] _ in
+                self?.load()
+            })
             .store(in: &cancellables)
     }
 

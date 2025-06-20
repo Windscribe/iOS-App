@@ -26,6 +26,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     @Published var loadingState: AccountState = .initial
     @Published var activeDialog: AccountDialogType?
     @Published var alertMessage: AccountSettingsAlertContent?
+    @Published private(set) var accountEmailStatus: AccountEmailStatusType = .missing
 
     private var cancellables = Set<AnyCancellable>()
     private var currentSession: Session?
@@ -40,20 +41,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     private let logger: FileLogger
 
     private let disposeBag = DisposeBag()
-
-    var accountEmailStatus: AccountEmailStatusType {
-        guard let session = currentSession else {
-            return .missing
-        }
-
-        if session.email.isEmpty {
-            return .missing
-        } else if !session.emailStatus {
-            return .unverified
-        } else {
-            return .verified
-        }
-    }
 
     var shouldShowAddEmailButton: Bool {
         currentSession?.email.isEmpty == true
@@ -92,6 +79,16 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                 self?.isDarkMode = isDark
             })
             .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: Notifications.sessionUpdated)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self = self, let updatedSession = self.sessionManager.session else { return }
+                self.currentSession = updatedSession
+                self.buildSections(from: updatedSession)
+                self.accountEmailStatus = self.calculateEmailStatus(from: updatedSession)
+            }
+            .store(in: &cancellables)
     }
 
     func loadSession() {
@@ -108,6 +105,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
                 self.currentSession = session
+                self.accountEmailStatus = self.calculateEmailStatus(from: session)
                 self.buildSections(from: session)
                 self.loadingState = .success
                 self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
@@ -238,10 +236,12 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    self?.loadingState = .error(error.localizedDescription)
-                    self?.alertMessage = AccountSettingsAlertContent(
+                    guard let self = self else { return }
+
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
-                        message: error.localizedDescription,
+                        message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 case .finished:
                     break
@@ -260,11 +260,12 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
                 if case let .failure(error) = completion {
-                    self?.loadingState = .error(error.localizedDescription)
-                    self?.alertMessage = AccountSettingsAlertContent(
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
-                        message: error.localizedDescription,
+                        message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 }
             }, receiveValue: { [weak self] _ in
@@ -285,10 +286,12 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.loadingState = .error(error.localizedDescription)
-                    self?.alertMessage = AccountSettingsAlertContent(
+                    guard let self = self else { return }
+
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,
-                        message: error.localizedDescription,
+                        message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 }
             }, receiveValue: { [weak self] response in
@@ -321,7 +324,29 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .store(in: &cancellables)
     }
 
+    private func calculateEmailStatus(from session: Session) -> AccountEmailStatusType {
+        if session.email.isEmpty {
+            return .missing
+        } else if !session.emailStatus {
+            return .unverified
+        } else {
+            return .verified
+        }
+    }
+
     private func logoutUser() {
         sessionManager.logoutUser()
+    }
+
+    private func fetchErrorMessage(from error: Error) -> String {
+        let errorMessage: String
+
+        if case let Errors.apiError(apiError) = error {
+            errorMessage = apiError.errorMessage ?? "Unknown API error"
+        } else {
+            errorMessage = error.localizedDescription
+        }
+
+        return errorMessage
     }
 }

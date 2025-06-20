@@ -30,12 +30,6 @@ struct NewsFeedDetailView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             HStack(spacing: 12) {
-                if !item.readStatus {
-                    Circle()
-                        .fill(Color.green)
-                        .frame(width: 8, height: 8)
-                }
-
                 VStack(alignment: .leading, spacing: 12) {
                     HStack(spacing: 16) {
                         Text(item.title)

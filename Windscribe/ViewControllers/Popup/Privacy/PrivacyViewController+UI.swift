@@ -60,7 +60,7 @@ extension PrivacyViewController {
             actionButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 32),
             actionButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 68),
             actionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -68),
-            actionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30),
+            actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
             actionButton.heightAnchor.constraint(equalToConstant: 48)
         ])
     }
