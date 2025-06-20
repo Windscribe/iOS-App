@@ -199,10 +199,10 @@ extension LocationPermissionInfoViewController {
                 item: cancelButton as Any,
                 attribute: .bottom,
                 relatedBy: .equal,
-                toItem: view,
+                toItem: view.safeAreaLayoutGuide,
                 attribute: .bottom,
                 multiplier: 1.0,
-                constant: -16
+                constant: -24
             ),
             NSLayoutConstraint(
                 item: cancelButton as Any,

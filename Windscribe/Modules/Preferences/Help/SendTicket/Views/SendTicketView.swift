@@ -137,7 +137,7 @@ struct SendTicketView: View {
                         PlaceholderTextEditor(isDarkMode: viewModel.isDarkMode,
                                               placeholderText: TextsAsset.SubmitTicket.tellUs,
                                               textColor: viewModel.showError ? .red : (.from(.titleColor, viewModel.isDarkMode)),
-                                              text: viewModel.message)
+                                              text: $viewModel.message)
                             .padding(16)
                             .background(Color.from(.backgroundColor, viewModel.isDarkMode))
                             .cornerRadius(9)
@@ -190,16 +190,20 @@ struct PlaceholderTextEditor: View {
     let isDarkMode: Bool
     let placeholderText: String
     let textColor: Color
-    @State var text: String = ""
+    @Binding var text: String
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             if text.isEmpty {
                 Text(placeholderText)
                     .foregroundColor(.from(.infoColor, isDarkMode))
+                    .padding(.top, 8)
+                    .padding(.leading, 5)
             }
+
             TextEditor(text: $text)
                 .font(.text(.callout))
+                .foregroundColor(textColor)
                 .transparentScrolling()
                 .modifier(TextEditorInputModifiers())
         }

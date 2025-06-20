@@ -56,7 +56,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
 
     // Derived
     var isFormValid: Bool {
-        email.isValidEmail() && subject.count >= 3 && message.count >= 3
+        email.isValidEmail() && !subject.isEmpty && !message.isEmpty
     }
 
     init(

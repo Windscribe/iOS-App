@@ -24,8 +24,13 @@ class NotificationRepositoryImpl: NotificationRepository {
         self.pushNotificationsManager = pushNotificationsManager
     }
 
-    func getUpdatedNotifications(pcpid: String = "") -> Single<[Notice]> {
-        logger.logD(self, "Getting notifications from API.")
+    func getUpdatedNotifications() -> Single<[Notice]> {
+        let pcpid = (try? pushNotificationsManager.notification.value()?.pcpid) ?? ""
+
+        if !pcpid.isEmpty {
+            logger.logD(self, "Adding pcpid ID: \(pcpid) to notifications request.")
+        }
+
         return apiManager.getNotifications(pcpid: pcpid).map {
             self.localDatabase.saveNotifications(notifications: Array($0.notices))
             return Array($0.notices)
@@ -35,11 +40,7 @@ class NotificationRepositoryImpl: NotificationRepository {
     }
 
     func loadNotifications() {
-        let pcpId = (try? pushNotificationsManager.notification.value()?.pcpid) ?? ""
-        if !pcpId.isEmpty {
-            logger.logD(self, "Adding pcpid ID: \(pcpId) to notifications request.")
-        }
-        getUpdatedNotifications(pcpid: pcpId).subscribe(onSuccess: { notices in
+        getUpdatedNotifications().subscribe(onSuccess: { notices in
             self.notices.onNext(notices)
         }).disposed(by: disposeBag)
     }

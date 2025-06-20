@@ -72,7 +72,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     func loadNewsFeedData() {
         loadState = .loading
 
-        notificationRepository.getUpdatedNotifications(pcpid: "")
+        notificationRepository.getUpdatedNotifications()
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .tryMap { notifications in

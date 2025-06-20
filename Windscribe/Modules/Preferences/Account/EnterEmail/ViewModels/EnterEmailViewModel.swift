@@ -87,13 +87,18 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
             .receive(on: DispatchQueue.main)
             .sink(
                 receiveCompletion: { [weak self] completion in
-                    self?.showLoading = false
+                    guard let self = self else {
+                        return
+                    }
+
                     switch completion {
                     case .finished:
-                        self?.submitEmailResult.send(.success(()))
+                        self.sessionManager.keepSessionUpdated()
+                        self.submitEmailResult.send(.success(()))
                     case .failure(let error):
-                        self?.submitEmailResult.send(.failure(EmailError.from(error)))
+                        self.submitEmailResult.send(.failure(EmailError.from(error)))
                     }
+                    self.showLoading = false
                 },
                 receiveValue: { _ in }
             )

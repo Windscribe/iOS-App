@@ -84,7 +84,11 @@ struct AccountSettingsView: View {
                 get: { dialog != nil },
                 set: { if !$0 { dialog = nil } }
             ), actions: {
-                TextField(dialogPlaceHolder(dialog), text: $inputText)
+                if dialog == .password {
+                    SecureField(dialogPlaceHolder(dialog), text: $inputText)
+                } else {
+                    TextField(dialogPlaceHolder(dialog), text: $inputText)
+                }
 
                 Button(TextsAsset.confirm) {
                     handleConfirm(dialog: dialog, input: inputText)
@@ -151,7 +155,7 @@ struct AccountSettingsView: View {
                     .font(.medium(.callout))
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(14)
-                    .background(Color.actionGreen.opacity(0.05))
+                    .background(Color.actionGreen.opacity(0.20))
                     .cornerRadius(12)
                     .padding(.horizontal, 16)
             })
@@ -233,6 +237,7 @@ struct AccountSettingsView: View {
     }
 
     private func presentDialog(for type: AccountInputDialog) {
+        inputText = ""
         if #available(iOS 16, *) {
             dialog = type
         } else {
@@ -412,6 +417,7 @@ struct AccountRowView: View {
                     .background(Color.from(.separatorColor, isDarkMode))
             }
         }
+        .contentShape(Rectangle())
         .onTapGesture {
             if let action = row.action {
                 actionHandler(action)

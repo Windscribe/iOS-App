@@ -94,6 +94,24 @@ extension Observable {
             })
             .eraseToAnyPublisher()
     }
+
+        func toInitialPublisher() -> AnyPublisher<Element, Error> {
+            return Deferred {
+                Future { promise in
+                    let disposable = self.subscribe(
+                        onNext: { value in
+                            promise(.success(value))
+                        },
+                        onError: { error in
+                            promise(.failure(error))
+                        }
+                    )
+                    _ = disposable
+                }
+            }
+            .eraseToAnyPublisher()
+        }
+
 }
 
 // MARK: Observable Initial Value -> Combine (with error propagation)

@@ -269,11 +269,11 @@ class SignUpViewModelImpl: SignUpViewModel {
             .sink(receiveCompletion: { [weak self] result in
                 guard let self = self else { return }
 
-                self.showLoadingView = false
                 if case .failure(let error) = result {
                     self.logger.logI("SignUpViewModel", "Failed to signup: \(error)")
                     self.handleError(error)
                 }
+                self.showLoadingView = false
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
 
@@ -316,8 +316,8 @@ class SignUpViewModelImpl: SignUpViewModel {
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] _ in
-                self?.showLoadingView = false
                 self?.routeTo.send(.main)
+                self?.showLoadingView = false
             }, receiveValue: { [weak self] _ in
                 if self?.email.isEmpty == false {
                     self?.routeTo.send(.confirmEmail)
@@ -335,8 +335,6 @@ class SignUpViewModelImpl: SignUpViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] result in
                 guard let self = self else { return }
-
-                self.showLoadingView = false
 
                 if case .failure(let error) = result {
                     if ignoreError {
@@ -356,6 +354,8 @@ class SignUpViewModelImpl: SignUpViewModel {
                         }
                     }
                 }
+
+                self.showLoadingView = false
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
 
@@ -366,8 +366,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                 if self.emergencyConnectRepository.isConnected() == true {
                     self.disconnectFromEmergencyConnect()
                 } else {
-                    self.showLoadingView = false
                     self.routeTo.send(.main)
+
+                    self.showLoadingView = false
                 }
             }).store(in: &cancellables)
     }
@@ -388,8 +389,8 @@ class SignUpViewModelImpl: SignUpViewModel {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self.latencyRepository.loadLatency()
                 }
-                self.showLoadingView = false
                 self.routeTo.send(.main)
+                self.showLoadingView = false
             }).store(in: &cancellables)
     }
 
