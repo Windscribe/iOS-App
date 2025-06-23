@@ -103,6 +103,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let ipRepository: IPRepository
     let localDB: LocalDatabase
     let appReviewManager: AppReviewManaging
+    let customSoundPlaybackManager: CustomSoundPlaybackManaging
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -121,7 +122,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          securedNetwork: SecuredNetworkRepository,
          credentialsRepository: CredentialsRepository,
          ipRepository: IPRepository,
-         localDB: LocalDatabase) {
+         localDB: LocalDatabase,
+         customSoundPlaybackManager: CustomSoundPlaybackManaging) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -134,6 +136,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.ipRepository = ipRepository
         self.credentialsRepository = credentialsRepository
         self.localDB = localDB
+        self.customSoundPlaybackManager = customSoundPlaybackManager
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -362,6 +365,10 @@ extension ConnectionViewModel {
                 return
             }
 
+            if checkCanPlayDisconnectedSound() {
+                playSound(for: .disconnected)
+            }
+
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
@@ -554,9 +561,33 @@ extension ConnectionViewModel {
             displayLocalIPAddress()
         }
 
+        var canPlaySound = true
+        if let currentState = try? connectedState.value() {
+            canPlaySound = currentState.state != state
+        }
+        if canPlaySound {
+            playSound(for: state)
+        }
+
         connectedState.onNext(ConnectionStateInfo(state: state,
                                                   isCustomConfigSelected: self.locationsManager.isCustomConfigSelected(),
                                                   internetConnectionAvailable: false,
                                                   connectedWifi: nil))
+
+    }
+
+    private func checkCanPlayDisconnectedSound() -> Bool {
+        guard let currentState = try? connectedState.value() else {
+            return false
+        }
+        return currentState.state == .connected
+    }
+
+    private func playSound(for state: ConnectionState) {
+        if state == .connected {
+            customSoundPlaybackManager.playSound(for: .connect)
+        } else if state == .disconnected {
+            customSoundPlaybackManager.playSound(for: .disconnect)
+        }
     }
 }

@@ -108,7 +108,7 @@ class NodeTableViewCell: BaseNodeCell {
         speedIcon.image = UIImage(named: ImagesAsset.tenGig)
         speedIcon.layer.opacity = 0.8
         speedIcon.setImageColor(color: .white)
-        contentView.addSubview(speedIcon)
+        iconsStackView.insertArrangedSubview(speedIcon, at: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -129,8 +129,7 @@ class NodeTableViewCell: BaseNodeCell {
 
         NSLayoutConstraint.activate([
             // speedIcon
-            speedIcon.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 1),
-            speedIcon.rightAnchor.constraint(equalTo: latencyLabel.leftAnchor, constant: -14),
+            speedIcon.centerYAnchor.constraint(equalTo: iconsStackView.centerYAnchor, constant: 1),
             speedIcon.heightAnchor.constraint(equalToConstant: 20),
             speedIcon.widthAnchor.constraint(equalToConstant: 20)
         ])

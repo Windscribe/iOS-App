@@ -41,5 +41,10 @@ struct LookAndFeelSettingsView: View {
         }
         .navigationTitle(TextsAsset.LookFeel.title)
         .navigationBarTitleDisplayMode(.inline)
+        .alert(viewModel.alertType.title, isPresented: $viewModel.showAlert) {
+            Button(TextsAsset.ok, role: .cancel) { }
+        } message: {
+            Text(viewModel.alertType.message)
+        }
     }
 }

@@ -17,7 +17,7 @@ enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
     var action: MenuEntryActionType? { .none(title: TextsAsset.Robert.manageCustomRules, parentId: id) }
     var message: String? { nil }
     var secondaryEntries: [MenuSecondaryEntryItem] { [] }
-    var title: String { "" }
+    var title: String { TextsAsset.Robert.manageCustomRules }
     var icon: String { "" }
 }
 

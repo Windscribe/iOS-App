@@ -98,10 +98,11 @@ enum MenuEntryActionResponseType {
     case button(parentId: Int)
     case link(parentId: Int)
     case none(parentId: Int)
-    case file(selecteURL: URL, parentId: Int)
+    case file(selecteURL: URL?, parentId: Int)
     case fileExport(parentId: Int)
     case infoLink(parentId: Int)
     case field(value: String, parentId: Int)
+    case buttonFileExport(success: Bool, parentId: Int)
 
     var parentId: Int {
         switch self {
@@ -113,7 +114,8 @@ enum MenuEntryActionResponseType {
             let .file(_, parentId),
             let .fileExport(parentId),
             let .infoLink(parentId),
-            let .field(_, parentId):
+            let .field(_, parentId),
+            let .buttonFileExport(_, parentId):
             return parentId
         }
     }
@@ -124,20 +126,25 @@ struct MenuSecondaryEntryItem: MenuEntryItemType {
     var title: String
     var icon: String
     var action: MenuEntryActionType?
+    var separator: Bool?
 
     static func == (lhs: MenuSecondaryEntryItem, rhs: MenuSecondaryEntryItem) -> Bool {
         lhs.id == rhs.id
     }
 
-    init(entry: any MenuEntryItemType) {
+    init(entry: any MenuEntryItemType, hasSeparator: Bool = false) {
         id = entry.id
         title = entry.title
         icon = entry.icon
         action = entry.action
+        separator = hasSeparator
     }
 
     var hasSeparator: Bool {
-        !(title.isEmpty && icon.isEmpty)
+        if let separator = separator {
+            return separator || !(title.isEmpty && icon.isEmpty)
+        }
+        return !(title.isEmpty && icon.isEmpty)
     }
 
     var isFixedHeight: Bool {

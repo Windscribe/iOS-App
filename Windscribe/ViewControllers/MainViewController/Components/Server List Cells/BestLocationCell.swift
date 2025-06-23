@@ -37,7 +37,9 @@ class BestLocationCellModel: ServerCellModelType {
 
     var actionSize: CGFloat = 16.0
 
-    var actionRightOffset: CGFloat = 24.0
+    var actionRightOffset: CGFloat = 15.0
+
+    var actionVisible: Bool = true
 
     var actionOpacity: Float = 0.4
 

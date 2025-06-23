@@ -98,9 +98,17 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
                 if case let .failure(error) = completion {
-                    self?.loadingState = .error(error.localizedDescription)
-                    self?.logger.logE("AccountViewModel", "Failed to load session: \(error)")
+                    guard let session = localDatabase.getSessionSync() else {
+                        self.loadingState = .error(error.localizedDescription)
+                        self.logger.logE("AccountViewModel", "Failed to load session: \(error)")
+                        return
+                    }
+                    self.currentSession = session
+                    self.buildSections(from: session)
+                    self.loadingState = .success
+
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }

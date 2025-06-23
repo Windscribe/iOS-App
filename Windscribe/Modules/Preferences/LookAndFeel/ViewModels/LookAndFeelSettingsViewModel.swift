@@ -9,9 +9,64 @@
 import Foundation
 import Combine
 
+enum LookAndFeelImportAlertType {
+    case customImportFailed
+    case customImportSucceeded
+    case customExportFailed
+    case customExportSucceeded
+    case resetSucceeded
+    case importFailed
+    case importSucceeded
+    case empty
+
+    var title: String {
+        switch self {
+        case .customImportFailed:
+            return TextsAsset.CustomLocationNames.importTitleFailed
+        case .customImportSucceeded:
+            return TextsAsset.CustomLocationNames.importTitleSuccess
+        case .customExportFailed:
+            return TextsAsset.CustomLocationNames.exportTitleFailed
+        case .customExportSucceeded:
+            return TextsAsset.CustomLocationNames.exportTitleSuccess
+        case .resetSucceeded:
+            return TextsAsset.CustomLocationNames.resetTitleSuccess
+        case .importFailed:
+            return TextsAsset.CustomAssetsAlert.failedTitle
+        case .importSucceeded:
+            return TextsAsset.CustomAssetsAlert.successTitle
+        default:
+            return ""
+        }
+    }
+
+    var message: String {
+        switch self {
+        case .customImportFailed:
+            return TextsAsset.CustomLocationNames.failedImporting
+        case .customImportSucceeded:
+            return TextsAsset.CustomLocationNames.successfullyImported
+        case .customExportFailed:
+            return TextsAsset.CustomLocationNames.failedExporting
+        case .customExportSucceeded:
+            return TextsAsset.CustomLocationNames.successfullyExported
+        case .resetSucceeded:
+            return TextsAsset.CustomLocationNames.resetSuccessful
+        case .importFailed:
+            return TextsAsset.CustomAssetsAlert.failedMessage
+        case .importSucceeded:
+            return TextsAsset.CustomAssetsAlert.successMessage
+        default:
+            return ""
+        }
+    }
+}
+
 protocol LookAndFeelSettingsViewModel: ObservableObject {
     var isImporterPresented: Bool { get set }
     var isDarkMode: Bool { get set }
+    var showAlert: Bool { get set }
+    var alertType: LookAndFeelImportAlertType { get set }
     var entries: [LookAndFeelEntryType] { get set }
 
     func entrySelected(_ entry: LookAndFeelEntryType,
@@ -19,9 +74,10 @@ protocol LookAndFeelSettingsViewModel: ObservableObject {
 }
 
 final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
-
     @Published var isImporterPresented: Bool = false
     @Published var isDarkMode: Bool = false
+    @Published var alertType: LookAndFeelImportAlertType = .empty
+    @Published var showAlert: Bool = false
     @Published var entries: [LookAndFeelEntryType] = []
 
     private let logger: FileLogger
@@ -134,6 +190,10 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                     lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: backgroundDisconnect)
                 }
             } else if case let .file(selecteURL, parentId) = actionSelected {
+                guard let selecteURL = selecteURL else {
+
+                    return
+                }
                 if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.id {
                     saveImageURL(pickedImageFile: selecteURL, for: .connect)
                 } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id {
@@ -143,11 +203,15 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
         case .sound:
             if case let .multiple(newOption, parentId) = actionSelected {
                 if parentId == LookAndFeelSecondaryEntryIDs.soundConnected.id {
-                    preferences.saveSoundEffectConnect(value: newOption)
-                    soundEffectConnect = SoundEffectType(mainCategory: newOption, subtypeTitle: nil)
+                    let subType = getSoundEffectSubType(from: newOption)
+                    soundEffectConnect = SoundEffectType(mainCategory: newOption,
+                                                         subtypeTitle: subType)
+                    preferences.saveSoundEffectConnect(value: subType ?? newOption)
                 } else if parentId == LookAndFeelSecondaryEntryIDs.soundDisconnected.id {
-                    preferences.saveSoundEffectDisconnect(value: newOption)
-                    soundEffectDisconnect = SoundEffectType(mainCategory: newOption, subtypeTitle: nil)
+                    let subType = getSoundEffectSubType(from: newOption)
+                    soundEffectDisconnect = SoundEffectType(mainCategory: newOption,
+                                                         subtypeTitle: subType)
+                    preferences.saveSoundEffectDisconnect(value: subType ?? newOption)
                 } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.id {
                     guard let subtype = SoundEffectSubtype(rawValue: newOption) else { return }
                     soundEffectConnect = SoundEffectType.bundled(subtype: subtype)
@@ -158,6 +222,10 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                     preferences.saveSoundEffectDisconnect(value: newOption)
                 }
             } else if case let .file(selecteURL, parentId) = actionSelected {
+                guard let selecteURL = selecteURL else {
+
+                    return
+                }
                 if parentId == LookAndFeelSecondaryEntryIDs.fileContentConnect.id {
                     saveSoundURL(pickedSoundFile: selecteURL, for: .connect)
                 } else if parentId == LookAndFeelSecondaryEntryIDs.fileContentDisconnect.id {
@@ -166,16 +234,27 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
             }
         case .customLocation:
             if case let .button(parentId) = actionSelected {
-                if parentId == LookAndFeelSecondaryEntryIDs.customNameExport.id {
-
-                } else if parentId == LookAndFeelSecondaryEntryIDs.customNameReset.id {
+                if parentId == LookAndFeelSecondaryEntryIDs.customNameReset.id {
                     resetLocations()
                 }
             } else if case let .file(selecteURL, _) = actionSelected {
+                guard let selecteURL = selecteURL else {
+                    return
+                }
                 importLocationFile(pickedLocationFile: selecteURL)
+            } else if case let .buttonFileExport(success, _) = actionSelected {
+                showAlert(for: success ? .customExportSucceeded : .customExportFailed)
             }
         }
         reloadItems()
+    }
+
+    private func getSoundEffectSubType(from newOption: String) -> String? {
+        if newOption == Fields.Values.bundled,
+           let first = SoundEffectSubtype.allCases.first {
+            return first.rawValue
+        }
+        return nil
     }
 }
 
@@ -183,8 +262,10 @@ extension LookAndFeelSettingsViewModelImpl {
     private func saveImageURL(pickedImageFile fileURL: URL, for domain: BackgroundAssetDomainType) {
         backgroundFileManager.saveImageFile(from: fileURL, for: domain) { [weak self] copiedURL in
             guard let self = self, let copiedURL = copiedURL else {
+                self?.showAlert(for: .importFailed)
                 return
             }
+            showAlert(for: .importSucceeded)
             saveCustomBackgroundPath(domain: domain, path: copiedURL.path)
         }
     }
@@ -192,8 +273,10 @@ extension LookAndFeelSettingsViewModelImpl {
     private func saveSoundURL(pickedSoundFile fileURL: URL, for domain: SoundAssetDomainType) {
         soundFileManager.saveSoundFile(from: fileURL, for: domain) { [weak self] copiedURL in
             guard let self = self, let copiedURL = copiedURL else {
+                self?.showAlert(for: .importFailed)
                 return
             }
+            showAlert(for: .importSucceeded)
             saveCustomSoundPath(domain: domain, path: copiedURL.path)
         }
     }
@@ -223,6 +306,11 @@ extension LookAndFeelSettingsViewModelImpl {
             self.reloadItems()
         }
     }
+
+    private func showAlert(for alertType: LookAndFeelImportAlertType) {
+        self.alertType = alertType
+        showAlert = true
+    }
 }
 
 extension LookAndFeelSettingsViewModelImpl {
@@ -234,7 +322,9 @@ extension LookAndFeelSettingsViewModelImpl {
                 let regionList = try JSONDecoder().decode([ExportedRegion].self, from: jsonData)
                 serverRepository.updateRegions(with: regionList)
                 logger.logI("LookAndFeelSettingsViewModel", "Import Locations finished")
+                showAlert(for: .customImportSucceeded)
             } catch {
+                showAlert(for: .customImportFailed)
                 logger.logE("LookAndFeelSettingsViewModel", "Import Locations failed, \(error.localizedDescription)")
             }
         }
@@ -260,6 +350,7 @@ extension LookAndFeelSettingsViewModelImpl {
 
     private func resetLocations() {
         serverRepository.updateRegions(with: [])
+        showAlert(for: .resetSucceeded)
     }
 
     private func buildLocationsJsonString(serverModels: [ServerModel]) throws -> Data {

@@ -35,17 +35,9 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
         UIImage(named: ImagesAsset.Servers.staticIP)?.withRenderingMode(.alwaysTemplate)
     }
 
-    override var actionImage: UIImage? {
-        nil
-    }
+    override var actionImage: UIImage? { nil }
 
-    override var actionSize: CGFloat {
-        0.0
-    }
-
-    override var actionRightOffset: CGFloat {
-        0.0
-    }
+    override var actionVisible: Bool { false }
 }
 
 class StaticIPTableViewCell: BaseNodeCell {

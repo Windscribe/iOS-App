@@ -18,6 +18,7 @@ protocol ServerCellModelType {
     var iconAspect: UIView.ContentMode { get }
     var clipIcon: Bool { get }
     var actionImage: UIImage? { get }
+    var actionVisible: Bool { get }
     var iconSize: CGFloat { get }
     var actionSize: CGFloat { get }
     var actionRightOffset: CGFloat { get }
@@ -56,6 +57,7 @@ class ServerListCell: SwipeTableViewCell {
     var nameLabel = UILabel()
     var nameInfoStackView = UIStackView()
     var healthCircle = HealthCircleView()
+    var iconsStackView = UIStackView()
     var tableViewTag: Int = 0
 
     var viewModel: ServerCellModelType?
@@ -80,10 +82,14 @@ class ServerListCell: SwipeTableViewCell {
         circleView.layer.borderWidth = 1
         circleView.clipsToBounds = true
 
+        iconsStackView.axis = .horizontal
+        iconsStackView.spacing = 16
+        iconsStackView.addArrangedSubview(actionImage)
+
         contentView.addSubview(icon)
         contentView.addSubview(circleView)
         contentView.addSubview(healthCircle)
-        contentView.addSubview(actionImage)
+        contentView.addSubview(iconsStackView)
         contentView.addSubview(nameInfoStackView)
     }
 
@@ -108,6 +114,7 @@ class ServerListCell: SwipeTableViewCell {
         nameInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         healthCircle.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        iconsStackView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // icon
@@ -135,9 +142,11 @@ class ServerListCell: SwipeTableViewCell {
             nameInfoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             nameInfoStackView.leftAnchor.constraint(equalTo: icon.rightAnchor, constant: 16),
 
+            // iconsStackView
+            iconsStackView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            iconsStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: -viewModel.actionRightOffset),
+
             // actionImage
-            actionImage.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
-            actionImage.rightAnchor.constraint(equalTo: self.rightAnchor, constant: (viewModel.actionSize/2.0 - viewModel.actionRightOffset)),
             actionImage.heightAnchor.constraint(equalToConstant: viewModel.actionSize),
             actionImage.widthAnchor.constraint(equalToConstant: viewModel.actionSize)
         ])
@@ -153,6 +162,7 @@ class ServerListCell: SwipeTableViewCell {
         actionImage.image = viewModel.actionImage
         actionImage.layer.opacity = viewModel.actionOpacity
         actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
+        actionImage.isHidden = !viewModel.actionVisible
 
         nameLabel.textColor = viewModel.nameColor(for: isDarkMode)
 

@@ -16,12 +16,15 @@ class CustomConfigListFooterView: WSView {
     weak var delegate: AddCustomConfigDelegate?
     lazy var actionButton = UIButton(type: .system)
     lazy var label = UILabel()
-    let disposeBag = DisposeBag()
+    lazy var backgroundView = UIView()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
+    lazy var lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
+    let disposeBag = DisposeBag()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .whiteWithOpacity(opacity: 0.05)
+
+        addSubview(backgroundView)
 
         actionButton.backgroundColor = UIColor.clear
         addSubview(actionButton)
@@ -31,13 +34,21 @@ class CustomConfigListFooterView: WSView {
         label.layer.opacity = 0.7
         addSubview(label)
 
+        bindViews()
+    }
+
+    private func bindViews() {
         actionButton.rx.tap.bind { [weak self] _ in
             self?.delegate?.addCustomConfig()
         }.disposed(by: disposeBag)
+        languageManager.activelanguage.subscribe(onNext: { [weak self] _ in
+            self?.label.text = TextsAsset.addCustomConfig
+        }).disposed(by: disposeBag)
 
-        languageManager.activelanguage.subscribe(onNext: { [self] _ in
-            label.text = TextsAsset.addCustomConfig
-        }, onError: { _ in }).disposed(by: disposeBag)
+        lookAndFeelRepository.isDarkModeSubject.subscribe(onNext: { [weak self] isDarkMode in
+            self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
+            self?.backgroundColor = .from(.backgroundColor, isDarkMode)
+        }).disposed(by: disposeBag)
     }
 
     override func setupLocalized() {
@@ -57,6 +68,7 @@ class CustomConfigListFooterView: WSView {
         super.layoutSubviews()
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         label.translatesAutoresizingMaskIntoConstraints = false
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
 
         layoutViews()
     }
@@ -64,6 +76,12 @@ class CustomConfigListFooterView: WSView {
     private func layoutViews() {
         let centerYConstant = UIScreen.hasTopNotch ? -10.0 : 0.0
         NSLayoutConstraint.activate([
+            // backgroundView
+            backgroundView.topAnchor.constraint(equalTo: topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            backgroundView.rightAnchor.constraint(equalTo: rightAnchor),
+            backgroundView.leftAnchor.constraint(equalTo: leftAnchor),
+
             // label
             label.centerYAnchor.constraint(equalTo: actionButton.centerYAnchor, constant: centerYConstant),
             label.centerXAnchor.constraint(equalTo: centerXAnchor),
