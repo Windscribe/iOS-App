@@ -32,91 +32,94 @@ struct AccountSettingsView: View {
     }
 
     var body: some View {
-        if case let .loading(isFullScreen) = viewModel.loadingState {
-            MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: isFullScreen)
-                .transition(.opacity)
-                .animation(.easeInOut, value: viewModel.loadingState)
-        } else {
+        ZStack {
+            if case let .loading(isFullScreen) = viewModel.loadingState, isFullScreen {
+                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: true)
+            } else {
+                PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 14) {
+                            ForEach(viewModel.sections) { section in
+                                AccountSectionView(
+                                    isDarkMode: viewModel.isDarkMode,
+                                    section: section,
+                                    accountStatus: viewModel.accountEmailStatus,
+                                    handleRowAction: viewModel.handleRowAction,
+                                    presentDialog: { dialogType in
+                                        presentDialog(for: dialogType)
+                                    }
+                                )
 
-            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 14) {
-                        ForEach(viewModel.sections) { section in
-                            AccountSectionView(
-                                isDarkMode: viewModel.isDarkMode,
-                                section: section,
-                                accountStatus: viewModel.accountEmailStatus,
-                                handleRowAction: viewModel.handleRowAction,
-                                presentDialog: { dialogType in
-                                    presentDialog(for: dialogType)
+                                if section.type == .info, viewModel.shouldShowAddEmailButton {
+                                    infoActionButtons()
                                 }
-                            )
 
-                            if section.type == .info, viewModel.shouldShowAddEmailButton {
-                                infoActionButtons()
-                            }
-
-                            if section.type == .plan, viewModel.shouldShowPlanActionButtons {
-                                planActionButtons()
+                                if section.type == .plan, viewModel.shouldShowPlanActionButtons {
+                                    planActionButtons()
+                                }
                             }
                         }
-                    }
-                    .onAppear {
-                        if !hasLoaded {
-                            viewModel.loadSession()
-                            hasLoaded = true
+                        .onAppear {
+                            if !hasLoaded {
+                                viewModel.loadSession()
+                                hasLoaded = true
+                            }
                         }
+                        .padding(.top, 8)
                     }
-                    .padding(.top, 8)
                 }
             }
-            .dynamicTypeSize(dynamicTypeRange)
-            .navigationTitle(TextsAsset.Account.title)
-            .navigationBarTitleDisplayMode(.inline)
-            .alert(item: $viewModel.alertMessage) { alert in
-                Alert(
-                    title: Text(alert.title),
-                    message: Text(alert.message),
-                    dismissButton: .default(Text(alert.buttonText))
-                )
-            }
-            .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
-                get: { dialog != nil },
-                set: { if !$0 { dialog = nil } }
-            ), actions: {
-                if dialog == .password {
-                    SecureField(dialogPlaceHolder(dialog), text: $inputText)
-                } else {
-                    TextField(dialogPlaceHolder(dialog), text: $inputText)
-                }
 
-                Button(TextsAsset.confirm) {
-                    handleConfirm(dialog: dialog, input: inputText)
-                }
+            if case let .loading(isFullScreen) = viewModel.loadingState, !isFullScreen {
+                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: false)
+            }
+        }
+        .dynamicTypeSize(dynamicTypeRange)
+        .navigationTitle(TextsAsset.Account.title)
+        .navigationBarTitleDisplayMode(.inline)
+        .alert(item: $viewModel.alertMessage) { alert in
+            Alert(
+                title: Text(alert.title),
+                message: Text(alert.message),
+                dismissButton: .default(Text(alert.buttonText))
+            )
+        }
+        .alert(dialogTitle(dialog), isPresented: Binding<Bool>(
+            get: { dialog != nil },
+            set: { if !$0 { dialog = nil } }
+        ), actions: {
+            if dialog == .password {
+                SecureField(dialogPlaceHolder(dialog), text: $inputText)
+            } else {
+                TextField(dialogPlaceHolder(dialog), text: $inputText)
+            }
 
-                Button(TextsAsset.cancel, role: .cancel) { }
-            }, message: {
-                Text(dialogDescription(dialog))
-            })
-            .id(dialog?.id)
-            .sheet(item: $fallbackDialog) { dialog in
-                MenuTextFieldDialogView(
-                    title: dialogTitle(dialog),
-                    description: dialogDescription(dialog),
-                    placeholder: dialogPlaceHolder(dialog),
-                    isSecure: dialog == .password,
-                    onConfirm: { input in
-                        handleConfirm(dialog: dialog, input: input)
-                    },
-                    onCancel: {
-                        fallbackDialog = nil
-                    }
-                )
+            Button(TextsAsset.confirm) {
+                handleConfirm(dialog: dialog, input: inputText)
             }
-            .sheet(isPresented: $showUpgradeModal) {
-                PlanUpgradeViewControllerWrapper()
-                    .edgesIgnoringSafeArea(.all)
-            }
+
+            Button(TextsAsset.cancel, role: .cancel) { }
+        }, message: {
+            Text(dialogDescription(dialog))
+        })
+        .id(dialog?.id)
+        .sheet(item: $fallbackDialog) { dialog in
+            MenuTextFieldDialogView(
+                title: dialogTitle(dialog),
+                description: dialogDescription(dialog),
+                placeholder: dialogPlaceHolder(dialog),
+                isSecure: dialog == .password,
+                onConfirm: { input in
+                    handleConfirm(dialog: dialog, input: input)
+                },
+                onCancel: {
+                    fallbackDialog = nil
+                }
+            )
+        }
+        .sheet(isPresented: $showUpgradeModal) {
+            PlanUpgradeViewControllerWrapper()
+                .edgesIgnoringSafeArea(.all)
         }
     }
 

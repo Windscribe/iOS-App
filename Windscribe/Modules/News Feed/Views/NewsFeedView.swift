@@ -12,7 +12,7 @@ struct NewsFeedView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel: NewsFeedViewModel
 
-    @State private var safariURL: URL?
+    @State private var safariItem: SafariItem?
     @State private var hasLoaded = false
 
     init(viewModel: NewsFeedViewModel) {
@@ -64,7 +64,12 @@ struct NewsFeedView: View {
                 .onChange(of: viewModel.viewToLaunch) { view in
                     switch view {
                     case let .safari(url):
-                        safariURL = url
+                        safariItem = nil
+                        viewModel.viewToLaunch = .unknown
+
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                            safariItem = SafariItem(url: url)
+                        }
                     case let .payment(promo, pcpid):
                         if let currentController = UIApplication.shared.topMostViewController() {
                             viewModel.navigateToPromotionView(with: promo, and: pcpid, from: currentController)
@@ -77,8 +82,8 @@ struct NewsFeedView: View {
                         break
                     }
                 }
-                .sheet(item: $safariURL) { url in
-                    SafariView(url: url)
+                .sheet(item: $safariItem) { item in
+                    SafariView(url: item.url)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle(TextsAsset.NewsFeed.title)
@@ -101,7 +106,7 @@ struct NewsFeedView: View {
 struct NewsFeedListItem: View {
     let item: NewsFeedDataModel
     let didTapExpand: () -> Void
-    let didTapAction: (ActionLinkModel) -> Void
+    let didTapAction: (NewsFeedActionType) -> Void
 
     @Binding var isDarkMode: Bool
 

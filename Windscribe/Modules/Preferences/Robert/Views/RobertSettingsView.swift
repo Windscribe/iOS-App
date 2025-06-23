@@ -23,58 +23,64 @@ struct RobertSettingsView: View {
     }
 
     var body: some View {
-        PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
-            ScrollView {
-                VStack(spacing: 16) {
-                    Button {
-                        viewModel.infoSelected()
-                    } label: {
-                        ZStack {
-                            Text(viewModel.description)
-                                .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
-                                .multilineTextAlignment(.leading)
-                                .font(.regular(.footnote))
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 12)
-                            HStack {
-                                Spacer()
-                                Image(ImagesAsset.Robert.mask)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 189)
-                                    .frame(maxHeight: .infinity, alignment: .top)
-                                    .foregroundColor(.from(.backgroundColor, viewModel.isDarkMode))
+        ZStack {
+            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                ScrollView {
+                    VStack(spacing: 16) {
+                        Button {
+                            viewModel.infoSelected()
+                        } label: {
+                            ZStack {
+                                Text(viewModel.description)
+                                    .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
+                                    .multilineTextAlignment(.leading)
+                                    .font(.regular(.footnote))
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 12)
+                                HStack {
+                                    Spacer()
+                                    Image(ImagesAsset.Robert.mask)
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 189)
+                                        .frame(maxHeight: .infinity, alignment: .top)
+                                        .foregroundColor(.from(.backgroundColor, viewModel.isDarkMode))
+                                }
                             }
-                        }
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.from(.backgroundColor, viewModel.isDarkMode), lineWidth: 1)
-                        )
-                        .padding(.horizontal, 16)
-                    }
-                    ForEach(viewModel.entries, id: \.self) { entry in
-                        FilterView(isDarkMode: viewModel.isDarkMode,
-                                   filter: entry,
-                                   action: { filter in
-                            viewModel.filterSelected(filter)
-                        })
-                    }
-                    Button {
-                        viewModel.customRulesSelected()
-                    } label: {
-                        Text(viewModel.customRulesEntry.title)
-                            .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
-                            .font(.medium(.callout))
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .padding(14)
-                            .background(Color.from(.backgroundColor, viewModel.isDarkMode))
-                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.from(.backgroundColor, viewModel.isDarkMode), lineWidth: 1)
+                            )
                             .padding(.horizontal, 16)
+                        }
+                        ForEach(viewModel.entries, id: \.self) { entry in
+                            FilterView(isDarkMode: viewModel.isDarkMode,
+                                       filter: entry,
+                                       action: { filter in
+                                viewModel.filterSelected(filter)
+                            })
+                        }
+                        Button {
+                            viewModel.customRulesSelected()
+                        } label: {
+                            Text(viewModel.customRulesEntry.title)
+                                .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                                .font(.medium(.callout))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(14)
+                                .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                                .cornerRadius(12)
+                                .padding(.horizontal, 16)
+                        }
                     }
+                    .padding(.top, 8)
                 }
-                .padding(.top, 8)
+                .dynamicTypeSize(dynamicTypeRange)
             }
-            .dynamicTypeSize(dynamicTypeRange)
+
+            if viewModel.isLoading {
+                MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: false)
+            }
         }
         .sheet(item: $viewModel.safariURL) { url in
             SafariView(url: url)

@@ -15,7 +15,7 @@ protocol NewsFeedModelType {
     var newsfeedData: BehaviorSubject<[NewsFeedDataModel]> { get }
     var viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> { get }
     func didTapToExpand(id: Int)
-    func didTapAction(action: ActionLinkModel)
+    func didTapAction(action: NewsFeedActionType)
 }
 
 class NewsFeedModel: NewsFeedModelType {
@@ -53,19 +53,36 @@ class NewsFeedModel: NewsFeedModelType {
                 if let id = openByDefault {
                     self.updateReadNotice(for: id)
                 }
+
+
                 return limitedNotifications.map { notification in
-                    let message = self.getMessage(description: notification.message)
+                    let (cleanMessage, parsedActionLink) = self.getMessage(description: notification.message)
                     var status = self.isRead(id: notification.id)
                     if openByDefault == notification.id {
                         status = true
                     }
+
+                    let action: NewsFeedActionType?
+                    if let parsedLink = parsedActionLink {
+                        // Use standard from parsed HTML
+                        action = .standard(parsedLink)
+                    } else if let notificationAction = notification.action {
+                        // Only fallback to promo if message had no url parse
+                        action = .promo(pcpid: notificationAction.pcpid,
+                                        promoCode: notificationAction.promoCode,
+                                        label: notificationAction.label)
+                    } else {
+                        action = nil
+                    }
+
                     return NewsFeedDataModel(
                         id: notification.id,
                         title: notification.title,
                         date: Date(timeIntervalSince1970: TimeInterval(notification.date)),
-                        description: message.0,
+                        description: cleanMessage,
                         expanded: notification.id == openByDefault ? true : false,
-                        readStatus: status, actionLink: message.1)
+                        readStatus: status,
+                        action: action)
                 }
             }
             .subscribe(on: MainScheduler.asyncInstance)
@@ -138,17 +155,18 @@ class NewsFeedModel: NewsFeedModelType {
         newsfeedData.onNext(updatedFeeds)
     }
 
-    func didTapAction(action: ActionLinkModel) {
+    func didTapAction(action: NewsFeedActionType) {
         logger.logI("Newsfeed", "User tapped on newsfeed action: \(action)")
-        let queryParams = getQueryParameters(from: action.link)
-        if queryParams.keys.contains("promo") {
-            viewToLaunch.onNext(.payment(queryParams["promo"] ?? "", queryParams["pcpid"]))
-        } else {
-            if let url = URL(string: action.link) {
+
+        switch action {
+        case .standard(let standardAction):
+            if let url = URL(string: standardAction.link) {
                 viewToLaunch.onNext(.safari(url))
             } else {
-                logger.logE(self, "Unable to create url from: \(action.link)")
+                logger.logE(self, "Unable to create url from: \(standardAction.link)")
             }
+        case .promo(let pcpid, let promoCode, _):
+            viewToLaunch.onNext(.payment(promoCode ?? "", pcpid))
         }
     }
 
