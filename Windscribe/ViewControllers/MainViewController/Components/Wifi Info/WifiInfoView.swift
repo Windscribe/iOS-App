@@ -126,8 +126,6 @@ class WifiInfoView: UIView {
         nameLabel.text != TextsAsset.noNetworksAvailable &&
         network != nil
         actionButton.isHidden = !isNetwork
-        trustedIcon.isHidden = !isNetwork
-        paddingView.isHidden = !isNetwork
     }
 
     private func addViews() {

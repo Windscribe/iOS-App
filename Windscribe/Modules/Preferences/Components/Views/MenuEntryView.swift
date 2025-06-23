@@ -403,8 +403,25 @@ struct MenuFileButtonActionView: View {
     @State private var isImporterPresented = false
 
     var body: some View {
-        MenuButtonActionView(isDarkMode: isDarkMode, title: title, actionType: actionType, action: {
+        Button(action: {
             isImporterPresented = true
+        }, label: {
+            HStack {
+                if let title = title {
+                    Text(title)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                if let imageName = actionType.imageName {
+                    Image(imageName)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                }
+            }
         })
         .fileImporter(
             isPresented: $isImporterPresented,
@@ -431,9 +448,26 @@ struct MenuFileExportButtonActionView: View {
     @State private var document: MultiFormatDocument?
 
     var body: some View {
-        MenuButtonActionView(isDarkMode: isDarkMode, title: title, actionType: actionType, action: {
+        Button(action: {
             document = MultiFormatDocument(documentInfo: documentInfo)
             isExporterPresented = true
+        }, label: {
+            HStack {
+                if let title = title {
+                    Text(title)
+                        .foregroundColor(.from(.titleColor, isDarkMode))
+                        .font(.medium(.callout))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                if let imageName = actionType.imageName {
+                    Image(imageName)
+                        .resizable()
+                        .renderingMode(.template)
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 16, height: 16)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                }
+            }
         })
         .fileExporter(
                     isPresented: $isExporterPresented,
@@ -442,8 +476,10 @@ struct MenuFileExportButtonActionView: View {
                     defaultFilename: documentInfo.tempFileName
                 ) { result in
                     switch result {
-                    case .success(let url): print("Exported to: \(url)")
-                    case .failure(let error): print("Export failed: \(error)")
+                    case .success:
+                        action(.buttonFileExport(success: true, parentId: parentId))
+                    case .failure:
+                        action(.buttonFileExport(success: false, parentId: parentId))
                     }
                 }
     }
@@ -486,6 +522,8 @@ struct MenuFileSelectionView: View {
         ) { result in
             if let selectedURL = try? result.get().first {
                 action(.file(selecteURL: selectedURL, parentId: parentId))
+            } else {
+                action(.file(selecteURL: nil, parentId: parentId))
             }
         }
     }

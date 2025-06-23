@@ -117,7 +117,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var latencyViewModel: LatencyViewModel!
 
     var soundManager: SoundManaging!
-    var customSoundPlaybackManager: CustomSoundPlaybackManaging!
     var logger: FileLogger!
 
     // MARK: constraints

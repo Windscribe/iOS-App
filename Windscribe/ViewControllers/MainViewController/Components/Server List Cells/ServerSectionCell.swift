@@ -50,7 +50,9 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 
     var actionSize: CGFloat = 16.0
 
-    var actionRightOffset: CGFloat = 24.0
+    var actionRightOffset: CGFloat = 16.0
+
+    var actionVisible: Bool = true
 
     var actionOpacity: Float {
         isExpanded ? 1.0 : 0.4

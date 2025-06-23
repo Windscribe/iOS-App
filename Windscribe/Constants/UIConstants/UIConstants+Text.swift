@@ -671,6 +671,13 @@ enum TextsAsset {
         static var resetTitleSuccess: String { "Reset Successful".localized }
     }
 
+    enum CustomAssetsAlert {
+        static var successTitle: String { return "Success!".localized }
+        static var failedTitle: String { return "Failed!".localized }
+        static var successMessage: String { return "Assets imported successfully!".localized }
+        static var failedMessage: String { return "Failed to import asset.".localized }
+    }
+
     enum PreferencesDescription {
         static var locationOrder: String { return "Arrange locations alphabetically, geographically, or by latency.".localized }
         static var displayLatency: String { return "Display latency as signal strength bars or in milliseconds.".localized }

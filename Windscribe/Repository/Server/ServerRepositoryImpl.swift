@@ -29,10 +29,19 @@ class ServerRepositoryImpl: ServerRepository {
         self.advanceRepository = advanceRepository
         self.preferences = preferences
         self.logger = logger
+
+        loadInitialServers()
     }
 
     var currentServerModels: [ServerModel] {
         (try? updatedServerModelsSubject.value()) ?? []
+    }
+
+    private func loadInitialServers() {
+        if let servers = self.localDatabase.getServers() {
+            self.rebuildFavouriteList(serverList: servers)
+            self.updateServerModels(servers: servers)
+        }
     }
 
     func getUpdatedServers() -> Single<[Server]> {
@@ -54,8 +63,10 @@ class ServerRepositoryImpl: ServerRepository {
                 self.updateServerModels(servers: servers)
                 return servers
             }.catch { error in
-                if let ips = self.localDatabase.getServers() {
-                    return Single.just(ips)
+                if let servers = self.localDatabase.getServers() {
+                    self.rebuildFavouriteList(serverList: servers)
+                    self.updateServerModels(servers: servers)
+                    return Single.just(servers)
                 } else {
                     return Single.error(error)
                 }

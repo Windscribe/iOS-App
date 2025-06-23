@@ -60,7 +60,9 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var actionSize: CGFloat { 20.0 }
 
-    var actionRightOffset: CGFloat { 24.0 }
+    var actionRightOffset: CGFloat { 14.0 }
+
+    var actionVisible: Bool { true }
 
     var actionOpacity: Float {
         0.4
@@ -136,6 +138,7 @@ class BaseNodeCell: ServerListCell {
     var nickNameLabel = UILabel()
     var latencyLabel = UILabel()
     var signalBarsIcon = UIImageView()
+    var latencyView = UIView()
 
     var baseNodeCellViewModel: BaseNodeCellViewModelType? {
         didSet {
@@ -161,10 +164,12 @@ class BaseNodeCell: ServerListCell {
 
         latencyLabel.font = UIFont.medium(size: 9)
         latencyLabel.layer.opacity = 0.7
-        contentView.addSubview(latencyLabel)
+        latencyView.addSubview(latencyLabel)
 
         signalBarsIcon.image = UIImage(named: ImagesAsset.CellSignalBars.full)
-        contentView.addSubview(signalBarsIcon)
+        latencyView.addSubview(signalBarsIcon)
+
+        iconsStackView.insertArrangedSubview(latencyView, at: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -188,6 +193,7 @@ class BaseNodeCell: ServerListCell {
         latencyLabel.translatesAutoresizingMaskIntoConstraints = false
         signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
         nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        latencyView.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // nickNameLabel
@@ -199,15 +205,20 @@ class BaseNodeCell: ServerListCell {
             favButton.heightAnchor.constraint(equalTo: actionImage.heightAnchor, constant: 8),
             favButton.widthAnchor.constraint(equalTo: actionImage.widthAnchor, constant: 8),
 
+            // latencyView
+            latencyView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            latencyView.heightAnchor.constraint(equalToConstant: 24),
+            latencyView.widthAnchor.constraint(equalToConstant: 24),
+
             // latencyLabel
-            signalBarsIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: -6),
-            signalBarsIcon.centerXAnchor.constraint(equalTo: latencyLabel.centerXAnchor),
-            signalBarsIcon.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
+            signalBarsIcon.centerYAnchor.constraint(equalTo: latencyView.centerYAnchor, constant: -6),
+            signalBarsIcon.centerXAnchor.constraint(equalTo: latencyView.centerXAnchor),
             signalBarsIcon.heightAnchor.constraint(equalToConstant: 11),
             signalBarsIcon.widthAnchor.constraint(equalToConstant: 11),
 
             // latencyLabel
-            latencyLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor, constant: 6),
+            latencyLabel.centerYAnchor.constraint(equalTo: latencyView.centerYAnchor, constant: 6),
+            latencyLabel.centerXAnchor.constraint(equalTo: latencyView.centerXAnchor),
             latencyLabel.heightAnchor.constraint(equalToConstant: 12)
 
         ])
@@ -224,7 +235,6 @@ class BaseNodeCell: ServerListCell {
 
         latencyLabel.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
         signalBarsIcon.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
-
 
         super.updateUI()
     }

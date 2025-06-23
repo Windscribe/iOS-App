@@ -112,7 +112,7 @@ enum LookAndFeelEntryType: MenuEntryHeaderType, Hashable {
     var secondaryEntries: [MenuSecondaryEntryItem] {
         makeSecondaryEntries()
             .map {
-                MenuSecondaryEntryItem(entry: $0)
+                MenuSecondaryEntryItem(entry: $0, hasSeparator: $0.hasSeparator)
             }
     }
 }
@@ -213,8 +213,6 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
         case .backgroundDisconnected: TextsAsset.LookFeel.disconnectedActionTitle
         case .soundConnected: TextsAsset.LookFeel.connectedActionTitle
         case .soundDisconnected: TextsAsset.LookFeel.disconnectedActionTitle
-        case .customNameImport: TextsAsset.LookFeel.importActionTitle
-        case .customNameExport: TextsAsset.LookFeel.exportActionTitle
         case .customNameReset: TextsAsset.LookFeel.resetActionTitle
         default: ""
         }
@@ -223,6 +221,13 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
     var icon: String { "" }
 
     var message: String? { nil }
+
+    var hasSeparator: Bool {
+        switch self {
+        case .fileContentConnect, .fileContentDisconnect : false
+        default: true
+        }
+    }
 
     var action: MenuEntryActionType? {
         switch self {
@@ -263,9 +268,9 @@ enum LookAndFeelSecondaryEntryType: MenuEntryItemType, Hashable {
                           options: bundledSoundsOptions,
                           parentId: id)
         case .customNameImport:
-                .buttonFile(title: "", fileTypes: [.json], parentId: id)
+                .buttonFile(title: TextsAsset.LookFeel.importActionTitle, fileTypes: [.json], parentId: id)
         case let .customNameExport(documentInfo):
-                .buttonFileExport(title: "", documentInfo: documentInfo, parentId: id)
+                .buttonFileExport(title: TextsAsset.LookFeel.exportActionTitle, documentInfo: documentInfo, parentId: id)
         case .customNameReset:
                 .button(title: "", parentId: id)
         case let .fileContentConnect(fileName, fileTypes):

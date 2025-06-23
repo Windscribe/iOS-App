@@ -69,6 +69,9 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         }.forEach {
             localDatabase.removeCustomConfig(fileId: $0.id)
         }
+        Task {
+            await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
+        }
     }
 
     // Stops tunnel

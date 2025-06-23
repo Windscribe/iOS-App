@@ -292,7 +292,8 @@ class ViewModels: Assembly {
                                 securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
-                                localDB: r.resolve(LocalDatabase.self)!)
+                                localDB: r.resolve(LocalDatabase.self)!,
+                                customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!)
         }.inObjectScope(.transient)
         container.register(ListSelectionViewModelType.self) { r in
             ListSelectionViewModel(
@@ -641,7 +642,6 @@ class ViewControllerModule: Assembly {
             vc.customConfigRepository = r.resolve(CustomConfigRepository.self)
             vc.viewModel = r.resolve(MainViewModelType.self)
             vc.soundManager = r.resolve(SoundManaging.self)
-            vc.customSoundPlaybackManager = r.resolve(CustomSoundPlaybackManaging.self)
             vc.logger = r.resolve(FileLogger.self)
             vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)

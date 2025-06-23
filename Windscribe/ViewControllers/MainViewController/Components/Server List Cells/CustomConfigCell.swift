@@ -43,19 +43,12 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
     }
 
     override var actionImage: UIImage? {
-        if areMissingCredentials {
-            return UIImage(named: ImagesAsset.missingCredentials)?.withRenderingMode(.alwaysTemplate)
-        }
-        return nil
+        UIImage(named: ImagesAsset.missingCredentials)?.withRenderingMode(.alwaysTemplate)
     }
 
-    override var actionSize: CGFloat {
-        areMissingCredentials ? 20.0 : 0.0
-    }
+    override var actionRightOffset: CGFloat { areMissingCredentials ? 14.0 : 11.0 }
 
-    override var actionRightOffset: CGFloat {
-        areMissingCredentials ? 24.0 : 0.0
-    }
+    override var actionVisible: Bool { areMissingCredentials }
 
     override var isSignalVisible: Bool { !areMissingCredentials }
 

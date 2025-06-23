@@ -62,9 +62,14 @@ struct RobertSettingsView: View {
                     Button {
                         viewModel.customRulesSelected()
                     } label: {
-                        MenuEntryView(item: viewModel.customRulesEntry, isDarkMode: viewModel.isDarkMode, action: { _ in
-                            viewModel.customRulesSelected()
-                        })
+                        Text(viewModel.customRulesEntry.title)
+                            .foregroundColor(.from(.titleColor, viewModel.isDarkMode))
+                            .font(.medium(.callout))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(14)
+                            .background(Color.from(.backgroundColor, viewModel.isDarkMode))
+                            .cornerRadius(12)
+                            .padding(.horizontal, 16)
                     }
                 }
                 .padding(.top, 8)
