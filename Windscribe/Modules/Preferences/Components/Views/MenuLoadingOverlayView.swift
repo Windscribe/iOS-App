@@ -18,7 +18,11 @@ struct MenuLoadingOverlayView: View {
             if isFullScreen {
                 Color.from(.actionBackgroundColor, isDarkMode)
                     .ignoresSafeArea()
+            } else {
+                Color.from(.actionBackgroundColor, isDarkMode).opacity(0.25)
+                    .edgesIgnoringSafeArea(.all)
             }
+
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .from(.iconColor, isDarkMode)))
                 .scaleEffect(1.5)

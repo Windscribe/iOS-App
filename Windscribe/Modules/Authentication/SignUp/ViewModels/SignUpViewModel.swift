@@ -367,7 +367,6 @@ class SignUpViewModelImpl: SignUpViewModel {
                     self.disconnectFromEmergencyConnect()
                 } else {
                     self.routeTo.send(.main)
-
                     self.showLoadingView = false
                 }
             }).store(in: &cancellables)

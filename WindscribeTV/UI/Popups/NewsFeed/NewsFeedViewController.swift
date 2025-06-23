@@ -20,7 +20,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
     var viewModel: NewsFeedModelType!, logger: FileLogger!, router: HomeRouter!, alertManager: AlertManagerV2!
     let disposeBag = DisposeBag()
-    var selectedActionLink: ActionLinkModel?
+    var selectedActionLink: NewsFeedActionType?
 
     // MARK: Overrides
 
@@ -108,8 +108,8 @@ extension NewsFeedViewController {
 
     private func setupDetailsView(with item: NewsFeedDataModel) {
         newsBodyText.text = item.description
-        if let action = item.actionLink {
-            button.setTitle(action.title, for: .normal)
+        if let action = item.action {
+            button.setTitle(action.actionText, for: .normal)
             buttonHiddingView.isHidden = false
             selectedActionLink = action
             button.addTapGesture(tapNumber: 1, target: self, action: #selector(onActionClick))

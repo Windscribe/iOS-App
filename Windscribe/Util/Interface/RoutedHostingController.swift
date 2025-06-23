@@ -75,8 +75,37 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if isMovingFromParent {
-            onPop?()
+
+        transitionCoordinator?.notifyWhenInteractionChanges { [weak self] context in
+            guard let self = self else { return }
+
+            if !context.isCancelled {
+                DispatchQueue.main.async {
+                    self.onPop?()
+                }
+            }
+        }
+
+        transitionCoordinator?.animate(alongsideTransition: nil, completion: { [weak self] _ in
+            guard let self = self else { return }
+
+            let wasPopped = self.navigationController?.viewControllers.contains(self) == false
+            if wasPopped {
+                DispatchQueue.main.async {
+                    self.onPop?()
+                }
+            }
+        })
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        navigationController?.setNavigationBarHidden(false, animated: false)
+
+        if let gesture = navigationController?.interactivePopGestureRecognizer {
+            gesture.isEnabled = true
+            gesture.delegate = self
         }
     }
 

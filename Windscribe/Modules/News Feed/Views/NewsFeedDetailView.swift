@@ -11,14 +11,14 @@ import SwiftUI
 struct NewsFeedDetailView: View {
     let item: NewsFeedDataModel
     let didTapExpand: () -> Void
-    let didTapAction: (ActionLinkModel) -> Void
+    let didTapAction: (NewsFeedActionType) -> Void
 
     @Binding var isDarkMode: Bool
     @State private var showRotation: Bool
 
     init(item: NewsFeedDataModel,
          didTapExpand: @escaping () -> Void,
-         didTapAction: @escaping (ActionLinkModel) -> Void,
+         didTapAction: @escaping (NewsFeedActionType) -> Void,
          isDarkMode: Binding<Bool>) {
         self.item = item
         self.didTapExpand = didTapExpand
@@ -56,12 +56,12 @@ struct NewsFeedDetailView: View {
                             .padding(.top, 4)
                     }
 
-                    if item.expanded, let actionLink = item.actionLink {
+                    if item.expanded, let actionLink = item.action {
                         Button(
                             action: {
                                 didTapAction(actionLink)
                             }, label: {
-                                Text(actionLink.title)
+                                Text(actionLink.actionText)
                                     .foregroundColor(isDarkMode ? .newsFeedButtonActionColor : .green)
                                     .font(.regular(.footnote))
                                     .frame(maxWidth: .infinity)

@@ -12,7 +12,7 @@ import RxSwift
 
 protocol NewsFeedViewModelProtocol: ObservableObject {
     func didTapToExpand(id: Int, allowMultipleExpansions: Bool )
-    func didTapAction(action: ActionLinkModel)
+    func didTapAction(action: NewsFeedActionType)
 
     var isDarkMode: Bool { get set }
 }
@@ -112,20 +112,33 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
         }
 
         return notifications.enumerated().map { index, notification in
-            let message = self.getMessage(description: notification.message)
+            let (cleanMessage, parsedActionLink) = self.getMessage(description: notification.message)
             var status = self.isRead(id: notification.id)
             if openByDefaultID == notification.id {
                 status = true
+            }
+
+            let action: NewsFeedActionType?
+            if let parsedLink = parsedActionLink {
+                // Use standard from parsed HTML
+                action = .standard(parsedLink)
+            } else if let notificationAction = notification.action {
+                // Only fallback to promo if message had no url parse
+                action = .promo(pcpid: notificationAction.pcpid,
+                                promoCode: notificationAction.promoCode,
+                                label: notificationAction.label)
+            } else {
+                action = nil
             }
 
             return NewsFeedDataModel(
                 id: notification.id,
                 title: notification.title,
                 date: Date(timeIntervalSince1970: TimeInterval(notification.date)),
-                description: message.0,
+                description: cleanMessage,
                 expanded: notification.id == openByDefaultID,
                 readStatus: status,
-                actionLink: message.1,
+                action: action,
                 isFirst: index == 0,
                 isLast: index == notifications.count - 1
             )
@@ -222,16 +235,20 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
     // MARK: Action Handling
 
-    func didTapAction(action: ActionLinkModel) {
-        logger.logI("Newsfeed", "User tapped on newsfeed action: \(action)")
-        let queryParams = getQueryParameters(from: action.link)
+    func didTapAction(action: NewsFeedActionType) {
+        logger.logI("Newsfeed", "User tapped on newsfeed action: \(action.actionText)")
 
-        if queryParams.keys.contains("promo") {
-            handlePayment(promoCode: queryParams["promo"] ?? "", pcpid: queryParams["pcpid"])
-        } else if isValidURL(action.link), let url = URL(string: action.link) {
-            viewToLaunch = .safari(url)
-        } else {
-            logger.logE("Newsfeed", "Invalid URL: \(action.link)")
+        switch action {
+        case .standard(let standardAction):
+            if isValidURL(standardAction.link), let url = URL(string: standardAction.link) {
+                viewToLaunch = .safari(url)
+            } else {
+                logger.logE("Newsfeed", "Invalid standard action URL: \(standardAction.link)")
+            }
+
+        case .promo(let pcpid, let promoCode, _):
+            let code = promoCode ?? ""
+            handlePayment(promoCode: code, pcpid: pcpid)
         }
     }
 

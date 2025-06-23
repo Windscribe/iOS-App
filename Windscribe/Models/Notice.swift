@@ -32,77 +32,6 @@ struct NoticeModel {
     }
 }
 
-@objcMembers class Notice: Object, Decodable {
-    dynamic var id: Int = 0
-    dynamic var title: String = ""
-    dynamic var message: String = ""
-    dynamic var date: Int = 0
-    dynamic var popup: Bool = false
-    dynamic var permFree: Bool = false
-    dynamic var permPro: Bool = false
-    dynamic var action: NoticeAction?
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case title
-        case message
-        case date
-        case popup
-        case permFree = "perm_free"
-        case permPro = "perm_pro"
-        case action
-    }
-
-    override static func primaryKey() -> String? {
-        return "id"
-    }
-
-    required convenience init(from decoder: Decoder) throws {
-        self.init()
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-
-        let decodedID = try container.decode(Int.self, forKey: .id)
-        let decodedTitle = try container.decode(String.self, forKey: .title)
-        let decodedMessage = try container.decode(String.self, forKey: .message)
-        let decodedDate = try container.decode(Int.self, forKey: .date)
-        let decodedPopup = try container.decodeIfPresent(Int.self, forKey: .popup) == 1
-        let decodedPermPro = try container.decodeIfPresent(Int.self, forKey: .permPro) == 1
-        let decodedPermFree = try container.decodeIfPresent(Int.self, forKey: .permFree) == 1
-        let decodedAction = try container.decodeIfPresent(NoticeAction.self, forKey: .action)
-
-        setValue(decodedID, forKey: "id")
-        setValue(decodedTitle, forKey: "title")
-        setValue(decodedMessage, forKey: "message")
-        setValue(decodedDate, forKey: "date")
-        setValue(decodedPopup, forKey: "popup")
-        setValue(decodedPermPro, forKey: "permPro")
-        setValue(decodedPermFree, forKey: "permFree")
-        setValue(decodedAction, forKey: "action")
-    }
-
-    func getModel() -> NoticeModel {
-        return NoticeModel(id: id,
-                           title: title,
-                           message: message,
-                           date: date,
-                           popup: popup,
-                           action: action)
-    }
-}
-
-@objcMembers class ReadNotice: Object {
-    dynamic var id: Int = 0
-
-    convenience init(noticeID: Int) {
-        self.init()
-        id = noticeID
-    }
-
-    override static func primaryKey() -> String? {
-        return "id"
-    }
-}
-
 @objcMembers class NoticeAction: Object, Decodable {
     dynamic var type: String?
     dynamic var pcpid: String?
@@ -119,10 +48,63 @@ struct NoticeModel {
     required convenience init(from decoder: Decoder) throws {
         self.init()
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        type = try container.decodeIfPresent(String.self, forKey: .type)
-        pcpid = try container.decodeIfPresent(String.self, forKey: .pcpid)
-        promoCode = try container.decodeIfPresent(String.self, forKey: .promoCode)
-        label = try container.decodeIfPresent(String.self, forKey: .label)
+
+        // Realm-safe decoding
+        setValue(try container.decodeIfPresent(String.self, forKey: .type), forKey: "type")
+        setValue(try container.decodeIfPresent(String.self, forKey: .pcpid), forKey: "pcpid")
+        setValue(try container.decodeIfPresent(String.self, forKey: .promoCode), forKey: "promoCode")
+        setValue(try container.decodeIfPresent(String.self, forKey: .label), forKey: "label")
+    }
+}
+
+@objcMembers class Notice: Object, Decodable {
+    dynamic var id: Int = 0
+    dynamic var title: String = ""
+    dynamic var message: String = ""
+    dynamic var date: Int = 0
+    dynamic var popup: Bool = false
+    dynamic var permFree: Bool = false
+    dynamic var permPro: Bool = false
+    dynamic var action: NoticeAction?
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, message, date, popup
+        case permFree = "perm_free"
+        case permPro = "perm_pro"
+        case action
+    }
+
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+
+    required convenience init(from decoder: Decoder) throws {
+        self.init()
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        setValue(try container.decode(Int.self, forKey: .id), forKey: "id")
+        setValue(try container.decode(String.self, forKey: .title), forKey: "title")
+        setValue(try container.decode(String.self, forKey: .message), forKey: "message")
+        setValue(try container.decode(Int.self, forKey: .date), forKey: "date")
+        setValue(try container.decodeIfPresent(Int.self, forKey: .popup) == 1, forKey: "popup")
+        setValue(try container.decodeIfPresent(Int.self, forKey: .permPro) == 1, forKey: "permPro")
+        setValue(try container.decodeIfPresent(Int.self, forKey: .permFree) == 1, forKey: "permFree")
+
+        if container.contains(.action) {
+            let actionObj = try container.decodeIfPresent(NoticeAction.self, forKey: .action)
+            setValue(actionObj, forKey: "action")
+        } else {
+            setValue(nil, forKey: "action")
+        }
+    }
+
+    func getModel() -> NoticeModel {
+        return NoticeModel(id: id,
+                           title: title,
+                           message: message,
+                           date: date,
+                           popup: popup,
+                           action: action)
     }
 }
 
@@ -131,15 +113,30 @@ struct NoticeList: Decodable {
 
     enum CodingKeys: String, CodingKey {
         case data
+    }
+
+    enum DataKeys: String, CodingKey {
         case notifications
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
+        let dataContainer = try container.nestedContainer(keyedBy: DataKeys.self, forKey: .data)
+        let array = try dataContainer.decode([Notice].self, forKey: .notifications)
         notices = List<Notice>()
-        if let noticesArray = try data.decodeIfPresent([Notice].self, forKey: .notifications) {
-            notices.append(objectsIn: noticesArray)
-        }
+        notices.append(objectsIn: array)
+    }
+}
+
+@objcMembers class ReadNotice: Object {
+    dynamic var id: Int = 0
+
+    convenience init(noticeID: Int) {
+        self.init()
+        id = noticeID
+    }
+
+    override static func primaryKey() -> String? {
+        return "id"
     }
 }

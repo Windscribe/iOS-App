@@ -41,6 +41,7 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     @Published var safariURL: URL?
     @Published var entries: [RobertFilter] = []
     @Published var customRulesEntry: RobertEntryType = .customRules
+    @Published var isLoading: Bool = false
 
     private let logger: FileLogger
     private let apiManager: APIManager
@@ -123,11 +124,15 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
 
     func filterSelected(_ filter: RobertFilter) {
         let status: Int32 = filter.enabled ? 0 : 1
+        isLoading = true
+
         apiManager.updateRobertSettings(id: filter.id, status: status)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
+                self.isLoading = false
+
                 if case let .failure(error) = completion,
                    let error = error as? Errors {
                     var newError = ""
@@ -168,6 +173,8 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
                         }
                     }, receiveValue: {_ in})
                     .store(in: &cancellables)
+
+                self.isLoading = false
             })
             .store(in: &cancellables)
     }
