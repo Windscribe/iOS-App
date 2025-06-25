@@ -134,9 +134,6 @@ final class SoundManager: SoundManaging {
     }
 
     func quickPlay(named name: String, extension ext: String = "caf") {
-        if let player = audioPlayers[name], player.isPlaying {
-            player.stop()
-        }
         playSound(named: name, withExtension: ext, volume: 1.0, style: .instant)
     }
 
@@ -148,6 +145,11 @@ final class SoundManager: SoundManaging {
     func resumeSound(named name: String) {
         guard let player = audioPlayers[name], !player.isPlaying else { return }
         player.play()
+    }
+
+    func stopAllSounds() {
+        taggedPlayers.forEach { $0.value.stop() }
+        audioPlayers.forEach { $0.value.stop() }
     }
 
     // SystemSoundID

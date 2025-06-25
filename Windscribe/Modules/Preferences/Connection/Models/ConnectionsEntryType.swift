@@ -151,18 +151,18 @@ enum ConnectionSecondaryType: MenuEntryItemType, Hashable {
     var action: MenuEntryActionType? {
         switch self {
         case .connectionModeInfo:
-                .infoLink(message: makeInfoLink(from: TextsAsset.Connection.connectionModeDescription), parentId: id)
+                .infoLink(message: TextsAsset.Connection.connectionModeDescription, parentId: id)
         case let .protocolMenu(currentOption, options),
             let .portMenu(currentOption, options):
                 .multiple(currentOption: currentOption, options: options, parentId: id)
         case .connectedDnsInfo:
-                .infoLink(message: makeInfoLink(from: TextsAsset.Connection.connectedDNSDescription), parentId: id)
+                .infoLink(message: TextsAsset.Connection.connectedDNSDescription, parentId: id)
         case let .connectedDnsCustom(value):
                 .field(value: value, placeHolder: TextsAsset.Connection.connectedDNSValueFieldDescription, parentId: id)
         case .allowLanInfo:
-                .infoLink(message: makeInfoLink(from: TextsAsset.Connection.allowLanDescription), parentId: id)
+                .infoLink(message: TextsAsset.Connection.allowLanDescription, parentId: id)
         case .circunventCensorshipInfo:
-                .infoLink(message: makeInfoLink(from: TextsAsset.Connection.circumventCensorshipDescription), parentId: id)
+                .infoLink(message: TextsAsset.Connection.circumventCensorshipDescription, parentId: id)
         }
     }
 }
