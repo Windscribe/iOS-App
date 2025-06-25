@@ -13,7 +13,6 @@ import RxSwift
 
 extension LocalDatabaseImpl {
     // MARK: migration
-
     func migrate() {
         Realm.Configuration.defaultConfiguration = Realm.Configuration(
             schemaVersion: 53,
@@ -260,4 +259,6 @@ extension LocalDatabaseImpl {
             }, deleteRealmIfMigrationNeeded: false
         )
     }
+
+    var doNotDeleteObjects: [String] { [String(describing: FavNode.self)] }
 }
