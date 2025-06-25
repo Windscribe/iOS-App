@@ -532,3 +532,27 @@
 
 "Complete Puzzle \n to continue" = "Selesaikan teka-teki \n untuk melanjutkan";
 "Slide puzzle piece into place" = "Geser potongan teka-teki ke tempatnya";
+
+"Invalid session auth or api parameters provided." = "Autentikasi sesi atau parameter API tidak valid.";
+"Invalid session auth." = "Autentikasi sesi tidak valid.";
+"Failed to process the upgrade using the receipt." = "Gagal memproses peningkatan menggunakan struk.";
+"Unable to verify the receipt with Apple." = "Tidak dapat memverifikasi struk dengan Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe tidak mendukung peningkatan melalui versi TestFlight. Jika Anda melakukan pembayaran selama periode TestFlight, pembayaran tersebut tidak akan dibebankan karena hanya untuk tujuan pengujian.";
+"Missing transaction ID. Please ensure you have an active subscription." = "ID transaksi hilang. Pastikan Anda memiliki langganan aktif.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Struk ini sudah diterapkan ke akun Anda. Jika Anda masih belum ditingkatkan, hubungi dukungan.";
+"The network appears to be offline." = "Jaringan tampaknya offline.";
+"Unable to reach the server. Please try again." = "Tidak dapat terhubung ke server. Silakan coba lagi.";
+"No data found." = "Data tidak ditemukan.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 dan ip3 tidak tersedia untuk mengonfigurasi profil ini.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Anda telah mencapai batas kunci WireGuard. Apakah Anda ingin menghapus kunci tertua?";
+"2FA code required to login." = "Kode 2FA diperlukan untuk masuk.";
+"Invalid 2FA Code provided." = "Kode 2FA yang dimasukkan tidak valid.";
+"Unknown error." = "Kesalahan tidak diketahui.";
+
+"Authentication Token retrieval failed." = "Gagal mengambil token autentikasi.";
+"Captcha image decoding failed. Please try again later." = "Gagal mendekode gambar captcha. Silakan coba lagi nanti.";
+"Failed to load data" = "Gagal memuat data";
+"Failed to get Robert Filters." = "Gagal mendapatkan filter Robert.";
+"Unable to load robert rules. Check your network connection." = "Tidak dapat memuat aturan Robert. Periksa koneksi jaringan Anda.";
+"Location Load" = "Beban Lokasi";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Menampilkan beban lokasi. Batang yang lebih pendek berarti beban lebih ringan.";

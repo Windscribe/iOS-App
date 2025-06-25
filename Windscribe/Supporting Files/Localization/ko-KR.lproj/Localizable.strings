@@ -532,3 +532,27 @@
 
 "Complete Puzzle \n to continue" = "퍼즐을 완료하세요 \n 계속하려면";
 "Slide puzzle piece into place" = "퍼즐 조각을 제자리에 맞추세요";
+
+"Invalid session auth or api parameters provided." = "잘못된 세션 인증 또는 API 매개변수가 제공되었습니다.";
+"Invalid session auth." = "세션 인증이 잘못되었습니다.";
+"Failed to process the upgrade using the receipt." = "영수증을 사용한 업그레이드 처리에 실패했습니다.";
+"Unable to verify the receipt with Apple." = "Apple과 영수증을 확인할 수 없습니다.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe는 TestFlight 버전에서의 업그레이드를 지원하지 않습니다. TestFlight 기간에 결제하셨다면 테스트 용도이므로 실제로 청구되지 않습니다.";
+"Missing transaction ID. Please ensure you have an active subscription." = "트랜잭션 ID가 없습니다. 활성 구독이 있는지 확인해 주세요.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "이 영수증은 이미 계정에 적용되었습니다. 여전히 업그레이드되지 않았다면 지원팀에 문의하세요.";
+"The network appears to be offline." = "네트워크가 오프라인인 것 같습니다.";
+"Unable to reach the server. Please try again." = "서버에 연결할 수 없습니다. 다시 시도해 주세요.";
+"No data found." = "데이터를 찾을 수 없습니다.";
+"Ip1 and ip3 are not available to configure this profile." = "이 프로필을 구성하려면 ip1 및 ip3을 사용할 수 없습니다.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "WireGuard 키 한도에 도달했습니다. 가장 오래된 키를 삭제하시겠습니까?";
+"2FA code required to login." = "로그인하려면 2FA 코드가 필요합니다.";
+"Invalid 2FA Code provided." = "잘못된 2FA 코드가 제공되었습니다.";
+"Unknown error." = "알 수 없는 오류.";
+
+"Authentication Token retrieval failed." = "인증 토큰을 가져오지 못했습니다.";
+"Captcha image decoding failed. Please try again later." = "캡차 이미지를 해독하지 못했습니다. 나중에 다시 시도해 주세요.";
+"Failed to load data" = "데이터 로딩 실패";
+"Failed to get Robert Filters." = "Robert 필터를 가져오지 못했습니다.";
+"Unable to load robert rules. Check your network connection." = "Robert 규칙을 불러올 수 없습니다. 네트워크 연결을 확인하세요.";
+"Location Load" = "위치 부하";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "위치의 부하를 표시합니다. 막대가 짧을수록 부하가 적습니다.";

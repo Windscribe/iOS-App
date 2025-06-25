@@ -532,3 +532,43 @@
 
 "Complete Puzzle \n to continue" = "Löse das Puzzle \n um fortzufahren";
 "Slide puzzle piece into place" = "Schiebe das Puzzlestück an die richtige Stelle";
+
+"Invalid session auth or api parameters provided." = "Ungültige Sitzungs-Authentifizierung oder API-Parameter angegeben.";
+"Invalid session auth." = "Ungültige Sitzungs-Authentifizierung.";
+"Failed to process the upgrade using the receipt." = "Upgrade mit der Quittung konnte nicht verarbeitet werden.";
+"Unable to verify the receipt with Apple." = "Quittung konnte nicht bei Apple verifiziert werden.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe unterstützt keine Upgrades über die TestFlight-Version. Sollten Sie in diesem Zeitraum gezahlt haben, wird der Betrag nicht belastet, da er nur zu Testzwecken dient.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Transaktions-ID fehlt. Bitte stellen Sie sicher, dass Ihr Abonnement aktiv ist.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Diese Quittung wurde Ihrem Konto bereits gutgeschrieben. Wenn Sie noch nicht hochgestuft wurden, wenden Sie sich an den Support.";
+"The network appears to be offline." = "Das Netzwerk scheint offline zu sein.";
+"Unable to reach the server. Please try again." = "Server nicht erreichbar. Bitte erneut versuchen.";
+"No data found." = "Keine Daten gefunden.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 und ip3 sind für diese Profilkonfiguration nicht verfügbar.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Sie haben Ihr Limit an WireGuard-Schlüsseln erreicht. Möchten Sie den ältesten Schlüssel löschen?";
+"2FA code required to login." = "Zum Einloggen ist ein 2FA-Code erforderlich.";
+"Invalid 2FA Code provided." = "Ungültiger 2FA-Code eingegeben.";
+"Unknown error." = "Unbekannter Fehler.";
+
+"Invalid session auth or api parameters provided." = "Ungültige Sitzungs-Authentifizierung oder API-Parameter angegeben.";
+"Invalid session auth." = "Ungültige Sitzungs-Authentifizierung.";
+"Failed to process the upgrade using the receipt." = "Upgrade mit der Quittung konnte nicht verarbeitet werden.";
+"Unable to verify the receipt with Apple." = "Quittung konnte nicht bei Apple verifiziert werden.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe unterstützt keine Upgrades über die TestFlight-Version. Sollten Sie in diesem Zeitraum gezahlt haben, wird der Betrag nicht belastet, da er nur zu Testzwecken dient.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Transaktions-ID fehlt. Bitte stellen Sie sicher, dass Ihr Abonnement aktiv ist.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Diese Quittung wurde Ihrem Konto bereits gutgeschrieben. Wenn Sie noch nicht hochgestuft wurden, wenden Sie sich an den Support.";
+"The network appears to be offline." = "Das Netzwerk scheint offline zu sein.";
+"Unable to reach the server. Please try again." = "Server nicht erreichbar. Bitte erneut versuchen.";
+"No data found." = "Keine Daten gefunden.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 und ip3 sind für diese Profilkonfiguration nicht verfügbar.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Sie haben Ihr Limit an WireGuard-Schlüsseln erreicht. Möchten Sie den ältesten Schlüssel löschen?";
+"2FA code required to login." = "Zum Einloggen ist ein 2FA-Code erforderlich.";
+"Invalid 2FA Code provided." = "Ungültiger 2FA-Code eingegeben.";
+"Unknown error." = "Unbekannter Fehler.";
+
+"Authentication Token retrieval failed." = "Authentifizierungstoken konnte nicht abgerufen werden.";
+"Captcha image decoding failed. Please try again later." = "Captcha-Bild konnte nicht dekodiert werden. Bitte versuchen Sie es später erneut.";
+"Failed to load data" = "Daten konnten nicht geladen werden";
+"Failed to get Robert Filters." = "Robert-Filter konnten nicht abgerufen werden.";
+"Unable to load robert rules. Check your network connection." = "Robert-Regeln konnten nicht geladen werden. Überprüfen Sie Ihre Netzwerkverbindung.";
+"Location Load" = "Standortauslastung";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Zeigt die Auslastung eines Standorts an. Kürzere Balken bedeuten geringere Auslastung.";

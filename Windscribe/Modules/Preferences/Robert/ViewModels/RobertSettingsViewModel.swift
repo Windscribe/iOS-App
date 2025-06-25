@@ -98,9 +98,9 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
                     var newError = ""
                     switch error {
                     case let .apiError(e):
-                        newError = e.errorMessage ?? "Failed to get Robert Filters."
+                        newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
                     default:
-                        newError = "Failed to get Robert Filters. \(error.description)"
+                        newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
                     }
                     self.logger.logE("GeneralSettingsViewModel", newError)
                     errorMessage = newError
@@ -138,9 +138,9 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
                     var newError = ""
                     switch error {
                     case let .apiError(e):
-                        newError = e.errorMessage ?? "Failed to update Robert Setting."
+                        newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
                     default:
-                        newError = "Failed to update Robert Setting. \(error.description)"
+                        newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
                     }
                     self.logger.logE("GeneralSettingsViewModel", newError)
                     errorMessage = newError
@@ -164,9 +164,9 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
                             var newError = ""
                             switch error {
                             case let .apiError(e):
-                                newError = e.errorMessage ?? "Failed to sync Robert Setting."
+                                newError = e.errorMessage ?? "Failed to sync Robert Settings."
                             default:
-                                newError = "Failed to sync Robert Setting. \(error.description)"
+                                newError = "Failed to sync Robert Settings. \(error.description)"
                             }
                             self.logger.logE("GeneralSettingsViewModel", newError)
                             errorMessage = newError

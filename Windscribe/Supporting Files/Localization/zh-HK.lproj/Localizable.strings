@@ -532,3 +532,27 @@
 
 "Complete Puzzle \n to continue" = "完成拼圖 \n 以繼續";
 "Slide puzzle piece into place" = "將拼圖碎片滑動到正確位置";
+
+"Invalid session auth or api parameters provided." = "提供的工作階段驗證或 API 參數無效。";
+"Invalid session auth." = "工作階段驗證無效。";
+"Failed to process the upgrade using the receipt." = "使用收據處理升級失敗。";
+"Unable to verify the receipt with Apple." = "無法向 Apple 驗證收據。";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe 不支援透過 TestFlight 版本升級。如在 TestFlight 期間付款，該筆款項不會被扣除，僅供測試用途。";
+"Missing transaction ID. Please ensure you have an active subscription." = "缺少交易 ID。請確保您有有效訂閱。";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "此收據已套用到您的帳戶。如仍未升級，請聯絡客服。";
+"The network appears to be offline." = "網絡似乎已離線。";
+"Unable to reach the server. Please try again." = "無法連線到伺服器，請再試一次。";
+"No data found." = "找不到資料。";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 和 ip3 不可用於設定此設定檔。";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "您已達到 WireGuard 金鑰上限。要刪除最舊的金鑰嗎？";
+"2FA code required to login." = "登入需要 2FA 驗證碼。";
+"Invalid 2FA Code provided." = "提供的 2FA 驗證碼無效。";
+"Unknown error." = "未知錯誤。";
+
+"Authentication Token retrieval failed." = "無法取得驗證權杖。";
+"Captcha image decoding failed. Please try again later." = "驗證碼圖片解碼失敗。請稍後再試。";
+"Failed to load data" = "無法載入資料";
+"Failed to get Robert Filters." = "無法取得 Robert 過濾器。";
+"Unable to load robert rules. Check your network connection." = "無法載入 Robert 規則。請檢查您的網絡連線。";
+"Location Load" = "位置負載";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "顯示位置負載。較短的條表示較少使用量。";

@@ -534,3 +534,44 @@
 
 "Complete Puzzle \n to continue" = "Завершите головоломку \n чтобы продолжить";
 "Slide puzzle piece into place" = "Перетащите часть головоломки на место";
+
+"Invalid session auth or api parameters provided." = "Предоставлены неверные параметры аутентификации сессии или API.";
+"Invalid session auth." = "Неверная аутентификация сессии.";
+"Failed to process the upgrade using the receipt." = "Не удалось обработать обновление по чеку.";
+"Unable to verify the receipt with Apple." = "Не удалось подтвердить чек в Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe не поддерживает обновления через версию TestFlight. Если вы оплатили в период TestFlight, средства не будут списаны, так как это только для тестирования.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Отсутствует ID транзакции. Убедитесь, что у вас активная подписка.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Этот чек уже применён к вашему аккаунту. Если вы всё ещё не обновлены, обратитесь в поддержку.";
+"The network appears to be offline." = "Сеть недоступна.";
+"Unable to reach the server. Please try again." = "Не удаётся подключиться к серверу. Попробуйте ещё раз.";
+"No data found." = "Данные не найдены.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 и ip3 недоступны для настройки этого профиля.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Вы достигли лимита ключей WireGuard. Удалить самый старый ключ?";
+"2FA code required to login." = "Для входа требуется 2FA-код.";
+"Invalid 2FA Code provided." = "Указан неверный 2FA-код.";
+"Unknown error." = "Неизвестная ошибка.";
+
+"Invalid session auth or api parameters provided." = "Предоставлены неверные параметры аутентификации сессии или API.";
+"Invalid session auth." = "Неверная аутентификация сессии.";
+"Failed to process the upgrade using the receipt." = "Не удалось обработать обновление по чеку.";
+"Unable to verify the receipt with Apple." = "Не удалось подтвердить чек в Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe не поддерживает обновления через версию TestFlight. Если вы оплатили в период TestFlight, средства не будут списаны, так как это только для тестирования.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Отсутствует ID транзакции. Убедитесь, что у вас активная подписка.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Этот чек уже применён к вашему аккаунту. Если вы всё ещё не обновлены, обратитесь в поддержку.";
+"The network appears to be offline." = "Сеть недоступна.";
+"Unable to reach the server. Please try again." = "Не удаётся подключиться к серверу. Попробуйте ещё раз.";
+"No data found." = "Данные не найдены.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 и ip3 недоступны для настройки этого профиля.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Вы достигли лимита ключей WireGuard. Удалить самый старый ключ?";
+"2FA code required to login." = "Для входа требуется 2FA-код.";
+"Invalid 2FA Code provided." = "Указан неверный 2FA-код.";
+"Unknown error." = "Неизвестная ошибка.";
+"Too many failed attempts. Please wait a moment and try again." = "Слишком много неудачных попыток. Подождите немного и попробуйте снова.";
+
+"Authentication Token retrieval failed." = "Не удалось получить токен аутентификации.";
+"Captcha image decoding failed. Please try again later." = "Не удалось расшифровать изображение капчи. Пожалуйста, попробуйте позже.";
+"Failed to load data" = "Не удалось загрузить данные";
+"Failed to get Robert Filters." = "Не удалось получить фильтры Роберта.";
+"Unable to load robert rules. Check your network connection." = "Не удалось загрузить правила Роберта. Проверьте сетевое соединение.";
+"Location Load" = "Загрузка локации";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Показывает загрузку локации. Более короткие полосы означают меньшую нагрузку.";

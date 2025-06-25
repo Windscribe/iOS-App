@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)setAuthHash:(NSString*)authHash;
 -(BOOL)isExist;
 -(BOOL)loginWithAuthHash;
--(void)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa;
+-(void)authTokenLogin:(BOOL)useAsciiCaptcha;
+-(void)login:(NSString*)username password:(NSString*)password code2fa:(NSString*)code2fa secureToken:(NSString*)secureToken captchaSolution:(NSString*)captchaSolution captchaTrailX:(NSArray<NSNumber*>*)captchaTrailX captchaTrailY:(NSArray<NSNumber*>*)captchaTrailY;
 -(void)logout;
 -(void)fetchSession;
 -(void)fetchServerCredentials;
@@ -32,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSString*)serverConfigs;
 -(NSString*)notifications;
 -(NSString*)checkUpdate;
+-(NSString*)authTokenLoginResult;
 -(void)setUpdateIntervals:(int)sessionInDisconnectedStateMs sessionInConnectedStateMs:(int)sessionInConnectedStateMs locationsMs:(int)locationsMs staticIpsMs:(int)staticIpsMs serverConfigsAndCredentialsMs:(int)serverConfigsAndCredentialsMs portMapMs:(int)portMapMs notificationsMs:(int)notificationsMs checkUpdateMs:(int)checkUpdateMs;
 
 @end

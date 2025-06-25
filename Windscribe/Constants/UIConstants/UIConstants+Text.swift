@@ -252,6 +252,10 @@ enum TextsAsset {
         return "Confirm".localized
     }
 
+    static var failedToLoadData: String {
+        return "Failed to load data".localized
+    }
+
     enum SignInError {
         static var usernameExpectedEmailProvided: String {
             return "Please login with your username, not your email".localized
@@ -578,6 +582,14 @@ enum TextsAsset {
 
         static var description: String {
             return "R.O.B.E.R.T. is a customizable server-side domain and IP blocking tool. Select the block lists you wish to apply on all your devices by toggling the switch.".localized
+        }
+
+        static var failedToGetFilters: String {
+            return "Failed to get Robert Filters.".localized
+        }
+
+        static var unableToLoadRules: String {
+            return "Unable to load robert rules. Check your network connection.".localized
         }
     }
 
@@ -2215,6 +2227,14 @@ enum TextsAsset {
 
         static var captchaSliderDescription: String {
             return "Slide puzzle piece into place".localized
+        }
+
+        static var tokenRetrievalFailed: String {
+            return "Authentication Token retrieval failed.".localized
+        }
+
+        static var captchaImageDecodingFailed: String {
+            return "Captcha image decoding failed. Please try again later.".localized
         }
     }
 }

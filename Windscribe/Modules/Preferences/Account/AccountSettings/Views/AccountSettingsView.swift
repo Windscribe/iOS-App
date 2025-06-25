@@ -341,7 +341,7 @@ struct AccountRowView: View {
         VStack(spacing: 0) {
             HStack(alignment: .top) {
                 HStack(spacing: 6) {
-                    if row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) {
+                    if row.shouldShowExclamationIcon(accountStatus: accountStatus) {
                         Image(systemName: "exclamationmark.circle")
                             .foregroundColor(row.shouldShowConfirmEmailBanner(accountStatus: accountStatus) ? .orangeYellow : .from(.iconColor, isDarkMode))
                     }

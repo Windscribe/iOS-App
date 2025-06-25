@@ -149,7 +149,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     private func handleCompletion(_ completion: Subscribers.Completion<Error>) {
         switch completion {
         case .failure(let error):
-            self.loadState = .error("Failed to load data: \(error.localizedDescription)")
+            self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
             self.logger.logE("Newsfeed", "Data Load Error: \(error)")
         case .finished:
             self.loadState = .loaded

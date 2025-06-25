@@ -556,3 +556,27 @@
 
 "Complete Puzzle \n to continue" = "आगे बढ़ने के लिए \n पहेली पूरी करें";
 "Slide puzzle piece into place" = "पहेली का टुकड़ा स्थान पर स्लाइड करें";
+
+"Invalid session auth or api parameters provided." = "अमान्य सत्र प्रमाणीकरण या API पैरामीटर प्रदान किए गए हैं।";
+"Invalid session auth." = "अमान्य सत्र प्रमाणीकरण।";
+"Failed to process the upgrade using the receipt." = "रसीद के साथ अपग्रेड प्रक्रिया विफल रही।";
+"Unable to verify the receipt with Apple." = "Apple के साथ रसीद सत्यापित नहीं हो पाई।";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe TestFlight संस्करण के माध्यम से अपग्रेड को समर्थित नहीं करता। यदि आपने TestFlight अवधि के दौरान भुगतान किया है तो निश्चिंत रहें, यह शुल्क नहीं लिया जाएगा क्योंकि यह केवल परीक्षण के लिए है।";
+"Missing transaction ID. Please ensure you have an active subscription." = "लेनदेन आईडी गुम है। कृपया सुनिश्चित करें कि आपकी सदस्यता सक्रिय है।";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "यह रसीद पहले ही आपके खाते पर लागू हो चुकी है। यदि अभी भी अपग्रेड नहीं हुआ है, तो सहायता के लिए समर्थन से संपर्क करें।";
+"The network appears to be offline." = "नेटवर्क ऑफ़लाइन प्रतीत हो रहा है।";
+"Unable to reach the server. Please try again." = "सर्वर तक नहीं पहुंच सके, कृपया पुनः प्रयास करें।";
+"No data found." = "कोई डेटा नहीं मिला।";
+"Ip1 and ip3 are not available to configure this profile." = "इस प्रोफ़ाइल को कॉन्फ़िगर करने के लिए ip1 और ip3 उपलब्ध नहीं हैं।";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "आप WireGuard कुंजियों की सीमा पर पहुँच गए हैं। क्या आप सबसे पुरानी कुंजी हटाना चाहते हैं?";
+"2FA code required to login." = "लॉगिन करने के लिए 2FA कोड आवश्यक है।";
+"Invalid 2FA Code provided." = "अमान्य 2FA कोड प्रदान किया गया।";
+"Unknown error." = "अज्ञात त्रुटि।";
+
+"Authentication Token retrieval failed." = "प्रमाणीकरण टोकन प्राप्त करने में विफल।";
+"Captcha image decoding failed. Please try again later." = "कैप्चा छवि डिकोड नहीं हो सकी। कृपया बाद में पुनः प्रयास करें।";
+"Failed to load data" = "डेटा लोड करने में विफल";
+"Failed to get Robert Filters." = "रॉबर्ट फ़िल्टर प्राप्त करने में विफल।";
+"Unable to load robert rules. Check your network connection." = "रॉबर्ट नियम लोड नहीं हो पाए। कृपया अपना नेटवर्क कनेक्शन जांचें।";
+"Location Load" = "स्थान लोड";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "स्थान के लोड को दर्शाएं। छोटी पट्टियाँ कम उपयोग को दर्शाती हैं।";

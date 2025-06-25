@@ -530,3 +530,27 @@
 
 "Complete Puzzle \n to continue" = "أكمل اللغز \n للمتابعة";
 "Slide puzzle piece into place" = "حرّك قطعة اللغز إلى مكانها الصحيح";
+
+"Invalid session auth or api parameters provided." = "تم تقديم مصادقة جلسة أو معلمات API غير صالحة.";
+"Invalid session auth." = "مصادقة الجلسة غير صالحة.";
+"Failed to process the upgrade using the receipt." = "فشل في معالجة الترقية باستخدام الإيصال.";
+"Unable to verify the receipt with Apple." = "غير قادر على التحقق من الإيصال مع Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "لا يدعم Windscribe الترقية من خلال إصدار TestFlight. إذا قمت بالدفع خلال فترة TestFlight فلن يتم تحصيل المبلغ، حيث إنه مخصص للاختبار فقط.";
+"Missing transaction ID. Please ensure you have an active subscription." = "معرّف المعاملة مفقود. يرجى التأكد من أن لديك اشتراكًا نشطًا.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "تم تطبيق هذا الإيصال بالفعل على حسابك. إذا لم تتم الترقية بعد، يرجى الاتصال بالدعم.";
+"The network appears to be offline." = "يبدو أن الشبكة غير متصلة.";
+"Unable to reach the server. Please try again." = "غير قادر على الوصول إلى الخادم. حاول مرة أخرى.";
+"No data found." = "لم يتم العثور على بيانات.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 و ip3 غير متاحين لتكوين هذا الملف الشخصي.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "لقد وصلت إلى حد مفاتيح WireGuard. هل تريد حذف أقدم مفتاح؟";
+"2FA code required to login." = "مطلوب رمز المصادقة الثنائية لتسجيل الدخول.";
+"Invalid 2FA Code provided." = "تم إدخال رمز مصادقة ثنائية غير صالح.";
+"Unknown error." = "خطأ غير معروف.";
+
+"Authentication Token retrieval failed." = "فشل في استرداد رمز المصادقة.";
+"Captcha image decoding failed. Please try again later." = "فشل في فك تشفير صورة Captcha. يرجى المحاولة لاحقًا.";
+"Failed to load data" = "فشل في تحميل البيانات";
+"Failed to get Robert Filters." = "فشل في الحصول على فلاتر Robert.";
+"Unable to load robert rules. Check your network connection." = "غير قادر على تحميل قواعد Robert. تحقق من اتصال الشبكة.";
+"Location Load" = "حِمل الموقع";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "يعرض مدى استخدام الموقع. الأشرطة الأقصر تعني حملاً أقل (استخدام أقل).";

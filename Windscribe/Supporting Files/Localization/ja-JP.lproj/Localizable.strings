@@ -536,3 +536,27 @@
 
 "Complete Puzzle \n to continue" = "パズルを完成させて \n 続行してください";
 "Slide puzzle piece into place" = "パズルのピースを所定の位置にスライド";
+
+"Invalid session auth or api parameters provided." = "無効なセッション認証またはAPIパラメータが指定されました。";
+"Invalid session auth." = "セッション認証が無効です。";
+"Failed to process the upgrade using the receipt." = "領収書を使用したアップグレードの処理に失敗しました。";
+"Unable to verify the receipt with Apple." = "Appleで領収書を検証できませんでした。";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "WindscribeはTestFlight版でのアップグレードに対応していません。TestFlight期間中に支払いを行った場合はテスト目的のみで請求されません。";
+"Missing transaction ID. Please ensure you have an active subscription." = "トランザクションIDがありません。アクティブなサブスクリプションがあるか確認してください。";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "この領収書はすでにアカウントに適用されています。まだアップグレードされていない場合はサポートに連絡してください。";
+"The network appears to be offline." = "ネットワークがオフラインのようです。";
+"Unable to reach the server. Please try again." = "サーバーに接続できません。再試行してください。";
+"No data found." = "データが見つかりません。";
+"Ip1 and ip3 are not available to configure this profile." = "このプロファイルを設定するには ip1 と ip3 は使用できません。";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "WireGuardキーの上限に達しました。最も古いキーを削除しますか？";
+"2FA code required to login." = "ログインするには2FAコードが必要です。";
+"Invalid 2FA Code provided." = "無効な2FAコードが入力されました。";
+"Unknown error." = "不明なエラー。";
+
+"Authentication Token retrieval failed." = "認証トークンの取得に失敗しました。";
+"Captcha image decoding failed. Please try again later." = "キャプチャ画像のデコードに失敗しました。後で再試行してください。";
+"Failed to load data" = "データの読み込みに失敗しました";
+"Failed to get Robert Filters." = "Robert フィルターの取得に失敗しました。";
+"Unable to load robert rules. Check your network connection." = "Robert のルールを読み込めません。ネットワーク接続を確認してください。";
+"Location Load" = "ロケーションの負荷";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "ロケーションの負荷を表示します。バーが短いほど負荷が少ないことを意味します。";

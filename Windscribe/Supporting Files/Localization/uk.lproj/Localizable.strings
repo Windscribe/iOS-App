@@ -533,3 +533,29 @@
 
 "Complete Puzzle \n to continue" = "Завершіть головоломку \n щоб продовжити";
 "Slide puzzle piece into place" = "Перетягніть шматок головоломки на місце";
+
+"Invalid session auth or api parameters provided." = "Надано недійсні дані автентифікації сесії або параметри API.";
+"Invalid session auth." = "Недійсна автентифікація сесії.";
+"Failed to process the upgrade using the receipt." = "Не вдалося обробити оновлення за допомогою чеку.";
+"Unable to verify the receipt with Apple." = "Не вдалося перевірити чек у Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe не підтримує оновлення через версію TestFlight. Якщо ви здійснили платіж у період TestFlight, кошти не будуть списані, оскільки це лише для тестування.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Відсутній ідентифікатор транзакції. Переконайтеся, що у вас є активна підписка.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Цей чек уже застосовано до вашого облікового запису. Якщо оновлення не відбулося, зверніться до служби підтримки.";
+"The network appears to be offline." = "Мережа, здається, недоступна.";
+"Unable to reach the server. Please try again." = "Не вдалося підключитися до сервера. Спробуйте ще раз.";
+"No data found." = "Даних не знайдено.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 та ip3 недоступні для налаштування цього профілю.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Ви досягли ліміту ключів WireGuard. Видалити найстаріший ключ?";
+"2FA code required to login." = "Потрібен код 2FA для входу.";
+"Invalid 2FA Code provided." = "Надано недійсний код 2FA.";
+"Unknown error." = "Невідома помилка.";
+"Too many failed attempts. Please wait a moment and try again." = "Забагато невдалих спроб. Зачекайте хвилину та спробуйте ще раз.";
+
+"Authentication Token retrieval failed." = "Не вдалося отримати токен автентифікації.";
+"Captcha image decoding failed. Please try again later." = "Не вдалося розпізнати зображення капчі. Спробуйте пізніше.";
+"Failed to load data" = "Не вдалося завантажити дані";
+"Failed to get Robert Filters." = "Не вдалося отримати фільтри Роберта.";
+"Unable to load robert rules. Check your network connection." = "Не вдалося завантажити правила Роберта. Перевірте з’єднання з мережею.";
+"Location Load" = "Завантаження локації";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Показує завантаження локації. Коротші смужки означають менше навантаження (використання).";
+
