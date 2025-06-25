@@ -543,3 +543,28 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 
 "Complete Puzzle \n to continue" = "Hoàn thành câu đố \n để tiếp tục";
 "Slide puzzle piece into place" = "Trượt mảnh ghép vào đúng chỗ";
+
+"Invalid session auth or api parameters provided." = "Thông tin xác thực phiên hoặc tham số API không hợp lệ.";
+"Invalid session auth." = "Thông tin xác thực phiên không hợp lệ.";
+"Failed to process the upgrade using the receipt." = "Không thể xử lý nâng cấp bằng biên lai.";
+"Unable to verify the receipt with Apple." = "Không thể xác minh biên lai với Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe không hỗ trợ nâng cấp qua phiên bản TestFlight. Nếu bạn đã thanh toán trong giai đoạn TestFlight thì yên tâm, khoản đó sẽ không bị trừ vì chỉ nhằm mục đích thử nghiệm.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Thiếu mã giao dịch. Vui lòng đảm bảo bạn vẫn còn gói đăng ký hoạt động.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Biên lai này đã được áp dụng cho tài khoản của bạn. Nếu bạn vẫn chưa được nâng cấp, hãy liên hệ bộ phận hỗ trợ.";
+"The network appears to be offline." = "Có vẻ mạng đang ngoại tuyến.";
+"Unable to reach the server. Please try again." = "Không thể kết nối tới máy chủ. Vui lòng thử lại.";
+"No data found." = "Không tìm thấy dữ liệu.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 và ip3 không khả dụng để cấu hình hồ sơ này.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Bạn đã đạt giới hạn khóa WireGuard. Bạn có muốn xóa khóa cũ nhất không?";
+"2FA code required to login." = "Cần mã 2FA để đăng nhập.";
+"Invalid 2FA Code provided." = "Mã 2FA không hợp lệ.";
+"Unknown error." = "Lỗi không xác định.";
+"Too many failed attempts. Please wait a moment and try again." = "Quá nhiều lần thử không thành công. Vui lòng đợi một lúc rồi thử lại.";
+
+"Authentication Token retrieval failed." = "Không thể lấy mã xác thực.";
+"Captcha image decoding failed. Please try again later." = "Không giải mã được hình ảnh Captcha. Vui lòng thử lại sau.";
+"Failed to load data" = "Tải dữ liệu thất bại";
+"Failed to get Robert Filters." = "Không thể lấy bộ lọc Robert.";
+"Unable to load robert rules. Check your network connection." = "Không thể tải quy tắc Robert. Kiểm tra kết nối mạng của bạn.";
+"Location Load" = "Tải địa điểm";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Hiển thị tải của một địa điểm. Vạch ngắn hơn nghĩa là ít tải hơn (sử dụng ít hơn).";

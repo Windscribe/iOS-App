@@ -128,7 +128,7 @@ class LoginViewModelImpl: LoginViewModel {
 
                 if case let .failure(error) = completion {
                     self.logger.logE("LoginViewModel", "Failed to get auth token: \(error)")
-                    self.failedState = .network("Authentication Token retrieval failed. \(error)")
+                    self.failedState = .network("\(TextsAsset.Authentication.tokenRetrievalFailed) \(error)")
                     self.showLoadingView = false
                 }
             } receiveValue: { [weak self] tokenResponse in
@@ -145,7 +145,7 @@ class LoginViewModelImpl: LoginViewModel {
                         self.showCaptchaPopup = true
                     } else {
                         self.logger.logE("LoginViewModel", "Failed to decode captcha images.")
-                        self.failedState = .network("Captcha image decoding failed. Please try again later.")
+                        self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
                     }
                     self.showLoadingView = false
                     return

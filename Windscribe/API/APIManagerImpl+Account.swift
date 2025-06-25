@@ -71,7 +71,9 @@ extension APIManagerImpl {
                 return nil
             }
 
-            return self.api.authTokenLogin(completion)
+            // TODO: For TVOS useAsciiCaptcha should be true
+            // Implement TV ASCII screen
+            return self.api.authTokenLogin(false, callback: completion)
 
         }
     }
@@ -82,7 +84,9 @@ extension APIManagerImpl {
                 return nil
             }
 
-            return self.api.authTokenSignup(completion)
+            // TODO: For TVOS useAsciiCaptcha should be true
+            // Implement TV ASCII screen
+            return self.api.authTokenSignup(false, callback: completion)
         }
     }
 

@@ -532,3 +532,28 @@
 
 "Complete Puzzle \n to continue" = "Ukończ układankę \n aby kontynuować";
 "Slide puzzle piece into place" = "Przesuń element układanki na miejsce";
+
+"Invalid session auth or api parameters provided." = "Podano nieprawidłowe uwierzytelnienie sesji lub parametry API.";
+"Invalid session auth." = "Nieprawidłowe uwierzytelnienie sesji.";
+"Failed to process the upgrade using the receipt." = "Nie udało się przetworzyć aktualizacji przy użyciu e-paragonu.";
+"Unable to verify the receipt with Apple." = "Nie można zweryfikować płatności w Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe nie obsługuje uaktualnień w wersji TestFlight. Jeśli dokonałeś płatności w okresie korzystania z TestFlight, nie zostanie ona uiszczona, ponieważ służy wyłącznie celom testowym.";
+"Missing transaction ID. Please ensure you have an active subscription." = "Brak identyfikatora transakcji (ID). Upewnij się, że masz aktywną subskrypcję.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Ta e-płatność została już zastosowana do Twojego konta. Jeśli nadal nie otrzymałeś uaktualnienia, skontaktuj się z naszą pomocą techniczną.";
+"The network appears to be offline." = "Wydaje się, że jesteś offline.";
+"Unable to reach the server. Please try again." = "Nie udało się połączyć z serwerem. Spróbuj ponownie.";
+"No data found." = "Nie znaleziono danych.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 i ip3 są niedostępne do konfiguracji tego profilu.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Osiągnąłeś limit kluczy WireGuard. Czy chcesz usunąć najstarszy klucz?";
+"2FA code required to login." = "Do zalogowania wymagany jest kod 2FA.";
+"Invalid 2FA Code provided." = "Podano nieprawidłowy kod 2FA.";
+"Unknown error." = "Nieznany błąd.";
+"Too many failed attempts. Please wait a moment and try again." = "Zbyt wiele nieudanych prób. Poczekaj chwilę i spróbuj ponownie.";
+
+"Authentication Token retrieval failed." = "Nie udało się pobrać tokena uwierzytelniania.";
+"Captcha image decoding failed. Please try again later." = "Nie udało się odczytać obrazu Captcha. Spróbuj ponownie później.";
+"Failed to load data" = "Nie udało się załadować danych";
+"Failed to get Robert Filters." = "Nie udało się pobrać filtrów Roberta.";
+"Unable to load robert rules. Check your network connection." = "Nie można załadować zasad Roberta. Sprawdź połączenie sieciowe.";
+"Location Load" = "Obciążenie lokalizacji";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Wyświetla obciążenie lokalizacji. Krótsze paski oznaczają mniejsze zużycie.";

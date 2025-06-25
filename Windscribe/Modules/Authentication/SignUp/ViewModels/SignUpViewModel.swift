@@ -180,7 +180,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
                 if case .failure(let error) = result {
                     self.logger.logE("SignUpViewModel", "Failed to get auth token: \(error)")
-                    self.failedState = .network("Authentication Token retrieval failed. \(error)")
+                    self.failedState = .network("\(TextsAsset.Authentication.tokenRetrievalFailed) \(error)")
                     self.showLoadingView = false
                 }
             }, receiveValue: { [weak self] tokenResponse in
@@ -197,7 +197,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                         self.showCaptchaPopup = true
                     } else {
                         self.logger.logE("SignUpViewModel", "Failed to decode captcha images.")
-                        self.failedState = .network("Captcha image decode failed")
+                        self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
                     }
                     self.showLoadingView = false
                     return

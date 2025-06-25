@@ -26,7 +26,7 @@ enum WSNetErrors: Int32 {
         case .incorrectJson:
             return Errors.parsingError
         case .failOverFailed:
-            return Errors.unknownError
+            return Errors.tooManyFailedAttempts
         }
     }
 }

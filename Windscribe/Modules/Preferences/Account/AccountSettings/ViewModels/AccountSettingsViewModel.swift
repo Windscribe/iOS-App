@@ -350,7 +350,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
         let errorMessage: String
 
         if case let Errors.apiError(apiError) = error {
-            errorMessage = apiError.errorMessage ?? "Unknown API error"
+            errorMessage = apiError.errorMessage ?? TextsAsset.unknownAPIError
         } else {
             errorMessage = error.localizedDescription
         }

@@ -532,3 +532,27 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 
 "Complete Puzzle \n to continue" = "Terminez le puzzle \n pour continuer";
 "Slide puzzle piece into place" = "Faites glisser la pièce du puzzle à sa place";
+
+"Invalid session auth or api parameters provided." = "Authentification de session ou paramètres d'API non valides.";
+"Invalid session auth." = "Authentification de session non valide.";
+"Failed to process the upgrade using the receipt." = "Impossible de traiter la mise à niveau avec le reçu.";
+"Unable to verify the receipt with Apple." = "Impossible de vérifier le reçu auprès d'Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe ne prend pas en charge les mises à niveau via la version TestFlight. Si vous avez effectué un paiement pendant cette période, soyez assuré qu'il ne sera pas débité, car il sert uniquement aux tests.";
+"Missing transaction ID. Please ensure you have an active subscription." = "ID de transaction manquant. Veuillez vérifier que vous disposez d'un abonnement actif.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Ce reçu a déjà été appliqué à votre compte. Si vous n'êtes toujours pas mis à niveau, contactez le support.";
+"The network appears to be offline." = "Le réseau semble hors ligne.";
+"Unable to reach the server. Please try again." = "Impossible de joindre le serveur. Veuillez réessayer.";
+"No data found." = "Aucune donnée trouvée.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 et ip3 ne sont pas disponibles pour configurer ce profil.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Vous avez atteint votre limite de clés WireGuard. Voulez-vous supprimer la plus ancienne ?";
+"2FA code required to login." = "Code 2FA requis pour se connecter.";
+"Invalid 2FA Code provided." = "Code 2FA invalide.";
+"Unknown error." = "Erreur inconnue.";
+
+"Authentication Token retrieval failed." = "Échec de la récupération du jeton d'authentification.";
+"Captcha image decoding failed. Please try again later." = "Échec du décodage de l’image Captcha. Veuillez réessayer plus tard.";
+"Failed to load data" = "Échec du chargement des données";
+"Failed to get Robert Filters." = "Impossible d’obtenir les filtres Robert.";
+"Unable to load robert rules. Check your network connection." = "Impossible de charger les règles de Robert. Vérifiez votre connexion réseau.";
+"Location Load" = "Charge de l’emplacement";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Affiche la charge d’un emplacement. Des barres plus courtes indiquent une charge moindre.";

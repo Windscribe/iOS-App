@@ -70,6 +70,10 @@ struct AccountRowModel: Identifiable, Hashable {
     func shouldShowConfirmEmailBanner(accountStatus: AccountEmailStatusType) -> Bool {
         title.lowercased() == TextsAsset.email.lowercased()  && accountStatus == .unverified
     }
+
+    func shouldShowExclamationIcon(accountStatus: AccountEmailStatusType) -> Bool {
+        title.lowercased() == TextsAsset.email.lowercased()  && accountStatus != .verified
+    }
 }
 
 struct AccountSectionModel: Identifiable, Hashable {

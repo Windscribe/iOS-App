@@ -1067,6 +1067,10 @@
 		F440F3022D8DECE6006F1A6D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3012D8DECE6006F1A6D /* LoginView.swift */; };
 		F440F3042D8DF088006F1A6D /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3032D8DF088006F1A6D /* LoginTextField.swift */; };
 		F440F3082D8E102D006F1A6D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3072D8E102D006F1A6D /* LoginViewModel.swift */; };
+		F443EA532E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
+		F443EA542E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
+		F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
+		F443EA592E0B215E00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F44F275C2D84B79E00A47E37 /* NewsFeedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */; };
 		F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275D2D84B87500A47E37 /* NewsFeedView.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
@@ -1238,6 +1242,7 @@
 		F4F51A782D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
 		F4F51A792D9D8CED00407DE7 /* EmergencyConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A772D9D8CED00407DE7 /* EmergencyConnectViewModel.swift */; };
 		F4F51A7B2D9DA09100407DE7 /* EmergencyConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F51A7A2D9DA09100407DE7 /* EmergencyConnectView.swift */; };
+		F4F6224B2E0B22ED00830935 /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2015,6 +2020,7 @@
 		F440F3012D8DECE6006F1A6D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		F440F3032D8DF088006F1A6D /* LoginTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		F440F3072D8E102D006F1A6D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+ErrorTexts.swift"; sourceTree = "<group>"; };
 		F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDetailView.swift; sourceTree = "<group>"; };
 		F44F275D2D84B87500A47E37 /* NewsFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedView.swift; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
@@ -4548,6 +4554,7 @@
 			isa = PBXGroup;
 			children = (
 				AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */,
+				F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */,
 				E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */,
 				F47D8E742D5A8A6A00B3FA5A /* UIConstants+Accessibility.swift */,
 				E90FD02427394FA800721874 /* UIConstants+Fields.swift */,
@@ -6171,6 +6178,7 @@
 				59A218732C3C9EDF000D89FA /* DefaultValues.swift in Sources */,
 				59FC74142C51543400021CD1 /* PushNotificationPayload.swift in Sources */,
 				1E8C8F3D2C6500D900CBFDC5 /* DNSSettingsManager.swift in Sources */,
+				F443EA542E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				59FC744F2C515E4900021CD1 /* ThemeUtils.swift in Sources */,
 				59FC73E52C51506700021CD1 /* APIManagerImpl+Others.swift in Sources */,
 				59FC746B2C5167F200021CD1 /* CustomConfigRepository.swift in Sources */,
@@ -6669,6 +6677,7 @@
 				F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */,
 				F49C45B62DCD2C63007E5EF1 /* ConnectionSettingsView.swift in Sources */,
 				1EDAA91B2CCBD4E60014E678 /* VPNUserSettings.swift in Sources */,
+				F443EA532E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				1ED616762DD6250C006CDC99 /* LookAndFeelEntryType.swift in Sources */,
 				F49C45B22DCD28BF007E5EF1 /* AccountSettingsView.swift in Sources */,
 				F49C45CA2DCD335E007E5EF1 /* AboutSettingsView.swift in Sources */,
@@ -6906,6 +6915,7 @@
 				C5DD96042CA723E700FFABBC /* KeyChainDatabaseImpl.swift in Sources */,
 				1E60DFEB2CA471B800623CD5 /* ShowLocationIntentHandler.swift in Sources */,
 				C56FCBE32B2B8DB1008DE7D4 /* SharedUserDefaults.swift in Sources */,
+				F4F6224B2E0B22ED00830935 /* UIConstants+ErrorTexts.swift in Sources */,
 				5993396E2B4CD28300EC615D /* DefaultValues.swift in Sources */,
 				C50F20D12B62110500266B23 /* Bundle+Extension.swift in Sources */,
 				C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */,
@@ -6955,6 +6965,7 @@
 				C5D0E40429BB8BE70091FB14 /* test_ringlogger.c in Sources */,
 				F49C45812DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				C52DA5302B63913500E5C571 /* FileDatabaseImpl.swift in Sources */,
+				F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				596E60082B8F77EF00D51E20 /* Language.swift in Sources */,
 				C50F20832B60B79600266B23 /* APIUtil.swift in Sources */,
 				C51EEDC92C1779A900B01F8F /* LanguageManager.swift in Sources */,
@@ -7034,6 +7045,7 @@
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
 				F49C45802DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
 				1E60E01B2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
+				F443EA592E0B215E00FFC75E /* UIConstants+ErrorTexts.swift in Sources */,
 				1E7A19582C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C585F3E52C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
 				C52DA5132B63821300E5C571 /* RepositoryErrors.swift in Sources */,

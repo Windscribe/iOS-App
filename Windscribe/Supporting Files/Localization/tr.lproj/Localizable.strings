@@ -547,3 +547,28 @@
 
 "Complete Puzzle \n to continue" = "Devam etmek için \n bulmacayı tamamlayın";
 "Slide puzzle piece into place" = "Bulmaca parçasını yerine kaydırın";
+
+"Invalid session auth or api parameters provided." = "Geçersiz oturum doğrulama veya API parametreleri sağlandı.";
+"Invalid session auth." = "Geçersiz oturum doğrulaması.";
+"Failed to process the upgrade using the receipt." = "Makbuzla yükseltme işlemi gerçekleştirilemedi.";
+"Unable to verify the receipt with Apple." = "Makbuz Apple ile doğrulanamadı.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe, TestFlight sürümü üzerinden yükseltmeleri desteklemez. TestFlight döneminde ödeme yaptıysanız, endişelenmeyin; yalnızca test amacıyla kullanıldığından ücret alınmayacaktır.";
+"Missing transaction ID. Please ensure you have an active subscription." = "İşlem kimliği eksik. Lütfen aktif bir aboneliğinizin olduğundan emin olun.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Bu makbuz zaten hesabınıza uygulanmış. Hâlâ yükseltilmediyseniz, destekle iletişime geçin.";
+"The network appears to be offline." = "Ağ çevrimdışı görünüyor.";
+"Unable to reach the server. Please try again." = "Sunucuya ulaşılamıyor. Lütfen tekrar deneyin.";
+"No data found." = "Veri bulunamadı.";
+"Ip1 and ip3 are not available to configure this profile." = "Bu profili yapılandırmak için ip1 ve ip3 kullanılamıyor.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "WireGuard anahtar sınırına ulaştınız. En eski anahtarı silmek ister misiniz?";
+"2FA code required to login." = "Giriş yapmak için 2FA kodu gereklidir.";
+"Invalid 2FA Code provided." = "Geçersiz 2FA kodu girildi.";
+"Unknown error." = "Bilinmeyen hata.";
+"Too many failed attempts. Please wait a moment and try again." = "Çok fazla başarısız deneme. Lütfen biraz bekleyip tekrar deneyin.";
+
+"Authentication Token retrieval failed." = "Kimlik doğrulama jetonu alınamadı.";
+"Captcha image decoding failed. Please try again later." = "Captcha görüntüsü çözümlenemedi. Lütfen daha sonra tekrar deneyin.";
+"Failed to load data" = "Veri yüklenemedi";
+"Failed to get Robert Filters." = "Robert filtreleri alınamadı.";
+"Unable to load robert rules. Check your network connection." = "Robert kuralları yüklenemedi. Ağ bağlantınızı kontrol edin.";
+"Location Load" = "Konum Yükü";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Bir konumun yükünü gösterir. Daha kısa çubuklar daha az kullanım anlamına gelir.";

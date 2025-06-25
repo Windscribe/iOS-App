@@ -87,47 +87,50 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case missingRemoteAddress
     case wgLimitExceeded
     case appleSsoError(String)
+    case tooManyFailedAttempts
 
     public var description: String {
         switch self {
         case .validationFailure:
-            return "Invalid session auth or api parameters provided."
+            return ErrorTexts.APIError.validationFailure
         case .sessionIsInvalid:
-            return "Invalid session auth."
+            return ErrorTexts.APIError.invalidSession
         case .unableToUpgradeUser:
-            return "Failed to process the upgrade using the receipt."
+            return ErrorTexts.APIError.unableToUpgradeUser
         case .unableToVerifyWithApple:
-            return "Unable to verify the receipt with Apple."
+            return ErrorTexts.APIError.unableToVerifyWithApple
         case .sandboxReceipt:
-            return "Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes."
+            return ErrorTexts.APIError.sandboxReceipt
         case .missingTransactionId:
-            return "Missing transaction ID. Please ensure you have an active subscription."
+            return ErrorTexts.APIError.missingTransactionId
         case .duplicateTransactionId:
-            return "This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance."
+            return ErrorTexts.APIError.duplicateTransactionId
         case .noNetwork:
-            return "The network appears to be offline."
+            return ErrorTexts.APIError.noNetwork
         case .unknownError:
-            return "Unable to reach the server. Please try again."
+            return ErrorTexts.APIError.unknownError
         case let .apiError(error):
             return error.errorMessage ?? ""
         case .datanotfound:
-            return "no data found."
+            return ErrorTexts.APIError.datanotfound
         case .handled:
             return ""
         case .ipNotAvailable:
-            return "Ip1 and ip3 are not avaialble to configure this profile."
+            return ErrorTexts.APIError.ipNotAvailable
         case .missingRemoteAddress:
-            return "Missing remote address in selected location."
+            return ErrorTexts.APIError.missingRemoteAddress
         case .wgLimitExceeded:
-            return "You have reached your limit of WireGuard keys. Do you want to delete your oldest key?"
+            return ErrorTexts.APIError.wgLimitExceeded
         case .twoFactorRequired:
-            return "2FA code required to login."
+            return ErrorTexts.APIError.twoFactorRequired
         case .invalid2FA:
-            return "Invalid 2FA Code provided."
+            return ErrorTexts.APIError.invalid2FA
         case .appleSsoError(let error):
             return error
+        case .tooManyFailedAttempts, .parsingError:
+            return ErrorTexts.APIError.tooManyFailedAttempts
         default:
-            return "Unknown error."
+            return ErrorTexts.APIError.unspecifiedError
         }
     }
 }

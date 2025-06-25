@@ -530,3 +530,27 @@
 
 "Complete Puzzle \n to continue" = "Completa il puzzle \n per continuare";
 "Slide puzzle piece into place" = "Fai scorrere il pezzo del puzzle nella posizione corretta";
+
+"Invalid session auth or api parameters provided." = "Autenticazione di sessione o parametri API non validi.";
+"Invalid session auth." = "Autenticazione di sessione non valida.";
+"Failed to process the upgrade using the receipt." = "Impossibile elaborare l'upgrade con la ricevuta.";
+"Unable to verify the receipt with Apple." = "Impossibile verificare la ricevuta con Apple.";
+"Windscribe does not support upgrades through the TestFlight version. If you've made a payment during the TestFlight period, rest assured that it won't be charged, as it is solely for testing purposes." = "Windscribe non supporta aggiornamenti tramite la versione TestFlight. Se hai effettuato un pagamento durante il periodo di TestFlight, non verrà addebitato perché è solo a scopo di test.";
+"Missing transaction ID. Please ensure you have an active subscription." = "ID transazione mancante. Assicurati di avere un abbonamento attivo.";
+"This receipt has already been applied to your account. If you are still not upgraded, contact support for assistance." = "Questa ricevuta è già stata applicata al tuo account. Se non sei ancora stato aggiornato, contatta il supporto.";
+"The network appears to be offline." = "La rete sembra offline.";
+"Unable to reach the server. Please try again." = "Impossibile raggiungere il server. Riprova.";
+"No data found." = "Nessun dato trovato.";
+"Ip1 and ip3 are not available to configure this profile." = "Ip1 e ip3 non sono disponibili per configurare questo profilo.";
+"You have reached your limit of WireGuard keys. Do you want to delete your oldest key?" = "Hai raggiunto il limite di chiavi WireGuard. Vuoi eliminare la chiave più vecchia?";
+"2FA code required to login." = "È necessario un codice 2FA per accedere.";
+"Invalid 2FA Code provided." = "Codice 2FA non valido fornito.";
+"Unknown error." = "Errore sconosciuto.";
+
+"Authentication Token retrieval failed." = "Impossibile recuperare il token di autenticazione.";
+"Captcha image decoding failed. Please try again later." = "Decodifica dell'immagine captcha non riuscita. Riprova più tardi.";
+"Failed to load data" = "Caricamento dati non riuscito";
+"Failed to get Robert Filters." = "Impossibile ottenere i filtri Robert.";
+"Unable to load robert rules. Check your network connection." = "Impossibile caricare le regole di Robert. Verifica la connessione di rete.";
+"Location Load" = "Carico della posizione";
+"Display a location’s load. Shorter bars mean lesser load (usage)." = "Visualizza il carico di una posizione. Barre più corte indicano un carico minore (utilizzo).";
