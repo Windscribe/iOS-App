@@ -27,16 +27,7 @@ struct RobertSettingsView: View {
             PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 ScrollView {
                     VStack(spacing: 16) {
-                        Button {
-                            viewModel.infoSelected()
-                        } label: {
                             ZStack {
-                                Text(viewModel.description)
-                                    .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
-                                    .multilineTextAlignment(.leading)
-                                    .font(.regular(.footnote))
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 12)
                                 HStack {
                                     Spacer()
                                     Image(ImagesAsset.Robert.mask)
@@ -46,13 +37,17 @@ struct RobertSettingsView: View {
                                         .frame(maxHeight: .infinity, alignment: .top)
                                         .foregroundColor(.from(.backgroundColor, viewModel.isDarkMode))
                                 }
+                                DescriptionWithLearnMore(description: TextsAsset.Robert.description,
+                                                         isDarkMode: viewModel.isDarkMode,
+                                                         action: viewModel.infoSelected)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 12)
                             }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.from(.backgroundColor, viewModel.isDarkMode), lineWidth: 1)
                             )
                             .padding(.horizontal, 16)
-                        }
                         ForEach(viewModel.entries, id: \.self) { entry in
                             FilterView(isDarkMode: viewModel.isDarkMode,
                                        filter: entry,

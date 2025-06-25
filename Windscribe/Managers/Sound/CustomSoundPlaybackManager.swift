@@ -61,6 +61,7 @@ class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
 
             // Play the user-provided sound file
             if let path = path {
+                soundManager.stopAllSounds()
                 soundManager.playCustomSound(from: path, volume: 1.0, tag: domain.tag)
             }
 
@@ -73,7 +74,7 @@ class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
             case .disconnect:
                urlAssetName = subtype.turnOffAssetName
             }
-
+            soundManager.stopAllSounds()
             // Play a bundled/internal sound asset
             soundManager.playSound(
                 named: urlAssetName,

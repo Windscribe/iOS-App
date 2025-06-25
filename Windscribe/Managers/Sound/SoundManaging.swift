@@ -24,4 +24,5 @@ protocol SoundManaging {
     func resumeSound(named name: String)
     func quickPlay(named name: String, extension ext: String)
     func playCustomSound(from path: String, volume: Float, tag: String?)
+    func stopAllSounds()
 }

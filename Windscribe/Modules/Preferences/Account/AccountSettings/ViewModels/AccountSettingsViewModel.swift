@@ -43,7 +43,10 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     private let disposeBag = DisposeBag()
 
     var shouldShowAddEmailButton: Bool {
-        currentSession?.email.isEmpty == true
+        guard currentSession?.isInvalidated == false else {
+            return false
+        }
+        return currentSession?.email.isEmpty == true
     }
 
     var shouldShowPlanActionButtons: Bool {

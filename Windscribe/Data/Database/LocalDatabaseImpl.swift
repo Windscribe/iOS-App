@@ -254,7 +254,7 @@ class LocalDatabaseImpl: LocalDatabase {
 
         cleanTrigger.onNext(())
         guard let realm = realm else { return }
-        
+
         try? realm.write {
             for objectSchema in realm.schema.objectSchema {
                 let objectType = doNotDeleteObjects.first(where: { $0 == objectSchema.className })

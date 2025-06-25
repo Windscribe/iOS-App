@@ -45,7 +45,7 @@ enum MenuEntryActionType: Hashable {
     case link(title: String?, parentId: Int)
     case none(title: String, parentId: Int)
     case file(value: String, fileTypes: [UTType], parentId: Int)
-    case infoLink(message: AttributedString, parentId: Int)
+    case infoLink(message: String, parentId: Int)
     case field(value: String, placeHolder: String, parentId: Int)
 
     var imageName: String? {
@@ -171,14 +171,4 @@ protocol MenuEntryItemType: Hashable {
     var title: String { get }
     var icon: String { get }
     var action: MenuEntryActionType? { get }
-}
-
-extension MenuEntryItemType {
-    func makeInfoLink(from description: String) -> AttributedString {
-        var info = AttributedString("\(description) \(TextsAsset.learnMore)")
-        if let range = info.range(of: TextsAsset.learnMore) {
-            info[range].foregroundColor = .learnBlue
-        }
-        return info
-    }
 }

@@ -216,14 +216,10 @@ struct MenuEntryActionView: View {
                                   actionType: actionType,
                                   action: action)
         case let .infoLink(message, parentId):
-            Text(message)
-                .foregroundColor(.from(.infoColor, isDarkMode))
-                .font(.regular(.footnote))
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .onTapGesture {
-                    action(.infoLink(parentId: parentId))
-                }
+            DescriptionWithLearnMore(description: message, isDarkMode: isDarkMode) {
+                action(.infoLink(parentId: parentId))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         case let .field(value, placeHolder, parentId):
             MenuFieldView(isDarkMode: isDarkMode,
                           value: value,
