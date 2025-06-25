@@ -253,9 +253,21 @@ class LocalDatabaseImpl: LocalDatabase {
         let realm = try? Realm()
 
         cleanTrigger.onNext(())
-
-        try? realm?.write {
-            realm?.deleteAll()
+        guard let realm = realm else { return }
+        
+        try? realm.write {
+            for objectSchema in realm.schema.objectSchema {
+                let objectType = doNotDeleteObjects.first(where: { $0 == objectSchema.className })
+                if objectType == nil {
+                    if let objectSchema = realm.schema[objectSchema.className],
+                       let objectType = objectSchema.objectClass as? Object.Type {
+                        let objects = realm.objects(objectType)
+                        realm.delete(objects)
+                    }
+                } else {
+                    logger.logD("LocalDatabaseImpl", "Skipping deletion of \(String(describing: objectSchema.className))")
+                }
+            }
         }
     }
 
