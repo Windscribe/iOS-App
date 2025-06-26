@@ -26,7 +26,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     @Published var loadingState: AccountState = .initial
     @Published var activeDialog: AccountDialogType?
     @Published var alertMessage: AccountSettingsAlertContent?
-    @Published private(set) var accountEmailStatus: AccountEmailStatusType = .missing
+    @Published private(set) var accountEmailStatus: AccountEmailStatusType = .unknown
 
     private var cancellables = Set<AnyCancellable>()
     private var currentSession: Session?
@@ -97,6 +97,13 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     func loadSession() {
         loadingState = .loading(isFullScreen: true)
 
+        // Set initial state for session from the local database
+        if let session = localDatabase.getSessionSync() {
+            self.currentSession = session
+            self.accountEmailStatus = self.calculateEmailStatus(from: session)
+            self.buildSections(from: session)
+        }
+
         apiManager.getSession(nil)
             .asPublisher()
             .receive(on: DispatchQueue.main)
@@ -109,6 +116,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                         return
                     }
                     self.currentSession = session
+                    self.accountEmailStatus = self.calculateEmailStatus(from: session)
                     self.buildSections(from: session)
                     self.loadingState = .success
 

@@ -559,3 +559,8 @@
 "Unable to load robert rules. Check your network connection." = "Não foi possível carregar as regras do Robert. Verifique a sua ligação à Internet.";
 "Location Load" = "Carga da Localização";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Mostra a carga de uma localização. Barras mais curtas significam menor carga (uso).";
+
+"Clear" = "Limpar";
+"Favorite Locations" = "Localizações favoritas";
+"Custom Configs" = "Configurações personalizadas";
+"Static IPs" = "IPs estáticos";

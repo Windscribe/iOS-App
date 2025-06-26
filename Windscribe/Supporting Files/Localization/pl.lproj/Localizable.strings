@@ -557,3 +557,8 @@
 "Unable to load robert rules. Check your network connection." = "Nie można załadować zasad Roberta. Sprawdź połączenie sieciowe.";
 "Location Load" = "Obciążenie lokalizacji";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Wyświetla obciążenie lokalizacji. Krótsze paski oznaczają mniejsze zużycie.";
+
+"Clear" = "Wyczyść";
+"Favorite Locations" = "Ulubione lokalizacje";
+"Custom Configs" = "Niestandardowe konfiguracje";
+"Static IPs" = "Statyczne adresy IP";

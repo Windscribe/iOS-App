@@ -44,7 +44,6 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var nickName: String { "" }
 
-    var clipIcon: Bool { true }
     var iconAspect: UIView.ContentMode { .scaleToFill }
     var iconImage: UIImage? {
         UIImage(named: ImagesAsset.cityImage)?.withRenderingMode(.alwaysTemplate)

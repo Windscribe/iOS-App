@@ -27,4 +27,8 @@ class ContainerResolver: ContainerResolvertype {
     func getApi() -> WSNetServerAPI {
         return container.resolve(WSNetServerAPI.self)!
     }
+
+    func getLocalizationService() -> LocalizationService {
+        return container.resolve(LocalizationService.self)!
+    }
 }

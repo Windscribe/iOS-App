@@ -568,3 +568,8 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Unable to load robert rules. Check your network connection." = "Không thể tải quy tắc Robert. Kiểm tra kết nối mạng của bạn.";
 "Location Load" = "Tải địa điểm";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Hiển thị tải của một địa điểm. Vạch ngắn hơn nghĩa là ít tải hơn (sử dụng ít hơn).";
+
+"Clear" = "Xóa";
+"Favorite Locations" = "Vị trí yêu thích";
+"Custom Configs" = "Cấu hình tùy chỉnh";
+"Static IPs" = "Địa chỉ IP tĩnh";

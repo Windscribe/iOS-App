@@ -575,3 +575,8 @@
 "Unable to load robert rules. Check your network connection." = "Не удалось загрузить правила Роберта. Проверьте сетевое соединение.";
 "Location Load" = "Загрузка локации";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Показывает загрузку локации. Более короткие полосы означают меньшую нагрузку.";
+
+"Clear" = "Очистить";
+"Favorite Locations" = "Избранные локации";
+"Custom Configs" = "Пользовательские настройки";
+"Static IPs" = "Статические IP";

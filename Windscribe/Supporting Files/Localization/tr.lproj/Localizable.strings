@@ -572,3 +572,8 @@
 "Unable to load robert rules. Check your network connection." = "Robert kuralları yüklenemedi. Ağ bağlantınızı kontrol edin.";
 "Location Load" = "Konum Yükü";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Bir konumun yükünü gösterir. Daha kısa çubuklar daha az kullanım anlamına gelir.";
+
+"Clear" = "Temizle";
+"Favorite Locations" = "Favori Konumlar";
+"Custom Configs" = "Özel Yapılandırmalar";
+"Static IPs" = "Statik IP'ler";

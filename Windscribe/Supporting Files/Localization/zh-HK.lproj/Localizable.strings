@@ -556,3 +556,8 @@
 "Unable to load robert rules. Check your network connection." = "無法載入 Robert 規則。請檢查您的網絡連線。";
 "Location Load" = "位置負載";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "顯示位置負載。較短的條表示較少使用量。";
+
+"Clear" = "清除";
+"Favorite Locations" = "喜愛的位置";
+"Custom Configs" = "自訂設定";
+"Static IPs" = "靜態 IP";

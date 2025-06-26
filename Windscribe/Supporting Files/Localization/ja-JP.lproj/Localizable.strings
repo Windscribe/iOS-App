@@ -560,3 +560,8 @@
 "Unable to load robert rules. Check your network connection." = "Robert のルールを読み込めません。ネットワーク接続を確認してください。";
 "Location Load" = "ロケーションの負荷";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "ロケーションの負荷を表示します。バーが短いほど負荷が少ないことを意味します。";
+
+"Clear" = "クリア";
+"Favorite Locations" = "お気に入りのロケーション";
+"Custom Configs" = "カスタム設定";
+"Static IPs" = "静的IP";

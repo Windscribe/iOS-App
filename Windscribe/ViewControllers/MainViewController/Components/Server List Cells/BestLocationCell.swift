@@ -22,7 +22,6 @@ class BestLocationCellModel: ServerCellModelType {
         TextsAsset.bestLocation
     }
 
-    var clipIcon: Bool { true }
     var iconAspect: UIView.ContentMode { .scaleAspectFill }
     var iconImage: UIImage? {
         guard let countryCode = displayingBestLocation?.countryCode else { return nil }

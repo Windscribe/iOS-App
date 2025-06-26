@@ -102,6 +102,7 @@ enum AccountEmailStatusType {
     case verified
     case missing
     case unverified
+    case unknown
 }
 
 struct AccountSettingsAlertContent: Identifiable {
