@@ -256,6 +256,18 @@ enum TextsAsset {
         return "Failed to load data".localized
     }
 
+    static var staticIPList: String {
+        return "Static IPs".localized
+    }
+
+    static var customConfigs: String {
+        return "Custom Configs".localized
+    }
+
+    static var favoriteNodes: String {
+        return "Favorite Locations".localized
+    }
+
     enum SignInError {
         static var usernameExpectedEmailProvided: String {
             return "Please login with your username, not your email".localized

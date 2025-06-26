@@ -556,3 +556,8 @@
 "Unable to load robert rules. Check your network connection." = "无法加载 Robert 规则。请检查您的网络连接。";
 "Location Load" = "位置负载";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "显示某个位置的负载。条越短，负载越小（使用率越低）。";
+
+"Clear" = "清除";
+"Favorite Locations" = "收藏位置";
+"Custom Configs" = "自定义配置";
+"Static IPs" = "静态 IP";

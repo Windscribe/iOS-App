@@ -25,6 +25,10 @@ struct Provider: TimelineProvider {
         return resolver.getPreferences()
     }
 
+    init() {
+        LocalizationBridge.setup(resolver.getLocalizationService())
+    }
+
     func placeholder(in _: Context) -> SimpleEntry {
         return snapshotEntry
     }

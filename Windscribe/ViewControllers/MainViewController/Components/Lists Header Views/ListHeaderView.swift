@@ -15,11 +15,11 @@ enum ListHeaderViewType {
     var description: String {
         switch self {
         case .staticIP:
-            return "Static IPs"
+            return TextsAsset.staticIPList
         case .customConfig:
-            return "Custom Configs"
+            return TextsAsset.customConfigs
         case .favNodes:
-            return "Favorite Locations"
+            return TextsAsset.favoriteNodes
         case .empty:
             return ""
         }

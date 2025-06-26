@@ -556,3 +556,8 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Unable to load robert rules. Check your network connection." = "Impossible de charger les règles de Robert. Vérifiez votre connexion réseau.";
 "Location Load" = "Charge de l’emplacement";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Affiche la charge d’un emplacement. Des barres plus courtes indiquent une charge moindre.";
+
+"Clear" = "Effacer";
+"Favorite Locations" = "Emplacements favoris";
+"Custom Configs" = "Configurations personnalisées";
+"Static IPs" = "IPs statiques";

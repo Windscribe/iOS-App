@@ -554,3 +554,8 @@
 "Unable to load robert rules. Check your network connection." = "غير قادر على تحميل قواعد Robert. تحقق من اتصال الشبكة.";
 "Location Load" = "حِمل الموقع";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "يعرض مدى استخدام الموقع. الأشرطة الأقصر تعني حملاً أقل (استخدام أقل).";
+
+"Clear" = "مسح";
+"Favorite Locations" = "المواقع المفضلة";
+"Custom Configs" = "الإعدادات المخصصة";
+"Static IPs" = "عناوين IP ثابتة";

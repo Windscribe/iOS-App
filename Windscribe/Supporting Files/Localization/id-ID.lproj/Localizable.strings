@@ -556,3 +556,8 @@
 "Unable to load robert rules. Check your network connection." = "Tidak dapat memuat aturan Robert. Periksa koneksi jaringan Anda.";
 "Location Load" = "Beban Lokasi";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Menampilkan beban lokasi. Batang yang lebih pendek berarti beban lebih ringan.";
+
+"Clear" = "Bersihkan";
+"Favorite Locations" = "Lokasi Favorit";
+"Custom Configs" = "Konfigurasi Kustom";
+"Static IPs" = "IP Statis";

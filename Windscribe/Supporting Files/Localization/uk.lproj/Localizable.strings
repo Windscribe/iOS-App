@@ -559,3 +559,7 @@
 "Location Load" = "Завантаження локації";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "Показує завантаження локації. Коротші смужки означають менше навантаження (використання).";
 
+"Clear" = "Очистити";
+"Favorite Locations" = "Улюблені місця";
+"Custom Configs" = "Користувацькі налаштування";
+"Static IPs" = "Статичні IP";

@@ -580,3 +580,8 @@
 "Unable to load robert rules. Check your network connection." = "रॉबर्ट नियम लोड नहीं हो पाए। कृपया अपना नेटवर्क कनेक्शन जांचें।";
 "Location Load" = "स्थान लोड";
 "Display a location’s load. Shorter bars mean lesser load (usage)." = "स्थान के लोड को दर्शाएं। छोटी पट्टियाँ कम उपयोग को दर्शाती हैं।";
+
+"Clear" = "साफ़ करें";
+"Favorite Locations" = "पसंदीदा स्थान";
+"Custom Configs" = "कस्टम कॉन्फ़िगरेशन";
+"Static IPs" = "स्थैतिक IPs";

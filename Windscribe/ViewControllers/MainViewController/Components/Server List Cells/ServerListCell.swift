@@ -16,7 +16,6 @@ protocol ServerCellModelType {
     var iconImage: UIImage? { get }
     var shouldTintIcon: Bool { get }
     var iconAspect: UIView.ContentMode { get }
-    var clipIcon: Bool { get }
     var actionImage: UIImage? { get }
     var actionVisible: Bool { get }
     var iconSize: CGFloat { get }
@@ -104,8 +103,6 @@ class ServerListCell: SwipeTableViewCell {
 
     func updateLayout() {
         guard let viewModel = viewModel else { return }
-        icon.clipsToBounds = viewModel.clipIcon
-        icon.layer.cornerRadius = viewModel.iconSize / 2.0
         icon.contentMode = viewModel.iconAspect
 
         icon.translatesAutoresizingMaskIntoConstraints = false

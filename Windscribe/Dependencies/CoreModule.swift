@@ -23,6 +23,9 @@ extension Container {
         register(Preferences.self) { _ in
             SharedSecretDefaults.shared
         }.inObjectScope(.container)
+        register(LocalizationService.self) { r in
+            LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.container)
         if WSNet.isValid() {
             register(WSNetServerAPI.self) { _ in
                 WSNet.instance().serverAPI()
