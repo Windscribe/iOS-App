@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+<path fill-rule="nonzero" fill="rgb(63.529412%, 0%, 11.372549%)" fill-opacity="1" d="M 10 0 C 4.484375 0 0.0117188 4.464844 0 9.980469 L 0 10 L 10 11.25 L 20 10 C 20 4.476562 15.523438 0 10 0 Z M 10 0 "/>
+<path fill-rule="nonzero" fill="rgb(93.333333%, 93.333333%, 93.333333%)" fill-opacity="1" d="M 0 10.019531 L 0 10 L 20 10 C 20 15.523438 15.523438 20 10 20 C 4.484375 20 0.0117188 15.535156 0 10.019531 Z M 0 10.019531 "/>
+</svg>

@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "TL-s.png",
+      "filename": "TL-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "TL-s@2x.png",
+      "filename": "TL-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "TL-s@3x.png",
+      "filename": "TL-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

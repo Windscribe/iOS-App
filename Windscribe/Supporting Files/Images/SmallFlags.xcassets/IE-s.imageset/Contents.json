@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "IE-s.png",
+      "filename": "IE-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "IE-s@2x.png",
+      "filename": "IE-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "IE-s@3x.png",
+      "filename": "IE-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

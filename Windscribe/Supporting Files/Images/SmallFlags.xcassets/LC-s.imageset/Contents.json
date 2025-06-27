@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "LC-s.png",
+      "filename": "LC-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "LC-s@2x.png",
+      "filename": "LC-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "LC-s@3x.png",
+      "filename": "LC-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

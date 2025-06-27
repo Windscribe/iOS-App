@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "TF-s.png",
+      "filename": "TF-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "TF-s@2x.png",
+      "filename": "TF-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "TF-s@3x.png",
+      "filename": "TF-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

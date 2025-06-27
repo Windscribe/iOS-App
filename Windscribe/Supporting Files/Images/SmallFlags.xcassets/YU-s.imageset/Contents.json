@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "YU-s.png",
+      "filename": "YU-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "YU-s@2x.png",
+      "filename": "YU-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "YU-s@3x.png",
+      "filename": "YU-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

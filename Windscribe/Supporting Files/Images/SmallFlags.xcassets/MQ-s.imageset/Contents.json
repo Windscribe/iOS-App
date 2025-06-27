@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "MQ-s.png",
+      "filename": "MQ-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "MQ-s@2x.png",
+      "filename": "MQ-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "MQ-s@3x.png",
+      "filename": "MQ-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

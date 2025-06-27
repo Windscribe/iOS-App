@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "WF-s.png",
+      "filename": "WF-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "WF-s@2x.png",
+      "filename": "WF-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "WF-s@3x.png",
+      "filename": "WF-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "PF-s.png",
+      "filename": "PF-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "PF-s@2x.png",
+      "filename": "PF-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "PF-s@3x.png",
+      "filename": "PF-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+<path fill-rule="nonzero" fill="rgb(84.705882%, 0%, 15.294118%)" fill-opacity="1" d="M 10 20 C 15.515625 20 19.988281 15.535156 20 10.019531 L 20 10 L 10 8.75 L 0 10 C 0 15.523438 4.476562 20 10 20 Z M 10 20 "/>
+<path fill-rule="nonzero" fill="rgb(100%, 85.490196%, 26.666667%)" fill-opacity="1" d="M 20 9.980469 L 20 10 L 0 10 C 0 4.476562 4.476562 0 10 0 C 15.515625 0 19.988281 4.464844 20 9.980469 Z M 20 9.980469 "/>
+<path fill-rule="evenodd" fill="rgb(42.745098%, 64.705882%, 26.666667%)" fill-opacity="1" d="M 7.390625 19.65625 C 3.132812 18.507812 0 14.621094 0 10 C 0 5.378906 3.132812 1.492188 7.390625 0.34375 Z M 7.390625 19.65625 "/>
+</svg>

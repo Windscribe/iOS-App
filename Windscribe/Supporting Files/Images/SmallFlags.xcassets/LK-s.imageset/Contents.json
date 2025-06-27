@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "LK-s.png",
+      "filename": "LK-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "LK-s@2x.png",
+      "filename": "LK-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "LK-s@3x.png",
+      "filename": "LK-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

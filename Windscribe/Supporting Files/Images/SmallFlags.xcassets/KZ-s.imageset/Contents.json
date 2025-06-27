@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "KZ-s.png",
+      "filename": "KZ-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "KZ-s@2x.png",
+      "filename": "KZ-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "KZ-s@3x.png",
+      "filename": "KZ-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }

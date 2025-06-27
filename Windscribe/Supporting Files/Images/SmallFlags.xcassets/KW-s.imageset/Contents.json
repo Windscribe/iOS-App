@@ -1,17 +1,17 @@
 {
   "images": [
     {
-      "filename": "KW-s.png",
+      "filename": "KW-s.svg",
       "idiom": "universal",
       "scale": "1x"
     },
     {
-      "filename": "KW-s@2x.png",
+      "filename": "KW-s@2x.svg",
       "idiom": "universal",
       "scale": "2x"
     },
     {
-      "filename": "KW-s@3x.png",
+      "filename": "KW-s@3x.svg",
       "idiom": "universal",
       "scale": "3x"
     }
