@@ -128,6 +128,8 @@
 		1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF72CAB061800623CD5 /* Disconnect.swift */; };
 		1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E60DFF82CAB061800623CD5 /* Connect.swift */; };
 		1E66109F2E0C203B00CCEFD6 /* DescriptionWithLearnMore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */; };
+		1E6610A22E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
+		1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */; };
 		1E7918BF2CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */; };
 		1E7918C02CDCD2F100C20723 /* ConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */; };
 		1E7918C32CDE2FD100C20723 /* LivecycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7918C22CDE2FCC00C20723 /* LivecycleManager.swift */; };
@@ -1444,6 +1446,7 @@
 		1E60E0162CAD664300623CD5 /* ContainerResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolver.swift; sourceTree = "<group>"; };
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
 		1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionWithLearnMore.swift; sourceTree = "<group>"; };
+		1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WillDisappear.swift"; sourceTree = "<group>"; };
 		1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewModel.swift; sourceTree = "<group>"; };
 		1E7918C22CDE2FCC00C20723 /* LivecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivecycleManager.swift; sourceTree = "<group>"; };
 		1E79CA5D2C63D7A3006D4DE7 /* AccountSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSectionView.swift; sourceTree = "<group>"; };
@@ -2645,6 +2648,14 @@
 			path = AppIntents;
 			sourceTree = "<group>";
 		};
+		1E6610A02E0EBFE300CCEFD6 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
 		1E7918C12CDE2FBC00C20723 /* Livecycle */ = {
 			isa = PBXGroup;
 			children = (
@@ -3297,6 +3308,7 @@
 		AF018E0721B0A32800B225FF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1E6610A02E0EBFE300CCEFD6 /* SwiftUI */,
 				F485CBC32D4D67630063EA3A /* UIKit */,
 				C545A0DB2D47638F00F3333E /* Completable+Extension.swift */,
 				AF018E0521B09FB300B225FF /* String+Extension.swift */,
@@ -6008,6 +6020,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E6610A22E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */,
 				59FC74292C5155CB00021CD1 /* VPNManager+ConnectionStatus.swift in Sources */,
 				59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
@@ -6788,6 +6801,7 @@
 				F49C45772DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				E9C9143D2735770000C2ABCD /* MainViewController+Connection.swift in Sources */,
 				1ED616892DE61B98006CDC99 /* NetworkOptionsSettingsView.swift in Sources */,
+				1E6610A32E0EBFF200CCEFD6 /* View+WillDisappear.swift in Sources */,
 				AF36A1AD237C7FC500BDDCDB /* Score.swift in Sources */,
 				1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */,
 				AF1442B1220CAE9B006B8B5C /* Group.swift in Sources */,

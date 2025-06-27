@@ -96,6 +96,9 @@ struct PreferencesMainCategoryView: View {
                 router.createView(for: .confirmEmail)
             }
         }
+        .onWillDisappear {
+            HapticFeedbackGenerator.shared.run(level: .medium)
+        }
     }
 
     @ViewBuilder

@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PreferencesBaseView<Content: View>: View {
     @Binding var isDarkMode: Bool
+    var useHapticFeedback: Bool = true
     let content: () -> Content
 
     var body: some View {
@@ -17,5 +18,10 @@ struct PreferencesBaseView<Content: View>: View {
             content()
         }
         .background(Color.from(.screenBackgroundColor, isDarkMode).ignoresSafeArea())
+        .onAppear {
+            if useHapticFeedback{
+                HapticFeedbackGenerator.shared.run(level: .medium)
+            }
+        }
     }
 }

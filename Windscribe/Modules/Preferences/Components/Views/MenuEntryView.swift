@@ -168,6 +168,7 @@ struct MenuEntryActionView: View {
                                    action: action)
         case let .toggle(isSelected, parentId):
             Button(action: {
+                HapticFeedbackGenerator.shared.run(level: .medium)
                 action(.toggle(isSelected: !isSelected, parentId: parentId))
             }, label: {
                 if let imageName = actionType.getImageName(for: isDarkMode) {
