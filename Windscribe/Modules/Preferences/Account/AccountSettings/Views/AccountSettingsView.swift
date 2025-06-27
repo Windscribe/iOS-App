@@ -36,7 +36,7 @@ struct AccountSettingsView: View {
             if case let .loading(isFullScreen) = viewModel.loadingState, isFullScreen {
                 MenuLoadingOverlayView(isDarkMode: $viewModel.isDarkMode, isFullScreen: true)
             } else {
-                PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+                PreferencesBaseView(isDarkMode: $viewModel.isDarkMode, useHapticFeedback: false) {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 14) {
                             ForEach(viewModel.sections) { section in
@@ -120,6 +120,8 @@ struct AccountSettingsView: View {
         .sheet(isPresented: $showUpgradeModal) {
             PlanUpgradeViewControllerWrapper()
                 .edgesIgnoringSafeArea(.all)
+        }.onAppear {
+            HapticFeedbackGenerator.shared.run(level: .medium)
         }
     }
 

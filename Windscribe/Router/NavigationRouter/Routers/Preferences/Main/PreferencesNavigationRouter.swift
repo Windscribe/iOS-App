@@ -50,12 +50,10 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
     }
 
     func navigate(to destination: Route) {
-        HapticFeedbackGenerator.shared.run(level: .medium)
         activeRoute = destination
     }
 
     func pop() {
-        HapticFeedbackGenerator.shared.run(level: .medium)
         activeRoute = nil
     }
 }
