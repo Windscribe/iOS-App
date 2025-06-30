@@ -112,7 +112,9 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     func favoriteSelected() { }
 
     func isNodeFavorited() -> Bool {
-        favNodes.map({ $0.groupId }).contains(groupId)
+        favNodes
+            .filter{ !$0.isInvalidated }
+            .map({ $0.groupId }).contains(groupId)
     }
 
     private func getSignalLevel(minTime: Int) -> Int {

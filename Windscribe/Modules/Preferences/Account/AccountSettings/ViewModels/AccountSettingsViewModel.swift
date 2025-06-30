@@ -29,7 +29,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     @Published private(set) var accountEmailStatus: AccountEmailStatusType = .unknown
 
     private var cancellables = Set<AnyCancellable>()
-    private var currentSession: Session?
 
     // Dependencies
     private let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -43,10 +42,10 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
     private let disposeBag = DisposeBag()
 
     var shouldShowAddEmailButton: Bool {
-        guard currentSession?.isInvalidated == false else {
+        guard let session = localDatabase.getSessionSync() else {
             return false
         }
-        return currentSession?.email.isEmpty == true
+        return session.email.isEmpty == true
     }
 
     var shouldShowPlanActionButtons: Bool {
@@ -87,7 +86,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self, let updatedSession = self.sessionManager.session else { return }
-                self.currentSession = updatedSession
                 self.buildSections(from: updatedSession)
                 self.accountEmailStatus = self.calculateEmailStatus(from: updatedSession)
             }
@@ -99,7 +97,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
 
         // Set initial state for session from the local database
         if let session = localDatabase.getSessionSync() {
-            self.currentSession = session
             self.accountEmailStatus = self.calculateEmailStatus(from: session)
             self.buildSections(from: session)
         }
@@ -115,7 +112,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                         self.logger.logE("AccountViewModel", "Failed to load session: \(error)")
                         return
                     }
-                    self.currentSession = session
                     self.accountEmailStatus = self.calculateEmailStatus(from: session)
                     self.buildSections(from: session)
                     self.loadingState = .success
@@ -123,7 +119,6 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                 }
             }, receiveValue: { [weak self] session in
                 guard let self = self else { return }
-                self.currentSession = session
                 self.accountEmailStatus = self.calculateEmailStatus(from: session)
                 self.buildSections(from: session)
                 self.loadingState = .success

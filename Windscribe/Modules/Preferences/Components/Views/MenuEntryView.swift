@@ -241,35 +241,37 @@ struct MenuMultipleActionView: View {
     let action: (MenuEntryActionResponseType) -> Void
 
     var body: some View {
-        Menu {
-            ForEach(options, id: \.self) { option in
-                Button(action: {
-                    action(.multiple(newOption: option.fieldKey, parentId: parentId))
-                }, label: {
-                    HStack {
-                        Text(option.title)
-                        if option.title == currentOption {
-                            Image(ImagesAsset.CheckMarkButton.off)
+        HStack {
+            Menu {
+                ForEach(options, id: \.self) { option in
+                    Button(action: {
+                        action(.multiple(newOption: option.fieldKey, parentId: parentId))
+                    }, label: {
+                        HStack {
+                            Text(option.title)
+                            if option.title == currentOption {
+                                Image(ImagesAsset.CheckMarkButton.off)
+                            }
                         }
-                    }
-                })
-            }
-        } label: {
-            HStack(spacing: 8) {
-                Text(currentOption)
-                    .foregroundColor(.from(.infoColor, isDarkMode))
-                    .font(.regular(.callout))
-                if let imageName = actionType.imageName {
-                    Image(imageName)
-                        .resizable()
-                        .renderingMode(.template)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 16, height: 16)
+                    })
+                }
+            } label: {
+                HStack(spacing: 8) {
+                    Text(currentOption)
                         .foregroundColor(.from(.infoColor, isDarkMode))
+                        .font(.regular(.callout))
+                    if let imageName = actionType.imageName {
+                        Image(imageName)
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.from(.infoColor, isDarkMode))
+                    }
                 }
-                if isAlignLeading {
-                    Spacer()
-                }
+            }
+            if isAlignLeading {
+                Spacer()
             }
         }
     }
