@@ -51,14 +51,39 @@ struct AuthenticationCaptchaPopupView: View {
     @State private var startDragOffsetX: CGFloat = 0
     @State private var previousTrailX: CGFloat = 0
 
-    private let referenceWidth: CGFloat = 700
-    private let referenceHeight: CGFloat = 400
-    private let sliderWidth: CGFloat = 120
-    private let maxSlideRange: CGFloat = 580 // referenceWidth - sliderWidth
+    private let maxDisplayWidth: CGFloat = 400
+
+    private let referenceWidth: CGFloat
+    private let referenceHeight: CGFloat
+    private let sliderWidth: CGFloat
+    private let maxSlideRange: CGFloat
+
+    init(
+        background: UIImage,
+        puzzlePiece: UIImage,
+        topOffset: CGFloat,
+        onSubmit: @escaping (_ finalX: CGFloat, _ trailX: [CGFloat], _ trailY: [CGFloat]) -> Void,
+        onCancel: @escaping () -> Void,
+        isDarkMode: Binding<Bool>) {
+            self.background = background
+            self.puzzlePiece = puzzlePiece
+            self.topOffset = topOffset
+            self.onSubmit = onSubmit
+            self.onCancel = onCancel
+            self._isDarkMode = isDarkMode
+
+            referenceWidth = background.size.width
+            referenceHeight = background.size.height
+            sliderWidth = puzzlePiece.size.width
+            maxSlideRange = referenceWidth - sliderWidth
+    }
 
     var body: some View {
         GeometryReader { geo in
-            let maxWidth = min(geo.size.width - 32, 400)
+            // Check image dimension is bigger 400
+            // 32 is 16 * 2 padding value
+            let maxWidth = min(geo.size.width - 32, maxDisplayWidth)
+
             let aspectRatio = referenceHeight / referenceWidth
             let displayedHeight = maxWidth * aspectRatio
             let displayedSliderWidth = sliderWidth * (displayedHeight / referenceHeight)
@@ -102,6 +127,7 @@ struct AuthenticationCaptchaPopupView: View {
 
                                     Task {
                                         try? await Task.sleep(nanoseconds: 100_000_000) // 100 ms delay
+
                                         let sliderRatio = sliderOffsetX / actualRange
                                         let finalX = sliderRatio * maxSlideRange
 
