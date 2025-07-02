@@ -78,7 +78,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
             .tryMap { notifications in
                 try self.validateNotifications(notifications)
             }
-            .map { self.sortAndLimitNotifications($0) }
+            .map { self.sortNotifications($0) }
             .map { self.mapToNewsFeedDataModels($0) }
             .sink(
                 receiveCompletion: { [weak self] completion in
@@ -94,12 +94,11 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     }
 
     // Step 1: Extract Sorting Logic
-    private func sortAndLimitNotifications(_ notifications: [Notice]) -> [Notice] {
+    private func sortNotifications(_ notifications: [Notice]) -> [Notice] {
         return Array(
             notifications
                 .reversed()
                 .sorted { $0.date > $1.date }
-                .prefix(5)
         )
     }
 

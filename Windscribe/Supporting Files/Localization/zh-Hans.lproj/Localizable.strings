@@ -555,7 +555,7 @@
 "Failed to get Robert Filters." = "获取 Robert 筛选器失败。";
 "Unable to load robert rules. Check your network connection." = "无法加载 Robert 规则。请检查您的网络连接。";
 "Location Load" = "位置负载";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "显示某个位置的负载。条越短，负载越小（使用率越低）。";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "显示位置的负载。较小的圆弧表示较低的负载（使用量）。";
 
 "Clear" = "清除";
 "Favorite Locations" = "收藏位置";

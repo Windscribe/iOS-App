@@ -708,7 +708,7 @@ enum TextsAsset {
         static var language: String { return "Localize Windscribe to supported languages.".localized }
         static var background: String { return "Customize the background of the main app screen.".localized }
         static var notificationStats: String { return "Set up push notifications to receive connection updates in case of an interruption".localized }
-        static var locationLoad: String { return "Display a location’s load. Shorter bars mean lesser load (usage).".localized }
+        static var locationLoad: String { return "Display a location’s load. Smaller circle arc mean lesser load (usage).".localized }
         static var hapticFeedback: String { return "Vibrate the device based on user actions.".localized }
         static var customBackground: String { return "Use the app custom background instead of the locations flag.".localized }
     }

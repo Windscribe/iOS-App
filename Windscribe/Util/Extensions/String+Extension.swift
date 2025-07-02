@@ -111,6 +111,21 @@ extension String {
             return []
         }
     }
+
+    // Adds the dash in XXXX-XXXX format
+    func formattedLazyLoginCode() -> String {
+        let clean = self
+            .uppercased()
+            .filter { $0.isLetter || $0.isNumber }
+            .prefix(8)
+        let prefix = clean.prefix(4)
+        let suffix = clean.dropFirst(4)
+        if suffix.isEmpty {
+            return String(prefix)
+        } else {
+            return "\(prefix)-\(suffix)"
+        }
+    }
 }
 
 extension StringProtocol {

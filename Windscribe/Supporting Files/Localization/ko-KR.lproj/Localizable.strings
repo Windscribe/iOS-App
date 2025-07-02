@@ -555,7 +555,7 @@
 "Failed to get Robert Filters." = "Robert 필터를 가져오지 못했습니다.";
 "Unable to load robert rules. Check your network connection." = "Robert 규칙을 불러올 수 없습니다. 네트워크 연결을 확인하세요.";
 "Location Load" = "위치 부하";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "위치의 부하를 표시합니다. 막대가 짧을수록 부하가 적습니다.";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "위치의 부하를 표시합니다. 더 작은 원호는 더 적은 부하(사용량)를 의미합니다.";
 
 "Clear" = "지우기";
 "Favorite Locations" = "즐겨찾는 위치";

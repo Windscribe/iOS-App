@@ -36,6 +36,8 @@ struct CaptchaSheetContent: View {
 }
 
 struct AuthenticationCaptchaPopupView: View {
+    @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
+
     let background: UIImage
     let puzzlePiece: UIImage
     let topOffset: CGFloat  // Reference referenceHeight space
@@ -90,18 +92,22 @@ struct AuthenticationCaptchaPopupView: View {
             let actualRange = maxWidth - displayedSliderWidth
             let topOffsetScaled = topOffset * (displayedHeight / referenceHeight)
 
-            VStack(spacing: 20) {
+            VStack(spacing: 24) {
                 Text(TextsAsset.Authentication.captchaDescription)
                     .font(.medium(.headline))
                     .multilineTextAlignment(.center)
                     .foregroundColor(.from(.titleColor, isDarkMode))
-                    .padding(.top, 12)
+                    .padding(.top, 8)
 
                 ZStack(alignment: .topLeading) {
                     Image(uiImage: background)
                         .resizable()
                         .frame(width: maxWidth, height: displayedHeight)
                         .cornerRadius(8)
+                        .overlay(
+                             RoundedRectangle(cornerRadius: 8)
+                                 .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                         )
 
                     Image(uiImage: puzzlePiece)
                         .resizable()
@@ -143,13 +149,30 @@ struct AuthenticationCaptchaPopupView: View {
                 .frame(width: maxWidth, height: displayedHeight)
                 .padding(.bottom, 8)
 
+                HStack {
+                    Text("Drag left puzzle piece into place")
+                        .font(.regular(.caption1))
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding(4)
+                .background(Color.from(.popUpBackgroundColor, isDarkMode))
+                .cornerRadius(100)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 100)
+                        .inset(by: -0.5)
+                        .stroke(Color.from(.iconColor, isDarkMode).opacity(0.05), lineWidth: 1)
+                )
+                .frame(width: maxWidth, alignment: .center)
+
                 Button(TextsAsset.cancel, action: onCancel)
                     .font(.regular(.callout))
                     .foregroundColor(.from(.infoColor, isDarkMode))
-                    .padding(.bottom, 4)
+                    .padding(.bottom, 8)
             }
             .padding()
-            .background(Color.from(.popUpBackgroundColor, isDarkMode))
+            .background(Color.from(.captchaBackgroundColor, isDarkMode))
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
@@ -160,6 +183,7 @@ struct AuthenticationCaptchaPopupView: View {
             .position(x: geo.size.width / 2, y: geo.size.height / 2)
         }
         .padding(.horizontal, 16)
+        .dynamicTypeSize(dynamicTypeRange)
     }
 }
 

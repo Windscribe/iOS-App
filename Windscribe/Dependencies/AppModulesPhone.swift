@@ -275,7 +275,8 @@ class ViewModels: Assembly {
                                      lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
-            SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                     languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
         container.register(LocationManagingViewModelType.self) { r in
             LocationManagingViewModel(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
@@ -386,7 +387,8 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
 
         container.register(ListHeaderViewModelType.self) { r in
-            ListHeaderViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            ListHeaderViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                                languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
 
         container.register(FreeAccountFooterViewModelType.self) { r in
