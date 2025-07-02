@@ -90,6 +90,11 @@ struct AccountSettingsView: View {
         ), actions: {
             if dialog == .password {
                 SecureField(dialogPlaceHolder(dialog), text: $inputText)
+            } else if dialog == .lazyLogin {
+                TextField(dialogPlaceHolder(dialog), text: $inputText)
+                    .onChange(of: inputText) { newValue in
+                        inputText = newValue.formattedLazyLoginCode()
+                    }
             } else {
                 TextField(dialogPlaceHolder(dialog), text: $inputText)
             }
@@ -109,6 +114,7 @@ struct AccountSettingsView: View {
                 description: dialogDescription(dialog),
                 placeholder: dialogPlaceHolder(dialog),
                 isSecure: dialog == .password,
+                isLazyCode: dialog == .lazyLogin,
                 onConfirm: { input in
                     handleConfirm(dialog: dialog, input: input)
                 },

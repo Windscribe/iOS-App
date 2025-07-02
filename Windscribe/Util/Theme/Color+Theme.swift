@@ -19,6 +19,7 @@ enum MenuColorsType {
     case actionBackgroundColor
     case dark
     case popUpBackgroundColor
+    case captchaBackgroundColor
 }
 
 enum MainColorsType {
@@ -52,13 +53,15 @@ extension Color {
         case .dark:
             return isDarkMode ? .black : .infoGrey
         case .allowedColor(let isEnabled):
-             if isEnabled {
-                 return .positiveGreen
+            if isEnabled {
+                return .positiveGreen
             } else {
                 return .infoGrey
             }
         case .popUpBackgroundColor:
             return isDarkMode ? .grayishDarkColor : .white
+        case .captchaBackgroundColor:
+            return isDarkMode ? .deepSlate : .white
         }
     }
 }

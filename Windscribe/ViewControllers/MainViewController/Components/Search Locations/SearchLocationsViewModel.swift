@@ -18,6 +18,7 @@ protocol SearchCountryViewDelegate: AnyObject {
 protocol SearchLocationsViewModelType {
     var isSearchActive: BehaviorSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var refreshLanguage: PublishSubject<Void> { get }
 
     var delegate: SearchCountryViewDelegate? { get set }
 
@@ -29,13 +30,18 @@ protocol SearchLocationsViewModelType {
 }
 
 class SearchLocationsViewModel: SearchLocationsViewModelType {
-    var isSearchActive = BehaviorSubject<Bool>(value: false)
+    let isSearchActive = BehaviorSubject<Bool>(value: false)
+    let refreshLanguage = PublishSubject<Void>()
+
     let isDarkMode: BehaviorSubject<Bool>
+    let disposeBag = DisposeBag()
 
     weak var delegate: SearchCountryViewDelegate?
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
+        languageManager.activelanguage.subscribe { _ in self.refreshLanguage.onNext(()) }
+            .disposed(by: disposeBag)
     }
 
     func toggleSearch() {

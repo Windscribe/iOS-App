@@ -21,11 +21,11 @@ enum BackgroundAspectRatioType: String, CaseIterable {
 
     init(aspectRatioType: String) {
         switch aspectRatioType {
-        case TextsAsset.General.stretch:
+        case Fields.Values.stretch:
             self = .stretch
-        case TextsAsset.General.fill:
+        case Fields.Values.fill:
            self = .fill
-        case TextsAsset.General.tile:
+        case Fields.Values.tile:
             self = .tile
         default:
             self = .stretch

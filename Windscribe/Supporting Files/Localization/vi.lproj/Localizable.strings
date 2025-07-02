@@ -567,7 +567,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Failed to get Robert Filters." = "Không thể lấy bộ lọc Robert.";
 "Unable to load robert rules. Check your network connection." = "Không thể tải quy tắc Robert. Kiểm tra kết nối mạng của bạn.";
 "Location Load" = "Tải địa điểm";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "Hiển thị tải của một địa điểm. Vạch ngắn hơn nghĩa là ít tải hơn (sử dụng ít hơn).";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "Hiển thị tải của một vị trí. Cung tròn nhỏ hơn có nghĩa là mức sử dụng thấp hơn.";
 
 "Clear" = "Xóa";
 "Favorite Locations" = "Vị trí yêu thích";

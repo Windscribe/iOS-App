@@ -579,7 +579,7 @@
 "Failed to get Robert Filters." = "रॉबर्ट फ़िल्टर प्राप्त करने में विफल।";
 "Unable to load robert rules. Check your network connection." = "रॉबर्ट नियम लोड नहीं हो पाए। कृपया अपना नेटवर्क कनेक्शन जांचें।";
 "Location Load" = "स्थान लोड";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "स्थान के लोड को दर्शाएं। छोटी पट्टियाँ कम उपयोग को दर्शाती हैं।";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "स्थान का लोड दिखाएं। छोटा वृत्त चाप कम लोड (उपयोग) को दर्शाता है।";
 
 "Clear" = "साफ़ करें";
 "Favorite Locations" = "पसंदीदा स्थान";

@@ -14,6 +14,7 @@ struct MenuTextFieldDialogView: View {
     let description: String
     let placeholder: String
     let isSecure: Bool
+    let isLazyCode: Bool
     let onConfirm: (String) -> Void
     let onCancel: () -> Void
 
@@ -32,6 +33,12 @@ struct MenuTextFieldDialogView: View {
             if isSecure {
                 SecureField(placeholder, text: $input)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+            } else if isLazyCode {
+                TextField(placeholder, text: $input)
+                    .onChange(of: input) { newValue in
+                        input = newValue.formattedLazyLoginCode()
+                    }
+                .textFieldStyle(RoundedBorderTextFieldStyle())
             } else {
                 TextField(placeholder, text: $input)
                     .textFieldStyle(RoundedBorderTextFieldStyle())

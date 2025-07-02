@@ -555,7 +555,7 @@
 "Failed to get Robert Filters." = "Gagal mendapatkan filter Robert.";
 "Unable to load robert rules. Check your network connection." = "Tidak dapat memuat aturan Robert. Periksa koneksi jaringan Anda.";
 "Location Load" = "Beban Lokasi";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "Menampilkan beban lokasi. Batang yang lebih pendek berarti beban lebih ringan.";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "Tampilkan beban lokasi. Lengkungan lingkaran yang lebih kecil berarti beban (penggunaan) yang lebih sedikit.";
 
 "Clear" = "Bersihkan";
 "Favorite Locations" = "Lokasi Favorit";

@@ -571,7 +571,7 @@
 "Failed to get Robert Filters." = "Robert filtreleri alınamadı.";
 "Unable to load robert rules. Check your network connection." = "Robert kuralları yüklenemedi. Ağ bağlantınızı kontrol edin.";
 "Location Load" = "Konum Yükü";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "Bir konumun yükünü gösterir. Daha kısa çubuklar daha az kullanım anlamına gelir.";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "Bir konumun yükünü gösterir. Daha küçük daire yayı, daha az yük (kullanım) anlamına gelir.";
 
 "Clear" = "Temizle";
 "Favorite Locations" = "Favori Konumlar";

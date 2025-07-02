@@ -50,13 +50,19 @@ class SearchLocationsView: UIView {
             guard let self = self else { return }
             separatorView.backgroundColor = .from(.loadCircleColor, isDarkMode)
             searchTextfield.textColor = .from(.textColor, isDarkMode)
-            searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
-                                                                       attributes: [NSAttributedString.Key.foregroundColor: UIColor.from(.placeholderColor, isDarkMode)])
+            updateSearchTextfield(for: isDarkMode)
             searchIcon.setImageColor(color: .from(.infoColor, isDarkMode))
             exitSearchButton.imageView?.setImageColor(color: .from(.infoColor, isDarkMode))
             searchTextfield.textColor = .from(.textColor, isDarkMode)
             backgroundColor = isUserInteractionEnabled ? .from(.backgroundColor, isDarkMode) : .clear
             self.isDarkMode = isDarkMode
+        }).disposed(by: disposeBag)
+        viewModel.refreshLanguage.subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            clearSearchButton.configuration = getClearConfig()
+            if let isDarkMode = try? viewModel.isDarkMode.value() {
+                updateSearchTextfield(for: isDarkMode)
+            }
         }).disposed(by: disposeBag)
     }
 
@@ -72,18 +78,7 @@ class SearchLocationsView: UIView {
         exitSearchButton.setImage(UIImage(named: ImagesAsset.exitSearch)?.withRenderingMode(.alwaysTemplate)
                                   , for: .normal)
 
-        var config = UIButton.Configuration.plain()
-        config.title = TextsAsset.clearSearch
-        config.baseForegroundColor = .cyberBlueWithOpacity(opacity: 0.7)
-        config.titleAlignment = .center
-        config.titleTextAttributesTransformer =
-          UIConfigurationTextAttributesTransformer { incoming in
-            var outgoing = incoming
-            outgoing.font = UIFont.text(size: 16)
-            return outgoing
-          }
-
-        clearSearchButton.configuration = config
+        clearSearchButton.configuration = getClearConfig()
 
         searchTextfield.autocorrectionType = .no
         searchTextfield.autocapitalizationType = .none
@@ -94,6 +89,25 @@ class SearchLocationsView: UIView {
         exitSearchButton.layer.opacity = serverSectionOpacity
 
         stackContainerView.addArrangedSubviews([searchIcon, spacerView, searchTextfield, clearSearchButton, exitSearchButton])
+    }
+
+    private func getClearConfig() -> UIButton.Configuration {
+        var config = UIButton.Configuration.plain()
+        config.title = TextsAsset.clearSearch
+        config.baseForegroundColor = .cyberBlueWithOpacity(opacity: 0.7)
+        config.titleAlignment = .center
+        config.titleTextAttributesTransformer =
+          UIConfigurationTextAttributesTransformer { incoming in
+            var outgoing = incoming
+            outgoing.font = UIFont.text(size: 16)
+            return outgoing
+          }
+        return config
+    }
+
+    private func updateSearchTextfield(for isDarkMode: Bool) {
+        searchTextfield.attributedPlaceholder = NSAttributedString(string: TextsAsset.searchLocations,
+                                                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.from(.placeholderColor, isDarkMode)])
     }
 
     private func addViewConstraints() {

@@ -556,7 +556,7 @@
 "Failed to get Robert Filters." = "No se pudieron obtener los filtros de Robert.";
 "Unable to load robert rules. Check your network connection." = "No se pudieron cargar las reglas de Robert. Verifica tu conexión a internet.";
 "Location Load" = "Carga de ubicación";
-"Display a location’s load. Shorter bars mean lesser load (usage)." = "Muestra la carga de una ubicación. Barras más cortas indican menor uso.";
+"Display a location’s load. Smaller circle arc mean lesser load (usage)." = "Muestra la carga de una ubicación. Un arco más pequeño indica menor carga (uso).";
 
 "Clear" = "Limpiar";
 "Favorite Locations" = "Ubicación favorita";
