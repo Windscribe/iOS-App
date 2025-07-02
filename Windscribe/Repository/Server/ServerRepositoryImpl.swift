@@ -20,7 +20,6 @@ class ServerRepositoryImpl: ServerRepository {
     private let preferences: Preferences
     private let logger: FileLogger
     private let disposeBag = DisposeBag()
-    private var unusedFavourites: [String] = []
 
     init(apiManager: APIManager, localDatabase: LocalDatabase, userRepository: UserRepository, preferences: Preferences, advanceRepository: AdvanceRepository, logger: FileLogger) {
         self.apiManager = apiManager
@@ -39,7 +38,6 @@ class ServerRepositoryImpl: ServerRepository {
 
     private func loadInitialServers() {
         if let servers = self.localDatabase.getServers() {
-            self.rebuildFavouriteList(serverList: servers)
             self.updateServerModels(servers: servers)
         }
     }
@@ -59,12 +57,10 @@ class ServerRepositoryImpl: ServerRepository {
                     }
                 }
                 self.localDatabase.saveServers(servers: servers)
-                self.rebuildFavouriteList(serverList: servers)
                 self.updateServerModels(servers: servers)
                 return servers
             }.catch { error in
                 if let servers = self.localDatabase.getServers() {
-                    self.rebuildFavouriteList(serverList: servers)
                     self.updateServerModels(servers: servers)
                     return Single.just(servers)
                 } else {
@@ -121,38 +117,5 @@ class ServerRepositoryImpl: ServerRepository {
                 return
             }
         }
-    }
-
-    private func rebuildFavouriteList(serverList: [Server]) {
-        unusedFavourites.removeAll()
-        DispatchQueue.main.async {
-            for favourite in self.localDatabase.getFavNodeSync() {
-                for server in serverList {
-                    for group in server.groups where String(group.id) == favourite.groupId {
-                        if let lastSelectedNode = self.getLastSelectedNode(
-                            group: group,
-                            server: server,
-                            favourite: favourite) {
-                            let favNode = FavNode(node: lastSelectedNode,
-                                                  group: group,
-                                                  server: server)
-                            self.localDatabase.saveFavNode(favNode: favNode).disposed(by: self.disposeBag)
-                        }
-                    }
-                }
-            }
-            for hostname in self.unusedFavourites {
-                self.localDatabase.removeFavNode(hostName: hostname)
-            }
-        }
-    }
-
-    private func getLastSelectedNode(group: Group, server _: Server, favourite: FavNode) -> Node? {
-        var node = group.nodes.filter { $0.hostname == favourite.hostname }.first
-        if node == nil && group.nodes.count > 0 {
-            unusedFavourites.append(favourite.hostname)
-            node = group.nodes.randomElement()
-        }
-        return node
     }
 }

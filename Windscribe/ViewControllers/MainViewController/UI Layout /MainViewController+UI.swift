@@ -58,7 +58,7 @@ extension MainViewController {
         favTableView = PlainTableView()
         favTableView.tag = 1
         favTableView.register(
-            FavNodeTableViewCell.self,
+            NodeTableViewCell.self,
             forCellReuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         scrollView.addSubview(favTableView)
 

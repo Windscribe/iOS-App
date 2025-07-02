@@ -33,23 +33,23 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func loadFavNodes() {
+    func loadFavouriteList() {
         favTableView.dataSource = favNodesListTableViewDataSource
         favTableView.delegate = favNodesListTableViewDataSource
         favNodesListTableViewDataSource?.delegate = self
-        reloadFavNodeOrder()
+        reloadFavouriteOrder()
     }
 
-    @objc func reloadFavNodeOrder() {
-        viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] favNodes in
-                if favNodes?.count == 0 {
-                favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: [], viewModel: viewModel)
+    @objc func reloadFavouriteOrder() {
+        viewModel.favouriteList.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] favList in
+                if favList?.count == 0 {
+                    favNodesListTableViewDataSource = FavouriteListTableViewDataSource(favList: [], viewModel: viewModel)
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.reloadData()
                 return
             }
-            if let favnodes = favNodes {
-                favNodesListTableViewDataSource = FavNodesListTableViewDataSource(favNodes: viewModel.sortFavouriteNodesUsingUserPreferences(favNodes: favnodes), viewModel: viewModel)
+            if let favList = favList {
+                favNodesListTableViewDataSource = FavouriteListTableViewDataSource(favList: viewModel.sortFavouriteNodesUsingUserPreferences(favList: favList), viewModel: viewModel)
                 favNodesListTableViewDataSource?.delegate = self
                 favTableView.dataSource = favNodesListTableViewDataSource
                 favTableView.delegate = favNodesListTableViewDataSource

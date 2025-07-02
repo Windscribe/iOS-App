@@ -40,7 +40,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
 
     var serverSections: [ServerSection] = []
     weak var delegate: ServerListTableViewDelegate?
-    var favNodes: [FavNodeModel]? {
+    var favList: [GroupModel]? {
         didSet {
             delegate?.reloadServerListTableView()
         }
@@ -61,8 +61,8 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
             return $0
         })
 
-        viewModel.favNode.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.favNodes = $0
+        viewModel.favouriteList.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            self.favList = $0
         }).disposed(by: disposeBag)
     }
 
@@ -94,7 +94,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
         if (serverSections.count > indexPath.section) && ((serverSections[indexPath.section].server?.groups.count ?? 0) > indexPath.row - 1) {
             let group = serverSections[indexPath.section].server?.groups[indexPath.row - 1]
             cell.bindViews(isDarkMode: viewModel.isDarkMode)
-            cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: group, displayingNodeServer: serverSections[indexPath.section].server)
+            cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: group)
         }
         return cell
     }

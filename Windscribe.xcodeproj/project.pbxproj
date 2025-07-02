@@ -79,7 +79,7 @@
 		1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */; };
 		1E2CBFEF2CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
 		1E2CBFF02CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
-		1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */; };
+		1E3B47F32BF6378E00C2E7A7 /* MainViewController+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+Favourites.swift */; };
 		1E3F775D2DAFFC43008308A8 /* ListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */; };
 		1E3F77602DB007CD008308A8 /* ListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */; };
 		1E3F77612DB13CA0008308A8 /* ExportedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553D62DA6AA2200F16AF0 /* ExportedLocations.swift */; };
@@ -98,7 +98,6 @@
 		1E5553A42D81FABF00F16AF0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; };
 		1E5553A52D81FABF00F16AF0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1E5553A32D81FABF00F16AF0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		1E5553A82D830EE200F16AF0 /* ServerListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553A72D830EDC00F16AF0 /* ServerListCell.swift */; };
-		1E5553AB2D847C9E00F16AF0 /* FavNodeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553AA2D847C9C00F16AF0 /* FavNodeTableViewCell.swift */; };
 		1E5553AD2D89AAC400F16AF0 /* BaseNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553AC2D89AAC300F16AF0 /* BaseNodeCell.swift */; };
 		1E5553B12D89BF7F00F16AF0 /* Flags.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E5553B02D89BF7F00F16AF0 /* Flags.xcassets */; };
 		1E5553B72D8C323800F16AF0 /* TopNavBarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E5553B62D8C322400F16AF0 /* TopNavBarHeader.swift */; };
@@ -1414,7 +1413,7 @@
 		1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewModel.swift; sourceTree = "<group>"; };
 		1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDebugLogCompletedViewModel.swift; sourceTree = "<group>"; };
 		1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsManager.swift; sourceTree = "<group>"; };
-		1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+FavNodes.swift"; sourceTree = "<group>"; };
+		1E3B47F22BF6378E00C2E7A7 /* MainViewController+Favourites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Favourites.swift"; sourceTree = "<group>"; };
 		1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListEmptyView.swift; sourceTree = "<group>"; };
 		1E3F775F2DB007C6008308A8 /* ListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListHeaderView.swift; sourceTree = "<group>"; };
 		1E3F77632DB13CC8008308A8 /* ExportedLocations+Init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExportedLocations+Init.swift"; sourceTree = "<group>"; };
@@ -1425,7 +1424,6 @@
 		1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodesListViewModel.swift; sourceTree = "<group>"; };
 		1E4933522BF50BC200C853AF /* ServerListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListViewModel.swift; sourceTree = "<group>"; };
 		1E5553A72D830EDC00F16AF0 /* ServerListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerListCell.swift; sourceTree = "<group>"; };
-		1E5553AA2D847C9C00F16AF0 /* FavNodeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavNodeTableViewCell.swift; sourceTree = "<group>"; };
 		1E5553AC2D89AAC300F16AF0 /* BaseNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseNodeCell.swift; sourceTree = "<group>"; };
 		1E5553B02D89BF7F00F16AF0 /* Flags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Flags.xcassets; sourceTree = "<group>"; };
 		1E5553B62D8C322400F16AF0 /* TopNavBarHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavBarHeader.swift; sourceTree = "<group>"; };
@@ -2494,7 +2492,7 @@
 			isa = PBXGroup;
 			children = (
 				1E49334F2BF4E43F00C853AF /* FavNodesListViewModel.swift */,
-				1E3B47F22BF6378E00C2E7A7 /* MainViewController+FavNodes.swift */,
+				1E3B47F22BF6378E00C2E7A7 /* MainViewController+Favourites.swift */,
 			);
 			path = "Fav Nodes List";
 			sourceTree = "<group>";
@@ -2514,7 +2512,6 @@
 				1E5553D32D9EC1CA00F16AF0 /* CustomConfigCell.swift */,
 				AFB0DC0321FB997300C40E3C /* StaticIPTableViewCell.swift */,
 				1E5553AC2D89AAC300F16AF0 /* BaseNodeCell.swift */,
-				1E5553AA2D847C9C00F16AF0 /* FavNodeTableViewCell.swift */,
 				1E5553A72D830EDC00F16AF0 /* ServerListCell.swift */,
 				F469F0D32D7BA5E0004DC6AB /* BestLocationCell.swift */,
 				AF04982C21FA24FF0046D33B /* NodeTableViewCell.swift */,
@@ -6616,7 +6613,6 @@
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
 				1E5553B72D8C323800F16AF0 /* TopNavBarHeader.swift in Sources */,
 				1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */,
-				1E5553AB2D847C9E00F16AF0 /* FavNodeTableViewCell.swift in Sources */,
 				599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */,
 				59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */,
 				1ED6164A2DCA7132006CDC99 /* MenuEntryView.swift in Sources */,
@@ -6838,7 +6834,7 @@
 				AF36BF1022FC971E00FCC6F4 /* WSTextField.swift in Sources */,
 				F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */,
 				1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */,
-				1E3B47F32BF6378E00C2E7A7 /* MainViewController+FavNodes.swift in Sources */,
+				1E3B47F32BF6378E00C2E7A7 /* MainViewController+Favourites.swift in Sources */,
 				C5D1C2D62BBFE2F40083B9EC /* AdvanceKeys.swift in Sources */,
 				C57BDE3B29B93E2400337E63 /* SiriIdentifiers.swift in Sources */,
 				1E49334A2BF3A52500C853AF /* StaticIPListViewModel.swift in Sources */,

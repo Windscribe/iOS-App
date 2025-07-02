@@ -14,7 +14,7 @@ protocol MainViewModelType {
     var serverList: BehaviorSubject<[ServerModel]> { get }
     var lastConnection: BehaviorSubject<VPNConnection?> { get }
     var portMap: BehaviorSubject<[PortMap]?> { get }
-    var favNode: BehaviorSubject<[FavNodeModel]?> { get }
+    var favouriteList: BehaviorSubject<[GroupModel]?> { get }
     var staticIPs: BehaviorSubject<[StaticIP]?> { get }
     var customConfigs: BehaviorSubject<[CustomConfig]?> { get }
     var oldSession: OldSession? { get }
@@ -46,7 +46,7 @@ protocol MainViewModelType {
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void)
     func saveLastNotificationTimestamp()
     func getLastNotificationTimestamp() -> Double?
-    func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel]
+    func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel]
     func getPortList(protocolName: String) -> [String]?
     func getStaticIp() -> [StaticIP]
     func getLatency(ip: String?) -> Int
@@ -80,7 +80,7 @@ class MainViewModel: MainViewModelType {
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
     var portMap = BehaviorSubject<[PortMap]?>(value: nil)
-    var favNode = BehaviorSubject<[FavNodeModel]?>(value: nil)
+    var favouriteList = BehaviorSubject<[GroupModel]?>(value: nil)
     var staticIPs = BehaviorSubject<[StaticIP]?>(value: nil)
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
@@ -131,7 +131,7 @@ class MainViewModel: MainViewModelType {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadNotifications()
         loadServerList()
-        loadFavNode()
+        loadFavourite()
         loadTvFavourites()
         loadStaticIps()
         loadCustomConfigs()
@@ -179,24 +179,23 @@ class MainViewModel: MainViewModelType {
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
-    func sortFavouriteNodesUsingUserPreferences(favNodes: [FavNodeModel]) -> [FavNodeModel] {
-        var favNodesOrdered = [FavNodeModel]()
+    func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel] {
+        var favNodesOrdered = [GroupModel]()
         switch try? locationOrderBy.value() {
         case Fields.Values.geography:
-            favNodesOrdered = favNodes
+            favNodesOrdered = favList
         case Fields.Values.alphabet:
-            favNodesOrdered = favNodes.sorted { favNode1, favNode2 -> Bool in
-                guard let countryCode1 = favNode1.cityName, let countryCode2 = favNode2.cityName else { return false }
-                return countryCode1 < countryCode2
+            favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
+                return fav1.city < fav2.city
             }
         case Fields.Values.latency:
-            favNodesOrdered = favNodes.sorted { favNode1, favNode2 -> Bool in
-                let firstLatency = getLatency(ip: favNode1.pingIp)
-                let secondLatency = getLatency(ip: favNode2.pingIp)
+            favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
+                let firstLatency = getLatency(ip: fav1.pingIp)
+                let secondLatency = getLatency(ip: fav2.pingIp)
                 return firstLatency < secondLatency
             }
         default:
-            return favNodes
+            return favList
         }
         return favNodesOrdered
     }
@@ -315,20 +314,19 @@ class MainViewModel: MainViewModelType {
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
-    func loadFavNode() {
+    func loadFavourite() {
         Observable.combineLatest(serverRepository.updatedServerModelsSubject.asObservable(),
-                                 localDatabase.getFavNode())
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] (serverModels, favList) in
-                guard let self = self else { return }
-                let favModels = favList.filter { !$0.isInvalidated }
-                    .compactMap { favNode in
-                    let group = serverModels.flatMap { $0.groups }
-                        .first { "\($0.id)" == favNode.groupId }
-                    return favNode.getFavNodeModel(with: group?.city, and: group?.nick)
+                                 localDatabase.getFavouriteListObservable())
+        .observe(on: MainScheduler.asyncInstance)
+        .subscribe(on: MainScheduler.instance)
+        .subscribe(onNext: { [weak self] (serverModels, favList) in
+            guard let self = self else { return }
+            let favGroupModels = favList.filter { !$0.isInvalidated }
+                .compactMap { favNode in
+                    return serverModels.flatMap { $0.groups }
+                        .first { "\($0.id)" == favNode.id }
                 }
-                favNode.onNext(favModels)
+            favouriteList.onNext(favGroupModels)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 

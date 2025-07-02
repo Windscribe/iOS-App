@@ -122,8 +122,8 @@ class TVViewModels: Assembly {
                                 locationsManager: r.resolve(LocationsManagerType.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(FavNodesListViewModelType.self) { r in
-            FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
+        container.register(FavouriteListViewModelType.self) { r in
+            FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
                                   sessionManager: r.resolve(SessionManaging.self)!,
@@ -157,7 +157,7 @@ class TVViewControllers: Assembly {
             vc.logger = r.resolve(FileLogger.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
-            vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
+            vc.favNodesListViewModel = r.resolve(FavouriteListViewModelType.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.ipInfoViewModel = r.resolve(IPInfoViewModelType.self)

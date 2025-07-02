@@ -26,7 +26,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private let disposeBag = DisposeBag()
     let latency: BehaviorSubject<[PingData]> = BehaviorSubject(value: [])
-    private let favNodes: BehaviorSubject<[FavNode]> = BehaviorSubject(value: [])
+    private let favList: BehaviorSubject<[Favourite]> = BehaviorSubject(value: [])
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
 
@@ -37,12 +37,12 @@ class LatencyRepositoryImpl: LatencyRepository {
         self.logger = logger
         self.locationsManager = locationsManager
         latency.onNext(self.database.getAllPingData())
-        observeFavNodes()
+        observeFavouriteList()
     }
 
-    private func observeFavNodes() {
-        database.getFavNode().subscribe(onNext: { favNodes in
-            self.favNodes.onNext(favNodes)
+    private func observeFavouriteList() {
+        database.getFavouriteListObservable().subscribe(onNext: { favList in
+            self.favList.onNext(favList)
         }, onError: { _ in
         }).disposed(by: disposeBag)
     }
@@ -91,15 +91,6 @@ class LatencyRepositoryImpl: LatencyRepository {
             .disposed(by: self.disposeBag)
 
         return latencySingles.asCompletable()
-    }
-
-    func loadFavouriteLatency() -> Completable {
-        let favourites = try? favNodes.value().map { p in (p.pingIp, p.pingHost) }
-        return createLatencyTask(from: favourites ?? [])
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .do(onSuccess: { _ in self.latency.onNext(self.database.getAllPingData()) })
-            .asCompletable()
     }
 
     func loadStreamingServerLatency() -> Completable {

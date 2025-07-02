@@ -147,6 +147,15 @@ struct FavNodeModel {
     }
 }
 
+@objcMembers class Favourite: Object, Decodable {
+    @Persisted(primaryKey: true) var id: String
+
+    convenience init(id: String) {
+        self.init()
+        self.id = id
+    }
+}
+
 @objcMembers class FavNode: Object, Decodable {
     dynamic var groupId: String = ""
     dynamic var serverName: String = ""

@@ -48,7 +48,7 @@ class MainViewController: PreferredFocusedViewController {
     var vpnConnectionViewModel: ConnectionViewModelType!
     var latencyViewModel: LatencyViewModel!
     var serverListViewModel: ServerListViewModelType!
-    var favNodesListViewModel: FavNodesListViewModelType!
+    var favNodesListViewModel: FavouriteListViewModelType!
     var staticIPListViewModel: StaticIPListViewModelType!
     var router: HomeRouter!
     let disposeBag = DisposeBag()
@@ -607,9 +607,9 @@ extension MainViewController: ServerListTableViewDelegate {
     func reloadTable(cell _: UITableViewCell) {}
 }
 
-extension MainViewController: FavNodesListTableViewDelegate {
-    func setSelectedFavNode(favNode: FavNodeModel) {
-        favNodesListViewModel.setSelectedFavNode(favNode: favNode)
+extension MainViewController: FavouriteListTableViewDelegate {
+    func setSelectedFavourite(favourite: GroupModel) {
+        favNodesListViewModel.setSelectedFav(favourite: favourite)
     }
 }
 

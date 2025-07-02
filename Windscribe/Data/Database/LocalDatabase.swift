@@ -52,10 +52,12 @@ protocol LocalDatabase {
     func saveRobertFilters(filters: RobertFilters) -> Disposable
     func getLastConnection() -> Observable<VPNConnection?>
     func saveLastConnetion(vpnConnection: VPNConnection) -> Disposable
-    func saveFavNode(favNode: FavNode) -> Disposable
-    func getFavNode() -> Observable<[FavNode]>
-    func getFavNodeSync() -> [FavNode]
-    func removeFavNode(hostName: String)
+
+    func saveFavourite(favourite: Favourite) -> Disposable
+    func getFavouriteListObservable() -> Observable<[Favourite]>
+    func getFavouriteList() -> [Favourite]
+    func removeFavourite(groupId: String)
+
     func toggleRobertRule(id: String)
     func updateNetworkWithPreferredProtocolSwitch(network: WifiNetwork, status: Bool)
     func updateTrustNetwork(network: WifiNetwork, status: Bool)
