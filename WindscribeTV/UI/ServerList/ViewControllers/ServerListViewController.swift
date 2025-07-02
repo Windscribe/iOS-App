@@ -51,7 +51,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
     @IBOutlet var emptyDataView: EmptyListView!
 
     weak var delegate: ServerListTableViewDelegate?
-    weak var favDelegate: FavNodesListTableViewDelegate?
+    weak var favDelegate: FavouriteListTableViewDelegate?
     weak var bestLocDelegate: BestLocationConnectionDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
@@ -558,10 +558,10 @@ extension ServerListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ServerListViewController: FavNodesListTableViewDelegate {
-    func setSelectedFavNode(favNode: FavNodeModel) {
+extension ServerListViewController: FavouriteListTableViewDelegate {
+    func setSelectedFavourite(favourite: GroupModel) {
         navigationController?.popToRootViewController(animated: true)
-        favDelegate?.setSelectedFavNode(favNode: favNode)
+        favDelegate?.setSelectedFavourite(favourite: favourite)
     }
 
     func showUpgradeView() {

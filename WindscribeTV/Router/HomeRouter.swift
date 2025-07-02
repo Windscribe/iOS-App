@@ -57,7 +57,7 @@ class HomeRouter: RootRouter {
             transition.subtype = CATransitionSubtype.fromTop
             from.view.layer.add(transition, forKey: nil)
             vc.delegate = from as? any ServerListTableViewDelegate
-            vc.favDelegate = from as? any FavNodesListTableViewDelegate
+            vc.favDelegate = from as? any FavouriteListTableViewDelegate
             vc.staticIpDelegate = from as? any StaticIPListTableViewDelegate
             vc.bestLocDelegate = from as? any BestLocationConnectionDelegate
             vc.bestLocation = bestLocation

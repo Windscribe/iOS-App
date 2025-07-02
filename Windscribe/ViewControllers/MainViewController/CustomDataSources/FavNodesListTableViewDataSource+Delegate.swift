@@ -1,5 +1,5 @@
 //
-//  FavNodesListTableViewDataSource+Delegate.swift
+//  FavouriteListTableViewDataSource+Delegate.swift
 //  Windscribe
 //
 //  Created by Yalcin on 2019-01-31.
@@ -10,37 +10,37 @@ import RxSwift
 import Swinject
 import UIKit
 
-protocol FavNodesListTableViewDelegate: AnyObject {
-    func setSelectedFavNode(favNode: FavNodeModel)
-    func hideFavNodeRefreshControl()
-    func showFavNodeRefreshControl()
+protocol FavouriteListTableViewDelegate: AnyObject {
+    func setSelectedFavourite(favourite: GroupModel)
+    func hideFavouritesRefreshControl()
+    func showFavouritesRefreshControl()
     func handleRefresh()
     func tableViewScrolled(toTop: Bool)
 }
 
-class FavNodesListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
-    var favNodes: [FavNodeModel]?
-    weak var delegate: FavNodesListTableViewDelegate?
+class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSource, WTableViewDataSourceDelegate {
+    var favList: [GroupModel]?
+    weak var delegate: FavouriteListTableViewDelegate?
     var scrollHappened = false
     var viewModel: MainViewModelType
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
 
-    init(favNodes: [FavNodeModel]?, viewModel: MainViewModelType) {
+    init(favList: [GroupModel]?, viewModel: MainViewModelType) {
         self.viewModel = viewModel
         super.init()
         scrollViewDelegate = self
-        self.favNodes = favNodes
+        self.favList = favList
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection _: Int) -> Int {
-        guard let count = favNodes?.count else { return 0 }
+        guard let count = favList?.count else { return 0 }
         if count == 0 {
-            delegate?.hideFavNodeRefreshControl()
+            delegate?.hideFavouritesRefreshControl()
             showEmptyView(tableView: tableView)
             tableView.tableHeaderView?.isHidden = true
         } else {
-            delegate?.showFavNodeRefreshControl()
+            delegate?.showFavouritesRefreshControl()
             tableView.backgroundView = nil
             tableView.tableHeaderView?.isHidden = false
         }
@@ -49,13 +49,13 @@ class FavNodesListTableViewDataSource: WSTableViewDataSource, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
-            withIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier, for: indexPath) as? FavNodeTableViewCell
-            ?? FavNodeTableViewCell(
+            withIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
+            ?? NodeTableViewCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
-        let node = favNodes?[indexPath.row]
+        let favourite = favList?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
-        cell.favCellViewModel = FavNodeCellModel(displayingFavNode: node)
+        cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: favourite)
         return cell
     }
 
@@ -64,8 +64,8 @@ class FavNodesListTableViewDataSource: WSTableViewDataSource, UITableViewDataSou
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let favNode = favNodes?[indexPath.row] else { return }
-        delegate?.setSelectedFavNode(favNode: favNode)
+        guard let favourite = favList?[indexPath.row] else { return }
+        delegate?.setSelectedFavourite(favourite: favourite)
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {

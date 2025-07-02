@@ -1,5 +1,5 @@
 //
-//  FavNodesListViewModel.swift
+//  FavouriteListViewModel.swift
 //  Windscribe
 //
 //  Created by Andre Fonseca on 15/05/2024.
@@ -9,16 +9,16 @@
 import Foundation
 import RxSwift
 
-enum FavNodesIPAlertType { case connecting; case disconnecting }
+enum FavouritesIPAlertType { case connecting; case disconnecting }
 
-protocol FavNodesListViewModelType {
-    var presentAlertTrigger: PublishSubject<FavNodesIPAlertType> { get }
+protocol FavouriteListViewModelType {
+    var presentAlertTrigger: PublishSubject<FavouritesIPAlertType> { get }
     var showUpgradeTrigger: PublishSubject<Void> { get }
-    func setSelectedFavNode(favNode: FavNodeModel)
+    func setSelectedFav(favourite: GroupModel)
 }
 
-class FavNodesListViewModel: FavNodesListViewModelType {
-    var presentAlertTrigger = PublishSubject<FavNodesIPAlertType>()
+class FavouriteListViewModel: FavouriteListViewModelType {
+    var presentAlertTrigger = PublishSubject<FavouritesIPAlertType>()
     var showUpgradeTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
@@ -42,21 +42,18 @@ class FavNodesListViewModel: FavNodesListViewModelType {
         self.protocolManager = protocolManager
     }
 
-    func setSelectedFavNode(favNode: FavNodeModel) {
+    func setSelectedFav(favourite: GroupModel) {
         if !connectivity.internetConnectionAvailable() { return }
         if vpnManager.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
-        if !canAccesstoProLocation() && favNode.isPremiumOnly ?? false {
+        if !canAccesstoProLocation() && favourite.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
         } else if vpnManager.configurationState == ConfigurationState.initial {
-            guard let hostname = favNode.hostname,
-                  let cityName = favNode.cityName,
-                  let groupId = Int(favNode.groupId ?? "1") else { return }
-            logger.logD(self, "Tapped on Fav Node \(cityName) \(hostname) from the server list.")
-            locationsManager.saveLastSelectedLocation(with: "\(groupId)")
+            logger.logD(self, "Tapped on Favourite \(favourite.city) from the server list.")
+            locationsManager.saveLastSelectedLocation(with: "\(favourite.id)")
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
             }

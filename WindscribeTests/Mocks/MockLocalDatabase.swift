@@ -154,20 +154,6 @@ class MockLocalDatabase: LocalDatabase {
         return Disposables.create()
     }
 
-    func saveFavNode(favNode: Windscribe.FavNode) -> Disposable {
-        return Disposables.create()
-    }
-
-    func getFavNode() -> Observable<[Windscribe.FavNode]> {
-        return Observable.just([])
-    }
-
-    func getFavNodeSync() -> [Windscribe.FavNode] {
-        return []
-    }
-
-    func removeFavNode(hostName: String) {}
-
     func toggleRobertRule(id: String) {}
 
     func updateNetworkWithPreferredProtocolSwitch(network: Windscribe.WifiNetwork, status: Bool) {}

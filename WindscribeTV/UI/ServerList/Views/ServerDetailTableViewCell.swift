@@ -18,8 +18,8 @@ protocol ServerListTableViewDelegate: AnyObject {
     func reloadTable(cell: UITableViewCell)
 }
 
-protocol FavNodesListTableViewDelegate: AnyObject {
-    func setSelectedFavNode(favNode: FavNodeModel)
+protocol FavouriteListTableViewDelegate: AnyObject {
+    func setSelectedFavourite(favourite: GroupModel)
     func showUpgradeView()
     func showExpiredAccountView()
     func showOutOfDataPopUp()
@@ -35,7 +35,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     @IBOutlet var connectButton: UIButton!
     @IBOutlet var proIcon: UIImageView!
     weak var delegate: ServerListTableViewDelegate?
-    weak var favDelegate: FavNodesListTableViewDelegate?
+    weak var favDelegate: FavouriteListTableViewDelegate?
     weak var staticIpDelegate: StaticIPListTableViewDelegate?
 
     @IBOutlet var latencyLabel: UILabel!
@@ -60,7 +60,7 @@ class ServerDetailTableViewCell: UITableViewCell {
 
     var displayingFavGroup: GroupModel? {
         didSet {
-            updateUIForFavNode()
+            updateUIForFavourite()
         }
     }
 
@@ -126,7 +126,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         }
     }
 
-    func updateUIForFavNode() {
+    func updateUIForFavourite() {
         connectButtonTrailing.constant = 0
         favButton.isHidden = false
         if let city = displayingFavGroup?.city, let nick = displayingFavGroup?.nick {
@@ -388,24 +388,11 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             guard let server = displayingNodeServer, let group = displayingGroup else {
                 guard let favGroup = displayingFavGroup else { return }
-                if let favNode = buildFavNode(group: favGroup)?.getFavNodeModel() {
-                    favDelegate?.setSelectedFavNode(favNode: favNode)
-                }
+                favDelegate?.setSelectedFavourite(favourite: favGroup)
                 return
             }
             delegate?.setSelectedServerAndGroup(server: server, group: group)
         }
-    }
-
-    private func buildFavNode(group: GroupModel) -> FavNode? {
-        let servers = localDB.getServers() ?? []
-        let server = servers.first { server in
-            server.groups.map { $0.id }.contains(group.id)
-        }
-        if let server = server, let node = group.nodes.randomElement() {
-            return FavNode(node: node, group: group, server: server.getServerModel())
-        }
-        return nil
     }
 
     func isHostStillActive(hostname: String, isStaticIP _: Bool = false) -> Bool {

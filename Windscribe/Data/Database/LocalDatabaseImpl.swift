@@ -204,20 +204,20 @@ class LocalDatabaseImpl: LocalDatabase {
         return updateRealmObject(object: vpnConnection)
     }
 
-    func saveFavNode(favNode: FavNode) -> Disposable {
-        return updateRealmObject(object: favNode)
+    func saveFavourite(favourite: Favourite) -> Disposable {
+        return updateRealmObject(object: favourite)
     }
 
-    func getFavNode() -> Observable<[FavNode]> {
-        return getSafeRealmObservable(type: FavNode.self)
+    func getFavouriteListObservable() -> Observable<[Favourite]> {
+        return getSafeRealmObservable(type: Favourite.self)
     }
 
-    func getFavNodeSync() -> [FavNode] {
-        return getRealmObjects(type: FavNode.self) ?? []
+    func getFavouriteList() -> [Favourite] {
+        return getRealmObjects(type: Favourite.self) ?? []
     }
 
-    func removeFavNode(hostName: String) {
-        if let object = getRealmObject(type: FavNode.self, primaryKey: hostName) {
+    func removeFavourite(groupId: String) {
+        if let object = getRealmObject(type: Favourite.self, primaryKey: groupId) {
             deleteRealmObject(object: object)
         }
     }

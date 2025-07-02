@@ -26,7 +26,7 @@ class ServerDetailViewController: UIViewController {
     var server: ServerModel?
     var viewModel: MainViewModelType?, serverListViewModel: ServerListViewModelType?, logger: FileLogger!
     weak var delegate: ServerListTableViewDelegate?
-    var favNodes: [FavNodeModel]?
+    var favList: [GroupModel]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +71,8 @@ class ServerDetailViewController: UIViewController {
     }
 
     func bindData() {
-        viewModel?.favNode.bind(onNext: { favNodes in
-            self.favNodes = favNodes?.compactMap { $0 }
+        viewModel?.favouriteList.bind(onNext: { favList in
+            self.favList = favList?.compactMap { $0 }
         }).disposed(by: disposeBag)
     }
 }

@@ -146,7 +146,7 @@ extension MainViewController {
         if results.count == 0 { return }
         DispatchQueue.main.async {
             self.loadServerTable(servers: results)
-            self.reloadFavNodeOrder()
+            self.reloadFavouriteOrder()
             self.configureBestLocation()
         }
     }
@@ -157,7 +157,7 @@ extension MainViewController {
                 self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
             }
         }).disposed(by: disposeBag)
-        reloadFavNodeOrder()
+        reloadFavouriteOrder()
         viewModel.serverList.subscribe(on: MainScheduler.instance).subscribe(onNext: { [self] servers in
             DispatchQueue.main.async {
                 self.loadServerTable(servers: servers)

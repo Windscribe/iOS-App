@@ -55,7 +55,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     // MARK: datasources
     var serverListTableViewDataSource: ServerListTableViewDataSource?
-    var favNodesListTableViewDataSource: FavNodesListTableViewDataSource?
+    var favNodesListTableViewDataSource: FavouriteListTableViewDataSource?
     var staticIPListTableViewDataSource: StaticIPListTableViewDataSource?
     var customConfigListTableViewDataSource: CustomConfigListTableViewDataSource?
 
@@ -110,7 +110,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var locationManagerViewModel: LocationManagingViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var customConfigPickerViewModel: CustomConfigPickerViewModelType!
-    var favNodesListViewModel: FavNodesListViewModelType!
+    var favNodesListViewModel: FavouriteListViewModelType!
     var staticIPListViewModel: StaticIPListViewModelType!
     var serverListViewModel: ServerListViewModelType!
     var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!

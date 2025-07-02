@@ -316,8 +316,8 @@ class ViewModels: Assembly {
                                         locationsManager: r.resolve(LocationsManagerType.self)!,
                                         protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(FavNodesListViewModelType.self) { r in
-            FavNodesListViewModel(logger: r.resolve(FileLogger.self)!,
+        container.register(FavouriteListViewModelType.self) { r in
+            FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
                                   connectivity: r.resolve(Connectivity.self)!,
                                   sessionManager: r.resolve(SessionManaging.self)!,
@@ -647,7 +647,7 @@ class ViewControllerModule: Assembly {
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.customConfigPickerViewModel = r.resolve(CustomConfigPickerViewModelType.self)
-            vc.favNodesListViewModel = r.resolve(FavNodesListViewModelType.self)
+            vc.favNodesListViewModel = r.resolve(FavouriteListViewModelType.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)

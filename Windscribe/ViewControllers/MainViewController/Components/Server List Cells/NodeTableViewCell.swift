@@ -25,10 +25,9 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     var displayingGroup: GroupModel?
     var displayingNodeServer: ServerModel?
 
-    init(displayingGroup: GroupModel?, displayingNodeServer: ServerModel?) {
+    init(displayingGroup: GroupModel?) {
         super.init()
         self.displayingGroup = displayingGroup
-        self.displayingNodeServer = displayingNodeServer
         if let pingIP = displayingGroup?.pingIp {
             minTime = latencyRepository.getPingData(ip: pingIP)?.latency ?? minTime
         }
@@ -69,25 +68,16 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     }
 
     override func favoriteSelected() {
-        if !isProLocked {
-            guard let group = displayingGroup, let server = displayingNodeServer else { return }
-            if isFavourited {
-                let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
-                    guard let self = self else { return }
-                    if group.id >= 0,
-                       let favNodeHostname = self.favNodes.filter({ $0.groupId == "\(self.groupId)" }).first?.hostname {
-                        self.localDB.removeFavNode(hostName: favNodeHostname)
-                    }
-                }
-                AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
-                                              message: TextsAsset.Favorites.removeMessage,
-                                              buttonText: TextsAsset.cancel, actions: [yesAction])
-            } else {
-                if let bestNode = group.bestNode {
-                    let favNode = FavNode(node: bestNode, group: group, server: server)
-                    localDB.saveFavNode(favNode: favNode).disposed(by: disposeBag)
-                }
+        if isFavourited {
+            let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { [weak self] _ in
+                guard let self = self else { return }
+                self.localDB.removeFavourite(groupId: "\(self.groupId)")
             }
+            AlertManager.shared.showAlert(title: TextsAsset.Favorites.removeTitle,
+                                          message: TextsAsset.Favorites.removeMessage,
+                                          buttonText: TextsAsset.cancel, actions: [yesAction])
+        } else {
+            localDB.saveFavourite(favourite: Favourite(id: "\(self.groupId)")).disposed(by: disposeBag)
         }
     }
 }
@@ -137,7 +127,7 @@ class NodeTableViewCell: BaseNodeCell {
 
     override func updateUI() {
         super.updateUI()
-        if (nodeCellViewModel?.isProLocked ?? false) {
+        if nodeCellViewModel?.isProLocked ?? false {
             icon.setImageColor(color: .proStarColor)
         }
     }

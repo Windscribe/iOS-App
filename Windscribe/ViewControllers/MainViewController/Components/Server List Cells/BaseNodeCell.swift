@@ -34,7 +34,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     private var locationLoad: Bool = DefaultValues.showServerHealth
 
     var showServerHealth: Bool { locationLoad }
-    var favNodes: [FavNode] = []
+    var favList: [Favourite] = []
     var isFavourited: Bool = false
     var minTime = -1
 
@@ -91,10 +91,10 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     }
 
     init() {
-        favNodes = localDB.getFavNodeSync()
-        localDB.getFavNode().subscribe(onNext: { [weak self] favNodes in
+        favList = localDB.getFavouriteList()
+        localDB.getFavouriteListObservable().subscribe(onNext: { [weak self] favList in
             guard let self = self else { return }
-            self.favNodes = favNodes
+            self.favList = favList
             let prevIsFavourited = self.isFavourited
             self.isFavourited = isNodeFavorited()
             if prevIsFavourited != self.isFavourited {
@@ -112,9 +112,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     func favoriteSelected() { }
 
     func isNodeFavorited() -> Bool {
-        favNodes
-            .filter{ !$0.isInvalidated }
-            .map({ $0.groupId }).contains(groupId)
+        favList.filter { !$0.isInvalidated }
+            .map({ $0.id }).contains(groupId)
     }
 
     private func getSignalLevel(minTime: Int) -> Int {

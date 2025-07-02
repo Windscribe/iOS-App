@@ -193,7 +193,7 @@ extension MainViewController {
         }).disposed(by: disposeBag)
     }
 
-    func bindFavNodesListViewModel() {
+    func bindFavouriteListViewModel() {
         favNodesListViewModel.presentAlertTrigger.subscribe {
             switch $0 {
             case .connecting: self.displayConnectingAlert()
