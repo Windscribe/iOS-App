@@ -159,7 +159,7 @@ struct DataLeftModel {
     }
 
     func getDataLeftModel() -> DataLeftModel {
-        let data = trafficMax - trafficUsed
+        let data = max(trafficMax - trafficUsed, 0.0)
         let dataLeftMB = data / 1024 / 1024
         let dataLeft = dataLeftMB > 1024 ? dataLeftMB / 1024 : dataLeftMB
         return DataLeftModel(unit: dataLeftMB > 1024 ? "GB" : "MB",
