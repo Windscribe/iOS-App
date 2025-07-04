@@ -1,108 +1,115 @@
 ## Windscribe for iOS and tvOS
 
-Windscribe for iOS and tvOS are native apps written in Swift language. Some features include multiple protocols, per network configuration, On-Demand mode.
+Windscribe for iOS and tvOS are native apps written in Swift. Features include support for multiple VPN protocols, per-network configuration, and On-Demand mode.
 
-- [Download and install](README.md#download-and-install)
-- [Acknowledgements](README.md#acknowledgements)
-- [Build from source](README.md#build-from-source)
-    - [Requirements](README.md#requirements)
-    - [Development dependencies](README.md#development-dependencies)
-    - [Project dependencies](README.md#install-dependencies)
-    - [Build](README.md#build)
-    - [Troubleshoot](README.md#troubleshoot)
-        - [pod install](README.md#pod-install)
-        - [Wireguard-bridge](README.md#wireguard-bridge)
-- [Pull request](README.md#pull-request)
-- [Versioning](README.md#versioning)
+- [Download and install](#download-and-install)
+- [Acknowledgements](#acknowledgements)
+- [Build from source](#build-from-source)
+    - [Requirements](#requirements)
+    - [Development dependencies](#development-dependencies)
+    - [Project dependencies](#project-dependencies)
+    - [Build](#build)
+    - [Troubleshoot](#troubleshoot)
+- [Pull request](#pull-request)
+- [Versioning](#versioning)
 
 ### Download and install
 
-Windscribe iOS and tvOS app can be downloaded from App Store
+Windscribe iOS and tvOS app can be downloaded from the App Store:  
 [Link](https://apps.apple.com/us/app/windscribe-vpn/id1129435228)
 
 ### Acknowledgements
-Check our [Acknowledgements file](ACKNOWLEDGEMENTS.md) for the list of third parties libraries we use in this project
+
+Check our [Acknowledgements file](ACKNOWLEDGEMENTS.md) for a list of third-party libraries used in this project.
 
 ### Build from source
 
 #### Requirements
-- iOS 12.0+
+
+- iOS 15.0+
 - tvOS 17.0+
 - Xcode 15.0+
-- Swift 5.0+
-- CocoaPods 1.15.2+
+- Swift 5.9+
 - Go 1.16+
 
 #### Development dependencies
+
 - swiftlint
 - go
 
 #### Project dependencies
- - [CocoaLumberjack/Swift](https://github.com/CocoaLumberjack/CocoaLumberjack)
- - [Realm](https://github.com/realm/realm-swift)
- - [RealmSwift](https://github.com/realm/realm-swift)
- - [IQKeyboardManagerSwift](https://github.com/hackiftekhar/IQKeyboardManager)
- - [ExpyTableView](https://github.com/okhanokbay/ExpyTableView)
- - [SwipeCellKit](https://github.com/SwipeCellKit/SwipeCellKit)
- - [AES256Encrypter](https://github.com/dhilowitz/AES256Encrypter)
- - [OpenVPNAdapter](https://github.com/ss-abramchuk/OpenVPNAdapter)
- - [RxSwift](https://github.com/ReactiveX/RxSwift)
- - [RxGesture](https://github.com/RxSwiftCommunity/RxGesture)
- - [RxDataSources](https://github.com/RxSwiftCommunity/RxDataSources)
- - [Swinject](https://github.com/Swinject/Swinject)
- - [RxRealm](https://github.com/RxSwiftCommunity/RxRealm)
- - [MockingbirdFramework](https://github.com/typealiased/mockingbird)
+
+- [CocoaLumberjack/Swift](https://github.com/CocoaLumberjack/CocoaLumberjack)
+- [Realm](https://github.com/realm/realm-swift)
+- [RealmSwift](https://github.com/realm/realm-swift)
+- [IQKeyboardManagerSwift](https://github.com/hackiftekhar/IQKeyboardManager)
+- [ExpyTableView](https://github.com/okhanokbay/ExpyTableView)
+- [SwipeCellKit](https://github.com/SwipeCellKit/SwipeCellKit)
+- [AES256Encrypter](https://github.com/dhilowitz/AES256Encrypter)
+- [OpenVPNAdapter](https://github.com/ss-abramchuk/OpenVPNAdapter)
+- [RxSwift](https://github.com/ReactiveX/RxSwift)
+- [RxGesture](https://github.com/RxSwiftCommunity/RxGesture)
+- [RxDataSources](https://github.com/RxSwiftCommunity/RxDataSources)
+- [Swinject](https://github.com/Swinject/Swinject)
+- [RxRealm](https://github.com/RxSwiftCommunity/RxRealm)
+- [SnapKit](https://github.com/SnapKit/SnapKit)
 
 #### Build
-- Make sure following dependencies are installed
-- Run all the following installations on the terminal
-- Install Swift Lint
-```sh
-brew install swiftlint go
-```
-- Install Cocoa Pods
-```sh
-gem install cocoapods
-```
 
-```
-- clone this repository
-- `$ cd` into the project root directory
-- open the pode file '$ open podfile' make sure the flag `is_tvos` is correct for the platform you are running 
-  (`false` if you are trying to run for iOS and `true` if you are trying to run for tvOS)
-- Run pod install to pull project dependencies
-```sh
-pod install 
-```
-- Open 'Windscribe.xcworkspace' in Xcode
-- Select 'Windscribe-Default' scheme
-- Open Windscribe > Enviroments > Config.xcconfig. Set your Team ID, App Bundle ID.
-- Setup signing with an Apple paid developer account(Windscribe > Target > Signing and capabilities)
-- Clean project (Product > clean Build folder - Cmd+Shift+K)
-- Click File > Packages > Resolve package versions.
-- Connect to a device, iphone/iPad for iOS, and apple tv for tvOS and run - Simulators are now supported in the default scheme, but you will not be able to connect to a VPN
+1. Clone this repository
+    ```sh
+    git clone <repo-url>
+    cd Windscribe
+    ```
+
+2. Open the project in Xcode
+    ```sh
+    open Windscribe.xcodeproj
+    ```
+
+3. In Xcode, go to **File > Packages > Add Package Dependencies** and ensure all required Swift packages are properly resolved.
+
+4. Choose the correct scheme from the available options:
+   - `Windscribe-Default` (release configuration with debug flags enabled)
+   - `Windscribe-Release`
+   - `Windscribe-Staging`
+   - `Windscribe-tvOS` (for building and running on Apple TV devices)
+
+5. Navigate to `Windscribe/Environments/Config.xcconfig` and set your:
+    - `Team ID`
+    - `App Bundle ID`
+
+6. Set up code signing under `Targets > Signing & Capabilities` using your Apple Developer account.
+
+7. Clean the project:
+    - `Product > Clean Build Folder` (Cmd + Shift + K)
+
+8. Resolve all packages:
+    - `File > Packages > Resolve Package Versions`
+
+9. Connect a real device (iPhone/iPad for iOS or Apple TV for tvOS) and run the app.
+    > Simulators are supported, but VPN connections require physical hardware.
 
 #### Troubleshoot
-##### pod install
-- Check the the flag `is_tvos` on the podfile
-- Clean Build
-- Clear Xcode derived data (File > Workspace settings)
-- Clear pod cache
-```sh
-rm -rf "${HOME}/Library/Caches/CocoaPods"
-rm -rf "`pwd`/Pods/"
-pod update
-```
+
+- If build fails or dependencies don't resolve:
+    - Clear Derived Data: `Xcode > Settings > Locations > Derived Data`
+    - Reopen the project and resolve packages again
 
 ### Pull request
-- fork this repository
-- follow build instructions
-- fix linter warnings and errors before submitting
-```sh
-swiftlint lint
-```
+
+- Fork this repository
+- Create an issue first and describe your proposed changes or bug fix
+- Submit a pull request referencing the issue number
+- Ensure the code builds successfully and passes linting:
+    ```sh
+    swiftlint lint
+    ```
 
 ### Versioning
-The project is using Semantic Versioning ([SemVer](https://semver.org)) for creating release versions.
 
-`Major.Minor.Patch`
+This project uses [Semantic Versioning](https://semver.org):
+
+`Major.Minor.Patch (BuildNumber)`
+
+Example: `3.8.5 (22)` on TestFlight
