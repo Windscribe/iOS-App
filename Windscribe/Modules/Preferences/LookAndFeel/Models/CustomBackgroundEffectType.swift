@@ -150,7 +150,7 @@ extension BackgroundEffectType {
 extension BackgroundEffectType: Equatable {
     static func == (lhs: BackgroundEffectType, rhs: BackgroundEffectType) -> Bool {
         switch (lhs, rhs) {
-        case (.none, .none), (.custom, .custom):
+        case (.none, .none), (.custom, .custom), (.flag, .flag):
             return true
         case let (.bundled(a), .bundled(b)):
             return a == b
