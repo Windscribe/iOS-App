@@ -326,7 +326,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                 } else if response.isUsed {
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,
-                        message: TextsAsset.Account.voucherUsedMessage,
+                        message: TextsAsset.Account.voucherAlreadyMessage,
                         buttonText: TextsAsset.okay)
                 } else {
                     self.alertMessage = AccountSettingsAlertContent(

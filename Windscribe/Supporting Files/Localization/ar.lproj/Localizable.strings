@@ -413,7 +413,7 @@
 
 "Apply voucher code to your account" = "قم بتطبيق رمز القسيمة على حسابك.";
 "Sweet, Voucher code is applied successfully" = "رائع، تم تطبيق رمز القسيمة بنجاح!";
-"Voucher code is used already" = "رمز القسيمة مستخدم بالفعل.";
+"Your account is already on the plan this code provides" = "رمز القسيمة مستخدم بالفعلحسابك موجود بالفعل على الخطة التي يوفرها هذا الرمز";
 "Voucher provided is invalid or expired." = "رمز القسيمة المُقدَّم غير صالح أو منتهي الصلاحية.";
 "Confirmed email is required." = "مطلوب بريد إلكتروني مؤكد.";
 "Make advanced tweaks to the way the app functions" = "قم بإجراء تعديلات متقدمة على كيفية عمل التطبيق.";
