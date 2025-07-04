@@ -898,9 +898,9 @@ enum TextsAsset {
         static var voucherCodeSuccessful: String {
             return "Sweet, Voucher code is applied successfully".localized
         }
-
-        static var voucherUsedMessage: String {
-            return "Voucher code is used already".localized
+        
+        static var voucherAlreadyMessage: String {
+            return "Your account is already on the plan this code provides".localized
         }
 
         static var invalidVoucherCode: String {

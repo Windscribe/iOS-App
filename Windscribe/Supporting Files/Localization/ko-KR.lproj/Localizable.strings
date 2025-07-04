@@ -415,7 +415,7 @@
 
 "Apply voucher code to your account" = "계정에 바우처 코드를 적용하세요.";
 "Sweet, Voucher code is applied successfully" = "좋아요! 바우처 코드가 성공적으로 적용되었습니다.";
-"Voucher code is used already" = "이 바우처 코드는 이미 사용되었습니다.";
+"Your account is already on the plan this code provides" = "귀하의 계정은 이미 이 코드가 제공하는 플랜에 포함되어 있습니다.";
 "Voucher provided is invalid or expired." = "제공된 바우처 코드가 유효하지 않거나 만료되었습니다.";
 "Confirmed email is required." = "확인된 이메일이 필요합니다.";
 "Make advanced tweaks to the way the app functions" = "앱 작동 방식을 고급 설정으로 조정하세요.";

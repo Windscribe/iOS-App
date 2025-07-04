@@ -430,7 +430,7 @@
 
 "Apply voucher code to your account" = "Kupon kodunu hesabınıza uygulayın";
 "Sweet, Voucher code is applied successfully" = "Harika, kupon kodu başarıyla uygulandı";
-"Voucher code is used already" = "Kupon kodu zaten kullanılmış";
+"Your account is already on the plan this code provides" = "Hesabınız zaten bu kodun sağladığı planda";
 "Voucher provided is invalid or expired." = "Sağlanan kupon geçersiz veya süresi dolmuş.";
 "Confirmed email is required." = "Onaylanmış e-posta gereklidir.";
 "Make advanced tweaks to the way the app functions" = "Uygulamanın çalışma şeklini gelişmiş ayarlarla özelleştirin";

@@ -425,7 +425,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 
 "Apply voucher code to your account" = "Áp dụng mã giảm giá vào tài khoản của bạn.";
 "Sweet, Voucher code is applied successfully" = "Tuyệt vời, mã giảm giá đã được áp dụng thành công.";
-"Voucher code is used already" = "Mã giảm giá đã được sử dụng.";
+"Your account is already on the plan this code provides" = "Tài khoản của bạn đã có trong gói mã này cung cấp.";
 "Voucher provided is invalid or expired." = "Mã giảm giá không hợp lệ hoặc đã hết hạn.";
 "Confirmed email is required." = "Yêu cầu xác nhận email.";
 "Make advanced tweaks to the way the app functions" = "Tùy chỉnh nâng cao cách ứng dụng hoạt động.";
