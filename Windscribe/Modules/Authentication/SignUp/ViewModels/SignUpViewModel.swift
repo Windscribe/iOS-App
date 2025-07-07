@@ -172,7 +172,7 @@ class SignUpViewModelImpl: SignUpViewModel {
         logger.logD("SignUpViewModel", "Requesting auth token for signup")
         showLoadingView = true
 
-        apiCallManager.authTokenSignup()
+        apiCallManager.authTokenSignup(useAsciiCaptcha: false)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] result in

@@ -33,8 +33,8 @@ protocol APIManager {
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
                 captchaTrailY: [CGFloat]) -> Single<Session>
-    func authTokenLogin() -> RxSwift.Single<AuthTokenResponse>
-    func authTokenSignup() -> RxSwift.Single<AuthTokenResponse>
+    func authTokenLogin(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse>
+    func authTokenSignup(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse>
     func regToken() -> RxSwift.Single<Token>
     func signUpUsingToken(token: String) -> RxSwift.Single<Session>
     func ssoSession(token: String) -> RxSwift.Single<SSOSession>

@@ -29,6 +29,7 @@ class LoginViewController: PreferredFocusedViewController {
     var loadingView: UIActivityIndicatorView!
     @IBOutlet var infoLabel: UILabel!
     @IBOutlet var infoView: UIView!
+    private var captchaView: CaptchaView?
     var is2FA: Bool = false
 
     // MARK: - State properties
@@ -220,12 +221,16 @@ class LoginViewController: PreferredFocusedViewController {
     }
 
     func bindView() {
-        viewModel.showLoadingView.bind { [weak self] show in
-            self?.loadingView.startAnimating()
-            self?.usernameTextField.isEnabled = !show
-            self?.passwordTextField?.isEnabled = !show
-            self?.loadingView.isHidden = !show
-        }.disposed(by: disposeBag)
+        viewModel.showLoadingView
+            .observe(on: MainScheduler.instance)
+            .bind { [weak self] show in
+                guard let self = self else { return }
+                self.loadingView.startAnimating()
+                self.usernameTextField.isEnabled = !show
+                self.passwordTextField?.isEnabled = !show
+                self.loadingView.isHidden = !show
+            }
+            .disposed(by: disposeBag)
         loginButton.rx.primaryAction.bind { [weak self] in
             self?.loginButtonAction(nil)
         }.disposed(by: disposeBag)
@@ -273,5 +278,66 @@ class LoginViewController: PreferredFocusedViewController {
                 setupCommonUI()
             }
         }.disposed(by: disposeBag)
+
+        viewModel.showCaptchaViewModel
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] captchaVM in
+                guard let self = self else { return }
+
+                let captchaView = CaptchaView()
+                captchaView.bind(to: captchaVM)
+
+                captchaView.submitTap
+                  .observe(on: MainScheduler.instance)
+                  .subscribe(onNext: { code in
+                    captchaVM.submitCaptcha.onNext(code)
+                  })
+                  .disposed(by: disposeBag)
+
+                captchaView.cancelTap
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: { [weak self] in
+                        self?.captchaView?.removeFromSuperview()
+                        self?.captchaView = nil
+                    })
+                    .disposed(by: disposeBag)
+
+                captchaVM.captchaDismiss
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: { [weak self] in
+                        self?.captchaView?.removeFromSuperview()
+                        self?.captchaView = nil
+                    })
+                    .disposed(by: self.disposeBag)
+
+                self.showCaptchaUI(captchaView: captchaView)
+            })
+            .disposed(by: disposeBag)
+    }
+
+    private func showCaptchaUI(captchaView: CaptchaView) {
+        self.captchaView = captchaView
+        captchaView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(captchaView)
+        
+        NSLayoutConstraint.activate([
+            captchaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            captchaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            captchaView.topAnchor.constraint(equalTo: view.topAnchor),
+            captchaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        DispatchQueue.main.async {
+            self.setNeedsFocusUpdate()
+            self.updateFocusIfNeeded()
+        }
+
+        captchaView.cancelTap
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.captchaView?.removeFromSuperview()
+                self?.captchaView = nil
+            })
+            .disposed(by: disposeBag)
     }
 }

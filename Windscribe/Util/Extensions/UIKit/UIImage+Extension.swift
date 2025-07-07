@@ -25,6 +25,45 @@ public extension UIImage {
 }
 
 extension UIImage {
+    static func fromAsciiBase64(_ base64String: String, font: UIFont = .monospacedSystemFont(ofSize: 22, weight: .regular), padding: CGFloat = 20) -> UIImage? {
+        guard let asciiData = Data(base64Encoded: base64String),
+              let asciiString = String(data: asciiData, encoding: .utf8) else {
+            return nil
+        }
+
+        // Break into lines
+        let lines = asciiString.components(separatedBy: .newlines)
+
+        // Determine max line width (in characters)
+        let maxLineWidth = lines.map { $0.count }.max() ?? 0
+        let lineHeight = font.lineHeight
+
+        // Estimate image size
+        let imageSize = CGSize(
+            width: CGFloat(maxLineWidth) * font.pointSize * 0.6 + 2 * padding,
+            height: CGFloat(lines.count) * lineHeight + 2 * padding
+        )
+
+        let renderer = UIGraphicsImageRenderer(size: imageSize)
+
+        let image = renderer.image { ctx in
+            UIColor.black.setFill()
+            ctx.fill(CGRect(origin: .zero, size: imageSize))
+
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: font,
+                .foregroundColor: UIColor.white
+            ]
+
+            for (i, line) in lines.enumerated() {
+                let point = CGPoint(x: padding, y: padding + CGFloat(i) * lineHeight)
+                line.draw(at: point, withAttributes: attributes)
+            }
+        }
+
+        return image
+    }
+
     static func fromBase64(_ base64: String) -> UIImage? {
         guard let data = Data(base64Encoded: base64),
               let image = UIImage(data: data) else { return nil }

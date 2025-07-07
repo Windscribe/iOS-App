@@ -65,28 +65,24 @@ extension APIManagerImpl {
             )
         }
     }
-    func authTokenLogin() -> RxSwift.Single<AuthTokenResponse> {
+    func authTokenLogin(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse> {
         return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
 
-            // TODO: For TVOS useAsciiCaptcha should be true
-            // Implement TV ASCII screen
-            return self.api.authTokenLogin(false, callback: completion)
+            return self.api.authTokenLogin(useAsciiCaptcha, callback: completion)
 
         }
     }
 
-    func authTokenSignup() -> RxSwift.Single<AuthTokenResponse> {
+    func authTokenSignup(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse> {
         return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
 
-            // TODO: For TVOS useAsciiCaptcha should be true
-            // Implement TV ASCII screen
-            return self.api.authTokenSignup(false, callback: completion)
+            return self.api.authTokenSignup(useAsciiCaptcha, callback: completion)
         }
     }
 

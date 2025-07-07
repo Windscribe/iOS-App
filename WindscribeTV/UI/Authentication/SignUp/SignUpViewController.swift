@@ -21,6 +21,7 @@ class SignUpViewController: PreferredFocusedViewController {
     @IBOutlet var signUpTitle: UILabel!
     @IBOutlet var usernameTextField: WSTextFieldTv!
     var loadingView: UIActivityIndicatorView!
+    private var captchaView: CaptchaView?
 
     // MARK: - State properties
 
@@ -114,6 +115,67 @@ class SignUpViewController: PreferredFocusedViewController {
         forgotButton.rx.primaryAction.bind { [self] in
             router.routeTo(to: RouteID.forgotPassword, from: self)
         }.disposed(by: disposeBag)
+        
+        viewModel.showCaptchaViewModel
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] captchaVM in
+                guard let self = self else { return }
+
+                let captchaView = CaptchaView()
+                captchaView.bind(to: captchaVM)
+
+                captchaView.submitTap
+                  .observe(on: MainScheduler.instance)
+                  .subscribe(onNext: { code in
+                    captchaVM.submitCaptcha.onNext(code)
+                  })
+                  .disposed(by: disposeBag)
+
+                captchaView.cancelTap
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: { [weak self] in
+                        self?.captchaView?.removeFromSuperview()
+                        self?.captchaView = nil
+                    })
+                    .disposed(by: disposeBag)
+
+                captchaVM.captchaDismiss
+                    .observe(on: MainScheduler.instance)
+                    .subscribe(onNext: { [weak self] in
+                        self?.captchaView?.removeFromSuperview()
+                        self?.captchaView = nil
+                    })
+                    .disposed(by: self.disposeBag)
+
+                self.showCaptchaUI(captchaView: captchaView)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func showCaptchaUI(captchaView: CaptchaView) {
+        self.captchaView = captchaView
+        captchaView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(captchaView)
+        
+        NSLayoutConstraint.activate([
+            captchaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            captchaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            captchaView.topAnchor.constraint(equalTo: view.topAnchor),
+            captchaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        DispatchQueue.main.async {
+            self.setNeedsFocusUpdate()
+            self.updateFocusIfNeeded()
+        }
+
+        captchaView.cancelTap
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.captchaView?.removeFromSuperview()
+                self?.captchaView = nil
+            })
+            .disposed(by: disposeBag)
     }
 
     private func setFailureState(state: SignUpErrorState) {

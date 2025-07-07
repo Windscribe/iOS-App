@@ -44,9 +44,15 @@ struct Entropy: Decodable {
 }
 
 struct CaptchaData: Decodable {
-    let background: String
-    let slider: String
-    let top: Int
+    let background: String?
+    let slider: String?
+    let top: Int?
+    let asciiArt: String?
+
+    enum CodingKeys: String, CodingKey {
+        case background, slider, top
+        case asciiArt = "ascii_art"
+    }
 }
 
 struct CaptchaPopupModel {
@@ -55,15 +61,16 @@ struct CaptchaPopupModel {
     let top: Int
 
     init?(from captchaData: CaptchaData) {
-        guard
-            let backgroundImage = UIImage.fromBase64(captchaData.background),
-            let sliderImage = UIImage.fromBase64(captchaData.slider)
-        else {
+        guard let backgroundImageData = captchaData.background,
+              let sliderImageData = captchaData.slider,
+              let backgroundImage = UIImage.fromBase64(backgroundImageData),
+              let sliderImage = UIImage.fromBase64(sliderImageData),
+              let topOffset = captchaData.top else {
             return nil
         }
 
         self.background = backgroundImage
         self.slider = sliderImage
-        self.top = captchaData.top
+        self.top = topOffset
     }
 }
