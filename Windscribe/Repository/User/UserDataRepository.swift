@@ -40,7 +40,9 @@ class UserDataRepositoryImpl: UserDataRepository {
     }
 
     func prepareUserData() -> Single<Void> {
+        
         logger.logD(UserDataRepositoryImpl.self, "Getting server list.")
+        
         return serverRepository.getUpdatedServers().flatMap { _ in
             self.latencyRepository.pickBestLocation()
             self.logger.logD(UserDataRepositoryImpl.self, "Getting iKEv2 credentials.")

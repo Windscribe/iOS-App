@@ -221,7 +221,6 @@
 		1ED33DE12D7B3D5300B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE02D7B3D5300B980D3 /* RealmSwift */; };
 		1ED33DE52D7B3D7300B980D3 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE42D7B3D7300B980D3 /* RealmSwift */; };
 		1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE62D7B3DAD00B980D3 /* RxBlocking */; };
-		1ED33DE92D7B3DAD00B980D3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE82D7B3DAD00B980D3 /* RxCocoa */; };
 		1ED33DEB2D7B3DAD00B980D3 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DEA2D7B3DAD00B980D3 /* RxSwift */; };
 		1ED33DED2D7B3DBC00B980D3 /* RxBlocking in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DEC2D7B3DBC00B980D3 /* RxBlocking */; };
 		1ED33DEF2D7B3DBC00B980D3 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DEE2D7B3DBC00B980D3 /* RxCocoa */; };
@@ -1049,6 +1048,7 @@
 		F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40419442D8232460005EF97 /* HTMLParserTests.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
+		F41541FF2E12F94A00833EC5 /* CaptchaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41541FE2E12F94400833EC5 /* CaptchaView.swift */; };
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
@@ -1073,6 +1073,7 @@
 		F443EA542E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F443EA592E0B215E00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
+		F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44A0E682E0F2A48008297CA /* CaptchaViewModel.swift */; };
 		F44F275C2D84B79E00A47E37 /* NewsFeedDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */; };
 		F44F275F2D84B87500A47E37 /* NewsFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44F275D2D84B87500A47E37 /* NewsFeedView.swift */; };
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
@@ -1200,6 +1201,8 @@
 		F49E61D12E00A23B0087386F /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
 		F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
 		F4A156FC2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A156FA2D5FE49300FDBD7C /* UIViewController+Extension.swift */; };
+		F4A36AAA2E13282600CCFFAA /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 1ED33DE82D7B3DAD00B980D3 /* RxCocoa */; };
+		F4A36AAC2E132A9600CCFFAA /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = F4A36AAB2E132A9600CCFFAA /* SnapKit */; };
 		F4ADA5FD2D564F790077C132 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5FC2D564F790077C132 /* ImageLoader.swift */; };
 		F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5F52D564F300077C132 /* ImageCache.swift */; };
 		F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */; };
@@ -2012,6 +2015,7 @@
 		F40419442D8232460005EF97 /* HTMLParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTMLParserTests.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		F41541FE2E12F94400833EC5 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
 		F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDataModel.swift; sourceTree = "<group>"; };
@@ -2024,6 +2028,7 @@
 		F440F3032D8DF088006F1A6D /* LoginTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		F440F3072D8E102D006F1A6D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+ErrorTexts.swift"; sourceTree = "<group>"; };
+		F44A0E682E0F2A48008297CA /* CaptchaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaViewModel.swift; sourceTree = "<group>"; };
 		F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDetailView.swift; sourceTree = "<group>"; };
 		F44F275D2D84B87500A47E37 /* NewsFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedView.swift; sourceTree = "<group>"; };
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
@@ -2161,6 +2166,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4A36AAA2E13282600CCFFAA /* RxCocoa in Frameworks */,
+				F4A36AAC2E132A9600CCFFAA /* SnapKit in Frameworks */,
 				1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */,
 				1E0A6E142D79ED160075B8F5 /* Swinject in Frameworks */,
 				1E0974992D7F354D003F7AA7 /* CocoaLumberjack in Frameworks */,
@@ -2169,7 +2176,7 @@
 				59532A152CB852740069CC8F /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				1ED33DEB2D7B3DAD00B980D3 /* RxSwift in Frameworks */,
-				1ED33DE92D7B3DAD00B980D3 /* RxCocoa in Frameworks */,
+				F41542012E12FAAC00833EC5 /* (null) in Frameworks */,
 				1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */,
@@ -3153,9 +3160,9 @@
 		59A218662C3C7FE4000D89FA /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				F4F51A6A2D9C643200407DE7 /* Authentication */,
 				F40FD2712E00B037004245DF /* Main */,
 				59656F6D2C73BEF400707EA2 /* ServerList */,
-				F4F51A6A2D9C643200407DE7 /* Authentication */,
 				1E0D9D6C2C6103A3008AFF2D /* Preferences */,
 				1EA9D6FE2C7754A800566A93 /* Components */,
 				1E006BB72C6A9C5200EE6389 /* Popups */,
@@ -5304,6 +5311,8 @@
 			children = (
 				592CA7992C4EC0FF0078D487 /* LoginViewController.swift */,
 				C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */,
+				F41541FE2E12F94400833EC5 /* CaptchaView.swift */,
+				F44A0E682E0F2A48008297CA /* CaptchaViewModel.swift */,
 				592CA7A22C4FF8910078D487 /* Login2FA.xib */,
 			);
 			path = Login;
@@ -5442,6 +5451,7 @@
 				1E0974982D7F354D003F7AA7 /* CocoaLumberjack */,
 				1E09749A2D7F354D003F7AA7 /* CocoaLumberjackSwift */,
 				1E09749F2D8077DE003F7AA7 /* RxDataSources */,
+				F4A36AAB2E132A9600CCFFAA /* SnapKit */,
 			);
 			productName = WindscribeTV;
 			productReference = 592EDBF92C3C688400351D44 /* WindscribeTV.app */;
@@ -6157,6 +6167,7 @@
 				1EF7BB482C74CD9D0032A4DF /* ConfirmEmailPopupViewController.swift in Sources */,
 				599BA2A92C5D200A00F0D1E4 /* LocalDatabaseImpl+Utility.swift in Sources */,
 				59FC73DD2C514BCD00021CD1 /* ConnectivityImpl.swift in Sources */,
+				F41541FF2E12F94A00833EC5 /* CaptchaView.swift in Sources */,
 				59FC73D72C514B4C00021CD1 /* RepositoryErrors.swift in Sources */,
 				59FC73E62C51506C00021CD1 /* APIManagerImpl+Robert.swift in Sources */,
 				59FC74042C5153C200021CD1 /* VPNProtocols.swift in Sources */,
@@ -6258,6 +6269,7 @@
 				F434A1BE2D84A7160059415F /* HTMLParser.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
+				F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
 				1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */,
 				59FC74542C51605600021CD1 /* ProtocolView.swift in Sources */,
@@ -9045,6 +9057,11 @@
 			productName = WireGuardKit;
 		};
 		F485CBC52D4D76BA0063EA3A /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		F4A36AAB2E132A9600CCFFAA /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;

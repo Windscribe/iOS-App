@@ -120,7 +120,8 @@ class LoginViewModelImpl: LoginViewModel {
         failedState = nil
         showLoadingView = true
 
-        apiCallManager.authTokenLogin()
+        // iOS - iPadOS is using captcha with puzzle
+        apiCallManager.authTokenLogin(useAsciiCaptcha: false)
             .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in

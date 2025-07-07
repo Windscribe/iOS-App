@@ -25,6 +25,7 @@ protocol SignUpViewModel {
     var showLoadingView: BehaviorSubject<Bool> { get }
     var routeTo: PublishSubject<SignupRoutes> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
     var failedState: BehaviorSubject<SignUpErrorState> { get }
 
     func continueButtonTapped(userName: String?, password: String?, email: String?, referrelUsername: String?, ignoreEmailCheck: Bool, claimAccount: Bool, voucherCode: String?)
@@ -35,6 +36,7 @@ protocol SignUpViewModel {
 
 class SignUpViewModelImpl: SignUpViewModel {
     let isDarkMode: BehaviorSubject<Bool>
+    let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
     let routeTo = PublishSubject<SignupRoutes>()
     let isPremiumUser = BehaviorSubject(value: false)
     let referralViewStatus = BehaviorSubject(value: false)
@@ -100,6 +102,85 @@ class SignUpViewModelImpl: SignUpViewModel {
             signUpUser(username: userName ?? "", password: password ?? "", email: email ?? "", referralUsername: referrelUsername ?? "", voucherCode: voucherCode ?? "")
         }
     }
+    
+    func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
+        failedState.onNext(.none)
+        showLoadingView.onNext(true)
+        logger.logD(self, "Signing up for account.")
+
+        apiCallManager.authTokenSignup(useAsciiCaptcha: true)
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] response -> Single<Session> in
+                guard let self = self else { return .never() }
+
+                if let captcha = response.data.captcha,
+                   let asciiArt = captcha.asciiArt {
+
+                    self.logger.logD("SignupViewModel", "Captcha required — creating captcha view model.")
+
+                    let captchaVM = CaptchaViewModel(
+                        asciiArtBase64: asciiArt,
+                        username: username,
+                        password: password,
+                        twoFactorCode: twoFactorCode,
+                        secureToken: response.data.token,
+                        apiCallManager: self.apiCallManager,
+                        logger: self.logger
+                    )
+                    
+                    captchaVM.isLoading
+                        .distinctUntilChanged()
+                        .take(until: captchaVM.captchaDismiss)
+                        .bind(to: self.showLoadingView)
+                        .disposed(by: self.disposeBag)
+
+                    captchaVM.loginSuccess
+                        .observe(on: MainScheduler.instance)
+                        .bind { [weak self] session in
+                            self?.logger.logD("SignupViewModel", "Captcha login success. Preparing user data.")
+                            self?.showLoadingView.onNext(true)
+                            
+                            self?.handleSignupSuccess(session: session)
+                        }
+                        .disposed(by: self.disposeBag)
+                    
+                    captchaVM.loginError
+                        .observe(on: MainScheduler.instance)
+                        .bind { [weak self] error in
+                            self?.handleSignupError(error)
+                        }
+                        .disposed(by: self.disposeBag)
+
+                    self.showCaptchaViewModel.onNext(captchaVM)
+                    return .never()
+                }
+
+                self.logger.logD("LoginViewModel", "AuthToken succeeded. Logging in with secureToken.")
+                return self.apiCallManager.login(
+                    username: username,
+                    password: password,
+                    code2fa: twoFactorCode ?? "",
+                    secureToken: response.data.token,
+                    captchaSolution: "",
+                    captchaTrailX: [],
+                    captchaTrailY: []
+                )
+            }
+            .catch { [weak self] error in
+                self?.handleAuthTokenError(error)
+                return .never()
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] session in
+                    self?.handleSignupSuccess(session: session)
+                },
+                onFailure: { [weak self] error in
+                    self?.handleSignupError(error)
+                }
+            )
+            .disposed(by: disposeBag)
+    }
 
     private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
         showLoadingView.onNext(true)
@@ -116,49 +197,40 @@ class SignUpViewModelImpl: SignUpViewModel {
             captchaTrailY: [])
         .observe(on: MainScheduler.instance)
         .subscribe(onSuccess: { [weak self] session in
-            self?.userRepository.login(session: session)
-            self?.logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
-            self?.prepareUserData()
+            self?.handleSignupSuccess(session: session)
+
         }, onFailure: { [weak self] error in
-            self?.logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
-            self?.handleError(error: error)
+            self?.handleSignupError(error)
+
         }).disposed(by: disposeBag)
     }
+    
+    private func handleSignupSuccess(session: Session) {
+        userRepository.login(session: session)
+        logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
 
-    private func claimGhostAccount(username: String, password: String, email: String) {
-        showLoadingView.onNext(true)
-        logger.logD(self, "Claiming account.")
-        apiCallManager.claimAccount(username: username, password: password, email: email).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            let isPro = try? isPremiumUser.value()
-            if isPro == false {
-                getUpdatedUser(email: email)
+        prepareUserData()
+    }
+    
+    private func handleAuthTokenError(_ error: Error) {
+        logger.logE("SignupViewModel", "Auth token handshake failed: \(error)")
+        showLoadingView.onNext(false)
+
+        switch error {
+        case let Errors.apiError(e):
+            failedState.onNext(.api(e.errorMessage ?? ""))
+        default:
+            if let err = error as? Errors {
+                failedState.onNext(.network(err.description))
             } else {
-                logger.logD(self, "Getting user data.")
-                prepareUserData(ignoreError: true)
+                failedState.onNext(.network(error.localizedDescription))
             }
-        }, onFailure: { [self] error in
-            logger.logD(self, "Error claming account. \(error)")
-            handleError(error: error)
-        }).disposed(by: disposeBag)
+        }
     }
+    
+    private func handleSignupError(_ error: Error) {
+        logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
 
-    private func getUpdatedUser(email: String) {
-        logger.logD(self, "Getting updated session.")
-        userRepository.getUpdatedUser().observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
-            self.showLoadingView.onNext(false)
-            if email.isEmpty == false {
-                self.routeTo.onNext(.confirmEmail)
-            } else {
-                self.routeTo.onNext(.main)
-            }
-        }, onFailure: { error in
-            self.logger.logE(self, "Failed to get session. \(error)")
-            self.showLoadingView.onNext(false)
-            self.routeTo.onNext(.main)
-        }).disposed(by: disposeBag)
-    }
-
-    private func handleError(error: Error) {
         showLoadingView.onNext(false)
         switch error {
         case Errors.userExists:
@@ -178,6 +250,44 @@ class SignUpViewModelImpl: SignUpViewModel {
                 failedState.onNext(.network(error.localizedDescription))
             }
         }
+    }
+
+    private func claimGhostAccount(username: String, password: String, email: String) {
+        showLoadingView.onNext(true)
+        logger.logD(self, "Claiming account.")
+        
+        apiCallManager.claimAccount(
+            username: username,
+            password: password,
+            email: email)
+        .observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
+            let isPro = try? isPremiumUser.value()
+            if isPro == false {
+                getUpdatedUser(email: email)
+            } else {
+                logger.logD(self, "Getting user data.")
+                prepareUserData(ignoreError: true)
+            }
+        }, onFailure: { [self] error in
+            logger.logD(self, "Error claming account. \(error)")
+            handleSignupError(error)
+        }).disposed(by: disposeBag)
+    }
+
+    private func getUpdatedUser(email: String) {
+        logger.logD(self, "Getting updated session.")
+        userRepository.getUpdatedUser().observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
+            self.showLoadingView.onNext(false)
+            if email.isEmpty == false {
+                self.routeTo.onNext(.confirmEmail)
+            } else {
+                self.routeTo.onNext(.main)
+            }
+        }, onFailure: { error in
+            self.logger.logE(self, "Failed to get session. \(error)")
+            self.showLoadingView.onNext(false)
+            self.routeTo.onNext(.main)
+        }).disposed(by: disposeBag)
     }
 
     private func disconnectFromEmergencyConnect() {

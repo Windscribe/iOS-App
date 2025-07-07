@@ -21,6 +21,8 @@ protocol LoginViewModel {
     var show2faCodeField: BehaviorSubject<Bool> { get }
     var routeToMainView: PublishSubject<Bool> { get }
     var isDarkMode: BehaviorSubject<Bool> { get }
+    var showCaptchaViewModel: PublishSubject<CaptchaViewModel> { get }
+
     var xpressCode: BehaviorSubject<String?> { get }
     func keyBoardWillShow()
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?)
@@ -35,6 +37,7 @@ class LoginViewModelImpl: LoginViewModel {
     let show2faCodeField = BehaviorSubject(value: false)
     let routeToMainView = PublishSubject<Bool>()
     let isDarkMode: BehaviorSubject<Bool>
+    let showCaptchaViewModel = PublishSubject<CaptchaViewModel>()
 
     let apiCallManager: APIManager
     let userRepository: UserRepository
@@ -64,49 +67,135 @@ class LoginViewModelImpl: LoginViewModel {
         registerNetworkEventListener()
     }
 
-    func continueButtonTapped(username: String, password: String, twoFactorCode: String? = "") {
+    func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
         failedState.onNext(.none)
+
+        // Step 1: Validate early
         if username.contains("@") {
-            failedState.onNext(LoginErrorState.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
+            failedState.onNext(.username(TextsAsset.SignInError.usernameExpectedEmailProvided))
             return
         }
-        showLoadingView.onNext(true)
-        logger.logD(self, "Logging in user.")
 
-        apiCallManager.login(
-            username: username,
-            password: password,
-            code2fa: twoFactorCode ?? "",
-            secureToken: "",
-            captchaSolution: "",
-            captchaTrailX: [],
-            captchaTrailY: [])
-        .observe(on: MainScheduler.instance)
-        .subscribe(onSuccess: { [weak self] session in
-            self?.preferences.saveLoginDate(date: Date())
-            WifiManager.shared.saveCurrentWifiNetworks()
-            self?.userRepository.login(session: session)
-            self?.logger.logI(LoginViewModelImpl.self, "Login successful, Preparing user data for \(session.username)")
-            self?.prepareUserData()
-        }, onFailure: { [weak self] error in
-            self?.logger.logE(LoginViewModelImpl.self, "Failed to login: \(error)")
-            self?.showLoadingView.onNext(false)
-            switch error {
-            case Errors.invalid2FA:
-                self?.failedState.onNext(.twoFa(TextsAsset.twoFactorInvalidError))
-            case Errors.twoFactorRequired:
-                self?.failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
-                self?.show2faCodeField.onNext(true)
-            case let Errors.apiError(e):
-                self?.failedState.onNext(.api(e.errorMessage ?? ""))
-            default:
-                if let error = error as? Errors {
-                    self?.failedState.onNext(.network(error.description))
-                } else {
-                    self?.failedState.onNext(.network(error.localizedDescription))
+        showLoadingView.onNext(true)
+        logger.logD("LoginViewModel", "Starting AuthToken login handshake...")
+
+        apiCallManager.authTokenLogin(useAsciiCaptcha: true)
+            .observe(on: MainScheduler.instance)
+            .flatMap { [weak self] response -> Single<Session> in
+                guard let self = self else { return .never() }
+
+                if let captcha = response.data.captcha,
+                   let asciiArt = captcha.asciiArt {
+
+                    self.logger.logD("LoginViewModel", "Captcha required — creating captcha view model.")
+
+                    let captchaVM = CaptchaViewModel(
+                        asciiArtBase64: asciiArt,
+                        username: username,
+                        password: password,
+                        twoFactorCode: twoFactorCode,
+                        secureToken: response.data.token,
+                        apiCallManager: self.apiCallManager,
+                        logger: self.logger
+                    )
+                    
+                    captchaVM.isLoading
+                        .distinctUntilChanged()
+                        .take(until: captchaVM.captchaDismiss)
+                        .bind(to: self.showLoadingView)
+                        .disposed(by: self.disposeBag)
+
+                    captchaVM.loginSuccess
+                        .observe(on: MainScheduler.instance)
+                        .bind { [weak self] session in
+                            self?.logger.logD("LoginViewModel", "Captcha login success. Preparing user data.")
+                            self?.showLoadingView.onNext(true)
+                            self?.handleLoginSuccess(session: session)
+                        }
+                        .disposed(by: self.disposeBag)
+                    
+                    captchaVM.loginError
+                        .observe(on: MainScheduler.instance)
+                        .bind { [weak self] error in
+                            self?.handleLoginError(error)
+                        }
+                        .disposed(by: self.disposeBag)
+
+                    self.showCaptchaViewModel.onNext(captchaVM)
+                    return .never()
                 }
+
+                self.logger.logD("LoginViewModel", "AuthToken succeeded. Logging in with secureToken.")
+                return self.apiCallManager.login(
+                    username: username,
+                    password: password,
+                    code2fa: twoFactorCode ?? "",
+                    secureToken: response.data.token,
+                    captchaSolution: "",
+                    captchaTrailX: [],
+                    captchaTrailY: []
+                )
             }
-        }).disposed(by: disposeBag)
+            .catch { [weak self] error in
+                self?.handleAuthTokenError(error)
+                return .never()
+            }
+            .observe(on: MainScheduler.instance)
+            .subscribe(
+                onSuccess: { [weak self] session in
+                    self?.handleLoginSuccess(session: session)
+                },
+                onFailure: { [weak self] error in
+                    self?.handleLoginError(error)
+                }
+            )
+            .disposed(by: disposeBag)
+    }
+
+    private func handleLoginSuccess(session: Session) {
+        preferences.saveLoginDate(date: Date())
+        WifiManager.shared.saveCurrentWifiNetworks()
+        userRepository.login(session: session)
+        logger.logI("LoginViewModel", "Login successful. Preparing user data for \(session.username)")
+
+        prepareUserData()
+    }
+
+    private func handleLoginError(_ error: Error) {
+        logger.logE("LoginViewModel", "Login failed: \(error)")
+        showLoadingView.onNext(false)
+
+        switch error {
+        case Errors.invalid2FA:
+            failedState.onNext(.twoFa(TextsAsset.twoFactorInvalidError))
+        case Errors.twoFactorRequired:
+            failedState.onNext(.twoFa(TextsAsset.twoFactorRequiredError))
+            show2faCodeField.onNext(true)
+        case let Errors.apiError(e):
+            failedState.onNext(.api(e.errorMessage ?? ""))
+        default:
+            if let err = error as? Errors {
+                failedState.onNext(.network(err.description))
+            } else {
+                failedState.onNext(.network(error.localizedDescription))
+            }
+        }
+    }
+
+    private func handleAuthTokenError(_ error: Error) {
+        logger.logE("LoginViewModel", "Auth token handshake failed: \(error)")
+        showLoadingView.onNext(false)
+
+        switch error {
+        case let Errors.apiError(e):
+            failedState.onNext(.api(e.errorMessage ?? ""))
+        default:
+            if let err = error as? Errors {
+                failedState.onNext(.network(err.description))
+            } else {
+                failedState.onNext(.network(error.localizedDescription))
+            }
+        }
     }
 
     func generateCodeTapped() {
