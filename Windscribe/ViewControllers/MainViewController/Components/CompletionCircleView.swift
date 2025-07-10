@@ -36,7 +36,7 @@ class CompletionCircleView: UIView {
         let endAngle = (percentage * 0.02 - 1) * CGFloat.pi
         let center = radius
         let innerRadius = radius - lineWidth / 2
-        
+
         var path = UIBezierPath(arcCenter: CGPoint(x: center, y: center), radius: innerRadius, startAngle: 0, endAngle: 2 * CGFloat.pi, clockwise: true)
         UIColor.whiteWithOpacity(opacity: 0.2).setStroke()
         path.lineWidth = lineWidth
