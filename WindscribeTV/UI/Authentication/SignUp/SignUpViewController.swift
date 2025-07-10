@@ -115,7 +115,7 @@ class SignUpViewController: PreferredFocusedViewController {
         forgotButton.rx.primaryAction.bind { [self] in
             router.routeTo(to: RouteID.forgotPassword, from: self)
         }.disposed(by: disposeBag)
-        
+
         viewModel.showCaptchaViewModel
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] captchaVM in
@@ -151,19 +151,19 @@ class SignUpViewController: PreferredFocusedViewController {
             })
             .disposed(by: disposeBag)
     }
-    
+
     private func showCaptchaUI(captchaView: CaptchaView) {
         self.captchaView = captchaView
         captchaView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(captchaView)
-        
+
         NSLayoutConstraint.activate([
             captchaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             captchaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             captchaView.topAnchor.constraint(equalTo: view.topAnchor),
             captchaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
+
         DispatchQueue.main.async {
             self.setNeedsFocusUpdate()
             self.updateFocusIfNeeded()

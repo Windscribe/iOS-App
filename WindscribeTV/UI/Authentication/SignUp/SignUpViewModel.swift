@@ -102,7 +102,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             signUpUser(username: userName ?? "", password: password ?? "", email: email ?? "", referralUsername: referrelUsername ?? "", voucherCode: voucherCode ?? "")
         }
     }
-    
+
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
         failedState.onNext(.none)
         showLoadingView.onNext(true)
@@ -127,7 +127,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                         apiCallManager: self.apiCallManager,
                         logger: self.logger
                     )
-                    
+
                     captchaVM.isLoading
                         .distinctUntilChanged()
                         .take(until: captchaVM.captchaDismiss)
@@ -139,11 +139,11 @@ class SignUpViewModelImpl: SignUpViewModel {
                         .bind { [weak self] session in
                             self?.logger.logD("SignupViewModel", "Captcha login success. Preparing user data.")
                             self?.showLoadingView.onNext(true)
-                            
+
                             self?.handleSignupSuccess(session: session)
                         }
                         .disposed(by: self.disposeBag)
-                    
+
                     captchaVM.loginError
                         .observe(on: MainScheduler.instance)
                         .bind { [weak self] error in
@@ -204,14 +204,14 @@ class SignUpViewModelImpl: SignUpViewModel {
 
         }).disposed(by: disposeBag)
     }
-    
+
     private func handleSignupSuccess(session: Session) {
         userRepository.login(session: session)
         logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
 
         prepareUserData()
     }
-    
+
     private func handleAuthTokenError(_ error: Error) {
         logger.logE("SignupViewModel", "Auth token handshake failed: \(error)")
         showLoadingView.onNext(false)
@@ -227,7 +227,7 @@ class SignUpViewModelImpl: SignUpViewModel {
             }
         }
     }
-    
+
     private func handleSignupError(_ error: Error) {
         logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
 
@@ -255,7 +255,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func claimGhostAccount(username: String, password: String, email: String) {
         showLoadingView.onNext(true)
         logger.logD(self, "Claiming account.")
-        
+
         apiCallManager.claimAccount(
             username: username,
             password: password,

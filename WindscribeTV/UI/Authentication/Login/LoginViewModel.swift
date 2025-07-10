@@ -98,7 +98,7 @@ class LoginViewModelImpl: LoginViewModel {
                         apiCallManager: self.apiCallManager,
                         logger: self.logger
                     )
-                    
+
                     captchaVM.isLoading
                         .distinctUntilChanged()
                         .take(until: captchaVM.captchaDismiss)
@@ -113,7 +113,7 @@ class LoginViewModelImpl: LoginViewModel {
                             self?.handleLoginSuccess(session: session)
                         }
                         .disposed(by: self.disposeBag)
-                    
+
                     captchaVM.loginError
                         .observe(on: MainScheduler.instance)
                         .bind { [weak self] error in

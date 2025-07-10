@@ -80,15 +80,15 @@ class LatencyRepositoryImpl: LatencyRepository {
             .observe(on: MainScheduler.asyncInstance)
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
         latencySingles.subscribe(
-                onSuccess: { _ in
-                    self.logger.logI(self, "Successfully updated latency data.")
-                    self.refreshBestLocation()
-                },
-                onFailure: { _ in
-                    self.logger.logE(self, "Failure to update latency data.")
-                    self.refreshBestLocation()
-                })
-            .disposed(by: self.disposeBag)
+            onSuccess: { _ in
+                self.logger.logI(self, "Successfully updated latency data.")
+                self.refreshBestLocation()
+            },
+            onFailure: { _ in
+                self.logger.logE(self, "Failure to update latency data.")
+                self.refreshBestLocation()
+            })
+        .disposed(by: self.disposeBag)
 
         return latencySingles.asCompletable()
     }
@@ -128,30 +128,26 @@ class LatencyRepositoryImpl: LatencyRepository {
     private func getCustomConfigLatency() -> Single<[PingData]> {
         return Single<[PingData]>.create { completion in
             autoreleasepool {
-                    let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
-                    var tasks: [Single<PingData>] = []
+                DispatchQueue.global().async {
+                let threadSafeConfigs = Array(self.database.getCustomConfigs()).map { ThreadSafeReference(to: $0) }
+                var tasks: [Single<PingData>] = []
+                if let realm = try? Realm() {
                     for ref in threadSafeConfigs {
                         let task = Single<PingData>.create { innerCompletion in
                             autoreleasepool {
-                                do {
-                                    let realm = try Realm()
-                                    guard let config = realm.resolve(ref) else {
-                                        innerCompletion(.failure(Realm.Error(.fail)))
-                                        return Disposables.create()
-                                    }
-                                    let pingData = PingData(ip: config.serverAddress, latency: -1)
-                                    self.getTCPLatency(pingIp: config.serverAddress) { minTime in
-                                        if minTime != -1 {
-                                            pingData.latency = minTime
-                                            self.database.addPingData(pingData: pingData)
+                                    if let config = realm.resolve(ref) {
+                                        let pingData = PingData(ip: config.serverAddress, latency: -1)
+                                        self.getTCPLatency(pingIp: config.serverAddress) { minTime in
+                                            if minTime != -1 {
+                                                pingData.latency = minTime
+                                                self.database.addPingData(pingData: pingData)
+                                            }
+                                            innerCompletion(.success(pingData))
                                         }
-                                        innerCompletion(.success(pingData))
+                                    } else {
+                                        innerCompletion(.failure(Realm.Error(.fail)))
                                     }
-                                    return Disposables.create()
-                                } catch {
-                                    innerCompletion(.failure(error))
-                                    return Disposables.create()
-                                }
+                                return Disposables.create()
                             }
                         }
                         tasks.append(task)
@@ -164,6 +160,8 @@ class LatencyRepositoryImpl: LatencyRepository {
                             completion(.failure(error))
                         })
                         .disposed(by: self.disposeBag)
+                }
+                }
             }
             return Disposables.create()
         }
@@ -171,20 +169,20 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
 #if os(iOS)
-            if vpnManager.isConnected() {
-                completion(-1)
-            } else {
-                _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
-                    QNNTcpPing.start(pingIp) { result in
-                        if let minTime = result?.minTime {
-                            completion(Int(minTime))
-                        } else {
-                            self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
-                            completion(-1)
-                        }
+        if vpnManager.isConnected() {
+            completion(-1)
+        } else {
+            _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {
+                QNNTcpPing.start(pingIp) { result in
+                    if let minTime = result?.minTime {
+                        completion(Int(minTime))
+                    } else {
+                        self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
+                        completion(-1)
                     }
                 }
             }
+        }
 #endif
     }
 

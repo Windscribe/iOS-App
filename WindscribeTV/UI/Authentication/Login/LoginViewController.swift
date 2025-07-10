@@ -319,14 +319,14 @@ class LoginViewController: PreferredFocusedViewController {
         self.captchaView = captchaView
         captchaView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(captchaView)
-        
+
         NSLayoutConstraint.activate([
             captchaView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             captchaView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             captchaView.topAnchor.constraint(equalTo: view.topAnchor),
             captchaView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
+
         DispatchQueue.main.async {
             self.setNeedsFocusUpdate()
             self.updateFocusIfNeeded()
