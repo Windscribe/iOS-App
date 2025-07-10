@@ -147,7 +147,7 @@ final class CaptchaView: UIView {
         codeTextField.snp.makeConstraints { $0.height.equalTo(75); $0.width.equalToSuperview() }
         submitButton.snp.makeConstraints { $0.height.equalTo(75); $0.width.equalToSuperview() }
         backButton.snp.makeConstraints { $0.height.equalTo(60); $0.width.equalToSuperview() }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
           self.setNeedsFocusUpdate()
           self.updateFocusIfNeeded()
@@ -175,7 +175,7 @@ final class CaptchaView: UIView {
             self.codeTextField.textColor = isCodeFocused ? .white : UIColor.white.withAlphaComponent(0.5)
         }
     }
-    
+
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         return [codeTextField]
     }

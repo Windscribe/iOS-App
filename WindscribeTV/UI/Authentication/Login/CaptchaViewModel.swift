@@ -17,11 +17,11 @@ class CaptchaViewModel {
     let captchaImage = BehaviorSubject<UIImage?>(value: nil)
     let isLoading = BehaviorSubject<Bool>(value: false)
     let errorMessage = BehaviorSubject<String?>(value: nil)
-    
+
     let loginSuccess = PublishSubject<Session>()
     let loginError = PublishSubject<Error>()
     let captchaDismiss = PublishSubject<Void>()
-    
+
     private let disposeBag = DisposeBag()
 
     private let asciiArtBase64: String
