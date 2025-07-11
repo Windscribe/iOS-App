@@ -55,7 +55,7 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         let favourite = favList?[indexPath.row]
         cell.bindViews(isDarkMode: viewModel.isDarkMode)
-        cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: favourite)
+        cell.nodeCellViewModel = NodeTableViewCellModel(displayingGroup: favourite, isFavorite: true)
         return cell
     }
 
