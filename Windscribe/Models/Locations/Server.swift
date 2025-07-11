@@ -139,7 +139,7 @@ struct ServerModel {
     }
 
     func getServerModel(customName: String = "", groupModels: [GroupModel] = []) -> ServerModel {
-        let groupModelList = groupModels.isEmpty ? groups.map { $0.getGroupModel() } : groupModels
+        let groupModelList = groupModels.isEmpty ? groups.map { $0.getGroupModel(countryCode: countryCode) } : groupModels
         let wasEdited = !customName.isEmpty && customName != name
         return ServerModel(id: id,
                            name: customName.isEmpty ? name : customName,
