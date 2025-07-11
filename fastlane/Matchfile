@@ -1,0 +1,7 @@
+
+gitlab_project("ws/client/iosapp")
+gitlab_host("https://gitlab.int.windscribe.com")
+
+storage_mode("gitlab_secure_files")
+
+type("development") # The default type, can be: appstore, adhoc, enterprise or development

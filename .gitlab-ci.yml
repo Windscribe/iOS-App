@@ -1,0 +1,80 @@
+stages:
+  - test
+  - build
+#  - deploy
+
+LintCheck:
+  stage: test
+  extends:
+    - .mr_check_only
+    - .prepare_job
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - echo "Running Linter..."
+    - brew install swiftlint
+    - fastlane lint
+    
+UnitTest:
+  stage: test
+  extends:
+    - .mr_check_only
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - fastlane test
+
+Build-iOS-For-Testflight:
+  stage: build
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - echo "Uploading iOS app to testflight..."
+    - fastlane iOSTestFlight
+  when: manual
+        
+Build-TV-Project:
+  stage: build
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - echo "Building TV app..."
+    - export FASTLANE_VERBOSE=true
+    - fastlane tvBuild
+  when: manual
+    
+Build-iOS-Project:
+  stage: build
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - echo "Building iOS app..."
+    - export FASTLANE_VERBOSE=true
+    - fastlane iOSBuild
+  when: manual
+    
+Build-Widget-Project:
+  stage: build
+  tags:
+    - $DEFAULT_PROJECT_RUNNER_TAG
+  script:
+    - echo "Building Widget..."
+    - export FASTLANE_VERBOSE=true
+    - fastlane widgetBuild
+  when: manual
+  
+image: ruby:3.1
+
+.mr_check_only:
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+      when: always
+    - when: never
+  
+
+.prepare_job:
+  stage: build
+  before_script:
+    - gem install bundler -v 2.4.22 --user-install
+    - bundle install --path vendor/bundle
+    - bundle install

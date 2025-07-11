@@ -1448,6 +1448,8 @@
 		1E60E0192CAD666400623CD5 /* ContainerResolvertype.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerResolvertype.swift; sourceTree = "<group>"; };
 		1E66109E2E0C203900CCEFD6 /* DescriptionWithLearnMore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionWithLearnMore.swift; sourceTree = "<group>"; };
 		1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+WillDisappear.swift"; sourceTree = "<group>"; };
+		1E68B6922E1E8033003E560E /* .gitlab-ci.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = ".gitlab-ci.yml"; sourceTree = SOURCE_ROOT; };
+		1E68B6932E1E8033003E560E /* Fastfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Fastfile; path = fastlane/Fastfile; sourceTree = SOURCE_ROOT; };
 		1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionViewModel.swift; sourceTree = "<group>"; };
 		1E7918C22CDE2FCC00C20723 /* LivecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LivecycleManager.swift; sourceTree = "<group>"; };
 		1E79CA5D2C63D7A3006D4DE7 /* AccountSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSectionView.swift; sourceTree = "<group>"; };
@@ -2176,7 +2178,6 @@
 				59532A152CB852740069CC8F /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				1ED33DEB2D7B3DAD00B980D3 /* RxSwift in Frameworks */,
-				F41542012E12FAAC00833EC5 /* (null) in Frameworks */,
 				1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */,
@@ -2658,6 +2659,15 @@
 				1E6610A12E0EBFEB00CCEFD6 /* View+WillDisappear.swift */,
 			);
 			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		1E68B68F2E1E7786003E560E /* CI */ = {
+			isa = PBXGroup;
+			children = (
+				1E68B6922E1E8033003E560E /* .gitlab-ci.yml */,
+				1E68B6932E1E8033003E560E /* Fastfile */,
+			);
+			path = CI;
 			sourceTree = "<group>";
 		};
 		1E7918C12CDE2FBC00C20723 /* Livecycle */ = {
@@ -3265,6 +3275,7 @@
 				AF018DEA21B0866600B225FF /* Products */,
 				5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */,
 				C56615F72C4D883E008AA993 /* libs */,
+				1E68B68F2E1E7786003E560E /* CI */,
 				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
 			);
@@ -7684,7 +7695,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -7737,7 +7748,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -8287,7 +8298,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
