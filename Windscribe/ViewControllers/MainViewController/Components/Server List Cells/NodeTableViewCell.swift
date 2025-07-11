@@ -16,6 +16,7 @@ protocol NodeTableViewCellModelType: BaseNodeCellViewModelType {
     var displayingGroup: GroupModel? { get }
     var isProLocked: Bool { get }
     var isSpeedIconVisible: Bool { get }
+    var isFavorite: Bool { get }
 }
 
 class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType {
@@ -23,9 +24,10 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     var latencyRepository = Assembler.resolve(LatencyRepository.self)
 
     var displayingGroup: GroupModel?
-    var displayingNodeServer: ServerModel?
+    var isFavorite: Bool
 
-    init(displayingGroup: GroupModel?) {
+    init(displayingGroup: GroupModel?, isFavorite: Bool = false) {
+        self.isFavorite = isFavorite
         super.init()
         self.displayingGroup = displayingGroup
         if let pingIP = displayingGroup?.pingIp {
@@ -54,7 +56,12 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     }
 
     override var iconImage: UIImage? {
-        !isProLocked ? super.iconImage : UIImage(named: ImagesAsset.proCityImage)?.withRenderingMode(.alwaysTemplate)
+        if isProLocked {
+            return UIImage(named: ImagesAsset.proCityImage)?.withRenderingMode(.alwaysTemplate)
+        } else if isFavorite, let countryCode = displayingGroup?.countryCode {
+            return UIImage(named: "\(countryCode)-s")
+        }
+        return super.iconImage
     }
 
     var isProLocked: Bool {
@@ -129,6 +136,8 @@ class NodeTableViewCell: BaseNodeCell {
         super.updateUI()
         if nodeCellViewModel?.isProLocked ?? false {
             icon.setImageColor(color: .proStarColor)
+        } else if nodeCellViewModel?.isFavorite ?? false {
+            icon.image = nodeCellViewModel?.iconImage
         }
     }
 

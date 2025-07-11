@@ -95,9 +95,10 @@ class ServerRepositoryImpl: ServerRepository {
                     server.groups.forEach { group in
                         if let city = region.cities.first(where: { $0.id == group.id }) {
                             mergedGroups.append(group.getGroupModel(customCity: city.name,
-                                                                    customNick: city.nickname))
+                                                                    customNick: city.nickname,
+                                                                    countryCode: region.country))
                         } else {
-                            mergedGroups.append(group.getGroupModel())
+                            mergedGroups.append(group.getGroupModel(countryCode: region.country))
                         }
                     }
                     if server.groups.count == mergedGroups.count {

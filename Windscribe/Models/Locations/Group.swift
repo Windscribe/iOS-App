@@ -12,6 +12,7 @@ import Swinject
 
 struct GroupModel {
     let id: Int
+    let countryCode: String?
     let city: String
     let nick: String
     let premiumOnly: Bool
@@ -27,6 +28,7 @@ struct GroupModel {
     let wasEdited: Bool
 
     init(id: Int,
+         countryCode: String? = nil,
          city: String,
          nick: String,
          premiumOnly: Bool,
@@ -41,6 +43,7 @@ struct GroupModel {
          pingHost: String,
          wasEdited: Bool) {
         self.id = id
+        self.countryCode = countryCode
         self.city = city
         self.nick = nick
         self.premiumOnly = premiumOnly
@@ -170,10 +173,11 @@ struct GroupModel {
         }
     }
 
-    func getGroupModel(customCity: String = "", customNick: String = "") -> GroupModel {
+    func getGroupModel(customCity: String = "", customNick: String = "", countryCode: String? = nil) -> GroupModel {
         let wasEdited = (!customCity.isEmpty && customCity != city) ||
         (!customNick.isEmpty && customNick != nick)
         return GroupModel(id: id,
+                          countryCode: countryCode,
                           city: customCity.isEmpty ? city : customCity,
                           nick: customNick.isEmpty ? nick : customNick,
                           premiumOnly: premiumOnly,
