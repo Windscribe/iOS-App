@@ -36,10 +36,9 @@ enum RouteID {
     case networkSecurity
     case network(with: WifiNetwork)
     case submitTicket
-    case locationPermission(delegate: DisclosureAlertDelegate, denied: Bool)
 
     // MARK: - Pop Up
-
+    case locationPermission
     case shakeForDataPopUp
     case shakeForDataView
     case shakeForDataResult(shakeCount: Int)

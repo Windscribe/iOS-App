@@ -107,7 +107,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     // MARK: View Models
     var viewModel: MainViewModelType!
-    var locationManagerViewModel: LocationManagingViewModelType!
     var vpnConnectionViewModel: ConnectionViewModelType!
     var customConfigPickerViewModel: CustomConfigPickerViewModelType!
     var favNodesListViewModel: FavouriteListViewModelType!
@@ -116,7 +115,10 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!
     var latencyViewModel: LatencyViewModel!
 
+    // MARK: Managers
     var soundManager: SoundManaging!
+    var locationPermissionManager: LocationPermissionManaging!
+
     var logger: FileLogger!
 
     // MARK: constraints

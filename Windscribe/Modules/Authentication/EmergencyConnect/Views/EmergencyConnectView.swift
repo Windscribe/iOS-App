@@ -9,35 +9,13 @@
 import SwiftUI
 import Combine
 
-struct EmergencyConnectView: View {
+struct EmergencyConnectView: View, ResponsivePopupLayoutProvider {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.deviceType) private var deviceType
     @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
 
     @StateObject private var viewModel: EmergencyConnectViewModelImpl
-
-    private let maxIphoneWidth: CGFloat = 430
-
-    func getMaxWidth(for geometry: GeometryProxy) -> CGFloat {
-        return min(geometry.size.width, maxIphoneWidth)
-    }
-
-    func getBottomPadding(for geometry: GeometryProxy) -> CGFloat {
-        if deviceType == .iPadPortrait {
-            return geometry.size.height * 0.24
-        } else if deviceType == .iPadLandscape {
-            return geometry.size.height * 0.12
-        }
-        return 24
-    }
-
-    func getTopSpacerHeight(for geometry: GeometryProxy) -> CGFloat {
-        if deviceType == .iPadPortrait {
-            return geometry.size.height * 0.24
-        }
-        return geometry.size.height * 0.12
-    }
 
     init(viewModel: any EmergencyConnectViewModel) {
         guard let model = viewModel as? EmergencyConnectViewModelImpl else {
@@ -49,6 +27,10 @@ struct EmergencyConnectView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            let topSpacer = getTopSpacerHeight(for: geometry, deviceType: deviceType)
+            let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
+            let maxWidth = getMaxWidth(for: geometry)
+
             PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
                 VStack(spacing: 24) {
                     headerSection
@@ -58,7 +40,7 @@ struct EmergencyConnectView: View {
                     ZStack(alignment: .top) {
                         VStack(spacing: 16) {
                             Spacer()
-                                .frame(height: getTopSpacerHeight(for: geometry))
+                                .frame(height: topSpacer)
 
                             Image(ImagesAsset.Welcome.emergencyConnectIcon)
                                 .renderingMode(.template)
@@ -108,7 +90,7 @@ struct EmergencyConnectView: View {
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
                         })
-                        .frame(maxWidth: getMaxWidth(for: geometry))
+                        .frame(maxWidth: maxWidth)
 
                         Button(action: {
                             dismiss()
@@ -121,9 +103,9 @@ struct EmergencyConnectView: View {
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
                         })
-                        .frame(maxWidth: getMaxWidth(for: geometry))
+                        .frame(maxWidth: maxWidth)
                     }
-                    .padding(.bottom, getBottomPadding(for: geometry))
+                    .padding(.bottom, bottomPadding)
                 }
                 .padding()
                 .dynamicTypeSize(dynamicTypeRange)

@@ -74,11 +74,18 @@ extension MainViewController {
             self.displaySiriShortcutPopup()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.requestLocationTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.locationManagerViewModel.requestLocationPermission {
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil), from: self)
+        vpnConnectionViewModel.requestLocationTrigger
+            .flatMap { [weak self] _ -> Single<Void> in
+                guard let self = self else { return .never() }
+                return self.locationPermissionManager.requestLocationPermissionFlow()
             }
-        }).disposed(by: disposeBag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil),
+                                     from: self)
+            })
+            .disposed(by: disposeBag)
 
         vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
@@ -94,11 +101,16 @@ extension MainViewController {
             self.router?.routeTo(to: .network(with: network), from: self)
         }.disposed(by: disposeBag)
 
-        wifiInfoView.unknownWifiTriggerSubject.subscribe { _ in
-            self.locationManagerViewModel.requestLocationPermission {
-                self.viewModel.updateSSID()
+        wifiInfoView.unknownWifiTriggerSubject
+            .flatMap { [weak self] _ -> Single<Void> in
+                guard let self = self else { return .never() }
+                return self.locationPermissionManager.requestLocationPermissionFlow()
             }
-        }.disposed(by: disposeBag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.updateSSID()
+            })
+            .disposed(by: disposeBag)
     }
 
     func bindMainViewModel() {
@@ -121,11 +133,18 @@ extension MainViewController {
             self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
 
-        viewModel.showNetworkSecurityTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.locationManagerViewModel.requestLocationPermission {
-                self.popupRouter?.routeTo(to: .networkSecurity, from: self)
+        viewModel.showNetworkSecurityTrigger
+            .flatMap { [weak self] _ -> Single<Void> in
+                guard let self = self else { return .never() }
+                return self.locationPermissionManager.requestLocationPermissionFlow()
             }
-        }).disposed(by: disposeBag)
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.popupRouter?.routeTo(to: .networkSecurity, from: self)
+            })
+            .disposed(by: disposeBag)
 
         viewModel.showNotificationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showNotificationsViewController()

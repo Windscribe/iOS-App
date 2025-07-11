@@ -35,13 +35,10 @@ class HomeRouter: BaseRouter, RootRouter {
             vc.delegate = delegate
             vc.type = type
             from.navigationController?.pushViewController(vc, animated: true)
-        case let RouteID.locationPermission(delegate, denied):
-            let vc = Assembler.resolve(LocationPermissionInfoViewController.self)
-            vc.delegate = delegate
-            vc.denied = denied
-            vc.modalPresentationStyle = .fullScreen
-            vc.modalTransitionStyle = .crossDissolve
-            from.present(vc, animated: true, completion: nil)
+        case RouteID.locationPermission:
+            let locationPermissionView = Assembler.resolve(LocationPermissionInfoView.self)
+
+            presentViewModally(from: from, view: locationPermissionView)
         case RouteID.trustedNetwork:
             let vc = Assembler.resolve(TrustedNetworkPopupViewController.self)
             vc.modalPresentationStyle = .overCurrentContext
