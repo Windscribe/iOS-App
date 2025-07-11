@@ -201,6 +201,13 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any LocationPermissionInfoViewModel).self) { r in
+            LocationPermissionInfoViewModelImpl(
+                manager: r.resolve(LocationPermissionManaging.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.transient)
+
         container.register(BannedAccountPopupModelType.self) { r in
             BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
@@ -278,8 +285,8 @@ class ViewModels: Assembly {
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                      languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
-        container.register(LocationManagingViewModelType.self) { r in
-            LocationManagingViewModel(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
+        container.register(LocationPermissionManaging.self) { r in
+            LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.transient)
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
@@ -645,7 +652,7 @@ class ViewControllerModule: Assembly {
             vc.viewModel = r.resolve(MainViewModelType.self)
             vc.soundManager = r.resolve(SoundManaging.self)
             vc.logger = r.resolve(FileLogger.self)
-            vc.locationManagerViewModel = r.resolve(LocationManagingViewModelType.self)
+            vc.locationPermissionManager = r.resolve(LocationPermissionManaging.self)
             vc.staticIPListViewModel = r.resolve(StaticIPListViewModelType.self)
             vc.vpnConnectionViewModel = r.resolve(ConnectionViewModelType.self)
             vc.customConfigPickerViewModel = r.resolve(CustomConfigPickerViewModelType.self)
@@ -778,8 +785,13 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(SendDebugLogCompletedViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(LocationPermissionInfoViewController.self) { _ in
-            LocationPermissionInfoViewController()
+
+        container.register(LocationPermissionInfoView.self) { r in
+            LocationPermissionInfoView(viewModel: LocationPermissionInfoViewModelImpl(
+                manager: r.resolve(LocationPermissionManaging.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            )
         }.inObjectScope(.transient)
 
         container.register(FlagsBackgroundView.self) { _ in

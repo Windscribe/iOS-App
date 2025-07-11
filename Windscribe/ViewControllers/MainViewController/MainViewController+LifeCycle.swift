@@ -37,10 +37,17 @@ extension MainViewController {
         overrideUserInterfaceStyle = .dark
         bindViewModels()
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        locationManagerViewModel.shouldPresentLocationPopUp.subscribe {
-            self.router?.routeTo(to: RouteID.locationPermission(delegate: self.locationManagerViewModel, denied: $0),
-                                 from: self)
-        }.disposed(by: disposeBag)
+
+        locationPermissionManager.shouldShowPermissionUI
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] denied in
+                guard let self else { return }
+                self.router?.routeTo(
+                    to: .locationPermission,
+                    from: self
+                )
+            })
+            .disposed(by: disposeBag)
     }
 
     override func viewWillAppear(_ animated: Bool) {

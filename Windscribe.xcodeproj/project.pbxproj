@@ -204,7 +204,7 @@
 		1EC6C7812BE268D60036248B /* ListSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7802BE268D60036248B /* ListSelectionViewModel.swift */; };
 		1EC6C7832BE268E30036248B /* ListSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7822BE268E30036248B /* ListSelectionView.swift */; };
 		1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */; };
-		1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationMainViewModel.swift */; };
+		1EC6C78A2BE293690036248B /* LocationPermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC6C7892BE293690036248B /* LocationPermissionManager.swift */; };
 		1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */; };
 		1ED23F7C2DBBCA9300C7BEE5 /* SelectionViewType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED23F782DBAA1E200C7BEE5 /* SelectionViewType.swift */; };
 		1ED23F7E2DBBCB7400C7BEE5 /* SoundManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353D2DA9953900108558 /* SoundManaging.swift */; };
@@ -392,8 +392,6 @@
 		59E63A0E2BCEBFF3002E566F /* PopUpMaintenanceLocationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A0C2BCEBFF3002E566F /* PopUpMaintenanceLocationVC.swift */; };
 		59E63A0F2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A0D2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift */; };
 		59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */; };
-		59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */; };
-		59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */; };
 		59E63A2E2BD145F1002E566F /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A2D2BD145F1002E566F /* MainViewModel.swift */; };
 		59FC73CA2C5042BD00021CD1 /* WSRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */; };
 		59FC73CD2C514A7A00021CD1 /* AppModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */; };
@@ -1052,6 +1050,9 @@
 		F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
 		F42ADD232D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
 		F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */; };
+		F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */; };
+		F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */; };
+		F43184BF2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */; };
 		F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */; };
 		F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */; };
 		F434A1BD2D84A5690059415F /* NewsFeedDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */; };
@@ -1515,7 +1516,7 @@
 		1EC6C7802BE268D60036248B /* ListSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelectionViewModel.swift; sourceTree = "<group>"; };
 		1EC6C7822BE268E30036248B /* ListSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelectionView.swift; sourceTree = "<group>"; };
 		1EC6C7842BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CardHeaderViewDelegate.swift"; sourceTree = "<group>"; };
-		1EC6C7892BE293690036248B /* LocationMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationMainViewModel.swift; sourceTree = "<group>"; };
+		1EC6C7892BE293690036248B /* LocationPermissionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionManager.swift; sourceTree = "<group>"; };
 		1ECBC2502D6CA8B000347A4F /* UpgradeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeViewModel.swift; sourceTree = "<group>"; };
 		1ED23F782DBAA1E200C7BEE5 /* SelectionViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionViewType.swift; sourceTree = "<group>"; };
 		1ED23F802DBBD36400C7BEE5 /* IPInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPInfoViewModel.swift; sourceTree = "<group>"; };
@@ -1617,8 +1618,6 @@
 		59E63A0D2BCEBFF3002E566F /* PopUpMaintenanceLocationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpMaintenanceLocationModel.swift; sourceTree = "<group>"; };
 		59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedNetworkPopup.swift; sourceTree = "<group>"; };
 		59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateUsPopupModel.swift; sourceTree = "<group>"; };
-		59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPermissionDisclosureViewController.swift; sourceTree = "<group>"; };
-		59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LocationPermissionDisclosureViewController+UI.swift"; sourceTree = "<group>"; };
 		59E63A2D2BD145F1002E566F /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainViewModel.swift; sourceTree = "<group>"; };
 		59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSRoundButton.swift; sourceTree = "<group>"; };
@@ -2020,6 +2019,9 @@
 		F41541FE2E12F94400833EC5 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
 		F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
 		F42ADD222D5BDADB0021AF6E /* UIApplication+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Extension.swift"; sourceTree = "<group>"; };
+		F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoView.swift; sourceTree = "<group>"; };
+		F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoViewModel.swift; sourceTree = "<group>"; };
+		F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponsivePopupLayoutProvider.swift; sourceTree = "<group>"; };
 		F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDataModel.swift; sourceTree = "<group>"; };
 		F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
 		F434A1C42D84AB200059415F /* NewsFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedModel.swift; sourceTree = "<group>"; };
@@ -2869,7 +2871,6 @@
 			children = (
 				1E7918BE2CDCD2E700C20723 /* ConnectionViewModel.swift */,
 				59E63A2D2BD145F1002E566F /* MainViewModel.swift */,
-				1EC6C7892BE293690036248B /* LocationMainViewModel.swift */,
 				C51EEDCF2C18897600B01F8F /* LatencyViewModel.swift */,
 			);
 			path = Models;
@@ -3208,15 +3209,6 @@
 			path = "Trusted Network";
 			sourceTree = "<group>";
 		};
-		59E63A242BD03DAC002E566F /* Location Permission */ = {
-			isa = PBXGroup;
-			children = (
-				59E63A252BD03DAC002E566F /* LocationPermissionDisclosureViewController.swift */,
-				59E63A262BD03DAC002E566F /* LocationPermissionDisclosureViewController+UI.swift */,
-			);
-			path = "Location Permission";
-			sourceTree = "<group>";
-		};
 		59FC74802C52D7B900021CD1 /* Router */ = {
 			isa = PBXGroup;
 			children = (
@@ -3370,6 +3362,7 @@
 				F40419352D822CE90005EF97 /* HTMLParser */,
 				1ED23F852DC3C99D00C7BEE5 /* Background */,
 				F49935392DA994A000108558 /* Sound */,
+				F43184BB2E1D9EE8007C96E3 /* LocationPermission */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -3889,9 +3882,8 @@
 		C57BDE3429B9390A00337E63 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
-				1E24AB892BD16C7E0004D17D /* Enter Credentials */,
-				59E63A242BD03DAC002E566F /* Location Permission */,
 				1EE74F742BD67B1D0031185F /* Push Notifications */,
+				1E24AB892BD16C7E0004D17D /* Enter Credentials */,
 				1EA876D32BCEA37A00F0DD25 /* Error View */,
 				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
 				59E63A0B2BCEBFF3002E566F /* Maintenance Location */,
@@ -4370,6 +4362,47 @@
 			path = AppReview;
 			sourceTree = "<group>";
 		};
+		F43184B52E1C57F2007C96E3 /* PopUps */ = {
+			isa = PBXGroup;
+			children = (
+				F43184B62E1C581D007C96E3 /* LocationPermission */,
+			);
+			path = PopUps;
+			sourceTree = "<group>";
+		};
+		F43184B62E1C581D007C96E3 /* LocationPermission */ = {
+			isa = PBXGroup;
+			children = (
+				F43184B72E1C582E007C96E3 /* Views */,
+				F43184B82E1C5834007C96E3 /* Models */,
+			);
+			path = LocationPermission;
+			sourceTree = "<group>";
+		};
+		F43184B72E1C582E007C96E3 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F43184B92E1C59DE007C96E3 /* LocationPermissionInfoView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F43184B82E1C5834007C96E3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F43184BB2E1D9EE8007C96E3 /* LocationPermission */ = {
+			isa = PBXGroup;
+			children = (
+				1EC6C7892BE293690036248B /* LocationPermissionManager.swift */,
+			);
+			path = LocationPermission;
+			sourceTree = "<group>";
+		};
 		F434A1B22D834A3D0059415F /* SampleData */ = {
 			isa = PBXGroup;
 			children = (
@@ -4699,10 +4732,11 @@
 			children = (
 				F4843A942D89F7300034330F /* SafariView.swift */,
 				F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */,
-				F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */,
+				F499351B2DA6D93700108558 /* RoutedHostingController.swift */,
 				F4888E3A2D946DB9005EF149 /* KeyboardResponder.swift */,
 				F4888E452D9658EB005EF149 /* ViewPositionReader.swift */,
-				F499351B2DA6D93700108558 /* RoutedHostingController.swift */,
+				F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */,
+				F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */,
 			);
 			path = Interface;
 			sourceTree = "<group>";
@@ -5353,6 +5387,7 @@
 				1E2366CB2BC5766E000DF098 /* News Feed */,
 				F46C285C2D4C041D0073207E /* PlanUpgrade */,
 				F499351E2DA7170F00108558 /* Preferences */,
+				F43184B52E1C57F2007C96E3 /* PopUps */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -6381,6 +6416,7 @@
 				AF2A752D230C52FB00548088 /* WSTableViewDataSource.swift in Sources */,
 				C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */,
 				C580FE042B4F254E004FA857 /* PushNotificationManagerV2Impl.swift in Sources */,
+				F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */,
 				F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */,
 				F49C45C42DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift in Sources */,
 				C5A930EC2B44A2DE0001CFA0 /* FileDatabase.swift in Sources */,
@@ -6437,6 +6473,7 @@
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
 				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
+				F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */,
 				1E5553CA2D95C91B00F16AF0 /* IPContentView.swift in Sources */,
 				F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */,
 				C5D0E3EE29BB85460091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
@@ -6637,7 +6674,6 @@
 				1E5553B72D8C323800F16AF0 /* TopNavBarHeader.swift in Sources */,
 				1E24AB8B2BD16E720004D17D /* EnterCredentialsViewModel.swift in Sources */,
 				599BA2AC2C5D21F200F0D1E4 /* XPressLoginVerifyResponse.swift in Sources */,
-				59E63A272BD03DAD002E566F /* LocationPermissionDisclosureViewController.swift in Sources */,
 				1ED6164A2DCA7132006CDC99 /* MenuEntryView.swift in Sources */,
 				1EA91DDB2BEA7F2C00496DF8 /* ConnectionStateInfo.swift in Sources */,
 				C5D0E40329BB8BE70091FB14 /* test_ringlogger.c in Sources */,
@@ -6705,7 +6741,7 @@
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,
 				AF443D7122C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift in Sources */,
-				1EC6C78A2BE293690036248B /* LocationMainViewModel.swift in Sources */,
+				1EC6C78A2BE293690036248B /* LocationPermissionManager.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */,
 				F47EC5242DE7B69900AF5089 /* HelpSettingsItem.swift in Sources */,
@@ -6773,6 +6809,7 @@
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,
+				F43184BF2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift in Sources */,
 				F499353F2DA9953900108558 /* SoundManaging.swift in Sources */,
 				AFD16F1122775E9F00E9FAD3 /* Notifications.swift in Sources */,
 				F47EC5412DEA27B200AF5089 /* HelpRouteID.swift in Sources */,
@@ -6849,7 +6886,6 @@
 				AF15B8CF2475BCEA0086BB2A /* SpacedLabel.swift in Sources */,
 				1ED23F812DBBD37000C7BEE5 /* IPInfoViewModel.swift in Sources */,
 				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
-				59E63A282BD03DAD002E566F /* LocationPermissionDisclosureViewController+UI.swift in Sources */,
 				1EE74F812BD7F9620031185F /* ShakeForDataResultViewModel.swift in Sources */,
 				AF54C6BC228215A700DAAB07 /* UIDevice+Extension.swift in Sources */,
 				1EE74F7A2BD6A0090031185F /* ShakeForDataPopupViewModel.swift in Sources */,

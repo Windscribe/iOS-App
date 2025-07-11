@@ -44,4 +44,10 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         viewController.changeNavigationBarStyle(isHidden: false)
         viewController.navigationController?.navigationBar.setNeedsLayout()
     }
+
+    func presentViewModally<V: View>(from viewController: WSUIViewController, view: V) {
+        let hostingController = UIHostingController(rootView: view)
+        hostingController.modalPresentationStyle = .fullScreen
+        viewController.present(hostingController, animated: true)
+    }
 }
