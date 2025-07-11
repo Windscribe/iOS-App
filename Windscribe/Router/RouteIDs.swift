@@ -50,7 +50,6 @@ enum RouteID {
     case proPlanExpireddAccountPopup
     case errorPopup(message: String, dismissAction: (() -> Void)?)
     case newsFeedPopup
-    case setPreferredProtocolPopup
     case privacyView(completionHandler: () -> Void)
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)

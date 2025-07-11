@@ -210,9 +210,6 @@ class ViewModels: Assembly {
         container.register(ProPlanExpiredAccountPopupModelType.self) { r in
             ProPlanExpiredAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
-        container.register(SetPreferredProtocolModelType.self) { r in
-            SetPreferredProtocolModel(connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.transient)
         container.register(ProtocolSetPreferredViewModelV2.self) { r in
             ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: ProtocolViewType.connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -690,12 +687,6 @@ class ViewControllerModule: Assembly {
                 htmlParser: r.resolve(HTMLParsing.self)!,
                 notificationRepository: r.resolve(NotificationRepository.self)!)
             )
-        }.inObjectScope(.transient)
-        container.register(SetPreferredProtocolPopupViewController.self) { _ in
-            SetPreferredProtocolPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(SetPreferredProtocolModelType.self)
-            c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(ProtocolSwitchViewController.self) { _ in
             ProtocolSwitchViewController()
