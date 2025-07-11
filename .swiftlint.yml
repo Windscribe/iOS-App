@@ -1,4 +1,6 @@
 excluded:
+  - fastlane
+  - vendor
   - Windscribe/WireGuard
   - Pods
   - build
