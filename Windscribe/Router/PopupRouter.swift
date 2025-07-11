@@ -30,8 +30,6 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = errorVC
         case .newsFeedPopup:
             view = Assembler.resolve(NewsFeedView.self)
-        case .setPreferredProtocolPopup:
-            vc = Assembler.resolve(SetPreferredProtocolPopupViewController.self)
         case let .privacyView(completionHandler):
             let privacyVC: PrivacyViewController = Assembler.resolve(PrivacyViewController.self)
             privacyVC.closeCompletion = completionHandler
@@ -92,15 +90,9 @@ class PopupRouter: BaseRouter, RootRouter {
                 switch to {
                 case let .bannedAccountPopup(pushAnimated):
                     from.navigationController?.pushViewController(vc, animated: pushAnimated)
-                case .setPreferredProtocolPopup,
-                        .privacyView,
-                        .enterCredentials,
-                        .shakeForDataPopUp,
-                        .pushNotifications,
-                        .maintenanceLocation:
+                case .privacyView, .enterCredentials, .shakeForDataPopUp, .pushNotifications, .maintenanceLocation:
                     from.present(vc, animated: true, completion: nil)
-                case .shakeForDataView,
-                     .shakeForDataResult:
+                case .shakeForDataView, .shakeForDataResult:
                     from.navigationController?.pushViewController(vc, animated: true)
                     from.navigationController?.viewControllers = [vc]
                 case .upgrade:
