@@ -127,14 +127,8 @@ class FlagsBackgroundView: UIView {
     var topNavBarHeader = TopNavBarHeader()
     var topView = UIView()
 
-    var flagHeight: CGFloat {
-        272
-    }
     var flagWidth: CGFloat {
         402
-    }
-    var height: CGFloat {
-        flagHeight + topNavBarHeader.height
     }
     var barHeight: CGFloat {
         topNavBarHeader.height
@@ -243,7 +237,6 @@ class FlagsBackgroundView: UIView {
             backgroundImageView.topAnchor.constraint(equalTo: topView.bottomAnchor),
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            backgroundImageView.heightAnchor.constraint(equalToConstant: flagHeight),
             flagWidthConstraint,
 
             // topMaskGradient
