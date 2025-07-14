@@ -163,6 +163,7 @@
 		1E8C8F3D2C6500D900CBFDC5 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
 		1E8C8F3E2C6507D800CBFDC5 /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		1E8C8F412C6508B300CBFDC5 /* PreferencesConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8C8F3F2C6508B300CBFDC5 /* PreferencesConnectionView.swift */; };
+		1E90487F2E252C5700C9B794 /* LocationNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E90487E2E252C5300C9B794 /* LocationNameView.swift */; };
 		1E9F2C332C665FC600607BAA /* PreferencesViewLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */; };
 		1E9F2C352C665FD100607BAA /* PreferencesViewLogView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */; };
 		1E9F2C362C6661E400607BAA /* ViewLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */; };
@@ -1481,6 +1482,7 @@
 		1E7A7AF32E0173B100A6EAA6 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/SiriOldIntents.strings; sourceTree = "<group>"; };
 		1E818F112C3D6D560088066C /* RegexConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexConstants.swift; sourceTree = "<group>"; };
 		1E8C8F3F2C6508B300CBFDC5 /* PreferencesConnectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesConnectionView.swift; sourceTree = "<group>"; };
+		1E90487E2E252C5300C9B794 /* LocationNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNameView.swift; sourceTree = "<group>"; };
 		1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewLogView.swift; sourceTree = "<group>"; };
 		1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesViewLogView.xib; sourceTree = "<group>"; };
 		1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupViewModel.swift; sourceTree = "<group>"; };
@@ -2539,6 +2541,7 @@
 		1E5553BA2D8D880600F16AF0 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				1E90487D2E252C4500C9B794 /* LocationNameView */,
 				1E3F776B2DB8FE00008308A8 /* CompletionCircleView.swift */,
 				1E3F77682DB7E5CB008308A8 /* Free Account Footer */,
 				1E3F775E2DB007A8008308A8 /* Lists Header Views */,
@@ -2702,6 +2705,14 @@
 				F49E61CE2E009DFD0087386F /* Models */,
 			);
 			path = Connection;
+			sourceTree = "<group>";
+		};
+		1E90487D2E252C4500C9B794 /* LocationNameView */ = {
+			isa = PBXGroup;
+			children = (
+				1E90487E2E252C5300C9B794 /* LocationNameView.swift */,
+			);
+			path = LocationNameView;
 			sourceTree = "<group>";
 		};
 		1E9F2C312C665FAB00607BAA /* ViewLog */ = {
@@ -6479,6 +6490,7 @@
 				AF36BF0E22FC96E800FCC6F4 /* EnterCredentialsViewController+UI.swift in Sources */,
 				F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */,
 				F47EC5342DEA1B6900AF5089 /* SendTicketViewModel.swift in Sources */,
+				1E90487F2E252C5700C9B794 /* LocationNameView.swift in Sources */,
 				C535D29927E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				C5D0E40729BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				C5D1C2D22BBFE18F0083B9EC /* AdvanceRepository.swift in Sources */,
