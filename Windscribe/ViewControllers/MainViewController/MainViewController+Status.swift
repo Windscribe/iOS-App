@@ -36,8 +36,7 @@ extension MainViewController {
         let location = vpnConnectionViewModel.getSelectedCountryInfo()
         guard !location.countryCode.isEmpty else { return }
         DispatchQueue.main.async {
-            self.connectedServerLabel.text = location.nickName
-            self.connectedCityLabel.text = location.cityName
+            self.locationNameView.update(mainName: location.cityName, nickName: location.nickName)
         }
     }
 }

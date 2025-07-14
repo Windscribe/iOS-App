@@ -24,8 +24,7 @@ extension MainViewController {
         logoIcon.translatesAutoresizingMaskIntoConstraints = false
         notificationDot.translatesAutoresizingMaskIntoConstraints = false
         connectButtonView.translatesAutoresizingMaskIntoConstraints = false
-        connectedCityLabel.translatesAutoresizingMaskIntoConstraints = false
-        connectedServerLabel.translatesAutoresizingMaskIntoConstraints = false
+        locationNameView.translatesAutoresizingMaskIntoConstraints = false
         spacer.translatesAutoresizingMaskIntoConstraints = false
         connectionStateInfoView.translatesAutoresizingMaskIntoConstraints = false
         wifiInfoView.translatesAutoresizingMaskIntoConstraints = false
@@ -116,20 +115,16 @@ extension MainViewController {
             connectionStateInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
             connectionStateInfoView.heightAnchor.constraint(equalToConstant: 21),
 
-            // connectedCityLabel
-            connectedCityLabel.topAnchor.constraint(equalTo: connectionStateInfoView.bottomAnchor, constant: 28),
-            connectedCityLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
-            connectedCityLabel.heightAnchor.constraint(equalToConstant: 40),
-
-            // connectedServerLabel
-            connectedServerLabel.centerYAnchor.constraint(equalTo: connectedCityLabel.centerYAnchor),
-            connectedServerLabel.leftAnchor.constraint(equalTo: connectedCityLabel.rightAnchor, constant: 4),
-            connectedServerLabel.heightAnchor.constraint(equalToConstant: 40),
+            // locationNameView
+            locationNameView.topAnchor.constraint(equalTo: connectionStateInfoView.bottomAnchor),
+            locationNameView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
+            locationNameView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
 
             // wifiInfoView
-            wifiInfoView.topAnchor.constraint(equalTo: connectedCityLabel.bottomAnchor, constant: 8),
+            wifiInfoView.topAnchor.constraint(equalTo: locationNameView.bottomAnchor, constant: 8),
             wifiInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 7),
             wifiInfoView.heightAnchor.constraint(equalToConstant: 32),
+            wifiInfoView.bottomAnchor.constraint(equalTo: listSelectionView.topAnchor, constant: -12),
 
             // ipInfoView
             ipInfoView.centerYAnchor.constraint(equalTo: wifiInfoView.centerYAnchor),

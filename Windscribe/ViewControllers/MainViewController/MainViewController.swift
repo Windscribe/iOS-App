@@ -47,7 +47,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var connectButtonView: ConnectButtonView!
     var connectionStateInfoView: ConnectionStateInfoView!
     var spacer: UIView!
-    var connectedCityLabel, connectedServerLabel: UILabel!
+    var locationNameView: LocationNameView!
     var ipInfoView: IPInfoView!
 
     // MARK: Wifi Info views

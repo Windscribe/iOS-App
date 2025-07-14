@@ -193,25 +193,14 @@ extension MainViewController {
         connectionStateInfoView.delegate = self
         view.addSubview(connectionStateInfoView)
 
+        locationNameView = LocationNameView()
+        view.addSubview(locationNameView)
+
         ipInfoView = Assembler.resolve(IPInfoView.self)
         view.addSubview(ipInfoView)
 
         wifiInfoView = Assembler.resolve(WifiInfoView.self)
         view.addSubview(wifiInfoView)
-
-        connectedCityLabel = UILabel()
-        connectedCityLabel.adjustsFontSizeToFitWidth = true
-        addConnectionLabel(label: connectedCityLabel,
-                           font: UIFont.bold(size: 26),
-                           color: UIColor.white,
-                           text: TextsAsset.bestLocation)
-
-        connectedServerLabel = UILabel()
-        connectedServerLabel.adjustsFontSizeToFitWidth = true
-        addConnectionLabel(label: connectedServerLabel,
-                           font: UIFont.regular(size: 26),
-                           color: UIColor.white,
-                           text: "")
 
         spacer = UIView()
         spacer.setContentHuggingPriority(UILayoutPriority.defaultLow, for: NSLayoutConstraint.Axis.horizontal)
