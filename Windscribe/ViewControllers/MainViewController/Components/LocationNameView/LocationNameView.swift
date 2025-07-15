@@ -105,20 +105,4 @@ class LocationNameView: UIView {
 
         layoutIfNeeded()
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        // Recheck layout when bounds change
-        if !mainNameLabel.text.isNilOrEmpty || !nickNameLabel.text.isNilOrEmpty {
-            update(mainName: mainNameLabel.text, nickName: nickNameLabel.text)
-        }
-    }
-}
-
-// MARK: - Helper Extension
-private extension Optional where Wrapped == String {
-    var isNilOrEmpty: Bool {
-        return self?.isEmpty ?? true
-    }
 }
