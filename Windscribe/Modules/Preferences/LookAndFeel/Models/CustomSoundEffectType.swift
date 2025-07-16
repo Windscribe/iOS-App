@@ -130,11 +130,11 @@ enum SoundEffectSubtype: String, CaseIterable {
         MenuOption(title: rawValue, fieldKey: rawValue)
     }
 
-    var turnOnAssetName: String {
+    func turnOnAssetName(isConnecting: Bool) -> String {
         switch self {
         case .arcade: return "ws_button_arcadeon"
         case .boing:  return "ws_button_boingon"
-        case .fartDeluxe: return "ws_button_multifarton"
+        case .fartDeluxe: return isConnecting ? "ws_button_multifartstart" : "ws_button_multifarton"
         case .fart: return "ws_button_farton"
         case .ghostWind: return "ws_button_ghostwindon"
         case .popCan: return "ws_button_popcanon"
