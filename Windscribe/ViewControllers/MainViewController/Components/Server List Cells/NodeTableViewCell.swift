@@ -59,7 +59,7 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         if isProLocked {
             return UIImage(named: ImagesAsset.proCityImage)?.withRenderingMode(.alwaysTemplate)
         } else if isFavorite, let countryCode = displayingGroup?.countryCode {
-            return UIImage(named: "\(countryCode)-s")
+            return UIImage(named: "\(countryCode)-s") ?? super.iconImage
         }
         return super.iconImage
     }
