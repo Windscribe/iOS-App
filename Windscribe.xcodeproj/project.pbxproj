@@ -2178,7 +2178,6 @@
 				59532A152CB852740069CC8F /* WSNet.xcframework in Frameworks */,
 				C598706D2C63212700DA4DB1 /* WireGuardKit in Frameworks */,
 				1ED33DEB2D7B3DAD00B980D3 /* RxSwift in Frameworks */,
-				F41542012E12FAAC00833EC5 /* (null) in Frameworks */,
 				1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */,
@@ -7673,7 +7672,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeDevelopment.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
@@ -7696,7 +7695,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -7721,7 +7720,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/Windscribe.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_TESTABILITY = YES;
@@ -7749,7 +7748,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -8277,7 +8276,7 @@
 				CODE_SIGN_ENTITLEMENTS = Windscribe/WindscribeProduction.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = GYZJYS7XUG;
 				ENABLE_BITCODE = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -8299,7 +8298,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.0;
+				MARKETING_VERSION = 3.9.1;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
