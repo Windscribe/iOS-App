@@ -588,6 +588,8 @@ extension ConnectionViewModel {
             customSoundPlaybackManager.playSound(for: .connect)
         } else if state == .disconnected {
             customSoundPlaybackManager.playSound(for: .disconnect)
+        } else if state == .connecting {
+            customSoundPlaybackManager.playSound(for: .connect, isConnecting: true)
         }
     }
 }

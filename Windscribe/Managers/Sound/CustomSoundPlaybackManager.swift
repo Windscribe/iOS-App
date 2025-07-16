@@ -10,6 +10,7 @@ import Foundation
 
 protocol CustomSoundPlaybackManaging {
     func playSound(for domain: SoundAssetDomainType)
+    func playSound(for domain: SoundAssetDomainType, isConnecting: Bool)
 }
 
 class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
@@ -33,6 +34,10 @@ class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
     ///
     /// - Parameter domain: The logical domain for the sound effect (e.g., `.connect`, `.disconnect`)
     func playSound(for domain: SoundAssetDomainType) {
+        playSound(for: domain, isConnecting: false)
+    }
+
+    func playSound(for domain: SoundAssetDomainType, isConnecting: Bool) {
         // Load the saved string preference for this domain
         let rawValue: String = {
             switch domain {
@@ -68,9 +73,12 @@ class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
         case .bundled(let subtype):
             var urlAssetName = ""
 
+            let shouldLoop = isConnecting && subtype == .fartDeluxe
+            guard !isConnecting || (shouldLoop) else { return }
+
             switch domain {
             case .connect:
-                urlAssetName = subtype.turnOnAssetName
+                urlAssetName = subtype.turnOnAssetName(isConnecting: isConnecting)
             case .disconnect:
                urlAssetName = subtype.turnOffAssetName
             }
@@ -81,7 +89,7 @@ class CustomSoundPlaybackManager: CustomSoundPlaybackManaging {
                 withExtension: "m4a",
                 fromBundle: .main,
                 volume: 1.0,
-                style: .instant,
+                style: shouldLoop ? .looped : .instant,
                 tag: domain.tag)
 
         case .none:
