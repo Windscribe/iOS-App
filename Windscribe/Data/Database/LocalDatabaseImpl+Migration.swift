@@ -257,11 +257,20 @@ extension LocalDatabaseImpl {
                     }
                 } else if oldSchemaVersion < 55 {
                     var favSet = Set<String>()
-                    migration.enumerateObjects(ofType: FavNode.className()) { oldObject, _ in
-                        guard let id = oldObject?["groupId"] as? String else { return }
-                        if !favSet.contains(id) {
-                            favSet.insert(id)
-                            migration.create(Favourite.className(), value: ["id": id])
+                    // Will try to see if FavNodes were already migrated to Favourites
+                    migration.enumerateObjects(ofType: Favourite.className()) { oldObject, _ in
+                        guard let id = oldObject?["id"] as? String else { return }
+                        favSet.insert(id)
+                    }
+                    if favSet.count == 0 {
+                        // Due to a previous migration error FavNodes were not migrated to Favourites
+                        // We need to do it now
+                        migration.enumerateObjects(ofType: FavNode.className()) { oldObject, _ in
+                            guard let id = oldObject?["groupId"] as? String else { return }
+                            if !favSet.contains(id) {
+                                favSet.insert(id)
+                                migration.create(Favourite.className(), value: ["id": id])
+                            }
                         }
                     }
                 }
@@ -269,5 +278,5 @@ extension LocalDatabaseImpl {
         )
     }
 
-    var doNotDeleteObjects: [String] { [String(describing: FavNode.self), String(describing: Favourite.self)] }
+    var doNotDeleteObjects: [String] { [String(describing: Favourite.self)] }
 }
