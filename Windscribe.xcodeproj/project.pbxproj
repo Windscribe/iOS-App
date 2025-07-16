@@ -191,6 +191,7 @@
 		1EA9D72A2C87375200566A93 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7292C87375200566A93 /* AccountPopupModel.swift */; };
 		1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */; };
 		1EA9D72D2C8739AC00566A93 /* AccountPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */; };
+		1EAEF74F2E280D2500F3C51F /* ws_button_multifartstart.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1EAEF74E2E280D2500F3C51F /* ws_button_multifartstart.m4a */; };
 		1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */; };
 		1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */; };
 		1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */; };
@@ -1501,6 +1502,7 @@
 		1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupViewController.swift; sourceTree = "<group>"; };
 		1EA9D7292C87375200566A93 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
 		1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AccountPopupViewController.xib; sourceTree = "<group>"; };
+		1EAEF74E2E280D2500F3C51F /* ws_button_multifartstart.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_multifartstart.m4a; sourceTree = "<group>"; };
 		1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsView.swift; sourceTree = "<group>"; };
 		1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsViewModel.swift; sourceTree = "<group>"; };
 		1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkSettingsEntryTpe.swift; sourceTree = "<group>"; };
@@ -5293,6 +5295,7 @@
 				F4E48D5E2DB9C2B0005CB047 /* ws_button_ghostwindoff.m4a */,
 				F4E48D5F2DB9C2B0005CB047 /* ws_button_ghostwindon.m4a */,
 				F4E48D602DB9C2B0005CB047 /* ws_button_multifartoff.m4a */,
+				1EAEF74E2E280D2500F3C51F /* ws_button_multifartstart.m4a */,
 				F4E48D612DB9C2B0005CB047 /* ws_button_multifarton.m4a */,
 				F4E48D622DB9C2B0005CB047 /* ws_button_popcanoff.m4a */,
 				F4E48D632DB9C2B0005CB047 /* ws_button_popcanon.m4a */,
@@ -5893,6 +5896,7 @@
 				F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */,
 				F4E48D742DB9C2B0005CB047 /* ws_button_ghostwindon.m4a in Resources */,
 				F4E48D752DB9C2B0005CB047 /* ws_button_arcadeon.m4a in Resources */,
+				1EAEF74F2E280D2500F3C51F /* ws_button_multifartstart.m4a in Resources */,
 				F4E48D762DB9C2B0005CB047 /* ws_button_wizbyoff.m4a in Resources */,
 				F4E48D772DB9C2B0005CB047 /* ws_button_multifartoff.m4a in Resources */,
 				F4E48D782DB9C2B0005CB047 /* ws_button_scifion.m4a in Resources */,
