@@ -2132,6 +2132,8 @@
 		F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
 		F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationCaptchaPopupView.swift; sourceTree = "<group>"; };
 		F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationTokenResponse.swift; sourceTree = "<group>"; };
+		F4CEE8032E2996690034B0A4 /* ArchitectureJournal .md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "ArchitectureJournal .md"; sourceTree = "<group>"; };
+		F4CEE8062E29BC320034B0A4 /* FeatureDevelopmentGuide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = FeatureDevelopmentGuide.md; sourceTree = "<group>"; };
 		F4E48D582DB9C2B0005CB047 /* ws_button_arcadeoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeoff.m4a; sourceTree = "<group>"; };
 		F4E48D592DB9C2B0005CB047 /* ws_button_arcadeon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_arcadeon.m4a; sourceTree = "<group>"; };
 		F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_boingoff.m4a; sourceTree = "<group>"; };
@@ -3885,6 +3887,7 @@
 		C57BDE4029B93F6D00337E63 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				F4CEE8042E2999D60034B0A4 /* AI */,
 				C50F208E2B60E37E00266B23 /* Theme */,
 				AF018E0721B0A32800B225FF /* Extensions */,
 				AF28573F2270B93B00BBF2AF /* Libraries */,
@@ -5281,6 +5284,15 @@
 				F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F4CEE8042E2999D60034B0A4 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				F4CEE8032E2996690034B0A4 /* ArchitectureJournal .md */,
+				F4CEE8062E29BC320034B0A4 /* FeatureDevelopmentGuide.md */,
+			);
+			path = AI;
 			sourceTree = "<group>";
 		};
 		F4E48D702DB9C2B0005CB047 /* Sounds */ = {
