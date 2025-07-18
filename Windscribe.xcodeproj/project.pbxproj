@@ -2652,15 +2652,6 @@
 			path = SwiftUI;
 			sourceTree = "<group>";
 		};
-		1E68B68F2E1E7786003E560E /* CI */ = {
-			isa = PBXGroup;
-			children = (
-				1E68B6922E1E8033003E560E /* .gitlab-ci.yml */,
-				1E68B6932E1E8033003E560E /* Fastfile */,
-			);
-			path = CI;
-			sourceTree = "<group>";
-		};
 		1E7918C12CDE2FBC00C20723 /* Livecycle */ = {
 			isa = PBXGroup;
 			children = (
@@ -3264,7 +3255,7 @@
 				AF018DEA21B0866600B225FF /* Products */,
 				5C7E6BA3FBBD49ED5CFC9502 /* Frameworks */,
 				C56615F72C4D883E008AA993 /* libs */,
-				1E68B68F2E1E7786003E560E /* CI */,
+				F415335B2E26C39900DA7683 /* CI */,
 				AFDF935E2562D94F002B1FBA /* HomeWidgetExtension.entitlements */,
 				C553E34D2C25ABE900A2C027 /* LICENCE.md */,
 			);
@@ -4347,6 +4338,15 @@
 				F440F2FA2D8CB492006F1A6D /* ViewModels */,
 			);
 			path = Welcome;
+			sourceTree = "<group>";
+		};
+		F415335B2E26C39900DA7683 /* CI */ = {
+			isa = PBXGroup;
+			children = (
+				1E68B6922E1E8033003E560E /* .gitlab-ci.yml */,
+				1E68B6932E1E8033003E560E /* Fastfile */,
+			);
+			path = CI;
 			sourceTree = "<group>";
 		};
 		F42ADD1E2D5BB47F0021AF6E /* AppReview */ = {
@@ -7727,7 +7727,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.1;
+				MARKETING_VERSION = 3.9.2;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -7780,7 +7780,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.1;
+				MARKETING_VERSION = 3.9.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
@@ -8330,7 +8330,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				MACH_O_TYPE = mh_execute;
-				MARKETING_VERSION = 3.9.1;
+				MARKETING_VERSION = 3.9.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D WINDSCRIBE";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(APP_BUNDLE_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8648,7 +8648,7 @@
 			repositoryURL = "https://github.com/realm/realm-swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 10.54.3;
+				minimumVersion = 10.54.5;
 			};
 		};
 		1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */ = {
