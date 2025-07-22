@@ -10,17 +10,17 @@ import Foundation
 import SwiftUI
 
 protocol ResponsivePopupLayoutProvider {
-    var maxIphoneWidth: CGFloat { get }
+    var maxWidth: CGFloat { get }
     func getMaxWidth(for geometry: GeometryProxy) -> CGFloat
     func getBottomPadding(for geometry: GeometryProxy, deviceType: DeviceType) -> CGFloat
     func getTopSpacerHeight(for geometry: GeometryProxy, deviceType: DeviceType) -> CGFloat
 }
 
 extension ResponsivePopupLayoutProvider {
-    var maxIphoneWidth: CGFloat { 430 }
+    var maxWidth: CGFloat { 450 }
 
     func getMaxWidth(for geometry: GeometryProxy) -> CGFloat {
-        min(geometry.size.width, maxIphoneWidth)
+        min(geometry.size.width, maxWidth)
     }
 
     func getBottomPadding(for geometry: GeometryProxy, deviceType: DeviceType) -> CGFloat {

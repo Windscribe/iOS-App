@@ -822,3 +822,153 @@ Each should follow the same pattern: UIKit → SwiftUI + Combine ViewModel with 
 6. **Router simplification** - Routers trigger, Views observe state reactively
 
 *This guide reflects the current migration strategy with a proven real-world example. Use the Location Permission pattern as a template for other feature migrations.*
+
+## Advanced Migration Patterns: State Management Architecture
+
+### State Manager Pattern for Complex Parameter Passing
+
+**Problem**: Parameter passing through RouteID creates tight coupling and complex state management.
+
+**Solution**: Use dedicated state managers with reactive patterns to eliminate parameter passing.
+
+#### Implementation Pattern
+
+```swift
+// ❌ Poor: Passing parameters through router
+enum RouteID {
+    case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
+}
+
+// Router passes parameters directly
+case let .enterCredentials(config, isUpdating):
+    let vc = EnterCredentialsViewController()
+    vc.config = config
+    vc.isUpdating = isUpdating
+
+// ✅ Better: Clean router + state manager
+enum RouteID {
+    case enterCredentials // Clean, no parameters
+}
+
+// State manager holds reactive state
+protocol CustomConfigStateManaging {
+    var currentConfigSubject: BehaviorSubject<CustomConfigModel?> { get }
+    var isUpdatingSubject: BehaviorSubject<Bool> { get }
+    
+    func setCurrentConfig(_ config: CustomConfigModel, isUpdating: Bool)
+    func clearCurrentConfig()
+}
+
+class CustomConfigStateManager: CustomConfigStateManaging {
+    let currentConfigSubject = BehaviorSubject<CustomConfigModel?>(value: nil)
+    let isUpdatingSubject = BehaviorSubject<Bool>(value: false)
+    
+    func setCurrentConfig(_ config: CustomConfigModel, isUpdating: Bool) {
+        currentConfigSubject.onNext(config)
+        isUpdatingSubject.onNext(isUpdating)
+    }
+    
+    func clearCurrentConfig() {
+        currentConfigSubject.onNext(nil)
+        isUpdatingSubject.onNext(false)
+    }
+}
+```
+
+#### ViewModel Integration
+
+```swift
+// ViewModel subscribes to state manager reactively
+class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
+    private let customConfigStateManager: CustomConfigStateManaging
+    private var displayingCustomConfig: CustomConfigModel?
+    
+    private func bind() {
+        // Subscribe to current config changes
+        customConfigStateManager.currentConfigSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] config in
+                self?.displayingCustomConfig = config
+                self?.title = config?.name ?? ""
+                self?.username = config?.username?.base64Decoded() ?? ""
+                self?.password = config?.password?.base64Decoded() ?? ""
+            })
+            .store(in: &cancellables)
+        
+        // Subscribe to updating state changes
+        customConfigStateManager.isUpdatingSubject
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isUpdating in
+                self?.isUpdating = isUpdating
+            })
+            .store(in: &cancellables)
+    }
+}
+```
+
+#### Usage in Legacy Code
+
+```swift
+// Legacy controllers set state before routing
+customConfigStateManager.setCurrentConfig(config, isUpdating: true)
+popupRouter?.routeTo(to: .enterCredentials, from: self)
+
+// Legacy bindings integration
+customConfigPickerViewModel.showEditCustomConfigTrigger.subscribe(onNext: {
+    self.customConfigStateManager.setCurrentConfig($0, isUpdating: true)
+    self.popupRouter?.routeTo(to: .enterCredentials, from: self)
+}).disposed(by: disposeBag)
+```
+
+#### Benefits of State Manager Pattern
+
+1. **Eliminates Parameter Passing**: Router IDs become clean enums without parameters
+2. **Reactive State Management**: ViewModels observe state changes reactively
+3. **Separation of Concerns**: State management separate from routing logic
+4. **Testability**: State managers can be easily mocked and tested
+5. **Consistency**: All state changes flow through reactive streams
+
+#### DI Configuration
+
+```swift
+// Register state manager as singleton
+container.register(CustomConfigStateManaging.self) { r in
+    CustomConfigStateManager(logger: r.resolve(FileLogger.self)!)
+}.inObjectScope(.container)
+
+// Inject into ViewModels
+container.register((any EnterCredentialsViewModel).self) { r in
+    EnterCredentialsViewModelImpl(
+        customConfigStateManager: r.resolve(CustomConfigStateManaging.self)!
+    )
+}.inObjectScope(.transient)
+
+// Inject into MainViewController for legacy integration
+container.register(MainViewController.self) { _ in
+    MainViewController()
+}.initCompleted { r, vc in
+    vc.customConfigStateManager = r.resolve(CustomConfigStateManaging.self)!
+}
+```
+
+#### When to Use State Manager Pattern
+
+Use this pattern when:
+- Multiple parameters need to be passed through routing
+- State needs to be shared between different ViewModels
+- Complex state transitions require coordination
+- Legacy code needs to trigger SwiftUI views with data
+
+#### Migration Checklist for State Management
+
+- [ ] **Identify Parameter Passing**: Find RouteID cases with parameters
+- [ ] **Create State Manager**: Implement reactive state management protocol
+- [ ] **Update RouteID**: Remove parameters from router enum
+- [ ] **Update ViewModel**: Subscribe to state manager using RxSwift bridge
+- [ ] **Update Legacy Integration**: Set state before routing
+- [ ] **Register in DI**: Configure state manager as singleton
+- [ ] **Test Integration**: Verify state flows correctly between components
+
+This pattern eliminates architectural complexity while maintaining clean separation between routing and state management.

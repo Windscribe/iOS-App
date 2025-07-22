@@ -54,6 +54,7 @@ struct EmergencyConnectView: View, ResponsivePopupLayoutProvider {
                                 .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
                             descriptionSection
+                                .frame(maxWidth: maxWidth)
 
                             Spacer()
                         }

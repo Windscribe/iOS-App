@@ -208,6 +208,14 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any EnterCredentialsViewModel).self) { r in
+            EnterCredentialsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!)
+        }.inObjectScope(.transient)
+
         container.register(BannedAccountPopupModelType.self) { r in
             BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
@@ -245,13 +253,6 @@ class ViewModels: Assembly {
             ErrorPopupViewModel()
         }.inObjectScope(.transient)
 
-        container.register(EnterCredentialsViewModelType.self) { r in
-            EnterCredentialsViewModel(
-                vpnManager: r.resolve(VPNManager.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!,
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
-            )
-        }.inObjectScope(.transient)
         container.register(PushNotificationViewModelType.self) { r in
             PushNotificationViewModel(
                 logger: r.resolve(FileLogger.self)!,
@@ -285,6 +286,7 @@ class ViewModels: Assembly {
         container.register(LocationPermissionManaging.self) { r in
             LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.transient)
+
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
                                 apiManager: r.resolve(APIManager.self)!,
@@ -755,12 +757,6 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(PushNotificationViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(EnterCredentialsViewController.self) { _ in
-            EnterCredentialsViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(EnterCredentialsViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
         container.register(ListSelectionView.self) { _ in
             ListSelectionView()
         }.initCompleted { r, c in
@@ -782,6 +778,15 @@ class ViewControllerModule: Assembly {
                 manager: r.resolve(LocationPermissionManaging.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            )
+        }.inObjectScope(.transient)
+
+        container.register(EnterCredentialsView.self) { r in
+            EnterCredentialsView(viewModel: EnterCredentialsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!)
             )
         }.inObjectScope(.transient)
 

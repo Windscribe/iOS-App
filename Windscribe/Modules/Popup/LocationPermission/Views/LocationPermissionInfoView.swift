@@ -31,13 +31,12 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
             let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
             let maxWidth = getMaxWidth(for: geometry)
 
-            PreferencesBaseView(isDarkMode: $viewModel.isDarkMode) {
+            ZStack {
                 VStack(spacing: 24) {
-                    Spacer()
-
                     ZStack(alignment: .top) {
                         VStack(spacing: 16) {
-                            Spacer().frame(height: topSpacer)
+                            Spacer()
+                                .frame(height: topSpacer)
 
                             Image(ImagesAsset.promptInfo)
                                 .renderingMode(.template)
@@ -55,12 +54,10 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .foregroundColor(.welcomeButtonTextColor)
                                 .multilineTextAlignment(.center)
-
-                            Spacer()
+                                .frame(maxWidth: maxWidth)
                         }
-                    }
 
-                    Spacer()
+                    }
 
                     VStack(spacing: 8) {
                         Button(action: viewModel.handlePrimaryAction) {
@@ -77,7 +74,7 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
 
                         Button(action: {
                             dismiss()
-                        }) {
+                        }, label: {
                             Text(TextsAsset.cancel)
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -85,14 +82,17 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
                                 .font(.bold(.title3))
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
-                        }
+                        })
                         .frame(maxWidth: maxWidth)
                     }
+                    .padding(.top, min(geometry.size.height * 0.25, 450))
                     .padding(.bottom, bottomPadding)
                 }
                 .padding()
                 .dynamicTypeSize(dynamicTypeRange)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.from(.screenBackgroundColor, viewModel.isDarkMode).ignoresSafeArea())
             .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
                 if shouldDismiss {
                     dismiss()
