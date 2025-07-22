@@ -19,7 +19,7 @@ struct PreferencesBaseView<Content: View>: View {
         }
         .background(Color.from(.screenBackgroundColor, isDarkMode).ignoresSafeArea())
         .onAppear {
-            if useHapticFeedback{
+            if useHapticFeedback {
                 HapticFeedbackGenerator.shared.run(level: .medium)
             }
         }

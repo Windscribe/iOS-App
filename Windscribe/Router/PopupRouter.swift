@@ -47,9 +47,15 @@ class PopupRouter: BaseRouter, RootRouter {
         case .pushNotifications:
             vc = Assembler.resolve(PushNotificationViewController.self)
         case let .enterCredentials(config, isUpdating):
-            let credentialsVC = Assembler.resolve(EnterCredentialsViewController.self)
-            credentialsVC.viewModel.setup(with: config, isUpdating: isUpdating)
-            vc = credentialsVC
+            let context = EnterCredentialsContext()
+            context.config = config
+            context.isUpdating = isUpdating
+
+            let enterCredentialsView = Assembler.resolve(EnterCredentialsView.self)
+                .environmentObject(context)
+
+            presentViewModally(from: from, view: enterCredentialsView)
+            return
         case .maintenanceLocation(let isStaticIp):
             vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
             (vc as? PopUpMaintenanceLocationVC)?.isStaticIp = isStaticIp

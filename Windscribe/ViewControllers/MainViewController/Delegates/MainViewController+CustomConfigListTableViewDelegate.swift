@@ -42,7 +42,8 @@ extension MainViewController: CustomConfigListTableViewDelegate {
                                                    customConfig: customConfig,
                                                    groupId: 0)
             if (customConfig.username == "" || customConfig.password == "") && (customConfig.authRequired ?? false) {
-                popupRouter?.routeTo(to: .enterCredentials(config: customConfig, isUpdating: false), from: self)
+                customConfigStateManager.setCurrentConfig(customConfig, isUpdating: false)
+                popupRouter?.routeTo(to: .enterCredentials, from: self)
             } else {
                 configureVPN()
             }
@@ -95,7 +96,8 @@ extension MainViewController: CustomConfigListTableViewDelegate {
     }
 
     func showEditCustomConfig(customConfig: CustomConfigModel) {
-        popupRouter?.routeTo(to: .enterCredentials(config: customConfig, isUpdating: true), from: self)
+        customConfigStateManager.setCurrentConfig(customConfig, isUpdating: true)
+        popupRouter?.routeTo(to: .enterCredentials, from: self)
     }
 
     func hideCustomConfigRefreshControl() {
