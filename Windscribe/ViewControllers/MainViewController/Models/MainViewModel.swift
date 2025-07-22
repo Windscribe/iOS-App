@@ -138,28 +138,34 @@ class MainViewModel: MainViewModelType {
         observeNetworkStatus()
         observeWifiNetwork()
         observeSession()
-        preferences.getOrderLocationsBy().subscribe(onNext: { [self] order in
+        preferences.getOrderLocationsBy().subscribe(onNext: { [weak self] order in
+            guard let self = self else { return }
             self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
         }, onError: { _ in }).disposed(by: disposeBag)
         loadLastConnection()
         loadLatencies()
         getNotices()
-        preferences.getSelectedProtocol().subscribe(onNext: { [self] data in
+        preferences.getSelectedProtocol().subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
             self.selectedProtocol.onNext(data ?? DefaultValues.protocol)
         }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getSelectedPort().subscribe(onNext: { [self] data in
+        preferences.getSelectedPort().subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
             self.selectedPort.onNext(data ?? DefaultValues.port)
         }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe(onNext: { [self] data in
+        preferences.getConnectionMode().subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
             self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
         }, onError: { _ in }).disposed(by: disposeBag)
-        serverRepository.updatedServerModelsSubject.subscribe(onNext: { [self] data in
+        serverRepository.updatedServerModelsSubject.subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
             self.serverList.onNext(data)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     private func observeWifiNetwork() {
-        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] (networks, appNetwork) in
+        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] (networks, appNetwork) in
+            guard let self = self else { return }
             guard let matchingNetwork = networks.first(where: {
                 $0.isInvalidated == false && $0.SSID == appNetwork.name
             }) else { return }
@@ -168,13 +174,15 @@ class MainViewModel: MainViewModelType {
     }
 
     private func observeSession() {
-        localDatabase.getSession().subscribe(onNext: { session in
+        localDatabase.getSession().subscribe(onNext: { [weak self] session in
+            guard let self = self else { return }
             self.session.onNext(session)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
     func observeNetworkStatus() {
-        connectivity.network.subscribe(onNext: { network in
+        connectivity.network.subscribe(onNext: { [weak self] network in
+            guard let self = self else { return }
             self.appNetwork.onNext(network)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
@@ -283,8 +291,9 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadLastConnection() {
-        localDatabase.getLastConnection().subscribe(onNext: { [self] data in
-            lastConnection.onNext(data)
+        localDatabase.getLastConnection().subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
+            self.lastConnection.onNext(data)
         }, onError: { _ in }).disposed(by: disposeBag)
     }
 
@@ -343,9 +352,10 @@ class MainViewModel: MainViewModelType {
         localDatabase.getCustomConfig().filter {$0.filter({$0.isInvalidated}).count == 0}
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(on: MainScheduler.instance)
-            .subscribe(onNext: { [self] data in
-                customConfigs.onNext(data)
-                updateCustomConfigLatency()
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self else { return }
+                self.customConfigs.onNext(data)
+                self.updateCustomConfigLatency()
             }).disposed(by: disposeBag)
     }
 
@@ -370,13 +380,15 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadLatencies() {
-        latencyRepo.latency.bind(onNext: { [self] data in
-            latencies.onNext(data)
+        latencyRepo.latency.bind(onNext: { [weak self] data in
+            guard let self = self else { return }
+            self.latencies.onNext(data)
         }).disposed(by: disposeBag)
     }
 
     func getNotices() {
-        Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { _, notifications in
+        Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { [weak self] _, notifications in
+            guard let self = self else { return }
             self.notices.onNext(notifications)
         }).disposed(by: disposeBag)
     }

@@ -12,5 +12,7 @@ import RxSwift
 protocol WireguardAPIManager {
     func getSession() -> Single<Session>
     func wgConfigInit(clientPublicKey: String, deleteOldestKey: Bool) -> RxSwift.Single<DynamicWireGuardConfig>
+    func wgConfigInitAsync(clientPublicKey: String, deleteOldestKey: Bool) async throws -> DynamicWireGuardConfig
     func wgConfigConnect(clientPublicKey: String, hostname: String, deviceId: String) -> RxSwift.Single<DynamicWireGuardConnect>
+    func wgConfigConnectAsync(clientPublicKey: String, hostname: String, deviceId: String) async throws -> DynamicWireGuardConnect
 }
