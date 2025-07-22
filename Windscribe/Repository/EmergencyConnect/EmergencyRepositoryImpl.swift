@@ -91,10 +91,19 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 }
             }
         }
-        .map { data -> CustomConfig in
-            let customConfig = self.saveConfiguration(data: data, configInfo: configInfo)
-            self.locationsManager.saveCustomConfig(withID: customConfig.id)
-            return customConfig
+        .flatMap { data -> AnyPublisher<CustomConfig, Error> in
+            Future<CustomConfig, Error> { promise in
+                DispatchQueue.main.async {
+                    do {
+                        let customConfig = self.saveConfiguration(data: data, configInfo: configInfo)
+                        self.locationsManager.saveCustomConfig(withID: customConfig.id)
+                        promise(.success(customConfig))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            }
+            .eraseToAnyPublisher()
         }
         .flatMap { _ -> AnyPublisher<VPNConnectionState, Error> in
             Future<Void, Never> { promise in

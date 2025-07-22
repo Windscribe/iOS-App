@@ -43,9 +43,12 @@ class WgCredentials {
         dns = SharedSecretDefaults.shared.getString(forKey: SharedKeys.dns)
     }
 
-    func getPublicKey() -> String? {
-        let publicKey = PrivateKey(base64Key: getPrivateKey()!)?.publicKey.base64Key
-        return publicKey
+    func getPublicKey() async -> String? {
+        return await Task.detached(priority: .utility) { [weak self] in
+            guard let self = self,
+                  let privateKey = self.getPrivateKey() else { return nil }
+            return PrivateKey(base64Key: privateKey)?.publicKey.base64Key
+        }.value
     }
 
     // Generate private key if not available and save it to keychain.
@@ -140,6 +143,6 @@ class WgCredentials {
     }
 
     var debugDescription: String {
-        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: \(getPublicKey() ?? "") Allowed Ip: \(allowedIps ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
+        return "Endpoint: \(serverEndPoint ?? "") Hostname: \(serverHostName ?? "") Server public key: \(serverPublicKey ?? "") \n User public key: [async] Allowed Ip: \(allowedIps ?? "") Preshared key: \(presharedKey ?? "") Address: \(address ?? "") Port: \(port ?? "") Dns: \(dns ?? "")"
     }
 }
