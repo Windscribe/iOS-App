@@ -32,8 +32,55 @@ func mapToAPIError(error: String?) -> Errors {
     return Errors.parsingError
 }
 
-func makeApiCall<T: Decodable>(modalType _: T.Type,
-                               apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) -> Single<T> {
+// MARK: - Async/Await API Call Method
+func makeApiCallAsync<T: Decodable>(modalType: T.Type,
+                                    apiCall: @escaping (@escaping (Int32, String) -> Void)
+                                    -> WSNetCancelableCallback?) async throws -> T {
+    return try await withCheckedThrowingContinuation { continuation in
+        let cancelable = apiCall { statusCode, responseData in
+            if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+                continuation.resume(throwing: wsNetError)
+            } else {
+                guard let apiResult = mapToSuccess(json: responseData, modeType: modalType) else {
+                    continuation.resume(throwing: mapToAPIError(error: responseData))
+                    return
+                }
+                continuation.resume(returning: apiResult)
+            }
+        }
+
+        // Store the cancelable for potential cancellation
+        // Note: Swift's structured concurrency will handle cancellation automatically
+        _ = cancelable
+    }
+}
+
+// MARK: - Bridge Method (Async to RxSwift)
+
+func makeApiCall<T: Decodable>(modalType: T.Type,
+                               apiCall: @escaping (@escaping (Int32, String) -> Void)
+                               -> WSNetCancelableCallback?) -> Single<T> {
+    return Single.create { single in
+        let task = Task {
+            do {
+                let result = try await makeApiCallAsync(modalType: modalType, apiCall: apiCall)
+                single(.success(result))
+            } catch {
+                single(.failure(error))
+            }
+        }
+
+        return Disposables.create {
+            task.cancel()
+        }
+    }
+}
+
+// MARK: - Legacy RxSwift Single Method (Deprecated)
+
+@available(*, deprecated, message: "Use async makeApiCall instead")
+func makeApiCallLegacy<T: Decodable>(modalType _: T.Type,
+                                     apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) -> Single<T> {
     return Single<T>.create { callback in
         let cancelable = apiCall { statusCode, responseData in
             if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {

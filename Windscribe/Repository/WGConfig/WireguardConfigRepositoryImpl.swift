@@ -39,56 +39,84 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     }
 
     private func wgInit() -> Single<Bool> {
-        return Single.just(wgCrendentials.initialized()).flatMap { initlized in
-            if initlized {
-                return Single.just(true)
-            } else {
-                let userPublicKey = self.wgCrendentials.getPublicKey() ?? ""
-                return self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: false)
-                    .catch { error in
-                        if let code = error as? Errors, code == .wgLimitExceeded {
-                            if let alertManager = self.alertManager {
-                                return alertManager.askUser(message: code.description).flatMap { accept in
-                                    if accept {
-                                        return self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)
-                                    } else {
-                                        return Single.error(Errors.handled)
-                                    }
-                                }
+        return Single.create { single in
+            Task {
+                do {
+                    if self.wgCrendentials.initialized() {
+                        single(.success(true))
+                        return
+                    }
+
+                    let userPublicKey = await self.wgCrendentials.getPublicKey() ?? ""
+
+                    do {
+                        let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: false)
+                        self.wgCrendentials.saveInitResponse(config: config)
+                        single(.success(true))
+                    } catch let error as Errors where error == .wgLimitExceeded {
+                        if let alertManager = self.alertManager {
+                            let accept = try await alertManager.askUser(message: error.description).asPromise()
+                            if accept {
+                                let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: true)
+                                self.wgCrendentials.saveInitResponse(config: config)
+                                single(.success(true))
                             } else {
-                                return self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)
+                                single(.failure(Errors.handled))
                             }
                         } else {
-                            return Single.error(error)
+                            let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: true)
+                            self.wgCrendentials.saveInitResponse(config: config)
+                            single(.success(true))
                         }
-                    }.flatMap { config in
-                        self.wgCrendentials.saveInitResponse(config: config)
-                        return Single.just(true)
                     }
+                } catch {
+                    single(.failure(error))
+                }
             }
+            return Disposables.create()
         }
     }
 
     private func wgConnect() -> Single<Bool> {
-        let deviceID = UIDevice.current.identifierForVendor?.uuidString ?? ""
-        let publicKey = wgCrendentials.getPublicKey() ?? ""
-        let hostName = wgCrendentials.serverHostName ?? ""
-        return apiCallManager.wgConfigConnect(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
-            .catch { error in
-                if case let Errors.apiError(code) = error, code.errorCode == invalidPublicKey {
-                    self.wgCrendentials.delete()
-                    return self.wgInit().flatMap { _ in
-                        self.apiCallManager.wgConfigConnect(clientPublicKey: self.wgCrendentials.getPublicKey() ?? "", hostname: hostName, deviceId: deviceID)
+        return Single.create { single in
+            Task {
+                do {
+                    let deviceID = await UIDevice.current.identifierForVendor?.uuidString ?? ""
+                    let publicKey = await self.wgCrendentials.getPublicKey() ?? ""
+                    let hostName = self.wgCrendentials.serverHostName ?? ""
+
+                    let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
+                    self.wgCrendentials.saveConnectResponse(config: config)
+                    single(.success(true))
+
+                } catch let Errors.apiError(code) where code.errorCode == invalidPublicKey {
+                    do {
+                        self.wgCrendentials.delete()
+                        _ = try await self.wgInit().asPromise()
+                        let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
+                        let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
+                        self.wgCrendentials.saveConnectResponse(config: config)
+                        single(.success(true))
+                    } catch {
+                        single(.failure(error))
                     }
-                } else if case let Errors.apiError(code) = error, code.errorCode == unableToSelectWgIp {
-                    return self.apiCallManager.wgConfigConnect(clientPublicKey: self.wgCrendentials.getPublicKey() ?? "", hostname: hostName, deviceId: deviceID)
-                } else {
-                    return Single.error(error)
+
+                } catch let Errors.apiError(code) where code.errorCode == unableToSelectWgIp {
+                    do {
+                        let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
+                        let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
+                        self.wgCrendentials.saveConnectResponse(config: config)
+                        single(.success(true))
+                    } catch {
+                        single(.failure(error))
+                    }
+
+                } catch {
+                    single(.failure(error))
                 }
-            }.map { config in
-                self.wgCrendentials.saveConnectResponse(config: config)
-                return true
             }
+            return Disposables.create()
+        }
     }
 
     private func templateWgConfig() -> RepositoryError? {

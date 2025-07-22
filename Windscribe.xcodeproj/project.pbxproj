@@ -192,6 +192,8 @@
 		1EA9D72C2C87392C00566A93 /* AccountPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EA9D72B2C87392C00566A93 /* AccountPopupViewController.xib */; };
 		1EA9D72D2C8739AC00566A93 /* AccountPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA9D7262C8734FB00566A93 /* AccountPopupViewController.swift */; };
 		1EAEF74F2E280D2500F3C51F /* ws_button_multifartstart.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 1EAEF74E2E280D2500F3C51F /* ws_button_multifartstart.m4a */; };
+		1EAEF7612E2E63B900F3C51F /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
+		1EAEF7632E2E63FF00F3C51F /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA22DE8C27B00729052 /* NetworkSettingsView.swift */; };
 		1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA42DE8C28900729052 /* NetworkSettingsViewModel.swift */; };
 		1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB67FA62DE8C29200729052 /* NetworkSettingsEntryTpe.swift */; };
@@ -7014,6 +7016,7 @@
 				C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */,
 				C5DD96052CA723EA00FFABBC /* KeyChainDatabase.swift in Sources */,
 				C5035A142CBE280600A46B6D /* Connect.swift in Sources */,
+				1EAEF7612E2E63B900F3C51F /* RxSwift+Extension.swift in Sources */,
 				C5B8DF042C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C59FF1A52CBB8DC70072EF70 /* String+Extension.swift in Sources */,
 				AF20AE2722DE4DB000375489 /* IntentHandler.swift in Sources */,
@@ -7072,6 +7075,7 @@
 				C535D28427E2CECA00C08345 /* WgCredentials.swift in Sources */,
 				C5D0E40229BB8BE70091FB14 /* ringlogger.c in Sources */,
 				C5E18ED4286B3D7200DD3B07 /* APIError.swift in Sources */,
+				1EAEF7632E2E63FF00F3C51F /* RxSwift+Extension.swift in Sources */,
 				AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */,
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,

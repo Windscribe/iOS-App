@@ -26,12 +26,30 @@ class WireguardAPIManagerImpl: WireguardAPIManager {
         }
     }
 
+    func wgConfigInitAsync(clientPublicKey: String, deleteOldestKey: Bool) async throws -> DynamicWireGuardConfig {
+        guard let sessionAuth = preferences.userSessionAuth() else {
+            throw Errors.validationFailure
+        }
+        return try await makeApiCallAsync(modalType: DynamicWireGuardConfig.self) { [weak self] completion in
+            self?.api.wgConfigsInit(sessionAuth, clientPublicKey: clientPublicKey, deleteOldestKey: deleteOldestKey, callback: completion)
+        }
+    }
+
     func wgConfigConnect(clientPublicKey: String, hostname: String, deviceId: String) -> RxSwift.Single<DynamicWireGuardConnect> {
         guard let sessionAuth = preferences.userSessionAuth() else {
             return Single.error(Errors.validationFailure)
         }
         return makeApiCall(modalType: DynamicWireGuardConnect.self) { completion in
             self.api.wgConfigsConnect(sessionAuth, clientPublicKey: clientPublicKey, hostname: hostname, deviceId: deviceId, wgTtl: "3600", callback: completion)
+        }
+    }
+
+    func wgConfigConnectAsync(clientPublicKey: String, hostname: String, deviceId: String) async throws -> DynamicWireGuardConnect {
+        guard let sessionAuth = preferences.userSessionAuth() else {
+            throw Errors.validationFailure
+        }
+        return try await makeApiCallAsync(modalType: DynamicWireGuardConnect.self) { [weak self] completion in
+            self?.api.wgConfigsConnect(sessionAuth, clientPublicKey: clientPublicKey, hostname: hostname, deviceId: deviceId, wgTtl: "3600", callback: completion)
         }
     }
 

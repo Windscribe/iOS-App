@@ -104,7 +104,8 @@ class WifiManager {
         let networksObservable = localDb.getNetworks().map { $0.compactMap { $0.freeze() } }
         Observable.combineLatest( networksObservable, connectivity.network.asObservable() )
             .filter { $0.0.allSatisfy { !$0.isInvalidated } }
-            .subscribe(onNext: { [self] (networks, network) in
+            .subscribe(onNext: { [weak self] (networks, network) in
+                guard let self = self else { return }
                 self.securedNetworksStatus.onNext(networks.map { [$0.SSID: $0.status] })
                 guard !networks.isEmpty else {
                     self.connectedSecuredNetwork = nil
@@ -116,7 +117,8 @@ class WifiManager {
                     self.updateSelectedPreferences()
                 }
                 self.initialNetworkFetch = false
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
                     self.connectedSecuredNetwork = networks.filter {
                         $0.SSID == network.name
                     }.first?.thaw()
@@ -125,9 +127,11 @@ class WifiManager {
                         self.saveNewNetwork(wifiSSID: networkName)
                     }
                 }
-            }, onError: { e in
+            }, onError: { [weak self] e in
+                guard let self = self else { return }
                 self.logger.logE(self, "Error getting network list. \(e)")
-            }, onCompleted: {
+            }, onCompleted: { [weak self] in
+                guard let self = self else { return }
                 self.logger.logD(self, "Network list is empty.")
                 self.observingNetworks = false
             }).disposed(by: disposeBag)
