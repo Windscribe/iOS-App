@@ -169,7 +169,6 @@
 		1EA4FA712D3E89A60021C656 /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
 		1EA4FA722D3E8D330021C656 /* IntentCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59FF19E2CB998610072EF70 /* IntentCommon.swift */; };
 		1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
-		1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */; };
 		1EA876DB2BCEE40800F0DD25 /* PrivacyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */; };
 		1EA91DCB2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */; };
 		1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */; };
@@ -1016,7 +1015,6 @@
 		E9425BA62743707B008B8786 /* URLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9425BA42743707B008B8786 /* URLs.swift */; };
 		E943750B27DEF6AD00F74F2D /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */; };
 		E94E34F728B2817000E76D14 /* FeatureExplainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E34F628B2816F00E76D14 /* FeatureExplainer.swift */; };
-		E96FEB26276CE78700D0BC54 /* ErrorPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E96FEB25276CE78700D0BC54 /* ErrorPopupViewController.swift */; };
 		E97ABD4328C822C300B38587 /* ThemeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD4228C822C300B38587 /* ThemeUtils.swift */; };
 		E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5028DC47D400B38587 /* ProtocolSwitchViewController.swift */; };
 		E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */; };
@@ -1485,7 +1483,6 @@
 		1E90487E2E252C5300C9B794 /* LocationNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationNameView.swift; sourceTree = "<group>"; };
 		1E9F2C322C665FC600607BAA /* PreferencesViewLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesViewLogView.swift; sourceTree = "<group>"; };
 		1E9F2C342C665FD100607BAA /* PreferencesViewLogView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesViewLogView.xib; sourceTree = "<group>"; };
-		1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupViewModel.swift; sourceTree = "<group>"; };
 		1EA876DA2BCEE40800F0DD25 /* PrivacyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViewModel.swift; sourceTree = "<group>"; };
 		1EA91DCA2BE51E7200496DF8 /* CustomConfigPickerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigPickerViewModel.swift; sourceTree = "<group>"; };
 		1EA91DCD2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+CustomConfigPicker.swift"; sourceTree = "<group>"; };
@@ -1971,7 +1968,6 @@
 		E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponse.swift; sourceTree = "<group>"; };
 		E94E34F628B2816F00E76D14 /* FeatureExplainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureExplainer.swift; sourceTree = "<group>"; };
 		E96AFFF12896856300B53EEE /* GeneralViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralViewType.swift; sourceTree = "<group>"; };
-		E96FEB25276CE78700D0BC54 /* ErrorPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorPopupViewController.swift; sourceTree = "<group>"; };
 		E97ABD4228C822C300B38587 /* ThemeUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUtils.swift; sourceTree = "<group>"; };
 		E97ABD5028DC47D400B38587 /* ProtocolSwitchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewController.swift; sourceTree = "<group>"; };
 		E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchUtils.swift; sourceTree = "<group>"; };
@@ -2703,15 +2699,6 @@
 				F49E61D32E00A32A0087386F /* Models */,
 			);
 			path = ViewLog;
-			sourceTree = "<group>";
-		};
-		1EA876D32BCEA37A00F0DD25 /* Error View */ = {
-			isa = PBXGroup;
-			children = (
-				E96FEB25276CE78700D0BC54 /* ErrorPopupViewController.swift */,
-				1EA876D42BCEA3A100F0DD25 /* ErrorPopupViewModel.swift */,
-			);
-			path = "Error View";
 			sourceTree = "<group>";
 		};
 		1EA876D92BCEE3BF00F0DD25 /* Privacy */ = {
@@ -3863,7 +3850,6 @@
 			isa = PBXGroup;
 			children = (
 				1EE74F742BD67B1D0031185F /* Push Notifications */,
-				1EA876D32BCEA37A00F0DD25 /* Error View */,
 				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
 				59E63A0B2BCEBFF3002E566F /* Maintenance Location */,
 				1E2366C62BC02447000DF098 /* Account */,
@@ -6622,8 +6608,6 @@
 				F469F0D42D7BA5E0004DC6AB /* BestLocationCell.swift in Sources */,
 				F469F0D92D7BA74E004DC6AB /* UIImage+GIF.swift in Sources */,
 				AFFA716A21CD4D7C00349195 /* APIDebug.swift in Sources */,
-				E96FEB26276CE78700D0BC54 /* ErrorPopupViewController.swift in Sources */,
-				1EA876D52BCEA3A100F0DD25 /* ErrorPopupViewModel.swift in Sources */,
 				E9425B9927437024008B8786 /* APIParameters.swift in Sources */,
 				F4B8E21C2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift in Sources */,
 				1EB67FAF2DEDD6E800729052 /* PreferencesBaseView.swift in Sources */,

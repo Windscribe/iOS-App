@@ -27,14 +27,6 @@ class AccountRouter: BaseRouter, NavigationRouter {
                 navigationController.modalPresentationStyle = .fullScreen
                 from.present(navigationController, animated: true, completion: nil)
             }
-        case let .errorPopup(message, dismissAction):
-            let errorVC = Assembler.resolve(ErrorPopupViewController.self)
-            errorVC.viewModel.setDismissAction(with: dismissAction)
-            errorVC.viewModel.setMessage(with: message)
-            DispatchQueue.main.async {
-                errorVC.modalPresentationStyle = .fullScreen
-                from.present(errorVC, animated: true, completion: nil)
-            }
         default: ()
         }
     }

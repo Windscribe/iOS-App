@@ -249,9 +249,6 @@ class ViewModels: Assembly {
         container.register(TrustedNetworkPopupType.self) { r in
             TrustedNetworkPopup(securedNetwork: r.resolve(SecuredNetworkRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
-        container.register(ErrorPopupViewModelType.self) { _ in
-            ErrorPopupViewModel()
-        }.inObjectScope(.transient)
 
         container.register(PushNotificationViewModelType.self) { r in
             PushNotificationViewModel(
@@ -711,11 +708,6 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ProtocolSetPreferredViewModelV2.self)
             c.type = .connected
             c.router = r.resolve(ProtocolSwitchRouter.self)
-        }.inObjectScope(.transient)
-        container.register(ErrorPopupViewController.self) { _ in
-            ErrorPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ErrorPopupViewModelType.self)
         }.inObjectScope(.transient)
         container.register(PrivacyViewController.self) { _ in
             PrivacyViewController()
