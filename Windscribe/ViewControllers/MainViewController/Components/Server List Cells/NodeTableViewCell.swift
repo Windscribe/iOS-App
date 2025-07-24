@@ -55,11 +55,21 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         displayingGroup?.nick ?? ""
     }
 
+    override var iconSize: CGFloat {
+        if isProLocked || isFavorite { return super.iconSize }
+        if isSpeedIconVisible { return 16.0 }
+        return 20.0
+    }
+
     override var iconImage: UIImage? {
         if isProLocked {
-            return UIImage(named: ImagesAsset.proCityImage)?.withRenderingMode(.alwaysTemplate)
+            return UIImage(named: ImagesAsset.proCityImage)?
+                .withRenderingMode(.alwaysTemplate)
         } else if isFavorite, let countryCode = displayingGroup?.countryCode {
             return UIImage(named: "\(countryCode)-s") ?? super.iconImage
+        } else if isSpeedIconVisible {
+            return UIImage(named:ImagesAsset.tenGig)?
+                .withRenderingMode(.alwaysTemplate)
         }
         return super.iconImage
     }
@@ -90,46 +100,18 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
 }
 
 class NodeTableViewCell: BaseNodeCell {
-    var speedIcon = UIImageView()
-
     var nodeCellViewModel: NodeTableViewCellModelType? {
         didSet {
             baseNodeCellViewModel = nodeCellViewModel
-            speedIcon.isHidden = !(nodeCellViewModel?.isSpeedIconVisible ?? true)
         }
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        speedIcon.image = UIImage(named: ImagesAsset.tenGig)
-        speedIcon.layer.opacity = 0.8
-        speedIcon.setImageColor(color: .white)
-        iconsStackView.insertArrangedSubview(speedIcon, at: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
-        super.bindViews(isDarkMode: isDarkMode)
-        isDarkMode.subscribe(onNext: { isDarkMode in
-            self.speedIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-        }).disposed(by: disposeBag)
-    }
-
-    override func updateLayout() {
-        super.updateLayout()
-
-        speedIcon.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            // speedIcon
-            speedIcon.centerYAnchor.constraint(equalTo: iconsStackView.centerYAnchor, constant: 1),
-            speedIcon.heightAnchor.constraint(equalToConstant: 20),
-            speedIcon.widthAnchor.constraint(equalToConstant: 20)
-        ])
     }
 
     override func updateUI() {
@@ -138,13 +120,6 @@ class NodeTableViewCell: BaseNodeCell {
             icon.setImageColor(color: .proStarColor)
         } else if nodeCellViewModel?.isFavorite ?? false {
             icon.image = nodeCellViewModel?.iconImage
-        }
-    }
-
-    override func setPressState(active: Bool) {
-        super.setPressState(active: active)
-        DispatchQueue.main.asyncAfter(deadline: .now() + (active ? 0.0 : 0.3)) { [weak self] in
-            self?.speedIcon.layer.opacity = active ? 1 : 0.8
         }
     }
 }

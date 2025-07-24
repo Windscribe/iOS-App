@@ -36,6 +36,7 @@ enum ImagesAsset {
     static let mainLogo = "main-logo"
     static let notifications = "notifications"
     static let locationLoad = "location-load"
+    static let locationIcon = "location-icon"
     static let cityImage = "city-image"
     static let proCityImage = "pro-icon"
     static let proMiniImage = "mini-pro-icon"

@@ -48,7 +48,7 @@ class SearchLocationsView: UIView {
     private func bindViews() {
         viewModel.isDarkMode.subscribe(onNext: { [weak self] isDarkMode in
             guard let self = self else { return }
-            separatorView.backgroundColor = .from(.loadCircleColor, isDarkMode)
+            separatorView.backgroundColor = .from(.gradientBorderColor, isDarkMode)
             searchTextfield.textColor = .from(.textColor, isDarkMode)
             updateSearchTextfield(for: isDarkMode)
             searchIcon.setImageColor(color: .from(.infoColor, isDarkMode))
@@ -68,6 +68,7 @@ class SearchLocationsView: UIView {
 
     private func addViews() {
         addSubview(separatorView)
+        separatorView.isHidden = true
         stackContainerView.axis = .horizontal
         stackContainerView.spacing = 0
         addSubview(stackContainerView)
@@ -182,6 +183,7 @@ class SearchLocationsView: UIView {
     func setSearchSelected(isSelected: Bool) {
         backgroundColor = isSelected ? .from(.backgroundColor, isDarkMode) : .clear
         isUserInteractionEnabled = isSelected
+        separatorView.isHidden = !isSelected
     }
 
     private func clearSearchField() {

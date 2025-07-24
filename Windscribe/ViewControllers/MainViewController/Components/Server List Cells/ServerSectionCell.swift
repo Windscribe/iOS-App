@@ -182,13 +182,13 @@ class ServerSectionCell: ServerListCell {
 
     private func animateExpansion(completion: @escaping () -> Void = {}) {
         guard let serverCellViewModel = serverCellViewModel else { return }
-        UIView.animate(withDuration: 0.35, animations: {
+        UIView.animate(withDuration: 0.15, animations: {
             self.actionImage.layer.opacity = serverCellViewModel.actionOpacity
         }, completion: { _ in
             completion()
         })
         UIView.transition(with: actionImage,
-                          duration: 0.35,
+                          duration: 0.15,
                           options: .transitionCrossDissolve,
                           animations: { self.actionImage.image = serverCellViewModel.actionImage },
                           completion: nil)

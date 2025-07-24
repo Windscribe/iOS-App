@@ -1,23 +1,24 @@
 {
-  "images": [
+  "images" : [
     {
-      "filename": "GN-s.svg",
-      "idiom": "universal",
-      "scale": "1x"
+      "filename" : "GN-s.svg",
+      "idiom" : "universal"
     },
     {
-      "filename": "GN-s@2x.svg",
-      "idiom": "universal",
-      "scale": "2x"
+      "filename" : "GN-s@2x.svg",
+      "idiom" : "universal",
+      "scale" : "2x",
+      "unassigned" : true
     },
     {
-      "filename": "GN-s@3x.svg",
-      "idiom": "universal",
-      "scale": "3x"
+      "filename" : "GN-s@3x.svg",
+      "idiom" : "universal",
+      "scale" : "3x",
+      "unassigned" : true
     }
   ],
-  "info": {
-    "author": "xcode",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }
