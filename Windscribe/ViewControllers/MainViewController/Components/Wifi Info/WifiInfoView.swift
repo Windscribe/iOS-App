@@ -89,7 +89,8 @@ class WifiInfoView: UIView {
     }
 
     private func bindViewModel() {
-        trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)
+        trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)?
+            .withRenderingMode(.alwaysTemplate)
 
         nameLabel.isBlurring = viewModel.isBlur
         nameLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
@@ -117,7 +118,8 @@ class WifiInfoView: UIView {
 
     func updateNetwork(network: WifiNetwork?) {
         self.network = network
-        trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)
+        trustedIcon.image = UIImage(named: viewModel.trustedNetworkImage)?
+            .withRenderingMode(.alwaysTemplate)
         updateActionVivibility()
     }
 
@@ -131,14 +133,14 @@ class WifiInfoView: UIView {
     private func addViews() {
         nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.font = UIFont.medium(size: 16)
-        nameLabel.textColor = UIColor.whiteWithOpacity(opacity: 0.7)
+        nameLabel.textColor = .whiteWithOpacity(opacity: 0.7)
         nameLabel.isUserInteractionEnabled = true
         nameLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
 
         trustedIcon = UIImageView()
         trustedIcon.contentMode = .scaleAspectFit
-        trustedIcon.image = UIImage(named: ImagesAsset.wifi)
-        trustedIcon.setImageColor(color: .white.withAlphaComponent(0.7))
+        trustedIcon.image = UIImage(named: ImagesAsset.wifi)?.withRenderingMode(.alwaysTemplate)
+        trustedIcon.tintColor = .whiteWithOpacity(opacity: 0.7)
 
         actionImage.image = UIImage(named: ImagesAsset.smallWhiteRightArrow)
         actionImage.setImageColor(color: .whiteWithOpacity(opacity: 0.7))

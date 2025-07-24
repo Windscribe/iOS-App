@@ -140,7 +140,7 @@ class ServerListTableViewDataSource: WExpyTableViewDataSource,
     }
 
     func tableView(_: UITableView,  heightForRowAt _: IndexPath) -> CGFloat {
-        return 50
+        return 48
     }
 
     func changeForSection(tableView: UITableView, state: ExpyState, section: Int) {

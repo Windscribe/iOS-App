@@ -171,7 +171,7 @@ extension MainViewController {
 
         preferencesTapAreaButton = LargeTapAreaImageButton()
         preferencesTapAreaButton.imageView?.contentMode = .scaleAspectFit
-        preferencesTapAreaButton.layer.opacity = 0.4
+        preferencesTapAreaButton.layer.opacity = 0.7
         preferencesTapAreaButton.setImage(UIImage(named: ImagesAsset.topNavBarMenu), for: .normal)
         preferencesTapAreaButton.imageView?.setImageColor(color: .white)
         view.addSubview(preferencesTapAreaButton)

@@ -50,7 +50,7 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(
             withIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier, for: indexPath) as? NodeTableViewCell
-            ?? NodeTableViewCell(
+        ?? NodeTableViewCell(
                 style: .default,
                 reuseIdentifier: ReuseIdentifiers.favNodeCellReuseIdentifier)
         let favourite = favList?[indexPath.row]
@@ -60,7 +60,7 @@ class FavouriteListTableViewDataSource: WSTableViewDataSource, UITableViewDataSo
     }
 
     func tableView(_: UITableView,  heightForRowAt _: IndexPath) -> CGFloat {
-        return 50
+        return 48
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {

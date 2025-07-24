@@ -88,6 +88,7 @@ extension UIColor {
     static let darkBlack = UIColor(red: 12 / 255.0, green: 19 / 255.0, blue: 29 / 255.0, alpha: 1.0)
 
     static let navyBlue = UIColor(red: 26/255.0, green: 56/255.0, blue: 128/255.0, alpha: 1.0)
+    static let connectedBlue = UIColor(red: 0/255.0, green: 97/255.0, blue: 232/255.0, alpha: 1.0)
 
     // Shake For Data
     static let backgroundBlue = UIColor(red: 0 / 255.0, green: 106 / 255.0, blue: 255 / 255.0, alpha: 1.0)

@@ -115,7 +115,7 @@ class ServerListCell: SwipeTableViewCell {
 
         NSLayoutConstraint.activate([
             // icon
-            icon.topAnchor.constraint(equalTo: self.topAnchor, constant: 13),
+            icon.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             icon.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
             icon.heightAnchor.constraint(equalToConstant: viewModel.iconSize),
             icon.widthAnchor.constraint(equalToConstant: viewModel.iconSize),
@@ -179,24 +179,23 @@ class ServerListCell: SwipeTableViewCell {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-        setPressState(active: true)
+        self.backgroundColor = .from(.pressStateColor, self.isDarkMode)
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
-        setPressState(active: false)
+        updateInactiveState()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesCancelled(touches, with: event)
-        setPressState(active: false)
+        updateInactiveState()
     }
 
-    func setPressState(active: Bool) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + (active ? 0.0 : 0.3)) { [weak self] in
+    private func updateInactiveState() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             guard let self = self else { return }
-            self.updateUI()
-            self.backgroundColor = active ? .from(.pressStateColor, self.isDarkMode): .clear
+            self.backgroundColor = .clear
         }
     }
 }

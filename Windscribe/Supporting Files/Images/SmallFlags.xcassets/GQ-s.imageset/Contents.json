@@ -1,23 +1,24 @@
 {
-  "images": [
+  "images" : [
     {
-      "filename": "GQ-s.svg",
-      "idiom": "universal",
-      "scale": "1x"
+      "filename" : "GQ-s.svg",
+      "idiom" : "universal"
     },
     {
-      "filename": "GQ-s@2x.svg",
-      "idiom": "universal",
-      "scale": "2x"
+      "filename" : "GQ-s@2x.svg",
+      "idiom" : "universal",
+      "scale" : "2x",
+      "unassigned" : true
     },
     {
-      "filename": "GQ-s@3x.svg",
-      "idiom": "universal",
-      "scale": "3x"
+      "filename" : "GQ-s@3x.svg",
+      "idiom" : "universal",
+      "scale" : "3x",
+      "unassigned" : true
     }
   ],
-  "info": {
-    "author": "xcode",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }

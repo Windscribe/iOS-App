@@ -88,8 +88,9 @@ class ConnectButtonView: UIView {
             guard let self = self, let state = state else { return }
             DispatchQueue.main.async {
                 UIView.animate(withDuration: 0.25) {
-                    self.ringImageView.isHidden = [.disconnected, .disconnecting, .invalid, .automaticFailed].contains(state)
+                    self.ringImageView.isHidden = state.connectButtonRingIsHidden
                     self.ringImageView.image = UIImage(named: state.connectButtonRing)
+                    self.ringImageView.setImageColor(color: state.connectButtonRingColor)
                     self.centralImageView.image = UIImage(named: state.connectButton)
                 }
                 if [.connected, .testing].contains(state) {

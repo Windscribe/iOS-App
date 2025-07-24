@@ -64,7 +64,7 @@ class CustomConfigListTableViewDataSource: WSTableViewDataSource, UITableViewDat
     }
 
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return 50
+        return 48
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
