@@ -13,8 +13,12 @@ func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T? {
     if modeType is String.Type {
         return json as? T
     }
+    guard let jsonData = json.utf8Encoded else {
+        print("UTF-8 Encoding Error: Unable to encode string to Data")
+        return nil
+    }
     do {
-        return try JSONDecoder().decode(modeType, from: json.utf8Encoded)
+        return try JSONDecoder().decode(modeType, from: jsonData)
     } catch {
         print("Decoding Error: \(error)")
         return nil

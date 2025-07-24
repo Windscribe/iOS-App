@@ -38,8 +38,10 @@ class EmergencyRepositoryImpl: EmergencyRepository {
                 continuation.resume(returning: endpoints)
             }
         }
-        let configs = endpoints.map { endpoint in
-            let config = self.wsnetEmergencyConnect.ovpnConfig().utf8Encoded
+        let configs: [OpenVPNConnectionInfo] = endpoints.compactMap { endpoint in
+            guard let config = self.wsnetEmergencyConnect.ovpnConfig().utf8Encoded else {
+                return nil
+            }
             let ip = endpoint.ip()
             let port = String(endpoint.port())
             let proto = if endpoint.protocol() == 0 {
