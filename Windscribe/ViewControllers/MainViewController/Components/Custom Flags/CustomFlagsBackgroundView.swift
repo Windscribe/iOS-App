@@ -11,6 +11,7 @@ import RxSwift
 
 struct BackgroundInfoModel {
     let image: UIImage?
+    let isConnected: Bool
     let animates: Bool
     let color: UIColor
     let aspectRatioType: BackgroundAspectRatioType
@@ -71,35 +72,38 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
 
     private func getBackgroundInfoModel(for effect: BackgroundEffectType,
                                         isConnected: Bool) -> BackgroundInfoModel {
-        let color: UIColor = isConnected ? .navyBlue : .nightBlue
+        let color: UIColor = isConnected ? .connectedBlue : .nightBlue
         let aspectRatio = lookAndFeelRepository.backgroundCustomAspectRatio
         switch effect {
         case .bundled(subtype: let subtype):
             if let image = UIImage(named: subtype.assetName) {
-                return BackgroundInfoModel(image: image, animates: false,
+                return BackgroundInfoModel(image: image, isConnected: isConnected, animates: false,
                                            color: color, aspectRatioType: aspectRatio,
                                            effect: effect)
             }
         case .custom:
             if let image = getImageURL(isConnected) {
-                return BackgroundInfoModel(image: image, animates: false,
+                return BackgroundInfoModel(image: image, isConnected: isConnected, animates: false,
                                            color: color, aspectRatioType: aspectRatio,
                                            effect: effect)
             }
         case .none:
-            return BackgroundInfoModel(image: nil, animates: false,
+            return BackgroundInfoModel(image: nil, isConnected: isConnected, animates: false,
                                        color: .clear, aspectRatioType: aspectRatio,
                                        effect: effect)
         default: break
         }
-        return getLocationInfo(color: color)
+        return getLocationInfo(color: color, isConnected: isConnected)
     }
 
-    private func getLocationInfo(color: UIColor) -> BackgroundInfoModel {
+    private func getLocationInfo(color: UIColor, isConnected: Bool) -> BackgroundInfoModel {
         let flagName = locationsManager.getLocationUIInfo().countryCode
         let animates = currentCountry != flagName
         currentCountry = flagName
-        return BackgroundInfoModel(image: UIImage(named: flagName), animates: animates, color: color, aspectRatioType: .stretch)
+        return BackgroundInfoModel(image: UIImage(named: flagName),
+                                   isConnected: isConnected,
+                                   animates: animates, color: color,
+                                   aspectRatioType: .stretch)
     }
 
     private func getImageURL(_ isconnected: Bool) -> UIImage? {
@@ -125,7 +129,6 @@ class FlagsBackgroundView: UIView {
     var backgroundImageView = UIImageView()
     var topMaskGradient = TopMaskGradientView()
     var topNavBarHeader = TopNavBarHeader()
-    var topView = UIView()
 
     var flagWidth: CGFloat {
         402
@@ -133,7 +136,7 @@ class FlagsBackgroundView: UIView {
     var barHeight: CGFloat {
         topNavBarHeader.height
     }
-    var topViewHeight: CGFloat {
+    var topSpace: CGFloat {
         if UIScreen.hasTopNotch {
             return 40
         } else if UIDevice.current.isIpad {
@@ -153,18 +156,17 @@ class FlagsBackgroundView: UIView {
     }
 
     func redraw() {
-        topMaskGradient.redrawGradient()
         topNavBarHeader.redrawGradient()
     }
 
     func changebackground(for info: BackgroundInfoModel) {
         switch info.effect {
         case .none:
-            backgroundImageView.alpha = 0.0
+            backgroundImageView.layer.opacity = 0.0
         case .flag:
-            backgroundImageView.alpha = 0.15
+            backgroundImageView.layer.opacity = 0.15
         default:
-            backgroundImageView.alpha = 1.0
+            backgroundImageView.layer.opacity = 1.0
         }
         if info.animates, let newImage = info.image {
             if backgroundImageView.image == nil {
@@ -192,9 +194,7 @@ class FlagsBackgroundView: UIView {
         viewModel.backgroundInfoSubject.subscribe(onNext: { [weak self] info in
             guard let self = self, let info = info else { return }
             DispatchQueue.main.async {
-                self.topMaskGradient.currentColor = info.color.cgColor
-                self.backgroundColor = info.color
-                self.topView.backgroundColor = info.color
+                self.topMaskGradient.isConnected = info.isConnected
                 self.changebackground(for: info)
             }
         }).disposed(by: disposeBag)
@@ -206,7 +206,6 @@ class FlagsBackgroundView: UIView {
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.setImageColor(color: .white)
         addSubview(backgroundImageView)
-        addSubview(topView)
         addSubview(topMaskGradient)
         addSubview(topNavBarHeader)
     }
@@ -215,17 +214,11 @@ class FlagsBackgroundView: UIView {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         topMaskGradient.translatesAutoresizingMaskIntoConstraints = false
         topNavBarHeader.translatesAutoresizingMaskIntoConstraints = false
-        topView.translatesAutoresizingMaskIntoConstraints = false
         let flagWidthConstraint = UIDevice.current.isIpad ?
         backgroundImageView.widthAnchor.constraint(equalTo: widthAnchor) :
         backgroundImageView.widthAnchor.constraint(equalToConstant: flagWidth)
 
         NSLayoutConstraint.activate([
-            // topView
-            topView.topAnchor.constraint(equalTo: topAnchor),
-            topView.leftAnchor.constraint(equalTo: leftAnchor),
-            topView.rightAnchor.constraint(equalTo: rightAnchor),
-            topView.heightAnchor.constraint(equalToConstant: topViewHeight),
 
             // topNavBarLeftImageView
             topNavBarHeader.topAnchor.constraint(equalTo: topAnchor),
@@ -234,13 +227,13 @@ class FlagsBackgroundView: UIView {
             topNavBarHeader.heightAnchor.constraint(equalToConstant: topNavBarHeader.height),
 
             // flagView
-            backgroundImageView.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: topSpace),
             backgroundImageView.bottomAnchor.constraint(equalTo: bottomAnchor),
             backgroundImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             flagWidthConstraint,
 
             // topMaskGradient
-            topMaskGradient.topAnchor.constraint(equalTo: topView.bottomAnchor),
+            topMaskGradient.topAnchor.constraint(equalTo: topAnchor),
             topMaskGradient.bottomAnchor.constraint(equalTo: bottomAnchor),
             topMaskGradient.centerXAnchor.constraint(equalTo: centerXAnchor),
             topMaskGradient.heightAnchor.constraint(equalTo: backgroundImageView.heightAnchor),

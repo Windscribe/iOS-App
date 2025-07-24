@@ -66,6 +66,8 @@ class ListSelectionView: UIView {
 
     var disposeBag = DisposeBag()
 
+    let viewHeight: CGFloat = 56
+
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -92,13 +94,14 @@ class ListSelectionView: UIView {
             UIColor.from(.gradientStartColor, isDarkMode).cgColor,
             UIColor.from(.gradientEndColor, isDarkMode).cgColor
         ]
-        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width + 2, height: 54)
+        gradient.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width + 2, height: viewHeight)
         gradientView.layer.addSublayer(gradient)
         gradientView.layer.cornerRadius = 24
         gradientView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
         gradientView.layer.masksToBounds = true
         gradientView.layer.borderWidth = 1
-        gradientView.layer.borderColor = UIColor.from(.gradientBorderColor, isDarkMode).cgColor
+        gradientView.layer.borderColor = UIColor.from(.gradientBorderColor,
+                                                      isDarkMode).cgColor
     }
 
     private func addViews() {

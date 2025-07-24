@@ -9,20 +9,68 @@
 import UIKit
 
 class TopMaskGradientView: UIView {
-    var currentColor: CGColor = UIColor.nightBlue.cgColor {
+    private let gradientDisconnected = CAGradientLayer()
+    private let gradientConnected = CAGradientLayer()
+
+    var isConnected: Bool = false {
         didSet {
-            redrawGradient()
+            if oldValue != isConnected {
+                animateGradientFade()
+            }
         }
     }
 
-    func redrawGradient() {
-        layoutIfNeeded()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupGradients()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupGradients()
+    }
+
+    private func setupGradients() {
         layer.sublayers = []
         let width = UIScreen.main.bounds.width
-        let gradient = CAGradientLayer()
-        gradient.colors = [currentColor, UIColor.clear.cgColor]
-        gradient.locations = [0,0.6]
-        gradient.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
-        layer.insertSublayer(gradient, at: 0)
+
+        gradientDisconnected.colors = [UIColor.nightBlue.cgColor, UIColor.clear.cgColor]
+        gradientDisconnected.locations = [0, 0.6]
+        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        layer.insertSublayer(gradientDisconnected, at: 0)
+
+        gradientConnected.colors = [UIColor.connectedBlue.cgColor, UIColor.clear.cgColor]
+        gradientConnected.locations = [0, 1.2]
+        gradientConnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        layer.insertSublayer(gradientConnected, at: 1)
+
+        gradientDisconnected.opacity = 1
+        gradientConnected.opacity = 0
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        let width = UIScreen.main.bounds.width
+        gradientDisconnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+        gradientConnected.frame = CGRect(x: 0, y: 0, width: width, height: frame.height)
+    }
+
+    func animateGradientFade() {
+        let animationTime = 0.25
+        func getfadeAnimation(isFadeIn: Bool) -> CABasicAnimation {
+            let fade = CABasicAnimation(keyPath: "opacity")
+            fade.fromValue = isFadeIn ? 0 : 1
+            fade.toValue = isFadeIn ? 1 : 0
+            fade.duration = animationTime
+            fade.fillMode = .forwards
+            fade.isRemovedOnCompletion = false
+            return fade
+        }
+
+        gradientDisconnected.add(getfadeAnimation(isFadeIn: !isConnected),
+                                 forKey: isConnected ? "fadeOut" : "fadeIn")
+        gradientConnected.add(getfadeAnimation(isFadeIn: isConnected),
+                              forKey: isConnected ? "fadeIn" : "fadeOut")
     }
 }

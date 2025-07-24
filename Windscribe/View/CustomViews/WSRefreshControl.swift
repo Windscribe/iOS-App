@@ -23,8 +23,8 @@ class WSRefreshControl: UIRefreshControl {
         super.init()
         setText(TextsAsset.refreshLatency)
         layer.opacity = 0.5
-        tintColor = UIColor.midnight
-        backgroundColor = UIColor.clear
+        tintColor = .white
+        backgroundColor = .nightBlue
         bindViews(isDarkMode: isDarkMode)
     }
 
@@ -55,10 +55,10 @@ class WSRefreshControl: UIRefreshControl {
             disposeBag = DisposeBag()
             return
         }
-        tintColor = isDarkMode ? UIColor.white : UIColor.midnight
-        backgroundColor = isDarkMode ? UIColor.darkBlack : UIColor.seperatorWhite
-        backView.label.backgroundColor = isDarkMode ? UIColor.darkBlack : UIColor.seperatorWhite
-        backView.label.textColor = isDarkMode ? UIColor.white : UIColor.midnight
+        tintColor = .from(.iconColor, isDarkMode)
+        backgroundColor = .from(.backgroundColor, isDarkMode)
+        backView.label.backgroundColor = UIColor.clear
+        backView.label.textColor = .from(.textColor, isDarkMode)
         setText(attributedTitle?.string ?? TextsAsset.refreshLatency)
     }
 }

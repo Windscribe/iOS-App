@@ -46,7 +46,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var iconAspect: UIView.ContentMode { .scaleToFill }
     var iconImage: UIImage? {
-        UIImage(named: ImagesAsset.cityImage)?.withRenderingMode(.alwaysTemplate)
+        UIImage(named: ImagesAsset.locationIcon)?.withRenderingMode(.alwaysTemplate)
     }
 
     var shouldTintIcon: Bool { true }

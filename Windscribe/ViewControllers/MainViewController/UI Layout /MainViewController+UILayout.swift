@@ -33,7 +33,7 @@ extension MainViewController {
 
         let isSmaller = UIDevice.current.isIphone5orLess()
 
-        listSelectionViewTopConstraint = listSelectionView.topAnchor.constraint(equalTo: flagBackgroundView.topAnchor, constant: flagBackgroundView.topViewHeight + 16)
+        listSelectionViewTopConstraint = listSelectionView.topAnchor.constraint(equalTo: flagBackgroundView.topAnchor, constant: flagBackgroundView.topSpace + 16)
         listSelectionViewBottomConstraint = listSelectionView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor)
         NSLayoutConstraint.activate([
             // flagBackgroundView
@@ -41,14 +41,44 @@ extension MainViewController {
             flagBackgroundView.rightAnchor.constraint(equalTo: view.rightAnchor),
             flagBackgroundView.leftAnchor.constraint(equalTo: view.leftAnchor),
 
+            // listSelectionView
+            listSelectionViewBottomConstraint,
+            listSelectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            listSelectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            listSelectionView.heightAnchor.constraint(equalToConstant: listSelectionView.viewHeight),
+
+            // connectionStateInfoView
+            connectionStateInfoView.topAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.barHeight + 16),
+            connectionStateInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
+            connectionStateInfoView.heightAnchor.constraint(equalToConstant: 21),
+
+            // locationNameView
+            locationNameView.topAnchor.constraint(equalTo: connectionStateInfoView.bottomAnchor),
+            locationNameView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
+            locationNameView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
+
+            // wifiInfoView
+            wifiInfoView.topAnchor.constraint(equalTo: locationNameView.bottomAnchor, constant: 8),
+            wifiInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 7),
+            wifiInfoView.heightAnchor.constraint(equalToConstant: 32),
+            wifiInfoView.bottomAnchor.constraint(equalTo: flagBackgroundView.bottomAnchor, constant: -1*(listSelectionView.viewHeight + 14)),
+
+            // ipInfoView
+            ipInfoView.centerYAnchor.constraint(equalTo: wifiInfoView.centerYAnchor),
+            ipInfoView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
+
+            // connectButtonView
+            connectButtonView.topAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.barHeight - connectButtonView.topPadding),
+            connectButtonView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: connectButtonView.rightPadding),
+
             // preferencesTapAreaButton
-            preferencesTapAreaButton.bottomAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.topNavBarHeader.height - 8),
-            preferencesTapAreaButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 18),
+            preferencesTapAreaButton.bottomAnchor.constraint(equalTo: flagBackgroundView.topNavBarHeader.bottomAnchor, constant: -18),
+            preferencesTapAreaButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: isSmaller ? 16 : 18),
             preferencesTapAreaButton.heightAnchor.constraint(equalToConstant: isSmaller ? 20 : 24),
             preferencesTapAreaButton.widthAnchor.constraint(equalToConstant: isSmaller ? 20 : 24),
 
             // logoIcon
-            logoIcon.centerYAnchor.constraint(equalTo: preferencesTapAreaButton.centerYAnchor, constant: -2),
+            logoIcon.centerYAnchor.constraint(equalTo: preferencesTapAreaButton.centerYAnchor),
             logoIcon.leftAnchor.constraint(equalTo: preferencesTapAreaButton.rightAnchor, constant: 16),
             logoIcon.heightAnchor.constraint(equalToConstant: isSmaller ? 16 : 18),
             logoIcon.widthAnchor.constraint(equalToConstant: isSmaller ? 110 : 124),
@@ -58,12 +88,6 @@ extension MainViewController {
             notificationDot.rightAnchor.constraint(equalTo: logoIcon.rightAnchor, constant: 16),
             notificationDot.heightAnchor.constraint(equalToConstant: 14),
             notificationDot.widthAnchor.constraint(equalToConstant: 14),
-
-            // listSelectionView
-            listSelectionViewBottomConstraint,
-            listSelectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            listSelectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            listSelectionView.heightAnchor.constraint(equalToConstant: 54),
 
             // scrollView
             scrollView.topAnchor.constraint(equalTo: listSelectionView.bottomAnchor),
@@ -108,31 +132,7 @@ extension MainViewController {
             customConfigTableViewFooterView.centerXAnchor.constraint(equalTo: customConfigTableView.centerXAnchor),
             customConfigTableViewFooterView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             customConfigTableViewFooterView.widthAnchor.constraint(equalTo: view.widthAnchor),
-            customConfigTableViewFooterView.heightAnchor.constraint(equalToConstant: UIScreen.hasTopNotch ? 65 : 50),
-
-            // connectionStateInfoView
-            connectionStateInfoView.topAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.barHeight + 16),
-            connectionStateInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
-            connectionStateInfoView.heightAnchor.constraint(equalToConstant: 21),
-
-            // locationNameView
-            locationNameView.topAnchor.constraint(equalTo: connectionStateInfoView.bottomAnchor),
-            locationNameView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 12),
-            locationNameView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
-
-            // wifiInfoView
-            wifiInfoView.topAnchor.constraint(equalTo: locationNameView.bottomAnchor, constant: 8),
-            wifiInfoView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 7),
-            wifiInfoView.heightAnchor.constraint(equalToConstant: 32),
-            wifiInfoView.bottomAnchor.constraint(equalTo: listSelectionView.topAnchor, constant: -12),
-
-            // ipInfoView
-            ipInfoView.centerYAnchor.constraint(equalTo: wifiInfoView.centerYAnchor),
-            ipInfoView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -12),
-
-            // connectButtonView
-            connectButtonView.topAnchor.constraint(equalTo: view.topAnchor, constant: flagBackgroundView.barHeight - connectButtonView.topPadding),
-            connectButtonView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: connectButtonView.rightPadding)
+            customConfigTableViewFooterView.heightAnchor.constraint(equalToConstant: UIScreen.hasTopNotch ? 65 : 50)
         ])
     }
 }

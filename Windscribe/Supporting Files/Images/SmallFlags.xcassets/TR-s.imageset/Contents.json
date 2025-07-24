@@ -1,23 +1,24 @@
 {
-  "images": [
+  "images" : [
     {
-      "filename": "TR-s.svg",
-      "idiom": "universal",
-      "scale": "1x"
+      "filename" : "TR-s.svg",
+      "idiom" : "universal"
     },
     {
-      "filename": "TR-s@2x.svg",
-      "idiom": "universal",
-      "scale": "2x"
+      "filename" : "TR-s@2x.svg",
+      "idiom" : "universal",
+      "scale" : "2x",
+      "unassigned" : true
     },
     {
-      "filename": "TR-s@3x.svg",
-      "idiom": "universal",
-      "scale": "3x"
+      "filename" : "TR-s@3x.svg",
+      "idiom" : "universal",
+      "scale" : "3x",
+      "unassigned" : true
     }
   ],
-  "info": {
-    "author": "xcode",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }

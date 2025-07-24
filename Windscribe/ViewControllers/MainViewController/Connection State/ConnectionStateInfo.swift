@@ -98,6 +98,21 @@ extension ConnectionState {
         }
     }
 
+    var connectButtonRingColor: UIColor {
+        switch self {
+        case .connected: .seaGreen
+        case .connecting, .testing: .whiteWithOpacity(opacity: 0.4)
+        case .disconnecting, .disconnected, .automaticFailed, .invalid: .clear
+        }
+    }
+
+    var connectButtonRingIsHidden: Bool {
+        switch self {
+        case .disconnected, .disconnecting, .invalid, .automaticFailed: true
+        default: false
+        }
+    }
+
     var connectButtonRingTv: String {
         switch self {
         case .connected, .testing: ImagesAsset.TvAsset.connectedRing
