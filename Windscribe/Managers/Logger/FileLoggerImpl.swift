@@ -13,15 +13,21 @@ import RxSwift
 class FileLoggerImpl: FileLogger {
     private let maxLogLength = 120_000
 
-    // MARK: - Throttling Configuration (Errors Always Logged)
+    // MARK: - Throttling Configuration (Errors Prioritized but Limited)
     private let throttleInterval: TimeInterval = 0.2 // 200ms minimum between identical non-error logs
-    private let maxNonErrorLogsPerSecond: Int = 40 // Limit debug/info logs to 40 per second
+    private let maxNonErrorLogsPerSecond: Int = 35 // Limit debug/info logs to 35 per second (reduced)
     private let burstAllowance: Int = 5 // Allow burst of 5 non-error logs before throttling
+
+    // Error throttling (still prioritized but with emergency limits)
+    private let maxErrorLogsPerSecond: Int = 60 // Allow up to 60 error logs per second
+    private let errorThrottleInterval: TimeInterval = 0.05 // 50ms minimum between identical error logs
 
     // MARK: - Throttling State
     private let throttleQueue = DispatchQueue(label: "com.windscribe.logging.throttle", qos: .utility)
     private var messageThrottleMap: [String: TimeInterval] = [:]
+    private var errorMessageThrottleMap: [String: TimeInterval] = [:]
     private var nonErrorLogTimestamps: [TimeInterval] = []
+    private var errorLogTimestamps: [TimeInterval] = []
     private var currentBurstCount: Int = 0
     private var lastBurstReset: TimeInterval = 0
     var logDirectory: URL? = {
@@ -48,11 +54,11 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logE(_ tag: Any, _ message: String) {
-        // ERRORS ARE ALWAYS LOGGED - NO THROTTLING
-        DDLogError(DDLogMessageFormat("\(message)"), level: DDLogLevel.error, tag: tag)
+        // ERRORS ARE PRIORITIZED BUT STILL THROTTLED FOR MEMORY PROTECTION
+        logWithThrottling(.error, tag: tag, message: message)
     }
 
-    // MARK: - Throttling Implementation (Debug/Info Only)
+    // MARK: - Throttling Implementation (All Levels with Error Priority)
 
     private enum LogLevel {
         case debug, info, error
@@ -66,24 +72,42 @@ class FileLoggerImpl: FileLogger {
             let messageHash = "\(tag)-\(message)".hash
             let messageKey = String(messageHash)
 
-            // Check if we should throttle this specific message
-            if let lastLogTime = self.messageThrottleMap[messageKey],
-               now - lastLogTime < self.throttleInterval {
-                return // Skip this log due to message throttling
-            }
+            if level == .error {
+                // Error log throttling - more permissive but still limited
+                if let lastLogTime = self.errorMessageThrottleMap[messageKey],
+                   now - lastLogTime < self.errorThrottleInterval {
+                    return // Skip duplicate error too soon
+                }
 
-            // Check rate limiting for non-error logs
-            if !self.shouldAllowNonErrorLog(at: now) {
-                return // Skip this log due to rate limiting
-            }
+                if !self.shouldAllowErrorLog(at: now) {
+                    return // Skip due to error rate limiting
+                }
 
-            // Update throttling state
-            self.messageThrottleMap[messageKey] = now
-            self.recordNonErrorLogTimestamp(now)
+                self.errorMessageThrottleMap[messageKey] = now
+                self.recordErrorLogTimestamp(now)
 
-            // Clean up old entries periodically
-            if self.messageThrottleMap.count > 500 {
-                self.cleanupThrottleMap(currentTime: now)
+                // Clean up error throttle map periodically
+                if self.errorMessageThrottleMap.count > 200 {
+                    self.cleanupErrorThrottleMap(currentTime: now)
+                }
+            } else {
+                // Non-error log throttling (debug/info)
+                if let lastLogTime = self.messageThrottleMap[messageKey],
+                   now - lastLogTime < self.throttleInterval {
+                    return // Skip this log due to message throttling
+                }
+
+                if !self.shouldAllowNonErrorLog(at: now) {
+                    return // Skip this log due to rate limiting
+                }
+
+                self.messageThrottleMap[messageKey] = now
+                self.recordNonErrorLogTimestamp(now)
+
+                // Clean up old entries periodically
+                if self.messageThrottleMap.count > 500 {
+                    self.cleanupThrottleMap(currentTime: now)
+                }
             }
 
             // Perform actual logging on main queue
@@ -94,7 +118,6 @@ class FileLoggerImpl: FileLogger {
                 case .info:
                     DDLogInfo(DDLogMessageFormat("\(message)"), level: DDLogLevel.info, tag: tag)
                 case .error:
-                    // This should never be called since errors bypass throttling
                     DDLogError(DDLogMessageFormat("\(message)"), level: DDLogLevel.error, tag: tag)
                 }
             }
@@ -135,9 +158,36 @@ class FileLoggerImpl: FileLogger {
         }
     }
 
+    private func shouldAllowErrorLog(at timestamp: TimeInterval) -> Bool {
+        // Remove error timestamps older than 1 second
+        errorLogTimestamps.removeAll { timestamp - $0 > 1.0 }
+
+        // Check error rate limit
+        if errorLogTimestamps.count < maxErrorLogsPerSecond {
+            return true
+        }
+
+        return false
+    }
+
+    private func recordErrorLogTimestamp(_ timestamp: TimeInterval) {
+        errorLogTimestamps.append(timestamp)
+
+        // Keep only recent timestamps to prevent memory growth
+        if errorLogTimestamps.count > maxErrorLogsPerSecond * 2 {
+            errorLogTimestamps.removeFirst(errorLogTimestamps.count - maxErrorLogsPerSecond)
+        }
+    }
+
     private func cleanupThrottleMap(currentTime: TimeInterval) {
         messageThrottleMap = messageThrottleMap.filter { _, lastLogTime in
             currentTime - lastLogTime < 30.0 // Keep entries for 30 seconds
+        }
+    }
+
+    private func cleanupErrorThrottleMap(currentTime: TimeInterval) {
+        errorMessageThrottleMap = errorMessageThrottleMap.filter { _, lastLogTime in
+            currentTime - lastLogTime < 10.0 // Keep error entries for 10 seconds
         }
     }
 
@@ -251,7 +301,7 @@ class FileLoggerImpl: FileLogger {
             DDLog.add(osLogger)
 
             // Log throttling configuration on startup
-            DDLogInfo(DDLogMessageFormat("Logging throttling enabled: Max \(maxNonErrorLogsPerSecond) non-error logs/sec, \(throttleInterval)s duplicate message interval. Errors are never throttled."), level: DDLogLevel.info, tag: self)
+            DDLogInfo(DDLogMessageFormat("Enhanced logging throttling enabled: Max \(maxNonErrorLogsPerSecond) debug/info logs/sec, \(maxErrorLogsPerSecond) error logs/sec, \(throttleInterval)s duplicate non-error interval, \(errorThrottleInterval)s duplicate error interval."), level: DDLogLevel.info, tag: self)
         }
     }
 

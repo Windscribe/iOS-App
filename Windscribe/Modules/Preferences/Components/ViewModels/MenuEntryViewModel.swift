@@ -13,6 +13,24 @@ struct DocumentFormatInfo: Hashable {
     let fileData: Data
     let type: UTType
     let tempFileName: String
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(type.identifier)
+        hasher.combine(tempFileName)
+        hasher.combine(fileData.count)
+        if fileData.count > 0 && fileData.count <= 1024 {
+            hasher.combine(fileData)
+        } else if fileData.count > 1024 {
+            hasher.combine(fileData.prefix(512))
+            hasher.combine(fileData.suffix(512))
+        }
+    }
+
+    static func == (lhs: DocumentFormatInfo, rhs: DocumentFormatInfo) -> Bool {
+        return lhs.type == rhs.type &&
+               lhs.tempFileName == rhs.tempFileName &&
+               lhs.fileData.count == rhs.fileData.count
+    }
 }
 
 struct MultiFormatDocument: FileDocument {

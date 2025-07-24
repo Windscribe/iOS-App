@@ -93,8 +93,8 @@ extension String {
         return prefix(1).capitalized + dropFirst()
     }
 
-    var utf8Encoded: Data {
-        return data(using: .utf8)!
+    var utf8Encoded: Data? {
+        return data(using: .utf8)
     }
 
     func getIPOctects() -> [String] {
