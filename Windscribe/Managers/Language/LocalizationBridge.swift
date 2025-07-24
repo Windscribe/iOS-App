@@ -18,10 +18,18 @@ struct LocalizationBridge {
 
 extension String {
     var localized: String {
-        LocalizationBridge.current.localizedString(for: self, comment: "")
+        guard let service = LocalizationBridge.current else {
+            // Fallback for network extensions where LocalizationBridge may not be initialized
+            return self
+        }
+        return service.localizedString(for: self, comment: "")
     }
 
     func localized(comment: String = "") -> String {
-        LocalizationBridge.current.localizedString(for: self, comment: comment)
+        guard let service = LocalizationBridge.current else {
+            // Fallback for network extensions where LocalizationBridge may not be initialized
+            return self
+        }
+        return service.localizedString(for: self, comment: comment)
     }
 }
