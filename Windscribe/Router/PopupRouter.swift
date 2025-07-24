@@ -23,11 +23,6 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = Assembler.resolve(OutOfDataAccountPopupViewController.self)
         case .proPlanExpireddAccountPopup:
             vc = Assembler.resolve(ProPlanExpiredPopupViewController.self)
-        case let .errorPopup(message, dismissAction):
-            let errorVC = Assembler.resolve(ErrorPopupViewController.self)
-            errorVC.viewModel.setDismissAction(with: dismissAction)
-            errorVC.viewModel.setMessage(with: message)
-            vc = errorVC
         case .newsFeedPopup:
             view = Assembler.resolve(NewsFeedView.self)
         case let .privacyView(completionHandler):
@@ -77,8 +72,6 @@ class PopupRouter: BaseRouter, RootRouter {
             switch to {
             case .networkSecurity:
                 vc.modalTransitionStyle = .coverVertical
-            case .errorPopup:
-                vc.modalPresentationStyle = .fullScreen
             case .maintenanceLocation:
                 vc.modalPresentationStyle = .overFullScreen
             case .shakeForDataView,

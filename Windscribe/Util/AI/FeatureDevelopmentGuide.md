@@ -823,6 +823,100 @@ Each should follow the same pattern: UIKit → SwiftUI + Combine ViewModel with 
 
 *This guide reflects the current migration strategy with a proven real-world example. Use the Location Permission pattern as a template for other feature migrations.*
 
+## Real-World Migration Example 2: Push Notifications Popup
+
+### Simplified Popup Migration Pattern
+
+This second example demonstrates a **simpler migration pattern** for basic popup views without complex state management or parameter passing.
+
+#### Key Migration Insights
+
+**Code Reduction & Modernization:**
+- **Before**: 188 lines across 3 files (UIKit controller + UI extension + RxSwift ViewModel)  
+- **After**: 170 lines in 2 files (SwiftUI view + Combine ViewModel)
+- **9% code reduction** with significantly improved maintainability
+
+#### Critical Pattern Differences from Location Permission
+
+##### 1. Dismissal Pattern Evolution
+```swift
+// ❌ Old: NotificationCenter-based dismissal
+class PushNotificationViewModel: PushNotificationViewModelType {
+    func cancel() {
+        NotificationCenter.default.post(
+            Notification(name: Notifications.dismissPushNotificationPermissionPopup)
+        )
+    }
+}
+
+// ✅ New: Reactive dismissal with SwiftUI Environment
+struct PushNotificationView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: PushNotificationViewModelImpl
+    
+    var body: some View {
+        // UI code...
+        .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
+    }
+}
+
+final class PushNotificationViewModelImpl: PushNotificationViewModel {
+    @Published var shouldDismiss: Bool = false
+    
+    func enableNotifications() {
+        pushNotificationsManager.askForPushNotificationPermission()
+        shouldDismiss = true  // Reactive dismissal trigger
+    }
+}
+```
+
+##### 2. Dependency Injection Simplification
+```swift
+// ✅ New: Direct SwiftUI View registration (simpler than Location Permission)
+container.register(PushNotificationView.self) { r in
+    PushNotificationView(viewModel: PushNotificationViewModelImpl(
+        logger: r.resolve(FileLogger.self)!,
+        lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+        pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+    )
+}.inObjectScope(.transient)
+```
+
+##### 3. Router Conversion
+```swift
+// ✅ Clean router conversion (no parameters needed)
+case .pushNotifications:
+    let pushNotificationView = Assembler.resolve(PushNotificationView.self)
+    presentViewModally(from: from, view: pushNotificationView)
+    return
+```
+
+#### When to Use This Simpler Pattern
+
+**Use Push Notifications pattern for:**
+- Simple popup views with basic user actions
+- Views that don't require complex state management
+- Straightforward permission requests or confirmations
+- Views with minimal external dependencies
+
+**Use Location Permission pattern for:**
+- Complex state transitions and parameter passing
+- Views requiring dedicated state managers
+- Multi-step workflows with external coordination
+
+#### Migration Decision Matrix
+
+| Feature Type | Use Pattern | Key Indicators |
+|--------------|-------------|----------------|
+| **Simple Popups** | Push Notifications | Basic actions, no state sharing, direct dismissal |
+| **Permission Flows** | Location Permission | Complex state, parameter passing, external coordination |
+| **Settings Screens** | Location Permission + State Manager | Multiple parameters, persistent state |
+| **Authentication** | Location Permission + State Manager | Multi-step flows, shared state |
+
 ## Advanced Migration Patterns: State Management Architecture
 
 ### State Manager Pattern for Complex Parameter Passing

@@ -47,7 +47,6 @@ enum RouteID {
     case bannedAccountPopup(animated: Bool)
     case outOfDataAccountPopup
     case proPlanExpireddAccountPopup
-    case errorPopup(message: String, dismissAction: (() -> Void)?)
     case newsFeedPopup
     case privacyView(completionHandler: () -> Void)
     case pushNotifications
