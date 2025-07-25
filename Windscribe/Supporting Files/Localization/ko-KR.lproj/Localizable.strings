@@ -531,7 +531,7 @@
 "Tell us what’s wrong" = "무슨 문제가 있는지 알려주세요";
 
 "Complete Puzzle \n to continue" = "퍼즐을 완료하세요 \n 계속하려면";
-"Slide puzzle piece into place" = "퍼즐 조각을 제자리에 맞추세요";
+"Drag left puzzle piece into place" = "퍼즐 조각을 제자리에 맞추세요";
 
 "Invalid session auth or api parameters provided." = "잘못된 세션 인증 또는 API 매개변수가 제공되었습니다.";
 "Invalid session auth." = "세션 인증이 잘못되었습니다.";

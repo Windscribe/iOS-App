@@ -116,33 +116,15 @@ struct AuthenticationCaptchaPopupView: View {
                         .gesture(
                             DragGesture()
                                 .onChanged { value in
-                                    let newOffsetX = (startDragOffsetX + value.translation.width)
-                                        .clamped(to: 0...actualRange)
-                                    let deltaX = newOffsetX - previousTrailX
-                                    previousTrailX = newOffsetX
-
-                                    sliderOffsetX = newOffsetX
-                                    sliderOffsetY = value.translation.height
-
-                                    dragTrailX.append(deltaX)
-                                    dragTrailY.append(value.translation.height)
+                                    handleDragChanged(value, actualRange: actualRange)
                                 }
                                 .onEnded { _ in
-                                    startDragOffsetX = sliderOffsetX
-                                    previousTrailX = sliderOffsetX
-
-                                    Task {
-                                        try? await Task.sleep(nanoseconds: 100_000_000) // 100 ms delay
-
-                                        let sliderRatio = sliderOffsetX / actualRange
-                                        let finalX = sliderRatio * maxSlideRange
-
-                                        let scaledTrailX = dragTrailX.map { $0 * (maxSlideRange / actualRange) }
-                                        let scaledTrailY = dragTrailY.map {
-                                            $0 * (referenceHeight / displayedHeight)
-                                        }
-                                        onSubmit(finalX, scaledTrailX, scaledTrailY)
-                                    }
+                                    handleDragEnded(
+                                        actualRange: actualRange,
+                                        maxSlideRange: maxSlideRange,
+                                        displayedHeight: displayedHeight,
+                                        referenceHeight: referenceHeight
+                                    )
                                 }
                         )
                 }
@@ -150,7 +132,7 @@ struct AuthenticationCaptchaPopupView: View {
                 .padding(.bottom, 8)
 
                 HStack {
-                    Text("Drag left puzzle piece into place")
+                    Text(TextsAsset.Authentication.captchaSliderDescription)
                         .font(.regular(.caption1))
                         .foregroundColor(.from(.infoColor, isDarkMode))
                         .multilineTextAlignment(.center)
@@ -184,6 +166,47 @@ struct AuthenticationCaptchaPopupView: View {
         }
         .padding(.horizontal, 16)
         .dynamicTypeSize(dynamicTypeRange)
+    }
+
+    private func handleDragChanged(_ value: DragGesture.Value, actualRange: CGFloat) {
+        let newOffsetX = (startDragOffsetX + value.translation.width)
+            .clamped(to: 0...actualRange)
+        let deltaX = newOffsetX - previousTrailX
+        previousTrailX = newOffsetX
+
+        sliderOffsetX = newOffsetX
+        sliderOffsetY = value.translation.height
+
+        dragTrailX.append(deltaX)
+
+        dragTrailY.append(sliderOffsetY)
+    }
+
+    private func handleDragEnded(actualRange: CGFloat, maxSlideRange: CGFloat, displayedHeight: CGFloat, referenceHeight: CGFloat) {
+        startDragOffsetX = sliderOffsetX
+        previousTrailX = sliderOffsetX
+
+        Task {
+            try? await Task.sleep(nanoseconds: 100_000_000)
+
+            let sliderRatio = sliderOffsetX / actualRange
+            let finalX = sliderRatio * maxSlideRange
+
+            // Limit trail arrays to last 50 items due to server limitations
+            let limitedTrailX = Array(dragTrailX.suffix(50))
+            let limitedTrailY = Array(dragTrailY.suffix(50))
+
+            let scaledTrailX = limitedTrailX.map { $0 * (maxSlideRange / actualRange) }
+            let scaledTrailY = limitedTrailY.map {
+                $0 * (referenceHeight / displayedHeight)
+            }
+
+            // Only register movement changes greater than 0.5 to reduce noise in trail data
+            let filteredTrailX = scaledTrailX.filter { $0 == 0.0 || abs($0) > 0.5 }
+            let filteredTrailY = scaledTrailY.filter { $0 == 0.0 || abs($0) > 0.5 }
+
+            onSubmit(finalX, filteredTrailX, filteredTrailY)
+        }
     }
 }
 

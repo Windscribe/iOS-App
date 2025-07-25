@@ -535,7 +535,7 @@
 "Tell us what’s wrong" = "何が問題か教えてください";
 
 "Complete Puzzle \n to continue" = "パズルを完成させて \n 続行してください";
-"Slide puzzle piece into place" = "パズルのピースを所定の位置にスライド";
+"Drag left puzzle piece into place" = "パズルのピースを所定の位置にスライド";
 
 "Invalid session auth or api parameters provided." = "無効なセッション認証またはAPIパラメータが指定されました。";
 "Invalid session auth." = "セッション認証が無効です。";

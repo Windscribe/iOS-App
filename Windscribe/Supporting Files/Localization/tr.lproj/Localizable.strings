@@ -546,7 +546,7 @@
 "Tell us what’s wrong" = "Sorunun ne olduğunu bize söyleyin";
 
 "Complete Puzzle \n to continue" = "Devam etmek için \n bulmacayı tamamlayın";
-"Slide puzzle piece into place" = "Bulmaca parçasını yerine kaydırın";
+"Drag left puzzle piece into place" = "Bulmaca parçasını yerine kaydırın";
 
 "Invalid session auth or api parameters provided." = "Geçersiz oturum doğrulama veya API parametreleri sağlandı.";
 "Invalid session auth." = "Geçersiz oturum doğrulaması.";
