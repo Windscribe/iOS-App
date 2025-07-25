@@ -555,7 +555,7 @@
 "Tell us what’s wrong" = "हमें बताएं कि क्या गलत है";
 
 "Complete Puzzle \n to continue" = "आगे बढ़ने के लिए \n पहेली पूरी करें";
-"Slide puzzle piece into place" = "पहेली का टुकड़ा स्थान पर स्लाइड करें";
+"Drag left puzzle piece into place" = "पहेली का टुकड़ा स्थान पर स्लाइड करें";
 
 "Invalid session auth or api parameters provided." = "अमान्य सत्र प्रमाणीकरण या API पैरामीटर प्रदान किए गए हैं।";
 "Invalid session auth." = "अमान्य सत्र प्रमाणीकरण।";

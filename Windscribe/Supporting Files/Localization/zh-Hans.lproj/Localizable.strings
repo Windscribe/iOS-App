@@ -531,7 +531,7 @@
 "Tell us what’s wrong" = "告诉我们哪里出了问题";
 
 "Complete Puzzle \n to continue" = "完成拼图 \n 以继续";
-"Slide puzzle piece into place" = "将拼图块滑动到位";
+"Drag left puzzle piece into place" = "将拼图块滑动到位";
 
 "Invalid session auth or api parameters provided." = "提供的会话验证或 API 参数无效。";
 "Invalid session auth." = "会话验证无效。";

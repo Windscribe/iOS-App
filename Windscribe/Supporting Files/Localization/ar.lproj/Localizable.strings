@@ -529,7 +529,7 @@
 "Tell us what’s wrong" = "أخبرنا ما المشكلة";
 
 "Complete Puzzle \n to continue" = "أكمل اللغز \n للمتابعة";
-"Slide puzzle piece into place" = "حرّك قطعة اللغز إلى مكانها الصحيح";
+"Drag left puzzle piece into place" = "حرّك قطعة اللغز إلى مكانها الصحيح";
 
 "Invalid session auth or api parameters provided." = "تم تقديم مصادقة جلسة أو معلمات API غير صالحة.";
 "Invalid session auth." = "مصادقة الجلسة غير صالحة.";

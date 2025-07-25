@@ -531,7 +531,7 @@
 "Tell us what’s wrong" = "Beri tahu kami apa yang salah";
 
 "Complete Puzzle \n to continue" = "Selesaikan teka-teki \n untuk melanjutkan";
-"Slide puzzle piece into place" = "Geser potongan teka-teki ke tempatnya";
+"Drag left puzzle piece into place" = "Geser potongan teka-teki ke tempatnya";
 
 "Invalid session auth or api parameters provided." = "Autentikasi sesi atau parameter API tidak valid.";
 "Invalid session auth." = "Autentikasi sesi tidak valid.";

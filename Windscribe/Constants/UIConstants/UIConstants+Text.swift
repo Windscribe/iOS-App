@@ -2238,7 +2238,7 @@ enum TextsAsset {
         }
 
         static var captchaSliderDescription: String {
-            return "Slide puzzle piece into place".localized
+            return "Drag left puzzle piece into place".localized
         }
 
         static var tokenRetrievalFailed: String {
