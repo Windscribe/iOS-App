@@ -532,7 +532,7 @@
 "Tell us what’s wrong" = "Скажіть нам, у чому проблема";
 
 "Complete Puzzle \n to continue" = "Завершіть головоломку \n щоб продовжити";
-"Slide puzzle piece into place" = "Перетягніть шматок головоломки на місце";
+"Drag left puzzle piece into place" = "Перетягніть шматок головоломки на місце";
 
 "Invalid session auth or api parameters provided." = "Надано недійсні дані автентифікації сесії або параметри API.";
 "Invalid session auth." = "Недійсна автентифікація сесії.";

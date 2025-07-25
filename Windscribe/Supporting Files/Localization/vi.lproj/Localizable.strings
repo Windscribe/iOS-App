@@ -542,7 +542,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Tell us what’s wrong" = "Hãy cho chúng tôi biết vấn đề là gì";
 
 "Complete Puzzle \n to continue" = "Hoàn thành câu đố \n để tiếp tục";
-"Slide puzzle piece into place" = "Trượt mảnh ghép vào đúng chỗ";
+"Drag left puzzle piece into place" = "Trượt mảnh ghép vào đúng chỗ";
 
 "Invalid session auth or api parameters provided." = "Thông tin xác thực phiên hoặc tham số API không hợp lệ.";
 "Invalid session auth." = "Thông tin xác thực phiên không hợp lệ.";

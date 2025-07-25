@@ -533,7 +533,7 @@
 "Tell us what’s wrong" = "Diga-nos o que está errado";
 
 "Complete Puzzle \n to continue" = "Complete o quebra-cabeça \n para continuar";
-"Slide puzzle piece into place" = "Deslize a peça do quebra-cabeça para o lugar";
+"Drag left puzzle piece into place" = "Deslize a peça do quebra-cabeça para o lugar";
 
 "Invalid session auth or api parameters provided." = "Autenticação da sessão ou parâmetros da API inválidos.";
 "Invalid session auth." = "Autenticação da sessão inválida.";

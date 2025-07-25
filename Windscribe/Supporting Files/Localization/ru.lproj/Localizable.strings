@@ -533,7 +533,7 @@
 "Tell us what’s wrong" = "Расскажите, что не так";
 
 "Complete Puzzle \n to continue" = "Завершите головоломку \n чтобы продолжить";
-"Slide puzzle piece into place" = "Перетащите часть головоломки на место";
+"Drag left puzzle piece into place" = "Перетащите часть головоломки на место";
 
 "Invalid session auth or api parameters provided." = "Предоставлены неверные параметры аутентификации сессии или API.";
 "Invalid session auth." = "Неверная аутентификация сессии.";

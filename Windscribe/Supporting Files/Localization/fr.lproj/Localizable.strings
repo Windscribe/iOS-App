@@ -531,7 +531,7 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Tell us what’s wrong" = "Dites-nous ce qui ne va pas";
 
 "Complete Puzzle \n to continue" = "Terminez le puzzle \n pour continuer";
-"Slide puzzle piece into place" = "Faites glisser la pièce du puzzle à sa place";
+"Drag left puzzle piece into place" = "Faites glisser la pièce du puzzle à sa place";
 
 "Invalid session auth or api parameters provided." = "Authentification de session ou paramètres d'API non valides.";
 "Invalid session auth." = "Authentification de session non valide.";
