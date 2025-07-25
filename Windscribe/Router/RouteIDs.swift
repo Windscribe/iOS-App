@@ -48,7 +48,7 @@ enum RouteID {
     case outOfDataAccountPopup
     case proPlanExpireddAccountPopup
     case newsFeedPopup
-    case privacyView(completionHandler: () -> Void)
+    case privacyView
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
     case trustedNetwork

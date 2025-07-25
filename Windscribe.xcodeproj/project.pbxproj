@@ -1124,6 +1124,9 @@
 		F4843A952D89F7300034330F /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A942D89F7300034330F /* SafariView.swift */; };
 		F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A972D89F7DE0034330F /* URL+Extension.swift */; };
 		F4843A992D89F7DE0034330F /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4843A972D89F7DE0034330F /* URL+Extension.swift */; };
+		F484B7A22E314C9800BABA98 /* PrivacyInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484B7A12E314C9800BABA98 /* PrivacyInfoView.swift */; };
+		F484B7A42E314CA600BABA98 /* PrivacyInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484B7A32E314CA600BABA98 /* PrivacyInfoViewModel.swift */; };
+		F484B7A72E317D6000BABA98 /* PrivacyStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484B7A62E317D6000BABA98 /* PrivacyStateManager.swift */; };
 		F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
 		F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
 		F485CBBC2D4D52D40063EA3A /* Then.swift in Sources */ = {isa = PBXBuildFile; fileRef = F485CBB92D4D52D40063EA3A /* Then.swift */; };
@@ -2067,6 +2070,9 @@
 		F47EC5422DEA47B100AF5089 /* Task+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Task+Extension.swift"; sourceTree = "<group>"; };
 		F4843A942D89F7300034330F /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		F4843A972D89F7DE0034330F /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
+		F484B7A12E314C9800BABA98 /* PrivacyInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyInfoView.swift; sourceTree = "<group>"; };
+		F484B7A32E314CA600BABA98 /* PrivacyInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyInfoViewModel.swift; sourceTree = "<group>"; };
+		F484B7A62E317D6000BABA98 /* PrivacyStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyStateManager.swift; sourceTree = "<group>"; };
 		F485CBB92D4D52D40063EA3A /* Then.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Then.swift; sourceTree = "<group>"; };
 		F485CBC02D4D672D0063EA3A /* UIWindow+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+Extension.swift"; sourceTree = "<group>"; };
 		F485CBC92D51411B0063EA3A /* PlanUpgradeBenefitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeBenefitView.swift; sourceTree = "<group>"; };
@@ -3330,6 +3336,7 @@
 				1ED23F852DC3C99D00C7BEE5 /* Background */,
 				F49935392DA994A000108558 /* Sound */,
 				F43184BB2E1D9EE8007C96E3 /* LocationPermission */,
+				F484B7A52E317D3A00BABA98 /* PrivacyState */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -4341,6 +4348,7 @@
 			children = (
 				F43184B62E1C581D007C96E3 /* LocationPermission */,
 				F4F3A5B32E26C7F6006D967F /* EnterCredentials */,
+				F484B79E2E314C5900BABA98 /* PrivacyInfoView */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -4714,6 +4722,39 @@
 				F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */,
 			);
 			path = Interface;
+			sourceTree = "<group>";
+		};
+		F484B79E2E314C5900BABA98 /* PrivacyInfoView */ = {
+			isa = PBXGroup;
+			children = (
+				F484B79F2E314C7800BABA98 /* Views */,
+				F484B7A02E314C7F00BABA98 /* ViewModels */,
+			);
+			path = PrivacyInfoView;
+			sourceTree = "<group>";
+		};
+		F484B79F2E314C7800BABA98 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F484B7A12E314C9800BABA98 /* PrivacyInfoView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F484B7A02E314C7F00BABA98 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F484B7A32E314CA600BABA98 /* PrivacyInfoViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F484B7A52E317D3A00BABA98 /* PrivacyState */ = {
+			isa = PBXGroup;
+			children = (
+				F484B7A62E317D6000BABA98 /* PrivacyStateManager.swift */,
+			);
+			path = PrivacyState;
 			sourceTree = "<group>";
 		};
 		F485CBC32D4D67630063EA3A /* UIKit */ = {
@@ -6468,6 +6509,7 @@
 				F4A156FB2D5FE49300FDBD7C /* UIViewController+Extension.swift in Sources */,
 				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Extension.swift in Sources */,
 				AF0420EE21C1A0FD002132DE /* Node.swift in Sources */,
+				F484B7A72E317D6000BABA98 /* PrivacyStateManager.swift in Sources */,
 				1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */,
 				F49C45BA2DCD2E85007E5EF1 /* RobertSettingsView.swift in Sources */,
 				F4888E392D9313C0005EF149 /* AuthenticationNavigationRouter.swift in Sources */,
@@ -6505,6 +6547,7 @@
 				1E66109F2E0C203B00CCEFD6 /* DescriptionWithLearnMore.swift in Sources */,
 				F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */,
 				1ED6167C2DD75B78006CDC99 /* AboutItemType.swift in Sources */,
+				F484B7A42E314CA600BABA98 /* PrivacyInfoViewModel.swift in Sources */,
 				1E4933502BF4E43F00C853AF /* FavNodesListViewModel.swift in Sources */,
 				AF018DED21B0866600B225FF /* AppDelegate.swift in Sources */,
 				AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */,
@@ -6722,6 +6765,7 @@
 				C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */,
 				F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */,
 				AF4E926821EFC6EC00A3F584 /* Color+Extension.swift in Sources */,
+				F484B7A22E314C9800BABA98 /* PrivacyInfoView.swift in Sources */,
 				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */,
 				AF3E90E1231D970F00AD192A /* PrivacyViewController.swift in Sources */,
