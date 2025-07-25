@@ -89,48 +89,52 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case appleSsoError(String)
     case tooManyFailedAttempts
 
-    public var description: String {
+    public var unlocalizedDescription: String {
         switch self {
         case .validationFailure:
-            return ErrorTexts.APIError.validationFailure
+            return ErrorTexts.APIError.validationFailure.unlocalizedDescription
         case .sessionIsInvalid:
-            return ErrorTexts.APIError.invalidSession
+            return ErrorTexts.APIError.invalidSession.unlocalizedDescription
         case .unableToUpgradeUser:
-            return ErrorTexts.APIError.unableToUpgradeUser
+            return ErrorTexts.APIError.unableToUpgradeUser.unlocalizedDescription
         case .unableToVerifyWithApple:
-            return ErrorTexts.APIError.unableToVerifyWithApple
+            return ErrorTexts.APIError.unableToVerifyWithApple.unlocalizedDescription
         case .sandboxReceipt:
-            return ErrorTexts.APIError.sandboxReceipt
+            return ErrorTexts.APIError.sandboxReceipt.unlocalizedDescription
         case .missingTransactionId:
-            return ErrorTexts.APIError.missingTransactionId
+            return ErrorTexts.APIError.missingTransactionId.unlocalizedDescription
         case .duplicateTransactionId:
-            return ErrorTexts.APIError.duplicateTransactionId
+            return ErrorTexts.APIError.duplicateTransactionId.unlocalizedDescription
         case .noNetwork:
-            return ErrorTexts.APIError.noNetwork
+            return ErrorTexts.APIError.noNetwork.unlocalizedDescription
         case .unknownError:
-            return ErrorTexts.APIError.unknownError
+            return ErrorTexts.APIError.unknownError.unlocalizedDescription
         case let .apiError(error):
             return error.errorMessage ?? ""
         case .datanotfound:
-            return ErrorTexts.APIError.datanotfound
+            return ErrorTexts.APIError.datanotfound.unlocalizedDescription
         case .handled:
             return ""
         case .ipNotAvailable:
-            return ErrorTexts.APIError.ipNotAvailable
+            return ErrorTexts.APIError.ipNotAvailable.unlocalizedDescription
         case .missingRemoteAddress:
-            return ErrorTexts.APIError.missingRemoteAddress
+            return ErrorTexts.APIError.missingRemoteAddress.unlocalizedDescription
         case .wgLimitExceeded:
-            return ErrorTexts.APIError.wgLimitExceeded
+            return ErrorTexts.APIError.wgLimitExceeded.unlocalizedDescription
         case .twoFactorRequired:
-            return ErrorTexts.APIError.twoFactorRequired
+            return ErrorTexts.APIError.twoFactorRequired.unlocalizedDescription
         case .invalid2FA:
-            return ErrorTexts.APIError.invalid2FA
+            return ErrorTexts.APIError.invalid2FA.unlocalizedDescription
         case .appleSsoError(let error):
             return error
         case .tooManyFailedAttempts, .parsingError:
-            return ErrorTexts.APIError.tooManyFailedAttempts
+            return ErrorTexts.APIError.tooManyFailedAttempts.unlocalizedDescription
         default:
-            return ErrorTexts.APIError.unspecifiedError
+            return ErrorTexts.APIError.unspecifiedError.unlocalizedDescription
         }
+    }
+
+    public var description: String {
+        unlocalizedDescription.localized
     }
 }
