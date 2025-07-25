@@ -44,7 +44,9 @@ class PopupRouter: BaseRouter, RootRouter {
         case .shakeLeaderboards:
             vc = Assembler.resolve(ViewLeaderboardViewController.self)
         case .pushNotifications:
-            vc = Assembler.resolve(PushNotificationViewController.self)
+            let pushNotificationView = Assembler.resolve(PushNotificationView.self)
+            presentViewModally(from: from, view: pushNotificationView)
+            return
         case let .enterCredentials(config, isUpdating):
             let context = EnterCredentialsContext()
             context.config = config

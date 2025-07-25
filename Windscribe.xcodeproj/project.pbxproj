@@ -259,7 +259,6 @@
 		1EDFA0E52CB5519100F778E5 /* CoreModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20C52B61760000266B23 /* CoreModule.swift */; };
 		1EDFA0E72CB5523900F778E5 /* KeyChainDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */; };
 		1EDFA0EA2CB5559F00F778E5 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFED9A3E226E5286000E9EE2 /* Data+Extension.swift */; };
-		1EE74F762BD67B630031185F /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */; };
 		1EE74F7A2BD6A0090031185F /* ShakeForDataPopupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */; };
 		1EE74F7E2BD6C0DE0031185F /* ShakeForDataViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */; };
 		1EE74F812BD7F9620031185F /* ShakeForDataResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F802BD7F9620031185F /* ShakeForDataResultViewModel.swift */; };
@@ -663,8 +662,6 @@
 		AF619C4A24AA348900BB331C /* WireGuardTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AF619C4224AA348900BB331C /* WireGuardTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AF619C5524AA351D00BB331C /* ErrorNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF619C5224AA351D00BB331C /* ErrorNotifier.swift */; };
 		AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF619DF224AB5DAE00BB331C /* CustomConfigListFooterView.swift */; };
-		AF69DC5022331BE000AC6FDC /* PushNotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF69DC4F22331BE000AC6FDC /* PushNotificationViewController.swift */; };
-		AF69DC5222331C5400AC6FDC /* PushNotificationViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF69DC5122331C5400AC6FDC /* PushNotificationViewController+UI.swift */; };
 		AF6E8A6E2215D378005887E0 /* BestNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6E8A6D2215D378005887E0 /* BestNode.swift */; };
 		AF7F3082237609890097C6D6 /* ShakeForDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F3081237609890097C6D6 /* ShakeForDataViewController.swift */; };
 		AF7F30842376099C0097C6D6 /* ShakeForDataViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F30832376099C0097C6D6 /* ShakeForDataViewController+UI.swift */; };
@@ -1084,6 +1081,8 @@
 		F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */; };
 		F45C67462DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */; };
 		F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */; };
+		F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */; };
+		F45DF7412E2FF58700B00F09 /* PushNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */; };
 		F45F19122D7A1D540028D0C2 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		F45F191A2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
@@ -1537,7 +1536,6 @@
 		1ED6168A2DE61B9E006CDC99 /* NetworkOptionsEntryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkOptionsEntryType.swift; sourceTree = "<group>"; };
 		1EDAA9192CCBD4DA0014E678 /* VPNUserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNUserSettings.swift; sourceTree = "<group>"; };
 		1EDAA9222CD3CA8C0014E678 /* ConfigurationsManager+Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+Info.swift"; sourceTree = "<group>"; };
-		1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
 		1EE74F792BD6A0090031185F /* ShakeForDataPopupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataPopupViewModel.swift; sourceTree = "<group>"; };
 		1EE74F7D2BD6C0DE0031185F /* ShakeForDataViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataViewModel.swift; sourceTree = "<group>"; };
 		1EE74F802BD7F9620031185F /* ShakeForDataResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataResultViewModel.swift; sourceTree = "<group>"; };
@@ -1760,8 +1758,6 @@
 		AF619C4F24AA351A00BB331C /* WireGuardNetworkExtension-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WireGuardNetworkExtension-Bridging-Header.h"; sourceTree = "<group>"; };
 		AF619C5224AA351D00BB331C /* ErrorNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorNotifier.swift; sourceTree = "<group>"; };
 		AF619DF224AB5DAE00BB331C /* CustomConfigListFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigListFooterView.swift; sourceTree = "<group>"; };
-		AF69DC4F22331BE000AC6FDC /* PushNotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewController.swift; sourceTree = "<group>"; };
-		AF69DC5122331C5400AC6FDC /* PushNotificationViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PushNotificationViewController+UI.swift"; sourceTree = "<group>"; };
 		AF6E8A6D2215D378005887E0 /* BestNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BestNode.swift; sourceTree = "<group>"; };
 		AF7F3081237609890097C6D6 /* ShakeForDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataViewController.swift; sourceTree = "<group>"; };
 		AF7F30832376099C0097C6D6 /* ShakeForDataViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShakeForDataViewController+UI.swift"; sourceTree = "<group>"; };
@@ -2041,6 +2037,8 @@
 		F45BA5A12D54010100CFDB82 /* UpgradeSuccessShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessShareView.swift; sourceTree = "<group>"; };
 		F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		F45C67472DBFEDD6006A6D30 /* ConfirmEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailView.swift; sourceTree = "<group>"; };
+		F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationViewModel.swift; sourceTree = "<group>"; };
+		F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationView.swift; sourceTree = "<group>"; };
 		F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RxSwift+Extension.swift"; sourceTree = "<group>"; };
 		F465A6362D5D37EF00579B5F /* AppReviewManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManagerTests.swift; sourceTree = "<group>"; };
 		F465A6382D5D3B6000579B5F /* MockPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPreferences.swift; sourceTree = "<group>"; };
@@ -2990,16 +2988,6 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		1EE74F742BD67B1D0031185F /* Push Notifications */ = {
-			isa = PBXGroup;
-			children = (
-				AF69DC5122331C5400AC6FDC /* PushNotificationViewController+UI.swift */,
-				AF69DC4F22331BE000AC6FDC /* PushNotificationViewController.swift */,
-				1EE74F752BD67B630031185F /* PushNotificationViewModel.swift */,
-			);
-			path = "Push Notifications";
-			sourceTree = "<group>";
-		};
 		1EE74F782BD69FD50031185F /* Popup */ = {
 			isa = PBXGroup;
 			children = (
@@ -3856,7 +3844,6 @@
 		C57BDE3429B9390A00337E63 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
-				1EE74F742BD67B1D0031185F /* Push Notifications */,
 				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
 				59E63A0B2BCEBFF3002E566F /* Maintenance Location */,
 				1E2366C62BC02447000DF098 /* Account */,
@@ -4348,7 +4335,8 @@
 			children = (
 				F43184B62E1C581D007C96E3 /* LocationPermission */,
 				F4F3A5B32E26C7F6006D967F /* EnterCredentials */,
-				F484B79E2E314C5900BABA98 /* PrivacyInfoView */,
+				F484B79E2E314C5900BABA98 /* PrivacyInformation */,
+				F45DF73B2E2FF52D00B00F09 /* PushNotification */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -4533,6 +4521,31 @@
 			isa = PBXGroup;
 			children = (
 				F45C67452DBFEAAC006A6D30 /* ConfirmEmailViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F45DF73B2E2FF52D00B00F09 /* PushNotification */ = {
+			isa = PBXGroup;
+			children = (
+				F45DF73C2E2FF53F00B00F09 /* Views */,
+				F45DF73D2E2FF54500B00F09 /* ViewModels */,
+			);
+			path = PushNotification;
+			sourceTree = "<group>";
+		};
+		F45DF73C2E2FF53F00B00F09 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F45DF7402E2FF58700B00F09 /* PushNotificationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F45DF73D2E2FF54500B00F09 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F45DF73E2E2FF57700B00F09 /* PushNotificationViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4724,13 +4737,13 @@
 			path = Interface;
 			sourceTree = "<group>";
 		};
-		F484B79E2E314C5900BABA98 /* PrivacyInfoView */ = {
+		F484B79E2E314C5900BABA98 /* PrivacyInformation */ = {
 			isa = PBXGroup;
 			children = (
 				F484B79F2E314C7800BABA98 /* Views */,
 				F484B7A02E314C7F00BABA98 /* ViewModels */,
 			);
-			path = PrivacyInfoView;
+			path = PrivacyInformation;
 			sourceTree = "<group>";
 		};
 		F484B79F2E314C7800BABA98 /* Views */ = {
@@ -6540,6 +6553,8 @@
 				1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */,
 				C580FDEA2B4D70EE004FA857 /* KeyChainDatabase.swift in Sources */,
 				F46C28692D4C0A020073207E /* PlanUpgradeViewModel.swift in Sources */,
+				F45DF73F2E2FF57700B00F09 /* PushNotificationViewModel.swift in Sources */,
+				F45DF7412E2FF58700B00F09 /* PushNotificationView.swift in Sources */,
 				AF018DEF21B0866600B225FF /* MainViewController.swift in Sources */,
 				E9219FF32885BD4D0026E544 /* WSFillLayoutView.swift in Sources */,
 				1EB67FA32DE8C28200729052 /* NetworkSettingsView.swift in Sources */,
@@ -6564,7 +6579,6 @@
 				1E60E00E2CAC53DB00623CD5 /* ShortcutProvider.swift in Sources */,
 				E9219FF12885AFB90026E544 /* UIStackView+Extension.swift in Sources */,
 				C51F7B74276D0AAB0074A025 /* RobertFilters.swift in Sources */,
-				AF69DC5022331BE000AC6FDC /* PushNotificationViewController.swift in Sources */,
 				5947B4B22A2638BA00C95CF2 /* NWInterface+Extension.swift in Sources */,
 				F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */,
 				1EC6C7832BE268E30036248B /* ListSelectionView.swift in Sources */,
@@ -6593,7 +6607,6 @@
 				C59BBFC9273F30D60078BB72 /* WebSession.swift in Sources */,
 				C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */,
 				AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */,
-				AF69DC5222331C5400AC6FDC /* PushNotificationViewController+UI.swift in Sources */,
 				F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */,
 				59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */,
 				C5A930DF2B43F00A0001CFA0 /* CredentialsRepository.swift in Sources */,
@@ -6931,7 +6944,6 @@
 				AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */,
 				C59CA15F2CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
 				C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */,
-				1EE74F762BD67B630031185F /* PushNotificationViewModel.swift in Sources */,
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
 				AF15B8CF2475BCEA0086BB2A /* SpacedLabel.swift in Sources */,
 				1ED23F812DBBD37000C7BEE5 /* IPInfoViewModel.swift in Sources */,
