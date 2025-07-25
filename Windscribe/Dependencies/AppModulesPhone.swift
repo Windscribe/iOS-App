@@ -246,6 +246,20 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!
             )
         }.inObjectScope(.transient)
+
+        container.register(PrivacyStateManaging.self) { r in
+            PrivacyStateManager(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.container)
+
+        container.register((any PrivacyInfoViewModel).self) { r in
+            PrivacyInfoViewModelImpl(
+                preferences: r.resolve(Preferences.self)!,
+                networkRepository: r.resolve(SecuredNetworkRepository.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
+        }.inObjectScope(.transient)
         container.register(TrustedNetworkPopupType.self) { r in
             TrustedNetworkPopup(securedNetwork: r.resolve(SecuredNetworkRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -770,6 +784,17 @@ class ViewControllerModule: Assembly {
                 manager: r.resolve(LocationPermissionManaging.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+            )
+        }.inObjectScope(.transient)
+
+        container.register(PrivacyInfoView.self) { r in
+            PrivacyInfoView(viewModel: PrivacyInfoViewModelImpl(
+                preferences: r.resolve(Preferences.self)!,
+                networkRepository: r.resolve(SecuredNetworkRepository.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
             )
         }.inObjectScope(.transient)
 

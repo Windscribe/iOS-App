@@ -25,10 +25,14 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = Assembler.resolve(ProPlanExpiredPopupViewController.self)
         case .newsFeedPopup:
             view = Assembler.resolve(NewsFeedView.self)
-        case let .privacyView(completionHandler):
-            let privacyVC: PrivacyViewController = Assembler.resolve(PrivacyViewController.self)
-            privacyVC.closeCompletion = completionHandler
-            vc = privacyVC
+        case .privacyView:
+            let privacyInfoView = Assembler.resolve(PrivacyInfoView.self)
+            let hostingController = UIHostingController(rootView: privacyInfoView)
+            hostingController.modalPresentationStyle = .overCurrentContext
+            hostingController.modalTransitionStyle = .crossDissolve
+            hostingController.view.backgroundColor = UIColor.clear // Critical for transparency
+            from.present(hostingController, animated: true, completion: nil)
+            return
         case .shakeForDataPopUp:
             vc = UINavigationController(rootViewController: Assembler.resolve(ShakeForDataPopupViewController.self))
         case .shakeForDataView:
