@@ -13,7 +13,6 @@ enum Notifications {
     static let newNotificationToRead = Notification.Name(rawValue: "news-to-read")
     static let userPreferencesChanged = Notification.Name(rawValue: "user-preferences-changed")
     static let loadSession = Notification.Name(rawValue: "load-session")
-    static let dismissPushNotificationPermissionPopup = Notification.Name(rawValue: "push-notification-permission-popup")
     static let userLoggedOut = Notification.Name(rawValue: "user-logged-out")
     static let connectToVPN = Notification.Name(rawValue: "connect-to-vpn")
     static let disconnectVPN = Notification.Name(rawValue: "disconnect-vpn")

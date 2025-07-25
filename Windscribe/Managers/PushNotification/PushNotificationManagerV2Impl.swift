@@ -49,7 +49,6 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
                 self.logger.logD(self, "Push Notification Permission granted, registering for remote notifications.")
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
-                    NotificationCenter.default.post(Notification(name: Notifications.dismissPushNotificationPermissionPopup))
                 }
             } else {
                 self.logger.logD(self, "Push Notification Permission Not Granted. \(String(describing: error?.localizedDescription))")

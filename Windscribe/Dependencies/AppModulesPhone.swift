@@ -208,6 +208,13 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any PushNotificationViewModel).self) { r in
+            PushNotificationViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any EnterCredentialsViewModel).self) { r in
             EnterCredentialsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
@@ -264,12 +271,6 @@ class ViewModels: Assembly {
             TrustedNetworkPopup(securedNetwork: r.resolve(SecuredNetworkRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
-        container.register(PushNotificationViewModelType.self) { r in
-            PushNotificationViewModel(
-                logger: r.resolve(FileLogger.self)!,
-                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!
-            )
-        }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
             MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
@@ -758,11 +759,6 @@ class ViewControllerModule: Assembly {
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ViewLeaderboardViewModelType.self)
         }.inObjectScope(.transient)
-        container.register(PushNotificationViewController.self) { _ in
-            PushNotificationViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(PushNotificationViewModelType.self)
-        }.inObjectScope(.transient)
         container.register(ListSelectionView.self) { _ in
             ListSelectionView()
         }.initCompleted { r, c in
@@ -804,6 +800,14 @@ class ViewControllerModule: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!)
+            )
+        }.inObjectScope(.transient)
+
+        container.register(PushNotificationView.self) { r in
+            PushNotificationView(viewModel: PushNotificationViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
             )
         }.inObjectScope(.transient)
 
