@@ -50,6 +50,23 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
     }
 
+
+    override init() {
+        super.init()
+        // Ensure LocalizationBridge is initialized for network extension context
+        logger.logD("PacketTunnelProvider", "override init to make sure Localization initialized")
+        ensureLocalizationInitialized()
+    }
+
+    private func ensureLocalizationInitialized() {
+        logger.logD("PacketTunnelProvider", "ensureLocalizationInitialized called, checking if LocalizationBridge is initialized")
+        if LocalizationBridge.needsSetup {
+            let localizationService = LocalizationServiceImpl(logger: logger)
+            LocalizationBridge.setup(localizationService)
+            logger.logD("PacketTunnelProvider", "ensureLocalizationInitialized - LocalizationBridge was not initialized. It is now initialized!")
+        }
+    }
+
     private func stopTunnel(completionHandler: @escaping (Error?) -> Void) {
         let error = NSError(domain: "com.windscribe", code: 50)
         NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
@@ -76,9 +93,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let activationAttemptId = options?["activationAttemptId"] as? String
         let errorNotifier = ErrorNotifier(activationAttemptId: activationAttemptId)
         
-        // Initialize LocalizationBridge for network extension context to prevent localization crashes
-        let localizationService = LocalizationServiceImpl(logger: logger)
-        LocalizationBridge.setup(localizationService)
+        ensureLocalizationInitialized()
         
         // Load configuration from preferences.
         wgCrendentials.load()
@@ -97,25 +112,11 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }, onFailure: { error in
                 let errorDescription: String
                 if let wsError = error as? Errors {
-                    // Handle Windscribe errors safely without triggering localization crash
-                    switch wsError {
-                    case .validationFailure:
-                        errorDescription = "Validation failure"
-                    case .sessionIsInvalid:
-                        errorDescription = "Invalid session"
-                    case .noNetwork:
-                        errorDescription = "No network connection"
-                    case .unknownError:
-                        errorDescription = "Unknown error"
-                    case .apiError(let apiError):
-                        errorDescription = apiError.errorMessage ?? "API error"
-                    default:
-                        errorDescription = "Error: \(String(describing: wsError))"
-                    }
+                    errorDescription = wsError.unlocalizedDescription
                 } else {
                     errorDescription = error.localizedDescription
                 }
-                self.logger.logD("PacketTunnelProvider", "Error getting user session: \(errorDescription)")
+                self.logger.logE("PacketTunnelProvider", "Error getting user session: \(errorDescription)")
                 completionHandler(error)
             }).disposed(by: disposeBag)
             return
@@ -252,6 +253,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Check user session for change.
     func getSession() {
+        // Ensure LocalizationBridge is initialized before potential error handling
+        ensureLocalizationInitialized()
         logger.logD("PacketTunnelProvider", "Requesting user session update.")
         apiCallManager.getSession()
             .subscribe(onSuccess: { [self] data in
@@ -267,13 +270,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }, onFailure: { error in
                 self.runningHealthCheck = false
                 if let wsError = error as? Errors {
-                    self.logger.logD("PacketTunnelProvider", "Get Session failed with Windscribe error.")
-                    switch error {
+                    self.logger.logE("PacketTunnelProvider", "Get Session failed with Windscribe error - \(wsError.unlocalizedDescription).")
+                    switch wsError {
                     case Errors.sessionIsInvalid:
                         self.wgCrendentials.delete()
                         self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
                     case let Errors.apiError(e):
-                        self.logger.logD("PacketTunnelProvider", e.errorMessage ?? "")
+                        self.logger.logE("PacketTunnelProvider", "Get Session failed with API error - \(e.errorMessage ?? "").")
                     default:
                         self.runningHealthCheck = false
                     }
@@ -283,6 +286,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     /// Request new interface address to check if it has changed.
     private func requestNewInterfaceIp(completionHandler: ((Error?) -> Void)? = nil) {
+        // Ensure LocalizationBridge is initialized before any potential error handling
+        ensureLocalizationInitialized()
         do {
             logger.logD("PacketTunnelProvider", "Catching existing configuration.")
             var tunnelConfig: TunnelConfiguration? = nil
@@ -322,18 +327,18 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 self.runningHealthCheck = false
                 let errorDesc: String
                 if let wsError = error as? Errors {
-                    errorDesc = "Windscribe error: \(String(describing: wsError))"
+                    errorDesc = wsError.unlocalizedDescription
                 } else {
                     errorDesc = error.localizedDescription
                 }
-                self.logger.logD("PacketTunnelProvider", "Failed to build get wg configuration from api: \(errorDesc)")
+                self.logger.logE("PacketTunnelProvider", "Failed to build get wg configuration from api: \(errorDesc)")
                 if let completionHandler = completionHandler {
                     completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
                     return
                 }
             }).disposed(by: disposeBag)
         } catch let e {
-            self.logger.logD("PacketTunnelProvider", "Failed to get wg configuration. \(e.localizedDescription)")
+            self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration. \(e.localizedDescription)")
             self.runningHealthCheck = false
             if let completionHandler = completionHandler {
                 completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
@@ -346,7 +351,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private func replacePeer(tunnelConfiguration: TunnelConfiguration) {
         adapter.update(tunnelConfiguration: tunnelConfiguration) { error in
             if let error = error {
-                self.logger.logD("PacketTunnelProvider", "PacketTunnelProvider: Error updating tunnel configuration. \(error.localizedDescription)")
+                self.logger.logE("PacketTunnelProvider", "PacketTunnelProvider: Error updating tunnel configuration. \(error.localizedDescription)")
             } else {
                 self.logger.logD("PacketTunnelProvider", "PacketTunnelProvider: Successfully updated peer.")
             }
