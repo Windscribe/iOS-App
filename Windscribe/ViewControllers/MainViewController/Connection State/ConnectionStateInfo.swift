@@ -106,6 +106,13 @@ extension ConnectionState {
         }
     }
 
+    var isConnectButtonRingRotated: Bool {
+        switch self {
+        case .connected, .connecting: true
+        default: false
+        }
+    }
+
     var connectButtonRingIsHidden: Bool {
         switch self {
         case .disconnected, .disconnecting, .invalid, .automaticFailed: true
