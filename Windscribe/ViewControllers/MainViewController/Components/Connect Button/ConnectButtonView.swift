@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import QuartzCore
 
 protocol ConnectButtonViewModelType {
     var statusSubject: BehaviorSubject<ConnectionState?> { get }
@@ -29,6 +30,8 @@ class ConnectButtonView: UIView {
     let disposeBag = DisposeBag()
     let connectTriggerSubject = PublishSubject<Void>()
 
+    private var isButtonRotated = false
+
     var viewModel: ConnectButtonViewModelType! {
         didSet {
             bindViewModel()
@@ -36,6 +39,7 @@ class ConnectButtonView: UIView {
     }
 
     var ringImageView = UIImageView()
+    var centralImageContainerView = UIView()
     var centralImageView = UIImageView()
     var connectButton = UIButton()
 
@@ -87,11 +91,20 @@ class ConnectButtonView: UIView {
         viewModel.statusSubject.subscribe { [weak self] state in
             guard let self = self, let state = state else { return }
             DispatchQueue.main.async {
-                UIView.animate(withDuration: 0.25) {
+                let animationTime: CGFloat = 0.25
+                UIView.animate(withDuration: animationTime) {
                     self.ringImageView.isHidden = state.connectButtonRingIsHidden
                     self.ringImageView.image = UIImage(named: state.connectButtonRing)
                     self.ringImageView.setImageColor(color: state.connectButtonRingColor)
-                    self.centralImageView.image = UIImage(named: state.connectButton)
+                }
+
+                if state.isConnectButtonRingRotated != self.isButtonRotated {
+                    let rotationAngle: CGFloat = state.isConnectButtonRingRotated ? .pi/2 : 0
+                    UIView.animate(withDuration: TimeInterval(animationTime)) {
+                        self.centralImageView.transform = CGAffineTransform(rotationAngle: rotationAngle)
+                        self.centralImageContainerView.transform = CGAffineTransform(rotationAngle: rotationAngle)
+                    }
+                    self.isButtonRotated = state.isConnectButtonRingRotated
                 }
                 if [.connected, .testing].contains(state) {
                     self.ringImageView.stopRotating()
@@ -109,13 +122,15 @@ class ConnectButtonView: UIView {
         ringImageView.image = UIImage(named: ImagesAsset.connectButtonRing)
         ringImageView.isHidden = true
         centralImageView.image = UIImage(named: ImagesAsset.disconnectedButton)
+        centralImageContainerView.addSubview(centralImageView)
         addSubview(ringImageView)
-        addSubview(centralImageView)
+        addSubview(centralImageContainerView)
         addSubview(connectButton)
     }
 
     private func setLayout() {
         ringImageView.translatesAutoresizingMaskIntoConstraints = false
+        centralImageContainerView.translatesAutoresizingMaskIntoConstraints = false
         centralImageView.translatesAutoresizingMaskIntoConstraints = false
         connectButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -128,11 +143,17 @@ class ConnectButtonView: UIView {
             ringImageView.heightAnchor.constraint(equalToConstant: buttonSize),
             ringImageView.widthAnchor.constraint(equalToConstant: buttonSize),
 
+            // centralImageContainerView
+            centralImageContainerView.centerYAnchor.constraint(equalTo: ringImageView.centerYAnchor),
+            centralImageContainerView.centerXAnchor.constraint(equalTo: ringImageView.centerXAnchor),
+            centralImageContainerView.heightAnchor.constraint(equalToConstant: centralSize),
+            centralImageContainerView.widthAnchor.constraint(equalToConstant: centralSize),
+
             // centralImageView
-            centralImageView.centerYAnchor.constraint(equalTo: ringImageView.centerYAnchor),
-            centralImageView.centerXAnchor.constraint(equalTo: ringImageView.centerXAnchor),
-            centralImageView.heightAnchor.constraint(equalToConstant: centralSize),
-            centralImageView.widthAnchor.constraint(equalToConstant: centralSize),
+            centralImageView.centerYAnchor.constraint(equalTo: centralImageContainerView.centerYAnchor),
+            centralImageView.centerXAnchor.constraint(equalTo: centralImageContainerView.centerXAnchor),
+            centralImageView.heightAnchor.constraint(equalTo: centralImageContainerView.heightAnchor),
+            centralImageView.widthAnchor.constraint(equalTo: centralImageContainerView.widthAnchor),
 
             // connectButton
             connectButton.centerYAnchor.constraint(equalTo: centerYAnchor),
