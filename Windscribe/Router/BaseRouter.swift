@@ -39,7 +39,7 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
             viewController?.changeNavigationBarStyle(isHidden: true)
         }
 
-        viewController.navigationController?.pushViewController(hostingController, animated: true)
+        viewController.navigationController?.pushViewController(hostingController, animated: false)
 
         viewController.changeNavigationBarStyle(isHidden: false)
         viewController.navigationController?.navigationBar.setNeedsLayout()

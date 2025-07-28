@@ -111,7 +111,7 @@ class VPNManager: VPNManagerProtocol {
     /// - Returns: An `Observable` that emits the VPN status as an `NEVPNStatus` value.
     func getStatus() -> Observable<NEVPNStatus> {
         return vpnInfo
-            .debounce(.milliseconds(500), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(100), scheduler: MainScheduler.instance)
             .compactMap { $0 }
             .map { [weak self] info in
                 guard let self = self else { return NEVPNStatus.invalid }
