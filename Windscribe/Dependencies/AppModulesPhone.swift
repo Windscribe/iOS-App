@@ -266,10 +266,6 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
-        container.register(TrustedNetworkPopupType.self) { r in
-            TrustedNetworkPopup(securedNetwork: r.resolve(SecuredNetworkRepository.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.transient)
-
         container.register(MainViewModelType.self) { r in
             MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
@@ -719,12 +715,6 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ProtocolSetPreferredViewModelV2.self)
             c.type = .connected
             c.router = r.resolve(ProtocolSwitchRouter.self)
-        }.inObjectScope(.transient)
-        container.register(TrustedNetworkPopupViewController.self) { _ in
-            TrustedNetworkPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(TrustedNetworkPopupType.self)
-            c.logger = r.resolve(FileLogger.self)
         }.inObjectScope(.transient)
         container.register(ShakeForDataPopupViewController.self) { _ in
             ShakeForDataPopupViewController()

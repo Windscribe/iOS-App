@@ -388,7 +388,6 @@
 		59DF45892C59C58600EB6DC1 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5790A662B93184C00D24495 /* SignUpViewModel.swift */; };
 		59E4A7D02C73D84300987F99 /* ServerDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E4A7CE2C73D84300987F99 /* ServerDetailTableViewCell.swift */; };
 		59E4A7D12C73D84300987F99 /* ServerDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 59E4A7CF2C73D84300987F99 /* ServerDetailTableViewCell.xib */; };
-		59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */; };
 		59E63A2E2BD145F1002E566F /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E63A2D2BD145F1002E566F /* MainViewModel.swift */; };
 		59FC73CA2C5042BD00021CD1 /* WSRoundButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FC73C92C5042BD00021CD1 /* WSRoundButton.swift */; };
 		59FC73CD2C514A7A00021CD1 /* AppModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */; };
@@ -617,8 +616,6 @@
 		AF36BF1222FC975600FCC6F4 /* WSActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36BF1122FC975600FCC6F4 /* WSActionButton.swift */; };
 		AF3FC11D227B68EB0050B224 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3FC11C227B68EB0050B224 /* SessionManager.swift */; };
 		AF443D6D22C170FD004986DA /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF443D6C22C170FD004986DA /* ImageButton.swift */; };
-		AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF443D6E22C2756A004986DA /* TrustedNetworkPopupViewController.swift */; };
-		AF443D7122C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF443D7022C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift */; };
 		AF45E644226E20A900C1C108 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
@@ -1609,7 +1606,6 @@
 		59DF45872C59C30400EB6DC1 /* SignupRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupRouter.swift; sourceTree = "<group>"; };
 		59E4A7CE2C73D84300987F99 /* ServerDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerDetailTableViewCell.swift; sourceTree = "<group>"; };
 		59E4A7CF2C73D84300987F99 /* ServerDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ServerDetailTableViewCell.xib; sourceTree = "<group>"; };
-		59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedNetworkPopup.swift; sourceTree = "<group>"; };
 		59E63A1E2BD03DA1002E566F /* RateUsPopupModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateUsPopupModel.swift; sourceTree = "<group>"; };
 		59E63A2D2BD145F1002E566F /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		59EB6D1C2B328D6400616414 /* PreferencesMainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesMainViewModel.swift; sourceTree = "<group>"; };
@@ -1705,8 +1701,6 @@
 		AF36BF1122FC975600FCC6F4 /* WSActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSActionButton.swift; sourceTree = "<group>"; };
 		AF3FC11C227B68EB0050B224 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		AF443D6C22C170FD004986DA /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
-		AF443D6E22C2756A004986DA /* TrustedNetworkPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrustedNetworkPopupViewController.swift; sourceTree = "<group>"; };
-		AF443D7022C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TrustedNetworkPopupViewController+UI.swift"; sourceTree = "<group>"; };
 		AF4B92EB221CA1C50054580D /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		AF4B92F1221DCBEC0054580D /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
 		AF4B92F3221DF6670054580D /* AccountPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupViewController.swift; sourceTree = "<group>"; };
@@ -2700,13 +2694,6 @@
 			path = ViewLog;
 			sourceTree = "<group>";
 		};
-		1EA876D92BCEE3BF00F0DD25 /* Privacy */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Privacy;
-			sourceTree = "<group>";
-		};
 		1EA91DCC2BEA691700496DF8 /* Custom Config Picker */ = {
 			isa = PBXGroup;
 			children = (
@@ -3142,16 +3129,6 @@
 				E97ABD6128F91ABA00B38587 /* ProtocolManager.swift */,
 			);
 			path = Protocols;
-			sourceTree = "<group>";
-		};
-		59E63A1B2BD002E0002E566F /* Trusted Network */ = {
-			isa = PBXGroup;
-			children = (
-				AF443D6E22C2756A004986DA /* TrustedNetworkPopupViewController.swift */,
-				AF443D7022C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift */,
-				59E63A192BCFF032002E566F /* TrustedNetworkPopup.swift */,
-			);
-			path = "Trusted Network";
 			sourceTree = "<group>";
 		};
 		59FC74802C52D7B900021CD1 /* Router */ = {
@@ -3828,9 +3805,7 @@
 		C57BDE3429B9390A00337E63 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
-				1EA876D92BCEE3BF00F0DD25 /* Privacy */,
 				1E2366C62BC02447000DF098 /* Account */,
-				59E63A1B2BD002E0002E566F /* Trusted Network */,
 				AF36A208237DE90F00BDDCDB /* ShakeForData */,
 			);
 			path = Popup;
@@ -6616,7 +6591,6 @@
 				C5A930C72B4203F70001CFA0 /* APIManagerImpl+Session.swift in Sources */,
 				AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */,
 				F499352E2DA71F1400108558 /* GhostAccountViewModel.swift in Sources */,
-				59E63A1A2BCFF032002E566F /* TrustedNetworkPopup.swift in Sources */,
 				C5A930DF2B43F00A0001CFA0 /* CredentialsRepository.swift in Sources */,
 				595329FE2CAF750E0069CC8F /* ClaimVoucherCodeResponse.swift in Sources */,
 				C5A930E62B44711A0001CFA0 /* ServerRepositoryImpl.swift in Sources */,
@@ -6810,7 +6784,6 @@
 				F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */,
 				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,
-				AF443D7122C275F5004986DA /* TrustedNetworkPopupViewController+UI.swift in Sources */,
 				1EC6C78A2BE293690036248B /* LocationPermissionManager.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */,
@@ -6873,7 +6846,6 @@
 				1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */,
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
 				C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */,
-				AF443D6F22C2756A004986DA /* TrustedNetworkPopupViewController.swift in Sources */,
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,

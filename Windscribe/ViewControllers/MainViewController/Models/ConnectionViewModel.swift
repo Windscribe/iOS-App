@@ -27,7 +27,6 @@ protocol ConnectionViewModelType {
     var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
     var showAutoModeScreenTrigger: PublishSubject<Void> { get }
     var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
-    var trustedNetworkPopupTrigger: PublishSubject<Void> { get }
     var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
@@ -80,7 +79,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let showAutoModeScreenTrigger = PublishSubject<Void>()
     let openNetworkHateUsDialogTrigger = PublishSubject<Void>()
-    let trustedNetworkPopupTrigger = PublishSubject<Void>()
     let pushNotificationPermissionsTrigger = PublishSubject<Void>()
     let siriShortcutTrigger = PublishSubject<Void>()
     let requestLocationTrigger = PublishSubject<Void>()
@@ -361,7 +359,11 @@ extension ConnectionViewModel {
     private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
             guard !WifiManager.shared.isConnectedWifiTrusted() else {
-                trustedNetworkPopupTrigger.onNext(())
+                logger.logD(self, "User joining untrusted network")
+
+                let currentNetwork = securedNetwork.getCurrentNetwork()
+                vpnManager.untrustedOneTimeOnlySSID = currentNetwork?.SSID ?? ""
+                vpnManager.simpleEnableConnection()
                 return
             }
 
