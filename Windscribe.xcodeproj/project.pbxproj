@@ -5488,7 +5488,7 @@
 /* Begin PBXLegacyTarget section */
 		AF619D8B24AA3CCF00BB331C /* WireGuardGoBridgeiOS */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = 1.20.14;
+			buildArgumentsString = 1.23.11;
 			buildConfigurationList = AF619D8C24AA3CCF00BB331C /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgeiOS" */;
 			buildPhases = (
 			);
@@ -8789,8 +8789,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Windscribe/wireguard-apple.git";
 			requirement = {
-				kind = revision;
-				revision = 7bb0d1aabc0d2f1542ebc074cf4dd1ecdd269004;
+				branch = 2025;
+				kind = branch;
 			};
 		};
 		F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
