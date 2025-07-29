@@ -58,8 +58,17 @@ class PopupRouter: BaseRouter, RootRouter {
             presentViewModally(from: from, view: enterCredentialsView)
             return
         case .maintenanceLocation(let isStaticIp):
-            vc = Assembler.resolve(PopUpMaintenanceLocationVC.self)
-            (vc as? PopUpMaintenanceLocationVC)?.isStaticIp = isStaticIp
+            let context = MaintananceLocationContext()
+            context.isStaticIp = isStaticIp
+
+            let maintananceLocationView = Assembler.resolve(MaintananceLocationView.self)
+                .environmentObject(context)
+
+            let hostingController = UIHostingController(rootView: maintananceLocationView)
+            hostingController.modalPresentationStyle = .overFullScreen
+            hostingController.view.backgroundColor = UIColor.clear
+            from.present(hostingController, animated: true, completion: nil)
+            return
         case let .upgrade(promoCode, pcpID):
             let upgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
                 $0.promoCode = promoCode

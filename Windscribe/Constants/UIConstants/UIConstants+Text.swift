@@ -1957,7 +1957,7 @@ enum TextsAsset {
         }
 
         static var subtHeader: String {
-            return "Try again later or go\nto our Status page\nfor more info".localized
+            return "Try again later or go to our Status page for more info".localized
         }
 
         static var checkStatus: String {
