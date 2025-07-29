@@ -51,7 +51,6 @@ enum RouteID {
     case privacyView
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
-    case trustedNetwork
 
     // MARK: - Protocol View
 
