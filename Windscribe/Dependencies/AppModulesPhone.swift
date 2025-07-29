@@ -223,6 +223,13 @@ class ViewModels: Assembly {
                 localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any MaintananceLocationViewModel).self) { r in
+            MaintananceLocationViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
+        }.inObjectScope(.transient)
+
         container.register(BannedAccountPopupModelType.self) { r in
             BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
         }.inObjectScope(.transient)
@@ -244,14 +251,6 @@ class ViewModels: Assembly {
                 router: r.resolve(AccountRouter.self)!,
                 htmlParser: r.resolve(HTMLParsing.self)!,
                 notificationRepository: r.resolve(NotificationRepository.self)!)
-        }.inObjectScope(.transient)
-        container.register(PrivacyViewModelType.self) { r in
-            PrivacyViewModel(
-                preferences: r.resolve(Preferences.self)!,
-                networkRepository: r.resolve(SecuredNetworkRepository.self)!,
-                localDatabase: r.resolve(LocalDatabase.self)!,
-                logger: r.resolve(FileLogger.self)!
-            )
         }.inObjectScope(.transient)
 
         container.register(PrivacyStateManaging.self) { r in
@@ -366,9 +365,6 @@ class ViewModels: Assembly {
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!,
                                  serverRepository: r.resolve(ServerRepository.self)!,
                                  staticIpRepository: r.resolve(StaticIpRepository.self)!)
-        }.inObjectScope(.transient)
-        container.register(PopUpMaintenanceLocationModelType.self) { r in
-            PopUpMaintenanceLocationModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
         container.register(FlagsBackgroundViewModelType.self) { r in
@@ -724,12 +720,6 @@ class ViewControllerModule: Assembly {
             c.type = .connected
             c.router = r.resolve(ProtocolSwitchRouter.self)
         }.inObjectScope(.transient)
-        container.register(PrivacyViewController.self) { _ in
-            PrivacyViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(PrivacyViewModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
         container.register(TrustedNetworkPopupViewController.self) { _ in
             TrustedNetworkPopupViewController()
         }.initCompleted { r, c in
@@ -763,11 +753,6 @@ class ViewControllerModule: Assembly {
             ListSelectionView()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ListSelectionViewModelType.self)
-        }.inObjectScope(.transient)
-        container.register(PopUpMaintenanceLocationVC.self) { _ in
-            PopUpMaintenanceLocationVC()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(PopUpMaintenanceLocationModelType.self)
         }.inObjectScope(.transient)
         container.register(SendDebugLogCompletedViewController.self) { _ in
             SendDebugLogCompletedViewController()
@@ -808,6 +793,12 @@ class ViewControllerModule: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+            )
+        }.inObjectScope(.transient)
+
+        container.register(MaintananceLocationView.self) { r in
+            MaintananceLocationView(
+                viewModel: r.resolve((any MaintananceLocationViewModel).self)!
             )
         }.inObjectScope(.transient)
 
