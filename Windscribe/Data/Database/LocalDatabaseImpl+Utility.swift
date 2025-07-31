@@ -12,22 +12,29 @@ import RealmSwift
 import RxSwift
 
 extension LocalDatabaseImpl {
-    func getRealmObject<T: Object>(type: T.Type) -> T? {
+    func getRealmObject<T: Object>(type: T.Type, primaryKey: String) -> T? {
         do {
             let realm = try Realm()
-            return realm.objects(type).first
-        } catch let error {
+            return realm.object(ofType: type, forPrimaryKey: primaryKey)
+        } catch {
             logger.logE("LocalDatabaseImpl", "Getting Realm was not possible, with error \(error.localizedDescription)")
             return nil
         }
     }
 
-    func getRealmObject<T: Object>(type: T.Type, primaryKey: String) -> T? {
-        return try? Realm().object(ofType: type, forPrimaryKey: primaryKey)
+    func getRealmObject<T: Object>(type: T.Type) -> T? {
+        getRealmObjects(type: type)?.first
     }
 
     func getRealmObjects<T: Object>(type: T.Type) -> [T]? {
-        return try? Array(Realm().objects(type))
+        do {
+            let realm = try Realm()
+            let results = realm.objects(type)
+            return Array(results)
+        } catch {
+            logger.logE("LocalDatabaseImpl", "Getting Realm was not possible, with error \(error.localizedDescription)")
+            return nil
+        }
     }
 
     func updateRealmObject<T: Object>(object: T) -> Disposable {
