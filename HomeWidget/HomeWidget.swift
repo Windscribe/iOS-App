@@ -14,7 +14,6 @@ import Swinject
 import WidgetKit
 
 struct Provider: TimelineProvider {
-    let tag = "AppIntents"
     let resolver = ContainerResolver()
 
     fileprivate var logger: FileLogger {
@@ -29,6 +28,12 @@ struct Provider: TimelineProvider {
         LocalizationBridge.setup(resolver.getLocalizationService())
     }
 
+    private func debugLog(_ message: String) {
+        #if DEBUG
+        logger.logD("AppIntents", message)
+        #endif
+    }
+
     func placeholder(in _: Context) -> SimpleEntry {
         return snapshotEntry
     }
@@ -38,24 +43,28 @@ struct Provider: TimelineProvider {
     }
 
     func getTimeline(in _: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        var entries: [SimpleEntry] = []
-        entries.append(snapshotEntry)
-        logger.logD(tag, "Getting widget timeline")
-        let protocolType = self.preferences.getActiveManagerKey() ?? TextsAsset.wireGuard
-        getActiveManager(for: protocolType) { result in
-            switch result {
-            case let .success(manager):
-                if let entry = buildSimpleEntry(manager: manager) {
-                    logger.logD(tag, "Updated widget with status:  \(manager.connection.status)")
-                    entries.append(entry)
+        autoreleasepool {
+            var entries: [SimpleEntry] = []
+            entries.append(snapshotEntry)
+            debugLog("Getting widget timeline")
+            let protocolType = self.preferences.getActiveManagerKey() ?? TextsAsset.wireGuard
+            getActiveManager(for: protocolType) { result in
+                autoreleasepool {
+                    switch result {
+                    case let .success(manager):
+                        if let entry = buildSimpleEntry(manager: manager) {
+                            debugLog("Updated widget with status: \(manager.connection.status)")
+                            entries.append(entry)
+                        }
+                    case let .failure(failure):
+                        debugLog("No VPN Configuration found Error: \(failure).")
+                        let entry = buildErrorEntry(failure: failure)
+                        entries.append(entry)
+                    }
+                    let timeline = Timeline(entries: entries, policy: .atEnd)
+                    completion(timeline)
                 }
-            case let .failure(failure):
-                logger.logD(tag, "No VPN Configuration found Error: \(failure).")
-                let entry = buildErrorEntry(failure: failure)
-                entries.append(entry)
             }
-            let timeline = Timeline(entries: entries, policy: .atEnd)
-            completion(timeline)
         }
     }
 
