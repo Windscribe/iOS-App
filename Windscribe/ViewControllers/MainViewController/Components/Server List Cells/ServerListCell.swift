@@ -193,6 +193,9 @@ class ServerListCell: SwipeTableViewCell {
     }
 
     private func updateInactiveState() {
-        self.backgroundColor = .clear
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
+            self.backgroundColor = .clear
+        }
     }
 }
