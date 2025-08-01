@@ -63,7 +63,9 @@ class IPInfoView: UIView {
             self.showSecureIPAddressState(ipAddress: $0)
         }).disposed(by: disposeBag)
 
-        ipLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
+        ipLabel.rx.anyGesture(.tap(configuration: { gestureRecognizer, _ in
+            gestureRecognizer.numberOfTapsRequired = 2
+        })).skip(1).subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
             self.viewModel.markBlurStaticIpAddress(isBlured: !viewModel.isBlurStaticIpAddress)
             self.ipLabel.isBlurring = viewModel.isBlurStaticIpAddress

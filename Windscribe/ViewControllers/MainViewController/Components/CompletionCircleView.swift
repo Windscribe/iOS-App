@@ -11,6 +11,7 @@ import UIKit
 class CompletionCircleView: UIView {
     let lineWidth: CGFloat
     let radius: CGFloat
+    var startAngle: CGFloat = 0
 
     init(lineWidth: CGFloat = 1, radius: CGFloat = 12) {
         self.lineWidth = lineWidth
@@ -33,7 +34,7 @@ class CompletionCircleView: UIView {
         super.draw(rect)
         guard let percentage = percentage else { return }
 
-        let endAngle = (percentage * 0.02 - 1) * CGFloat.pi
+        let endAngle = (percentage * 0.02 - 1) * CGFloat.pi + startAngle
         let center = radius
         let innerRadius = radius - lineWidth / 2
 
@@ -41,7 +42,7 @@ class CompletionCircleView: UIView {
         UIColor.whiteWithOpacity(opacity: 0.2).setStroke()
         path.lineWidth = lineWidth
         path.stroke()
-        path = UIBezierPath(arcCenter: CGPoint(x: center, y: center), radius: innerRadius, startAngle: -CGFloat.pi, endAngle: endAngle, clockwise: true)
+        path = UIBezierPath(arcCenter: CGPoint(x: center, y: center), radius: innerRadius, startAngle: -CGFloat.pi + startAngle, endAngle: endAngle, clockwise: true)
         getColorFromPercentage().setStroke()
         path.lineWidth = lineWidth
         path.stroke()
