@@ -42,6 +42,8 @@ class BestLocationCellModel: ServerCellModelType {
 
     var actionOpacity: Float = 0.4
 
+    var hasProLocked: Bool = false
+
     var serverHealth: CGFloat {
         CGFloat(self.displayingBestLocation?.health ?? 0)
     }

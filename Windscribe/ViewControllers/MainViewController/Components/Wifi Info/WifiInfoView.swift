@@ -93,9 +93,25 @@ class WifiInfoView: UIView {
             .withRenderingMode(.alwaysTemplate)
 
         nameLabel.isBlurring = viewModel.isBlur
+
+        // Single tap for location permission popup (unknown network only)
         nameLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
-            nameLabel.isBlurring = viewModel.nameLabelTapped(networkName: nameLabel.text) ?? false
+            if nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
+                viewModel.unknownWifiTriggerSubject.onNext(())
+            }
+        }).disposed(by: disposeBag)
+
+        // Double tap for blur toggle (known network only)
+        nameLabel.rx.anyGesture(.tap(configuration: { gestureRecognizer, _ in
+            gestureRecognizer.numberOfTapsRequired = 2
+        })).skip(1).subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            if nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork {
+                let preferences = (viewModel as? WifiInfoViewModel)?.preferences
+                preferences?.saveBlurNetworkName(bool: !(preferences?.getBlurNetworkName() ?? false))
+                nameLabel.isBlurring = preferences?.getBlurNetworkName() ?? false
+            }
         }).disposed(by: disposeBag)
 
         actionButton.rx.tap.bind { [weak self] _ in

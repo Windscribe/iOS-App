@@ -14,7 +14,7 @@ import UIKit
 
 protocol BaseNodeCellViewModelType: ServerCellModelType {
     var signalImage: UIImage? { get }
-    var latencyValue: String { get }
+    var latencyValue: NSAttributedString { get }
     var nickName: String { get }
     var updateUISubject: PublishSubject<Void> { get }
     var groupId: String { get }
@@ -69,6 +69,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var serverHealth: CGFloat { 0.0 }
 
+    var hasProLocked: Bool { false }
+
     var signalImage: UIImage? {
         switch getSignalLevel(minTime: minTime) {
         case 1:
@@ -86,8 +88,19 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var isSignalVisible: Bool { true }
 
-    var latencyValue: String {
-        minTime > 0 ? "  \(minTime.description)  " : "  --  "
+    var latencyValue: NSAttributedString {
+        if minTime > 0 {
+            let latencyText = "\(minTime.description)ms"
+            let attributedString = NSMutableAttributedString(string: latencyText)
+
+            if let msRange = latencyText.range(of: "ms") {
+                let nsRange = NSRange(msRange, in: latencyText)
+                attributedString.addAttribute(.font, value: UIFont.medium(size: 7), range: nsRange)
+            }
+            return attributedString
+        } else {
+            return NSAttributedString(string: "  --  ")
+        }
     }
 
     init() {
@@ -220,16 +233,14 @@ class BaseNodeCell: ServerListCell {
             latencyLabel.centerYAnchor.constraint(equalTo: latencyView.centerYAnchor, constant: 6),
             latencyLabel.centerXAnchor.constraint(equalTo: latencyView.centerXAnchor),
             latencyLabel.heightAnchor.constraint(equalToConstant: 12)
-
         ])
     }
 
     override func updateUI() {
-        latencyLabel.text = ""
         favButton.isEnabled = true
         nickNameLabel.isEnabled = true
         nameLabel.isEnabled = true
-        latencyLabel.text = baseNodeCellViewModel?.latencyValue
+        latencyLabel.attributedText = baseNodeCellViewModel?.latencyValue
         signalBarsIcon.image = baseNodeCellViewModel?.signalImage
         nickNameLabel.text = baseNodeCellViewModel?.nickName
 

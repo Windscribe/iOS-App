@@ -98,7 +98,6 @@ class ServerSectionCellModel: ServerSectionCellModelType {
 
 class ServerSectionCell: ServerListCell {
     var p2pIcon = UIImageView()
-    var proIcon = UIImageView()
 
     var serverCellViewModel: ServerSectionCellModel? {
         didSet {
@@ -120,10 +119,6 @@ class ServerSectionCell: ServerListCell {
         p2pIcon.setImageColor(color: .white)
         p2pIcon.layer.opacity = 0.7
         contentView.addSubview(p2pIcon)
-
-        proIcon.image = UIImage(named: ImagesAsset.proMiniImage)
-        proIcon.setImageColor(color: .proStarColor)
-        contentView.addSubview(proIcon)
 
         updateUI()
         updateLayout()
@@ -147,27 +142,19 @@ class ServerSectionCell: ServerListCell {
         super.updateUI()
         guard let serverCellViewModel = serverCellViewModel else { return }
         p2pIcon.isHidden = serverCellViewModel.isP2pHidden
-        proIcon.isHidden = !serverCellViewModel.hasProLocked
     }
 
     override func updateLayout() {
         super.updateLayout()
 
         p2pIcon.translatesAutoresizingMaskIntoConstraints = false
-        proIcon.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // p2pIcon
             p2pIcon.centerYAnchor.constraint(equalTo: nameLabel.centerYAnchor),
             p2pIcon.rightAnchor.constraint(equalTo: actionImage.leftAnchor, constant: -14),
             p2pIcon.heightAnchor.constraint(equalToConstant: 16),
-            p2pIcon.widthAnchor.constraint(equalToConstant: 16),
-
-                // proIcon
-            proIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
-            proIcon.leftAnchor.constraint(equalTo: leftAnchor, constant: 11),
-            proIcon.heightAnchor.constraint(equalToConstant: 16),
-            proIcon.widthAnchor.constraint(equalToConstant: 16)
+            p2pIcon.widthAnchor.constraint(equalToConstant: 16)
         ])
     }
 
@@ -175,8 +162,6 @@ class ServerSectionCell: ServerListCell {
         super.bindViews(isDarkMode: isDarkMode)
         isDarkMode.subscribe(onNext: { isDarkMode in
             self.p2pIcon.setImageColor(color: .from(.iconColor, isDarkMode))
-            let proImageName = isDarkMode ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
-            self.proIcon.image = UIImage(named: proImageName)
         }).disposed(by: disposeBag)
     }
 

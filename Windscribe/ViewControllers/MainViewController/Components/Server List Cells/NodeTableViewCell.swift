@@ -56,19 +56,20 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
     }
 
     override var iconSize: CGFloat {
-        if isProLocked || isFavorite { return super.iconSize }
+        if isFavorite { return 20.0 }
+        if isProLocked { return super.iconSize }
         if isSpeedIconVisible { return 16.0 }
         return 20.0
     }
 
     override var iconImage: UIImage? {
-        if isProLocked {
+        if isFavorite, let countryCode = displayingGroup?.countryCode {
+            return UIImage(named: "\(countryCode)-s") ?? super.iconImage
+        } else if isProLocked {
             return UIImage(named: ImagesAsset.proCityImage)?
                 .withRenderingMode(.alwaysTemplate)
-        } else if isFavorite, let countryCode = displayingGroup?.countryCode {
-            return UIImage(named: "\(countryCode)-s") ?? super.iconImage
         } else if isSpeedIconVisible {
-            return UIImage(named:ImagesAsset.tenGig)?
+            return UIImage(named: ImagesAsset.tenGig)?
                 .withRenderingMode(.alwaysTemplate)
         }
         return super.iconImage
@@ -79,6 +80,8 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         return group.premiumOnly &&
         !(sessionManager.session?.isPremium ?? false)
     }
+
+    override var hasProLocked: Bool { isProLocked && isFavorite }
 
     var isSpeedIconVisible: Bool {
         displayingGroup?.linkSpeed == "10000"
@@ -116,10 +119,10 @@ class NodeTableViewCell: BaseNodeCell {
 
     override func updateUI() {
         super.updateUI()
-        if nodeCellViewModel?.isProLocked ?? false {
-            icon.setImageColor(color: .proStarColor)
-        } else if nodeCellViewModel?.isFavorite ?? false {
+        if nodeCellViewModel?.isFavorite ?? false {
             icon.image = nodeCellViewModel?.iconImage
+        } else if nodeCellViewModel?.isProLocked ?? false {
+            icon.setImageColor(color: .proStarColor)
         }
     }
 }
