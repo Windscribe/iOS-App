@@ -29,7 +29,7 @@ protocol ServerCellModelType {
 }
 
 class HealthCircleView: CompletionCircleView {
-    override init(lineWidth: CGFloat = 1, radius: CGFloat = 12) {
+    override init(lineWidth: CGFloat = 1, radius: CGFloat = 13) {
         super.init(lineWidth: lineWidth, radius: radius)
         startAngle = .pi / 2
     }
@@ -96,7 +96,7 @@ class ServerListCell: SwipeTableViewCell {
         nameInfoStackView.spacing = 5
 
         circleView.backgroundColor = .clear
-        circleView.layer.cornerRadius = 12
+        circleView.layer.cornerRadius = 13
         circleView.layer.borderWidth = 1
         circleView.clipsToBounds = true
 
@@ -150,8 +150,8 @@ class ServerListCell: SwipeTableViewCell {
             // circleView
             circleView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
             circleView.centerXAnchor.constraint(equalTo: icon.centerXAnchor),
-            circleView.heightAnchor.constraint(equalToConstant: 24),
-            circleView.widthAnchor.constraint(equalToConstant: 24),
+            circleView.heightAnchor.constraint(equalToConstant: 26),
+            circleView.widthAnchor.constraint(equalToConstant: 26),
 
             // healthCircle
             healthCircle.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
