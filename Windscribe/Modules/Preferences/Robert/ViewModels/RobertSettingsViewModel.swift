@@ -184,7 +184,7 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     }
 
     func customRulesSelected() {
-        logger.logI(self, "User tapped custom rules button.")
+        logger.logI("RobertSettingsViewModelImpl", "User tapped custom rules button.")
         apiManager.getWebSession()
             .asPublisher()
             .receive(on: DispatchQueue.main)

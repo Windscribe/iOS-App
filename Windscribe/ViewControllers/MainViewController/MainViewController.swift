@@ -168,7 +168,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func pushNotificationReceived(payload: PushNotificationPayload) {
         if payload.type == "promo" {
-            logger.logD(self, "Push notification type was promo now launching promo view. \(payload)")
+            logger.logD("MainViewController", "Push notification type was promo now launching promo view. \(payload)")
 
             launchPromoView(payload: payload)
         }
@@ -178,7 +178,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         guard vpnConnectionViewModel.isConnected() else { return }
         let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
         if !isOnline {
-            logger.logI(MainViewController.self, "No internet connection available.")
+            logger.logI("MainViewController", "No internet connection available.")
             internetConnectionLost = true
             vpnConnectionViewModel.disableConnection()
         }
@@ -222,13 +222,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId)"
-            logger.logD(self, "Configuring best location.")
+            logger.logD("MainViewController", "Configuring best location.")
             serverListTableViewDataSource?.bestLocation = bestLocation
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
             }
             if connectToBestLocation {
-                logger.logD(self, "Forcing to connect to best location.")
+                logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
             guard let displayingGroup = (try? self.viewModel.serverList.value())?
@@ -248,7 +248,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func showOutOfDataPopup() {
-        logger.logD(self, "Displaying Out Of Data Popup.")
+        logger.logD("MainViewController", "Displaying Out Of Data Popup.")
         popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
     }
 
@@ -276,7 +276,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
             if oldSession.isPremium &&
                 !newSession.isPremium &&
                 !nodes.isEmpty {
-                logger.logD(self, "Account downgrade detected.")
+                logger.logD("MainViewController", "Account downgrade detected.")
                 if vpnConnectionViewModel.isDisconnected() {
                     loadLatencyValues()
                 } else {

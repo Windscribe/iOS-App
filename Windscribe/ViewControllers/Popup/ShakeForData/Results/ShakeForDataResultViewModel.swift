@@ -52,7 +52,7 @@ class ShakeForDataResultViewModel: ShakeForDataResultViewModelType {
     }
 
     func wasShown() {
-        logger.logD(self, "Displaying Shake For Data Result View")
+        logger.logD("ShakeForDataResultViewModel", "Displaying Shake For Data Result View")
     }
 
     func quit(from: WSUIViewController, completion: @escaping () -> Void) {

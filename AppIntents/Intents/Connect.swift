@@ -35,14 +35,14 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        logger.logD(tag, "Enable VPN action called.")
+        logger.logI(tag, "Enable VPN action called.")
         do {
             let protocolType = preferences.getActiveManagerKey() ?? "WireGuard"
             let activeManager = try await getNEVPNManager(for: protocolType)
             let vpnStatus = activeManager.connection.status
             // If it's invalid it will not connect
             guard vpnStatus != .invalid else {
-                logger.logD(tag, "Invalid VPN Manager.")
+                logger.logI(tag, "Invalid VPN Manager.")
                 WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                 return .result(dialog: .responseFailure)
             }
@@ -63,17 +63,17 @@ struct Connect: AppIntent, WidgetConfigurationIntent {
                 try? await Task.sleep(for: .milliseconds(500))
                 if activeManager.connection.status == .connected {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-                    logger.logD(tag, "Connected to VPN.")
+                    logger.logI(tag, "Connected to VPN.")
                     return .result(dialog: .responseSuccess)
                 }
                 iterations += 1
-                logger.logD(tag, "Awaiting connection to VPN.")
+                logger.logI(tag, "Awaiting connection to VPN.")
             }
-            logger.logD(tag, "Taking too long to connect.")
+            logger.logI(tag, "Taking too long to connect.")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseTimeoutFailure)
         } catch {
-            logger.logD(tag, "Error connecting to VPN: \(error)")
+            logger.logE("Connect", "Error connecting to VPN: \(error.localizedDescription)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailure)
         }

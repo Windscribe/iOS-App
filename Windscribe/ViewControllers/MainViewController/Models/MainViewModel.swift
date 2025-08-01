@@ -394,14 +394,14 @@ class MainViewModel: MainViewModelType {
     }
 
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void) {
-        logger.logD(MainViewController.self, "Checking for unread notifications.")
+        logger.logD("MainViewController", "Checking for unread notifications.")
         DispatchQueue.main.async {
             guard let readNotices = self.localDatabase.getReadNotices(), let notices = self.retrieveNotifications(), let notice = notices.first, let noticeId = notice.id, let noticePopup = notice.popup else { return }
             let readNoticeIds = Set(readNotices.filter { $0.isInvalidated == false }.map {  $0.id })
             let noticeIds = Set(notices.compactMap { $0.id })
 
             if noticePopup && !readNoticeIds.contains(noticeId) {
-                self.logger.logD(MainViewController.self, "New notification to read with popup.")
+                self.logger.logD("MainViewController", "New notification to read with popup.")
                 completion(true, 0)
             }
             let readNoticeDifferentCount = noticeIds.reduce(0) {

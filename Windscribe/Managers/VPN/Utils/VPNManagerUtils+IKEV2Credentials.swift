@@ -13,16 +13,16 @@ extension ConfigurationsManager {
     func configureIKEV2WithSavedCredentials(with selectedNode: SelectedNode?,
                                             userSettings: VPNUserSettings) async throws -> Bool {
         guard let selectedNode = selectedNode else {
-            logger.logE(self, "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
+            logger.logE("ConfigurationsManager", "Failed to configure IKEv2 profile. \(Errors.hostnameNotFound.localizedDescription)")
             throw Errors.hostnameNotFound
         }
         let manager = iKEV2Manager() ?? NEVPNManager.shared()
         let ip = selectedNode.ip1 ?? selectedNode.staticIpToConnect
         guard let ip = ip else {
-            logger.logE(self, "Ip1 and ip3 are not avaialble to configure this profile.")
+            logger.logE("ConfigurationsManager", "Ip1 and ip3 are not avaialble to configure this profile.")
             throw Errors.ipNotAvailable
         }
-        logger.logD(self, "Configuring VPN profile with saved credentials. \(selectedNode.hostname)")
+        logger.logD("ConfigurationsManager", "Configuring VPN profile with saved credentials. \(selectedNode.hostname)")
 
         var base64username = ""
         var base64password = ""
@@ -36,7 +36,7 @@ extension ConfigurationsManager {
             base64password = credentials.password.base64Decoded()
         }
         if base64username == "" || base64password == "" {
-            logger.logE(self, "Can't establish a VPN connection, missing authentication values.")
+            logger.logE("ConfigurationsManager", "Can't establish a VPN connection, missing authentication values.")
             throw Errors.missingAuthenticationValues
         }
         keychainDb.save(username: base64username, password: base64password)
@@ -115,16 +115,16 @@ extension ConfigurationsManager {
             try await saveThrowing(manager: manager)
         } catch {
             guard let error = error as? Errors else { throw Errors.notDefined }
-            logger.logE(self, "Error when saving vpn preferences \(error.description).")
+            logger.logE("ConfigurationsManager", "Error when saving vpn preferences \(error.description).")
             throw error
         }
-        logger.logD(self, "VPN configuration successful. Username: \(username)")
-        logger.logD(self, "KillSwitch option set by user is \(userSettings.killSwitch)")
-        logger.logD(self, "Allow lan option set by user is \(userSettings.allowLane)")
+        logger.logD("ConfigurationsManager", "VPN configuration successful. Username: \(username)")
+        logger.logD("ConfigurationsManager", "KillSwitch option set by user is \(userSettings.killSwitch)")
+        logger.logD("ConfigurationsManager", "Allow lan option set by user is \(userSettings.allowLane)")
         #if os(iOS)
             if #available(iOS 15.1, *) {
-                logger.logD(self, "KillSwitch in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.includeAllNetworks))")
-                logger.logD(self, "Allow lan in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.excludeLocalNetworks))")
+                logger.logD("ConfigurationsManager", "KillSwitch in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.includeAllNetworks))")
+                logger.logD("ConfigurationsManager", "Allow lan in IKEv2 VPNManager is \(String(describing: manager.protocolConfiguration?.excludeLocalNetworks))")
             }
         #endif
         return true

@@ -18,7 +18,7 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     }
 
     func save(username: String, password: String) {
-        logger.logD(self, "Saving credentials to keychain")
+        logger.logD("KeyChainDatabase", "Saving credentials to keychain")
         guard let passwordData = password.data(using: String.Encoding.utf8, allowLossyConversion: false),
               let accountData = username.data(using: String.Encoding.utf8, allowLossyConversion: false) else { return }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
@@ -28,11 +28,11 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
                                     kSecValueData as String: passwordData]
         SecItemDelete(query as CFDictionary)
         SecItemAdd(query as CFDictionary, nil)
-        logger.logD(self, "Saved credentials to keychain")
+        logger.logI("KeyChainDatabase", "Saved credentials to keychain")
     }
 
     func retrieve(username: String) -> Data? {
-        logger.logD(self, "Retrieving credentials from keychain")
+        logger.logD("KeyChainDatabase", "Retrieving credentials from keychain")
         guard let accountData = username.data(using: String.Encoding.utf8, allowLossyConversion: false) else { return nil }
         let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
                                     kSecAttrGeneric as String: accountData,
@@ -43,10 +43,10 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
         var result: CFTypeRef?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
         if status == errSecSuccess {
-            logger.logD(self, "Retrieved credentials from keychain")
+            logger.logI("KeyChainDatabase", "Retrieved credentials from keychain")
             return result as? Data
         } else {
-            logger.logD(self, "Error when retriving data from keychain. \(errSecItemNotFound)")
+            logger.logE("KeyChainDatabase", "Error when retriving data from keychain. \(errSecItemNotFound)")
             return nil
         }
     }

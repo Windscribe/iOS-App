@@ -119,14 +119,14 @@ extension MainViewController {
 
         viewModel.promoPayload.distinctUntilChanged().subscribe(onNext: { payload in
             guard let payload = payload else { return }
-            self.logger.logD(self, "Showing upgrade view with payload: \(payload.description)")
+            self.logger.logD("MainViewController", "Showing upgrade view with payload: \(payload.description)")
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
 
         viewModel.notices.subscribe(onNext: { _ in
             self.checkForUnreadNotifications()
         }, onError: { error in
-            self.logger.logE(self, "Realm notifications error \(error.localizedDescription)")
+            self.logger.logE("MainViewController", "Realm notifications error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
 
         viewModel.showNetworkSecurityTrigger

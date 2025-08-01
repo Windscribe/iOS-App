@@ -71,7 +71,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
 extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
     func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard !urls.isEmpty else { return }
-        logger.logD(self, "Importing WireGuard/OpenVPN .conf file")
+        logger.logD("CustomConfigPickerViewModel", "Importing WireGuard/OpenVPN .conf file")
         urls.forEach { url in
             let fileName = url.lastPathComponent.replacingOccurrences(of: ".\(url.pathExtension)", with: "")
             localDataBase.getCustomConfig().take(1).subscribe(on: MainScheduler.instance).subscribe(onNext: {
@@ -98,7 +98,7 @@ extension CustomConfigPickerViewModel: UIDocumentPickerDelegate {
 
 extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
     func addCustomConfig() {
-        logger.logD(self, "User tapped to Add Custom Config")
+        logger.logD("CustomConfigPickerViewModel", "User tapped to Add Custom Config")
 
         let documentTypes: [UTType] = [
             UTType("com.windscribe.wireguard.config.quick") ?? .data,
@@ -148,7 +148,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     }
 
     private func continueSetSelected(with customConfig: CustomConfigModel, and isConnecting: Bool) async {
-        logger.logD(self, "Tapped on Custom config from the list.")
+        logger.logD("CustomConfigPickerViewModel", "Tapped on Custom config from the list.")
 
         guard !isConnecting else {
             displayAllertTrigger.onNext(.connecting)
@@ -167,7 +167,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     private func setBestLocation() {
         let locationID = locationsManager.getBestLocation()
         if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
-            self.logger.logD(self, "Changing selected location to Best location ID \(locationID) from the server list.")
+            self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
             self.locationsManager.saveLastSelectedLocation(with: locationID)
             self.configureVPNTrigger.onNext(())
         } else {

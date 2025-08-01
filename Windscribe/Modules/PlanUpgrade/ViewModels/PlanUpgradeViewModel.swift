@@ -94,7 +94,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
             promoCode = pushNotificationPayload?.promoCode
             pcpID = pushNotificationPayload?.pcpid
         }
-        logger.logD(self, "Loading billing plans. Promo: \(promoCode ?? "N/A")")
+        logger.logD("DefaultUpgradePlanViewModel", "Loading billing plans. Promo: \(promoCode ?? "N/A")")
 
         showProgress.onNext(true)
 
@@ -108,7 +108,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
                     for plan in mobilePlans {
                         let discount = plan.discount >= 0 ? "\(plan.discount)%" : "N/A"
                         self.logger.logD(
-                            self,
+                            "DefaultUpgradePlanViewModel",
                             "Plan: \(plan.name) Ext: \(plan.extId) Duration: \(plan.duration) Discount: \(discount)")
                     }
                     self.mobilePlans = mobilePlans
@@ -124,7 +124,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     }
 
     func continuePayButtonTapped() {
-        logger.logD(self, "User tapped to upgrade.")
+        logger.logD("DefaultUpgradePlanViewModel", "User tapped to upgrade.")
         upgradeState.onNext(.loading)
         if let selectedPlan = selectedPlan {
             inAppPurchaseManager.purchase(windscribeInAppProduct: selectedPlan)
@@ -132,13 +132,13 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     }
 
     func restoreButtonTapped() {
-        logger.logD(self, "User tapped to restore purchases.")
+        logger.logD("DefaultUpgradePlanViewModel", "User tapped to restore purchases.")
         upgradeState.onNext(.loading)
         inAppPurchaseManager.restorePurchase()
     }
 
     func setSelectedPlan(plan: WindscribeInAppProduct) {
-        logger.logD(self, "Selected plan: \(plan.planLabel)")
+        logger.logD("DefaultUpgradePlanViewModel", "Selected plan: \(plan.planLabel)")
         selectedPlan = plan
     }
 
@@ -161,28 +161,28 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     }
 
     private func upgrade() {
-        self.logger.logI(self, "Getting new session.")
+        self.logger.logI("DefaultUpgradePlanViewModel", "Getting new session.")
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { session in
-            self.logger.logI(self, "Received updated session.")
+            self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
             self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             self.upgradeState.onNext(.success(session.isUserGhost))
         }, onFailure: { _ in
-            self.logger.logE(self, "Failure to update session.")
+            self.logger.logE("DefaultUpgradePlanViewModel", "Failure to update session.")
             self.upgradeState.onNext(.success(false))
         }).disposed(by: disposeBag)
     }
 
     private func postpcpID() {
         if let payID = pcpID {
-            logger.logD(self, "Posting pcpID")
+            logger.logD("DefaultUpgradePlanViewModel", "Posting pcpID")
             apiManager.postBillingCpID(pcpID: payID).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
                 self.upgrade()
             }, onFailure: { _ in
-                self.logger.logE(self, "Failed to post pcpID")
+                self.logger.logE("DefaultUpgradePlanViewModel", "Failed to post pcpID")
                 self.upgrade()
             }).disposed(by: disposeBag)
         } else {
-            logger.logE(self, "No pcpID now upgrading.")
+            logger.logE("DefaultUpgradePlanViewModel", "No pcpID now upgrading.")
             upgrade()
         }
     }
@@ -211,17 +211,17 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
     }
 
     func purchasedSuccessfully(transaction _: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
-        logger.logD(self, "Purchase successful.")
+        logger.logD("DefaultUpgradePlanViewModel", "Purchase successful.")
 
         apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
             .subscribe(
                 onSuccess: { _ in
-                    self.logger.logD(self, "Purchase verified successfully")
+                    self.logger.logD("DefaultUpgradePlanViewModel", "Purchase verified successfully")
                     self.saveAppleData(appleID: nil, appleData: nil, appleSig: nil)
                     self.postpcpID()
                 },
                 onFailure: { error in
-                    self.logger.logE(self, "Failed to verify payment and saving for later. \(error)")
+                    self.logger.logE("DefaultUpgradePlanViewModel", "Failed to verify payment and saving for later. \(error)")
                     self.saveAppleData(appleID: appleID, appleData: appleData, appleSig: appleSIG)
                     if let error = error as? Errors {
                         switch error {
@@ -237,48 +237,48 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
     }
 
     func failedToPurchase() {
-        logger.logE(self, "Failed to complete transaction.")
+        logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction.")
         upgradeState.onNext(
             .titledError(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle,
                          TextsAsset.UpgradeView.planBenefitTransactionFailedAlert))
     }
 
     func unableToMakePurchase() {
-        logger.logE(self, "Failed to complete transaction.")
+        logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction.")
         upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
     }
 
     func failedCanceledByUser() {
-        logger.logE(self, "Failed to complete transaction. Purchase canceled by user.")
+        logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction. Purchase canceled by user.")
         // Upgrade state will not send an error here so dismiss screen will not show alert
         upgradeState.onNext(.none)
     }
 
     func failedDueToNetworkIssue() {
-        logger.logE(self, "Failed to complete transaction. Problem with internet connection.")
+        logger.logE("DefaultUpgradePlanViewModel", "Failed to complete transaction. Problem with internet connection.")
         upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
     }
 
     func setVerifiedTransaction(transaction: UncompletedTransactions?, error: String?) {
         DispatchQueue.main.async { [weak self] in
             if transaction == nil {
-                self?.logger.logE(PlanUpgradeViewModel.self, error ?? "Failed to restore transaction.")
+                self?.logger.logE("PlanUpgradeViewModel.", error ?? "Failed to restore transaction.")
                 self?.upgradeState.onNext(.error(error ?? TextsAsset.UpgradeView.planBenefitTransactionFailedRestoreTitle))
             } else {
-                self?.logger.logD(PlanUpgradeViewModel.self, "Successfully verified item: \(transaction?.description ?? "")")
+                self?.logger.logD("PlanUpgradeViewModel.", "Successfully verified item: \(transaction?.description ?? "")")
                 self?.upgrade()
             }
         }
     }
 
     func failedToLoadProducts() {
-        logger.logE(self, "Failed to load products. Check your network and try again.")
+        logger.logE("DefaultUpgradePlanViewModel", "Failed to load products. Check your network and try again.")
         showProgress.onNext(false)
         upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitNetworkProblemTitle))
     }
 
     func unableToRestorePurchase(error: any Error) {
-        logger.logE(self, "Unable to restore purchase. \(error)")
+        logger.logE("DefaultUpgradePlanViewModel", "Unable to restore purchase. \(error)")
         if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
             upgradeState.onNext(.error(Errors.noNetwork.description))
         } else if error is URLError {

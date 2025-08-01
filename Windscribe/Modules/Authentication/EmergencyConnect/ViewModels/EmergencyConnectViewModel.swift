@@ -67,7 +67,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
                 guard let self = self else { return }
 
-                self.logger.logD("EmergencyConnectViewModel", "VPN state changed to \(state)")
+                self.logger.logI("EmergencyConnectViewModel", "VPN state changed to \(state)")
 
                 switch state {
                 case .connected:
@@ -109,7 +109,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
 
     private func connect(using ovpnInfoList: [OpenVPNConnectionInfo]) {
         guard !ovpnInfoList.isEmpty else {
-            logger.logE(Self.self, "Unable to get emergency connect configuration.")
+            logger.logE("EmergencyConnectViewModel", "Unable to get emergency connect configuration.")
             return
         }
 
@@ -130,7 +130,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
 
                 switch completion {
                 case .finished:
-                    self.logger.logD("EmergencyConnectViewModel", "Successfully started OpenVPN.")
+                    self.logger.logI("EmergencyConnectViewModel", "Successfully started OpenVPN.")
                 case .failure(let error):
                     self.logger.logE("EmergencyConnectViewModel", "Failed to start OpenVPN: \(error.localizedDescription)")
                 }

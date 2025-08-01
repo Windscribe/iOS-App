@@ -32,7 +32,7 @@ class FileDatabaseImpl: FileDatabase {
             let fileURL = documentDirectory.appendingPathComponent(path)
             try fileManager.removeItem(at: fileURL)
         } catch {
-            logger.logE(self, "\(error.localizedDescription)")
+            logger.logE("FileDatabaseImpl", "\(error.localizedDescription)")
         }
     }
 
@@ -53,7 +53,7 @@ class FileDatabaseImpl: FileDatabase {
             let fileURL = documentDirectory.appendingPathComponent(path)
             try data.write(to: fileURL)
         } catch {
-            logger.logE(self, "\(error.localizedDescription)")
+            logger.logE("FileDatabaseImpl", "\(error.localizedDescription)")
         }
     }
 
@@ -74,7 +74,7 @@ class FileDatabaseImpl: FileDatabase {
             let fileURL = documentDirectory.appendingPathComponent(path)
             return try Data(contentsOf: fileURL, options: .uncached)
         } catch {
-            logger.logE(self, "\(error.localizedDescription)")
+            logger.logE("FileDatabaseImpl", "\(error.localizedDescription)")
         }
         return nil
     }

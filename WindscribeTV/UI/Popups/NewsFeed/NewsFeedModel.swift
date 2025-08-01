@@ -163,7 +163,7 @@ class NewsFeedModel: NewsFeedModelType {
             if let url = URL(string: standardAction.link) {
                 viewToLaunch.onNext(.safari(url))
             } else {
-                logger.logE(self, "Unable to create url from: \(standardAction.link)")
+                logger.logE("NewsFeedModel", "Unable to create url from: \(standardAction.link)")
             }
         case .promo(let pcpid, let promoCode, _):
             viewToLaunch.onNext(.payment(promoCode ?? "", pcpid))

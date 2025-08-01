@@ -30,7 +30,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
             self.wgConnect()
         }.flatMapCompletable { _ in
             if let error = self.templateWgConfig() {
-                self.logger.logE(self, "Templated wg config failed with error \(error)")
+                self.logger.logE("WireguardConfigRepositoryImpl", "Templated wg config failed with error \(error)")
                 return Completable.error(Errors.parsingError)
             } else {
                 return Completable.empty()

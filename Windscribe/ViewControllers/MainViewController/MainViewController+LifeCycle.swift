@@ -15,7 +15,7 @@ import UIKit
 extension MainViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Main view loaded. Preparing layout.")
+        logger.logD("MainViewController", "Main view loaded. Preparing layout.")
         addViews()
         addCardHeaderView()
         addSearchViews()

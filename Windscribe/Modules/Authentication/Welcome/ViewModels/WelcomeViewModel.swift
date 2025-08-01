@@ -94,7 +94,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 guard let self = self else { return }
                 self.showLoadingView = false
                 if case .failure(let error) = completion {
-                    self.logger.logI("WelcomeViewModel", "Apple sign in error: \(error)")
+                    self.logger.logE("WelcomeViewModel", "Apple sign in error: \(error)")
                     self.handleError(error)
                 }
             }, receiveValue: { [weak self] session in
@@ -118,7 +118,6 @@ class WelcomeViewModelImpl: WelcomeViewModel {
                 }
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
-                self.logger.logD("WelcomeViewModel", "User data is ready")
                 self.routeToMainView.send(true)
             })
             .store(in: &cancellables)

@@ -31,7 +31,7 @@ class SignUpViewController: PreferredFocusedViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Displaying Signup Screen.")
+        logger.logD("SignUpViewController", "Displaying Signup Screen.")
         setup()
         setupLocalized()
         // Do any additional setup after loading the view.
@@ -109,7 +109,7 @@ class SignUpViewController: PreferredFocusedViewController {
             self?.setFailureState(state: state)
         }.disposed(by: disposeBag)
         viewModel.routeTo.bind { [self] _ in
-            self.logger.logD(self, "Moving to home screen.")
+            self.logger.logD("SignUpViewController", "Moving to home screen.")
             router.routeTo(to: RouteID.home, from: self)
         }.disposed(by: disposeBag)
         forgotButton.rx.primaryAction.bind { [self] in

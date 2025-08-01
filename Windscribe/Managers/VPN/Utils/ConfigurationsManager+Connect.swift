@@ -40,7 +40,7 @@ extension ConfigurationsManager {
             guard let self = self else { return }
             do {
                 let config = try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
-                self.logger.logD("VPNConfiguration", "Configuration built successfully \(config.description)")
+                self.logger.logI("VPNConfiguration", "Configuration built successfully \(config.description)")
                 progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
                 let correctedProtocolPort = checkForCustomConfig(config: config, proto: proto, port: port)
@@ -48,36 +48,36 @@ extension ConfigurationsManager {
                 let portName = correctedProtocolPort.portName
 
                 let wrapperProtocol = [udp, tcp, wsTunnel, stealth].contains(protocolName) ? TextsAsset.openVPN : protocolName
-                self.logger.logD("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)")
+                self.logger.logI("VPNConfiguration", "Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)")
                 progressPublisher.send(.update("Attempting connection: [Location: \(locationID) \(protocolName) \(portName) \(vpnSettings.description)"))
                 guard !Task.isCancelled else { return }
-                self.logger.logD("VPNConfiguration", "disconnectExistingConnections")
+                self.logger.logI("VPNConfiguration", "disconnectExistingConnections")
                 try await self.disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
 
                 guard !Task.isCancelled else { return }
-                self.logger.logD("VPNConfiguration", "prepareNextManager")
+                self.logger.logI("VPNConfiguration", "prepareNextManager")
                 nextManager = try await self.prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
 
                 try await Task.sleep(nanoseconds: 1_000_000_000)
-                self.logger.logD("VPNConfiguration", "Building configuration.")
+                self.logger.logI("VPNConfiguration", "Building configuration.")
                 progressPublisher.send(.update("Building configuration."))
 
                 guard !Task.isCancelled else { return }
 
-                self.logger.logD("VPNConfiguration", "Building NEVPNTunnelProtocol.")
+                self.logger.logI("VPNConfiguration", "Building NEVPNTunnelProtocol.")
                 progressPublisher.send(.update("Building NEVPNTunnelProtocol."))
                 guard let nextManager = nextManager else { return }
                 try config.buildProtocol(settings: vpnSettings, manager: nextManager)
 
-                self.logger.logD("VPNConfiguration", "Applying user settings.")
+                self.logger.logI("VPNConfiguration", "Applying user settings.")
                 progressPublisher.send(.update("Applying user settings."))
                 config.applySettings(settings: vpnSettings, manager: nextManager)
 
-                self.logger.logD("VPNConfiguration", "Saving configuration.")
+                self.logger.logI("VPNConfiguration", "Saving configuration.")
                 progressPublisher.send(.update("Saving configuration."))
                 try await self.saveToPreferences(manager: nextManager)
                 cacheTunnelManager(manager: nextManager)
-                self.logger.logD("VPNConfiguration", "Starting VPN connection.")
+                self.logger.logI("VPNConfiguration", "Starting VPN connection.")
                 progressPublisher.send(.update("Starting VPN connection."))
                 try nextManager.connection.startVPNTunnel()
 
@@ -152,13 +152,13 @@ extension ConfigurationsManager {
                     }
                 }
             } catch {
-                self.logger.logD("VPNConfiguration", "Failed connection with error: \(error).")
+                self.logger.logE("VPNConfiguration", "Failed connection with error: \(error).")
                 progressPublisher.send(completion: .failure(error))
             }
         }
         return progressPublisher
             .handleEvents(receiveCancel: {
-                self.logger.logD("VPNConfiguration", "Cancelling connection task.")
+                self.logger.logI("VPNConfiguration", "Cancelling connection task.")
                 task.cancel()
                 isCancelled = true
                 Task {
@@ -183,7 +183,7 @@ extension ConfigurationsManager {
                 try await manager.connection.fetchLastDisconnectError()
             } catch {
                 if let nsError = error as NSError? {
-                    self.logger.logD("VPNConfiguration", "Connection error: \(nsError)")
+                    self.logger.logE("VPNConfiguration", "Connection error: \(nsError)")
                     if [12, 8, 50].contains(nsError.code) {
                         throw VPNConfigurationErrors.authFailure
                     }

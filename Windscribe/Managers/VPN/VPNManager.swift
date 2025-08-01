@@ -148,7 +148,7 @@ class VPNManager: VPNManagerProtocol {
         }
         set(value) {
             if value != activeVPNManager {
-                logger.logI(VPNManager.self, "Active VPN Manager changed to \(value)")
+                logger.logI("VPNManager", "Active VPN Manager changed to \(value)")
             }
             preferences.saveActiveManagerKey(key: value.username)
         }
@@ -185,7 +185,7 @@ extension VPNManager {
                         ruleDisconnect.interfaceTypeMatch = .cellular
                     #endif
                     onDemandRules.append(ruleDisconnect)
-                    logger.logD(VPNManager.self, "Added On demand disconnect rule for cellular network.")
+                    logger.logD("VPNManager", "Added On demand disconnect rule for cellular network.")
                 }
             }
             let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
@@ -193,7 +193,7 @@ extension VPNManager {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
                 ruleDisconnect.ssidMatch = unsecureWifiNetworks
                 onDemandRules.append(ruleDisconnect)
-                logger.logD(VPNManager.self, "Added On demand disconnect rule for Wi-fi networks. \(unsecureWifiNetworks.joined(separator: "-").description)")
+                logger.logD("VPNManager", "Added On demand disconnect rule for Wi-fi networks. \(unsecureWifiNetworks.joined(separator: "-").description)")
             }
         }
         let ruleConnect = NEOnDemandRuleConnect()

@@ -26,7 +26,6 @@ extension MainViewController {
         viewModel.portMap.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { portMaps in
             let portMapProvidedProtocols = (portMaps?.map { $0.heading } ?? []).sorted()
             if appProtocols != portMapProvidedProtocols {
-                self.logger.logD(self, "Updating Portmap to include missing protocols.")
                 self.viewModel.loadServerList()
                 self.viewModel.loadPortMap()
             }
@@ -60,7 +59,7 @@ extension MainViewController {
             }
 
         }, onError: { error in
-            self.logger.logE(self, "Realm server list notification error \(error.localizedDescription)")
+            self.logger.logE("MainViewController", "Realm server list notification error \(error.localizedDescription)")
 
         }).disposed(by: disposeBag)
     }
@@ -86,12 +85,12 @@ extension MainViewController {
             }
 
         }, onError: { [self] error in
-            self.logger.logE(self, "Realm static ip list notification error \(error.localizedDescription)")
+            self.logger.logE("MainViewController", "Realm static ip list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
 
     func loadCustomConfigs() {
-        logger.logD(self, "Loading custom configs list from disk.")
+        logger.logD("MainViewController", "Loading custom configs list from disk.")
         viewModel.customConfigs.subscribe(on: MainScheduler.instance).observe(on: MainScheduler.instance).subscribe(onNext: { [self] customconfigs in
             var customConfigs = [CustomConfigModel]()
             guard let customconfigs = customconfigs else { return }
@@ -105,7 +104,7 @@ extension MainViewController {
             self.customConfigTableView.delegate = self.customConfigListTableViewDataSource
             self.customConfigTableView.reloadData()
         }, onError: { [self] error in
-            self.logger.logE(self, "Realm custom config list notification error \(error.localizedDescription)")
+            self.logger.logE("MainViewController", "Realm custom config list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
 
@@ -139,7 +138,7 @@ extension MainViewController {
                     Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.latencyLoadTimeOut), userInfo: nil, repeats: false)
                 }
             } else {
-                self.logger.logD(self, "Connected to VPN Stopping latency refresh.")
+                self.logger.logD("MainViewController", "Connected to VPN Stopping latency refresh.")
                 self.endRefreshControls()
             }
         }).disposed(by: disposeBag)

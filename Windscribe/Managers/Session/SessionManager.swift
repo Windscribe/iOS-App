@@ -60,14 +60,14 @@ class SessionManager: SessionManaging {
                     }
                 }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
                     self?.userRepo.update(session: session)
-                    self?.logger.logD("SessionManager", "Session updated for \(session.username)")
+                    self?.logger.logI("SessionManager", "Session updated for \(session.username)")
                     self?.sessionFetchInProgress = false
                 }, onFailure: { [weak self] error in
                     if let errors = error as? Errors,
                        errors == .sessionIsInvalid {
                         self?.logoutUser()
                     } else {
-                        self?.logger.logD("SessionManager", "Failed to update error")
+                        self?.logger.logE("SessionManager", "Failed to update error: \(error)")
                     }
                     self?.sessionFetchInProgress = false
                 }).disposed(by: disposeBag)
@@ -96,7 +96,7 @@ class SessionManager: SessionManaging {
                 self.checkForStatus()
                 self.checkForSessionChange()
             }, onError: { error in
-                self.logger.logD("SessionManager", "Realm user preferences notification error \(error.localizedDescription)")
+                self.logger.logE("SessionManager", "Realm user preferences notification error \(error.localizedDescription)")
             }
         ).disposed(by: disposeBag)
     }
@@ -107,7 +107,6 @@ class SessionManager: SessionManaging {
         if let hoursPassed = timePassed.hour {
             if hoursPassed > 23 {
                 lastCheckForServerConfig = timeNow
-                logger.logD("SessionManager", "Updating server configs.")
                 credentialsRepo.getUpdatedOpenVPNCrendentials().flatMap { _ in
                     self.credentialsRepo.getUpdatedServerConfig()
                 }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
@@ -121,10 +120,10 @@ class SessionManager: SessionManaging {
             wgCredentials.delete()
         }
         if session.status == 3 {
-            logger.logD("SessionManager", "User is banned.")
+            logger.logI("SessionManager", "User is banned.")
             vpnManager.simpleDisableConnection()
         } else if session.status == 2 && !locationsManager.isCustomConfigSelected() {
-            logger.logD("SessionManager", "User is out of data.")
+            logger.logI("SessionManager", "User is out of data.")
             vpnManager.simpleDisableConnection()
         }
     }
@@ -134,10 +133,10 @@ class SessionManager: SessionManaging {
             .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onCompleted: {
-                self.logger.logD("SessionManager", "Successfully update latency.")
+                self.logger.logI("SessionManager", "Successfully update latency.")
                 self.refreshLocations()
             }, onError: { _ in
-                self.logger.logD("SessionManager", "Failed to update latency.")
+                self.logger.logI("SessionManager", "Failed to update latency.")
                 self.refreshLocations()
             })
             .disposed(by: disposeBag)
@@ -164,34 +163,34 @@ class SessionManager: SessionManaging {
     func checkForSessionChange() {
         logger.logD("SessionManager", "Comparing new session with old session.")
         guard let newSession = session, let oldSession = localDatabase.getOldSession() else {
-            logger.logD("SessionManager", "No old session found")
+            logger.logI("SessionManager", "No old session found")
             return
         }
         if oldSession.locHash != newSession.locHash {
             serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if oldSession.getALCList() != newSession.getALCList() || (newSession.alc.count == 0 && oldSession.alc.count != 0) {
-            logger.logD("SessionManager", "ALC changes detected. Request to retrieve server list")
+            logger.logI("SessionManager", "ALC changes detected. Request to retrieve server list")
             serverRepo.getUpdatedServers().subscribe(onSuccess: { _ in
                 self.checkLocationValidity()
             }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         let sipCount = localDatabase.getStaticIPs()?.count ?? 0
         if sipCount != newSession.getSipCount() {
-            logger.logD("SessionManager", "SIP changes detected. Request to retrieve static ip list")
+            logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
             staticIPRepo.getStaticServers().flatMap { _ in
                 self.checkLocationValidity()
                 return self.latencyRepo.loadStaticIpLatency()
             }.subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
         }
         if !newSession.isPremium && oldSession.isPremium {
-            logger.logD("SessionManager", "User's pro plan expired.")
+            logger.logI("SessionManager", "User's pro plan expired.")
             serverRepo.getUpdatedServers().delaySubscription(RxTimeInterval.seconds(3), scheduler: MainScheduler.asyncInstance).subscribe(
                 onSuccess: { _ in
-                    self.logger.logD("SessionManager", "Updated server list.")
+                    self.logger.logI("SessionManager", "Updated server list.")
                     self.checkLocationValidity()
                 }, onFailure: { _ in
-                    self.logger.logD("SessionManager", "Failed to update server list.")
+                    self.logger.logE("SessionManager", "Failed to update server list.")
                     self.checkLocationValidity()
                 }
             ).disposed(by: disposeBag)
@@ -259,12 +258,12 @@ class SessionManager: SessionManaging {
             .observe(on: MainScheduler.asyncInstance)
             .subscribe(onSuccess: { [self] response in
                 if response.success {
-                    logger.logI(self, "Session successfully deleted: \(response.message)")
+                    logger.logI("SessionManager", "Session successfully deleted: \(response.message)")
                 } else {
-                    logger.logI(self, "Delete session API returned failure: \(response.message)")
+                    logger.logI("SessionManager", "Delete session API returned failure: \(response.message)")
                 }
             }, onFailure: { [self] error in
-                logger.logE(self, "Failed to delete session after retries: \(error.localizedDescription)")
+                logger.logE("SessionManager", "Failed to delete session after retries: \(error.localizedDescription)")
             })
             .disposed(by: disposeBag)
 

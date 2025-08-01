@@ -43,7 +43,7 @@ class AppReviewManager: AppReviewManaging {
 
     func requestReviewIfAvailable(session: Session?) {
         guard shouldShowReviewRequest(session: session) else {
-            logger.logD(self, "Rate Dialog: Do not show! All of the review request criterias shall be met.")
+            logger.logD("AppReviewManager", "Rate Dialog: Do not show! All of the review request criterias shall be met.")
             return
         }
 
@@ -53,7 +53,7 @@ class AppReviewManager: AppReviewManaging {
     func shouldShowReviewRequest(session: Session?) -> Bool {
         // User Session is necessary to detect user status
         guard let session = session else {
-            logger.logD(self, "Rate Dialog: Do not show, no session available")
+            logger.logD("AppReviewManager", "Rate Dialog: Do not show, no session available")
             return false
         }
 
@@ -87,24 +87,22 @@ class AppReviewManager: AppReviewManaging {
     private func checkTimeElapseStatus() -> Bool {
         guard !hasReviewRequestedBefore() else {
             // Review has requested before check if it is more than 180 days
-            logger.logD(self, "Rate Dialog: The dialog has been shown before, lets check if it was more than 180 days ago.")
+            logger.logD("AppReviewManager", "Rate Dialog: The dialog has been shown before, lets check if it was more than 180 days ago.")
 
             guard let dateLastShown = preferences.getWhenRateUsPopupDisplayed() else {
-                logger.logD(self, "Rate Dialog: We don't have a date for last show, but we have the information that is was shown, let's try showing again.")
+                logger.logD("AppReviewManager", "Rate Dialog: We don't have a date for last show, but we have the information that is was shown, let's try showing again.")
                 return true
             }
 
             guard daysSinceLastReviewRequest(dateLastShown: dateLastShown) > 180 else {
-                logger.logD(self, "Rate Dialog: Do not show! Rate dialog was shown less than 180 days ago.")
+                logger.logD("AppReviewManager", "Rate Dialog: Do not show! Rate dialog was shown less than 180 days ago.")
                 return false
             }
 
-            logger.logD(self, "Rate Dialog: Show Dialog! User has seen the dialog, but more than 30 days ago, lets try again.")
             return true
         }
 
         // Review has not requested before so request it
-        logger.logD(self, "Rate Dialog: The dialog has been shown before, lets check if it was more than 30 days ago.")
         return true
     }
 
@@ -113,7 +111,6 @@ class AppReviewManager: AppReviewManaging {
     /// - Returns: If user used soem amount of data that will be enough for rating
     private func checkUsageBandwithStatus(session: Session) -> Bool {
         guard session.getDataUsedInMB() >= 1024 else {
-            logger.logD(self, "Rate Dialog: Do not show! User has not spent 1Gb yet")
             return false
         }
 
@@ -125,7 +122,7 @@ class AppReviewManager: AppReviewManaging {
     /// - Returns: If user is older than 2 days old
     private func checkLoggedStatus() -> Bool {
         guard daysSinceLogin() >= 2 else {
-            logger.logD(self, "Rate Dialog: Do not show! It has been less than 2 days since first time login")
+            logger.logD("AppReviewManager", "Rate Dialog: Do not show! It has been less than 2 days since first time login")
             return false
         }
 
@@ -143,12 +140,12 @@ class AppReviewManager: AppReviewManaging {
         guard session.status == 1 else {
             let statusDescription = session.status == 2 ? "Out of Data" :
                                     (session.status == 3 ? "Banned" : "Unknown: \(session.status)")
-            logger.logD(self, "Rate Dialog: Do not show! Session not in valid state: \(statusDescription)")
+            logger.logD("AppReviewManager", "Rate Dialog: Do not show! Session not in valid state: \(statusDescription)")
 
             return false
         }
 
-        logger.logD(self, "Rate Dialog: Show Dialog! Session is in scope also valid")
+        logger.logD("AppReviewManager", "Rate Dialog: Show Dialog! Session is in scope also valid")
         return true
     }
 }
@@ -168,7 +165,7 @@ extension AppReviewManager {
 
     private func daysSinceLastReviewRequest(dateLastShown: Date) -> Int {
         let timeSinceLastTime = dateLastShown.daysSince
-        logger.logD(self, "Rate Dialog: Rate Dialog last shown at: \(dateLastShown), it was shown \(timeSinceLastTime) days ago.")
+        logger.logD("AppReviewManager", "Rate Dialog: Rate Dialog last shown at: \(dateLastShown), it was shown \(timeSinceLastTime) days ago.")
 
         return timeSinceLastTime
     }
@@ -180,7 +177,7 @@ extension AppReviewManager {
 
     private func promptReview() {
         guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
-            logger.logD(self, "Rate Dialog: No active UIWindowScene found.")
+            logger.logD("AppReviewManager", "Rate Dialog: No active UIWindowScene found.")
             return
         }
 #if os(iOS)
@@ -200,18 +197,18 @@ extension AppReviewManager {
 
             // If a review prompt was shown, do nothing further
             if reviewPromptDetected.value {
-                logger.logD(self, "Rate Dialog: Review prompt was likely SHOWN (new window detected).")
+                logger.logD("AppReviewManager", "Rate Dialog: Review prompt was likely SHOWN (new window detected).")
                 return
             }
 
             // If no review prompt was detected, open the App Store review page
-            logger.logD(self, "Rate Dialog: Review prompt was NOT shown (no new window appeared).")
+            logger.logD("AppReviewManager", "Rate Dialog: Review prompt was NOT shown (no new window appeared).")
             self.promptReviewWithConfirmation()
         }
 
         #elseif os(tvOS)
         // SKStoreReviewController is not available on tvOS, so redirect to the App Store review page
-        logger.logD(self, "Rate Dialog: SKStoreReviewController is not available on tvOS, opening App Store review page.")
+        logger.logD("AppReviewManager", "Rate Dialog: SKStoreReviewController is not available on tvOS, opening App Store review page.")
         promptReviewWithConfirmation()
         #endif
     }
@@ -227,7 +224,7 @@ extension AppReviewManager {
             .sink { _ in
                 // If detected, mark that the review prompt was shown
                 reviewPromptDetected.send(true)
-                self.logger.logD(self, "Rate Dialog: Review prompt was SHOWN - SKStoreReviewPresentationWindow detected.")
+                self.logger.logD("AppReviewManager", "Rate Dialog: Review prompt was SHOWN - SKStoreReviewPresentationWindow detected.")
             }
             .store(in: &cancellables)
 

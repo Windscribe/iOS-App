@@ -54,16 +54,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override init() {
         super.init()
         // Ensure LocalizationBridge is initialized for network extension context
-        logger.logD("PacketTunnelProvider", "override init to make sure Localization initialized")
         ensureLocalizationInitialized()
     }
 
     private func ensureLocalizationInitialized() {
-        logger.logD("PacketTunnelProvider", "ensureLocalizationInitialized called, checking if LocalizationBridge is initialized")
         if LocalizationBridge.needsSetup {
             let localizationService = LocalizationServiceImpl(logger: logger)
             LocalizationBridge.setup(localizationService)
-            logger.logD("PacketTunnelProvider", "ensureLocalizationInitialized - LocalizationBridge was not initialized. It is now initialized!")
         }
     }
 
@@ -97,16 +94,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
         // Load configuration from preferences.
         wgCrendentials.load()
-        logger.logD("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
+        logger.logI("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
             apiCallManager.getSession().subscribe(onSuccess: { [weak self] session in
                 guard let self = self else { return }
                 if session.status == 1 {
-                    self.logger.logD("PacketTunnelProvider", "User status is Okay, attempt rebuilding credentials.")
+                    self.logger.logI("PacketTunnelProvider", "User status is Okay, attempt rebuilding credentials.")
                     self.runningHealthCheck = true
                     self.requestNewInterfaceIp(completionHandler: completionHandler)
                 } else {
-                    self.logger.logD("PacketTunnelProvider", "User status is \(session.status), do not reconnect.")
+                    self.logger.logI("PacketTunnelProvider", "User status is \(session.status), do not reconnect.")
                     stopTunnel(completionHandler: completionHandler)
                 }
             }, onFailure: { error in
@@ -136,7 +133,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         }
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
-            logger.logD("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
+            logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
             if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
                 tunnelConfiguration.dnsSettings = dnsSettings
             }
@@ -144,7 +141,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         adapter.start(tunnelConfiguration: tunnelConfiguration) { adapterError in
             guard let adapterError = adapterError else {
                 let interfaceName = self.adapter.interfaceName ?? "unknown"
-                self.logger.logD("PacketTunnelProvider", "Tunnel interface is \(interfaceName)")
+                self.logger.logI("PacketTunnelProvider", "Tunnel interface is \(interfaceName)")
                 #if os(iOS)
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
                 #endif
@@ -183,7 +180,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func stopTunnel(with _: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        logger.logD("PacketTunnelProvider", "Stopping WireGuard tunnel.")
+        logger.logI("PacketTunnelProvider", "Stopping WireGuard tunnel.")
         adapter.stop { error in
             ErrorNotifier.removeLastErrorFile()
 
@@ -221,7 +218,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         let currentTime = Date().timeIntervalSince1970
         let lastWakeTime = preferences.getWireguardWakeupTime()
         if lastWakeTime == 0 || currentTime - lastWakeTime >= 600 {
-            logger.logD("PacketTunnelProvider", "Device wake up.")
+            logger.logI("PacketTunnelProvider", "Device wake up.")
             UserDefaults.standard.set(currentTime, forKey: "lastWakeTime")
             preferences.saveWireguardWakeupTime(value: currentTime)
             onStaleConnection()
@@ -235,7 +232,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Called when handshake fails. Checks user status and authentication.
     func onStaleConnection() {
         if !runningHealthCheck && !preferences.isCustomConfigSelected() {
-            logger.logD("PacketTunnelProvider", "Running health connection health check.")
+            logger.logI("PacketTunnelProvider", "Running health connection health check.")
             DispatchQueue.global().async {
                 self.runningHealthCheck = true
                 self.getSession()
@@ -246,7 +243,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     /// Request new interface ip from wg init + wg connect
     /// Check if interface changed or peer changed (Account status change.)
     private func setNewTunnelInterfaceIp(updatedConfig: TunnelConfiguration) {
-        logger.logD("PacketTunnelProvider", "Interface has address changed")
+        logger.logI("PacketTunnelProvider", "Interface has address changed")
         reasserting = true
         replacePeer(tunnelConfiguration: updatedConfig)
     }
@@ -255,7 +252,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     func getSession() {
         // Ensure LocalizationBridge is initialized before potential error handling
         ensureLocalizationInitialized()
-        logger.logD("PacketTunnelProvider", "Requesting user session update.")
+        logger.logI("PacketTunnelProvider", "Requesting user session update.")
         apiCallManager.getSession()
             .subscribe(onSuccess: { [self] data in
                 if data.status == 1 {
@@ -264,7 +261,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     self.runningHealthCheck = false
                     wgCrendentials.delete()
                     preferences.saveForceDisconnect(value: true)
-                    self.logger.logD("PacketTunnelProvider", "User status is banned/expired")
+                    self.logger.logI("PacketTunnelProvider", "User status is banned/expired")
                     self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
                 }
             }, onFailure: { error in
@@ -289,14 +286,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Ensure LocalizationBridge is initialized before any potential error handling
         ensureLocalizationInitialized()
         do {
-            logger.logD("PacketTunnelProvider", "Catching existing configuration.")
             var tunnelConfig: TunnelConfiguration? = nil
             if let config = wgCrendentials.asWgCredentialsString(), wgCrendentials.initialized() {
                 tunnelConfig = try TunnelConfiguration(fromWgQuickConfig: config)
             }
             let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
-            logger.logD("PacketTunnelProvider", "Requesting new interface address.")
             wgConfigRepository.getCredentials().subscribe(onCompleted: {
                 self.runningHealthCheck = false
                 // Restart extesnion if connection to apply new configuration.
@@ -310,17 +305,15 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                             let updatedConfig = try TunnelConfiguration(fromWgQuickConfig: self.wgCrendentials.asWgCredentialsString()!)
                             if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
                                 let customDNSValue = self.preferences.getCustomDNSValue()
-                                self.logger.logD("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
+                                self.logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
                                 if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
                                     updatedConfig.dnsSettings = dnsSettings
                                 }
                             }
                             self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
                         } catch {
-                            self.logger.logD("PacketTunnelProvider", "Failed to get wg configuration.")
+                            self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration: \(error.localizedDescription)")
                         }
-                    } else {
-                        self.logger.logD("PacketTunnelProvider", "Same interface address.")
                     }
                 }
             }, onError: { error in
@@ -351,9 +344,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     private func replacePeer(tunnelConfiguration: TunnelConfiguration) {
         adapter.update(tunnelConfiguration: tunnelConfiguration) { error in
             if let error = error {
-                self.logger.logE("PacketTunnelProvider", "PacketTunnelProvider: Error updating tunnel configuration. \(error.localizedDescription)")
-            } else {
-                self.logger.logD("PacketTunnelProvider", "PacketTunnelProvider: Successfully updated peer.")
+                self.logger.logE("PacketTunnelProvider", "Error updating tunnel configuration. \(error)")
             }
             self.reasserting = false
         }

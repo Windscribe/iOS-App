@@ -66,7 +66,7 @@ final class EnterCredentialsViewModelImpl: EnterCredentialsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
-                    self?.logger.logI("EnterCredentialsViewModel", "Theme subscription error: \(error)")
+                    self?.logger.logE("EnterCredentialsViewModel", "Theme subscription error: \(error)")
                 }
             }, receiveValue: { [weak self] in
                 self?.isDarkMode = $0

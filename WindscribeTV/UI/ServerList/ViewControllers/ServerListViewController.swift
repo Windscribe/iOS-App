@@ -90,7 +90,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logger.logD(self, "Displaying Server List View")
+        logger.logD("ServerListViewController", "Displaying Server List View")
     }
 
 
@@ -151,7 +151,7 @@ class ServerListViewController: PreferredFocusedViewController, SideMenuOptionVi
             }
             self.changeEmptyViewVisibility()
         }, onError: { error in
-            self.logger.logI(self, "Realm server list notification error \(error.localizedDescription)")
+            self.logger.logE("ServerListViewController", "Realm server list notification error \(error.localizedDescription)")
         }).disposed(by: disposeBag)
     }
 

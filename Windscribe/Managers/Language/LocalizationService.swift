@@ -27,7 +27,7 @@ class LocalizationServiceImpl: LocalizationService {
               let languageBundle = Bundle(path: path) else {
             bundle = .main
 
-            logger.logD("LocalizationServiceImpl", "Bundle doesnt have the the seletected language")
+            logger.logD("LocalizationService", "Bundle doesnt have the the seletected language")
 
             return
         }

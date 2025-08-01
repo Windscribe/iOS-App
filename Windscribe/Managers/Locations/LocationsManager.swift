@@ -203,16 +203,16 @@ class LocationsManager: LocationsManagerType {
     func checkLocationValidity(checkProAccess: () -> Bool) {
         let locationID = getLastSelectedLocation()
         guard !locationID.isEmpty, locationID != "0" else {
-            self.logger.logD(self, "Location is empty or invalid.. Switching to Best location.")
+            self.logger.logI("LocationsManager", "Location is empty or invalid.. Switching to Best location.")
             updateToBestLocation()
             return
         }
         guard let currentLocation = try? getLocation(from: locationID) else {
-            self.logger.logD(self, "Unable to find location with ID: \(locationID). Switching to Sister location.")
+            self.logger.logI("LocationsManager", "Unable to find location with ID: \(locationID). Switching to Sister location.")
             if let sisterLocationID = getSisterLocationID(from: locationID) {
                 saveLastSelectedLocation(with: sisterLocationID)
             } else {
-                self.logger.logD(self, "Unable to find sister location. Switching to Best location.")
+                self.logger.logI("LocationsManager", "Unable to find sister location. Switching to Best location.")
                 updateToBestLocation()
             }
             return

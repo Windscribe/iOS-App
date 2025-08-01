@@ -367,14 +367,14 @@ extension ConfigurationsManager {
             }
         } catch {
             let updatedLocation = handleLocationFallback(for: lastLocation)
-            logger.logD("VPNConfiguration", "Updated location to \(updatedLocation ?? "n/a")")
+            logger.logI("VPNConfiguration", "Updated location to \(updatedLocation ?? "n/a")")
             return updatedLocation
         }
     }
 
     private func handleLocationFallback(for location: String) -> String? {
         let locationID = locationsManager.getId(location: location)
-        logger.logD("VPNConfiguration", "Looking for fallback location for \(location)")
+        logger.logI("VPNConfiguration", "Looking for fallback location for \(location)")
         guard let servers = localDatabase.getServers() else { return nil }
 
         var groupResult: GroupModel?

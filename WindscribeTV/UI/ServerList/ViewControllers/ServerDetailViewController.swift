@@ -39,7 +39,7 @@ class ServerDetailViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        logger.logD(self, "Displaying Server List View")
+        logger.logD("ServerDetailViewController", "Displaying Server List View")
     }
 
     func setupUI() {

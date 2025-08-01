@@ -26,6 +26,7 @@ extension MainViewController {
                 latencyViewModel.loadAllServerLatency(
                     onAllServerCompletion: { [weak self] in
                         guard let self else { return }
+
                         self.loadServerTable(servers: (try? self.viewModel.serverList.value()) ?? [])
                         self.favTableView.reloadData()
                         self.endRefreshControls(update: false)
@@ -155,7 +156,7 @@ extension MainViewController {
 
     @objc
     func applicationWillEnterForeground() {
-        logger.logD(self, "Application will enter foreground")
+        logger.logD("MainViewController", "Application will enter foreground")
         restartServerRefreshControl()
     }
 

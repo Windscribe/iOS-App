@@ -71,7 +71,7 @@ class ProtocolManager: ProtocolManagerType {
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         self.locationManager = locationManager
-        logger.logI(self, "Starting connection manager.")
+        logger.logI("ProtocolManager", "Starting connection manager.")
         bindData()
         Task {
             await refreshProtocols(shouldReset: true, shouldReconnect: false)
@@ -94,7 +94,6 @@ class ProtocolManager: ProtocolManagerType {
         connectivity.network.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] network in
             Task { @MainActor in
-                self?.logger.logD("ProtocolManager", "connectivity Network : \(network)")
                 await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
             }
         }).disposed(by: disposeBag)
@@ -144,13 +143,12 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         if connectionMode == Fields.Values.manual {
-            logger.logD(self, "Manual protocol : \(manualProtocol)")
+            logger.logD("ProtocolManager", "Manual protocol : \(manualProtocol)")
             appendPort(proto: manualProtocol, port: manualPort)
             setPriority(proto: manualProtocol, type: .normal)
         }
         WifiManager.shared.saveCurrentWifiNetworks()
         if let currentNetwork = securedNetwork.getCurrentNetwork(), currentNetwork.preferredProtocolStatus == true {
-            logger.logD(self, "Secured Network : \(currentNetwork.SSID), preferredProtocol: \(currentNetwork.preferredProtocol)")
             let preferredProto = currentNetwork.preferredProtocol
             let preferredPort = currentNetwork.preferredPort
             appendPort(proto: preferredProto, port: preferredPort)
@@ -163,7 +161,7 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         for displayProtocol in failedProtocols {
-            logger.logD(self, "Failed: \(displayProtocol.protocolPort.protocolName)")
+            logger.logD("ProtocolManager", "Failed: \(displayProtocol.protocolPort.protocolName)")
             setPriority(proto: displayProtocol.protocolPort.protocolName, type: .fail)
         }
 
@@ -184,7 +182,7 @@ class ProtocolManager: ProtocolManagerType {
             protocolsToConnectList.first?.viewType = .nextUp
         }
         let log = "Protocols to connect List: " + protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
-        logger.logI(self, log)
+        logger.logI("ProtocolManager", log)
 
         currentProtocolSubject.onNext(getFirstProtocol())
         connectionProtocolSubject.onNext(shouldReconnect ? (protocolPort: getFirstProtocol(), connectionType: .user) : nil)
@@ -219,7 +217,7 @@ class ProtocolManager: ProtocolManagerType {
     func onConnectStateChange(state: NEVPNStatus) {
         accessQueue.async { [self] in
             userSelected = nil
-            logger.logI(self, "Connection state changed to \(state).")
+            logger.logI("ProtocolManager", "Connection state changed to \(state).")
             if state == .connected {
                 protocolsToConnectList.first { $0.viewType == .nextUp
                 }?.viewType = .connected
@@ -235,7 +233,7 @@ class ProtocolManager: ProtocolManagerType {
 
     /// User/App selected this protocol to connect.
     func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType) {
-        logger.logI(self, "User selected \(proto) to connect.")
+        logger.logI("ProtocolManager", "User selected \(proto) to connect.")
         userSelected = proto
         setPriority(proto: proto.protocolName)
         let firstProtocol = getFirstProtocol()
@@ -248,7 +246,7 @@ class ProtocolManager: ProtocolManagerType {
         if goodProtocol != nil {
             let diff = Date().timeIntervalSince(resetGoodProtocolTime ?? Date())
             if diff >= 43200 {
-                logger.logI(self, "Resetting good Protocol after 12 hours.")
+                logger.logI("ProtocolManager", "Resetting good Protocol after 12 hours.")
                 Task { @MainActor in
                     await reset()
                     scheduledTimer.invalidate()
@@ -261,10 +259,10 @@ class ProtocolManager: ProtocolManagerType {
     func onProtocolFail() async -> Bool {
         userSelected = nil
         let failedProtocol = await getNextProtocol()
-        logger.logI(self, "\(failedProtocol.protocolName) failed to connect.")
+        logger.logI("ProtocolManager", "\(failedProtocol.protocolName) failed to connect.")
         setPriority(proto: failedProtocol.protocolName, type: .fail)
         if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
-            logger.logI(self, "No more protocol left to connect.")
+            logger.logI("ProtocolManager", "No more protocol left to connect.")
             await reset()
             currentProtocolSubject.onNext(getFirstProtocol())
             return true

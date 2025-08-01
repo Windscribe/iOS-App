@@ -75,10 +75,10 @@ class LivecycleManager: LivecycleManagerType {
         let info = try? vpnManager.vpnInfo.value()
         if connectivity.internetConnectionAvailable() {
             if info?.killSwitch == true && vpnManager.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
-                logger.logD("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
+                logger.logI("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
                 vpnManager.simpleDisableConnection()
             } else if vpnManager.isConnected() && testTask == nil {
-                logger.logD("LivecycleManager", "VPN conencted. testing conenctivity.")
+                logger.logI("LivecycleManager", "VPN conencted. testing conenctivity.")
                 testTask = testConnectivity()
             }
         }
@@ -87,7 +87,7 @@ class LivecycleManager: LivecycleManagerType {
     /// App foreground.
     func appEnteredForeground() {
         checkForKillSwitch()
-        logger.logD("LivecycleManager", "App internet moved to foreground.")
+        logger.logI("LivecycleManager", "App internet moved to foreground.")
         becameActiveTrigger.onNext(())
         sessionManager.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
@@ -106,7 +106,7 @@ class LivecycleManager: LivecycleManagerType {
         return Task { @MainActor in
             do {
                 let network = connectivity.getNetwork()
-                self.logger.logD("LivecycleManager", "Network: \(network)")
+                self.logger.logI("LivecycleManager", "Network: \(network)")
 
                 try await withCheckedThrowingContinuation { continuation in
                     ipRepository.getIp().retry(3).subscribe(onSuccess: { _ in
@@ -120,7 +120,7 @@ class LivecycleManager: LivecycleManagerType {
                 testTask = nil
             } catch {
                 testTask = nil
-                self.logger.logD("LivecycleManager", "Connected to VPN but no internet. \(error)")
+                self.logger.logE("LivecycleManager", "Connected to VPN but no internet. \(error)")
                 try await self.validateLocation()
             }
         }
@@ -131,14 +131,14 @@ class LivecycleManager: LivecycleManagerType {
         do {
             let updatedId = try await configManager.validateLocation(lastLocation: id)
             if let updatedId = updatedId, id != updatedId {
-                logger.logD("LivecycleManager", "Location is not valid, updated to \(updatedId)")
+                logger.logI("LivecycleManager", "Location is not valid, updated to \(updatedId)")
                 try await connectToVPN(updatedLocationId: updatedId)
             } else {
-                logger.logD("LivecycleManager", "Location is valid connecting to same network.")
+                logger.logI("LivecycleManager", "Location is valid connecting to same network.")
                 try await connectToVPN(updatedLocationId: id)
             }
         } catch {
-            logger.logD("LivecycleManager", "Error: \(error)")
+            logger.logE("LivecycleManager", "Error: \(error)")
             try await disconenctFromVPN()
         }
     }
@@ -149,10 +149,10 @@ class LivecycleManager: LivecycleManagerType {
                 receiveCompletion: { result in
                     switch result {
                     case .finished:
-                        self.logger.logD("LivecycleManager", "Successfully disconnected from VPN.")
+                        self.logger.logI("LivecycleManager", "Successfully disconnected from VPN.")
                         continuation.resume()
                     case let .failure(error):
-                        self.logger.logD("LivecycleManager", "Error disconnecting from VPN \(error)")
+                        self.logger.logE("LivecycleManager", "Error disconnecting from VPN \(error)")
                         continuation.resume(throwing: error)
                     }
                 },
@@ -175,14 +175,14 @@ class LivecycleManager: LivecycleManagerType {
                 receiveCompletion: { result in
                     switch result {
                     case .finished:
-                        self.logger.logD("LivecycleManager", "Successfully connected to VPN.")
+                        self.logger.logI("LivecycleManager", "Successfully connected to VPN.")
                         continuation.resume()
                     case let .failure(error):
-                        self.logger.logD("LivecycleManager", "Error connecting to VPN \(error)")
+                        self.logger.logE("LivecycleManager", "Error connecting to VPN \(error)")
                         continuation.resume(throwing: error)
                     }
                 },
-                receiveValue: { _ in self.logger.logD("LivecycleManager", "Updated from VPN connection.") }
+                receiveValue: { _ in self.logger.logI("LivecycleManager", "Updated from VPN connection.") }
             )
         }
     }

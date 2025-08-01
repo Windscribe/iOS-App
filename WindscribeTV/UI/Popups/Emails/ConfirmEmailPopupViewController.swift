@@ -20,7 +20,7 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Confirm Email Popup Shown.")
+        logger.logD("ConfirmEmailPopupViewController", "Confirm Email Popup Shown.")
         bindViews()
     }
 
@@ -41,15 +41,15 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
 
     private func bindViews() {
         resendButton.rx.primaryAction.bind { [self] in
-            logger.logD(self, "User tapped Resend Email button.")
+            logger.logD("ConfirmEmailPopupViewController", "User tapped Resend Email button.")
             self.resendButtonTapped()
         }.disposed(by: disposeBag)
         changeButton.rx.primaryAction.bind { [self] in
-            logger.logD(self, "User tapped Change Email button.")
+            logger.logD("ConfirmEmailPopupViewController", "User tapped Change Email button.")
             self.router.routeTo(to: .addEmail, from: self)
         }.disposed(by: disposeBag)
         closeButton.rx.primaryAction.bind { [self] in
-            logger.logD(self, "User tapped Close button.")
+            logger.logD("ConfirmEmailPopupViewController", "User tapped Close button.")
             self.dismiss(animated: true, completion: nil)
         }.disposed(by: disposeBag)
     }

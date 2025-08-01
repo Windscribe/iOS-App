@@ -42,7 +42,6 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
         self.privacyStateManager = privacyStateManager
 
         bind()
-        logViewShown()
     }
 
     private func bind() {
@@ -60,12 +59,9 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
             .store(in: &cancellables)
     }
 
-    private func logViewShown() {
-        logger.logD(self, "Displaying Privacy Popup View")
-    }
 
     func acceptPrivacy() {
-        logger.logD(self, "User accepted privacy conditions.")
+        logger.logD("PrivacyInfoViewModel", "User accepted privacy conditions.")
 
         // Save privacy acceptance
         preferences.savePrivacyPopupAccepted(bool: true)
@@ -92,9 +88,9 @@ final class PrivacyInfoViewModelImpl: PrivacyInfoViewModel {
            suggestedProtocol.port != "" {
             defaultProtocol = suggestedProtocol.protocolType
             defaultPort = suggestedProtocol.port
-            logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+            logger.logD("PrivacyInfoViewModel", "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
         } else {
-            logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
+            logger.logD("PrivacyInfoViewModel", "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
 
         localDatabase.updateConnectionMode(value: Fields.Values.manual)

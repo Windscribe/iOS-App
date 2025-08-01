@@ -69,7 +69,7 @@ class ServerListViewModel: ServerListViewModelType {
             reloadTrigger.onNext(())
         } else if vpnManager.configurationState == ConfigurationState.initial {
             guard let bestNode = group.bestNode else { return }
-            logger.logD(self, "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
+            logger.logD("ServerListViewModel", "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(group.id)")
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)
@@ -82,7 +82,7 @@ class ServerListViewModel: ServerListViewModelType {
     func connectToBestLocation() {
         let locationID = locationsManager.getBestLocation()
         if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
-            self.logger.logD(self, "Tapped on Best Location with ID \(locationID) from the server list.")
+            self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

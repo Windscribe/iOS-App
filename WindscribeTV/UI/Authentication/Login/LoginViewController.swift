@@ -42,10 +42,8 @@ class LoginViewController: PreferredFocusedViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if is2FA {
-            logger.logD(self, "Displaying Login Screen with 2fa.")
             setup2FA()
         } else {
-            logger.logD(self, "Displaying Login Screen.")
             setup()
         }
         setupCommonUI()
@@ -236,13 +234,13 @@ class LoginViewController: PreferredFocusedViewController {
         }.disposed(by: disposeBag)
         forgotButton.rx.primaryAction.bind { [self] in
             router.routeTo(to: .forgotPassword, from: self)
-            self.logger.logD(self, "Moving to forgot password screen.")
+            self.logger.logD("LoginViewController", "Moving to forgot password screen.")
         }.disposed(by: disposeBag)
         backButton.rx.primaryAction.bind { [weak self] in
             self?.backButtonAction(nil)
         }.disposed(by: disposeBag)
         viewModel.routeToMainView.bind { [self] _ in
-            self.logger.logD(self, "Moving to home screen.")
+            self.logger.logD("LoginViewController", "Moving to home screen.")
             router.routeTo(to: RouteID.home, from: self)
         }.disposed(by: disposeBag)
         generateCodeButton.rx.primaryAction.bind { [weak self] in

@@ -27,7 +27,7 @@ import Swinject
 
     func increaseFailCount(type: String) {
         let logger = Assembler.resolve(FileLogger.self)
-        logger.logD(self, "Automatic Connection Mode: Increase fail count for \(type)")
+        logger.logE("AutomaticMode", "Automatic Connection Mode: Increase fail count for \(type)")
         switch type {
         case TextsAsset.General.protocols[0]:
             wgFailed += 1

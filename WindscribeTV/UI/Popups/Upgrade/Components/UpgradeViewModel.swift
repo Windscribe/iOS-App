@@ -109,7 +109,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
             promoCode = pushNotificationPayload?.promoCode
             pcpID = pushNotificationPayload?.pcpid
         }
-        logger.logD(self, "Loading billing plans. Promo: \(promoCode ?? "N/A")")
+        logger.logD("UpgradeViewModelImpl", "Loading billing plans. Promo: \(promoCode ?? "N/A")")
         showProgress.onNext(true)
         billingRepository.getMobilePlans(promo: promoCode)
             .subscribe(on: ConcurrentDispatchQueueScheduler(qos: .background))
@@ -118,7 +118,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
                 guard let self = self else { return }
                 for p in mobilePlans {
                     let discount = p.discount >= 0 ? "\(p.discount)%" : "N/A"
-                    self.logger.logD(self, "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
+                    self.logger.logD("UpgradeViewModelImpl", "Plan: \(p.name) Ext: \(p.extId) Duration: \(p.duration) Discount: \(discount)")
                 }
                 self.mobilePlans = mobilePlans
                 self.showProgress.onNext(false)
@@ -131,7 +131,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func continuePayButtonTapped() {
-        logger.logD(self, "User tapped to upgrade.")
+        logger.logD("UpgradeViewModelImpl", "User tapped to upgrade.")
         upgradeState.onNext(.loading)
         if let selectedPlan = selectedPlan {
             inAppPurchaseManager.purchase(windscribeInAppProduct: selectedPlan)
@@ -139,7 +139,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func continueFreeButtonTapped() {
-        logger.logD(self, "User tapped to get free data.")
+        logger.logD("UpgradeViewModelImpl", "User tapped to get free data.")
         if sessionManager.session?.hasUserAddedEmail == true && sessionManager.session?.emailStatus == false {
             upgradeRouteState.onNext(RouteID.confirmEmail(delegate: self))
         } else if sessionManager.session?.hasUserAddedEmail == false && sessionManager.session?.isUserGhost == false {
@@ -150,13 +150,13 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func restoreButtonTapped() {
-        logger.logD(self, "User tapped to restore purchases.")
+        logger.logD("UpgradeViewModelImpl", "User tapped to restore purchases.")
         upgradeState.onNext(.loading)
         inAppPurchaseManager.restorePurchase()
     }
 
     func setSelectedPlan(plan: WindscribeInAppProduct) {
-        logger.logD(self, "Selected plan: \(plan.planLabel)")
+        logger.logD("UpgradeViewModelImpl", "Selected plan: \(plan.planLabel)")
         selectedPlan = plan
     }
 
@@ -174,24 +174,24 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func failedCanceledByUser() {
-        logger.logE(self, "Failed to complete transaction. Purchase canceled by user.")
+        logger.logE("UpgradeViewModelImpl", "Failed to complete transaction. Purchase canceled by user.")
         // Upgrade state will not send an error here so dismiss screen will not show alert
         upgradeState.onNext(.none)
     }
 
     func failedDueToNetworkIssue() {
-        logger.logE(self, "Failed to complete transaction. Problem with internet connection.")
+        logger.logE("UpgradeViewModelImpl", "Failed to complete transaction. Problem with internet connection.")
         upgradeState.onNext(.error(TextsAsset.UpgradeView.planBenefitTransactionFailedAlertTitle))
     }
 
     func purchasedSuccessfully(transaction _: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
-        logger.logD(self, "Purchase successful.")
+        logger.logD("UpgradeViewModelImpl", "Purchase successful.")
         apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
-            self.logger.logD(self, "Purchase verified successfully")
+            self.logger.logD("UpgradeViewModelImpl", "Purchase verified successfully")
             self.saveAppleData(appleID: nil, appleData: nil, appleSig: nil)
             self.postpcpID()
         }, onFailure: { error in
-            self.logger.logE(self, "Failed to verify payment and saving for later. \(error)")
+            self.logger.logE("UpgradeViewModelImpl", "Failed to verify payment and saving for later. \(error)")
             self.saveAppleData(appleID: appleID, appleData: appleData, appleSig: appleSIG)
             if let error = error as? Errors {
                 switch error {
@@ -205,28 +205,28 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func upgrade() {
-        self.logger.logI(self, "Getting new session.")
+        self.logger.logI("UpgradeViewModelImpl", "Getting new session.")
         apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { session in
-            self.logger.logI(self, "Received updated session.")
+            self.logger.logI("UpgradeViewModelImpl", "Received updated session.")
             self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
             self.upgradeState.onNext(.success(session.isUserGhost))
         }, onFailure: { _ in
-            self.logger.logE(self, "Failure to update session.")
+            self.logger.logE("UpgradeViewModelImpl", "Failure to update session.")
             self.upgradeState.onNext(.success(false))
         }).disposed(by: disposeBag)
     }
 
     private func postpcpID() {
         if let payID = pcpID {
-            logger.logD(self, "Posting pcpID")
+            logger.logD("UpgradeViewModelImpl", "Posting pcpID")
             apiManager.postBillingCpID(pcpID: payID).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
                 self.upgrade()
             }, onFailure: { _ in
-                self.logger.logE(self, "Failed to post pcpID")
+                self.logger.logE("UpgradeViewModelImpl", "Failed to post pcpID")
                 self.upgrade()
             }).disposed(by: disposeBag)
         } else {
-            logger.logE(self, "No pcpID now upgrading.")
+            logger.logE("UpgradeViewModelImpl", "No pcpID now upgrading.")
             upgrade()
         }
     }
@@ -238,12 +238,12 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func failedToPurchase() {
-        logger.logE(self, "Failed to complete transaction.")
+        logger.logE("UpgradeViewModelImpl", "Failed to complete transaction.")
         upgradeState.onNext(.error("Failed to complete transaction."))
     }
 
     func unableToMakePurchase() {
-        logger.logE(self, "Failed to complete transaction.")
+        logger.logE("UpgradeViewModelImpl", "Failed to complete transaction.")
         upgradeState.onNext(.error("Failed to complete transaction."))
     }
 
@@ -260,13 +260,13 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     func failedToLoadProducts() {
-        logger.logE(self, "Failed to load products. Check your network and try again.")
+        logger.logE("UpgradeViewModelImpl", "Failed to load products. Check your network and try again.")
         showProgress.onNext(false)
         upgradeState.onNext(.error("Failed to load products. Check your network and try again."))
     }
 
     func unableToRestorePurchase(error: any Error) {
-        logger.logE(self, "Unable to restore purchase. \(error)")
+        logger.logE("UpgradeViewModelImpl", "Unable to restore purchase. \(error)")
         if let err = error as? URLError, err.code == URLError.Code.notConnectedToInternet {
             upgradeState.onNext(.error(Errors.noNetwork.description))
         } else if error as? URLError != nil {

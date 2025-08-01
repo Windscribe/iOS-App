@@ -30,7 +30,7 @@ class UpgradePopViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Displaying Upgrade View")
+        logger.logD("UpgradePopViewController", "Displaying Upgrade View")
         setup()
         bindViews()
     }
@@ -147,11 +147,11 @@ extension UpgradePopViewController: UpgradePricingViewDelegate {
     func pricingOptionWasSelected(plan: WindscribeInAppProduct?) {
         if let plan = plan {
             viewModel?.setSelectedPlan(plan: plan)
-            logger.logD(self, "Pricing Option Was Selected with plan \(plan)")
+            logger.logD("UpgradePopViewController", "Pricing Option Was Selected with plan \(plan)")
             viewModel?.continuePayButtonTapped()
             return
         } else {
-            logger.logD(self, "Pricing Option Was Selected")
+            logger.logD("UpgradePopViewController", "Pricing Option Was Selected")
             viewModel?.continuePayButtonTapped()
         }
     }

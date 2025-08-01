@@ -47,7 +47,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     func continueButtonTapped() {
         if keyChainDatabase.isGhostAccountCreated() {
-            logger.logD(self, "Ghost account already created from this device.")
+            logger.logD("WelcomeViewModelImpl", "Ghost account already created from this device.")
             routeToSignup.onNext(true)
             return
         }

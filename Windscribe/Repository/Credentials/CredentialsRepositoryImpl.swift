@@ -115,12 +115,10 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         if preferences.getSessionAuthHash() == nil {
             return
         }
-        logger.logD(self, "Updating open vpn credentials.")
         getUpdatedOpenVPNCrendentials().flatMap { _ in
-            self.logger.logD(self, "Updating open vpn server config.")
             return self.getUpdatedServerConfig()
         }.subscribe(onSuccess: { _ in
-            self.logger.logD(self, "Server config updated.")
-        }, onFailure: { _ in self.logger.logD(self, "Failed to update server config.") }).disposed(by: disposeBag)
+            self.logger.logI("CredentialsRepositoryImpl", "Server config updated.")
+        }, onFailure: { _ in self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.") }).disposed(by: disposeBag)
     }
 }

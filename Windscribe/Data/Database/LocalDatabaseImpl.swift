@@ -145,7 +145,6 @@ class LocalDatabaseImpl: LocalDatabase {
     }
 
     func saveIp(myip: MyIP) -> Disposable {
-        logger.logD(self, "Saving My ip to database.")
         return updateRealmObject(object: myip)
     }
 
@@ -265,7 +264,7 @@ class LocalDatabaseImpl: LocalDatabase {
                         realm.delete(objects)
                     }
                 } else {
-                    logger.logD("LocalDatabaseImpl", "Skipping deletion of \(String(describing: objectSchema.className))")
+                    logger.logD("LocalDatabase", "Skipping deletion of \(String(describing: objectSchema.className))")
                 }
             }
         }

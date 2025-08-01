@@ -62,17 +62,17 @@ class LatencyRepositoryImpl: LatencyRepository {
     }
 
     func loadAllServerLatency() -> Completable {
-        logger.logE(self, "Attempting to update latency data.")
+        logger.logE("LatencyRepositoryImpl", "Attempting to update latency data.")
         let pingServers = getServerPingAndHosts()
         if pingServers.count == 0 {
-            logger.logE(self, "Server list not ready for latency update.")
+            logger.logE("LatencyRepositoryImpl", "Server list not ready for latency update.")
             return Completable.empty()
         }
         if locationsManager.getBestLocation() == "0" {
             self.pickBestLocation()
         }
         if vpnManager.isConnected() {
-            self.logger.logE(self, "Latency not updated as vpn is connected")
+            self.logger.logE("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
             return Completable.empty()
         }
         let latencySingles = createLatencyTask(from: pingServers)
@@ -81,11 +81,11 @@ class LatencyRepositoryImpl: LatencyRepository {
             .timeout(.seconds(20), other: Single<[PingData]>.error(RxError.timeout), scheduler: MainScheduler.instance)
         latencySingles.subscribe(
             onSuccess: { _ in
-                self.logger.logI(self, "Successfully updated latency data.")
+                self.logger.logI("LatencyRepositoryImpl", "Successfully updated latency data.")
                 self.refreshBestLocation()
             },
             onFailure: { _ in
-                self.logger.logE(self, "Failure to update latency data.")
+                self.logger.logE("LatencyRepositoryImpl", "Failure to update latency data.")
                 self.refreshBestLocation()
             })
         .disposed(by: self.disposeBag)
@@ -177,7 +177,7 @@ class LatencyRepositoryImpl: LatencyRepository {
                     if let minTime = result?.minTime {
                         completion(Int(minTime))
                     } else {
-                        self.logger.logE(self, "Error when performing TCP ping to given node. \(pingIp)")
+                        self.logger.logE("LatencyRepositoryImpl", "Error when performing TCP ping to given node. \(pingIp)")
                         completion(-1)
                     }
                 }
@@ -284,12 +284,12 @@ class LatencyRepositoryImpl: LatencyRepository {
             if #available(iOS 16, tvOS 17, *) {
                 guard let countryCode = Locale.current.region?.identifier else { return }
                 if let regionBasedLocation = self.selectServerByRegion(servers: servers, countryCode: countryCode) {
-                    self.logger.logD(self, "Selected best location based on region: \(regionBasedLocation)")
+                    self.logger.logI("LatencyRepositoryImpl", "Selected best location based on region: \(regionBasedLocation)")
                     return
                 }
             }
             if let timeZoneBasedLocation = self.selectServerByTimeZone(servers: servers) {
-                self.logger.logD(self, "Selected fallback best location based on time zone: \(timeZoneBasedLocation)")
+                self.logger.logI("LatencyRepositoryImpl", "Selected fallback best location based on time zone: \(timeZoneBasedLocation)")
             }
         }
     }
@@ -342,7 +342,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     /// Build and save the best location using the selected server, group, and node
     private func buildAndSaveBestLocation(group: Group) -> String {
-        logger.logD(self, "Saving best location: \(group.id)")
+        logger.logI("LatencyRepositoryImpl", "Saving best location: \(group.id)")
         locationsManager.saveBestLocation(with: "\(group.id)")
         return group.city
     }

@@ -25,7 +25,7 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
     fileprivate let preferences = ContainerResolver().getPreferences()
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        logger.logD(tag, "Disable VPN action called.")
+        logger.logI(tag, "Disable VPN action called.")
         do {
             let protocolType = preferences.getActiveManagerKey() ?? "WireGuard"
             let activeManager = try await getNEVPNManager(for: protocolType)
@@ -44,17 +44,17 @@ struct Disconnect: AppIntent, WidgetConfigurationIntent {
                 try? await Task.sleep(for: .milliseconds(500))
                 if activeManager.connection.status == .disconnected {
                     WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-                    logger.logD(tag, "Disconnected from VPN.")
+                    logger.logI(tag, "Disconnected from VPN.")
                     return .result(dialog: .responseSuccessDisconnect)
                 }
                 iterations += 1
-                logger.logD(tag, "Awaiting disconnect from VPN.")
+                logger.logI(tag, "Awaiting disconnect from VPN.")
             }
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
-            logger.logD(tag, "Taking too long to disconnect.")
+            logger.logI(tag, "Taking too long to disconnect.")
             return .result(dialog: .responseFailureDisconnect)
         } catch {
-            logger.logD(tag, "Error disconnecting from VPN: \(error)")
+            logger.logE("Disconnect", "Error disconnecting from VPN: \(error.localizedDescription)")
             WidgetCenter.shared.reloadTimelines(ofKind: "HomeWidget")
             return .result(dialog: .responseFailureDisconnect)
         }

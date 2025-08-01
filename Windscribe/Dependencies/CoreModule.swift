@@ -36,8 +36,7 @@ extension Container {
             let preferences = r.resolve(Preferences.self)!
             let logger = r.resolve(FileLogger.self)
             WSNet.setLogger({ message in
-                let msg = message.split(separator: "]").last?.trimmingCharacters(in: .whitespaces) ?? ""
-                logger?.logD("WSNet", msg.trimmingCharacters(in: .whitespacesAndNewlines))
+                logger?.logWSNet(message.trimmingCharacters(in: .whitespacesAndNewlines))
             }, debugLog: false)
             var language = "en"
             let preferredLanguages = Locale.preferredLanguages
