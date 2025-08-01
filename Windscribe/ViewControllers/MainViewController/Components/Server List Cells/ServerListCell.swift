@@ -24,13 +24,23 @@ protocol ServerCellModelType {
     var actionOpacity: Float { get }
     var serverHealth: CGFloat { get }
     var showServerHealth: Bool { get }
+    var hasProLocked: Bool { get }
     func nameColor(for isDarkMode: Bool) -> UIColor
 }
 
 class HealthCircleView: CompletionCircleView {
+    override init(lineWidth: CGFloat = 1, radius: CGFloat = 12) {
+        super.init(lineWidth: lineWidth, radius: radius)
+        startAngle = .pi / 2
+    }
+
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     var health: CGFloat? {
         didSet {
-            self.percentage = health
+            self.percentage = max(health ?? 0, 12.5)
         }
     }
 
@@ -57,7 +67,16 @@ class ServerListCell: SwipeTableViewCell {
     var nameInfoStackView = UIStackView()
     var healthCircle = HealthCircleView()
     var iconsStackView = UIStackView()
+    var proIcon = UIImageView()
     var tableViewTag: Int = 0
+
+    private lazy var iconHeightConstraint: NSLayoutConstraint = {
+        return icon.heightAnchor.constraint(equalToConstant: viewModel?.iconSize ?? 0)
+    }()
+
+    private lazy var iconWidthConstraint: NSLayoutConstraint = {
+        return icon.widthAnchor.constraint(equalToConstant: viewModel?.iconSize ?? 0)
+    }()
 
     var viewModel: ServerCellModelType?
 
@@ -85,11 +104,15 @@ class ServerListCell: SwipeTableViewCell {
         iconsStackView.spacing = 16
         iconsStackView.addArrangedSubview(actionImage)
 
+        proIcon.image = UIImage(named: ImagesAsset.proMiniImage)
+        proIcon.setImageColor(color: .proStarColor)
+
         contentView.addSubview(icon)
         contentView.addSubview(circleView)
         contentView.addSubview(healthCircle)
         contentView.addSubview(iconsStackView)
         contentView.addSubview(nameInfoStackView)
+        contentView.addSubview(proIcon)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -112,13 +135,17 @@ class ServerListCell: SwipeTableViewCell {
         healthCircle.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         iconsStackView.translatesAutoresizingMaskIntoConstraints = false
+        proIcon.translatesAutoresizingMaskIntoConstraints = false
+
+        iconHeightConstraint.constant = viewModel.iconSize
+        iconWidthConstraint.constant = viewModel.iconSize
 
         NSLayoutConstraint.activate([
             // icon
             icon.centerYAnchor.constraint(equalTo: self.centerYAnchor),
-            icon.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 16),
-            icon.heightAnchor.constraint(equalToConstant: viewModel.iconSize),
-            icon.widthAnchor.constraint(equalToConstant: viewModel.iconSize),
+            icon.centerXAnchor.constraint(equalTo: self.leftAnchor, constant: 28),
+            iconHeightConstraint,
+            iconWidthConstraint,
 
             // circleView
             circleView.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
@@ -145,7 +172,13 @@ class ServerListCell: SwipeTableViewCell {
 
             // actionImage
             actionImage.heightAnchor.constraint(equalToConstant: viewModel.actionSize),
-            actionImage.widthAnchor.constraint(equalToConstant: viewModel.actionSize)
+            actionImage.widthAnchor.constraint(equalToConstant: viewModel.actionSize),
+
+            // proIcon
+            proIcon.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            proIcon.leftAnchor.constraint(equalTo: leftAnchor, constant: 11),
+            proIcon.heightAnchor.constraint(equalToConstant: 16),
+            proIcon.widthAnchor.constraint(equalToConstant: 16)
         ])
     }
 
@@ -167,6 +200,12 @@ class ServerListCell: SwipeTableViewCell {
 
         circleView.isHidden = !viewModel.showServerHealth
         healthCircle.isHidden = !viewModel.showServerHealth
+
+        proIcon.isHidden = !viewModel.hasProLocked
+
+        iconHeightConstraint.constant = viewModel.iconSize
+        iconWidthConstraint.constant = viewModel.iconSize
+        layoutIfNeeded()
     }
 
     func bindViews(isDarkMode: BehaviorSubject<Bool>) {
@@ -174,6 +213,9 @@ class ServerListCell: SwipeTableViewCell {
             self.actionImage.setImageColor(color: .from(.iconColor, isDarkMode))
             self.circleView.layer.borderColor = UIColor.from(.loadCircleColor, isDarkMode).cgColor
             self.isDarkMode = isDarkMode
+
+            let proImageName = isDarkMode ? ImagesAsset.proMiniImage : ImagesAsset.proMiniLightImage
+            self.proIcon.image = UIImage(named: proImageName)
         }).disposed(by: disposeBag)
     }
 
