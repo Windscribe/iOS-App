@@ -61,7 +61,7 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
             SKPaymentQueue.default().add(self)
             hasAddObserver = true
         }
-        logger.logD(self, "Requesting completed transactions to be added to the queue.")
+        logger.logI("InAppPurchaseManagerImpl", "Requesting completed transactions to be added to the queue.")
         SKPaymentQueue.default().restoreCompletedTransactions()
     }
 
@@ -90,14 +90,14 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager {
            let appleSIG = preferences.getActiveAppleSig() {
             apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
                 self.apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: self.dispose)
-                self.logger.logD(self, "Sending Apple purchase data successful.")
+                self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
                 // setting nil for successfull validation
                 self.preferences.saveActiveAppleID(id: nil)
                 self.preferences.saveActiveAppleSig(sig: nil)
                 self.preferences.saveActiveAppleData(data: nil)
             }, onFailure: { error in
                 if let error = error as? Errors {
-                    self.logger.logE(self, "\(error.description)")
+                    self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
                 }
             }).disposed(by: dispose)
         }

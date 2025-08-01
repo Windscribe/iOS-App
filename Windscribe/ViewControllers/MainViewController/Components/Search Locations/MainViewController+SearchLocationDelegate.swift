@@ -167,7 +167,7 @@ extension MainViewController: SearchCountryViewDelegate {
     }
 
     func showSearchLocation() {
-        logger.logD(self, "User tapped to search locations.")
+        logger.logD("MainViewController", "User tapped to search locations.")
         clearScrollHappened()
         lastSelectedHeaderViewTab = selectedHeaderViewTab ?? .all
         scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)

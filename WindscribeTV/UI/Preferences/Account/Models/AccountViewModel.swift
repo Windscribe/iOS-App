@@ -127,7 +127,7 @@ class AccountViewModel: AccountViewModelType {
             default:
                 self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
             }
-            self.logger.logE(self, error.localizedDescription)
+            self.logger.logE("AccountViewModel", error.localizedDescription)
         }).disposed(by: disposeBag)
     }
 
@@ -143,7 +143,7 @@ class AccountViewModel: AccountViewModelType {
                 self.sessionUpdatedTrigger.onNext(())
             }
         }, onFailure: { [self] error in
-            logger.logE(self, "Failed to get session from server with error \(error).")
+            logger.logE("AccountViewModel", "Failed to get session from server with error \(error).")
         }).disposed(by: disposeBag)
         return sessionSingle
     }

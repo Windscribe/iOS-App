@@ -69,7 +69,7 @@ class MainViewController: PreferredFocusedViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        logger.logD(self, "Main view will appear")
+        logger.logD("MainViewController", "Main view will appear")
         sessionManager.keepSessionUpdated()
         super.viewWillAppear(animated)
         myPreferredFocusedView = connectionButton
@@ -388,12 +388,12 @@ class MainViewController: PreferredFocusedViewController {
     func configureBestLocation(selectBestLocation: Bool = false, connectToBestLocation: Bool = false) {
         if let bestLocation = vpnConnectionViewModel.getBestLocation() {
             let locationId = "\(bestLocation.groupId)"
-            logger.logD(self, "Configuring best location.")
+            logger.logD("MainViewController", "Configuring best location.")
             if selectBestLocation || noSelectedNodeToConnect() {
                 vpnConnectionViewModel.selectBestLocation(with: locationId)
             }
             if connectToBestLocation {
-                logger.logD(self, "Forcing to connect to best location.")
+                logger.logD("MainViewController", "Forcing to connect to best location.")
                 enableVPNConnection()
             }
             guard let displayingGroup = try? self.viewModel.serverList.value().flatMap({ $0.groups }).filter({ $0.id == bestLocation.groupId }).first else { return }
@@ -478,7 +478,7 @@ class MainViewController: PreferredFocusedViewController {
     @IBAction func connectButtonPressed(_: Any) {
         disableConnectButton()
         if statusLabel.text?.contains(TextsAsset.Status.off) ?? false {
-            logger.logI(MainViewController.self, "User tapped to connect.")
+            logger.logI("MainViewController", "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 enableVPNConnection()
@@ -486,7 +486,7 @@ class MainViewController: PreferredFocusedViewController {
                 enableConnectButton()
             }
         } else {
-            logger.logD(self, "User tapped to disconnect.")
+            logger.logD("MainViewController", "User tapped to disconnect.")
             disableVPNConnection()
         }
     }
@@ -510,14 +510,14 @@ class MainViewController: PreferredFocusedViewController {
 
     private func checkSessionChanges(session: Session?) {
         guard let session = session else { return }
-        logger.logD(self, "Looking for account state changes.")
+        logger.logD("MainViewController", "Looking for account state changes.")
         if session.status == 3 {
-            logger.logD(self, "User is banned.")
+            logger.logD("MainViewController", "User is banned.")
             router?.routeTo(to: RouteID.bannedAccountPopup, from: self)
             return
         } else if session.status == 2 {
             if !viewModel.didShowOutOfDataPopup {
-                logger.logD(self, "User is out of data.")
+                logger.logD("MainViewController", "User is out of data.")
                 showOutOfDataPopup()
                 viewModel.didShowOutOfDataPopup = true
             }
@@ -525,14 +525,14 @@ class MainViewController: PreferredFocusedViewController {
         }
         guard let oldSession = viewModel.oldSession else { return }
         if !session.isPremium && oldSession.isPremium {
-            logger.logD(self, "User Pro plan is expired.")
+            logger.logD("MainViewController", "User Pro plan is expired.")
             showProPlanExpiredPopup()
             return
         }
     }
 
     private func showOutOfDataPopup() {
-        logger.logD(self, "Displaying Out Of Data Popup.")
+        logger.logD("MainViewController", "Displaying Out Of Data Popup.")
         router?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
     }
 

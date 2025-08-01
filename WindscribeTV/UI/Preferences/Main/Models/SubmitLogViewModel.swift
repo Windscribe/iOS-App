@@ -64,7 +64,7 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
             }
             return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
         }.subscribe(onSuccess: { _ in
-            self.logger.logD(self, "Debug log submitted.")
+            self.logger.logD("SubmitLogViewModelImpl", "Debug log submitted.")
             completion(true, nil)
         }, onFailure: { error in
             completion(false, error.localizedDescription)

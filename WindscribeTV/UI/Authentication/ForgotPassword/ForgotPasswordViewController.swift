@@ -17,7 +17,7 @@ class ForgotPasswordViewController: UIViewController {
     var logger: FileLogger!
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Displaying Forgotten Password Screen.")
+        logger.logD("ForgotPasswordViewController", "Displaying Forgotten Password Screen.")
         setupUI()
         setupLocalized()
         // Do any additional setup after loading the view.

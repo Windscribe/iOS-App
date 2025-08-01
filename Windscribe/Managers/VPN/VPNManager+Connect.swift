@@ -27,13 +27,10 @@ extension VPNManager {
     func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
-                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to configuring")
                 self.configurationState = .disabling
             }, receiveCompletion: { _ in
-                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to initial")
                 self.configurationState = .initial
             }, receiveCancel: {
-                self.logger.logD("VPNConfiguration", "disconnectFromViewModel - configurationState set to initial from cancel")
                 self.configurationState = .initial
             }).eraseToAnyPublisher()
     }
@@ -50,7 +47,7 @@ extension VPNManager {
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
-        self.logger.logD("VPNConfiguration", "Connecting from ViewModel")
+        self.logger.logI("VPNConfiguration", "Connecting from ViewModel")
         return disableKillSwitchIfRequired()
             .flatMap { _ in
                 return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()
@@ -61,13 +58,10 @@ extension VPNManager {
             }
             return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
         }.handleEvents(receiveSubscription: { _ in
-            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to configuring")
             self.configurationState = .configuring
         }, receiveCompletion: { _ in
-            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to initial")
             self.configurationState = .initial
         }, receiveCancel: {
-            self.logger.logD("VPNConfiguration", "connectFromViewModel - configurationState set to initial from cancel")
             self.configurationState = .initial
         }).eraseToAnyPublisher()
     }
@@ -94,12 +88,12 @@ extension VPNManager {
     private func connectWithInitialRetry(id: String, proto: String, port: String, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: connectionType == .emergency ? self.emergencyUserSettings(): self.makeUserSettings(), connectionType: connectionType)
             .catch { error in
-                self.logger.logD("VPNConfiguration", "Fail to connect with error: \(error).")
+                self.logger.logE("VPNConfiguration", "Fail to connect with error: \(error).")
                 if let error = error as? NEVPNError {
                     // First connection to ikev2 may throw this error if config is not saved yet.
                     // Wait for 2 seconds and retry.
                     if error.code == NEVPNError.Code.configurationInvalid {
-                        self.logger.logD(self, "NEVPNError: Configuration is invalid.")
+                        self.logger.logI("VPNManager", "NEVPNError: Configuration is invalid.")
                         return Just(())
                             .delay(for: .seconds(2), scheduler: DispatchQueue.main)
                             .flatMap { _ in
@@ -119,7 +113,7 @@ extension VPNManager {
                     // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
                         if connectionType == .user, self.locationsManager.getLocationType(id: id) != .custom {
-                            self.logger.logD("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
+                            self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
                             return self.configManager.connectAsync(locationID: id, proto: proto, port: port, vpnSettings: self.makeUserSettings())
                         }
                     default: ()
@@ -141,7 +135,7 @@ extension VPNManager {
     /// - Note:
     ///   It checks for network availability before attempting to update server and credential data, with a maximum wait time of 3 seconds.
     private func updateConnectionData(locationID: String, connectionError: Error) -> Future<String?, Error> {
-        logger.logD("VPNConfiguration", "Auth failure: attempting to update server data + credentials.")
+        logger.logE("VPNConfiguration", "Auth failure: attempting to update server data + credentials.")
         return Future { promise in
             Task {
                 do {
@@ -157,11 +151,11 @@ extension VPNManager {
                             promise(.failure(connectionError))
                         }
                     } catch {
-                        self.logger.logD("VPNConfiguration", "Failure update location: \(error)")
+                        self.logger.logE("VPNConfiguration", "Failure update location: \(error)")
                         promise(.failure(connectionError))
                     }
                 } catch {
-                    self.logger.logD("VPNConfiguration", "Failure to update user data: \(error)")
+                    self.logger.logE("VPNConfiguration", "Failure to update user data: \(error)")
                     promise(.failure(connectionError))
                 }
             }

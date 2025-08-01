@@ -93,7 +93,7 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
     }
 
     func logStatus() {
-        logger.logI(self, "\(getStatus())")
+        logger.logI("LocationPermissionManager", "\(getStatus())")
     }
 
     func getStatus() -> CLAuthorizationStatus {
@@ -105,13 +105,13 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
     }
 
     func grantPermission() {
-        logger.logD(self, "Location Permission granted")
+        logger.logD("LocationPermissionManager", "Location Permission granted")
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
     }
 
     func openSettings() {
-        logger.logD(self, "Opening settings for location permission")
+        logger.logD("LocationPermissionManager", "Opening settings for location permission")
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
     }
 }

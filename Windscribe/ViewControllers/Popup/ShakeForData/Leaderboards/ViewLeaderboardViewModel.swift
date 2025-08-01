@@ -39,6 +39,6 @@ class ViewLeaderboardViewModel: ViewLeaderboardViewModelType {
     }
 
     func wasShown() {
-        logger.logD(self, "Displaying Shake For Data Leaderboard View")
+        logger.logD("ViewLeaderboardViewModel", "Displaying Shake For Data Leaderboard View")
     }
 }

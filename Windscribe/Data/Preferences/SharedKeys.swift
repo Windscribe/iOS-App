@@ -114,12 +114,10 @@ enum SharedKeys {
 func getValueFromPlistFile(key: String) -> String {
     if let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),
        let plistData = FileManager.default.contents(atPath: plistPath) {
-        do {
-            if let plistDictionary = try PropertyListSerialization.propertyList(
-                from: plistData, options: [], format: nil) as? [String: Any] {
-                return plistDictionary[key] as? String ?? ""
-            }
-        } catch {}
+        if let plistDictionary = try? PropertyListSerialization.propertyList(
+            from: plistData, options: [], format: nil) as? [String: Any] {
+            return plistDictionary[key] as? String ?? ""
+        }
     }
     return ""
 }

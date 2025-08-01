@@ -28,7 +28,7 @@ class NotificationRepositoryImpl: NotificationRepository {
         let pcpid = (try? pushNotificationsManager.notification.value()?.pcpid) ?? ""
 
         if !pcpid.isEmpty {
-            logger.logD(self, "Adding pcpid ID: \(pcpid) to notifications request.")
+            logger.logD("NotificationRepository", "Adding pcpid ID: \(pcpid) to notifications request.")
         }
 
         return apiManager.getNotifications(pcpid: pcpid).map {

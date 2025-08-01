@@ -34,7 +34,6 @@ final class PushNotificationViewModelImpl: PushNotificationViewModel {
         self.pushNotificationsManager = pushNotificationsManager
 
         bind()
-        logViewShown()
     }
 
     private func bind() {
@@ -52,18 +51,14 @@ final class PushNotificationViewModelImpl: PushNotificationViewModel {
             .store(in: &cancellables)
     }
 
-    private func logViewShown() {
-        logger.logD(self, "Displaying Push Notifications Popup View")
-    }
-
     func enableNotifications() {
-        logger.logD(self, "Asking for push notification permission.")
+        logger.logD("PushNotificationViewModel", "Asking for push notification permission.")
         pushNotificationsManager.askForPushNotificationPermission()
         shouldDismiss = true
     }
 
     func cancel() {
-        logger.logD(self, "Push notification permission cancelled.")
+        logger.logD("PushNotificationViewModel", "Push notification permission cancelled.")
         shouldDismiss = true
     }
 }

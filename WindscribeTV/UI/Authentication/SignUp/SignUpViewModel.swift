@@ -106,7 +106,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     func continueButtonTapped(username: String, password: String, twoFactorCode: String?) {
         failedState.onNext(.none)
         showLoadingView.onNext(true)
-        logger.logD(self, "Signing up for account.")
+        logger.logD("SignUpViewModelImpl", "Signing up for account.")
 
         apiCallManager.authTokenSignup(useAsciiCaptcha: true)
             .observe(on: MainScheduler.instance)
@@ -137,7 +137,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                     captchaVM.loginSuccess
                         .observe(on: MainScheduler.instance)
                         .bind { [weak self] session in
-                            self?.logger.logD("SignupViewModel", "Captcha login success. Preparing user data.")
+                            self?.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
                             self?.showLoadingView.onNext(true)
 
                             self?.handleSignupSuccess(session: session)
@@ -184,7 +184,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
         showLoadingView.onNext(true)
-        logger.logD(self, "Signing up for account.")
+        logger.logD("SignUpViewModelImpl", "Signing up for account.")
         apiCallManager.signup(
             username: username,
             password: password,
@@ -229,7 +229,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func handleSignupError(_ error: Error) {
-        logger.logI(SignUpViewModelImpl.self, "Failed to signup: \(error)")
+        logger.logE(SignUpViewModelImpl.self, "Failed to signup: \(error)")
 
         showLoadingView.onNext(false)
         switch error {
@@ -254,7 +254,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func claimGhostAccount(username: String, password: String, email: String) {
         showLoadingView.onNext(true)
-        logger.logD(self, "Claiming account.")
+        logger.logD("SignUpViewModelImpl", "Claiming account.")
 
         apiCallManager.claimAccount(
             username: username,
@@ -265,17 +265,17 @@ class SignUpViewModelImpl: SignUpViewModel {
             if isPro == false {
                 getUpdatedUser(email: email)
             } else {
-                logger.logD(self, "Getting user data.")
+                logger.logD("SignUpViewModelImpl", "Getting user data.")
                 prepareUserData(ignoreError: true)
             }
         }, onFailure: { [self] error in
-            logger.logD(self, "Error claming account. \(error)")
+            logger.logD("SignUpViewModelImpl", "Error claming account. \(error)")
             handleSignupError(error)
         }).disposed(by: disposeBag)
     }
 
     private func getUpdatedUser(email: String) {
-        logger.logD(self, "Getting updated session.")
+        logger.logD("SignUpViewModelImpl", "Getting updated session.")
         userRepository.getUpdatedUser().observe(on: MainScheduler.instance).subscribe(onSuccess: { _ in
             self.showLoadingView.onNext(false)
             if email.isEmpty == false {
@@ -284,7 +284,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self.routeTo.onNext(.main)
             }
         }, onFailure: { error in
-            self.logger.logE(self, "Failed to get session. \(error)")
+            self.logger.logE("SignUpViewModelImpl", "Failed to get session. \(error)")
             self.showLoadingView.onNext(false)
             self.routeTo.onNext(.main)
         }).disposed(by: disposeBag)

@@ -47,7 +47,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         else {
             fatalError()
         }
-        logger.logD(self, "Started OpenVPNAdapter.")
+        logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.")
         let properties: OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
         let configuration = OpenVPNConfiguration()
@@ -57,7 +57,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         do {
             properties = try vpnAdapter.apply(configuration: configuration)
         } catch {
-            logger.logD(self, "Failed to apply configuration to OpenVPNAdapter.")
+            logger.logE("PacketTunnelProvider", "Failed to apply configuration to OpenVPNAdapter: \(error.localizedDescription)")
             completionHandler(error)
             return
         }
@@ -68,7 +68,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 credentials.username = username
                 credentials.password = password
                 do {
-                    logger.logD(self, "Added credentials to OpenVPNAdapter.")
+                    logger.logI("PacketTunnelProvider", "Added credentials to OpenVPNAdapter.")
                     try vpnAdapter.provide(credentials: credentials)
                 } catch {
                     completionHandler(error)
@@ -76,7 +76,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 }
             }
         }
-        logger.logD(self, "OpenVPNAdapter started successfully.")
+        logger.logI("PacketTunnelProvider", "OpenVPN Adapter started successfully.")
         vpnReachability.startTracking { [weak self] status in
             guard status != .notReachable else { return }
             self?.vpnAdapter.reconnect(afterTimeInterval: 5)
@@ -91,13 +91,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         } else {
             startHandler = completionHandler
-            logger.logD(self, "Connecting to OpenVPNAdapter.")
+            logger.logI("PacketTunnelProvider", "Connecting to OpenVPNAdapter.")
             vpnAdapter.connect(using: packetFlow)
         }
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        logger.logD(self, "Stopping OpenVPNAdapter with \(reason)")
+        logger.logI("PacketTunnelProvider", "Stopping OpenVPNAdapter with \(reason)")
         stopHandler = completionHandler
         if vpnReachability.isTracking {
             vpnReachability.stopTracking()
@@ -105,7 +105,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if reason == .authenticationCanceled {
             preferences.saveForceDisconnect(value: true)
         }
-        logger.logD(self, "Reason for disconnect \(reason.rawValue)")
+        logger.logI("PacketTunnelProvider", "Reason for disconnect \(reason.rawValue)")
         vpnAdapter.disconnect()
     }
 
@@ -153,7 +153,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     FileManager.default.createFile(atPath: path, contents: nil)
                 }
             }
-        } catch {}
+        } catch {
+            logger.logE("PacketTunnelProvider", "Failed to check/clear proxy log file: \(error)")
+        }
         return path
     }
 
@@ -174,7 +176,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     func openVPNAdapter(_: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
-            logger.logD(self, "User DNS configuration: \(customDNSValue.description)")
+            logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
             if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
                 networkSettings?.dnsSettings = dnsSettings
             }
@@ -224,11 +226,6 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         } else {
             cancelTunnelWithError(error)
         }
-    }
-
-    func openVPNAdapter(_: OpenVPNAdapter, handleLogMessage logMessage: String) {
-        // self.logger.logD(self, "\(logMessage)")
-        logger.logD(self, "OpenVPNAdapter: \(logMessage)")
     }
 }
 

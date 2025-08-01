@@ -61,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)
         }, onFailure: { [self] error in
-            logger.logE(self, "Failed to get session from server with error \(error).")
+            logger.logE("AppDelegate", "Failed to get session from server with error \(error).")
         }).disposed(by: disposeBag)
 
         Task.detached { [unowned self] in
@@ -82,9 +82,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
             apiManager.recordInstall(platform: "tvos").subscribe(onSuccess: { _ in
-                self.logger.logD(self, "Successfully recorded new install.")
+                self.logger.logI("AppDelegate", "Successfully recorded new install.")
             }, onFailure: { error in
-                self.logger.logE(self, "Failed to record new install: \(error)")
+                self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
             }).disposed(by: disposeBag)
         }
     }
@@ -99,20 +99,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_: UIApplication) {
-        logger.logD(self, "App state changed to WillResignActive")
+        logger.logI("AppDelegate", "App state changed to WillResignActive")
     }
 
     func applicationDidEnterBackground(_: UIApplication) {
-        logger.logD(self, "App state changed to DidEnterBackground")
+        logger.logI("AppDelegate", "App state changed to DidEnterBackground")
     }
 
     func applicationWillEnterForeground(_: UIApplication) {
-        logger.logD(self, "App state changed to WillEnterForeground.")
+        logger.logI("AppDelegate", "App state changed to WillEnterForeground.")
         ProtocolManager.shared.resetGoodProtocol()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
-        logger.logD(self, "App state changed to Active.")
+        logger.logI("AppDelegate", "App state changed to Active.")
         livecycleManager.appEnteredForeground()
     }
 

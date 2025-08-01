@@ -57,7 +57,7 @@ extension MainViewController {
     }
 
     func updateUIForSession(session: Session?) {
-        logger.logD(self, "Looking for account state changes.")
+        logger.logD("MainViewController", "Looking for account state changes.")
         guard let session = session else { return }
 
         // check for ghost account and present account completion screen
@@ -70,7 +70,7 @@ extension MainViewController {
         reloadTableViews()
         setTableViewInsets()
         if session.status == 3 {
-            logger.logD(self, "User is banned.")
+            logger.logD("MainViewController", "User is banned.")
             var animated = true
             if let topVc = navigationController?.topViewController as? AccountPopupViewController {
                 if topVc is BannedAccountPopupViewController {
@@ -82,7 +82,7 @@ extension MainViewController {
             popupRouter?.routeTo(to: RouteID.bannedAccountPopup(animated: animated), from: self)
             return
         } else if session.status == 2 {
-            logger.logD(self, "User is out of data.")
+            logger.logD("MainViewController", "User is out of data.")
             if !didShowOutOfDataPopup {
                 showOutOfDataPopup()
                 didShowOutOfDataPopup = true
@@ -183,19 +183,19 @@ extension MainViewController {
     }
 
     @objc func disconnectVPNIntentReceived() {
-        logger.logD(self, "Disconnect intent received from outside of the app.")
+        logger.logD("MainViewController", "Disconnect intent received from outside of the app.")
         disableVPNConnection()
     }
 
     @objc func connectVPNIntentReceived() {
-        logger.logD(self, "Connect intent received from outside of the app.")
+        logger.logD("MainViewController", "Connect intent received from outside of the app.")
         enableVPNConnection()
     }
 
     func connectButtonTapped() {
         HapticFeedbackGenerator.shared.run(level: .medium)
         if vpnConnectionViewModel.isDisconnected() || vpnConnectionViewModel.isDisconnecting() {
-            logger.logI(MainViewController.self, "User tapped to connect.")
+            logger.logI("MainViewController", "User tapped to connect.")
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 enableVPNConnection()
@@ -203,7 +203,7 @@ extension MainViewController {
                 displayInternetConnectionLostAlert()
             }
         } else {
-            logger.logD(self, "User tapped to disconnect.")
+            logger.logD("MainViewController", "User tapped to disconnect.")
             vpnConnectionViewModel.disableConnection()
         }
     }
@@ -240,18 +240,18 @@ extension MainViewController {
     }
 
     func logoButtonTapped() {
-        logger.logD(self, "User tapped to view Preferences view.")
+        logger.logD("MainViewController", "User tapped to view Preferences view.")
         //  HapticFeedbackGenerator.shared.run(level: .medium)
         router?.routeTo(to: RouteID.mainMenu, from: self)
     }
 
     @objc func notificationsButtonTapped() {
-        logger.logD(self, "User tapped to view Notifications view.")
+        logger.logD("MainViewController", "User tapped to view Notifications view.")
         showNotificationsViewController()
     }
 
     @objc func upgradeButtonTapped() {
-        logger.logD(self, "User tapped upgrade button.")
+        logger.logD("MainViewController", "User tapped upgrade button.")
         showUpgradeView()
     }
 }

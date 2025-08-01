@@ -26,7 +26,7 @@ class NewsFeedViewController: PreferredFocusedViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Displaying Notifications View")
+        logger.logD("NewsFeedViewController", "Displaying Notifications View")
         setup()
         bindViews()
     }
@@ -132,7 +132,7 @@ extension NewsFeedViewController: OptionSelectionViewDelegate {
         guard let index = listStackView.arrangedSubviews.firstIndex(of: sender), sections.count >= index
         else { return }
         let details = sections[index-1]
-        logger.logD(self, "Pressed to see details of \(details.title).")
+        logger.logD("NewsFeedViewController", "Pressed to see details of \(details.title).")
         setupDetailsView(with: details)
         for arrangedSubview in listStackView.arrangedSubviews {
             if let view = arrangedSubview as? OptionSelectionView {

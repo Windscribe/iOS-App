@@ -37,7 +37,7 @@ class ShakeForDataViewModel: ShakeForDataViewModelType {
     }
 
     func wasShown() {
-        logger.logD(self, "Displaying Shake For Data View")
+        logger.logD("ShakeForDataViewModel", "Displaying Shake For Data View")
         timerCount.onNext(startTimerCount)
         shakeCount.onNext(0)
         start()

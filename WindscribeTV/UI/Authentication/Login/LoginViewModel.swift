@@ -77,7 +77,6 @@ class LoginViewModelImpl: LoginViewModel {
         }
 
         showLoadingView.onNext(true)
-        logger.logD("LoginViewModel", "Starting AuthToken login handshake...")
 
         apiCallManager.authTokenLogin(useAsciiCaptcha: true)
             .observe(on: MainScheduler.instance)
@@ -108,7 +107,7 @@ class LoginViewModelImpl: LoginViewModel {
                     captchaVM.loginSuccess
                         .observe(on: MainScheduler.instance)
                         .bind { [weak self] session in
-                            self?.logger.logD("LoginViewModel", "Captcha login success. Preparing user data.")
+                            self?.logger.logI("LoginViewModel", "Captcha login success. Preparing user data.")
                             self?.showLoadingView.onNext(true)
                             self?.handleLoginSuccess(session: session)
                         }
@@ -203,8 +202,8 @@ class LoginViewModelImpl: LoginViewModel {
             .subscribe(onSuccess: { [weak self] xpressResponse in
                 self?.xpressCode.onNext(xpressResponse.xPressLoginCode)
                 self?.startXPressLoginCodeVerifier(response: xpressResponse)
-            }, onFailure: { [self] _ in
-                self.logger.logE(self, "Unable to generate Login code. Check you network connection.")
+            }, onFailure: { [self] error in
+                self.logger.logE("LoginViewModel", "Unable to generate Login code: \(error)")
                 self.failedState.onNext(.loginCode(TextsAsset.TVAsset.loginCodeError))
             }).disposed(by: disposeBag)
     }
@@ -228,12 +227,12 @@ class LoginViewModelImpl: LoginViewModel {
                             WifiManager.shared.saveCurrentWifiNetworks()
                             self?.preferences.saveLoginDate(date: Date())
                             self?.userRepository.login(session: session)
-                            self?.logger.logI(LoginViewModelImpl.self, "Login successful with login code, Preparing user data for \(session.username)")
+                            self?.logger.logI("LoginViewModel", "Login successful with login code, Preparing user data for \(session.username)")
                             self?.prepareUserData()
                             self?.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                         }).disposed(by: self.disposeBag)
                     }, onFailure: { [self] error in
-                        self.logger.logE(self, error.localizedDescription)
+                        self.logger.logE("LoginViewModel", "Failed to verify XPress login code: \(error.localizedDescription)")
                         invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
                     }).disposed(by: self.disposeBag)
             })
@@ -245,7 +244,7 @@ class LoginViewModelImpl: LoginViewModel {
         let now = Date()
         let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
         if secondsPassed > loginCodeResponse.ttl {
-            logger.logD(self, "Failed to verify XPress login code in ttl .Giving up")
+            logger.logE("LoginViewModel", "Failed to verify XPress login code in ttl. Giving up")
             failedState.onNext(.network(""))
         }
     }
@@ -275,10 +274,10 @@ class LoginViewModelImpl: LoginViewModel {
 
     private func prepareUserData() {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            logger.logD(self, "User data is ready")
+            logger.logD("LoginViewModel", "User data is ready")
             emergencyConnectRepository.cleansEmergencyConfigs()
             if emergencyConnectRepository.isConnected() == true {
-                logger.logD(self, "Disconnecting emergency connect.")
+                logger.logD("LoginViewModel", "Disconnecting emergency connect.")
                 disconnectFromEmergencyConnect()
             } else {
                 showLoadingView.onNext(false)
@@ -286,7 +285,7 @@ class LoginViewModelImpl: LoginViewModel {
             }
         }, onFailure: { [weak self] error in
             self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-            self?.logger.logE(LoginViewModelImpl.self, "Failed to prepare user data: \(error)")
+            self?.logger.logE("LoginViewModel", "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {
             case let Errors.apiError(e):

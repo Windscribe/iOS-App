@@ -22,7 +22,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Add Email Popup Shown.")
+        logger.logD("AddEmailPopupViewController", "Add Email Popup Shown.")
         bindViews()
     }
 
@@ -62,7 +62,7 @@ class AddEmailPopupViewController: BasePopUpViewController {
 
     private func continueButtonTapped() {
         guard let emailText = emailTextField.text else { return }
-        logger.logD(self, "User tapped to submit email.")
+        logger.logD("AddEmailPopupViewController", "User tapped to submit email.")
         showLoading()
         addEmailButton.isEnabled = false
         aeViewModel.changeEmailAddress(email: emailText).observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in

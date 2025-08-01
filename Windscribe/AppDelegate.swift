@@ -65,30 +65,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_: UIApplication) {
-        logger.logD(self, "App state changed to WillResignActive.")
+        logger.logI("AppDelegate", "App state changed to WillResignActive.")
     }
 
     func applicationDidEnterBackground(_: UIApplication) {
         // Once user have left the app remove last push notification payload.
-        logger.logD(self, "App state changed to EnterBackground.")
+        logger.logI("AppDelegate", "App state changed to EnterBackground.")
         pushNotificationManager.addPushNotification(notificationPayload: nil)
         preferences.saveServerSettings(settings: WSNet.instance().currentPersistentSettings())
     }
 
     func applicationWillEnterForeground(_: UIApplication) {
-        logger.logD(self, "App state changed to WillEnterForeground.")
+        logger.logI("AppDelegate", "App state changed to WillEnterForeground.")
         ProtocolManager.shared.resetGoodProtocol()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
-        logger.logD(self, "App state changed to Active.")
+        logger.logI("AppDelegate", "App state changed to Active.")
         registerForPushNotifications()
         AutomaticMode.shared.resetFailCounts()
         livecycleManager.appEnteredForeground()
     }
 
     func applicationWillTerminate(_: UIApplication) {
-        logger.logD(self, "App state changed to WillTerminate.")
+        logger.logI("AppDelegate", "App state changed to WillTerminate.")
     }
 
     /// Records app install.
@@ -96,9 +96,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
             apiManager.recordInstall(platform: "ios").subscribe(onSuccess: { _ in
-                self.logger.logD(self, "Successfully recorded new install.")
+                self.logger.logD("AppDelegate", "Successfully recorded new install.")
             }, onFailure: { error in
-                self.logger.logE(self, "Failed to record new install: \(error)")
+                self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
             }).disposed(by: disposeBag)
         }
     }
@@ -144,14 +144,14 @@ extension AppDelegate {
     func application(_: UIApplication, open url: URL, sourceApplication _: String?, annotation _: Any) -> Bool {
         if preferences.userSessionAuth() != nil {
             if url.isFileURL && url.pathExtension == "ovpn" {
-                logger.logD(self, "Importing OpenVPN .ovpn file")
+                logger.logI("AppDelegate", "Importing OpenVPN .ovpn file")
                 if let error = customConfigRepository.saveOpenVPNConfig(url: url) {
                     AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
                 } else {
                     NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
                 }
             } else if url.isFileURL && url.pathExtension == "conf" {
-                logger.logD(self, "Importing WireGuard .conf file")
+                logger.logI("AppDelegate", "Importing WireGuard .conf file")
                 if let error = customConfigRepository.saveWgConfig(url: url) {
                     AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
                 } else {
@@ -189,9 +189,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler _: @escaping (UIBackgroundFetchResult) -> Void) {
-        logger.logD(self, "Push notification received [didReceiveRemoteNotification].")
+        logger.logD("AppDelegate", "Push notification received [didReceiveRemoteNotification].")
         if let userInfo = userInfo as? [String: AnyObject] {
-            logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
+            logger.logD("AppDelegate", "Push notification received while app was in background now handling silent actions: \(userInfo)")
             pushNotificationManager.handleSilentPushNotificationActions(
                 payload: PushNotificationPayload(userInfo: userInfo))
         }
@@ -203,16 +203,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     /// Called when registerForRemoteNotification is successful. Sends device token to the server.
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("") { $0 + String(format: "%02.2hhX", $1) }
-        logger.logD(self, "Sending notifcation token to server.")
+        logger.logI("AppDelegate", "Sending notifcation token to server.")
         apiManager.getSession(token)
             .subscribe(on: MainScheduler.asyncInstance)
             .observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-            logger.logD(self, "Remote notification token registered with server. \(token)")
+            logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
             localDatabase.saveOldSession()
             localDatabase.saveSession(session: session).disposed(by: disposeBag)
             preferences.saveRegisteredForPushNotifications(bool: true)
         }, onFailure: { [self] error in
-            logger.logE(self, "Failed to register remote notification token with server \(error).")
+            logger.logE("AppDelegate", "Failed to register remote notification token with server \(error).")
         }).disposed(by: disposeBag)
     }
 
@@ -225,9 +225,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 willPresent response: UNNotification,
                                 withCompletionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        logger.logD(self, "Push notification received [willPresent].")
+        logger.logI("AppDelegate", "Push notification received [willPresent].")
         if let userInfo = response.request.content.userInfo as? [String: AnyObject] {
-            logger.logD(self, "Push notification received while app was in background now handling silent actions: \(userInfo)")
+            logger.logD("AppDelegate", "Push notification received while app was in background now handling silent actions: \(userInfo)")
             pushNotificationManager.handleSilentPushNotificationActions(
                 payload: PushNotificationPayload(userInfo: userInfo))
         }
@@ -238,9 +238,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler: @escaping () -> Void) {
-        logger.logD(self, "Push notification received [didReiceive].")
+        logger.logI("AppDelegate", "Push notification received [didReiceive].")
         if let userInfo = response.notification.request.content.userInfo as? [String: AnyObject] {
-            logger.logD(self, "User clicked on push notification: \(userInfo)")
             pushNotificationManager.addPushNotification(
                 notificationPayload: PushNotificationPayload(userInfo: userInfo))
         }

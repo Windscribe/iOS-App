@@ -95,7 +95,7 @@ class WifiManager {
                 }
             }
         }, onError: { _ in
-            self.logger.logD(self, "Unable to get network name")
+            self.logger.logI("WifiManager", "Unable to get network name")
         })
     }
 
@@ -129,21 +129,20 @@ class WifiManager {
                 }
             }, onError: { [weak self] e in
                 guard let self = self else { return }
-                self.logger.logE(self, "Error getting network list. \(e)")
+                self.logger.logE("WifiManager", "Error getting network list. \(e)")
             }, onCompleted: { [weak self] in
                 guard let self = self else { return }
-                self.logger.logD(self, "Network list is empty.")
                 self.observingNetworks = false
             }).disposed(by: disposeBag)
     }
 
     private func observeAutoSecureSettings() {
         preferences.getAutoSecureNewNetworks().compactMap { $0 }.subscribe(onNext: { autoSecure in
-            self.logger.logD(self, "Auto secure network setting: \(autoSecure)")
+            self.logger.logI("WifiManager", "Auto secure network setting: \(autoSecure)")
         }, onError: { e in
-            self.logger.logE(self, "Error getting auto secure property. \(e)")
+            self.logger.logE("WifiManager", "Error getting auto secure property. \(e)")
         }, onCompleted: {
-            self.logger.logD(self, "Auto secure property is empty.")
+            self.logger.logI("WifiManager", "Auto secure property is empty.")
         }).disposed(by: disposeBag)
     }
 
@@ -157,7 +156,7 @@ class WifiManager {
                                       port: defaultPort,
                                       preferredProtocol: defaultProtocol,
                                       preferredPort: defaultPort)
-            logger.logD(self, "Adding \"\(wifiSSID)\" to \(network.status ? "Unsecured" : "secured") networks database.")
+            logger.logI("WifiManager", "Adding \"\(wifiSSID)\" to \(network.status ? "Unsecured" : "secured") networks database.")
             localDb.saveNetwork(wifiNetwork: network).disposed(by: disposeBag)
             if !observingNetworks {
                 observeSecuredNetworks()
@@ -176,7 +175,7 @@ class WifiManager {
         guard let result = connectedSecuredNetwork,
         !result.isInvalidated else { return }
         if (result.protocolType != selectedProtocol) || (result.port != selectedPort) {
-            logger.logI(self, "Protocol for \"\(result.SSID)\" is set to \(result.protocolType):\(result.port)")
+            logger.logI("WifiManager", "Protocol for \"\(result.SSID)\" is set to \(result.protocolType):\(result.port)")
             selectedProtocol = result.protocolType
             selectedPort = result.port
         }
@@ -205,7 +204,7 @@ class WifiManager {
             guard let connectionMode = try? connectionMode.value() else { return }
             if connectionMode != Fields.Values.manual, network.preferredProtocolStatus == false {
                 if network.protocolType != defaultProtocol {
-                    logger.logI(self, "Updating \"\(network.SSID)\"'s protocol settings to \(defaultProtocol):\(defaultPort)")
+                    logger.logI("WifiManager", "Updating \"\(network.SSID)\"'s protocol settings to \(defaultProtocol):\(defaultPort)")
                     localDb.updateWifiNetwork(network: network,
                                               properties: [
                                                 Fields.protocolType: defaultProtocol,

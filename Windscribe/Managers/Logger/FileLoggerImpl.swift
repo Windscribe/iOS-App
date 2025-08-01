@@ -11,25 +11,115 @@ import Foundation
 import RxSwift
 
 class FileLoggerImpl: FileLogger {
+    enum LogLevel: String {
+        case debug, info, error
+    }
+
+    private struct LogBufferModel: Codable {
+        enum CodingKeys: String, CodingKey {
+            case level = "lvl"
+            case tag = "mod"
+            case message = "msg"
+            case timestamp = "tm"
+        }
+
+        let level: LogLevel
+        let tag: String
+        let message: String
+        let timestamp: TimeInterval
+
+        private static let jsonDateFormatter: DateFormatter = {
+              let formatter = DateFormatter()
+              formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+              return formatter
+          }()
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+
+            let formattedTime = LogBufferModel.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+
+            // Encode in specific order: tm, lvl, mod, msg for human readability
+            try container.encode(formattedTime, forKey: .timestamp)
+            try container.encode(level.rawValue, forKey: .level)
+            try container.encode(tag, forKey: .tag)
+            try container.encode(message, forKey: .message)
+        }
+
+        private func escapeJSONString(_ input: String) -> String {
+            var result = ""
+            for char in input {
+                switch char {
+                case "\"": result += "\\\""
+                case "\\": result += "\\\\"
+                case "\n": result += "\\n"
+                case "\r": result += "\\r"
+                case "\t": result += "\\t"
+                default: result.append(char)
+                }
+            }
+            return result
+        }
+
+        func toOrderedJSONString() -> String {
+              let formattedTime = Self.jsonDateFormatter.string(from: Date(timeIntervalSince1970: timestamp))
+
+              // Prevent multiple replacingOccurrences
+              let escapedTag = escapeJSONString(tag)
+              let escapedMessage = escapeJSONString(message)
+
+              return "{\"tm\": \"\(formattedTime)\", \"lvl\": \"\(level.rawValue)\", \"mod\": \"\(escapedTag)\", \"msg\": \"\(escapedMessage)\"}"
+          }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            // Decode tag and message directly
+            tag = try container.decode(String.self, forKey: .tag)
+            message = try container.decode(String.self, forKey: .message)
+
+            // Decode level string and convert to enum
+            let levelString = try container.decode(String.self, forKey: .level)
+            switch levelString {
+            case "debug": level = .debug
+            case "info": level = .info
+            case "error": level = .error
+            default: level = .info // fallback
+            }
+
+            // Decode timestamp string and convert to TimeInterval
+            let timestampString = try container.decode(String.self, forKey: .timestamp)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+            timestamp = dateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+        }
+
+        // Keep the original init for creating new log entries
+        init(level: LogLevel, tag: String, message: String) {
+            self.level = level
+            self.tag = tag
+            self.message = message
+            self.timestamp = Date().timeIntervalSince1970
+        }
+    }
+
     private let maxLogLength = 120_000
+    private let logFileName = "windscribe.log"
 
-    // MARK: - Throttling Configuration (Errors Prioritized but Limited)
-    private let throttleInterval: TimeInterval = 0.2 // 200ms minimum between identical non-error logs
-    private let maxNonErrorLogsPerSecond: Int = 35 // Limit debug/info logs to 35 per second (reduced)
-    private let burstAllowance: Int = 5 // Allow burst of 5 non-error logs before throttling
+    // MARK: - Log Batching Configuration
+    private let batchFlushInterval: TimeInterval = 2.0 // Flush every 2 seconds
+    private let batchMaxSize: Int = 50 // Flush when buffer reaches 50 logs
+    private let batchMaxMemorySize: Int = 10_000 // Flush when buffer reaches ~10KB of text
 
-    // Error throttling (still prioritized but with emergency limits)
-    private let maxErrorLogsPerSecond: Int = 60 // Allow up to 60 error logs per second
-    private let errorThrottleInterval: TimeInterval = 0.05 // 50ms minimum between identical error logs
+    // MARK: - Log Retention Configuration
+    private let maxLogRetentionHours: TimeInterval = 24 * 60 * 60 // 24 hours in seconds
+    private let maxLogFileSize: Int = 2 * 1024 * 1024 // 2MB total
 
-    // MARK: - Throttling State
-    private let throttleQueue = DispatchQueue(label: "com.windscribe.logging.throttle", qos: .utility)
-    private var messageThrottleMap: [String: TimeInterval] = [:]
-    private var errorMessageThrottleMap: [String: TimeInterval] = [:]
-    private var nonErrorLogTimestamps: [TimeInterval] = []
-    private var errorLogTimestamps: [TimeInterval] = []
-    private var currentBurstCount: Int = 0
-    private var lastBurstReset: TimeInterval = 0
+    // MARK: - Batching State
+    private let batchQueue = DispatchQueue(label: "com.windscribe.logging.batch", qos: .utility)
+    private var logBuffer: [LogBufferModel] = []
+    private var batchTimer: Timer?
+    private var currentBufferSize: Int = 0
     var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
         #if os(tvOS)
@@ -41,154 +131,186 @@ class FileLoggerImpl: FileLogger {
 
     init() {
         setupLogger()
+        startBatchTimer()
     }
 
-    func logD(_ tag: Any, _ message: String) {
-//        #if DEBUG
-        logWithThrottling(.debug, tag: tag, message: message)
-//        #endif
+    func logD(_ tag: String, _ message: String) {
+        #if DEBUG
+        addToBatch(.debug, tag: tag, message: message)
+        #endif
     }
 
-    func logI(_ tag: Any, _ message: String) {
-        logWithThrottling(.info, tag: tag, message: message)
+    func logI(_ tag: String, _ message: String) {
+        addToBatch(.info, tag: tag, message: message)
     }
 
-    func logE(_ tag: Any, _ message: String) {
-        // ERRORS ARE PRIORITIZED BUT STILL THROTTLED FOR MEMORY PROTECTION
-        logWithThrottling(.error, tag: tag, message: message)
+    func logWSNet(_ message: String) {
+        guard let jsonData = message.data(using: .utf8),
+        let wsnetLog = try? JSONDecoder().decode(LogBufferModel.self, from: jsonData)
+        else {
+            addToBatch(.info, tag: "wsnet", message: message)
+            return
+        }
+        addLogBufferModelToBatch(wsnetLog)
     }
 
-    // MARK: - Throttling Implementation (All Levels with Error Priority)
-
-    private enum LogLevel {
-        case debug, info, error
+    func logE(_ tag: String, _ message: String) {
+        addToBatch(.error, tag: tag, message: message)
     }
 
-    private func logWithThrottling(_ level: LogLevel, tag: Any, message: String) {
-        throttleQueue.async { [weak self] in
+    // MARK: - Log Batching Implementation
+
+    private func getLogFileURL() -> URL? {
+        guard let logDirectory = logDirectory else {
+            return nil
+        }
+        return logDirectory.appendingPathComponent(logFileName)
+    }
+
+    private func addToBatch(_ level: LogLevel, tag: String, message: String) {
+        let logEntry = LogBufferModel(level: level, tag: tag, message: message)
+        addLogBufferModelToBatch(logEntry)
+    }
+
+    private func addLogBufferModelToBatch(_ logEntry: LogBufferModel) {
+        batchQueue.async { [weak self] in
             guard let self = self else { return }
+            self.logBuffer.append(logEntry)
+            self.currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
 
-            let now = Date().timeIntervalSince1970
-            let messageHash = "\(tag)-\(message)".hash
-            let messageKey = String(messageHash)
+            // Check if we should flush the buffer
+            if self.logBuffer.count >= self.batchMaxSize ||
+               self.currentBufferSize >= self.batchMaxMemorySize {
+                self.flushLogBuffer()
+            }
+        }
+    }
 
-            if level == .error {
-                // Error log throttling - more permissive but still limited
-                if let lastLogTime = self.errorMessageThrottleMap[messageKey],
-                   now - lastLogTime < self.errorThrottleInterval {
-                    return // Skip duplicate error too soon
+    private func startBatchTimer() {
+        self.batchTimer = Timer.scheduledTimer(withTimeInterval: self.batchFlushInterval, repeats: true) { [weak self] _ in
+            self?.flushLogBuffer()
+        }
+    }
+
+    private func flushLogBuffer() {
+        batchQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard !self.logBuffer.isEmpty else { return }
+
+            let bufferCopy = self.logBuffer
+            self.logBuffer.removeAll()
+            self.currentBufferSize = 0
+
+            // Sort by timestamp to maintain chronological order
+            let sortedLogs = bufferCopy.sorted { $0.timestamp < $1.timestamp }
+
+            // Convert to JSON and write to file
+            self.writeLogsToFile(sortedLogs)
+        }
+    }
+
+    private func writeLogsToFile(_ logs: [LogBufferModel]) {
+        guard let logFileURL = getLogFileURL() else { return }
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.sortedKeys]
+        var newJsonLines: [String] = []
+
+        // Encode new logs using custom ordered JSON
+        for log in logs {
+            let jsonString = log.toOrderedJSONString()
+            newJsonLines.append(jsonString)
+        }
+
+        guard !newJsonLines.isEmpty else { return }
+
+        do {
+            // Read existing logs and combine with new ones
+            var allLogs: [LogBufferModel] = []
+
+            if FileManager.default.fileExists(atPath: logFileURL.path) {
+                let existingLogs = parseExistingLogFile(logFileURL: logFileURL)
+                allLogs.append(contentsOf: existingLogs)
+            }
+
+            // Add new logs
+            allLogs.append(contentsOf: logs)
+
+            // Apply retention policies
+            let trimmedLogs = applyRetentionPolicies(logs: allLogs)
+
+            // Write trimmed logs back to file using custom ordered JSON
+            let trimmedJsonLines = trimmedLogs.map { log in
+                log.toOrderedJSONString()
+            }
+
+            let finalContent = trimmedJsonLines.joined(separator: "\n") + (trimmedJsonLines.isEmpty ? "" : "\n")
+            try finalContent.write(to: logFileURL, atomically: true, encoding: .utf8)
+
+        } catch {
+            logE("FileLogger", "Failed to write logs to file: \(error)")
+        }
+    }
+
+    private func parseExistingLogFile(logFileURL: URL) -> [LogBufferModel] {
+        do {
+            let content = try String(contentsOf: logFileURL, encoding: .utf8)
+            let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
+
+            let decoder = JSONDecoder()
+            var parsedLogs: [LogBufferModel] = []
+
+            for line in lines {
+                if let data = line.data(using: .utf8) {
+                    do {
+                        let logEntry = try decoder.decode(LogBufferModel.self, from: data)
+                        parsedLogs.append(logEntry)
+                    } catch {
+                        logE("FileLogger", "Failed to parse log line: \(line) - Error: \(error)")
+                    }
                 }
+            }
 
-                if !self.shouldAllowErrorLog(at: now) {
-                    return // Skip due to error rate limiting
-                }
+            return parsedLogs
+        } catch {
+            logE("FileLogger", "Failed to read existing log file: \(error)")
+            return []
+        }
+    }
 
-                self.errorMessageThrottleMap[messageKey] = now
-                self.recordErrorLogTimestamp(now)
+    private func applyRetentionPolicies(logs: [LogBufferModel]) -> [LogBufferModel] {
+        let now = Date().timeIntervalSince1970
+        let cutoffTime = now - maxLogRetentionHours
 
-                // Clean up error throttle map periodically
-                if self.errorMessageThrottleMap.count > 200 {
-                    self.cleanupErrorThrottleMap(currentTime: now)
-                }
+        // Step 1: Remove logs older than 24 hours
+        let recentLogs = logs.filter { $0.timestamp >= cutoffTime }
+
+        // Step 2: If still over size limit, remove oldest entries
+        let sortedLogs = recentLogs.sorted { $0.timestamp < $1.timestamp }
+
+        // Calculate current size using ordered JSON strings
+        var currentSize = 0
+        var finalLogs: [LogBufferModel] = []
+
+        // Start from newest and work backwards to keep as much recent data as possible
+        for log in sortedLogs.reversed() {
+            let jsonString = log.toOrderedJSONString()
+            let logSize = jsonString.count + 1 // +1 for newline
+
+            if currentSize + logSize <= maxLogFileSize {
+                finalLogs.insert(log, at: 0) // Insert at beginning to maintain chronological order
+                currentSize += logSize
             } else {
-                // Non-error log throttling (debug/info)
-                if let lastLogTime = self.messageThrottleMap[messageKey],
-                   now - lastLogTime < self.throttleInterval {
-                    return // Skip this log due to message throttling
-                }
-
-                if !self.shouldAllowNonErrorLog(at: now) {
-                    return // Skip this log due to rate limiting
-                }
-
-                self.messageThrottleMap[messageKey] = now
-                self.recordNonErrorLogTimestamp(now)
-
-                // Clean up old entries periodically
-                if self.messageThrottleMap.count > 500 {
-                    self.cleanupThrottleMap(currentTime: now)
-                }
-            }
-
-            // Perform actual logging on main queue
-            DispatchQueue.main.async {
-                switch level {
-                case .debug:
-                    DDLogDebug(DDLogMessageFormat("\(message)"), level: DDLogLevel.debug, tag: tag)
-                case .info:
-                    DDLogInfo(DDLogMessageFormat("\(message)"), level: DDLogLevel.info, tag: tag)
-                case .error:
-                    DDLogError(DDLogMessageFormat("\(message)"), level: DDLogLevel.error, tag: tag)
-                }
+                break // Stop adding logs once we hit the size limit
             }
         }
+
+        return finalLogs
     }
 
-    private func shouldAllowNonErrorLog(at timestamp: TimeInterval) -> Bool {
-        // Remove timestamps older than 1 second
-        nonErrorLogTimestamps.removeAll { timestamp - $0 > 1.0 }
-
-        // Check burst allowance
-        if timestamp - lastBurstReset > 1.0 {
-            // Reset burst counter every second
-            currentBurstCount = 0
-            lastBurstReset = timestamp
-        }
-
-        // Allow bursts up to the limit
-        if currentBurstCount < burstAllowance {
-            currentBurstCount += 1
-            return true
-        }
-
-        // Check rate limit for sustained logging
-        if nonErrorLogTimestamps.count < maxNonErrorLogsPerSecond {
-            return true
-        }
-
-        return false
-    }
-
-    private func recordNonErrorLogTimestamp(_ timestamp: TimeInterval) {
-        nonErrorLogTimestamps.append(timestamp)
-
-        // Keep only recent timestamps to prevent memory growth
-        if nonErrorLogTimestamps.count > maxNonErrorLogsPerSecond * 2 {
-            nonErrorLogTimestamps.removeFirst(nonErrorLogTimestamps.count - maxNonErrorLogsPerSecond)
-        }
-    }
-
-    private func shouldAllowErrorLog(at timestamp: TimeInterval) -> Bool {
-        // Remove error timestamps older than 1 second
-        errorLogTimestamps.removeAll { timestamp - $0 > 1.0 }
-
-        // Check error rate limit
-        if errorLogTimestamps.count < maxErrorLogsPerSecond {
-            return true
-        }
-
-        return false
-    }
-
-    private func recordErrorLogTimestamp(_ timestamp: TimeInterval) {
-        errorLogTimestamps.append(timestamp)
-
-        // Keep only recent timestamps to prevent memory growth
-        if errorLogTimestamps.count > maxErrorLogsPerSecond * 2 {
-            errorLogTimestamps.removeFirst(errorLogTimestamps.count - maxErrorLogsPerSecond)
-        }
-    }
-
-    private func cleanupThrottleMap(currentTime: TimeInterval) {
-        messageThrottleMap = messageThrottleMap.filter { _, lastLogTime in
-            currentTime - lastLogTime < 30.0 // Keep entries for 30 seconds
-        }
-    }
-
-    private func cleanupErrorThrottleMap(currentTime: TimeInterval) {
-        errorMessageThrottleMap = errorMessageThrottleMap.filter { _, lastLogTime in
-            currentTime - lastLogTime < 10.0 // Keep error entries for 10 seconds
-        }
+    deinit {
+        batchTimer?.invalidate()
+        flushLogBuffer() // Ensure any remaining logs are written
     }
 
     func getLogData() -> Single<String> {
@@ -196,79 +318,24 @@ class FileLoggerImpl: FileLogger {
             guard let self = self else {
                 return Disposables.create {}
             }
-            var allLogEntries: [String] = []
-            let allLogFiles = self.getAllLogFiles()
-
-            for logFileURL in allLogFiles {
-                do {
-                    let logContent = try String(contentsOf: logFileURL)
-                    allLogEntries.append(contentsOf: buildLogEntries(from: logContent))
-                } catch {
-                    print("Error reading log file: \(error)")
-                }
+            guard let logFileURL = getLogFileURL() else {
+                return Disposables.create {}
             }
 
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-
-            // Assuming log entries have timestamps at the beginning, sort them based on timestamps.
-            let sortedLogEntries = allLogEntries
-                .compactMap { entry -> (Date, String)? in
-                    let components = entry.components(separatedBy: " ")
-                    guard components.count >= 2 else {
-                        return nil
-                    }
-                    if let timestamp = dateFormatter.date(from: "\(components[0]) \(components[1])"),
-                       let jsonEntry = self.logEntryToJSON(entry) {
-                        return (timestamp, jsonEntry)
-                    }
-                    return nil
-                }
-                .sorted { $0.0.compare($1.0) == .orderedAscending }
-                .map { $0.1 }
-            let combinedLog = sortedLogEntries.joined(separator: "")
-            let truncatedLog: String
-            if combinedLog.count > maxLogLength {
-                let startIndex = combinedLog.index(combinedLog.endIndex, offsetBy: -maxLogLength)
-                let substring = combinedLog[startIndex...]
-                if let firstNewlineIndex = substring.firstIndex(of: "\n") {
-                    truncatedLog = String(substring[firstNewlineIndex...])
-                } else {
-                    truncatedLog = String(substring)
-                }
-            } else {
-                truncatedLog = combinedLog
+            self.batchQueue.async {
+                self.flushLogBuffer()
+                let allLogs = self.parseExistingLogFile(logFileURL: logFileURL)
+                let combinedLog = allLogs.sorted { $0.timestamp < $1.timestamp }
+                    .map { $0.toOrderedJSONString() }
+                    .reduce(into: "", {
+                        if $0.count + $1.count <= self.maxLogLength {
+                            return $0 += $1 + "\n"
+                        }
+                    })
+                callback(.success(combinedLog))
             }
-            callback(.success(truncatedLog))
             return Disposables.create {}
         }
-    }
-
-    private func logEntryToJSON(_ logEntry: String) -> String? {
-        let values = logEntry.split(separator: " ")
-        guard values.count >= 5 else { return nil }
-        var message = Array(values[5..<values.endIndex]).reduce("") { result, value in
-            let middle = result.isEmpty ? result : " "
-            return result + middle + String(value)
-        }
-
-        guard !message.isEmpty else { return nil }
-
-        if !message.contains("DeviceInfo") {
-            message.removeLast()
-        }
-
-        let lvl = removeBrackets(String(values[2]))
-        let mod = removeBrackets(String(values[3]))
-
-        return "{\"tm\": \"\(values[0]) \(values[1])\"," +
-        " \"lvl\": \"\(lvl)\"," +
-        " \"mod\": \"\(mod)\"," +
-        " \"msg\": \"\(message)\"}\n"
-    }
-
-    private func removeBrackets(_ input: String) -> String {
-        return input.replacingOccurrences(of: "[", with: "").replacingOccurrences(of: "]", with: "")
     }
 
     func logDeviceInfo() {
@@ -284,25 +351,24 @@ class FileLoggerImpl: FileLogger {
             "------------------------------------------------------"
         ]
         let fullInfo = deviceInfo.joined(separator: "\n")
-        logD(self, fullInfo)
+        logD("FileLogger", fullInfo)
     }
 
     private func setupLogger() {
-        let logFileManager = DDLogFileManagerDefault(logsDirectory: logDirectory?.path)
-        let fileLogger = DDFileLogger(logFileManager: logFileManager)
-        fileLogger.rollingFrequency = 0
-        fileLogger.maximumFileSize = 2_000_000
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 1
-        fileLogger.logFormatter = FileLogFormater()
-        if DDLog.allLoggers.count == 0 {
-            DDLog.add(fileLogger)
-            let osLogger = DDOSLogger(subsystem: "com.windscribe.vpn", category: "Windscribe-VPN")
-            osLogger.logFormatter = FileLogFormater()
-            DDLog.add(osLogger)
+        // Ensure log directory exists
+        guard let logDirectory = logDirectory else { return }
 
-            // Log throttling configuration on startup
-            DDLogInfo(DDLogMessageFormat("Enhanced logging throttling enabled: Max \(maxNonErrorLogsPerSecond) debug/info logs/sec, \(maxErrorLogsPerSecond) error logs/sec, \(throttleInterval)s duplicate non-error interval, \(errorThrottleInterval)s duplicate error interval."), level: DDLogLevel.info, tag: self)
+        do {
+            try FileManager.default.createDirectory(at: logDirectory, withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            logE("FileLogger", "Failed to create log directory: \(error)")
         }
+
+        // Log configuration on startup to the JSON log file
+        let retentionHours = Int(maxLogRetentionHours / (60 * 60))
+        let maxSizeMB = maxLogFileSize / (1024 * 1024)
+        let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeMB)MB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
+        addToBatch(.info, tag: "FileLogger", message: startupMessage)
     }
 
     private func getAllLogFiles() -> [URL] {
@@ -316,29 +382,4 @@ class FileLoggerImpl: FileLogger {
         }
     }
 
-    private func buildLogEntries(from fileContent: String) -> [String] {
-        var logEntries: [String] = []
-        var currentLogEntry = ""
-        let regexPattern = #"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}"#
-        do {
-            let regex = try NSRegularExpression(pattern: regexPattern, options: [])
-            let lines = fileContent.components(separatedBy: .newlines)
-
-            for line in lines {
-                let range = NSRange(location: 0, length: line.utf16.count)
-                if let match = regex.firstMatch(in: line, options: [], range: range), let timestampRange = Range(match.range, in: line) {
-                    _ = String(line[timestampRange])
-                    if !currentLogEntry.isEmpty {
-                        logEntries.append(currentLogEntry)
-                        currentLogEntry = ""
-                    }
-                }
-                currentLogEntry += line + "\n"
-            }
-            if !currentLogEntry.isEmpty {
-                logEntries.append(currentLogEntry)
-            }
-        } catch {}
-        return logEntries
-    }
 }

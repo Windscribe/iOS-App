@@ -78,7 +78,7 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
 extension StaticIPListViewModel: StaticIPListFooterViewDelegate {
     func addStaticIP() {
-        logger.logD(self, "User tapped Add Static IP button.")
+        logger.logD("StaticIPListViewModel", "User tapped Add Static IP button.")
         let urlString = LinkProvider.getWindscribeLink(path: Links.staticIPs)
         guard let url = URL(string: urlString) else { return }
         presentLinkTrigger.onNext(url)

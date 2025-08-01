@@ -61,7 +61,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger.logD(self, "Displaying Preferences View")
+        logger.logD("PreferencesMainViewController", "Displaying Preferences View")
         setup()
     }
 
@@ -106,7 +106,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
         accountViewModel.cancelAccountState.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] state in
             guard let self = self else { return }
-            self.logger.logD(self, "Cancel account state: \(state)")
+            self.logger.logD("PreferencesMainViewController", "Cancel account state: \(state)")
             switch state {
             case .initial:
                 self.hideLoading()
@@ -161,7 +161,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     }
 
     private func signoutButtonTapped() {
-        logger.logD(self, "User tapped to sign out.")
+        logger.logD("PreferencesMainViewController", "User tapped to sign out.")
         viewModel.alertManager.showYesNoAlert(viewController: self, title: TextsAsset.Preferences.logout,
                                               message: TextsAsset.Preferences.logOutAlert,
                                               completion: { result in
@@ -173,7 +173,7 @@ class PreferencesMainViewController: PreferredFocusedViewController {
 
     private func sendLogButtonTapped(logView: PreferencesOptionView) {
         if helpViewModel.networkStatus != NetworkStatus.connected {
-            logger.logD(self, "No Internet available")
+            logger.logD("PreferencesMainViewController", "No Internet available")
             DispatchQueue.main.async {
                 self.helpViewModel.alertManager.showSimpleAlert(viewController: self, title: TextsAsset.appLogSubmitFailAlert, message: "", buttonText: TextsAsset.okay)
             }
@@ -193,13 +193,13 @@ class PreferencesMainViewController: PreferredFocusedViewController {
     }
 
     private func handleCancelAccount() {
-        logger.logD(self, "Showing delete account popup.")
+        logger.logD("PreferencesMainViewController", "Showing delete account popup.")
         viewModel.alertManager.askPasswordToDeleteAccount(viewController: self).subscribe(onSuccess: { [weak self] password in
             guard let self = self else { return }
             if let password = password, !password.isEmpty {
                 self.accountViewModel.cancelAccount(password: password)
             } else {
-                self.logger.logD(self, "Entered password is nil/empty.")
+                self.logger.logD("PreferencesMainViewController", "Entered password is nil/empty.")
             }
         }, onFailure: { _ in }).disposed(by: disposeBag)
     }
@@ -266,7 +266,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
                 item.isHidden = true
         }
 
-        logger.logD(self, "Preference of type \(value) selected.")
+        logger.logD("PreferencesMainViewController", "Preference of type \(value) selected.")
 
         switch value {
         case .general: generalView.isHidden = false
@@ -285,7 +285,7 @@ extension PreferencesMainViewController: PreferencesOptionViewDelegate {
 
 extension PreferencesMainViewController: PreferencesAccountViewDelegate {
     func actionSelected(with item: AccountItemCell) {
-        logger.logD(self, "Account action of type \(item) selected.")
+        logger.logD("PreferencesMainViewController", "Account action of type \(item) selected.")
         if item.isUpgradeButton {
             router.routeTo(to: .upgrade(promoCode: nil, pcpID: nil, shouldBeRoot: false), from: self)
             return

@@ -46,12 +46,12 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     func askForPushNotificationPermission() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
             if granted && error == nil {
-                self.logger.logD(self, "Push Notification Permission granted, registering for remote notifications.")
+                self.logger.logD("PushNotificationManager", "Push Notification Permission granted, registering for remote notifications.")
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             } else {
-                self.logger.logD(self, "Push Notification Permission Not Granted. \(String(describing: error?.localizedDescription))")
+                self.logger.logE("PushNotificationManager", "Push Notification Permission Not Granted. \(String(describing: error?.localizedDescription))")
             }
         }
     }

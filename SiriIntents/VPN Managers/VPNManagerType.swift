@@ -75,13 +75,13 @@ extension VPNManagerType {
             removeOtherProfiles(otherProviders: otherProviders) { [weak self] result, error in
                 guard let self = self else { return }
                 if let error = error {
-                    logger.logE(self, "Error removing profile: \(error)")
+                    logger.logE("VPNManagerType", "Error removing profile: \(error)")
                     completion(false)
                     return
                 }
                 providerManager?.loadFromPreferences { error in
                     if let error = error {
-                        self.logger.logE(self, "Error loading profile: \(error)")
+                        self.logger.logE("VPNManagerType", "Error loading profile: \(error)")
                         completion(false)
                         return
                     }
@@ -90,21 +90,21 @@ extension VPNManagerType {
                         providerManager?.isEnabled = true
                         providerManager?.saveToPreferences { error in
                             if let error = error {
-                                self.logger.logE(self, "Error saving profile: \(error)")
+                                self.logger.logE("VPNManagerType", "Error saving profile: \(error)")
                                 completion(false)
                                 return
                             }
                             providerManager?.loadFromPreferences(completionHandler: { error in
                                 if let error = error {
-                                    self.logger.logE(self, "Error loading profile: \(error)")
+                                    self.logger.logE("VPNManagerType", "Error loading profile: \(error)")
                                     completion(false)
                                     return
                                 }
                                 do {
                                     try providerManager?.connection.startVPNTunnel()
-                                    self.logger.logD(self, "Tunnel started successfully with \(providerManager.debugDescription).")
+                                    self.logger.logD("VPNManagerType", "Tunnel started successfully with \(providerManager.debugDescription).")
                                 } catch let e {
-                                    self.logger.logE(self, "Error starting tunnel: \(e)")
+                                    self.logger.logE("VPNManagerType", "Error starting tunnel: \(e)")
                                     completion(false)
                                     return
                                 }

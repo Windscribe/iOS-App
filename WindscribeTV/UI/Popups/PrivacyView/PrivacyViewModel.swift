@@ -51,9 +51,9 @@ class PrivacyViewModel: PrivacyViewModelType {
            suggestedProtocol.port != "" {
             defaultProtocol = suggestedProtocol.protocolType
             defaultPort = suggestedProtocol.port
-            logger.logD(self, "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
+            logger.logD("PrivacyViewModel", "Detected Suggested Protocol: Protocol selection set to \(suggestedProtocol.protocolType):\(suggestedProtocol.port)")
         } else {
-            logger.logD(self, "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
+            logger.logD("PrivacyViewModel", "Used Default Protocol: Protocol selection set to \(defaultProtocol):\(defaultPort)")
         }
 
         localDatabase.updateConnectionMode(value: Fields.Values.manual)

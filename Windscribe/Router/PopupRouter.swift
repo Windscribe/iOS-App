@@ -77,7 +77,7 @@ class PopupRouter: BaseRouter, RootRouter {
             vc = UINavigationController(rootViewController: upgradeVC)
         case .rateUsPopUp:
             let logger = Assembler.resolve(FileLogger.self)
-            logger.logD(self, "Not implemented")
+            logger.logD("PopupRouter", "Not implemented")
         case .networkSecurity:
             view = Assembler.resolve(NetworkSecurityView.self)
         default: return

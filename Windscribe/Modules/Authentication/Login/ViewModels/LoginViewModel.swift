@@ -135,7 +135,7 @@ class LoginViewModelImpl: LoginViewModel {
             } receiveValue: { [weak self] tokenResponse in
                 guard let self = self else { return }
 
-                self.logger.logD("LoginViewModel", "Token received: \(tokenResponse.data.token)")
+                self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
                 self.secureToken = tokenResponse.data.token
 
                 // If CAPTCHA required
@@ -327,7 +327,7 @@ class LoginViewModelImpl: LoginViewModel {
         let secondsPassed = Int(now.timeIntervalSince(startTime) * 1000)
 
         if secondsPassed > loginCodeResponse.ttl {
-            logger.logD("LoginViewModel", "Failed to verify XPress login code in TTL. Giving up.")
+            logger.logE("LoginViewModel", "Failed to verify XPress login code in TTL. Giving up.")
             failedState = .network(TextsAsset.loginCodeExpired)
         }
     }
@@ -379,11 +379,11 @@ class LoginViewModelImpl: LoginViewModel {
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
 
-                self.logger.logD("LoginViewModel", "User data is ready")
+                self.logger.logI("LoginViewModel", "User data is ready")
                 self.emergencyConnectRepository.cleansEmergencyConfigs()
 
                 if self.emergencyConnectRepository.isConnected() == true {
-                    logger.logD("LoginViewModel", "Disconnecting emergency connect.")
+                    logger.logI("LoginViewModel", "Disconnecting emergency connect.")
                     self.disconnectFromEmergencyConnect()
                 } else {
                     self.showLoadingView = false

@@ -56,21 +56,21 @@ extension VPNManager {
                 self.lastConnectionStatus = connectionStatus
                 switch connectionStatus {
                 case .connecting:
-                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connecting")
+                    self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connecting")
                     self.checkIfUserIsOutOfData()
                 case .connected:
-                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Connected")
+                    self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connected")
                     untrustedOneTimeOnlySSID = ""
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                         self?.updateUserIpIfRequired()
                     }
                 case .disconnecting:
-                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnecting")
+                    self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Disconnecting")
                 case .disconnected:
-                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Disconnected")
+                    self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Disconnected")
                     handleConnectError()
                 case .invalid:
-                    self.logger.logD(VPNManager.self, "[\(protocolType)] VPN Status: Invalid")
+                    self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Invalid")
                 default:
                     return
                 }
@@ -92,7 +92,7 @@ extension VPNManager {
         case .available(let ip):
             // Ip is available but its a NON VPN IP.
             if !ip.isInvalidated && !ip.isOurIp {
-                logger.logI(self, "Updating non VPN IP after connection update from on demand mode.")
+                logger.logI("VPNManager", "Updating non VPN IP after connection update from on demand mode.")
                 ipRepository.getIp().subscribe().disposed(by: disposeBag)
             }
         default: ()
@@ -113,22 +113,22 @@ extension VPNManager {
             }
             if error == .credentialsFailure {
                 AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
-                self.logger.logD(self, "VPN disconnected due to credential failure")
+                self.logger.logE("VPNManager", "VPN disconnected due to credential failure")
                 Task {
                     await self.resetProfiles()
-                    self.logger.logI(self, "Disabling VPN Profiles to get access api access.")
+                    self.logger.logI("VPNManager", "Disabling VPN Profiles to get access api access.")
                     try await Task.sleep(nanoseconds: 2_000_000_000)
-                    self.logger.logI(self, "Getting new session.")
+                    self.logger.logI("VPNManager", "Getting new session.")
                     self.sessionManager.getUppdatedSession().subscribe(onSuccess: { _ in
                         self.awaitingConnectionCheck = false
                     }, onFailure: { _ in
-                        self.logger.logE(self, "Failure to update session after disabling VPN profile.")
+                        self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile.")
                         self.awaitingConnectionCheck = false
                     }).disposed(by: self.disposeBag)
                 }
             } else {
                 self.awaitingConnectionCheck = false
-                self.logger.logE(self, "Unhandled connection error: \(error.description)")
+                self.logger.logE("VPNManager", "Unhandled connection error: \(error.description)")
             }
         }
     }
@@ -192,7 +192,7 @@ extension VPNManager {
         if error.code == 50 {
             completion(.credentialsFailure)
         } else {
-            logger.logD(self, "NEVPNProvider error: \(error)")
+            logger.logE("VPNManager", "NEVPNProvider error: \(error)")
             completion(nil)
         }
     }

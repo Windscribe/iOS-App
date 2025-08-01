@@ -38,14 +38,14 @@ extension VPNManager {
     func checkLocalIPIsRFC() -> Bool {
         if let localIPAddress = NWInterface.InterfaceType.wifi.ipv4 {
             if localIPAddress.isRFC1918IPAddress {
-                logger.logD(VPNManager.self, "It's an RFC1918 address. \(localIPAddress)")
+                logger.logD("VPNManager", "It's an RFC1918 address. \(localIPAddress)")
                 return true
             } else {
-                logger.logD(VPNManager.self, "Non Rfc-1918 address found  \(localIPAddress)")
+                logger.logD("VPNManager", "Non Rfc-1918 address found  \(localIPAddress)")
                 return false
             }
         } else {
-            logger.logD(VPNManager.self, "Failed to retrieve local IP address.")
+            logger.logD("VPNManager", "Failed to retrieve local IP address.")
             return true
         }
     }

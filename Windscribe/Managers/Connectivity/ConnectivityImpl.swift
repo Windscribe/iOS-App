@@ -76,7 +76,7 @@ class ConnectivityImpl: Connectivity {
             )
             if lastEvent != appNetwork {
                 DispatchQueue.main.async {
-                    self.logger.logD(self,  appNetwork.description)
+                    self.logger.logD("Connectivity",  appNetwork.description)
                     self.network.onNext(appNetwork)
                     if !self.emergencyConnect.isConnected() {
                         WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)

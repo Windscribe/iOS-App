@@ -23,7 +23,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
     }
 
     func saveWgConfig(url: URL) -> RepositoryError? {
-        logger.logD(self, "Saving custom WireGuard config file.")
+        logger.logI("CustomConfigRepositoryImpl", "Saving custom WireGuard config file.")
         do {
             var data = try Data(contentsOf: url)
             if let fileName = url.lastPathComponent.split(separator: ".").first {
@@ -55,13 +55,13 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 return nil
             }
         } catch {
-            logger.logE(self, "Error when saving custom config file. \(error.localizedDescription)")
+            logger.logE("CustomConfigRepositoryImpl", "Error when saving custom config file. \(error.localizedDescription)")
         }
         return RepositoryError.invalidConfigData
     }
 
     func saveOpenVPNConfig(url: URL) -> RepositoryError? {
-        logger.logD(self, "Saving custom OpenVPN config file.")
+        logger.logI("CustomConfigRepositoryImpl", "Saving custom OpenVPN config file.")
         do {
             var data = try Data(contentsOf: url)
             if let fileName = url.lastPathComponent.split(separator: ".").first {
@@ -134,19 +134,19 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 return nil
             }
         } catch {
-            logger.logE(self, "Error when saving custom OpenVPN config file. \(error.localizedDescription)")
+            logger.logE("CustomConfigRepositoryImpl", "Error when saving custom OpenVPN config file. \(error.localizedDescription)")
         }
         return RepositoryError.invalidConfigData
     }
 
     func removeOpenVPNConfig(fileId: String) {
-        logger.logD(self, "Removing custom OpenVPN config file.")
+        logger.logI("CustomConfigRepositoryImpl", "Removing custom OpenVPN config file.")
         fileDatabase.removeFile(path: "\(fileId).ovpn")
         localDatabase.removeCustomConfig(fileId: fileId)
     }
 
     func removeWgConfig(fileId: String) {
-        logger.logD(self, "Removing custom config file.")
+        logger.logI("CustomConfigRepositoryImpl", "Removing custom config file.")
         fileDatabase.removeFile(path: "\(fileId).conf")
         localDatabase.removeCustomConfig(fileId: fileId)
     }

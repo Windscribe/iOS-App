@@ -336,7 +336,7 @@ extension ConnectionViewModel {
 
     func displayLocalIPAddress() {
         if !gettingIpAddress && !isConnecting() {
-            logger.logD(self, "Displaying local IP Address.")
+            logger.logD("ConnectionViewModel", "Displaying local IP Address.")
             gettingIpAddress = true
             ipRepository.getIp().subscribe(onSuccess: { _ in
                 self.gettingIpAddress = false
@@ -359,7 +359,7 @@ extension ConnectionViewModel {
     private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
             guard !WifiManager.shared.isConnectedWifiTrusted() else {
-                logger.logD(self, "User joining untrusted network")
+                logger.logI("ConnectionViewModel", "User joining untrusted network")
 
                 let currentNetwork = securedNetwork.getCurrentNetwork()
                 vpnManager.untrustedOneTimeOnlySSID = currentNetwork?.SSID ?? ""
@@ -379,32 +379,32 @@ extension ConnectionViewModel {
                 .sink(receiveCompletion: { completion in
                     switch completion {
                     case .finished:
-                        self.logger.logD(self, "Finished enabling connection.")
+                        self.logger.logD("ConnectionViewModel", "Finished enabling connection.")
                     case let .failure(error):
                         if let error = error as? NEVPNError {
-                            self.logger.logD(self, "NEVPNError: \(error.code)")
+                            self.logger.logE("ConnectionViewModel", "NEVPNError: \(error.code)")
                             return
                         }
                         if let error = error as? VPNConfigurationErrors {
-                            self.logger.logD(self, "Enable connection had a VPNConfigurationErrors:")
+                            self.logger.logE("ConnectionViewModel", "Enable connection had a VPNConfigurationErrors:")
                             if !self.handleErrors(error: error, fromEnable: true) {
                                 self.checkAutoModeFail()
                             }
                         } else {
-                            self.logger.logE(self, "Enable Connection with unknown error: \(error.localizedDescription)")
+                            self.logger.logE("ConnectionViewModel", "Enable Connection with unknown error: \(error.localizedDescription)")
                             self.checkAutoModeFail()
                         }
                     }
                 }, receiveValue: { state in
                     switch state {
                     case let .update(message):
-                        self.logger.logD(self, "Enable connection had an update: \(message)")
+                        self.logger.logD("ConnectionViewModel", "Enable connection had an update: \(message)")
                     case .validated:
-                        self.logger.logD(self, "Enable connection validate")
+                        self.logger.logD("ConnectionViewModel", "Enable connection validate")
                         self.updateState(with: .connected)
                         self.checkPreferencesForTriggers()
                     case let .vpn(status):
-                        self.logger.logD(self, "Enable connection new status: \(status.rawValue)")
+                        self.logger.logI("ConnectionViewModel", "Enable connection new status: \(status.rawValue)")
                     case .validating:
                         self.updateState(with: .testing)
                     }
@@ -418,7 +418,7 @@ extension ConnectionViewModel {
             .sink { completion in
                 switch completion {
                 case .finished:
-                    self.logger.logD(self, "Finished disabling connection.")
+                    self.logger.logD("ConnectionViewModel", "Finished disabling connection.")
                     self.displayLocalIPAddress()
                     Task { @MainActor in
                         await self.protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: false)
@@ -430,18 +430,18 @@ extension ConnectionViewModel {
                     }
                 case let .failure(error):
                     if let error = error as? VPNConfigurationErrors {
-                        self.logger.logD(self, "Disable connection had a VPNConfigurationErrors:")
+                        self.logger.logE("ConnectionViewModel", "Disable connection had a VPNConfigurationErrors:")
                         _ = !self.handleErrors(error: error)
                     } else {
-                        self.logger.logE(self, "Disable Connection with unknown error: \(error.localizedDescription)")
+                        self.logger.logE("ConnectionViewModel", "Disable Connection with unknown error: \(error.localizedDescription)")
                     }
                 }
             } receiveValue: { state in
                 switch state {
                 case let .update(message):
-                    self.logger.logD(self, "Disable connection had an update: \(message)")
+                    self.logger.logD("ConnectionViewModel", "Disable connection had an update: \(message)")
                 case let .vpn(status):
-                    self.logger.logD(self, "Disable connection new status: \(status.rawValue)")
+                    self.logger.logI("ConnectionViewModel", "Disable connection new status: \(status.rawValue)")
                 default: ()
                 }
             }
@@ -455,11 +455,11 @@ extension ConnectionViewModel {
         let connectionCount = preferences.getConnectionCount()
 
         if connectionCount == 2 {
-            logger.logD(self, "Displaying push notifications permission popup to user.")
+            logger.logD("ConnectionViewModel", "Displaying push notifications permission popup to user.")
             pushNotificationPermissionsTrigger.onNext(())
         }
         if connectionCount == 5 {
-            logger.logD(self, "Displaying Siri shortcut popup.")
+            logger.logD("ConnectionViewModel", "Displaying Siri shortcut popup.")
             siriShortcutTrigger.onNext(())
         }
 
@@ -467,7 +467,7 @@ extension ConnectionViewModel {
             guard let self else { return }
 
             guard let count = connectionCount, count % 3 == 0 else {
-                logger.logD(self, "Rate Dialog: Connection count is not a multiple of 3. Skipping...")
+                logger.logD("ConnectionViewModel", "Rate Dialog: Connection count is not a multiple of 3. Skipping...")
                 return
             }
 
@@ -478,7 +478,7 @@ extension ConnectionViewModel {
 
     // This should only be called when VPN is disconnected
     private func updateToLocalIPAddress() {
-        logger.logD(self, "Displaying local IP Address.")
+        logger.logD("ConnectionViewModel", "Displaying local IP Address.")
         gettingIpAddress = true
         ipRepository.getIp().subscribe(onSuccess: { _ in
             self.gettingIpAddress = false
@@ -517,12 +517,12 @@ extension ConnectionViewModel {
                 .configNotFound,
                 .incorrectVPNManager,
                 .connectionTimeout:
-            logger.logE(self, error.description)
+            logger.logE("ConnectionViewModel", error.description)
             return false
         case .accountExpired:
             showUpgradeRequiredTrigger.onNext(())
         case .accountBanned:
-            logger.logE(self, error.description)
+            logger.logE("ConnectionViewModel", error.description)
         case .locationNotFound(let id):
             reloadLocationsTrigger.onNext(id)
         case .networkIsOffline:
@@ -537,7 +537,7 @@ extension ConnectionViewModel {
             showAuthFailureTrigger.onNext(())
         case .connectivityTestFailed:
             guard locationsManager.getLocationType() == .custom else {
-                logger.logE(self, error.description)
+                logger.logE("ConnectionViewModel", error.description)
                 return false
             }
             showAuthFailureTrigger.onNext(())

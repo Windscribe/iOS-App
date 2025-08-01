@@ -21,6 +21,6 @@ class ShakeForDataPopupViewModel: ShakeForDataPopupViewModelType {
     }
 
     func wasShown() {
-        logger.logD(self, "Displaying Shake For Data Popup View")
+        logger.logD("ShakeForDataPopupViewModel", "Displaying Shake For Data Popup View")
     }
 }

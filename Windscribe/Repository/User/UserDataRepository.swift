@@ -41,28 +41,28 @@ class UserDataRepositoryImpl: UserDataRepository {
 
     func prepareUserData() -> Single<Void> {
 
-        logger.logD(UserDataRepositoryImpl.self, "Getting server list.")
+        logger.logI("UserDataRepository", "Getting server list.")
 
         return serverRepository.getUpdatedServers().flatMap { _ in
             self.latencyRepository.pickBestLocation()
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting iKEv2 credentials.")
+            self.logger.logD("UserDataRepository", "Getting iKEv2 credentials.")
             return self.credentialsRepository
                 .getUpdatedIKEv2Crendentials()
                 .catchAndReturn(nil)
         }.flatMap { _ in
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting OpenVPN Server config.")
+            self.logger.logI("UserDataRepository", "Getting OpenVPN Server config.")
             return self.credentialsRepository.getUpdatedServerConfig()
         }.flatMap { _ in
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting OpenVPN crendentials.")
+            self.logger.logI("UserDataRepository", "Getting OpenVPN crendentials.")
             return self.credentialsRepository.getUpdatedOpenVPNCrendentials().catchAndReturn(nil)
         }.flatMap { _ in
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting PortMap.")
+            self.logger.logI("UserDataRepository", "Getting PortMap.")
             return self.portMapRepository.getUpdatedPortMap()
         }.flatMap { _ in
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting PortMap.")
+            self.logger.logI("UserDataRepository", "Getting PortMap.")
             return self.staticIpRepository.getStaticServers().catchAndReturn([])
         }.flatMap { _ in
-            self.logger.logD(UserDataRepositoryImpl.self, "Getting Notifications.")
+            self.logger.logI("UserDataRepository", "Getting Notifications.")
             return self.notificationsRepository.getUpdatedNotifications().catchAndReturn([])
         }.map { _ in
             DispatchQueue.main.async {

@@ -270,7 +270,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 guard let self = self else { return }
 
                 if case .failure(let error) = result {
-                    self.logger.logI("SignUpViewModel", "Failed to signup: \(error)")
+                    self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")
                     self.handleError(error)
                 }
                 self.showLoadingView = false
@@ -285,7 +285,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func claimGhostAccount() {
-        logger.logD(self, "Claiming ghost account.")
+        logger.logD("SignUpViewModel", "Claiming ghost account.")
         showLoadingView = true
 
         apiCallManager.claimAccount(username: username, password: password, email: email)
@@ -310,7 +310,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func getUpdatedUser() {
-        logger.logD(self, "Getting updated session.")
+        logger.logD("SignUpViewModel", "Getting updated session.")
 
         userRepository.getUpdatedUser()
             .asPublisher()
@@ -328,7 +328,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func prepareUserData(ignoreError: Bool = false) {
-        logger.logD(self, "Preparing user data.")
+        logger.logD("SignUpViewModel", "Preparing user data.")
 
         userDataRepository.prepareUserData()
             .asPublisher()
@@ -358,8 +358,6 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self.showLoadingView = false
             }, receiveValue: { [weak self] _ in
                 guard let self = self else { return }
-
-                self.logger.logD("SignUpViewModel", "User data is ready")
 
                 self.emergencyConnectRepository.cleansEmergencyConfigs()
 
