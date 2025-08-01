@@ -87,7 +87,7 @@ extension UIColor {
         case .locationColor:
             return isDarkMode ? .white : .infoGray
         case .loadCircleColor:
-            return isDarkMode ? .whiteWithOpacity(opacity: 0.2) :
+            return isDarkMode ? .whiteWithOpacity(opacity: 0.1) :
                 .nightBlueOpacity(opacity: 0.2)
         case .placeholderColor:
             return isDarkMode ? .whiteWithOpacity(opacity: 0.5) :
