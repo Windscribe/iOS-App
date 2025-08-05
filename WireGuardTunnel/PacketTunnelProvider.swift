@@ -66,21 +66,40 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private func stopTunnel(completionHandler: @escaping (Error?) -> Void) {
         let error = NSError(domain: "com.windscribe", code: 50)
-        NETunnelProviderManager.loadAllFromPreferences { tunnels, _ in
+        NETunnelProviderManager.loadAllFromPreferences { tunnels, loadError in
             var wgTunnel: NETunnelProviderManager?
+
+            if let loadError = loadError {
+                self.logger.logE("PacketTunnelProvider", "Error loading tunnel preferences: \(loadError.localizedDescription)")
+                completionHandler(error)
+                return
+            }
+
             if let tunnels = tunnels {
-                for tunnel in tunnels {
+                // Filter out any nil objects to prevent crashes
+                let validTunnels = tunnels.compactMap { $0 }
+                self.logger.logD("PacketTunnelProvider", "Loaded \(validTunnels.count) valid tunnels out of \(tunnels.count) total")
+
+                for tunnel in validTunnels {
                     if tunnel.protocolConfiguration?.username == "WireGuard" {
                         wgTunnel = tunnel
+                        break
                     }
                 }
+            } else {
+                self.logger.logD("PacketTunnelProvider", "No tunnels loaded from preferences")
             }
+
             if let wgTunnel = wgTunnel {
                 wgTunnel.isOnDemandEnabled = false
-                wgTunnel.saveToPreferences() { _ in
+                wgTunnel.saveToPreferences() { saveError in
+                    if let saveError = saveError {
+                        self.logger.logE("PacketTunnelProvider", "Error saving tunnel preferences: \(saveError.localizedDescription)")
+                    }
                     completionHandler(error)
                 }
             } else {
+                self.logger.logD("PacketTunnelProvider", "No WireGuard tunnel found")
                 completionHandler(error)
             }
         }

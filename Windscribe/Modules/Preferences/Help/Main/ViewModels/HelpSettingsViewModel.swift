@@ -141,15 +141,15 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
 
         logger.getLogData()
             .asPublisher()
+            .receive(on: DispatchQueue.main)
             .flatMap { [weak self] logData -> AnyPublisher<Bool, Error> in
                 guard let self = self else {
                     return Fail(error: NSError(domain: "VMDisposed", code: -1))
                         .eraseToAnyPublisher()
                 }
 
-                var username = self.sessionManager.session?.username ?? ""
-
-                if let session = self.sessionManager.session, session.isUserGhost {
+                var username = sessionManager.session?.username ?? ""
+                if let session = sessionManager.session, session.isUserGhost {
                     username = "ghost_\(session.userId)"
                 }
 

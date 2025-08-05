@@ -15,7 +15,7 @@ enum WSNetErrors: Int32 {
     case incorrectJson = 3
     case failOverFailed = 4
 
-    var error: Error? {
+    var error: Errors? {
         switch self {
         case .success:
             return nil

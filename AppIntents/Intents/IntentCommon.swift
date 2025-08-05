@@ -37,7 +37,9 @@ func getActiveManager(for protocolType: String, completionHandler: @escaping (Sw
 @available(iOS 13.0.0, *)
 func getNEVPNManager(for protocolType: String) async throws -> NEVPNManager {
     let providers = try await NETunnelProviderManager.loadAllFromPreferences()
-    let provider = providers.first { $0.protocolConfiguration?.username == protocolType }
+    let provider = providers
+        .compactMap { $0 }
+        .first { $0.protocolConfiguration?.username == protocolType }
     if let provider = provider {
         return provider
     } else {
