@@ -16,6 +16,12 @@ extension MainViewController: ServerListTableViewDelegate {
             return
         }
 
+        // Check eligibility before proceeding
+        let session = try? viewModel.session.value()
+        guard checkEligibility(session: session, isStaticIP: false) else {
+            return
+        }
+
         if vpnManager.isDisconnecting() {
             vpnManagerViewModel.checkConnectedState()
         }
@@ -82,6 +88,13 @@ extension MainViewController: ServerListTableViewDelegate {
     func connectToBestLocation() {
         searchLocationsView.viewModel.dismiss()
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
+
+        // Check eligibility before proceeding
+        let session = try? viewModel.session.value()
+        guard checkEligibility(session: session, isStaticIP: false) else {
+            return
+        }
+
         guard let bestLocation = try? viewModel.bestLocation.value() else { return }
         // PersistenceManager.shared.retrieve(type: BestLocation.self)?.first else { return }
         if !vpnManagerViewModel.isConnecting() {

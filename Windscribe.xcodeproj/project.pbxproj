@@ -1216,6 +1216,9 @@
 		F4E48D872DB9C2B0005CB047 /* ws_button_subpingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D662DB9C2B0005CB047 /* ws_button_subpingoff.m4a */; };
 		F4E48D882DB9C2B0005CB047 /* ws_button_boingon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5B2DB9C2B0005CB047 /* ws_button_boingon.m4a */; };
 		F4E48D8B2DBAB85F005CB047 /* SoundFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */; };
+		F4E8AD702E4258D400C33D7F /* AccountStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8AD6D2E4258D400C33D7F /* AccountStatusView.swift */; };
+		F4E8AD712E4258D400C33D7F /* AccountStatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8AD6B2E4258D400C33D7F /* AccountStatusViewModel.swift */; };
+		F4E8AD722E4258D400C33D7F /* AccountStatusType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E8AD692E4258D400C33D7F /* AccountStatusType.swift */; };
 		F4F29E502D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E512D68D6D500933633 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */; };
 		F4F29E522D68D70B00933633 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42ADD1F2D5BB4A50021AF6E /* AppReviewManager.swift */; };
@@ -2128,6 +2131,9 @@
 		F4E48D6E2DB9C2B0005CB047 /* ws_button_wizbyoff.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyoff.m4a; sourceTree = "<group>"; };
 		F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = ws_button_wizbyon.m4a; sourceTree = "<group>"; };
 		F4E48D892DBAB85F005CB047 /* SoundFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundFileManager.swift; sourceTree = "<group>"; };
+		F4E8AD692E4258D400C33D7F /* AccountStatusType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatusType.swift; sourceTree = "<group>"; };
+		F4E8AD6B2E4258D400C33D7F /* AccountStatusViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatusViewModel.swift; sourceTree = "<group>"; };
+		F4E8AD6D2E4258D400C33D7F /* AccountStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStatusView.swift; sourceTree = "<group>"; };
 		F4F29E4F2D68D6D500933633 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		F4F3A5B62E26C855006D967F /* EnterCredentialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCredentialsView.swift; sourceTree = "<group>"; };
 		F4F51A682D9B176300407DE7 /* SignupWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupWarningView.swift; sourceTree = "<group>"; };
@@ -4259,6 +4265,7 @@
 		F43184B52E1C57F2007C96E3 /* Popup */ = {
 			isa = PBXGroup;
 			children = (
+				F4E8AD6F2E4258D400C33D7F /* AccountStatus */,
 				F43184B62E1C581D007C96E3 /* LocationPermission */,
 				F4F3A5B32E26C7F6006D967F /* EnterCredentials */,
 				F484B79E2E314C5900BABA98 /* PrivacyInformation */,
@@ -5307,6 +5314,40 @@
 				F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */,
 			);
 			path = Sounds;
+			sourceTree = "<group>";
+		};
+		F4E8AD6A2E4258D400C33D7F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8AD692E4258D400C33D7F /* AccountStatusType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F4E8AD6C2E4258D400C33D7F /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8AD6B2E4258D400C33D7F /* AccountStatusViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F4E8AD6E2E4258D400C33D7F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8AD6D2E4258D400C33D7F /* AccountStatusView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F4E8AD6F2E4258D400C33D7F /* AccountStatus */ = {
+			isa = PBXGroup;
+			children = (
+				F4E8AD6A2E4258D400C33D7F /* Models */,
+				F4E8AD6C2E4258D400C33D7F /* ViewModels */,
+				F4E8AD6E2E4258D400C33D7F /* Views */,
+			);
+			path = AccountStatus;
 			sourceTree = "<group>";
 		};
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
@@ -6639,6 +6680,9 @@
 				C580FDEC2B4D711D004FA857 /* KeyChainDatabaseImpl.swift in Sources */,
 				1E3F776C2DB8FE08008308A8 /* CompletionCircleView.swift in Sources */,
 				1E5553D72DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */,
+				F4E8AD702E4258D400C33D7F /* AccountStatusView.swift in Sources */,
+				F4E8AD712E4258D400C33D7F /* AccountStatusViewModel.swift in Sources */,
+				F4E8AD722E4258D400C33D7F /* AccountStatusType.swift in Sources */,
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
 				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
 				F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */,

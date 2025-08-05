@@ -59,4 +59,4 @@ class AccountPopupViewController: WSUIViewController {
 
 class BannedAccountPopupViewController: AccountPopupViewController {}
 class OutOfDataAccountPopupViewController: AccountPopupViewController {}
-class ProPlanExpiredPopupViewController: AccountPopupViewController {}
+class ProPlanExpiredAccountPopupViewController: AccountPopupViewController {}

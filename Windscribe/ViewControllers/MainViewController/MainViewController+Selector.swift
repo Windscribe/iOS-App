@@ -60,32 +60,30 @@ extension MainViewController {
         logger.logD("MainViewController", "Looking for account state changes.")
         guard let session = session else { return }
 
-        // check for ghost account and present account completion screen
-        if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
-            didCheckForGhostAccount = true
-            router?.routeTo(to: RouteID.signup(claimGhostAccount: true), from: self)
-        }
+        // Check for ghost account and present account completion screen
+        showAccountCompletionForGhostAccount(session: session)
 
         arrangeListsFooterViews()
         reloadTableViews()
         setTableViewInsets()
+
         if session.status == 3 {
-            logger.logD("MainViewController", "User is banned.")
-            var animated = true
-            if let topVc = navigationController?.topViewController as? AccountPopupViewController {
-                if topVc is BannedAccountPopupViewController {
-                    return
-                }
-                topVc.dismiss(animated: false)
-                animated = false
+            logger.logI("MainViewController", "User is banned from servers.")
+
+            if !didShowBannedProfilePopup {
+                showBannedAccountPopup()
+                didShowBannedProfilePopup = true
+                return
             }
-            popupRouter?.routeTo(to: RouteID.bannedAccountPopup(animated: animated), from: self)
-            return
-        } else if session.status == 2 {
-            logger.logD("MainViewController", "User is out of data.")
+        }
+       
+        if session.status == 2 {
+            logger.logI("MainViewController", "User is out of data.")
+            
             if !didShowOutOfDataPopup {
                 showOutOfDataPopup()
                 didShowOutOfDataPopup = true
+                return
             }
         }
 
@@ -94,19 +92,54 @@ extension MainViewController {
             if !didShowProPlanExpiredPopup {
                 showProPlanExpiredPopup()
                 didShowProPlanExpiredPopup = true
+                return
             }
         }
     }
 
-    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
-        DispatchQueue.main.async {
-            self.wifiInfoView.updateNetwork(network: network)
-            if network?.isInvalidated == true {
-                return
-            }
-            let isNetworkCellularWhileConnecting = self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network)
-//            self.connectionStateInfoView.refreshProtocol(from: network, with: protoPort,
-//                                                         isNetworkCellularWhileConnecting: isNetworkCellularWhileConnecting)
+    func checkEligibility(session: Session?, isStaticIP: Bool) -> Bool {
+        guard let session = session else {
+            return false
+        }
+
+        if session.status == 3 {
+            showBannedAccountPopup()
+            return false
+        }
+
+        if session.status == 2, !isStaticIP {
+            showOutOfDataPopup()
+            return false
+        }
+
+        if let oldSession = viewModel.oldSession, !session.isPremium, oldSession.isPremium, !isStaticIP {
+            showProPlanExpiredPopup()
+            return false
+        }
+
+        return true
+    }
+
+    func showBannedAccountPopup() {
+        logger.logI("MainViewController", "Displaying Banned User Profile Popup.")
+        popupRouter?.routeTo(to: RouteID.bannedAccountPopup, from: self)
+    }
+
+    func showOutOfDataPopup() {
+        logger.logI("MainViewController", "Displaying Out Of Data Popup.")
+        popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
+    }
+
+    func showProPlanExpiredPopup() {
+        logger.logI("MainViewController", "Displaying Pro Plan Expired Popup.")
+        popupRouter?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
+    }
+
+    func showAccountCompletionForGhostAccount(session: Session) {
+        if didCheckForGhostAccount == false, session.isUserPro == true, session.isUserGhost == true {
+            logger.logI("MainViewController", "Displaying Account Completion Popup for Ghost Account.")
+            didCheckForGhostAccount = true
+            router?.routeTo(to: RouteID.signup(claimGhostAccount: true), from: self)
         }
     }
 
@@ -122,6 +155,18 @@ extension MainViewController {
                                             title: TextsAsset.AuthFailure.title,
                                             message: TextsAsset.AuthFailure.message,
                                             buttonText: TextsAsset.okay)
+    }
+
+    func refreshProtocol(from network: WifiNetwork?, with protoPort: ProtocolPort?) {
+        DispatchQueue.main.async {
+            self.wifiInfoView.updateNetwork(network: network)
+            if network?.isInvalidated == true {
+                return
+            }
+            let isNetworkCellularWhileConnecting = self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network)
+            self.connectionStateInfoView.refreshProtocol(from: network, with: protoPort,
+                                                         isNetworkCellularWhileConnecting: isNetworkCellularWhileConnecting)
+        }
     }
 
     @objc func reloadTableViews() {
@@ -196,6 +241,19 @@ extension MainViewController {
         HapticFeedbackGenerator.shared.run(level: .medium)
         if vpnConnectionViewModel.isDisconnected() || vpnConnectionViewModel.isDisconnecting() {
             logger.logI("MainViewController", "User tapped to connect.")
+
+            // Check eligibility EXCEPT for custom config
+            let isCustomConfig = vpnConnectionViewModel.isCustomConfigSelected()
+            if !isCustomConfig {
+                let session = try? viewModel.session.value()
+                let locationType = vpnConnectionViewModel.getLocationType()
+                let isStaticIP = (locationType == .staticIP)
+
+                guard checkEligibility(session: session, isStaticIP: isStaticIP) else {
+                    return
+                }
+            }
+
             let isOnline: Bool = ((try? viewModel.appNetwork.value().status == .connected) != nil)
             if isOnline {
                 enableVPNConnection()

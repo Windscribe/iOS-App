@@ -44,7 +44,7 @@ enum RouteID {
     case shakeForDataResult(shakeCount: Int)
     case shakeLeaderboards
     case upgrade(promoCode: String?, pcpID: String?)
-    case bannedAccountPopup(animated: Bool)
+    case bannedAccountPopup
     case outOfDataAccountPopup
     case proPlanExpireddAccountPopup
     case newsFeedPopup
@@ -58,5 +58,4 @@ enum RouteID {
     case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String = "")
     case maintenanceLocation(isStaticIp: Bool)
     case protocolSwitchVC(delegate: ProtocolSwitchVCDelegate?, type: ProtocolFallbacksType)
-    case rateUsPopUp
 }

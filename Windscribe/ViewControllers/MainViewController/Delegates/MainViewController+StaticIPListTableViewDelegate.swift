@@ -12,6 +12,13 @@ import UIKit
 extension MainViewController: StaticIPListTableViewDelegate {
     func setSelectedStaticIP(staticIP: StaticIPModel) {
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
+
+        // Check eligibility before proceeding
+        let session = try? viewModel.session.value()
+        guard checkEligibility(session: session, isStaticIP: true) else {
+            return
+        }
+
         if vpnManager.isDisconnecting() {
             displayDisconnectingAlert()
             return

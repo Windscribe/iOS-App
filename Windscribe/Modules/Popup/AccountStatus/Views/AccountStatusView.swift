@@ -1,26 +1,25 @@
 //
-//  MaintananceLocationView.swift
+//  AccountStatusView.swift
 //  Windscribe
 //
-//  Created by Soner Yuksel on 2025-07-24.
+//  Created by Soner Yuksel on 2025-07-29.
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
 import Foundation
 import SwiftUI
-import SafariServices
 
-struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
+struct AccountStatusView: View, ResponsivePopupLayoutProvider {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.deviceType) private var deviceType
     @Environment(\.dynamicTypeLargeRange) private var dynamicTypeRange
-    @EnvironmentObject private var context: MaintananceLocationContext
+    @EnvironmentObject private var context: AccountStatusContext
 
-    @StateObject private var viewModel: MaintananceLocationViewModelImpl
+    @StateObject private var viewModel: AccountStatusViewModelImpl
 
-    init(viewModel: any MaintananceLocationViewModel) {
-        guard let model = viewModel as? MaintananceLocationViewModelImpl else {
-            fatalError("MaintananceLocationView must be initialized properly")
+    init(viewModel: any AccountStatusViewModel) {
+        guard let model = viewModel as? AccountStatusViewModelImpl else {
+            fatalError("AccountStatusView must be initialized properly")
         }
 
         _viewModel = StateObject(wrappedValue: model)
@@ -34,25 +33,25 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
 
             VStack(spacing: 32) {
                 Spacer()
-                    .frame(height: topSpacer)
+                    .frame(height: topSpacer - 64)
 
-                // Top Image - Garry character
-                Image(ImagesAsset.Garry.con)
+                // Character Image
+                Image(viewModel.accountStatusType.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 94, height: 130)
+                    .frame(width: 150, height: 150)
 
                 VStack(spacing: 16) {
-                    // Header Title
-                    Text(TextsAsset.MaintenanceLocationPopUp.title)
+                    // Title
+                    Text(viewModel.accountStatusType.title)
                         .font(.bold(.title2))
                         .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: maxWidth)
 
-                    // Sub Header Text
-                    Text(TextsAsset.MaintenanceLocationPopUp.subtHeader)
+                    // Description
+                    Text(viewModel.displayDescription)
                         .font(.text(.body))
                         .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.welcomeButtonTextColor)
@@ -61,32 +60,33 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
                 }
 
                 VStack(spacing: 8) {
-                    // Check Status Button (hidden for static IP)
-                    if !context.isStaticIp {
-                        Button(action: viewModel.checkStatus) {
-                            Text(TextsAsset.MaintenanceLocationPopUp.checkStatus)
+                    // Primary Action Button
+                    Button(action: viewModel.primaryAction) {
+                        Text(viewModel.accountStatusType.primaryButtonTitle)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(viewModel.accountStatusType.canTakeAction ? Color.loginRegisterEnabledButtonColor : Color.gray)
+                            .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                            .font(.bold(.title3))
+                            .dynamicTypeSize(dynamicTypeRange)
+                            .clipShape(Capsule())
+                    }
+                    .disabled(!viewModel.accountStatusType.canTakeAction)
+                    .frame(maxWidth: maxWidth)
+
+                    // Secondary Action Button (if available)
+                    if let secondaryTitle = viewModel.accountStatusType.secondaryButtonTitle {
+                        Button(action: viewModel.secondaryAction) {
+                            Text(secondaryTitle)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .background(Color.loginRegisterEnabledButtonColor)
-                                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                                .foregroundColor(.welcomeButtonTextColor)
                                 .font(.bold(.title3))
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
                         }
                         .frame(maxWidth: maxWidth)
                     }
-
-                    // Cancel Button
-                    Button(action: viewModel.cancel) {
-                        Text(TextsAsset.MaintenanceLocationPopUp.cancelTitle)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .foregroundColor(.welcomeButtonTextColor)
-                            .font(.bold(.title3))
-                            .dynamicTypeSize(dynamicTypeRange)
-                            .clipShape(Capsule())
-                    }
-                    .frame(maxWidth: maxWidth)
                 }
 
                 Spacer()
@@ -106,12 +106,18 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
                 dismiss()
             }
         }
-        .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url)
+        .sheet(isPresented: $viewModel.showUpgrade) {
+            PlanUpgradeViewControllerWrapper()
+        }
+        .onAppear {
+            viewModel.updateAccountStatusType(context.accountStatusType)
+        }
+        .onChange(of: context.accountStatusType) { newType in
+            viewModel.updateAccountStatusType(newType)
         }
     }
 }
 
-final class MaintananceLocationContext: ObservableObject {
-    @Published var isStaticIp = false
+final class AccountStatusContext: ObservableObject {
+    @Published var accountStatusType: AccountStatusType = .banned
 }
