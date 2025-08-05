@@ -58,7 +58,6 @@
 		1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0D9D7C2C612D32008AFF2D /* PreferencesAccountView.swift */; };
 		1E0D9D7F2C612D3E008AFF2D /* PreferencesAccountView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D9D7E2C612D3E008AFF2D /* PreferencesAccountView.xib */; };
 		1E0D9D832C612EDF008AFF2D /* PreferencesConnectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E0D9D822C612EDF008AFF2D /* PreferencesConnectionView.xib */; };
-		1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */; };
 		1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2366C92BC03925000DF098 /* PopupRouter.swift */; };
 		1E255F2B2E3A71A10078A565 /* ShakeForDataResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E255F2A2E3A71A10078A565 /* ShakeForDataResultsView.swift */; };
 		1E255F2D2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E255F2C2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift */; };
@@ -605,8 +604,6 @@
 		AF45E645226E216800C1C108 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF041757225F9163000982CD /* NetworkExtension.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AF4B92EC221CA1C50054580D /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92EB221CA1C50054580D /* UserPreferences.swift */; };
 		AF4B92F2221DCBEC0054580D /* Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F1221DCBEC0054580D /* Email.swift */; };
-		AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F3221DF6670054580D /* AccountPopupViewController.swift */; };
-		AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */; };
 		AF4C9AD122F4A03D004A9FA6 /* CustomConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */; };
 		AF4C9AD522F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */; };
 		AF4E91D521ED277A00A3F584 /* MobilePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E91D421ED277A00A3F584 /* MobilePlan.swift */; };
@@ -1384,7 +1381,6 @@
 		1E0D9D7E2C612D3E008AFF2D /* PreferencesAccountView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesAccountView.xib; sourceTree = "<group>"; };
 		1E0D9D822C612EDF008AFF2D /* PreferencesConnectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesConnectionView.xib; sourceTree = "<group>"; };
 		1E0EFF142C2C7A0F002FBC72 /* ConnectionOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOptions.swift; sourceTree = "<group>"; };
-		1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupModel.swift; sourceTree = "<group>"; };
 		1E2366C92BC03925000DF098 /* PopupRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupRouter.swift; sourceTree = "<group>"; };
 		1E255F2A2E3A71A10078A565 /* ShakeForDataResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataResultsView.swift; sourceTree = "<group>"; };
 		1E255F2C2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataResultsViewModel.swift; sourceTree = "<group>"; };
@@ -1683,8 +1679,6 @@
 		AF443D6C22C170FD004986DA /* ImageButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		AF4B92EB221CA1C50054580D /* UserPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPreferences.swift; sourceTree = "<group>"; };
 		AF4B92F1221DCBEC0054580D /* Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Email.swift; sourceTree = "<group>"; };
-		AF4B92F3221DF6670054580D /* AccountPopupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountPopupViewController.swift; sourceTree = "<group>"; };
-		AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountPopupViewController+UI.swift"; sourceTree = "<group>"; };
 		AF4C9AD022F4A03D004A9FA6 /* CustomConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfig.swift; sourceTree = "<group>"; };
 		AF4C9AD422F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomConfigListTableViewDataSource.swift; sourceTree = "<group>"; };
 		AF4E91D321E7BF1600A3F584 /* Windscribe.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Windscribe.entitlements; sourceTree = "<group>"; };
@@ -2363,16 +2357,6 @@
 				1E0D9D662C6103A3008AFF2D /* PreferenceOptions */,
 			);
 			path = Preferences;
-			sourceTree = "<group>";
-		};
-		1E2366C62BC02447000DF098 /* Account */ = {
-			isa = PBXGroup;
-			children = (
-				AF4B92F5221DF67B0054580D /* AccountPopupViewController+UI.swift */,
-				AF4B92F3221DF6670054580D /* AccountPopupViewController.swift */,
-				1E2366C72BC024ED000DF098 /* AccountPopupModel.swift */,
-			);
-			path = Account;
 			sourceTree = "<group>";
 		};
 		1E2366CB2BC5766E000DF098 /* News Feed */ = {
@@ -3453,7 +3437,6 @@
 			children = (
 				AF16CA112226F53F00997A2A /* WSUIViewController.swift */,
 				AF36A207237DE8FF00BDDCDB /* MainViewController */,
-				C57BDE3429B9390A00337E63 /* Popup */,
 				E97ABD4E28DC477B00B38587 /* Connection */,
 			);
 			path = ViewControllers;
@@ -3756,14 +3739,6 @@
 				59A2186D2C3C9D7D000D89FA /* AppModulesPhone.swift */,
 			);
 			path = Dependencies;
-			sourceTree = "<group>";
-		};
-		C57BDE3429B9390A00337E63 /* Popup */ = {
-			isa = PBXGroup;
-			children = (
-				1E2366C62BC02447000DF098 /* Account */,
-			);
-			path = Popup;
 			sourceTree = "<group>";
 		};
 		C57BDE4029B93F6D00337E63 /* Util */ = {
@@ -6509,7 +6484,6 @@
 				E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
-				AF4B92F4221DF6670054580D /* AccountPopupViewController.swift in Sources */,
 				F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */,
 				1E5553CA2D95C91B00F16AF0 /* IPContentView.swift in Sources */,
 				F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */,
@@ -6672,7 +6646,6 @@
 				F4E8AD712E4258D400C33D7F /* AccountStatusViewModel.swift in Sources */,
 				F4E8AD722E4258D400C33D7F /* AccountStatusType.swift in Sources */,
 				C5B6E866268208D40038B4D6 /* MainViewController+RefreshControls.swift in Sources */,
-				1E2366C82BC024ED000DF098 /* AccountPopupModel.swift in Sources */,
 				F45C67482DBFEDD6006A6D30 /* ConfirmEmailView.swift in Sources */,
 				AF2199582270B147009B42E5 /* Resolver.swift in Sources */,
 				1A9DB35428168E8500C3EC1C /* UITableViewCell+Extension.swift in Sources */,
@@ -6908,7 +6881,6 @@
 				C5A930D72B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift in Sources */,
 				C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */,
 				AF04EDA321E50E99005C6576 /* PortMap.swift in Sources */,
-				AF4B92F6221DF67B0054580D /* AccountPopupViewController+UI.swift in Sources */,
 				C59CA15F2CD400E4007517DA /* ConfigurationsManager+Connect.swift in Sources */,
 				C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */,
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
