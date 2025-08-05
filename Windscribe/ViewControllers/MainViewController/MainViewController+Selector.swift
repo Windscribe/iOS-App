@@ -76,10 +76,10 @@ extension MainViewController {
                 return
             }
         }
-       
+
         if session.status == 2 {
             logger.logI("MainViewController", "User is out of data.")
-            
+
             if !didShowOutOfDataPopup {
                 showOutOfDataPopup()
                 didShowOutOfDataPopup = true
