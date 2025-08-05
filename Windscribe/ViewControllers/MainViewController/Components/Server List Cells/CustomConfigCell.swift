@@ -30,6 +30,7 @@ class CustomConfigCellModel: BaseNodeCellViewModel {
     }
 
     override var showServerHealth: Bool { false }
+    
     override var iconAspect: UIView.ContentMode { .scaleAspectFit }
 
     override var iconImage: UIImage? {

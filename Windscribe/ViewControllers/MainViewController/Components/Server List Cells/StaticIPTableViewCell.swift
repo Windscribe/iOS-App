@@ -38,6 +38,8 @@ class StaticIPNodeCellModel: BaseNodeCellViewModel {
     override var actionImage: UIImage? { nil }
 
     override var actionVisible: Bool { false }
+
+    override var showServerHealth: Bool { false }
 }
 
 class StaticIPTableViewCell: BaseNodeCell {
