@@ -147,10 +147,11 @@ class WifiInfoView: UIView {
     }
 
     private func addViews() {
-        nameLabel.adjustsFontSizeToFitWidth = true
         nameLabel.font = UIFont.medium(size: 16)
         nameLabel.textColor = .whiteWithOpacity(opacity: 0.7)
         nameLabel.isUserInteractionEnabled = true
+        nameLabel.adjustsFontSizeToFitWidth = true
+        nameLabel.minimumScaleFactor = 0.75
         nameLabel.text = TextsAsset.NetworkSecurity.unknownNetwork
 
         trustedIcon = UIImageView()
