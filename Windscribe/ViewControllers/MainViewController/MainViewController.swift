@@ -63,6 +63,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     var appJustStarted = false
     var userJustLoggedIn = false
+    var didShowBannedProfilePopup = false
     var didShowOutOfDataPopup = false
     var didShowProPlanExpiredPopup = false
     var isLoadingLatencyValues = false
@@ -245,17 +246,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
 
     func noSelectedNodeToConnect() -> Bool {
         return vpnConnectionViewModel.getSelectedCountryCode() == ""
-    }
-
-    func showOutOfDataPopup() {
-        logger.logD("MainViewController", "Displaying Out Of Data Popup.")
-        popupRouter?.routeTo(to: RouteID.outOfDataAccountPopup, from: self)
-    }
-
-    func showProPlanExpiredPopup() {
-        DispatchQueue.main.async {
-            self.popupRouter?.routeTo(to: RouteID.proPlanExpireddAccountPopup, from: self)
-        }
     }
 
     func clearScrollHappened() {

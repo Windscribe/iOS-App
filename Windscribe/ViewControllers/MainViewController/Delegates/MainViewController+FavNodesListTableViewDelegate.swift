@@ -12,6 +12,13 @@ import UIKit
 extension MainViewController: FavNodesListTableViewDelegate {
     func setSelectedFavNode(favNode: FavNodeModel) {
         if !ReachabilityManager.shared.internetConnectionAvailable() { return }
+
+        // Check eligibility before proceeding
+        let session = try? viewModel.session.value()
+        guard checkEligibility(session: session, isStaticIP: false) else {
+            return
+        }
+
         if vpnManager.isDisconnecting() { displayDisconnectingAlert(); return }
         if !vpnManagerViewModel.isConnecting() {
             guard let countryCode = favNode.countryCode,

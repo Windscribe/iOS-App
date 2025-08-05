@@ -63,6 +63,7 @@ protocol ConnectionViewModelType {
     func isCustomConfigSelected() -> Bool
     func getBestLocationId() -> String
     func getBestLocation() -> BestLocationModel?
+    func getLocationType() -> LocationType?
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool
     func isNetworkCellularWhileConnecting(for network: AppNetwork?) -> Bool
 }
@@ -295,6 +296,10 @@ extension ConnectionViewModel {
     func getBestLocation() -> BestLocationModel? {
         let bestLocationId = getBestLocationId()
         return locationsManager.getBestLocationModel(from: bestLocationId)
+    }
+
+    func getLocationType() -> LocationType? {
+        return locationsManager.getLocationType()
     }
 
     func refreshProtocols() {

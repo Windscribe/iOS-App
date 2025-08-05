@@ -1101,7 +1101,7 @@ enum TextsAsset {
         }
 
         static var action: String {
-            return "Learn more".localized
+            return "Done".localized
         }
     }
 

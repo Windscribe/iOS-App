@@ -35,8 +35,10 @@ protocol MainViewModelType {
     var becameActiveTrigger: PublishSubject<Void> { get }
     var updateSSIDTrigger: PublishSubject<Void> { get }
 
-    var didShowProPlanExpiredPopup: Bool { get set }
+    var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
+    var didShowProPlanExpiredPopup: Bool { get set }
+
     var promoPayload: BehaviorSubject<PushNotificationPayload?> { get }
     func loadServerList()
     func sortServerListUsingUserPreferences(ignoreStreaming: Bool, isForStreaming: Bool, servers: [ServerModel], completion: @escaping (_ result: [ServerSection]) -> Void)
@@ -102,8 +104,10 @@ class MainViewModel: MainViewModelType {
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
+    var didShowBannedProfilePopup = false
     var didShowProPlanExpiredPopup = false
     var didShowOutOfDataPopup = false
+
     let isDarkMode: BehaviorSubject<Bool>
 
     let disposeBag = DisposeBag()

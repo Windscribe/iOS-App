@@ -230,15 +230,14 @@ class ViewModels: Assembly {
             )
         }.inObjectScope(.transient)
 
-        container.register(BannedAccountPopupModelType.self) { r in
-            BannedAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
+        container.register((any AccountStatusViewModel).self) { r in
+            AccountStatusViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                sessionManager: r.resolve(SessionManaging.self)!
+            )
         }.inObjectScope(.transient)
-        container.register(OutOfDataAccountPopupModelType.self) { r in
-            OutOfDataAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
-        }.inObjectScope(.transient)
-        container.register(ProPlanExpiredAccountPopupModelType.self) { r in
-            ProPlanExpiredAccountPopupModel(popupRouter: r.resolve(PopupRouter.self), sessionManager: r.resolve(SessionManaging.self)!)
-        }.inObjectScope(.transient)
+
         container.register(ProtocolSetPreferredViewModelV2.self) { r in
             ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: ProtocolViewType.connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -671,23 +670,8 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(PlanUpgradeViewModel.self)
         }.inObjectScope(.transient)
 
-        container.register(BannedAccountPopupViewController.self) { _ in
-            BannedAccountPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(BannedAccountPopupModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(OutOfDataAccountPopupViewController.self) { _ in
-            OutOfDataAccountPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(OutOfDataAccountPopupModelType.self)
-            c.logger = r.resolve(FileLogger.self)
-        }.inObjectScope(.transient)
-        container.register(ProPlanExpiredPopupViewController.self) { _ in
-            ProPlanExpiredPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ProPlanExpiredAccountPopupModelType.self)
-            c.logger = r.resolve(FileLogger.self)
+        container.register(AccountStatusView.self) { r in
+            AccountStatusView(viewModel: r.resolve((any AccountStatusViewModel).self)!)
         }.inObjectScope(.transient)
 
         container.register(NewsFeedView.self) { r in
