@@ -94,25 +94,40 @@ class WifiInfoView: UIView {
 
         nameLabel.isBlurring = viewModel.isBlur
 
-        // Single tap for location permission popup (unknown network only)
-        nameLabel.rx.anyGesture(.tap()).skip(1).subscribe(onNext: { [weak self] _ in
-            guard let self = self else { return }
-            if nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
-                viewModel.unknownWifiTriggerSubject.onNext(())
-            }
-        }).disposed(by: disposeBag)
+        // Track when double tap occurs to prevent single tap
+        var isDoubleTapInProgress = false
 
         // Double tap for blur toggle (known network only)
         nameLabel.rx.anyGesture(.tap(configuration: { gestureRecognizer, _ in
             gestureRecognizer.numberOfTapsRequired = 2
         })).skip(1).subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            isDoubleTapInProgress = true
             if nameLabel.text != TextsAsset.NetworkSecurity.unknownNetwork {
                 let preferences = (viewModel as? WifiInfoViewModel)?.preferences
                 preferences?.saveBlurNetworkName(bool: !(preferences?.getBlurNetworkName() ?? false))
                 nameLabel.isBlurring = preferences?.getBlurNetworkName() ?? false
             }
+            // Reset flag after delay longer than debounce time
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                isDoubleTapInProgress = false
+            }
         }).disposed(by: disposeBag)
+
+        // Single tap for location permission popup (unknown network) or network details (known network)
+        nameLabel.rx.anyGesture(.tap()).skip(1)
+            .debounce(.milliseconds(300), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self else { return }
+                // Don't fire if double tap is in progress
+                guard !isDoubleTapInProgress else { return }
+                if nameLabel.text == TextsAsset.NetworkSecurity.unknownNetwork {
+                    viewModel.unknownWifiTriggerSubject.onNext(())
+                } else {
+                    guard let network = self.network else { return }
+                    self.wifiTriggerSubject.onNext(network)
+                }
+            }).disposed(by: disposeBag)
 
         actionButton.rx.tap.bind { [weak self] _ in
             guard let network = self?.network else { return }
