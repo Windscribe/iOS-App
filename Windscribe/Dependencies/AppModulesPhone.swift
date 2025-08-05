@@ -268,23 +268,6 @@ class ViewModels: Assembly {
         container.register(MainViewModelType.self) { r in
             MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(ShakeForDataPopupViewModelType.self) { r in
-            ShakeForDataPopupViewModel(logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.transient)
-        container.register(ShakeForDataViewModelType.self) { r in
-            ShakeForDataViewModel(logger: r.resolve(FileLogger.self)!)
-        }.inObjectScope(.transient)
-        container.register(ShakeForDataResultViewModelType.self) { r in
-            ShakeForDataResultViewModel(logger: r.resolve(FileLogger.self)!,
-                                        repository: r.resolve(ShakeDataRepository.self)!,
-                                        preferences: r.resolve(Preferences.self)!,
-                                        alertManager: r.resolve(AlertManagerV2.self)!)
-        }.inObjectScope(.transient)
-        container.register(ViewLeaderboardViewModelType.self) { r in
-            ViewLeaderboardViewModel(logger: r.resolve(FileLogger.self)!,
-                                     repository: r.resolve(ShakeDataRepository.self)!,
-                                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                      languageManager: r.resolve(LanguageManager.self)!)
@@ -644,6 +627,48 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!))
         }.inObjectScope(.transient)
 
+        container.register(ShakeForDataMainView.self) { r in
+            ShakeForDataMainView(
+                viewModel: ShakeForDataMainViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                ),
+                router: r.resolve(ShakeForDataNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register(ShakeForDataLeaderboardView.self) { r in
+            ShakeForDataLeaderboardView(
+                viewModel: ShakeForDataLeaderboardModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    repository: r.resolve(ShakeDataRepository.self)!
+                )
+            )
+        }.inObjectScope(.transient)
+
+        container.register(ShakeForDataGameView.self) { r in
+            ShakeForDataGameView(
+                viewModel: ShakeForDataGameViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
+                    repository: r.resolve(ShakeDataRepository.self)!
+                ),
+                router: r.resolve(ShakeForDataNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register(ShakeForDataResultsView.self) { r in
+            ShakeForDataResultsView(
+                viewModel: ShakeForDataResultsViewModelImpl(
+                    preferences: r.resolve(Preferences.self)!,
+                    logger: r.resolve(FileLogger.self)!,
+                    repository: r.resolve(ShakeDataRepository.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                ),
+                router: r.resolve(ShakeForDataNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
         container.register(MainViewController.self) { _ in
             MainViewController()
         }.initCompleted { r, vc in
@@ -699,29 +724,6 @@ class ViewControllerModule: Assembly {
             c.viewModel = r.resolve(ProtocolSetPreferredViewModelV2.self)
             c.type = .connected
             c.router = r.resolve(ProtocolSwitchRouter.self)
-        }.inObjectScope(.transient)
-        container.register(ShakeForDataPopupViewController.self) { _ in
-            ShakeForDataPopupViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ShakeForDataPopupViewModelType.self)
-            c.popupRouter = r.resolve(PopupRouter.self)
-        }.inObjectScope(.transient)
-        container.register(ShakeForDataViewController.self) { _ in
-            ShakeForDataViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ShakeForDataViewModelType.self)
-            c.popupRouter = r.resolve(PopupRouter.self)
-        }.inObjectScope(.transient)
-        container.register(ShakeForDataResultViewController.self) { _ in
-            ShakeForDataResultViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ShakeForDataResultViewModelType.self)
-            c.popupRouter = r.resolve(PopupRouter.self)
-        }.inObjectScope(.transient)
-        container.register(ViewLeaderboardViewController.self) { _ in
-            ViewLeaderboardViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ViewLeaderboardViewModelType.self)
         }.inObjectScope(.transient)
         container.register(ListSelectionView.self) { _ in
             ListSelectionView()
@@ -838,6 +840,9 @@ class Routers: Assembly {
         }.inObjectScope(.transient)
         container.register(ConnectionsNavigationRouter.self) { _ in
             ConnectionsNavigationRouter()
+        }.inObjectScope(.transient)
+        container.register(ShakeForDataNavigationRouter.self) { _ in
+            ShakeForDataNavigationRouter()
         }.inObjectScope(.transient)
         container.register(HelpNavigationRouter.self) { _ in
             HelpNavigationRouter()

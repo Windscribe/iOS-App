@@ -20,6 +20,7 @@ enum MenuColorsType {
     case dark
     case popUpBackgroundColor
     case captchaBackgroundColor
+    case positive
 }
 
 enum MainColorsType {
@@ -62,6 +63,8 @@ extension Color {
             return isDarkMode ? .grayishDarkColor : .white
         case .captchaBackgroundColor:
             return isDarkMode ? .deepSlate : .white
+        case .positive:
+            return .positiveGreen
         }
     }
 }

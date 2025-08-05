@@ -22,21 +22,8 @@ class PopupRouter: BaseRouter, RootRouter {
         }
     }
 
-    // MARK: - Private Methods
-
     private func resolveViewController(for route: RouteID) -> UIViewController? {
         switch route {
-        case .shakeForDataPopUp:
-            return UINavigationController(
-                rootViewController: Assembler.resolve(ShakeForDataPopupViewController.self))
-        case .shakeForDataView:
-            return Assembler.resolve(ShakeForDataViewController.self)
-        case let .shakeForDataResult(shakeCount):
-            let shakeResultsVC = Assembler.resolve(ShakeForDataResultViewController.self)
-            shakeResultsVC.viewModel.setup(with: shakeCount)
-            return shakeResultsVC
-        case .shakeLeaderboards:
-            return Assembler.resolve(ViewLeaderboardViewController.self)
         case let .upgrade(promoCode, pcpID):
             let upgradeVC = Assembler.resolve(PlanUpgradeViewController.self).then {
                 $0.promoCode = promoCode
@@ -88,6 +75,9 @@ class PopupRouter: BaseRouter, RootRouter {
         case .networkSecurity:
             return Assembler.resolve(NetworkSecurityView.self)
 
+        case .shakeForDataPopUp:
+            return Assembler.resolve(ShakeForDataMainView.self)
+
         default:
             return nil
         }
@@ -98,11 +88,6 @@ class PopupRouter: BaseRouter, RootRouter {
 
         DispatchQueue.main.async {
             switch route {
-            case .shakeForDataPopUp:
-                from.present(vc, animated: true, completion: nil)
-            case .shakeForDataView, .shakeForDataResult:
-                from.navigationController?.pushViewController(vc, animated: true)
-                from.navigationController?.viewControllers = [vc]
             case .upgrade:
                 from.present(vc, animated: true)
             default:
@@ -113,9 +98,6 @@ class PopupRouter: BaseRouter, RootRouter {
 
     private func configureModalPresentation(_ vc: UIViewController, for route: RouteID) {
         switch route {
-        case .shakeForDataView, .shakeForDataResult:
-            vc.modalPresentationStyle = .overCurrentContext
-            vc.modalTransitionStyle = .coverVertical
         case .upgrade:
             vc.modalPresentationStyle = .fullScreen
         default:
@@ -128,7 +110,7 @@ class PopupRouter: BaseRouter, RootRouter {
         var isTransparentView = true
 
         switch route {
-        case .newsFeedPopup, .networkSecurity:
+        case .newsFeedPopup, .networkSecurity, .shakeForDataPopUp:
             isTransparentView = false
         default:
             isTransparentView = true

@@ -40,9 +40,6 @@ enum RouteID {
     // MARK: - Pop Up
     case locationPermission
     case shakeForDataPopUp
-    case shakeForDataView
-    case shakeForDataResult(shakeCount: Int)
-    case shakeLeaderboards
     case upgrade(promoCode: String?, pcpID: String?)
     case bannedAccountPopup
     case outOfDataAccountPopup

@@ -58,4 +58,14 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
 
         viewController.present(hostingController, animated: true)
     }
+
+    func presentViewModallyWithNavigation<V: View>(from viewController: WSUIViewController, view: V) {
+        let hostingController = RoutedHostingController(rootView: view)
+
+        let navigationController = UINavigationController(rootViewController: hostingController).then {
+            $0.modalPresentationStyle = .fullScreen
+        }
+        viewController.present(navigationController, animated: true)
+    }
+
 }

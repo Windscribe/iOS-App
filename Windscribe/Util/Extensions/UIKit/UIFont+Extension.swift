@@ -72,6 +72,10 @@ extension UIFont {
 
 extension Font {
 
+    static func score() -> Font {
+        .custom("IBMPlexSans-Bold", size: 120)
+    }
+
     static func bold(_ textStyle: UIFont.TextStyle) -> Font {
         .custom("IBMPlexSans-Bold", size: baseSize(for: textStyle), relativeTo: textStyle.toFontTextStyle())
     }

@@ -10,7 +10,14 @@ import Foundation
 import RxDataSources
 import UIKit
 
-class Score: Decodable {
+struct ShakeForDataLeaderboardEntry: Identifiable {
+    let id = UUID()
+    let score: Int
+    let user: String
+    let you: Bool
+}
+
+class ShakeForDataScore: Decodable {
     var score: Int = 0
     var user: String = ""
     var you: Bool = false
@@ -28,26 +35,30 @@ class Score: Decodable {
         user = try container.decodeIfPresent(String.self, forKey: .user) ?? ""
         you = try container.decodeIfPresent(Int.self, forKey: .you) == 1 ? true : false
     }
+
+    func toLeaderboardEntry() -> ShakeForDataLeaderboardEntry {
+        ShakeForDataLeaderboardEntry(score: score, user: user, you: you)
+    }
 }
 
-struct ScoreSection: SectionModelType {
-    init(original: ScoreSection, items: [Score]) {
+struct ShakeForDataScoreSection: SectionModelType {
+    init(original: ShakeForDataScoreSection, items: [ShakeForDataScore]) {
         self = original
         self.items = items
     }
 
-    init(items: [Score]) {
+    init(items: [ShakeForDataScore]) {
         self.items = items
     }
 
     var title: String = ""
-    var items: [Score]
+    var items: [ShakeForDataScore]
 }
 
-struct ScoreList {}
+struct ShakeForDataScoreList {}
 
 class Leaderboard: Decodable {
-    var scores = [Score]()
+    var scores = [ShakeForDataScore]()
 
     enum CodingKeys: String, CodingKey {
         case data
@@ -57,12 +68,12 @@ class Leaderboard: Decodable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let data = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .data)
-        if let scoreArray = try data.decodeIfPresent([Score].self, forKey: .leaderboard) {
+        if let scoreArray = try data.decodeIfPresent([ShakeForDataScore].self, forKey: .leaderboard) {
             setScores(array: scoreArray)
         }
     }
 
-    func setScores(array: [Score]) {
+    func setScores(array: [ShakeForDataScore]) {
         scores.removeAll()
         scores.append(contentsOf: array)
     }

@@ -9,7 +9,9 @@
 import Foundation
 import RxSwift
 
-struct ShakeDataRepositoryImpl: ShakeDataRepository {
+class ShakeDataRepositoryImpl: ShakeDataRepository {
+    var currentScore: Int = 0
+
     private let apiManager: APIManager
     private let sessionManager: SessionManaging
     private let disposeBag = DisposeBag()
@@ -19,7 +21,7 @@ struct ShakeDataRepositoryImpl: ShakeDataRepository {
         self.sessionManager = sessionManager
     }
 
-    func getLeaderboardScores() -> Single<[Score]> {
+    func getLeaderboardScores() -> Single<[ShakeForDataScore]> {
         return apiManager.getShakeForDataLeaderboard().flatMap { scoreList in
             Single.just(scoreList.scores)
         }.catch { error in
@@ -36,5 +38,9 @@ struct ShakeDataRepositoryImpl: ShakeDataRepository {
         }.catch { error in
             Single.error(error)
         }
+    }
+
+    func updateCurrentScore(_ score: Int) {
+        currentScore = score
     }
 }
