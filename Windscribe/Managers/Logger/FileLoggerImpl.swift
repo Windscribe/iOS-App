@@ -6,9 +6,9 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import CocoaLumberjackSwift
 import Foundation
 import RxSwift
+import UIKit
 
 class FileLoggerImpl: FileLogger {
     enum LogLevel: String {

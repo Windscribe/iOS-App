@@ -6,9 +6,9 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
-import CocoaLumberjack
 import Foundation
 import Swinject
+import UIKit
 
 /// Core dependencies used by all targets.
 extension Container {
