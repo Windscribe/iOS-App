@@ -5476,7 +5476,7 @@
 		};
 		C5A344572C4DF32B001EBB5C /* WireGuardGoBridgeappletvOS */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = 1.20.14;
+			buildArgumentsString = 1.23.11;
 			buildConfigurationList = C5A344582C4DF32B001EBB5C /* Build configuration list for PBXLegacyTarget "WireGuardGoBridgeappletvOS" */;
 			buildPhases = (
 			);
