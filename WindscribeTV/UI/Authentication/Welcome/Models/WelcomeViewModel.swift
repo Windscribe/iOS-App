@@ -58,12 +58,12 @@ class WelcomeViewModelImpl: WelcomeViewModel {
             }.subscribe(onSuccess: { [weak self] session in
                 self?.keyChainDatabase.setGhostAccountCreated()
                 self?.userRepository.login(session: session)
-                self?.logger.logE(WelcomeViewModelImpl.self, "Ghost account registration successful, Preparing user data for \(session.userId)")
+                self?.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
                 self?.prepareUserData()
             },onFailure: { [weak self] error in
                 switch error {
                 case Errors.apiError(let e):
-                        self?.logger.logE(WelcomeViewModelImpl.self, "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
+                        self?.logger.logE("WelcomeViewModelImpl", "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
                 default: ()
                 }
                 self?.showLoadingView.onNext(false)
@@ -73,12 +73,12 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     private func prepareUserData() {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] _ in
-            self?.logger.logD(WelcomeViewModelImpl.self, "User data is ready")
+            self?.logger.logD("WelcomeViewModelImpl", "User data is ready")
             self?.showLoadingView.onNext(false)
             self?.routeToMainView.onNext(true)
         }, onFailure: { [weak self] error in
             self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-            self?.logger.logE(WelcomeViewModelImpl.self, "Failed to prepare user data: \(error)")
+            self?.logger.logE("WelcomeViewModelImpl", "Failed to prepare user data: \(error)")
             self?.showLoadingView.onNext(false)
             switch error {
             case Errors.apiError(let e):

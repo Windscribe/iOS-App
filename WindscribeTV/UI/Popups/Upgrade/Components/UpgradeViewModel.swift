@@ -250,10 +250,10 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     func setVerifiedTransaction(transaction: UncompletedTransactions?, error: String?) {
         DispatchQueue.main.async { [weak self] in
             if transaction == nil {
-                self?.logger.logE(UpgradeViewModel.self, error ?? "Failed to restore transaction.")
+                self?.logger.logE("UpgradeViewModelImpl", error ?? "Failed to restore transaction.")
                 self?.upgradeState.onNext(.error(error ?? "Failed to restore transaction."))
             } else {
-                self?.logger.logD(UpgradeViewModel.self, "Successfully verified item: \(transaction?.description ?? "")")
+                self?.logger.logD("UpgradeViewModelImpl", "Successfully verified item: \(transaction?.description ?? "")")
                 self?.upgrade()
             }
         }

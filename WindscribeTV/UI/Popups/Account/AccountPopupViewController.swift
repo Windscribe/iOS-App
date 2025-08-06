@@ -21,7 +21,7 @@ class AccountPopupViewController: BasePopUpViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        logger?.logD(self, "Displaying Account Popup View")
+        logger?.logD("AccountPopupViewController", "Displaying Account Popup View")
         bindViews()
     }
 

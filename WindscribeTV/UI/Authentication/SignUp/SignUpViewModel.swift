@@ -207,7 +207,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func handleSignupSuccess(session: Session) {
         userRepository.login(session: session)
-        logger.logI(SignUpViewModelImpl.self, "Signup successful, Preparing user data for \(session.username)")
+        logger.logI("SignUpViewModelImpl", "Signup successful, Preparing user data for \(session.username)")
 
         prepareUserData()
     }
@@ -311,7 +311,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private func prepareUserData(ignoreError: Bool = false) {
         userDataRepository.prepareUserData().observe(on: MainScheduler.instance).subscribe(onSuccess: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
-                self?.logger.logD(SignUpViewModelImpl.self, "User data is ready")
+                self?.logger.logD("SignUpViewModelImpl", "User data is ready")
                 self?.emergencyConnectRepository.cleansEmergencyConfigs()
                 if self?.emergencyConnectRepository.isConnected() == true {
                     self?.disconnectFromEmergencyConnect()
@@ -326,7 +326,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 self?.routeTo.onNext(.main)
             } else {
                 self?.preferences.saveUserSessionAuth(sessionAuth: nil)
-                self?.logger.logE(SignUpViewModelImpl.self, "Failed to prepare user data: \(error)")
+                self?.logger.logE("SignUpViewModelImpl", "Failed to prepare user data: \(error)")
 
                 switch error {
                 case let Errors.apiError(e):
