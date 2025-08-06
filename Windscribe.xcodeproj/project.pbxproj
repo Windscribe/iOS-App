@@ -519,7 +519,6 @@
 		59FC746A2C5167E200021CD1 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
 		59FC746B2C5167F200021CD1 /* CustomConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA5262B63901400E5C571 /* CustomConfigRepository.swift */; };
 		59FC746C2C5167F500021CD1 /* CustomConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52DA5282B63902B00E5C571 /* CustomConfigRepositoryImpl.swift */; };
-		59FC746D2C51692C00021CD1 /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		59FC746E2C51693200021CD1 /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
 		59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA91DD82BEA7F2C00496DF8 /* ConnectionStateInfo.swift */; };
 		59FC74712C516D9000021CD1 /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */; };
@@ -723,6 +722,8 @@
 		C50F20D12B62110500266B23 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDE2281F1DD00378058 /* Bundle+Extension.swift */; };
 		C50F20D22B62110700266B23 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDE2281F1DD00378058 /* Bundle+Extension.swift */; };
 		C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDE2281F1DD00378058 /* Bundle+Extension.swift */; };
+		C511EC1D2E43BCE1009D2C12 /* ShakeForDataScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF36A1AC237C7FC500BDDCDB /* ShakeForDataScore.swift */; };
+		C511EC1E2E43BCF7009D2C12 /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		C512546B2DE76C8A003A58BD /* SSOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546A2DE76C7A003A58BD /* SSOManager.swift */; };
 		C512546C2DE76C8A003A58BD /* SSOManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546A2DE76C7A003A58BD /* SSOManager.swift */; };
 		C512546E2DE76D06003A58BD /* SSOSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = C512546D2DE76D05003A58BD /* SSOSession.swift */; };
