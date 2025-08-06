@@ -67,5 +67,4 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
         }
         viewController.present(navigationController, animated: true)
     }
-
 }

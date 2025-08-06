@@ -37,7 +37,7 @@ class HomeRouter: BaseRouter, RootRouter {
             from.navigationController?.pushViewController(vc, animated: true)
         case RouteID.locationPermission:
             let locationPermissionView = Assembler.resolve(LocationPermissionInfoView.self)
-            presentViewModally(from: from, view: locationPermissionView)
+            presentViewModally(from: from, view: DeviceTypeProvider { locationPermissionView })
         case RouteID.shareWithFriends:
             let referForDataView = Assembler.resolve(ReferForDataSettingsView.self)
             pushViewWithoutNavigationBar(from: from, view: referForDataView, title: "")

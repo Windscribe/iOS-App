@@ -39,7 +39,7 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
                 Image(viewModel.accountStatusType.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 150, height: 150)
+                    .frame(width: 120, height: 120)
 
                 VStack(spacing: 16) {
                     // Title
@@ -52,7 +52,7 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
 
                     // Description
                     Text(viewModel.displayDescription)
-                        .font(.text(.body))
+                        .font(.text(.callout))
                         .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.welcomeButtonTextColor)
                         .multilineTextAlignment(.center)
@@ -67,7 +67,7 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
                             .padding()
                             .background(viewModel.accountStatusType.canTakeAction ? Color.loginRegisterEnabledButtonColor : Color.gray)
                             .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                            .font(.bold(.title3))
+                            .font(.bold(.callout))
                             .dynamicTypeSize(dynamicTypeRange)
                             .clipShape(Capsule())
                     }
@@ -81,9 +81,8 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .foregroundColor(.welcomeButtonTextColor)
-                                .font(.bold(.title3))
+                                .font(.bold(.callout))
                                 .dynamicTypeSize(dynamicTypeRange)
-                                .clipShape(Capsule())
                         }
                         .frame(maxWidth: maxWidth)
                     }

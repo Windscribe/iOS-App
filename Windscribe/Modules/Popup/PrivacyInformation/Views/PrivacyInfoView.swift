@@ -26,72 +26,93 @@ struct PrivacyInfoView: View, ResponsivePopupLayoutProvider {
 
     var body: some View {
         GeometryReader { geometry in
-            let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
-            let maxWidth = getMaxWidth(for: geometry)
+            let baseMaxWidth = getMaxWidth(for: geometry)
+            let maxWidth = deviceType == .iPadPortrait || deviceType == .iPadLandscape ? 600 : baseMaxWidth
 
-            ZStack {
-                VStack(spacing: 32) {
-                    // Privacy Description Text - Scrollable
-                    ScrollViewReader { proxy in
-                        ScrollView(showsIndicators: true) {
-                            VStack(alignment: .leading, spacing: 16) {
-                                Spacer()
-                                    .frame(height: 40)
-                                    .id("topPadding")
+            mainContent(maxWidth: maxWidth)
+        }
+    }
 
-                                Text(TextsAsset.PrivacyView.description)
-                                    .font(.text(.subheadline))
-                                    .dynamicTypeSize(dynamicTypeRange)
-                                    .foregroundColor(.white)
-                                    .opacity(0.5)
-                                    .multilineTextAlignment(.leading)
-                                    .frame(maxWidth: maxWidth, alignment: .leading)
-                                    .id("privacyText")
-                            }
-                        }
-                        .onAppear {
-                            // Very subtle scroll to show indicator
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                withAnimation(.easeInOut(duration: 0.8)) {
-                                    proxy.scrollTo("privacyText", anchor: .center)
-                                }
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                    withAnimation(.easeInOut(duration: 0.8)) {
-                                        proxy.scrollTo("topPadding", anchor: .top)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Button positioned closer to text
-                    Button(action: viewModel.acceptPrivacy) {
-                        Text(TextsAsset.PrivacyView.action)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.loginRegisterEnabledButtonColor)
-                            .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                            .font(.bold(.title3))
-                            .dynamicTypeSize(dynamicTypeRange)
-                            .clipShape(Capsule())
-                    }
-                    .frame(maxWidth: maxWidth)
-                    .padding(.bottom, bottomPadding)
-                }
-                .padding()
-                .dynamicTypeSize(dynamicTypeRange)
+    private func mainContent(maxWidth: CGFloat) -> some View {
+        ZStack {
+            contentView(maxWidth: maxWidth)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(backgroundView)
+        .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+            if shouldDismiss {
+                dismiss()
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                Color.from(.screenBackgroundColor, viewModel.isDarkMode)
-                    .opacity(0.95)
-                    .ignoresSafeArea()
-            )
-            .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
-                if shouldDismiss {
-                    dismiss()
+        }
+    }
+
+    private func contentView(maxWidth: CGFloat) -> some View {
+        VStack {
+            scrollableTextView(maxWidth: maxWidth)
+            Spacer()
+            acceptButton(maxWidth: maxWidth)
+        }
+        .padding(.horizontal)
+        .padding(.top)
+        .dynamicTypeSize(dynamicTypeRange)
+    }
+
+    private func scrollableTextView(maxWidth: CGFloat) -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(showsIndicators: true) {
+                VStack(alignment: .leading, spacing: 16) {
+                    Spacer()
+                        .frame(height: 20)
+                        .id("topPadding")
+
+                    privacyDescriptionText(maxWidth: maxWidth)
+                }
+            }
+            .onAppear {
+                // Very subtle scroll to show indicator
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    withAnimation(.easeInOut(duration: 0.8)) {
+                        proxy.scrollTo("privacyText", anchor: UnitPoint.center)
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        withAnimation(.easeInOut(duration: 0.8)) {
+                            proxy.scrollTo("topPadding", anchor: UnitPoint.top)
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private func privacyDescriptionText(maxWidth: CGFloat) -> some View {
+        Text(TextsAsset.PrivacyView.description)
+            .font(.text(deviceType == .iPadPortrait || deviceType == .iPadLandscape ? .body : .subheadline))
+            .dynamicTypeSize(dynamicTypeRange)
+            .foregroundColor(.white)
+            .opacity(0.5)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: maxWidth, alignment: .leading)
+            .id("privacyText")
+    }
+
+    private func acceptButton(maxWidth: CGFloat) -> some View {
+        Button(action: viewModel.acceptPrivacy) {
+            Text(TextsAsset.PrivacyView.action)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.loginRegisterEnabledButtonColor)
+                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                .font(.bold(.callout))
+                .dynamicTypeSize(dynamicTypeRange)
+                .clipShape(Capsule())
+        }
+        .frame(maxWidth: maxWidth)
+        .padding(.bottom, 12)
+    }
+
+    private var backgroundView: some View {
+        Color.from(.screenBackgroundColor, viewModel.isDarkMode)
+            .opacity(0.95)
+            .ignoresSafeArea()
     }
 }
