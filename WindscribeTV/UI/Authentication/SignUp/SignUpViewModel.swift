@@ -229,7 +229,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func handleSignupError(_ error: Error) {
-        logger.logE(SignUpViewModelImpl.self, "Failed to signup: \(error)")
+        logger.logE("SignUpViewModelImpl", "Failed to signup: \(error)")
 
         showLoadingView.onNext(false)
         switch error {
