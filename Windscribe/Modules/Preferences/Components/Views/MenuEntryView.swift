@@ -291,11 +291,19 @@ struct MenuFieldView: View {
     var body: some View {
         if isEditing {
             HStack(spacing: 4) {
-                TextField(placeHolder, text: $editedValue)
-                    .foregroundColor(.from(.infoColor, isDarkMode))
-                    .font(.regular(.callout))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .focused($isTextFieldFocused)
+                ZStack(alignment: .leading) {
+                    if editedValue.isEmpty {
+                        Text(placeHolder)
+                            .foregroundColor(.from(.infoColor, isDarkMode).opacity(0.5))
+                            .font(.regular(.callout))
+                    }
+                    TextField("", text: $editedValue)
+                        .foregroundColor(.from(.infoColor, isDarkMode))
+                        .font(.regular(.callout))
+                        .focused($isTextFieldFocused)
+                        .tint(.from(.iconColor, isDarkMode))
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
                 Button(action: {
                     isEditing = false
                     isTextFieldFocused = false
@@ -306,10 +314,11 @@ struct MenuFieldView: View {
                             .resizable()
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 16, height: 16)
+                            .frame(width: 12, height: 12)
                             .foregroundColor(.from(.infoColor, isDarkMode))
                     }
                 })
+                .padding(.trailing, 12)
                 Button(action: {
                     isEditing = false
                     isTextFieldFocused = false
@@ -320,8 +329,8 @@ struct MenuFieldView: View {
                             .resizable()
                             .renderingMode(.template)
                             .aspectRatio(contentMode: .fit)
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(.eletricBlue)
+                            .frame(width: 16, height: 16)
+                            .foregroundColor(.positiveGreen)
                     }
                 })
             }
