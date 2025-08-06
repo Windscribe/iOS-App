@@ -32,32 +32,30 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
             let maxWidth = getMaxWidth(for: geometry)
 
             ZStack {
-                VStack(spacing: 24) {
-                    ZStack(alignment: .top) {
-                        VStack(spacing: 16) {
-                            Spacer()
-                                .frame(height: topSpacer)
+                VStack {
+                    VStack(spacing: 16) {
+                        Spacer()
+                            .frame(height: topSpacer)
 
-                            Image(ImagesAsset.promptInfo)
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                        Image(ImagesAsset.promptInfo)
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
-                            Text(TextsAsset.Permission.disclaimer)
-                                .font(.bold(.title1))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                        Text(TextsAsset.Permission.disclaimer)
+                            .font(.bold(.title2))
+                            .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
-                            Text(TextsAsset.Permission.disclosureDescription)
-                                .font(.text(.subheadline))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.welcomeButtonTextColor)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: maxWidth)
-                        }
-
+                        Text(TextsAsset.Permission.disclosureDescription)
+                            .font(.text(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
+                            .foregroundColor(.welcomeButtonTextColor)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: maxWidth)
                     }
+
+                    Spacer()
 
                     VStack(spacing: 8) {
                         Button(action: viewModel.handlePrimaryAction) {
@@ -66,8 +64,7 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
                                 .padding()
                                 .background(Color.loginRegisterEnabledButtonColor)
                                 .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                                .font(.bold(.title3))
-                                .dynamicTypeSize(dynamicTypeRange)
+                                .font(.bold(.callout))
                                 .clipShape(Capsule())
                         }
                         .frame(maxWidth: maxWidth)
@@ -79,13 +76,11 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .foregroundColor(.welcomeButtonTextColor)
-                                .font(.bold(.title3))
+                                .font(.bold(.callout))
                                 .dynamicTypeSize(dynamicTypeRange)
-                                .clipShape(Capsule())
                         })
                         .frame(maxWidth: maxWidth)
                     }
-                    .padding(.top, min(geometry.size.height * 0.25, 450))
                     .padding(.bottom, bottomPadding)
                 }
                 .padding()

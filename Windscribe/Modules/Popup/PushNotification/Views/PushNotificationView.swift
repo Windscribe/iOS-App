@@ -31,63 +31,59 @@ struct PushNotificationView: View, ResponsivePopupLayoutProvider {
             let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
             let maxWidth = getMaxWidth(for: geometry)
 
-            ZStack {
-                VStack(spacing: 24) {
-                    ZStack(alignment: .top) {
-                        VStack(spacing: 16) {
-                            Spacer()
-                                .frame(height: topSpacer)
+            VStack {
+                VStack(spacing: 16) {
+                    Spacer()
+                        .frame(height: topSpacer)
 
-                            Image(ImagesAsset.pushNotifications)
-                                .renderingMode(.template)
-                                .resizable()
-                                .frame(width: 60, height: 60)
-                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                    Image(ImagesAsset.pushNotifications)
+                        .renderingMode(.template)
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
-                            Text(TextsAsset.PushNotifications.title)
-                                .font(.bold(.title1))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
+                    Text(TextsAsset.PushNotifications.title)
+                        .font(.bold(.title2))
+                        .dynamicTypeSize(dynamicTypeRange)
+                        .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
-                            Text(TextsAsset.PushNotifications.description)
-                                .font(.text(.subheadline))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .foregroundColor(.welcomeButtonTextColor)
-                                .multilineTextAlignment(.center)
-                                .frame(maxWidth: maxWidth)
-                        }
-                    }
-
-                    VStack(spacing: 8) {
-                        Button(action: viewModel.enableNotifications) {
-                            Text(TextsAsset.PushNotifications.action)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.loginRegisterEnabledButtonColor)
-                                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                                .font(.bold(.title3))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .clipShape(Capsule())
-                        }
+                    Text(TextsAsset.PushNotifications.description)
+                        .font(.text(.callout))
+                        .dynamicTypeSize(dynamicTypeRange)
+                        .foregroundColor(.welcomeButtonTextColor)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: maxWidth)
-
-                        Button(action: viewModel.cancel) {
-                            Text(TextsAsset.cancel)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .foregroundColor(.welcomeButtonTextColor)
-                                .font(.bold(.title3))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .clipShape(Capsule())
-                        }
-                        .frame(maxWidth: maxWidth)
-                    }
-                    .padding(.top, min(geometry.size.height * 0.25, 450))
-                    .padding(.bottom, bottomPadding)
                 }
-                .padding()
-                .dynamicTypeSize(dynamicTypeRange)
+
+                Spacer()
+
+                VStack(spacing: 8) {
+                    Button(action: viewModel.enableNotifications) {
+                        Text(TextsAsset.PushNotifications.action)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.loginRegisterEnabledButtonColor)
+                            .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                            .font(.bold(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
+                            .clipShape(Capsule())
+                    }
+                    .frame(maxWidth: maxWidth)
+
+                    Button(action: viewModel.cancel) {
+                        Text(TextsAsset.cancel)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .foregroundColor(.welcomeButtonTextColor)
+                            .font(.bold(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
+                    }
+                    .frame(maxWidth: maxWidth)
+                }
+                .padding(.bottom, bottomPadding)
             }
+            .padding()
+            .dynamicTypeSize(dynamicTypeRange)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.from(.screenBackgroundColor, viewModel.isDarkMode).ignoresSafeArea())
             .onChange(of: viewModel.shouldDismiss) { shouldDismiss in

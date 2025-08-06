@@ -53,7 +53,7 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
 
                     // Sub Header Text
                     Text(TextsAsset.MaintenanceLocationPopUp.subtHeader)
-                        .font(.text(.body))
+                        .font(.text(.callout))
                         .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.welcomeButtonTextColor)
                         .multilineTextAlignment(.center)
@@ -69,7 +69,7 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
                                 .padding()
                                 .background(Color.loginRegisterEnabledButtonColor)
                                 .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                                .font(.bold(.title3))
+                                .font(.bold(.callout))
                                 .dynamicTypeSize(dynamicTypeRange)
                                 .clipShape(Capsule())
                         }
@@ -82,9 +82,8 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .foregroundColor(.welcomeButtonTextColor)
-                            .font(.bold(.title3))
+                            .font(.bold(.callout))
                             .dynamicTypeSize(dynamicTypeRange)
-                            .clipShape(Capsule())
                     }
                     .frame(maxWidth: maxWidth)
                 }

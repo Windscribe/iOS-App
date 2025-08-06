@@ -244,7 +244,7 @@ struct EnterCredentialsView: View, ResponsivePopupLayoutProvider {
     private func submitButtonSection(maxWidth: CGFloat) -> some View {
         Button(action: viewModel.submit) {
             Text(viewModel.isUpdating ? TextsAsset.save : TextsAsset.connect)
-                .font(.text(.body))
+                .font(.bold(.callout))
                 .foregroundColor(canSubmit ? .midnight : .from(.iconColor, viewModel.isDarkMode))
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)

@@ -30,7 +30,7 @@ extension ResponsivePopupLayoutProvider {
         case .iPadLandscape:
             return geometry.size.height * 0.12
         default:
-            return 24
+            return 12
         }
     }
 

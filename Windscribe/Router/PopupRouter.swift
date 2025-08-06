@@ -40,26 +40,31 @@ class PopupRouter: BaseRouter, RootRouter {
         case .bannedAccountPopup:
             let context = AccountStatusContext()
             context.accountStatusType = .banned
-            return Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            let accountStatusView = Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            return DeviceTypeProvider { accountStatusView }
 
         case .outOfDataAccountPopup:
             let context = AccountStatusContext()
             context.accountStatusType = .outOfData
-            return Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            let accountStatusView = Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            return DeviceTypeProvider { accountStatusView }
 
         case .proPlanExpireddAccountPopup:
             let context = AccountStatusContext()
             context.accountStatusType = .proPlanExpired
-            return Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            let accountStatusView = Assembler.resolve(AccountStatusView.self).environmentObject(context)
+            return DeviceTypeProvider { accountStatusView }
 
         case .newsFeedPopup:
             return Assembler.resolve(NewsFeedView.self)
 
         case .privacyView:
-            return Assembler.resolve(PrivacyInfoView.self)
+            let privacyInfoView = Assembler.resolve(PrivacyInfoView.self)
+            return DeviceTypeProvider { privacyInfoView }
 
         case .pushNotifications:
-            return Assembler.resolve(PushNotificationView.self)
+            let pushNotificationView = Assembler.resolve(PushNotificationView.self)
+            return DeviceTypeProvider { pushNotificationView }
 
         case let .enterCredentials(config, isUpdating):
             let context = EnterCredentialsContext()
@@ -70,7 +75,8 @@ class PopupRouter: BaseRouter, RootRouter {
         case .maintenanceLocation(let isStaticIp):
             let context = MaintananceLocationContext()
             context.isStaticIp = isStaticIp
-            return Assembler.resolve(MaintananceLocationView.self).environmentObject(context)
+            let maintananceLocationView = Assembler.resolve(MaintananceLocationView.self).environmentObject(context)
+            return DeviceTypeProvider { maintananceLocationView }
 
         case .networkSecurity:
             return Assembler.resolve(NetworkSecurityView.self)
