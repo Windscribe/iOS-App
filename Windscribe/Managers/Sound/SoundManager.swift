@@ -36,11 +36,23 @@ final class SoundManager: SoundManaging {
     init(logger: FileLogger) {
         self.logger = logger
 
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            logger.logE("SoundManager", "Failed to configure AVAudioSession: \(error)")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                try AVAudioSession.sharedInstance().setCategory(.playback,
+                                                                mode: .default,
+                                                                options: [.mixWithOthers])
+            } catch {
+                self.logger.logE("SoundManager", "Category set failed: \(error)")
+            }
+
+            DispatchQueue.global(qos: .utility).async {
+                do {
+                    try AVAudioSession.sharedInstance().setActive(true)
+                } catch {
+                    self.logger.logE("SoundManager", "Activation failed: \(error)")
+                }
+            }
         }
     }
 
