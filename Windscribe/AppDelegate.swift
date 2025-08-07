@@ -103,17 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    /// Load Latency Information
-    private func loadLatencyConfiguration() {
-        Task.detached { [unowned self] in
-            try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
-            if await preferences.userSessionAuth() != nil {
-                    try? await Task.sleep(nanoseconds: 2_000_000_000)
-                await self.latencyRepository.loadLatency()
-                }
-        }
-    }
-
     /// If vpn state is disconnected on app launch reset country override for the server list.
     private func resetCountryOverrideForServerList() {
         if vpnManager.isDisconnected() {

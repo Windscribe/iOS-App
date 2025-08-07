@@ -384,6 +384,7 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadLatencies() {
+        latencyRepo.loadLatency()
         latencyRepo.latency.bind(onNext: { [weak self] data in
             guard let self = self else { return }
             self.latencies.onNext(data)
