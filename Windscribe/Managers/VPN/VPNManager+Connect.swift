@@ -25,6 +25,7 @@ extension VPNManager {
     /// Usage:
     /// Call this function to start the disconnection process. See more: DisconnectTask
     func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error> {
+        connectionTaskPublisher?.cancel()
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
                 self.configurationState = .disabling
@@ -47,7 +48,8 @@ extension VPNManager {
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
-        self.logger.logI("VPNConfiguration", "Connecting from ViewModel")
+        logger.logI("VPNConfiguration", "Connecting from ViewModel")
+        connectionTaskPublisher?.cancel()
         return disableKillSwitchIfRequired()
             .flatMap { _ in
                 return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()

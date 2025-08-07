@@ -363,10 +363,13 @@ extension ConnectionViewModel {
 
     private func enableConnection(connectionType: ConnectionType) {
         Task { @MainActor in
-            if !WifiManager.shared.isConnectedWifiTrusted() {
+            guard !WifiManager.shared.isConnectedWifiTrusted() else {
                 logger.logI("ConnectionViewModel", "User joining untrusted network")
+
                 let currentNetwork = securedNetwork.getCurrentNetwork()
                 vpnManager.untrustedOneTimeOnlySSID = currentNetwork?.SSID ?? ""
+                vpnManager.simpleEnableConnection()
+                return
             }
 
             if checkCanPlayDisconnectedSound() {
@@ -415,6 +418,13 @@ extension ConnectionViewModel {
     }
 
     func disableConnection() {
+        guard !WifiManager.shared.isConnectedWifiTrusted() else {
+            logger.logI("ConnectionViewModel", "User leaving untrusted network")
+            vpnManager.untrustedOneTimeOnlySSID = ""
+            vpnManager.simpleDisableConnection()
+            return
+        }
+
         connectionTaskPublisher?.cancel()
         connectionTaskPublisher = vpnManager.disconnectFromViewModel().receive(on: DispatchQueue.main)
             .sink { completion in
