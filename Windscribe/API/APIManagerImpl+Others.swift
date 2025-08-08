@@ -10,12 +10,6 @@ import Foundation
 import RxSwift
 
 extension APIManagerImpl {
-    func sendDebugLog(username: String, log: String) -> Single<APIMessage> {
-        return makeApiCall(modalType: APIMessage.self) { completion in
-            self.api.debugLog(username, strLog: log, callback: completion)
-        }
-    }
-
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
         return try await makeApiCallAsync(modalType: APIMessage.self) { completion in
             self.api.debugLog(username, strLog: log, callback: completion)
