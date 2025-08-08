@@ -139,38 +139,32 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
 
         sendLogStatus = .sending
 
-        logger.getLogData()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .flatMap { [weak self] logData -> AnyPublisher<Bool, Error> in
-                guard let self = self else {
-                    return Fail(error: NSError(domain: "VMDisposed", code: -1))
-                        .eraseToAnyPublisher()
+        Task {
+            do {
+                let logData = try await logger.getLogData()
+
+                let username = await MainActor.run {
+                    var username = sessionManager.session?.username ?? ""
+                    if let session = sessionManager.session, session.isUserGhost {
+                        username = "ghost_\(session.userId)"
+                    }
+                    return username
                 }
 
-                var username = sessionManager.session?.username ?? ""
-                if let session = sessionManager.session, session.isUserGhost {
-                    username = "ghost_\(session.userId)"
+                _ = try await apiManager.sendDebugLog(username: username, log: logData)
+
+                await MainActor.run {
+                    self.sendLogStatus = .success
                 }
-
-                return self.apiManager.sendDebugLog(username: username, log: logData)
-                    .map { _ in true } // map APIMessage → Bool
-                    .asPublisher()
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-
-                if case let .failure(error) = completion {
+            } catch {
+                await MainActor.run {
                     self.sendLogStatus = .failure(error.localizedDescription)
                     self.alert = HelpAlert(
                         title: TextsAsset.appLogSubmitFailAlert,
                         message: "",
                         buttonText: TextsAsset.okay)
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.sendLogStatus = .success
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 }

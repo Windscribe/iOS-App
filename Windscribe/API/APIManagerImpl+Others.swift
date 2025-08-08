@@ -16,6 +16,12 @@ extension APIManagerImpl {
         }
     }
 
+    func sendDebugLog(username: String, log: String) async throws -> APIMessage {
+        return try await makeApiCallAsync(modalType: APIMessage.self) { completion in
+            self.api.debugLog(username, strLog: log, callback: completion)
+        }
+    }
+
     func getIp() -> Single<MyIP> {
         return makeApiCall(modalType: MyIP.self) { completion in
             self.api.myIP(completion)

@@ -57,14 +57,18 @@ final class DebugLogViewModelImpl: DebugLogViewModel {
 
         showProgress = true
 
-        logger.getLogData()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] _ in
-                self?.showProgress = false
-            }, receiveValue: { [weak self] content in
-                self?.logContent = content
-            })
-            .store(in: &cancellables)
+        Task {
+            do {
+                let content = try await logger.getLogData()
+                await MainActor.run {
+                    self.logContent = content
+                    self.showProgress = false
+                }
+            } catch {
+                await MainActor.run {
+                    self.showProgress = false
+                }
+            }
+        }
     }
 }
