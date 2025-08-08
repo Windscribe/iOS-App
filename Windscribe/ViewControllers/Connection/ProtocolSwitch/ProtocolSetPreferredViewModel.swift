@@ -67,22 +67,29 @@ class ProtocolSetPreferredViewModel: ProtocolSetPreferredViewModelV2 {
 
     func submitLog() {
         submitLogState.onNext(.sending)
-        logger.getLogData()
-            .flatMap { fileData in
-                var debugUsername = ""
-                if let session = self.sessionManager.session {
-                    debugUsername = session.username
+        Task {
+            do {
+                let logData = try await logger.getLogData()
+
+                let username = await MainActor.run {
+                    var username = sessionManager.session?.username ?? ""
+                    if let session = sessionManager.session, session.isUserGhost {
+                        username = "ghost_\(session.userId)"
+                    }
+                    return username
                 }
-                if let session = self.sessionManager.session, session.isUserGhost == true {
-                    debugUsername = "ghost_\(session.userId)"
+
+                _ = try await apiManager.sendDebugLog(username: username, log: logData)
+
+                await MainActor.run {
+                    submitLogState.onNext(.sent)
                 }
-                return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
+            } catch {
+                await MainActor.run {
+                    submitLogState.onNext(.failed)
+                }
             }
-            .subscribe(onSuccess: { [self] _ in
-                submitLogState.onNext(.sent)
-            }, onFailure: { [self] _ in
-                submitLogState.onNext(.failed)
-            }).disposed(by: disposeBag)
+        }
     }
 
     func getProtocolName() async -> String {

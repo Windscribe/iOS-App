@@ -22,7 +22,7 @@ class ViewLogViewModelImpl: ViewLogViewModel {
     let showProgress = BehaviorSubject(value: false)
     let isDarkMode: BehaviorSubject<Bool>
     private let logger: FileLogger
-    private let disposeBag = DisposeBag()
+
     init(logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.logger = logger
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
@@ -31,15 +31,18 @@ class ViewLogViewModelImpl: ViewLogViewModel {
 
     private func load() {
         showProgress.onNext(true)
-        logger.getLogData()
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onSuccess: { [weak self] content in
-            guard let self = self else { return }
-            self.showProgress.onNext(false)
-            self.logContent.onNext(content)
-        }, onFailure: { [weak self] _ in
-            self?.showProgress.onNext(false)
-        }).disposed(by: disposeBag)
+        Task {
+            do {
+                let content = try await logger.getLogData()
+                await MainActor.run {
+                    self.showProgress.onNext(false)
+                    self.logContent.onNext(content)
+                }
+            } catch {
+                await MainActor.run {
+                    self.showProgress.onNext(false)
+                }
+            }
+        }
     }
 }

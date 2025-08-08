@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 import UIKit
+import os.log
 
 class FileLoggerImpl: FileLogger {
     enum LogLevel: String {
@@ -23,16 +23,16 @@ class FileLoggerImpl: FileLogger {
             case timestamp = "tm"
         }
 
-        let level: LogLevel
-        let tag: String
-        let message: String
-        let timestamp: TimeInterval
-
         private static let jsonDateFormatter: DateFormatter = {
               let formatter = DateFormatter()
               formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
               return formatter
           }()
+
+        let level: LogLevel
+        let tag: String
+        let message: String
+        let timestamp: TimeInterval
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
@@ -89,9 +89,7 @@ class FileLoggerImpl: FileLogger {
 
             // Decode timestamp string and convert to TimeInterval
             let timestampString = try container.decode(String.self, forKey: .timestamp)
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-            timestamp = dateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
+            timestamp = LogBufferModel.jsonDateFormatter.date(from: timestampString)?.timeIntervalSince1970 ?? Date().timeIntervalSince1970
         }
 
         // Keep the original init for creating new log entries
@@ -107,7 +105,7 @@ class FileLoggerImpl: FileLogger {
     private let logFileName = "windscribe.log"
 
     // MARK: - Log Batching Configuration
-    private let batchFlushInterval: TimeInterval = 2.0 // Flush every 2 seconds
+    private let batchFlushInterval: TimeInterval = 10.0 // Flush every 10 seconds
     private let batchMaxSize: Int = 50 // Flush when buffer reaches 50 logs
     private let batchMaxMemorySize: Int = 10_000 // Flush when buffer reaches ~10KB of text
 
@@ -192,10 +190,16 @@ class FileLoggerImpl: FileLogger {
         }
     }
 
-    private func flushLogBuffer() {
+    private func flushLogBuffer(completion: (() -> Void)? = nil) {
         batchQueue.async { [weak self] in
-            guard let self = self else { return }
-            guard !self.logBuffer.isEmpty else { return }
+            guard let self = self else {
+                completion?()
+                return
+            }
+            guard !self.logBuffer.isEmpty else {
+                completion?()
+                return
+            }
 
             let bufferCopy = self.logBuffer
             self.logBuffer.removeAll()
@@ -206,23 +210,13 @@ class FileLoggerImpl: FileLogger {
 
             // Convert to JSON and write to file
             self.writeLogsToFile(sortedLogs)
+            completion?()
         }
     }
 
     private func writeLogsToFile(_ logs: [LogBufferModel]) {
         guard let logFileURL = getLogFileURL() else { return }
-
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.sortedKeys]
-        var newJsonLines: [String] = []
-
-        // Encode new logs using custom ordered JSON
-        for log in logs {
-            let jsonString = log.toOrderedJSONString()
-            newJsonLines.append(jsonString)
-        }
-
-        guard !newJsonLines.isEmpty else { return }
+        guard !logs.isEmpty else { return }
 
         do {
             // Read existing logs and combine with new ones
@@ -248,7 +242,7 @@ class FileLoggerImpl: FileLogger {
             try finalContent.write(to: logFileURL, atomically: true, encoding: .utf8)
 
         } catch {
-            logE("FileLogger", "Failed to write logs to file: \(error)")
+            os_log("Failed to write logs to file: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
         }
     }
 
@@ -266,14 +260,14 @@ class FileLoggerImpl: FileLogger {
                         let logEntry = try decoder.decode(LogBufferModel.self, from: data)
                         parsedLogs.append(logEntry)
                     } catch {
-                        logE("FileLogger", "Failed to parse log line: \(line) - Error: \(error)")
+                        os_log("Failed to parse log line - Error: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
                     }
                 }
             }
 
             return parsedLogs
         } catch {
-            logE("FileLogger", "Failed to read existing log file: \(error)")
+            os_log("Failed to read existing log file: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
             return []
         }
     }
@@ -313,28 +307,30 @@ class FileLoggerImpl: FileLogger {
         flushLogBuffer() // Ensure any remaining logs are written
     }
 
-    func getLogData() -> Single<String> {
-        return Single.create { [weak self] callback in
-            guard let self = self else {
-                return Disposables.create {}
-            }
+    func getLogData() async throws -> String {
+        return await withCheckedContinuation { continuation in
             guard let logFileURL = getLogFileURL() else {
-                return Disposables.create {}
+                continuation.resume(returning: "")
+                return
             }
 
-            self.batchQueue.async {
-                self.flushLogBuffer()
+            flushLogBuffer { [weak self] in
+                guard let self = self else {
+                    continuation.resume(returning: "")
+                    return
+                }
+
                 let allLogs = self.parseExistingLogFile(logFileURL: logFileURL)
-                let combinedLog = allLogs.sorted { $0.timestamp < $1.timestamp }
-                    .map { $0.toOrderedJSONString() }
+                let sortedLogs = allLogs.sorted { $0.timestamp > $1.timestamp }
+                let combinedLog = sortedLogs
                     .reduce(into: "", {
-                        if $0.count + $1.count <= self.maxLogLength {
-                            return $0 += $1 + "\n"
+                        let log = $1.toOrderedJSONString()
+                        if $0.count + log.count + "\n".count <= self.maxLogLength {
+                            return $0 = log + "\n" + $0
                         }
                     })
-                callback(.success(combinedLog))
+                continuation.resume(returning: combinedLog)
             }
-            return Disposables.create {}
         }
     }
 
@@ -361,7 +357,7 @@ class FileLoggerImpl: FileLogger {
         do {
             try FileManager.default.createDirectory(at: logDirectory, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            logE("FileLogger", "Failed to create log directory: \(error)")
+            os_log("Failed to create log directory: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
         }
 
         // Log configuration on startup to the JSON log file
@@ -371,15 +367,5 @@ class FileLoggerImpl: FileLogger {
         addToBatch(.info, tag: "FileLogger", message: startupMessage)
     }
 
-    private func getAllLogFiles() -> [URL] {
-        do {
-            let fileNames = try FileManager.default.contentsOfDirectory(atPath: logDirectory!.path).map { fileName in
-                logDirectory?.appendingPathComponent(fileName)
-            }.compactMap { $0 }
-            return fileNames
-        } catch {
-            return []
-        }
-    }
 
 }
