@@ -48,26 +48,28 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     }
 
     func submitDebugLog(username: String? = nil, completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {
-        logger.getLogData()
-            .subscribe(on: SerialDispatchQueueScheduler(qos: DispatchQoS.background))
-            .observe(on: MainScheduler.asyncInstance)
-            .flatMap { fileData in
-            var debugUsername = ""
-            if let session = self.sessionManager.session {
-                debugUsername = session.username
+        Task {
+            do {
+                let logData = try await logger.getLogData()
+
+                let username = await MainActor.run {
+                    var username = sessionManager.session?.username ?? ""
+                    if let session = sessionManager.session, session.isUserGhost {
+                        username = "ghost_\(session.userId)"
+                    }
+                    return username
+                }
+
+                _ = try await apiManager.sendDebugLog(username: username, log: logData)
+
+                await MainActor.run {
+                    completion(true, nil)
+                }
+            } catch {
+                await MainActor.run {
+                    completion(false, error.localizedDescription)
+                }
             }
-            if username != nil {
-                debugUsername = username ?? ""
-            }
-            if let session = self.sessionManager.session, session.isUserGhost == true {
-                debugUsername = "ghost_\(session.userId)"
-            }
-            return self.apiManager.sendDebugLog(username: debugUsername, log: fileData)
-        }.subscribe(onSuccess: { _ in
-            self.logger.logD("SubmitLogViewModelImpl", "Debug log submitted.")
-            completion(true, nil)
-        }, onFailure: { error in
-            completion(false, error.localizedDescription)
-        }).disposed(by: dispose)
+        }
     }
 }

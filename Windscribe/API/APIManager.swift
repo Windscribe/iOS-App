@@ -71,7 +71,6 @@ protocol APIManager {
     func recordInstall(platform: String) -> Single<APIMessage>
     func getNotifications(pcpid: String) -> Single<NoticeList>
     func getIp() -> Single<MyIP>
-    func sendDebugLog(username: String, log: String) -> Single<APIMessage>
     func sendDebugLog(username: String, log: String) async throws -> APIMessage
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) -> Single<APIMessage>
     func getShakeForDataLeaderboard() -> Single<Leaderboard>
