@@ -121,7 +121,12 @@ class PopupRouter: BaseRouter, RootRouter {
         default:
             isTransparentView = true
         }
+        switch route {
+        case .shakeForDataPopUp:
+            presentViewModallyWithNavigation(from: from, view: view)
+        default:
+            presentViewModally(from: from, view: view, isTransparent: isTransparentView)
+        }
 
-        presentViewModally(from: from, view: view, isTransparent: isTransparentView)
     }
 }

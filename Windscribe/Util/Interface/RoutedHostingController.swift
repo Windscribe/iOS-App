@@ -31,11 +31,11 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
                 }
 
                 let titleColor = UIColor(.from(.titleColor, isDarkMode))
-                let navigationBarBackgroundColor = UIColor(.from(.screenBackgroundColor, isDarkMode))
+                self.view.backgroundColor = UIColor(.from(.screenBackgroundColor, isDarkMode))
 
                 let appearance = UINavigationBarAppearance().then {
                     $0.configureWithOpaqueBackground()
-                    $0.backgroundColor = navigationBarBackgroundColor
+                    $0.backgroundColor = self.view.backgroundColor
                     $0.titleTextAttributes = [.foregroundColor: titleColor]
                     $0.shadowColor = .clear
                 }
