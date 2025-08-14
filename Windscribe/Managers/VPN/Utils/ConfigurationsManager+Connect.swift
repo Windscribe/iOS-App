@@ -39,7 +39,10 @@ extension ConfigurationsManager {
         let task = Task { [weak self] in
             guard let self = self else { return }
             do {
-                let config = try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+                progressPublisher.send(.update("Building configuration..."))
+                guard let config = try await tryBuildingConfig(locationID: locationID, proto: proto, port: port, vpnSettings: vpnSettings) else {
+                    throw VPNConfigurationErrors.connectionTimeout
+                }
                 self.logger.logI("VPNConfiguration", "Configuration built successfully \(config.description)")
                 progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
@@ -175,6 +178,26 @@ extension ConfigurationsManager {
             return ProtocolPort(protocolName: TextsAsset.wireGuard, portName: proto == TextsAsset.iKEv2 ? "443" : port)
         }
         return ProtocolPort(protocolName: proto, portName: port)
+    }
+
+    private func tryBuildingConfig(locationID: String,
+                                   proto: String,
+                                   port: String,
+                                   vpnSettings: VPNUserSettings) async throws -> VPNConfiguration? {
+
+        try await withThrowingTaskGroup(of: VPNConfiguration?.self) { group in
+            group.addTask {
+                try await self.buildConfig(location: locationID, proto: proto, port: port, userSettings: vpnSettings)
+            }
+            group.addTask {
+                try await Task.sleep(nanoseconds: 30_000_000_000)
+                return nil
+            }
+            // Return first completed task and cancel the rest
+            guard let config = try await group.next() else { return nil }
+            group.cancelAll()
+            return config
+        }
     }
 
     private func getConnectError(manager: NEVPNManager) async throws {
