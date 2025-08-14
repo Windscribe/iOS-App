@@ -26,6 +26,7 @@ class StaticIpRepositoryImpl: StaticIpRepository {
             self.localDatabase.saveStaticIPs(staticIps: Array($0.staticIPs))
             return Array($0.staticIPs)
         }.catch { error in
+            self.logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
             if let ips = self.localDatabase.getStaticIPs() {
                 return Single.just(ips)
             } else {
