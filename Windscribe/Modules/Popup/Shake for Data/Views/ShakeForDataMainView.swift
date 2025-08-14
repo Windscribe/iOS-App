@@ -21,6 +21,8 @@ struct ShakeForDataMainView: View, ResponsivePopupLayoutProvider {
 
     var body: some View {
         GeometryReader { geometry in
+            let baseMaxWidth = getMaxWidth(for: geometry)
+            let maxWidth = deviceType == .iPadPortrait || deviceType == .iPadLandscape ? 600 : baseMaxWidth
             let topSpacer = getTopSpacerHeight(for: geometry, deviceType: deviceType)
             let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
 
@@ -91,7 +93,9 @@ struct ShakeForDataMainView: View, ResponsivePopupLayoutProvider {
                     .padding(.bottom, bottomPadding)
                     Spacer()
                 }
+                .frame(maxWidth: maxWidth)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .overlay(routeLink)
             .dynamicTypeSize(dynamicTypeRange)
             .withRouter(router)
