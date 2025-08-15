@@ -46,6 +46,9 @@ struct WelcomeView: View {
                     self.showSSOErrorAlert = true
                     self.errorMessage = message
                 }
+                .onReceive(viewModel.showRestrictiveNetworkModal) { shouldShow in
+                    router.shouldNavigateToRestrictiveNetwork = shouldShow
+                }
                 .alert(isPresented: $showSSOErrorAlert) {
                     Alert(title: Text(TextsAsset.Welcome.ssoErrorAppleTitle),
                           message: Text(errorMessage),
@@ -55,6 +58,9 @@ struct WelcomeView: View {
                                 errorMessage = ""
                           }
                     )
+                }
+                .sheet(isPresented: $router.shouldNavigateToRestrictiveNetwork) {
+                    router.createView(for: .restrictiveNetwork)
                 }
                 .fullScreenCover(
                     isPresented: $router.shouldNavigateToEmergency,

@@ -1118,6 +1118,8 @@
 		F4888E422D94A11B005EF149 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E412D94A11B005EF149 /* SignUpViewModel.swift */; };
 		F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E432D959DDE005EF149 /* SignUpView.swift */; };
 		F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E452D9658EB005EF149 /* ViewPositionReader.swift */; };
+		F489F2582E4E55FF00E0D898 /* RestrictiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */; };
+		F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */; };
 		F48F41362DB938E300AFFC30 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353A2DA994BC00108558 /* SoundManager.swift */; };
 		F48F41372DB938EB00AFFC30 /* SoundManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353D2DA9953900108558 /* SoundManaging.swift */; };
 		F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
@@ -2047,6 +2049,8 @@
 		F4888E412D94A11B005EF149 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		F4888E432D959DDE005EF149 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		F4888E452D9658EB005EF149 /* ViewPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPositionReader.swift; sourceTree = "<group>"; };
+		F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkView.swift; sourceTree = "<group>"; };
+		F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkViewModel.swift; sourceTree = "<group>"; };
 		F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundPlaybackManager.swift; sourceTree = "<group>"; };
 		F499351B2DA6D93700108558 /* RoutedHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutedHostingController.swift; sourceTree = "<group>"; };
 		F499352B2DA71F0800108558 /* GhostAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountView.swift; sourceTree = "<group>"; };
@@ -4228,6 +4232,7 @@
 				F45DF73B2E2FF52D00B00F09 /* PushNotification */,
 				F4B5457A2E32CFA200135E74 /* MaintananceLocation */,
 				1EC98A4C2E213078009C2CD3 /* Shake for Data */,
+				F489F2522E4E552300E0D898 /* RestrictiveNetwork */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -4736,6 +4741,31 @@
 			isa = PBXGroup;
 			children = (
 				F4888E412D94A11B005EF149 /* SignUpViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F489F2522E4E552300E0D898 /* RestrictiveNetwork */ = {
+			isa = PBXGroup;
+			children = (
+				F489F2532E4E557500E0D898 /* Views */,
+				F489F2542E4E557B00E0D898 /* ViewModels */,
+			);
+			path = RestrictiveNetwork;
+			sourceTree = "<group>";
+		};
+		F489F2532E4E557500E0D898 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F489F2542E4E557B00E0D898 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -6597,6 +6627,7 @@
 				AF4E927621F8D17500A3F584 /* MainViewController+UI.swift in Sources */,
 				C56FCBF02B2B9F11008DE7D4 /* Assembler.swift in Sources */,
 				F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */,
+				F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Extension.swift in Sources */,
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
 				E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */,
@@ -6770,6 +6801,7 @@
 				1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */,
 				E97ABD5B28E819D900B38587 /* SendDebugLogCompletedViewController.swift in Sources */,
 				C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */,
+				F489F2582E4E55FF00E0D898 /* RestrictiveNetworkView.swift in Sources */,
 				E9D3D36D274D0F5900283285 /* MainViewController+LifeCycle.swift in Sources */,
 				AFF507D8229D86BA00C094A0 /* VPNManager.swift in Sources */,
 				E9D3D373274D29A500283285 /* MainViewController+LoadData.swift in Sources */,

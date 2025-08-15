@@ -181,6 +181,9 @@ struct SignUpView: View {
                             showEmailWarning = true
                         }
                     }
+                    .onReceive(viewModel.showRestrictiveNetworkModal) { shouldShow in
+                        router.shouldNavigateToRestrictiveNetwork = shouldShow
+                    }
                 }
             }
         }
@@ -201,6 +204,9 @@ struct SignUpView: View {
                     showEmailWarning = false
                 }
             )
+        }
+.sheet(isPresented: $router.shouldNavigateToRestrictiveNetwork) {
+            router.createView(for: .restrictiveNetwork)
         }
         .overlay(
             ZStack {

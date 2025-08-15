@@ -121,6 +121,9 @@ struct LoginView: View {
                     .onReceive(viewModel.routeToMainView) { _ in
                         router.routeToMainView()
                     }
+                    .onReceive(viewModel.showRestrictiveNetworkModal) { shouldShow in
+                        router.shouldNavigateToRestrictiveNetwork = shouldShow
+                    }
                 }
             }
             .navigationTitle(TextsAsset.Welcome.login)
@@ -129,6 +132,12 @@ struct LoginView: View {
             .sheet(item: $safariURL) { url in
                 SafariView(url: url)
             }
+            .fullScreenCover(
+                isPresented: $router.shouldNavigateToRestrictiveNetwork,
+                content: {
+                    router.createView(for: .restrictiveNetwork)
+                }
+            )
             .overlay(
                 ZStack {
                     if viewModel.showCaptchaPopup, let data = viewModel.captchaData {

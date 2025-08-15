@@ -20,6 +20,7 @@ class AuthenticationNavigationRouter: BaseNavigationRouter {
     @Published var shouldNavigateToLogin = false
     @Published var shouldNavigateToEmergency = false
     @Published var shouldNavigateToEnterEmail = false
+    @Published var shouldNavigateToRestrictiveNetwork = false
 
     func createView(for route: Route) -> AnyView {
         switch route {
@@ -37,6 +38,8 @@ class AuthenticationNavigationRouter: BaseNavigationRouter {
             return AnyView(Assembler.resolve(EmergencyConnectView.self))
         case .enterEmail:
             return AnyView(Assembler.resolve(EnterEmailView.self))
+        case .restrictiveNetwork:
+            return AnyView(Assembler.resolve(RestrictiveNetworkView.self))
 
         default:
             fatalError("Unsupported route: \(route)")

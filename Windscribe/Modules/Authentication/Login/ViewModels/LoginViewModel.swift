@@ -67,6 +67,7 @@ class LoginViewModelImpl: LoginViewModel {
 
     /// UI Events
     var routeToMainView = PassthroughSubject<Bool, Never>()
+    var showRestrictiveNetworkModal = PassthroughSubject<Bool, Never>()
 
     /// Initialization
     init(apiCallManager: APIManager,
@@ -238,6 +239,9 @@ class LoginViewModelImpl: LoginViewModel {
                     case Errors.twoFactorRequired:
                         self.failedState = .twoFactor(TextsAsset.twoFactorRequiredError)
                         self.show2FAField = true
+                    case Errors.failOverFailed:
+                        self.failedState = .api("")
+                        self.showRestrictiveNetworkModal.send(true)
                     case let Errors.apiError(e):
                         self.failedState = .api(e.errorMessage ?? TextsAsset.unknownAPIError)
                     default:
@@ -249,6 +253,7 @@ class LoginViewModelImpl: LoginViewModel {
                     }
 
                     self.showLoadingView = false
+                    return
                 }
             } receiveValue: { [weak self] session in
                 self?.handleSuccessfulLogin(session: session)
@@ -368,6 +373,9 @@ class LoginViewModelImpl: LoginViewModel {
                     switch error {
                     case let Errors.apiError(e):
                         self.failedState = .api(e.errorMessage ?? "")
+                    case Errors.failOverFailed:
+                        self.showRestrictiveNetworkModal.send(true)
+                        return
                     default:
                         if let error = error as? Errors {
                             self.failedState = .network(error.description)
