@@ -30,6 +30,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     let routeToSignup = PassthroughSubject<Bool, Never>()
     let routeToMainView = PassthroughSubject<Bool, Never>()
+    let showRestrictiveNetworkModal = PassthroughSubject<Bool, Never>()
 
     // Image Assets
     let backgroundImage = ImagesAsset.Welcome.background
@@ -129,6 +130,9 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
         if let error = error as? Errors {
             switch error {
+            case Errors.failOverFailed:
+                failedState = TextsAsset.failedToLoadData
+                showRestrictiveNetworkModal.send(true)
             case let Errors.apiError(apiError):
                 // API errors
                 failedState = apiError.errorMessage ?? TextsAsset.unknownAPIError

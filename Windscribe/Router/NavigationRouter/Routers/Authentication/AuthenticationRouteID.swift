@@ -14,6 +14,7 @@ enum AuthenticationRouteID: BaseRouteID {
     case emergency
     case main
     case enterEmail
+    case restrictiveNetwork
 
     var id: AuthenticationRouteID { self }
 }

@@ -1132,6 +1132,24 @@ enum TextsAsset {
             return "Turn Notification On".localized
         }
     }
+    
+    enum RestrictiveNetwork {
+        static var title: String {
+            return "Restrictive Network Detected".localized
+        }
+
+        static var description: String {
+            return "You appear to be on a highly restritive network which is blocking Windscribe. Please us the \"Emergency Connect\" feature on the main screen and then try to signup or login again. If you're unsuccessful, please contact us.".localized
+        }
+
+        static var exportAction: String {
+            return "Export Log".localized
+        }
+        
+        static var supportContactsAction: String {
+            return "Contact Support".localized
+        }
+    }
 
     enum UpgradeView {
         static var title: String {

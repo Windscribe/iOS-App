@@ -30,6 +30,7 @@ enum Links {
     static let softwareLicenses = "https://windscribe.com/terms/oss"
     static let appStoreLink = "https://apps.apple.com/us/app/windscribe-vpn/id1129435228"
     static let support = "windscribe.com/support"
+    static let contactSupport = base + "contact-support/"
     static let changelog = base + "changelog/ios"
     static let youtube = "https://www.youtube.com/c/windscribe"
     static let twitterX = "https://x.com/windscribecom"

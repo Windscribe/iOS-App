@@ -87,7 +87,7 @@ enum Errors: Error, CustomStringConvertible, Equatable {
     case missingRemoteAddress
     case wgLimitExceeded
     case appleSsoError(String)
-    case tooManyFailedAttempts
+    case failOverFailed
 
     public var unlocalizedDescription: String {
         switch self {
@@ -113,8 +113,6 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return error.errorMessage ?? ""
         case .datanotfound:
             return ErrorTexts.APIError.datanotfound.unlocalizedDescription
-        case .handled:
-            return ""
         case .ipNotAvailable:
             return ErrorTexts.APIError.ipNotAvailable.unlocalizedDescription
         case .missingRemoteAddress:
@@ -127,7 +125,9 @@ enum Errors: Error, CustomStringConvertible, Equatable {
             return ErrorTexts.APIError.invalid2FA.unlocalizedDescription
         case .appleSsoError(let error):
             return error
-        case .tooManyFailedAttempts, .parsingError:
+        case .handled, .failOverFailed:
+            return ""
+        case .parsingError:
             return ErrorTexts.APIError.tooManyFailedAttempts.unlocalizedDescription
         default:
             return ErrorTexts.APIError.unspecifiedError.unlocalizedDescription

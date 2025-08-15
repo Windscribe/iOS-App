@@ -60,6 +60,7 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     // Routing
     let routeTo = PassthroughSubject<SignupRoutes, Never>()
+    let showRestrictiveNetworkModal = PassthroughSubject<Bool, Never>()
 
     //  Derived States
     var isContinueButtonEnabled: Bool {
@@ -345,6 +346,9 @@ class SignUpViewModelImpl: SignUpViewModel {
                         switch error {
                         case let Errors.apiError(e):
                             self.failedState = .api(e.errorMessage ?? "")
+                        case Errors.failOverFailed:
+                            self.showRestrictiveNetworkModal.send(true)
+                            return
                         default:
                             if let error = error as? Errors {
                                 self.failedState = .network(error.description)
@@ -402,6 +406,9 @@ class SignUpViewModelImpl: SignUpViewModel {
             failedState = .email(TextsAsset.disposableEmail)
         case Errors.cannotChangeExistingEmail:
             failedState = .email(TextsAsset.cannotChangeExistingEmail)
+        case Errors.failOverFailed:
+            failedState = .api("")
+            showRestrictiveNetworkModal.send(true)
         case let Errors.apiError(e):
             failedState = .api(e.errorMessage ?? "")
         default:

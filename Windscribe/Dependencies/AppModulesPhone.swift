@@ -215,6 +215,13 @@ class ViewModels: Assembly {
                 pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any RestrictiveNetworkViewModel).self) { r in
+            RestrictiveNetworkViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any EnterCredentialsViewModel).self) { r in
             EnterCredentialsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
@@ -766,6 +773,14 @@ class ViewControllerModule: Assembly {
 
         container.register(PushNotificationView.self) { r in
             PushNotificationView(viewModel: PushNotificationViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+            )
+        }.inObjectScope(.transient)
+
+        container.register(RestrictiveNetworkView.self) { r in
+            RestrictiveNetworkView(viewModel: RestrictiveNetworkViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
