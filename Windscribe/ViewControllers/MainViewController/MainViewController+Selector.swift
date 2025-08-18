@@ -166,6 +166,9 @@ extension MainViewController {
             let isNetworkCellularWhileConnecting = self.vpnConnectionViewModel.isNetworkCellularWhileConnecting(for: network)
             self.connectionStateInfoView.refreshProtocol(from: network, with: protoPort,
                                                          isNetworkCellularWhileConnecting: isNetworkCellularWhileConnecting)
+            if self.vpnConnectionViewModel.isConnecting() {
+                self.connectButtonView.viewModel?.refreshConnectingState()
+            }
         }
     }
 

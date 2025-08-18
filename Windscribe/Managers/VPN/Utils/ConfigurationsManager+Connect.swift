@@ -39,10 +39,13 @@ extension ConfigurationsManager {
         let task = Task { [weak self] in
             guard let self = self else { return }
             do {
+                try? await nextManager?.loadFromPreferences()
+
                 progressPublisher.send(.update("Building configuration..."))
                 guard let config = try await tryBuildingConfig(locationID: locationID, proto: proto, port: port, vpnSettings: vpnSettings) else {
                     throw VPNConfigurationErrors.connectionTimeout
                 }
+
                 self.logger.logI("VPNConfiguration", "Configuration built successfully \(config.description)")
                 progressPublisher.send(.update("Configuration built successfully \(config.description)"))
 
@@ -211,6 +214,13 @@ extension ConfigurationsManager {
                         throw VPNConfigurationErrors.authFailure
                     }
                 }
+
+                // Check if error message contains NEHotspotNetwork error - treat as connection timeout
+                let errorString = error.localizedDescription
+                if errorString.contains("NEHotspotNetwork") || errorString.contains("nehelper sent invalid result") {
+                    self.logger.logE("VPNConfiguration", "NEHotspotNetwork error detected - treating as connection timeout")
+                    throw VPNConfigurationErrors.connectionTimeout
+                }
             }
         }
         throw VPNConfigurationErrors.connectionTimeout
@@ -304,7 +314,8 @@ extension ConfigurationsManager {
     private func disconnectExistingConnections(proto: String, progressPublisher: PassthroughSubject<VPNConnectionState, Error>) async throws {
         let managers = await getOtherManagers(proto: proto)
         for other in managers {
-            try await other.loadFromPreferences()
+            try? await other.loadFromPreferences()
+
             let managerName = getManagerName(from: other)
             progressPublisher.send(.update("Existing config: [\(managerName) Enabled: \(other.isEnabled) Status: \(other.connection.status)]"))
             if other.connection.status == .connected || other.connection.status == .connecting {
@@ -351,6 +362,8 @@ extension ConfigurationsManager {
         includesAllNetworks = manager.protocolConfiguration?.includeAllNetworks
 #endif
         if  includesAllNetworks == true || manager.isEnabled || manager.isOnDemandEnabled {
+            try? await manager.loadFromPreferences()
+
             manager.isEnabled = false
             manager.isOnDemandEnabled = false
 #if os(iOS)

@@ -10,6 +10,7 @@ import Foundation
 import NetworkExtension
 import RxSwift
 import Swinject
+import Combine
 
 protocol ProtocolManagerType {
     var goodProtocol: ProtocolPort? { get set }
@@ -17,12 +18,19 @@ protocol ProtocolManagerType {
 
     var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
     var connectionProtocolSubject: BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?> { get }
+    var showProtocolSwitchTrigger: PublishSubject<Void> { get }
+    var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
+
+    var displayProtocolsSubject: BehaviorSubject<[DisplayProtocolPort]> { get }
+
+    var failOverTimerCompletedSubject: PassthroughSubject<Void, Never> { get }
 
     func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool) async
     func getRefreshedProtocols() async -> [DisplayProtocolPort]
+    func getDisplayProtocols() async -> [DisplayProtocolPort]
     func getNextProtocol() async -> ProtocolPort
     func getProtocol() -> ProtocolPort
-    func onProtocolFail() async -> Bool
+    func onProtocolFail() async
     func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType)
     func resetGoodProtocol()
     func onConnectStateChange(state: NEVPNStatus)
@@ -41,6 +49,10 @@ class ProtocolManager: ProtocolManagerType {
     static var shared = Assembler.resolve(ProtocolManagerType.self)
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
+    private let defaultCountdownTime = 10
+    private var countdownTimer: DispatchSourceTimer?
+    private var countdownSeconds: Int = 10
+
     // MARK: - Properties
 
     /// Default protocol
@@ -48,7 +60,11 @@ class ProtocolManager: ProtocolManagerType {
     /// Provides concurrent access to protocol list.
     private let accessQueue = DispatchQueue(label: "protocolManagerAccessQueve", attributes: .concurrent)
     /// List of Protocols in ordered by priority
-    private(set) var protocolsToConnectList: [DisplayProtocolPort] = []
+    private(set) var protocolsToConnectList: [DisplayProtocolPort] = [] {
+        didSet {
+            displayProtocolsSubject.onNext(protocolsToConnectList)
+        }
+    }
     /// App selected this protocol automatcally or user selected it
     private var userSelected: ProtocolPort?
     /// Timer to reset good protocol
@@ -61,8 +77,13 @@ class ProtocolManager: ProtocolManagerType {
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
 
-    var currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
-    var connectionProtocolSubject = BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?>(value: nil)
+    let currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
+    let connectionProtocolSubject = BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?>(value: nil)
+    let displayProtocolsSubject = BehaviorSubject<[DisplayProtocolPort]>(value: [])
+    let showProtocolSwitchTrigger = PublishSubject<Void>()
+    let showAllProtocolsFailedTrigger = PublishSubject<Void>()
+
+    let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
     init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManagerType) {
         self.logger = logger
@@ -92,7 +113,7 @@ class ProtocolManager: ProtocolManagerType {
         }).disposed(by: disposeBag)
 
         connectivity.network.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] network in
+            .subscribe(onNext: { [weak self] _ in
             Task { @MainActor in
                 await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
             }
@@ -179,17 +200,23 @@ class ProtocolManager: ProtocolManagerType {
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
         } else {
-            protocolsToConnectList.first?.viewType = .nextUp
+            protocolsToConnectList.first?.viewType = .nextUp(countdown: -1)
         }
         let log = "Protocols to connect List: " + protocolsToConnectList.map { "\($0.protocolPort.protocolName) \($0.protocolPort.portName) \($0.viewType)"}.joined(separator: ", ")
         logger.logI("ProtocolManager", log)
 
-        currentProtocolSubject.onNext(getFirstProtocol())
-        connectionProtocolSubject.onNext(shouldReconnect ? (protocolPort: getFirstProtocol(), connectionType: .user) : nil)
+        let firstProtocol = getFirstProtocol()
+        displayProtocolsSubject.onNext(protocolsToConnectList)
+        currentProtocolSubject.onNext(firstProtocol)
+        connectionProtocolSubject.onNext(shouldReconnect ? (protocolPort: firstProtocol, connectionType: .user) : nil)
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
         await refreshProtocols(shouldReset: false, shouldReconnect: false)
+        return protocolsToConnectList
+    }
+
+    func getDisplayProtocols() async -> [DisplayProtocolPort] {
         return protocolsToConnectList
     }
 
@@ -219,12 +246,12 @@ class ProtocolManager: ProtocolManagerType {
             userSelected = nil
             logger.logI("ProtocolManager", "Connection state changed to \(state).")
             if state == .connected {
-                protocolsToConnectList.first { $0.viewType == .nextUp
+                protocolsToConnectList.first { $0.viewType.isNextup
                 }?.viewType = .connected
-                protocolsToConnectList.filter { $0.viewType == .nextUp }.forEach { $0.viewType = .normal }
+                protocolsToConnectList.filter { $0.viewType.isNextup }.forEach { $0.viewType = .normal }
             }
             if state == .disconnected {
-                protocolsToConnectList.filter { $0.viewType == .nextUp }.forEach { $0.viewType = .normal }
+                protocolsToConnectList.filter { $0.viewType.isNextup }.forEach { $0.viewType = .normal }
                 protocolsToConnectList.first { $0.viewType == .connected
                 }?.viewType = .normal
             }
@@ -234,6 +261,7 @@ class ProtocolManager: ProtocolManagerType {
     /// User/App selected this protocol to connect.
     func onUserSelectProtocol(proto: ProtocolPort, connectionType: ConnectionType) {
         logger.logI("ProtocolManager", "User selected \(proto) to connect.")
+        stopCountdownTimer()
         userSelected = proto
         setPriority(proto: proto.protocolName)
         let firstProtocol = getFirstProtocol()
@@ -256,7 +284,7 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     /// Current protocol failed to connect, lower its priority.
-    func onProtocolFail() async -> Bool {
+    func onProtocolFail() async {
         userSelected = nil
         let failedProtocol = await getNextProtocol()
         logger.logI("ProtocolManager", "\(failedProtocol.protocolName) failed to connect.")
@@ -264,12 +292,12 @@ class ProtocolManager: ProtocolManagerType {
         if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
             logger.logI("ProtocolManager", "No more protocol left to connect.")
             await reset()
-            currentProtocolSubject.onNext(getFirstProtocol())
-            return true
+            showAllProtocolsFailedTrigger.onNext(())
         } else {
-            currentProtocolSubject.onNext(getFirstProtocol())
-            return false
+            await refreshProtocols(shouldReset: false, shouldReconnect: false)
+            startCountdownTimer()
         }
+        currentProtocolSubject.onNext(getFirstProtocol())
     }
 
     func scheduleTimer() {
@@ -303,9 +331,10 @@ class ProtocolManager: ProtocolManagerType {
                 let item = copy[index]
                 item.viewType = type
                 copy.remove(at: index)
-                if type == .connected || type == .normal || type == .nextUp {
+                switch type {
+                case .connected, .normal, .nextUp:
                     copy.insert(item, at: 0)
-                } else {
+                default:
                     copy.append(item)
                 }
             }
@@ -339,5 +368,80 @@ class ProtocolManager: ProtocolManagerType {
             }
         }
         protocolsToConnectList = lstConnection.map { DisplayProtocolPort(protocolPort: $0, viewType: .normal) }
+    }
+}
+
+// MARK: Countdown Timer Management
+extension ProtocolManager {
+    /// Starts the automatic failover countdown timer (10 seconds default)
+    /// This is used in failure mode to automatically try the next protocol
+    private func startCountdownTimer() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            guard let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else { return }
+
+            self.countdownSeconds = self.defaultCountdownTime
+            self.setPriority(proto: proto.protocolPort.protocolName,
+                             type: .nextUp(countdown: self.countdownSeconds))
+
+            // Cancel existing timer
+            self.countdownTimer?.cancel()
+            self.countdownTimer = nil
+
+            // Start the new timer
+            self.countdownTimer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+            self.countdownTimer?.schedule(deadline: .now() + 1.0, repeating: 1.0)
+            self.countdownTimer?.setEventHandler { [weak self] in
+                self?.updateCountdown()
+            }
+            self.countdownTimer?.resume()
+
+            // Trigger subjects
+            self.showProtocolSwitchTrigger.onNext(())
+        }
+    }
+
+    private func updateCountdown() {
+        guard !vpnManager.isConnected(),
+              let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else {
+            stopCountdownTimer()
+            return
+        }
+
+        countdownSeconds -= 1
+
+        self.setPriority(proto: proto.protocolPort.protocolName,
+                         type: .nextUp(countdown: self.countdownSeconds))
+
+        if countdownSeconds <= 0 {
+            logger.logI("ProtocolManager", "Countdown completed - triggering protocol switch")
+            stopCountdownTimer()
+            countdownCompleted()
+        }
+    }
+
+    private func stopCountdownTimer() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+
+            self.countdownTimer?.cancel()
+            self.countdownTimer = nil
+            failOverTimerCompletedSubject.send()
+        }
+    }
+
+    private func countdownCompleted() {
+        Task {
+            guard let nextUpProtocol = await getRefreshedProtocols().first(where: { $0.viewType.isNextup }) else {
+                logger.logI("ProtocolManager", "Countdown completed but no nextUp protocol found")
+                return
+            }
+
+            if !vpnManager.isConnected() {
+                logger.logI("ProtocolManager",
+                            "Countdown completed - auto selecting: \(nextUpProtocol.protocolPort)")
+                onUserSelectProtocol(proto: nextUpProtocol.protocolPort, connectionType: .failover)
+            }
+        }
     }
 }

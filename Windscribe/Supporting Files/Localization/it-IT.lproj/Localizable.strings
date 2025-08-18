@@ -560,3 +560,9 @@
 "Custom Configs" = "Configurazioni personalizzate";
 "Static IPs" = "IP statici";
 "No Favourites" = "Nessun preferito";
+
+"Retry" = "Riprova";
+"Sent" = "Inviato";
+"Sending..." = "Invio in corso...";
+"Connected to" = "Connesso a";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Il tuo registro di debug è stato ricevuto. Contatta il supporto se desideri assistenza per questo problema.";

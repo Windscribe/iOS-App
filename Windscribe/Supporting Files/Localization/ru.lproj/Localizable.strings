@@ -581,3 +581,9 @@
 "Custom Configs" = "Пользовательские настройки";
 "Static IPs" = "Статические IP";
 "No Favourites" = "Избранное";
+
+"Retry" = "Повторить";
+"Sent" = "Отправлено";
+"Sending..." = "Отправка...";
+"Connected to" = "Подключено к";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Ваш журнал отладки получен. Пожалуйста, свяжитесь со службой поддержки, если вам нужна помощь с этой проблемой.";

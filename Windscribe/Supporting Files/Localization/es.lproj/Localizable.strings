@@ -563,3 +563,9 @@
 "Custom Configs" = "Configuraciones personalizadas";
 "Static IPs" = "IPs estáticas";
 "No Favourites" = "Sin favoritos";
+
+"Retry" = "Reintentar";
+"Sent" = "Enviado";
+"Sending..." = "Enviando...";
+"Connected to" = "Conectado a";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Se ha recibido tu registro de depuración. Ponte en contacto con el soporte si deseas asistencia con este problema.";

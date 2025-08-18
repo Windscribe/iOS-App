@@ -563,3 +563,9 @@
 "Custom Configs" = "Niestandardowe konfiguracje";
 "Static IPs" = "Statyczne adresy IP";
 "No Favourites" = "Brak faworytów";
+
+"Retry" = "Spróbuj ponownie";
+"Sent" = "Wysłano";
+"Sending..." = "Wysyłanie...";
+"Connected to" = "Połączono z";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Otrzymaliśmy Twój dziennik debugowania. Skontaktuj się z pomocą techniczną, jeśli potrzebujesz pomocy w tej sprawie.";

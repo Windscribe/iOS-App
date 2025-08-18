@@ -113,7 +113,6 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var favNodesListViewModel: FavouriteListViewModelType!
     var staticIPListViewModel: StaticIPListViewModelType!
     var serverListViewModel: ServerListViewModelType!
-    var protocolSwitchViewModel: ProtocolSwitchDelegateViewModelType!
     var latencyViewModel: LatencyViewModel!
 
     // MARK: Managers
@@ -299,7 +298,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     }
 
     func openConnectionChangeDialog() {
-        router?.routeTo(to: RouteID.protocolSwitchVC(delegate: protocolSwitchViewModel, type: .change), from: self)
+        router?.routeTo(to: RouteID.protocolSwitch(type: .change, error: nil), from: self)
     }
 }
 

@@ -562,3 +562,9 @@ sous « Compte », choisissez « Connexion différée » et entrez le code c
 "Custom Configs" = "Configurations personnalisées";
 "Static IPs" = "IPs statiques";
 "No Favourites" = "Pas de favoris";
+
+"Retry" = "Réessayer";
+"Sent" = "Envoyé";
+"Sending..." = "Envoi...";
+"Connected to" = "Connecté à";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Votre journal de débogage a été reçu. Veuillez contacter le support si vous souhaitez obtenir de l'aide pour ce problème.";

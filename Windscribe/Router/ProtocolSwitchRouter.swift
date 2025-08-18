@@ -7,28 +7,51 @@
 //
 
 import Foundation
+import SwiftUI
 import Swinject
 
 class ProtocolSwitchRouter: BaseRouter, RootRouter {
     func routeTo(to: RouteID, from: WSUIViewController) {
         switch to {
-        case let RouteID.sendDebugLogCompleted(delegate):
-            let vc = Assembler.resolve(SendDebugLogCompletedViewController.self)
-            vc.delegate = delegate
-            vc.modalPresentationStyle = .overFullScreen
-            vc.modalTransitionStyle = .crossDissolve
-            from.present(vc, animated: true)
-        case let RouteID.protocolSetPreferred(type, delegate, protocolName):
-            let vc = Assembler.resolve(ProtocolSetPreferredViewController.self)
-            vc.delegate = delegate
-            vc.type = type
-            vc.protocolName = protocolName
-            if type == .fail {
-                from.navigationController?.pushViewController(vc, animated: true)
+        case let RouteID.protocolConnectionResult(protocolName, viewType):
+            let router = Assembler.resolve(ProtocolSwitchNavigationRouter.self)
+            let view = Assembler.resolve(ProtocolConnectionResultView.self)
+            let context = ProtocolConnectionResultContext()
+            context.protocolName = protocolName
+            context.viewType = viewType
+
+            let hostingController = UIHostingController(rootView:
+                view.environmentObject(context)
+                    .environmentObject(router)
+            )
+
+            if viewType == .fail {
+                from.navigationController?.pushViewController(hostingController, animated: true)
             } else {
-                vc.modalPresentationStyle = .fullScreen
-                from.present(vc, animated: true)
+                hostingController.modalPresentationStyle = .fullScreen
+                from.present(hostingController, animated: true)
             }
+            return
+
+        case RouteID.protocolConnectionDebug:
+            let view = Assembler.resolve(ProtocolConnectionDebugView.self)
+            let hostingController = UIHostingController(rootView: view)
+            hostingController.modalPresentationStyle = .overFullScreen
+            hostingController.modalTransitionStyle = .crossDissolve
+            from.present(hostingController, animated: true)
+            return
+
+        case let RouteID.protocolSwitch(type, error):
+            let context = ProtocolSwitchContext()
+            context.fallbackType = type
+            context.error = error
+            let view = Assembler.resolve(ProtocolSwitchView.self)
+            let hostingController = UIHostingController(rootView:
+                view.environmentObject(context)
+            )
+            from.navigationController?.pushViewController(hostingController, animated: true)
+            return
+
         default: return
         }
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 enum RouteID {
-    // MARK: - Main
+    // MARK: Main
 
     case login
     case signup(claimGhostAccount: Bool)
@@ -17,7 +17,7 @@ enum RouteID {
     case emergency
     case mainMenu
 
-    // MARK: - Preferences Menu
+    // MARK: Preferences
 
     case advanceParams
     case help
@@ -38,6 +38,7 @@ enum RouteID {
     case submitTicket
 
     // MARK: - Pop Up
+
     case locationPermission
     case shakeForDataPopUp
     case upgrade(promoCode: String?, pcpID: String?)
@@ -48,11 +49,11 @@ enum RouteID {
     case privacyView
     case pushNotifications
     case enterCredentials(config: CustomConfigModel, isUpdating: Bool)
-
-    // MARK: - Protocol View
-
-    case sendDebugLogCompleted(delegate: SendDebugLogCompletedVCDelegate)
-    case protocolSetPreferred(type: ProtocolViewType, delegate: ProtocolSwitchVCDelegate?, protocolName: String = "")
     case maintenanceLocation(isStaticIp: Bool)
-    case protocolSwitchVC(delegate: ProtocolSwitchVCDelegate?, type: ProtocolFallbacksType)
+
+    // MARK: - Protocol Switch
+
+    case protocolSwitch(type: ProtocolFallbacksType, error: VPNConfigurationErrors?)
+    case protocolConnectionResult(protocolName: String, viewType: ProtocolViewType)
+    case protocolConnectionDebug
 }

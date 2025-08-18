@@ -578,3 +578,9 @@
 "Custom Configs" = "Benutzerdefinierte Konfigurationen";
 "Static IPs" = "Statische IPs";
 "No Favourites" = "Keine Favoriten";
+
+"Retry" = "Wiederholen";
+"Sent" = "Gesendet";
+"Sending..." = "Senden...";
+"Connected to" = "Verbunden mit";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Ihr Debug-Protokoll wurde empfangen. Bitte wenden Sie sich an den Support, wenn Sie Hilfe bei diesem Problem benötigen.";

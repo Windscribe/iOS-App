@@ -560,3 +560,9 @@
 "Custom Configs" = "الإعدادات المخصصة";
 "Static IPs" = "عناوين IP ثابتة";
 "No Favourites" = "لا توجد مفضلات";
+
+"Retry" = "إعادة المحاولة";
+"Sent" = "تم الإرسال";
+"Sending..." = "جارٍ الإرسال...";
+"Connected to" = "متصل بـ";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "تم استلام سجل التصحيح الخاص بك. يرجى الاتصال بالدعم إذا كنت بحاجة إلى المساعدة في هذه المشكلة.";

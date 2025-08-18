@@ -50,6 +50,11 @@ extension VPNManager {
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         logger.logI("VPNConfiguration", "Connecting from ViewModel")
         connectionTaskPublisher?.cancel()
+        self.vpnInfo.onNext(VPNConnectionInfo(selectedProtocol: proto.protocolName,
+                                              selectedPort: proto.portName,
+                                              status: .connecting,
+                                              killSwitch: false,
+                                              onDemand: false))
         return disableKillSwitchIfRequired()
             .flatMap { _ in
                 return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()
