@@ -152,7 +152,7 @@ class ConnectionStateInfoView: UIView {
         } else {
             isEnabled = ![.disconnected, .disconnecting].contains(state)
         }
-        actionIcon.isHidden = !isEnabled
+        actionIcon.isHidden = !(state == .connected && isEnabled)
         actionButton.isUserInteractionEnabled = isEnabled
         actionIcon.setImageColor(color: state.statusColor)
 
