@@ -564,3 +564,9 @@
 "Custom Configs" = "Користувацькі налаштування";
 "Static IPs" = "Статичні IP";
 "No Favourites" = "Немає обраних";
+
+"Retry" = "Спробувати знову";
+"Sent" = "Надіслано";
+"Sending..." = "Надсилання...";
+"Connected to" = "Підключено до";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Ваш журнал налагодження отримано. Зверніться до служби підтримки, якщо вам потрібна допомога з цією проблемою.";

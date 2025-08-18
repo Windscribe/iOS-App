@@ -19,7 +19,6 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
     case incorrectVPNManager
     case connectionTimeout
     case connectivityTestFailed
-    case allProtocolFailed
     case authFailure
     case upgradeRequired
     case accountExpired
@@ -50,8 +49,6 @@ enum VPNConfigurationErrors: Error, CustomStringConvertible, Equatable {
             return "Connection timeout."
         case .connectivityTestFailed:
             return "Connectivity test failed."
-        case .allProtocolFailed:
-            return TextsAsset.AutomaticModeFailedAlert.message
         case .authFailure:
             return "Authentication failure."
         case .upgradeRequired:

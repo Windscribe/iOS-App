@@ -566,3 +566,9 @@
 "Custom Configs" = "カスタム設定";
 "Static IPs" = "静的IP";
 "No Favourites" = "お気に入りはありません";
+
+"Retry" = "再試行";
+"Sent" = "送信済み";
+"Sending..." = "送信中...";
+"Connected to" = "接続先";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "デバッグログを受信しました。この問題について支援が必要な場合は、サポートにご連絡ください。";

@@ -314,6 +314,14 @@ enum TextsAsset {
         static var wireGuardProtocolDescription: String {
             return "Extremely simple yet fast and modern VPN protocol.".localized
         }
+
+        static var debugLogCompletionDescription: String {
+            return "Your debug log has been received. Please contact support if you want assistance with this issue.".localized
+        }
+
+        static var connectedState: String {
+            return "Connected to".localized
+        }
     }
 
     enum Permission {
@@ -1003,6 +1011,19 @@ enum TextsAsset {
         static var sentLog: String {
             return "Sent, Thanks!".localized
         }
+
+        static var sendingAction: String {
+            "Sending...".localized
+        }
+
+        static var sentStatus: String {
+            "Sent".localized
+        }
+
+        static var retryAction: String {
+            "Retry".localized
+        }
+
     }
 
     static var noNetworksAvailable: String {
@@ -1132,7 +1153,7 @@ enum TextsAsset {
             return "Turn Notification On".localized
         }
     }
-    
+
     enum RestrictiveNetwork {
         static var title: String {
             return "Restrictive Network Detected".localized
@@ -1145,7 +1166,7 @@ enum TextsAsset {
         static var exportAction: String {
             return "Export Log".localized
         }
-        
+
         static var supportContactsAction: String {
             return "Contact Support".localized
         }

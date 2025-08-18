@@ -62,8 +62,6 @@
 		1E255F2B2E3A71A10078A565 /* ShakeForDataResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E255F2A2E3A71A10078A565 /* ShakeForDataResultsView.swift */; };
 		1E255F2D2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E255F2C2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift */; };
 		1E2696C82BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696C72BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift */; };
-		1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */; };
-		1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */; };
 		1E2CBFEF2CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
 		1E2CBFF02CC7CACD00748D9F /* ConfigurationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */; };
 		1E3B47F32BF6378E00C2E7A7 /* MainViewController+Favourites.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3B47F22BF6378E00C2E7A7 /* MainViewController+Favourites.swift */; };
@@ -489,13 +487,11 @@
 		59FC74472C515DC500021CD1 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		59FC74482C515DE700021CD1 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD16F1022775E9F00E9FAD3 /* Notifications.swift */; };
 		59FC74492C515DF500021CD1 /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD6128F91ABA00B38587 /* ProtocolManager.swift */; };
-		59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */; };
 		59FC744D2C515E3800021CD1 /* UIView+Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FEC2885A3AE0026E544 /* UIView+Constraints.swift */; };
 		59FC744F2C515E4900021CD1 /* ThemeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD4228C822C300B38587 /* ThemeUtils.swift */; };
 		59FC74502C515E5400021CD1 /* UIConstants+ImagesAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90FD02627394FF100721874 /* UIConstants+ImagesAsset.swift */; };
 		59FC74522C515E7300021CD1 /* SKPaymentTransaction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */; };
 		59FC74532C51605300021CD1 /* UIStackView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FF02885AFB90026E544 /* UIStackView+Extension.swift */; };
-		59FC74542C51605600021CD1 /* ProtocolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5428DDC80E00B38587 /* ProtocolView.swift */; };
 		59FC74552C51605E00021CD1 /* SecuredNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */; };
 		59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */; };
 		59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5947B4B12A2638BA00C95CF2 /* NWInterface+Extension.swift */; };
@@ -981,13 +977,7 @@
 		E943750B27DEF6AD00F74F2D /* ErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943750A27DEF6AD00F74F2D /* ErrorResponse.swift */; };
 		E94E34F728B2817000E76D14 /* FeatureExplainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E94E34F628B2816F00E76D14 /* FeatureExplainer.swift */; };
 		E97ABD4328C822C300B38587 /* ThemeUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD4228C822C300B38587 /* ThemeUtils.swift */; };
-		E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5028DC47D400B38587 /* ProtocolSwitchViewController.swift */; };
-		E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */; };
-		E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5428DDC80E00B38587 /* ProtocolView.swift */; };
-		E97ABD5728E5F95E00B38587 /* ProtocolSetPreferredViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5628E5F95E00B38587 /* ProtocolSetPreferredViewController.swift */; };
 		E97ABD5928E60A9500B38587 /* WSButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5828E60A9500B38587 /* WSButton.swift */; };
-		E97ABD5B28E819D900B38587 /* SendDebugLogCompletedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5A28E819D900B38587 /* SendDebugLogCompletedViewController.swift */; };
-		E97ABD6028EB33F700B38587 /* ProtocolSetPreferredViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5F28EB33F700B38587 /* ProtocolSetPreferredViewModel.swift */; };
 		E97ABD6228F91ABA00B38587 /* ProtocolManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD6128F91ABA00B38587 /* ProtocolManager.swift */; };
 		E9816B6E27D8E9BE0059D275 /* WgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6D27D8E9BE0059D275 /* WgCredentials.swift */; };
 		E9816B7027D90F0D0059D275 /* DynamicWireGuardConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */; };
@@ -1015,6 +1005,15 @@
 		F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */; };
 		F43184BF2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */; };
 		F431AB992E26CD350072A1B4 /* EnterCredentialsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431AB982E26CD350072A1B4 /* EnterCredentialsViewModel.swift */; };
+		F43374412E4672C600333190 /* ProtocolSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43374402E4672C600333190 /* ProtocolSwitchView.swift */; };
+		F43374432E4672CF00333190 /* ProtocolSwitchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43374422E4672CF00333190 /* ProtocolSwitchViewModel.swift */; };
+		F43374452E46766400333190 /* ProtocolConnectionResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43374442E46766400333190 /* ProtocolConnectionResultView.swift */; };
+		F43374472E46767300333190 /* ProtocolConnectionResultViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43374462E46767300333190 /* ProtocolConnectionResultViewModel.swift */; };
+		F433744D2E46778700333190 /* ProtocolConnectionDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F433744C2E46778700333190 /* ProtocolConnectionDebugView.swift */; };
+		F433744F2E4677A100333190 /* ProtocolConnectionDebugViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F433744E2E4677A100333190 /* ProtocolConnectionDebugViewModel.swift */; };
+		F43374502E467C4500333190 /* ProtocolSwitchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5228DC47FF00B38587 /* ProtocolSwitchModels.swift */; };
+		F43374512E4682B000333190 /* ProtocolSwitchModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E97ABD5228DC47FF00B38587 /* ProtocolSwitchModels.swift */; };
+		F43374552E46941100333190 /* ProtocolConnectionLogState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43374542E46941100333190 /* ProtocolConnectionLogState.swift */; };
 		F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */; };
 		F434A1BC2D8378340059415F /* NewsFeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */; };
 		F434A1BD2D84A5690059415F /* NewsFeedDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */; };
@@ -1024,6 +1023,8 @@
 		F434A1C72D84AEF70059415F /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3FC11C227B68EB0050B224 /* SessionManager.swift */; };
 		F43653532DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */; };
 		F43653542DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */; };
+		F43E24A72E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */; };
+		F43E24A82E4A6B750011C65B /* ProtocolSwitchRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */; };
 		F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
 		F440BCFF2DE790250057A01F /* MenuCategoryRowType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED616782DD7585E006CDC99 /* MenuCategoryRowType.swift */; };
 		F440BD002DE7933D0057A01F /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF0CA558223C49020048D71C /* Array+Extension.swift */; };
@@ -1388,8 +1389,6 @@
 		1E255F2A2E3A71A10078A565 /* ShakeForDataResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataResultsView.swift; sourceTree = "<group>"; };
 		1E255F2C2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeForDataResultsViewModel.swift; sourceTree = "<group>"; };
 		1E2696C72BF66D5900B0AD59 /* ProtocolSwitchDelegateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchDelegateViewModel.swift; sourceTree = "<group>"; };
-		1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewModel.swift; sourceTree = "<group>"; };
-		1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDebugLogCompletedViewModel.swift; sourceTree = "<group>"; };
 		1E2CBFEE2CC7CABC00748D9F /* ConfigurationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationsManager.swift; sourceTree = "<group>"; };
 		1E3B47F22BF6378E00C2E7A7 /* MainViewController+Favourites.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainViewController+Favourites.swift"; sourceTree = "<group>"; };
 		1E3F775C2DAFFC38008308A8 /* ListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListEmptyView.swift; sourceTree = "<group>"; };
@@ -1929,13 +1928,8 @@
 		E94E34F628B2816F00E76D14 /* FeatureExplainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureExplainer.swift; sourceTree = "<group>"; };
 		E96AFFF12896856300B53EEE /* GeneralViewType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralViewType.swift; sourceTree = "<group>"; };
 		E97ABD4228C822C300B38587 /* ThemeUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeUtils.swift; sourceTree = "<group>"; };
-		E97ABD5028DC47D400B38587 /* ProtocolSwitchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewController.swift; sourceTree = "<group>"; };
-		E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchUtils.swift; sourceTree = "<group>"; };
-		E97ABD5428DDC80E00B38587 /* ProtocolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolView.swift; sourceTree = "<group>"; };
-		E97ABD5628E5F95E00B38587 /* ProtocolSetPreferredViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSetPreferredViewController.swift; sourceTree = "<group>"; };
+		E97ABD5228DC47FF00B38587 /* ProtocolSwitchModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchModels.swift; sourceTree = "<group>"; };
 		E97ABD5828E60A9500B38587 /* WSButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WSButton.swift; sourceTree = "<group>"; };
-		E97ABD5A28E819D900B38587 /* SendDebugLogCompletedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendDebugLogCompletedViewController.swift; sourceTree = "<group>"; };
-		E97ABD5F28EB33F700B38587 /* ProtocolSetPreferredViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSetPreferredViewModel.swift; sourceTree = "<group>"; };
 		E97ABD6128F91ABA00B38587 /* ProtocolManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolManager.swift; sourceTree = "<group>"; };
 		E9816B6D27D8E9BE0059D275 /* WgCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WgCredentials.swift; sourceTree = "<group>"; };
 		E9816B6F27D90F0D0059D275 /* DynamicWireGuardConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicWireGuardConfig.swift; sourceTree = "<group>"; };
@@ -1975,10 +1969,19 @@
 		F43184BC2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPermissionInfoViewModel.swift; sourceTree = "<group>"; };
 		F43184BE2E204B27007C96E3 /* ResponsivePopupLayoutProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponsivePopupLayoutProvider.swift; sourceTree = "<group>"; };
 		F431AB982E26CD350072A1B4 /* EnterCredentialsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCredentialsViewModel.swift; sourceTree = "<group>"; };
+		F43374402E4672C600333190 /* ProtocolSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchView.swift; sourceTree = "<group>"; };
+		F43374422E4672CF00333190 /* ProtocolSwitchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchViewModel.swift; sourceTree = "<group>"; };
+		F43374442E46766400333190 /* ProtocolConnectionResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConnectionResultView.swift; sourceTree = "<group>"; };
+		F43374462E46767300333190 /* ProtocolConnectionResultViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConnectionResultViewModel.swift; sourceTree = "<group>"; };
+		F433744C2E46778700333190 /* ProtocolConnectionDebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConnectionDebugView.swift; sourceTree = "<group>"; };
+		F433744E2E4677A100333190 /* ProtocolConnectionDebugViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConnectionDebugViewModel.swift; sourceTree = "<group>"; };
+		F43374542E46941100333190 /* ProtocolConnectionLogState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolConnectionLogState.swift; sourceTree = "<group>"; };
 		F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDataModel.swift; sourceTree = "<group>"; };
 		F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
 		F434A1C42D84AB200059415F /* NewsFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedModel.swift; sourceTree = "<group>"; };
 		F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Appearance.swift"; sourceTree = "<group>"; };
+		F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchNavigationRouter.swift; sourceTree = "<group>"; };
+		F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchRouteID.swift; sourceTree = "<group>"; };
 		F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTypeProvider.swift; sourceTree = "<group>"; };
 		F440F2FB2D8CB4E4006F1A6D /* WelcomeInfoPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeInfoPageView.swift; sourceTree = "<group>"; };
 		F440F3012D8DECE6006F1A6D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -2793,14 +2796,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		1EC98A4C2E213078009C2CD3 /* Shake for Data */ = {
+		1EC98A4C2E213078009C2CD3 /* ShakeForData */ = {
 			isa = PBXGroup;
 			children = (
-				1EC98A502E21336B009C2CD3 /* View Models */,
 				1EC98A4D2E213083009C2CD3 /* Views */,
+				1EC98A502E21336B009C2CD3 /* ViewModels */,
 				F4E706112E427A130066FCDC /* Models */,
 			);
-			path = "Shake for Data";
+			path = ShakeForData;
 			sourceTree = "<group>";
 		};
 		1EC98A4D2E213083009C2CD3 /* Views */ = {
@@ -2814,7 +2817,7 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		1EC98A502E21336B009C2CD3 /* View Models */ = {
+		1EC98A502E21336B009C2CD3 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				1E255F2C2E3A71B00078A565 /* ShakeForDataResultsViewModel.swift */,
@@ -2822,7 +2825,7 @@
 				1EAEF7582E2944B500F3C51F /* ShakeForDataLeaderboardModel.swift */,
 				1EC98A512E213373009C2CD3 /* ShakeForDataMainViewModel.swift */,
 			);
-			path = "View Models";
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		1ED23F852DC3C99D00C7BEE5 /* Background */ = {
@@ -3442,7 +3445,6 @@
 			children = (
 				AF16CA112226F53F00997A2A /* WSUIViewController.swift */,
 				AF36A207237DE8FF00BDDCDB /* MainViewController */,
-				E97ABD4E28DC477B00B38587 /* Connection */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -4000,15 +4002,6 @@
 			path = API;
 			sourceTree = "<group>";
 		};
-		E97ABD4E28DC477B00B38587 /* Connection */ = {
-			isa = PBXGroup;
-			children = (
-				F410019B2E020565007D6580 /* SendLog */,
-				F410019A2E020557007D6580 /* ProtocolSwitch */,
-			);
-			path = Connection;
-			sourceTree = "<group>";
-		};
 		E9858621273E191200868B2C /* Environments */ = {
 			isa = PBXGroup;
 			children = (
@@ -4144,28 +4137,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		F410019A2E020557007D6580 /* ProtocolSwitch */ = {
-			isa = PBXGroup;
-			children = (
-				E97ABD5028DC47D400B38587 /* ProtocolSwitchViewController.swift */,
-				1E2696CD2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift */,
-				E97ABD5228DC47FF00B38587 /* ProtocolSwitchUtils.swift */,
-				E97ABD5428DDC80E00B38587 /* ProtocolView.swift */,
-				E97ABD5628E5F95E00B38587 /* ProtocolSetPreferredViewController.swift */,
-				E97ABD5F28EB33F700B38587 /* ProtocolSetPreferredViewModel.swift */,
-			);
-			path = ProtocolSwitch;
-			sourceTree = "<group>";
-		};
-		F410019B2E020565007D6580 /* SendLog */ = {
-			isa = PBXGroup;
-			children = (
-				E97ABD5A28E819D900B38587 /* SendDebugLogCompletedViewController.swift */,
-				1E2696CF2C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift */,
-			);
-			path = SendLog;
-			sourceTree = "<group>";
-		};
 		F410019C2E02111A007D6580 /* Button */ = {
 			isa = PBXGroup;
 			children = (
@@ -4233,6 +4204,7 @@
 				F4B5457A2E32CFA200135E74 /* MaintananceLocation */,
 				1EC98A4C2E213078009C2CD3 /* Shake for Data */,
 				F489F2522E4E552300E0D898 /* RestrictiveNetwork */,
+				F43374272E4666A000333190 /* Connection */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -4270,6 +4242,109 @@
 			path = LocationPermission;
 			sourceTree = "<group>";
 		};
+		F43374272E4666A000333190 /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				F43374282E4666CF00333190 /* ProtocolSwitch */,
+				F43374292E46676A00333190 /* ProtocolConnectionResult */,
+				F433742A2E4667E500333190 /* ProtocolConnectionDebug */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		F43374282E4666CF00333190 /* ProtocolSwitch */ = {
+			isa = PBXGroup;
+			children = (
+				F433742B2E4667FB00333190 /* Views */,
+				F433742C2E46680200333190 /* ViewModels */,
+				F43374522E4688C900333190 /* Models */,
+			);
+			path = ProtocolSwitch;
+			sourceTree = "<group>";
+		};
+		F43374292E46676A00333190 /* ProtocolConnectionResult */ = {
+			isa = PBXGroup;
+			children = (
+				F433742D2E46680E00333190 /* Views */,
+				F433742E2E46681400333190 /* ViewModels */,
+				F43374532E4693E800333190 /* Models */,
+			);
+			path = ProtocolConnectionResult;
+			sourceTree = "<group>";
+		};
+		F433742A2E4667E500333190 /* ProtocolConnectionDebug */ = {
+			isa = PBXGroup;
+			children = (
+				F433742F2E46682000333190 /* Views */,
+				F43374302E46682600333190 /* ViewModels */,
+			);
+			path = ProtocolConnectionDebug;
+			sourceTree = "<group>";
+		};
+		F433742B2E4667FB00333190 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F43374402E4672C600333190 /* ProtocolSwitchView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F433742C2E46680200333190 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F43374422E4672CF00333190 /* ProtocolSwitchViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F433742D2E46680E00333190 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F43374442E46766400333190 /* ProtocolConnectionResultView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F433742E2E46681400333190 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F43374462E46767300333190 /* ProtocolConnectionResultViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F433742F2E46682000333190 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F433744C2E46778700333190 /* ProtocolConnectionDebugView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F43374302E46682600333190 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				F433744E2E4677A100333190 /* ProtocolConnectionDebugViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F43374522E4688C900333190 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E97ABD5228DC47FF00B38587 /* ProtocolSwitchModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F43374532E4693E800333190 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F43374542E46941100333190 /* ProtocolConnectionLogState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		F434A1B22D834A3D0059415F /* SampleData */ = {
 			isa = PBXGroup;
 			children = (
@@ -4303,6 +4378,15 @@
 				F434A1B72D8376C40059415F /* NewsFeedDataModel.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		F43E24A62E4A6B750011C65B /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */,
+				F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */,
+			);
+			path = Connection;
 			sourceTree = "<group>";
 		};
 		F440BCFC2DE786A70057A01F /* API */ = {
@@ -4714,6 +4798,7 @@
 			children = (
 				1EAEF7512E2932EC00F3C51F /* Popups */,
 				F49C45A32DCAC6FB007E5EF1 /* Authentication */,
+				F43E24A62E4A6B750011C65B /* Connection */,
 				F49C45A42DCACD6F007E5EF1 /* Preferences */,
 			);
 			path = Routers;
@@ -6237,6 +6322,7 @@
 				59A218712C3C9E22000D89FA /* AppModulesTV.swift in Sources */,
 				1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailAction.swift in Sources */,
 				59FC74702C51699100021CD1 /* ConnectionStateInfo.swift in Sources */,
+				F43374512E4682B000333190 /* ProtocolSwitchModels.swift in Sources */,
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59A2186A2C3C9C24000D89FA /* SharedUserDefaults.swift in Sources */,
 				1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */,
@@ -6302,7 +6388,6 @@
 				59FC743B2C515B7E00021CD1 /* StaticIpRepository.swift in Sources */,
 				1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */,
 				C585F3E62C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
-				59FC744B2C515E0200021CD1 /* ProtocolSwitchUtils.swift in Sources */,
 				59FC73EE2C51511700021CD1 /* Token.swift in Sources */,
 				1EA9D7122C8717DC00566A93 /* PrivacyPopUpViewController.swift in Sources */,
 				59FC73FA2C51538200021CD1 /* APIDebug.swift in Sources */,
@@ -6361,7 +6446,6 @@
 				F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
 				1ECBC2512D6CA8B200347A4F /* UpgradeViewModel.swift in Sources */,
-				59FC74542C51605600021CD1 /* ProtocolView.swift in Sources */,
 				59FC742B2C51564700021CD1 /* AppConstants.swift in Sources */,
 				59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */,
 				1E0D9D6F2C6103A3008AFF2D /* SettingsSection.swift in Sources */,
@@ -6448,6 +6532,7 @@
 				1ED616872DE61B8E006CDC99 /* NetworkOptionsSettingsViewModel.swift in Sources */,
 				F4B545802E32D19000135E74 /* MaintananceLocationViewModel.swift in Sources */,
 				AF34694E22384AF400A2BDC1 /* StaticIPListFooterView.swift in Sources */,
+				F43374472E46767300333190 /* ProtocolConnectionResultViewModel.swift in Sources */,
 				1E60E01A2CAD666400623CD5 /* ContainerResolvertype.swift in Sources */,
 				C580FDFA2B4DE80A004FA857 /* AppNetwork.swift in Sources */,
 				F45F191B2D7A43270028D0C2 /* RxSwift+Extension.swift in Sources */,
@@ -6500,7 +6585,6 @@
 				AFCAA9F323D7AEEC00D3C4D6 /* UIScrollView+Extension.swift in Sources */,
 				AF0420EE21C1A0FD002132DE /* Node.swift in Sources */,
 				F484B7A72E317D6000BABA98 /* PrivacyStateManager.swift in Sources */,
-				1E2696CE2C04B4D200B0AD59 /* ProtocolSwitchViewModel.swift in Sources */,
 				1EAEF7592E2944B700F3C51F /* ShakeForDataLeaderboardModel.swift in Sources */,
 				F49C45BA2DCD2E85007E5EF1 /* RobertSettingsView.swift in Sources */,
 				F4888E392D9313C0005EF149 /* AuthenticationNavigationRouter.swift in Sources */,
@@ -6513,18 +6597,19 @@
 				C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */,
 				1ED6167E2DD75BF9006CDC99 /* PreferencesActionButton.swift in Sources */,
 				F4888E342D930EC3005EF149 /* AuthenticationRouteID.swift in Sources */,
-				E97ABD5328DC47FF00B38587 /* ProtocolSwitchUtils.swift in Sources */,
 				AF04982D21FA24FF0046D33B /* NodeTableViewCell.swift in Sources */,
 				F485CBBB2D4D52D40063EA3A /* Then.swift in Sources */,
 				F43184BA2E1C59DE007C96E3 /* LocationPermissionInfoView.swift in Sources */,
 				1E5553CA2D95C91B00F16AF0 /* IPContentView.swift in Sources */,
 				F45BA59C2D53FF6700CFDB82 /* UpgradeSuccessLogoView.swift in Sources */,
 				C5D0E3EE29BB85460091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,
+				F43374452E46766400333190 /* ProtocolConnectionResultView.swift in Sources */,
 				E9DF548C274BD8FE00E9C672 /* MainViewController+UILayout.swift in Sources */,
 				C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */,
 				AF4C9AD522F4A30C004A9FA6 /* CustomConfigListTableViewDataSource.swift in Sources */,
 				AFD593D521F8EC0A00A47546 /* UILabel+Extension.swift in Sources */,
 				1EC6C77B2BDAC2D50036248B /* SearchLocationsViewModel.swift in Sources */,
+				F43374502E467C4500333190 /* ProtocolSwitchModels.swift in Sources */,
 				E9D3D371274D1DB700283285 /* MainViewController+Alert.swift in Sources */,
 				F49C45892DC95D15007E5EF1 /* PreferencesCategoryViewModel.swift in Sources */,
 				1E49334D2BF3C6A100C853AF /* MainViewController+StaticIP.swift in Sources */,
@@ -6565,6 +6650,7 @@
 				F43653542DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */,
 				1E7A7A912E007DAF00A6EAA6 /* SiriOldIntents.intentdefinition in Sources */,
 				F469F0EA2D7F8FFC004DC6AB /* View+Extension.swift in Sources */,
+				F433744F2E4677A100333190 /* ProtocolConnectionDebugViewModel.swift in Sources */,
 				1EC6C7852BE27E380036248B /* MainViewController+CardHeaderViewDelegate.swift in Sources */,
 				F4B8E2212DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift in Sources */,
 				F485CBCE2D514B4D0063EA3A /* PlanUgradeViewController+UI.swift in Sources */,
@@ -6592,7 +6678,6 @@
 				F485CBCC2D5146E30063EA3A /* PlanUpgradeLogoView.swift in Sources */,
 				C5D983B92B34A1C40069FF3A /* APIManagerImpl.swift in Sources */,
 				F485CBC12D4D672D0063EA3A /* UIWindow+Extension.swift in Sources */,
-				E97ABD6028EB33F700B38587 /* ProtocolSetPreferredViewModel.swift in Sources */,
 				C5A930F92B45A57B0001CFA0 /* FileLoggerImpl.swift in Sources */,
 				C580FE1A2B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift in Sources */,
 				59C311612BC73990004B16B3 /* ProtocolSwitchRouter.swift in Sources */,
@@ -6630,7 +6715,6 @@
 				F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Extension.swift in Sources */,
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
-				E97ABD5528DDC80E00B38587 /* ProtocolView.swift in Sources */,
 				C5A0CBB328D3FCA400F13B8E /* DispatchQueue+Extension.swift in Sources */,
 				1EC6C77E2BE136190036248B /* MainViewController+SearchLocationDelegate.swift in Sources */,
 				1EC98A522E213374009C2CD3 /* ShakeForDataMainViewModel.swift in Sources */,
@@ -6710,6 +6794,7 @@
 				1E5553C32D93118100F16AF0 /* CustomFlagsBackgroundView.swift in Sources */,
 				F49C45C22DCD31AE007E5EF1 /* LookAndFeelSettingsView.swift in Sources */,
 				1E5553CC2D96DA0000F16AF0 /* MainViewController+Bindings.swift in Sources */,
+				F43374432E4672CF00333190 /* ProtocolSwitchViewModel.swift in Sources */,
 				C5D1C2D42BBFE1AD0083B9EC /* AdvanceRepositoryImpl.swift in Sources */,
 				C5A930CB2B42169A0001CFA0 /* APIManagerImpl+Billing.swift in Sources */,
 				C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */,
@@ -6779,7 +6864,6 @@
 				C5A930E12B43F0270001CFA0 /* CredentialsRepositoryImpl.swift in Sources */,
 				1E7A19532C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935332DA8435D00108558 /* EnterEmailView.swift in Sources */,
-				E97ABD5128DC47D400B38587 /* ProtocolSwitchViewController.swift in Sources */,
 				F434A1B82D8376C40059415F /* NewsFeedDataModel.swift in Sources */,
 				AF36BF0822FB151D00FCC6F4 /* WSRefreshControl.swift in Sources */,
 				F4888E442D959DDE005EF149 /* SignUpView.swift in Sources */,
@@ -6799,7 +6883,6 @@
 				C5D983C02B34C23C0069FF3A /* UserRepositoryImpl.swift in Sources */,
 				F4843A982D89F7DE0034330F /* URL+Extension.swift in Sources */,
 				1E4933532BF50BC200C853AF /* ServerListViewModel.swift in Sources */,
-				E97ABD5B28E819D900B38587 /* SendDebugLogCompletedViewController.swift in Sources */,
 				C56FCBD22B2A42B9008DE7D4 /* RouteIDs.swift in Sources */,
 				F489F2582E4E55FF00E0D898 /* RestrictiveNetworkView.swift in Sources */,
 				E9D3D36D274D0F5900283285 /* MainViewController+LifeCycle.swift in Sources */,
@@ -6826,6 +6909,7 @@
 				5993396B2B4CD26600EC615D /* DefaultValues.swift in Sources */,
 				C59FF19F2CB998610072EF70 /* IntentCommon.swift in Sources */,
 				1E5553C72D946BE400F16AF0 /* ConnectButtonView.swift in Sources */,
+				F43374412E4672C600333190 /* ProtocolSwitchView.swift in Sources */,
 				C5387E9A2CD46C18008A26EE /* VPNManager+Connect.swift in Sources */,
 				C5A930F12B44AA880001CFA0 /* PortMapRepositoryImpl.swift in Sources */,
 				F404193E2D822F1A0005EF97 /* HTMLParser.swift in Sources */,
@@ -6839,6 +6923,9 @@
 				F469F0E02D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				F46C286C2D4C0AB30073207E /* PlanUpgradeDataModels.swift in Sources */,
 				1AF57D43280FCBE2004E8082 /* LanguageManager.swift in Sources */,
+				F43E24A72E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift in Sources */,
+				F43E24A82E4A6B750011C65B /* ProtocolSwitchRouteID.swift in Sources */,
+				F43374552E46941100333190 /* ProtocolConnectionLogState.swift in Sources */,
 				1ED23F882DC3C9C600C7BEE5 /* BackgroundFileManager.swift in Sources */,
 				AF018E0121B09A6100B225FF /* AppConstants.swift in Sources */,
 				C585F3E12C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
@@ -6859,7 +6946,6 @@
 				1E5553D42D9EC1D400F16AF0 /* CustomConfigCell.swift in Sources */,
 				C5B8DF022C9FD3450072333E /* VPNErrors.swift in Sources */,
 				1EBD1FB52C41827B00E90A4E /* LocalDatabaseImpl+Utility.swift in Sources */,
-				1E2696D02C04BE9400B0AD59 /* SendDebugLogCompletedViewModel.swift in Sources */,
 				1EB67FAB2DE9E29200729052 /* ConnectionsNavigationRouter.swift in Sources */,
 				AF97EFDF2281F1DD00378058 /* Bundle+Extension.swift in Sources */,
 				E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */,
@@ -6883,7 +6969,6 @@
 				C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */,
 				59215B482B60DE2E0086CBF6 /* HapticFeedbackGeneratorV2.swift in Sources */,
 				1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */,
-				E97ABD5728E5F95E00B38587 /* ProtocolSetPreferredViewController.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,
 				AF04983021FA43690046D33B /* Section.swift in Sources */,
 				C57BDE4229B93FBB00337E63 /* LinkProvider.swift in Sources */,
@@ -6919,6 +7004,7 @@
 				C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */,
 				AFBBAD15250A674A000B6750 /* HapticFeedbackGenerator.swift in Sources */,
 				AF15B8CF2475BCEA0086BB2A /* SpacedLabel.swift in Sources */,
+				F433744D2E46778700333190 /* ProtocolConnectionDebugView.swift in Sources */,
 				1ED23F812DBBD37000C7BEE5 /* IPInfoViewModel.swift in Sources */,
 				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
 				AF54C6BC228215A700DAAB07 /* UIDevice+Extension.swift in Sources */,

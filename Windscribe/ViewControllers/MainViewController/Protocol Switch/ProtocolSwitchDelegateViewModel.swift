@@ -24,3 +24,7 @@ extension ProtocolSwitchDelegateViewModel: ProtocolSwitchVCDelegate {
         disableVPNTrigger.onNext(())
     }
 }
+
+protocol ProtocolSwitchVCDelegate: AnyObject {
+    func disconnectFromFailOver()
+}

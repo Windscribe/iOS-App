@@ -49,19 +49,6 @@ extension MainViewController {
             self.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
 
-        vpnConnectionViewModel.showAutoModeScreenTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            guard let viewControllers = self.navigationController?.viewControllers,
-                  !viewControllers.contains(where: { $0 is ProtocolSetPreferredViewController }),
-                  !viewControllers.contains(where: { $0 is ProtocolSwitchViewController })
-            else { return }
-
-            self.router?.routeTo(to: RouteID.protocolSwitchVC(delegate: self.protocolSwitchViewModel, type: .failure), from: self)
-        }).disposed(by: disposeBag)
-
-        vpnConnectionViewModel.openNetworkHateUsDialogTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .fail, delegate: self.protocolSwitchViewModel), from: self)
-        }).disposed(by: disposeBag)
-
         vpnConnectionViewModel.pushNotificationPermissionsTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.popupRouter?.routeTo(to: .pushNotifications, from: self)
         }).disposed(by: disposeBag)
@@ -78,7 +65,7 @@ extension MainViewController {
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                self.router?.routeTo(to: RouteID.protocolSetPreferred(type: .connected, delegate: nil),
+                self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .connected),
                                      from: self)
             })
             .disposed(by: disposeBag)
@@ -169,6 +156,17 @@ extension MainViewController {
              })
              .disposed(by: disposeBag)
 
+        viewModel.showProtocolSwitchTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            // Disconnect VPN for clean state during countdown while preserving protocol failover sequence
+            self.router?.routeTo(to: RouteID.protocolSwitch(type: .failure, error: nil), from: self)
+        }).disposed(by: disposeBag)
+
+        viewModel.showAllProtocolsFailedTrigger.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+            // Disconnect VPN to stop protocol cycling when all protocols have failed
+            self.vpnConnectionViewModel.disableConnection()
+            self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .fail), from: self)
+        }).disposed(by: disposeBag)
+
         setNetworkSsid()
     }
 
@@ -251,9 +249,4 @@ extension MainViewController {
         }.disposed(by: disposeBag)
     }
 
-    func bindProtocolSwitchViewModel() {
-        protocolSwitchViewModel.disableVPNTrigger.subscribe { _ in
-            self.disableVPNConnection()
-        }.disposed(by: disposeBag)
-    }
 }

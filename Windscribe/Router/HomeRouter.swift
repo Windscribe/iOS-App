@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 import Swinject
 import UIKit
 
@@ -19,22 +20,36 @@ class HomeRouter: BaseRouter, RootRouter {
             pushViewWithoutNavigationBar(from: from, view: preferencesView, title: TextsAsset.Preferences.title)
         case RouteID.signup:
             goToSignUp(viewController: from, claimGhostAccount: false)
-        case let RouteID.protocolSetPreferred(type, delegate, protocolName):
-            let vc = Assembler.resolve(ProtocolSetPreferredViewController.self)
-            vc.delegate = delegate
-            vc.type = type
-            vc.protocolName = protocolName
-            if type == .fail {
-                from.navigationController?.pushViewController(vc, animated: true)
-            } else if type == .connected {
-                vc.modalPresentationStyle = .fullScreen
-                from.present(vc, animated: true)
+        case let RouteID.protocolConnectionResult(protocolName, viewType):
+            let router = Assembler.resolve(ProtocolSwitchNavigationRouter.self)
+            let view = Assembler.resolve(ProtocolConnectionResultView.self)
+            let context = ProtocolConnectionResultContext()
+            context.protocolName = protocolName
+            context.viewType = viewType
+
+            let hostingController = UIHostingController(rootView:
+                view.environmentObject(context)
+                    .environmentObject(router)
+            )
+
+            if viewType == .fail {
+                from.navigationController?.pushViewController(hostingController, animated: true)
+            } else if viewType == .connected {
+                hostingController.modalPresentationStyle = .fullScreen
+                from.present(hostingController, animated: true)
             }
-        case let RouteID.protocolSwitchVC(delegate, type):
-            let vc = Assembler.resolve(ProtocolSwitchViewController.self)
-            vc.delegate = delegate
-            vc.type = type
-            from.navigationController?.pushViewController(vc, animated: true)
+            return
+
+        case let RouteID.protocolSwitch(type, error):
+            let context = ProtocolSwitchContext()
+            context.fallbackType = type
+            context.error = error
+            let view = Assembler.resolve(ProtocolSwitchView.self)
+            let hostingController = UIHostingController(rootView:
+                view.environmentObject(context)
+            )
+            from.navigationController?.pushViewController(hostingController, animated: true)
+            return
         case RouteID.locationPermission:
             let locationPermissionView = Assembler.resolve(LocationPermissionInfoView.self)
             presentViewModally(from: from, view: DeviceTypeProvider { locationPermissionView })

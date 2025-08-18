@@ -84,6 +84,24 @@ class PopupRouter: BaseRouter, RootRouter {
         case .shakeForDataPopUp:
             return Assembler.resolve(ShakeForDataMainView.self)
 
+        case .protocolSwitch(let type, let error):
+            let context = ProtocolSwitchContext()
+            context.fallbackType = type
+            context.error = error
+            let protocolSwitchView = Assembler.resolve(ProtocolSwitchView.self).environmentObject(context)
+            return DeviceTypeProvider { protocolSwitchView }
+
+        case .protocolConnectionResult(let protocolName, let viewType):
+            let context = ProtocolConnectionResultContext()
+            context.protocolName = protocolName
+            context.viewType = viewType
+            let protocolResultView = Assembler.resolve(ProtocolConnectionResultView.self).environmentObject(context)
+            return DeviceTypeProvider { protocolResultView }
+
+        case .protocolConnectionDebug:
+            let protocolDebugView = Assembler.resolve(ProtocolConnectionDebugView.self)
+            return DeviceTypeProvider { protocolDebugView }
+
         default:
             return nil
         }

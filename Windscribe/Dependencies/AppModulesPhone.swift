@@ -245,9 +245,34 @@ class ViewModels: Assembly {
             )
         }.inObjectScope(.transient)
 
-        container.register(ProtocolSetPreferredViewModelV2.self) { r in
-            ProtocolSetPreferredViewModel(alertManager: r.resolve(AlertManagerV2.self)!, type: ProtocolViewType.connected, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, apiManager: r.resolve(APIManager.self)!, sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+        container.register((any ProtocolSwitchViewModel).self) { r in
+            ProtocolSwitchViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
         }.inObjectScope(.transient)
+
+        container.register((any ProtocolConnectionResultViewModel).self) { r in
+            ProtocolConnectionResultViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                localDatabase: r.resolve(LocalDatabase.self)!,
+                logger: r.resolve(FileLogger.self)!,
+                sessionManager: r.resolve(SessionManaging.self)!,
+                apiManager: r.resolve(APIManager.self)!,
+                protocolManager: r.resolve(ProtocolManagerType.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register((any ProtocolConnectionDebugViewModel).self) { r in
+            ProtocolConnectionDebugViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                logger: r.resolve(FileLogger.self)!
+            )
+        }.inObjectScope(.transient)
+
         container.register((any NewsFeedViewModelProtocol).self) { r in
             NewsFeedViewModel(
                 localDatabase: r.resolve(LocalDatabase.self)!,
@@ -273,7 +298,7 @@ class ViewModels: Assembly {
                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!)
+            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -303,12 +328,7 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
             )
         }.inObjectScope(.transient)
-        container.register(ProtocolSwitchViewModelType.self) { r in
-            ProtocolSwitchViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, vpnManager: r.resolve(VPNManager.self)!)
-        }.inObjectScope(.transient)
-        container.register(SendDebugLogCompletedViewModelType.self) { r in
-            SendDebugLogCompletedViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
-        }.inObjectScope(.transient)
+
         container.register(CustomConfigPickerViewModelType.self) { r in
             CustomConfigPickerViewModel(logger: r.resolve(FileLogger.self)!,
                                         alertManager: r.resolve(AlertManagerV2.self)!,
@@ -343,9 +363,7 @@ class ViewModels: Assembly {
                                   locationsManager: r.resolve(LocationsManagerType.self)!,
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
-        container.register(ProtocolSwitchDelegateViewModelType.self) { _ in
-            ProtocolSwitchDelegateViewModel()
-        }.inObjectScope(.transient)
+
         container.register(LatencyViewModel.self) { r in
             LatencyViewModelImpl(latencyRepo: r.resolve(LatencyRepository.self)!,
                                  serverRepository: r.resolve(ServerRepository.self)!,
@@ -692,7 +710,6 @@ class ViewControllerModule: Assembly {
             vc.customConfigPickerViewModel = r.resolve(CustomConfigPickerViewModelType.self)
             vc.favNodesListViewModel = r.resolve(FavouriteListViewModelType.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
-            vc.protocolSwitchViewModel = r.resolve(ProtocolSwitchDelegateViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
         }.inObjectScope(.transient)
 
@@ -717,30 +734,11 @@ class ViewControllerModule: Assembly {
                 notificationRepository: r.resolve(NotificationRepository.self)!)
             )
         }.inObjectScope(.transient)
-        container.register(ProtocolSwitchViewController.self) { _ in
-            ProtocolSwitchViewController()
-        }.initCompleted { r, c in
-            c.protocolManager = ProtocolManager.shared
-            c.viewModel = r.resolve(ProtocolSwitchViewModelType.self)
-            c.router = r.resolve(ProtocolSwitchRouter.self)
-            c.type = .change
-        }.inObjectScope(.transient)
-        container.register(ProtocolSetPreferredViewController.self) { _ in
-            ProtocolSetPreferredViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(ProtocolSetPreferredViewModelV2.self)
-            c.type = .connected
-            c.router = r.resolve(ProtocolSwitchRouter.self)
-        }.inObjectScope(.transient)
+
         container.register(ListSelectionView.self) { _ in
             ListSelectionView()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(ListSelectionViewModelType.self)
-        }.inObjectScope(.transient)
-        container.register(SendDebugLogCompletedViewController.self) { _ in
-            SendDebugLogCompletedViewController()
-        }.initCompleted { r, c in
-            c.viewModel = r.resolve(SendDebugLogCompletedViewModelType.self)
         }.inObjectScope(.transient)
 
         container.register(LocationPermissionInfoView.self) { r in
@@ -839,6 +837,31 @@ class ViewControllerModule: Assembly {
             FreeAccountFooterView()
         }.initCompleted { r, c in
             c.viewModel = r.resolve(FreeAccountFooterViewModelType.self)
+        }.inObjectScope(.transient)
+
+        container.register(ProtocolSwitchNavigationRouter.self) { _ in
+            ProtocolSwitchNavigationRouter()
+        }.inObjectScope(.transient)
+
+        container.register(ProtocolSwitchView.self) { r in
+            ProtocolSwitchView(
+                viewModel: r.resolve((any ProtocolSwitchViewModel).self)!,
+                router: r.resolve(ProtocolSwitchNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register(ProtocolConnectionResultView.self) { r in
+            ProtocolConnectionResultView(
+                viewModel: r.resolve((any ProtocolConnectionResultViewModel).self)!,
+                router: r.resolve(ProtocolSwitchNavigationRouter.self)!
+            )
+        }.inObjectScope(.transient)
+
+        container.register(ProtocolConnectionDebugView.self) { r in
+            ProtocolConnectionDebugView(
+                viewModel: r.resolve((any ProtocolConnectionDebugViewModel).self)!,
+                router: r.resolve(ProtocolSwitchNavigationRouter.self)!
+            )
         }.inObjectScope(.transient)
     }
 }

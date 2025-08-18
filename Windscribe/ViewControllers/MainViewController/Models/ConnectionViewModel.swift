@@ -25,8 +25,6 @@ protocol ConnectionViewModelType {
     var showAuthFailureTrigger: PublishSubject<Void> { get }
     var showConnectionFailedTrigger: PublishSubject<Void> { get }
     var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
-    var showAutoModeScreenTrigger: PublishSubject<Void> { get }
-    var openNetworkHateUsDialogTrigger: PublishSubject<Void> { get }
     var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
     var siriShortcutTrigger: PublishSubject<Void> { get }
     var requestLocationTrigger: PublishSubject<Void> { get }
@@ -78,8 +76,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showPrivacyTrigger = PublishSubject<Void>()
     let showAuthFailureTrigger = PublishSubject<Void>()
     let showConnectionFailedTrigger = PublishSubject<Void>()
-    let showAutoModeScreenTrigger = PublishSubject<Void>()
-    let openNetworkHateUsDialogTrigger = PublishSubject<Void>()
     let pushNotificationPermissionsTrigger = PublishSubject<Void>()
     let siriShortcutTrigger = PublishSubject<Void>()
     let requestLocationTrigger = PublishSubject<Void>()
@@ -158,9 +154,10 @@ class ConnectionViewModel: ConnectionViewModelType {
         protocolManager.connectionProtocolSubject
             .subscribe { [weak self] value in
                 guard let self = self, let value = value else { return }
+                // Only block if actually connected, not just matching protocol
                 if let info = try? vpnManager.vpnInfo.value(),
                    info.selectedProtocol == value.protocolPort.protocolName,
-                   [.connected, .connecting].contains(info.status) {
+                   info.status == .connected {
                     return
                 }
                 self.enableConnection(connectionType: value.connectionType)
@@ -379,6 +376,7 @@ extension ConnectionViewModel {
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
             connectionTaskPublisher?.cancel()
+
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: connectionType)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
@@ -539,8 +537,6 @@ extension ConnectionViewModel {
             reloadLocationsTrigger.onNext(id)
         case .networkIsOffline:
             showNoConnectionAlertTrigger.onNext(())
-        case .allProtocolFailed:
-            showAutoModeScreenTrigger.onNext(())
         case .upgradeRequired:
             showUpgradeRequiredTrigger.onNext(())
         case .privacyNotAccepted:
@@ -561,12 +557,7 @@ extension ConnectionViewModel {
 
     func checkAutoModeFail() {
         Task {
-            let allProtocolsFailed = await protocolManager.onProtocolFail()
-            if allProtocolsFailed {
-                openNetworkHateUsDialogTrigger.onNext(())
-            } else {
-                showAutoModeScreenTrigger.onNext(())
-            }
+            await protocolManager.onProtocolFail()
         }
     }
 

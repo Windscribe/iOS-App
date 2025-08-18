@@ -12,6 +12,7 @@ import QuartzCore
 
 protocol ConnectButtonViewModelType {
     var statusSubject: BehaviorSubject<ConnectionState?> { get }
+    func refreshConnectingState()
 }
 
 class ConnectButtonViewModel: ConnectButtonViewModelType {
@@ -23,6 +24,10 @@ class ConnectButtonViewModel: ConnectButtonViewModelType {
         vpnManager.getStatus().subscribe(onNext: { state in
             self.statusSubject.onNext(ConnectionState.state(from: state))
         }).disposed(by: disposeBag)
+    }
+
+    func refreshConnectingState() {
+        statusSubject.onNext(.connecting)
     }
 }
 
@@ -109,7 +114,11 @@ class ConnectButtonView: UIView {
                 if [.connected, .testing].contains(state) {
                     self.ringImageView.stopRotating()
                 } else {
-                    self.ringImageView.rotate()
+                    // Check if ring layer is already rotating to prevent glitch
+                    let isCurrentlyRotating = self.ringImageView.layer.animationKeys()?.contains("rotationanimationkey") == true
+                    if !isCurrentlyRotating {
+                        self.ringImageView.rotate()
+                    }
                 }
             }
         }.disposed(by: disposeBag)

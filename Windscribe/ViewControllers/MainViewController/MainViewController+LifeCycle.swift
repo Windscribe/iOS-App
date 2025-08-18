@@ -74,7 +74,6 @@ extension MainViewController {
         bindFavouriteListViewModel()
         bindStaticIPListViewModel()
         bindServerListViewModel()
-        bindProtocolSwitchViewModel()
         bindActions()
         bindViews()
     }

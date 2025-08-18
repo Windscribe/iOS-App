@@ -562,3 +562,9 @@
 "Custom Configs" = "Konfigurasi Kustom";
 "Static IPs" = "IP Statis";
 "No Favourites" = "Tidak ada favorit";
+
+"Retry" = "Coba lagi";
+"Sent" = "Terkirim";
+"Sending..." = "Mengirim...";
+"Connected to" = "Terhubung ke";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Log debug Anda telah diterima. Silakan hubungi dukungan jika Anda memerlukan bantuan untuk masalah ini.";

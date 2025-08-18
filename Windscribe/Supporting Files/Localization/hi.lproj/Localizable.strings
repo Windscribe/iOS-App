@@ -586,3 +586,9 @@
 "Custom Configs" = "कस्टम कॉन्फ़िगरेशन";
 "Static IPs" = "स्थैतिक IPs";
 "No Favourites" = "कोई पसंदीदा नहीं";
+
+"Retry" = "पुनः प्रयास करें";
+"Sent" = "भेजा गया";
+"Sending..." = "भेजा जा रहा है...";
+"Connected to" = "से जुड़ा हुआ";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "आपकी डिबग लॉग प्राप्त हो गई है। यदि आपको इस समस्या में सहायता चाहिए, तो कृपया समर्थन से संपर्क करें।";

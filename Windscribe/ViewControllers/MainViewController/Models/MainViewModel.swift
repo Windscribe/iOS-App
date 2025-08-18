@@ -34,6 +34,8 @@ protocol MainViewModelType {
     var showNotificationsTrigger: PublishSubject<Void> { get }
     var becameActiveTrigger: PublishSubject<Void> { get }
     var updateSSIDTrigger: PublishSubject<Void> { get }
+    var showProtocolSwitchTrigger: PublishSubject<Void> { get }
+    var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
 
     var didShowBannedProfilePopup: Bool { get set }
     var didShowOutOfDataPopup: Bool { get set }
@@ -78,6 +80,7 @@ class MainViewModel: MainViewModelType {
     let credentialsRepository: CredentialsRepository
     let livecycleManager: LivecycleManagerType
     let locationsManager: LocationsManagerType
+    let protocolManager: ProtocolManagerType
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
@@ -101,6 +104,8 @@ class MainViewModel: MainViewModelType {
     let showNotificationsTrigger: PublishSubject<Void>
     let becameActiveTrigger: PublishSubject<Void>
     let updateSSIDTrigger = PublishSubject<Void>()
+    let showProtocolSwitchTrigger: PublishSubject<Void>
+    let showAllProtocolsFailedTrigger: PublishSubject<Void>
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
@@ -111,7 +116,7 @@ class MainViewModel: MainViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
 
     let disposeBag = DisposeBag()
-    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepository: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType) {
+    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepository: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType, protocolManager: ProtocolManagerType) {
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
@@ -127,10 +132,13 @@ class MainViewModel: MainViewModelType {
         self.connectivity = connectivity
         self.livecycleManager = livecycleManager
         self.locationsManager = locationsManager
+        self.protocolManager = protocolManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
         becameActiveTrigger = livecycleManager.becameActiveTrigger
+        showProtocolSwitchTrigger = protocolManager.showProtocolSwitchTrigger
+        showAllProtocolsFailedTrigger = protocolManager.showAllProtocolsFailedTrigger
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadNotifications()

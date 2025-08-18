@@ -574,3 +574,9 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Custom Configs" = "Cấu hình tùy chỉnh";
 "Static IPs" = "Địa chỉ IP tĩnh";
 "No Favourites" = "Yêu thích";
+
+"Retry" = "Thử lại";
+"Sent" = "Đã gửi";
+"Sending..." = "Đang gửi...";
+"Connected to" = "Đã kết nối với";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "Nhật ký gỡ lỗi của bạn đã được nhận. Vui lòng liên hệ hỗ trợ nếu bạn cần trợ giúp với sự cố này.";

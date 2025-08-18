@@ -39,7 +39,48 @@ enum ProtocolFallbacksType {
     }
 }
 
+enum ProtocolViewType: Equatable {
+    case connected
+    case normal
+    case fail
+    case nextUp(countdown: Int)
+
+    var isSelectable: Bool {
+        switch self {
+        case .fail: false
+        default: true
+        }
+    }
+
+    var showCountdown: Bool {
+        switch self {
+        case let .nextUp(countdown): countdown >= 0
+        default: false
+        }
+    }
+
+    var isNextup: Bool {
+        switch self {
+        case .nextUp: true
+        default: false
+        }
+    }
+}
+
 typealias ProtocolPort = (protocolName: String, portName: String)
+
+struct ProtocolDisplayItem: Identifiable {
+    let id = UUID()
+    let protocolName: String
+    let portName: String
+    let description: String
+    let viewType: ProtocolViewType
+
+    // Computed properties for UI display
+    var displayName: String { protocolName }
+    var protocolPort: ProtocolPort { (protocolName, portName) }
+}
+
 class DisplayProtocolPort: CustomStringConvertible {
     var protocolPort: ProtocolPort
     var viewType: ProtocolViewType
@@ -52,4 +93,9 @@ class DisplayProtocolPort: CustomStringConvertible {
     var description: String {
         return "\(protocolPort) \(viewType)"
     }
+}
+
+struct ProtocolViewDetails: Equatable {
+    let protocolName: String
+    let viewType: ProtocolViewType
 }

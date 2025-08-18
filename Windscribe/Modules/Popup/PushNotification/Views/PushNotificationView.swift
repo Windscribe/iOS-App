@@ -39,7 +39,7 @@ struct PushNotificationView: View, ResponsivePopupLayoutProvider {
                     Image(ImagesAsset.pushNotifications)
                         .renderingMode(.template)
                         .resizable()
-                        .frame(width: 60, height: 60)
+                        .frame(width: 90, height: 90)
                         .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
 
                     Text(TextsAsset.PushNotifications.title)

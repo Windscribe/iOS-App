@@ -562,3 +562,9 @@
 "Custom Configs" = "自訂設定";
 "Static IPs" = "靜態 IP";
 "No Favourites" = "没有收藏夹";
+
+"Retry" = "重試";
+"Sent" = "已發送";
+"Sending..." = "正在發送...";
+"Connected to" = "已連接至";
+"Your debug log has been received. Please contact support if you want assistance with this issue." = "我們已收到您的除錯日誌。如需協助解決此問題，請聯絡客服。";

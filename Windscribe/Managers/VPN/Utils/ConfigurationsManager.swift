@@ -247,6 +247,8 @@ class ConfigurationsManager {
     }
 
     func updateOnDemandRules(manager: NEVPNManager, onDemandRules: [NEOnDemandRule]) async {
+        try? await manager.loadFromPreferences()
+
         manager.onDemandRules?.removeAll()
         manager.onDemandRules = onDemandRules
         try? await saveToPreferences(manager: manager)
@@ -263,6 +265,9 @@ class ConfigurationsManager {
 
     func reset(manager: NEVPNManager?) async {
         guard let manager = manager else { return }
+
+        try? await manager.loadFromPreferences()
+
         manager.isOnDemandEnabled = false
         manager.isEnabled = false
         #if os(iOS)
