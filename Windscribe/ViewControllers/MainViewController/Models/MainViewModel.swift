@@ -202,11 +202,13 @@ class MainViewModel: MainViewModelType {
     func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel] {
         var favNodesOrdered = [GroupModel]()
         switch try? locationOrderBy.value() {
-        case Fields.Values.geography:
-            favNodesOrdered = favList
-        case Fields.Values.alphabet:
-            favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
-                return fav1.city < fav2.city
+        case Fields.Values.geography, Fields.Values.alphabet:
+            favNodesOrdered = favList.sorted {
+                if $0.city == $1.city {
+                    return $0.nick < $1.nick
+                } else {
+                    return $0.city < $1.city
+                }
             }
         case Fields.Values.latency:
             favNodesOrdered = favList.sorted { fav1, fav2 -> Bool in
