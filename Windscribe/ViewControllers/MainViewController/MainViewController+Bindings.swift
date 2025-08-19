@@ -73,6 +73,12 @@ extension MainViewController {
         vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
+
+        vpnConnectionViewModel.showPreferredProtocolView.subscribe(onNext: { protocolName in
+            self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: protocolName,
+                                                                      viewType: .connected),
+                                 from: self)
+        }).disposed(by: disposeBag)
     }
 
     func bindViews() {

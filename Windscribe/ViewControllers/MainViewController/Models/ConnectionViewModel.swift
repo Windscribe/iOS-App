@@ -31,6 +31,7 @@ protocol ConnectionViewModelType {
     var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
     var reloadLocationsTrigger: PublishSubject<String> { get }
     var reviewRequestTrigger: PublishSubject<Void> { get }
+    var showPreferredProtocolView: PublishSubject<String> { get }
 
     var vpnManager: VPNManager { get }
     var appReviewManager: AppReviewManaging { get }
@@ -83,6 +84,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showNoConnectionAlertTrigger = PublishSubject<Void>()
     let reloadLocationsTrigger = PublishSubject<String>()
     let reviewRequestTrigger = PublishSubject<Void>()
+    let showPreferredProtocolView = PublishSubject<String>()
 
     private let disposeBag = DisposeBag()
     let vpnManager: VPNManager
@@ -105,6 +107,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var loadLatencyValuesOnDisconnect = false
     private var currentNetwork: AppNetwork?
     private var currentWifiAutoSecured = false
+    private var currentConnectionType: ConnectionType = .user
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -375,6 +378,7 @@ extension ConnectionViewModel {
 
             let nextProtocol = protocolManager.getProtocol()
             let locationID = locationsManager.getLastSelectedLocation()
+            currentConnectionType = connectionType
             connectionTaskPublisher?.cancel()
 
             connectionTaskPublisher = vpnManager.connectFromViewModel(locationId: locationID, proto: nextProtocol, connectionType: connectionType)
@@ -389,7 +393,7 @@ extension ConnectionViewModel {
                             return
                         }
                         if let error = error as? VPNConfigurationErrors {
-                            self.logger.logE("ConnectionViewModel", "Enable connection had a VPNConfigurationErrors:")
+                            self.logger.logE("ConnectionViewModel", "Enable connection had a VPNConfigurationErrors: \(error.description)")
                             if !self.handleErrors(error: error, fromEnable: true) {
                                 self.checkAutoModeFail()
                             }
@@ -406,6 +410,7 @@ extension ConnectionViewModel {
                         self.logger.logD("ConnectionViewModel", "Enable connection validate")
                         self.updateState(with: .connected)
                         self.checkPreferencesForTriggers()
+                        self.checkShouldShowPreferredProtocol()
                     case let .vpn(status):
                         self.logger.logI("ConnectionViewModel", "Enable connection new status: \(status.rawValue)")
                     case .validating:
@@ -440,7 +445,7 @@ extension ConnectionViewModel {
                     }
                 case let .failure(error):
                     if let error = error as? VPNConfigurationErrors {
-                        self.logger.logE("ConnectionViewModel", "Disable connection had a VPNConfigurationErrors:")
+                        self.logger.logE("ConnectionViewModel", "Disable connection had a VPNConfigurationErrors: \(error.description)")
                         _ = !self.handleErrors(error: error)
                     } else {
                         self.logger.logE("ConnectionViewModel", "Disable Connection with unknown error: \(error.localizedDescription)")
@@ -459,6 +464,21 @@ extension ConnectionViewModel {
 
     @objc private func loadLatencyValues() {
         loadLatencyValuesSubject.onNext(LoadLatencyInfo(force: false, connectToBestLocation: true))
+    }
+
+    private func checkShouldShowPreferredProtocol() {
+        guard currentConnectionType == .failover else { return }
+
+        let network = localDB.getNetworksSync()?.first { $0.SSID == connectivity.getNetwork().name }
+        guard let network = network else { return }
+
+        let nextProtocol = protocolManager.getProtocol()
+        guard !network.preferredProtocolStatus ||
+                nextProtocol.protocolName != network.preferredProtocol else {
+            return
+        }
+
+        showPreferredProtocolView.onNext(nextProtocol.protocolName)
     }
 
     private func checkPreferencesForTriggers() {
@@ -527,12 +547,11 @@ extension ConnectionViewModel {
                 .configNotFound,
                 .incorrectVPNManager,
                 .connectionTimeout:
-            logger.logE("ConnectionViewModel", error.description)
             return false
         case .accountExpired:
             showUpgradeRequiredTrigger.onNext(())
         case .accountBanned:
-            logger.logE("ConnectionViewModel", error.description)
+            return true
         case .locationNotFound(let id):
             reloadLocationsTrigger.onNext(id)
         case .networkIsOffline:
@@ -544,10 +563,7 @@ extension ConnectionViewModel {
         case .authFailure:
             showAuthFailureTrigger.onNext(())
         case .connectivityTestFailed:
-            guard locationsManager.getLocationType() == .custom else {
-                logger.logE("ConnectionViewModel", error.description)
-                return false
-            }
+            guard locationsManager.getLocationType() == .custom else { return false }
             showAuthFailureTrigger.onNext(())
         case let .customConfigMissingCredentials(customConfig):
             showEditCustomConfigTrigger.onNext(customConfig)
