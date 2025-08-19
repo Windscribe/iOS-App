@@ -166,7 +166,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
         case .normal, .nextUp:
             // User manually selected a protocol to connect with
-            let connectionType: ConnectionType = .user
+            let connectionType: ConnectionType = .failover
             protocolSelectionTrigger.send((protocolItem.protocolPort, connectionType))
 
         case .fail:
