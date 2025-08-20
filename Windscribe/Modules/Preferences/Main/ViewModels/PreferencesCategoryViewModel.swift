@@ -23,6 +23,7 @@ protocol PreferencesMainCategoryViewModel: ObservableObject {
     var isDarkMode: Bool { get set }
     var currentLanguage: String? { get set }
     var visibleItems: [PreferenceItemType] { get set }
+    var isScreenTestEnabled: Bool { get }
 
     func updateActionDisplay()
     func getDynamicRouteForAccountRow() -> PreferencesRouteID
@@ -35,6 +36,8 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     @Published var isDarkMode: Bool = false
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []
+
+    var isScreenTestEnabled: Bool = true
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -131,7 +134,8 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
 
     func reloadItems() {
         let isGhost = sessionManager.session?.isUserGhost ?? false
-        let count = isGhost ? 8 : 9
+        let baseCount = isGhost ? 8 : 9
+        let count = isScreenTestEnabled ? baseCount + 1 : baseCount
         visibleItems = (0..<count).compactMap { PreferenceItemType(rawValue: $0) }
     }
 

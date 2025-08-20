@@ -18,6 +18,7 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
     case lookAndFeel
     case helpMe
     case about
+    case screenTest
     case logout
 
     var id: Int { rawValue }
@@ -39,6 +40,8 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
             TextsAsset.Preferences.helpMe
         case .about:
             TextsAsset.Preferences.about
+        case .screenTest:
+            "Screen Test"
         case .logout:
             TextsAsset.Preferences.logout
         }
@@ -62,6 +65,8 @@ enum PreferenceItemType: Int, MenuCategoryRowType {
             ImagesAsset.Preferences.helpMe
         case .about:
             ImagesAsset.Preferences.about
+        case .screenTest:
+            ImagesAsset.Preferences.screenTest
         case .logout:
             ImagesAsset.Preferences.logout
         }
@@ -104,6 +109,7 @@ extension PreferenceItemType {
         case .lookAndFeel: return .lookAndFeel
         case .helpMe: return .help
         case .about: return .about
+        case .screenTest: return .screenTest
         case .logout: return nil
         }
     }

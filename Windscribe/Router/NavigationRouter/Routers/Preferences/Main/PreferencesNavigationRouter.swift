@@ -34,6 +34,8 @@ class PreferencesNavigationRouter: BaseNavigationRouter {
             return AnyView(Assembler.resolve(HelpSettingsView.self))
         case .about:
             return AnyView(Assembler.resolve(AboutSettingsView.self))
+        case .screenTest:
+            return AnyView(Assembler.resolve(ScreenTestView.self))
         case .ghostAccount:
             return AnyView(Assembler.resolve(GhostAccountView.self))
         case .enterEmail:
