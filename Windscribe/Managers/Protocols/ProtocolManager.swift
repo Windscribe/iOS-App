@@ -138,8 +138,14 @@ class ProtocolManager: ProtocolManagerType {
     /// change their priority based on user settings.
     /// append port
     /// Priority order [Connected, User selected, Preferred, Manual, Good, Failed]
+    ///
     @MainActor
     func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool) async {
+        await refreshProtocols(shouldReset: shouldReset, shouldReconnect: shouldReconnect, isFromFailover: false)
+    }
+
+    @MainActor
+    func refreshProtocols(shouldReset: Bool, shouldReconnect: Bool, isFromFailover: Bool) async {
         if failoverNetworkName != .none && failoverNetworkName != connectivity.getNetwork().networkType {
             goodProtocol = nil
             userSelected = nil
@@ -196,7 +202,8 @@ class ProtocolManager: ProtocolManagerType {
                 setPriority(proto: protocolName, type: .normal)
         }
 
-        if !shouldReconnect, let info = try? vpnManager.vpnInfo.value(), info.status == .connected {
+        if !isFromFailover, !shouldReconnect,
+           let info = try? vpnManager.vpnInfo.value(), info.status == .connected {
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
         } else {
@@ -294,7 +301,7 @@ class ProtocolManager: ProtocolManagerType {
             await reset()
             showAllProtocolsFailedTrigger.onNext(())
         } else {
-            await refreshProtocols(shouldReset: false, shouldReconnect: false)
+            await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
             startCountdownTimer()
         }
         currentProtocolSubject.onNext(getFirstProtocol())
@@ -402,8 +409,12 @@ extension ProtocolManager {
     }
 
     private func updateCountdown() {
-        guard !vpnManager.isConnected(),
-              let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else {
+        guard let proto = self.protocolsToConnectList.first(where: \.viewType.isNextup) else {
+            stopCountdownTimer()
+            return
+        }
+        guard self.protocolsToConnectList.filter({ $0.viewType == .connected }).isEmpty else {
+            self.setPriority(proto: proto.protocolPort.protocolName,type: .normal)
             stopCountdownTimer()
             return
         }
