@@ -129,6 +129,7 @@ extension ConfigurationsManager {
                                 self.preferences.increaseConnectionCount()
                             } catch {
                                 try await self.disableProfile(nextManager)
+                                await self.reloadManagers()
                                 progressPublisher.send(completion: .failure(error))
                             }
                         }

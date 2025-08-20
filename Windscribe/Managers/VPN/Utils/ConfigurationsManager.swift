@@ -109,15 +109,15 @@ class ConfigurationsManager {
 
     private func load() {
         reloadManagersTrigger.subscribe { [weak self] _ in
-            self?.reloadManagers()
+            Task {
+                await self?.reloadManagers()
+            }
         }.disposed(by: disposeBag)
     }
 
-    private func reloadManagers() {
-        Task {
-            managers = (try? await getAllManagers()) ?? []
-            delegate?.configureForConnectionState()
-        }
+    func reloadManagers() async {
+        managers = (try? await getAllManagers()) ?? []
+        delegate?.configureForConnectionState()
     }
 
     private func getNEVPNManager() async throws -> NEVPNManager {
