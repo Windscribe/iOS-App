@@ -17,6 +17,7 @@ enum PreferencesRouteID: Int, BaseRouteID, CaseIterable {
     case lookAndFeel
     case help
     case about
+    case screenTest
 
     case ghostAccount
     case enterEmail

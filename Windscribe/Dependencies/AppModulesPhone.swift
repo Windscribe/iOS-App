@@ -201,6 +201,11 @@ class ViewModels: Assembly {
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
         }.inObjectScope(.transient)
 
+        container.register((any ScreenTestViewModel).self) { r in
+            ScreenTestViewModelImpl(
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+        }.inObjectScope(.transient)
+
         container.register((any LocationPermissionInfoViewModel).self) { r in
             LocationPermissionInfoViewModelImpl(
                 manager: r.resolve(LocationPermissionManaging.self)!,
@@ -652,6 +657,13 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!))
         }.inObjectScope(.transient)
 
+        container.register(ScreenTestView.self) { r in
+            ScreenTestView(
+                viewModel: ScreenTestViewModelImpl(
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!),
+                router: r.resolve(ScreenTestNavigationRouter.self)!)
+        }.inObjectScope(.transient)
+
         container.register(ShakeForDataMainView.self) { r in
             ShakeForDataMainView(
                 viewModel: ShakeForDataMainViewModelImpl(
@@ -876,6 +888,11 @@ class Routers: Assembly {
         container.register(PreferencesNavigationRouter.self) { _ in
             PreferencesNavigationRouter()
         }.inObjectScope(.transient)
+
+        container.register(ScreenTestNavigationRouter.self) { _ in
+            ScreenTestNavigationRouter()
+        }.inObjectScope(.transient)
+
         container.register(ConnectionsNavigationRouter.self) { _ in
             ConnectionsNavigationRouter()
         }.inObjectScope(.transient)
