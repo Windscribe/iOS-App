@@ -19,6 +19,7 @@ enum ScreenTestRouteID: Int, BaseRouteID, CaseIterable {
     case pushNotification
     case restrictiveNetwork
     case shakeForData
+    case preferredProtocol
 
     var id: ScreenTestRouteID { self }
 }

@@ -20,6 +20,7 @@ enum ScreenTestItemType: Int, MenuCategoryRowType, CaseIterable {
     case pushNotification
     case shakeForData
     case restrictiveNetwork
+    case preferredProtocol
 
     var id: Int { rawValue }
     var title: String {
@@ -44,6 +45,8 @@ enum ScreenTestItemType: Int, MenuCategoryRowType, CaseIterable {
             "Shake For Data"
         case .restrictiveNetwork:
             "Restrictive Network"
+        case .preferredProtocol:
+            "Preferred Protocol"
         }
     }
 
@@ -69,6 +72,8 @@ enum ScreenTestItemType: Int, MenuCategoryRowType, CaseIterable {
             ImagesAsset.ShakeForData.icon
         case .restrictiveNetwork:
             ImagesAsset.wifi
+        case .preferredProtocol:
+            ImagesAsset.ProtocolBadges.iKEV2
         }
     }
 
@@ -98,6 +103,7 @@ extension ScreenTestItemType {
         case .pushNotification: return .pushNotification
         case .shakeForData: return .shakeForData
         case .restrictiveNetwork: return .restrictiveNetwork
+        case .preferredProtocol: return .preferredProtocol
         }
     }
 }

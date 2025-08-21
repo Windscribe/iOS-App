@@ -53,7 +53,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     var titleText: String {
         switch viewType {
         case .connected, .normal:
-            return TextsAsset.SetPreferredProtocolPopup.title(protocolType: protocolName.uppercased())
+            return TextsAsset.SetPreferredProtocolPopup.title(protocolType: protocolName)
         case .fail:
             return TextsAsset.SetPreferredProtocolPopup.failHeaderString
         case .nextUp:
