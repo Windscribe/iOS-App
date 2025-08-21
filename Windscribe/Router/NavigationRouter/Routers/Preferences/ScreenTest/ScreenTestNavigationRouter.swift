@@ -59,6 +59,14 @@ class ScreenTestNavigationRouter: BaseNavigationRouter {
         case .restrictiveNetwork:
             let restrictiveNetworkView = Assembler.resolve(RestrictiveNetworkView.self)
             return AnyView(DeviceTypeProvider { restrictiveNetworkView })
+        case .preferredProtocol:
+            let context = ProtocolConnectionResultContext()
+            context.protocolName = TextsAsset.iKEv2.localized
+            context.viewType = .connected
+            return AnyView(
+                Assembler.resolve(ProtocolConnectionResultView.self)
+                    .environmentObject(context)
+            )
         }
     }
 

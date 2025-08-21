@@ -43,14 +43,13 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
     }
 
     private func mainContent(topSpacer: CGFloat, bottomPadding: CGFloat, maxWidth: CGFloat) -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 32) {
             headerSection(topSpacer: topSpacer, maxWidth: maxWidth)
-            Spacer()
             actionButtonsSection(maxWidth: maxWidth)
             cancelButtonSection(bottomPadding: bottomPadding, maxWidth: maxWidth)
         }
-        .padding(.horizontal, 48)
         .dynamicTypeSize(dynamicTypeRange)
+        .padding(.horizontal, 48)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(backgroundView)
         .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
@@ -74,7 +73,7 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
     private func headerSection(topSpacer: CGFloat, maxWidth: CGFloat) -> some View {
         VStack(spacing: 16) {
             Spacer()
-                .frame(height: topSpacer - 48)
+                .frame(height: max(topSpacer - 64, 0))
 
             headerIcon
             headerTitle(maxWidth: maxWidth)
@@ -104,8 +103,7 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
         Text(viewModel.descriptionText)
             .font(.text(.callout))
             .dynamicTypeSize(dynamicTypeRange)
-            .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
-            .opacity(0.5)
+            .foregroundColor(.from(.infoColor, viewModel.isDarkMode))
             .multilineTextAlignment(.center)
             .frame(maxWidth: maxWidth)
     }
@@ -114,7 +112,7 @@ struct ProtocolConnectionResultView: View, ResponsivePopupLayoutProvider {
     /// Success: Shows "Set as Preferred" button
     /// Failure: Shows "Send Debug Log" button with loading state
     private func actionButtonsSection(maxWidth: CGFloat) -> some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             // Set as Preferred button (shown for successful connections)
             if viewModel.showSetPreferredButton {
                 setPreferredButton(maxWidth: maxWidth)
