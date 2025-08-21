@@ -11,10 +11,13 @@ import SafariServices
 
 struct SafariView: UIViewControllerRepresentable {
     let url: URL
+    let isDarkMode: Bool
 
     func makeUIViewController(context: Context) -> SFSafariViewController {
         let safariVC = SFSafariViewController(url: url)
-        safariVC.preferredControlTintColor = .black
+        safariVC.preferredControlTintColor = .from(.iconColor, isDarkMode)
+        safariVC.preferredBarTintColor = .from(.backgroundColor, isDarkMode)
+
         return safariVC
     }
 

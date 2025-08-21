@@ -106,7 +106,7 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
             }
         }
         .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url)
+            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
         }
     }
 }

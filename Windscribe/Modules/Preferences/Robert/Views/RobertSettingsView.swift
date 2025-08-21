@@ -78,7 +78,7 @@ struct RobertSettingsView: View {
             }
         }
         .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url)
+            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
         }
         .navigationTitle(TextsAsset.Robert.title)
         .navigationBarTitleDisplayMode(.inline)
