@@ -83,7 +83,7 @@ struct NewsFeedView: View {
                     }
                 }
                 .sheet(item: $safariItem) { item in
-                    SafariView(url: item.url)
+                    SafariView(url: item.url, isDarkMode: viewModel.isDarkMode)
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationTitle(TextsAsset.NewsFeed.title)

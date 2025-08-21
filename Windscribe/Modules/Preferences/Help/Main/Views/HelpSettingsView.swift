@@ -48,7 +48,7 @@ struct HelpSettingsView: View {
                 dismissButton: .default(Text(alert.buttonText)))
         }
         .sheet(item: $viewModel.safariURL) { url in
-            SafariView(url: url)
+            SafariView(url: url, isDarkMode: viewModel.isDarkMode)
         }
         .onChange(of: viewModel.selectedRoute) { route in
             switch route {

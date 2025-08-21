@@ -130,7 +130,7 @@ struct LoginView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { loginToolbar() }
             .sheet(item: $safariURL) { url in
-                SafariView(url: url)
+                SafariView(url: url, isDarkMode: viewModel.isDarkMode)
             }
             .fullScreenCover(
                 isPresented: $router.shouldNavigateToRestrictiveNetwork,
