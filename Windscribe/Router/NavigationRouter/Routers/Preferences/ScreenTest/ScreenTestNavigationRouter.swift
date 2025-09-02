@@ -55,7 +55,13 @@ class ScreenTestNavigationRouter: BaseNavigationRouter {
             return AnyView(DeviceTypeProvider { pushNotificationView })
         case .shakeForData:
             let shakeForDataMainView = Assembler.resolve(ShakeForDataMainView.self)
-            return AnyView(DeviceTypeProvider { shakeForDataMainView })
+            return AnyView(DeviceTypeProvider {
+                NavigationView {
+                    shakeForDataMainView
+                        .navigationBarHidden(true)
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
+            })
         case .restrictiveNetwork:
             let restrictiveNetworkView = Assembler.resolve(RestrictiveNetworkView.self)
             return AnyView(DeviceTypeProvider { restrictiveNetworkView })

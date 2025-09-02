@@ -134,9 +134,12 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
 
     func reloadItems() {
         let isGhost = sessionManager.session?.isUserGhost ?? false
-        let baseCount = isGhost ? 8 : 9
-        let count = isScreenTestEnabled ? baseCount + 1 : baseCount
-        visibleItems = (0..<count).compactMap { PreferenceItemType(rawValue: $0) }
+        let count = isGhost ? 9 : 10
+        visibleItems = (0..<count).compactMap {
+            let item = PreferenceItemType(rawValue: $0)!
+            if item == .screenTest && !isScreenTestEnabled { return nil }
+            return item
+        }
     }
 
     func shouldHideRow(index: Int) -> Bool {
