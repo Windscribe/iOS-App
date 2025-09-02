@@ -15,6 +15,9 @@ protocol DebugLogViewModel: ObservableObject {
     var showProgress: Bool { get }
     var isDarkMode: Bool { get }
     var fontSize: CGFloat { get set }
+    var showShareSheet: Bool { get set }
+
+    func shareLog()
 }
 
 final class DebugLogViewModelImpl: DebugLogViewModel {
@@ -23,6 +26,7 @@ final class DebugLogViewModelImpl: DebugLogViewModel {
     @Published var isDarkMode: Bool = false
     @Published var fontSize: CGFloat = 10
     @Published var hasLoaded = false
+    @Published var showShareSheet: Bool = false
 
     let title = TextsAsset.Debug.viewLog
 
@@ -70,5 +74,9 @@ final class DebugLogViewModelImpl: DebugLogViewModel {
                 }
             }
         }
+    }
+
+    func shareLog() {
+        self.showShareSheet = true
     }
 }

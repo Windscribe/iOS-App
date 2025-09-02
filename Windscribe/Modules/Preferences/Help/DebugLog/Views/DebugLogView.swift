@@ -78,12 +78,15 @@ struct DebugLogView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
-                    shareLog()
+                    viewModel.shareLog()
                 },label: {
                     Image(systemName: "square.and.arrow.up")
                         .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                 })
             }
+        }
+        .sheet(isPresented: $viewModel.showShareSheet) {
+            ShareSheetView(items: [viewModel.logContent])
         }
     }
 
@@ -92,20 +95,6 @@ struct DebugLogView: View {
             withAnimation(.easeOut(duration: 0.25)) {
                 scrollProxy?.scrollTo(logID, anchor: .bottom)
             }
-        }
-    }
-
-    private func shareLog() {
-        let logText = viewModel.logContent
-        let activityVC = UIActivityViewController(activityItems: [logText], applicationActivities: nil)
-
-        if let scene = UIApplication.shared.connectedScenes
-            .filter({ $0.activationState == .foregroundActive })
-            .first as? UIWindowScene,
-           let rootVC = scene.windows
-            .first(where: { $0.isKeyWindow })?.rootViewController {
-
-            rootVC.present(activityVC, animated: true, completion: nil)
         }
     }
 }
