@@ -28,7 +28,8 @@ class ShakeForDataNavigationRouter: BaseNavigationRouter {
     }
 
     func navigate(to destination: Route) {
-        if let navVC = UIApplication.shared.topMostViewController()?.navigationController {
+        // Configure navigation items if we have a navigation controller
+        if let navVC = findNavigationController() {
             switch destination {
             case .shakeGame, .results:
                 navVC.navigationItem.backBarButtonItem = nil
@@ -37,6 +38,7 @@ class ShakeForDataNavigationRouter: BaseNavigationRouter {
                     UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             }
         }
+
         activeRoute = destination
     }
 
@@ -45,8 +47,29 @@ class ShakeForDataNavigationRouter: BaseNavigationRouter {
     }
 
     func dismiss() {
-        if let navVC = UIApplication.shared.topMostViewController()?.navigationController {
+        if let navVC = findNavigationController() {
             navVC.dismiss(animated: true)
+        } else if let topVC = UIApplication.shared.topMostViewController(), topVC.presentingViewController != nil {
+            topVC.dismiss(animated: true)
         }
+    }
+
+    // MARK: - Private Helper Methods
+
+    private func findNavigationController() -> UINavigationController? {
+        guard let topVC = UIApplication.shared.topMostViewController() else { return nil }
+
+        // First try the standard approach
+        if let navVC = topVC.navigationController {
+            return navVC
+        }
+
+        // If no navigation controller found, check if we're in a presented context (like fullScreenCover)
+        if let presentingVC = topVC.presentingViewController, let navVC = presentingVC.navigationController {
+            return navVC
+        }
+
+        // Last resort: check if the top view controller itself is a navigation controller
+        return topVC as? UINavigationController
     }
 }
