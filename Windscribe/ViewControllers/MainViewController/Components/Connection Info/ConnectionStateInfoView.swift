@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Combine
 
 protocol ConnectionStateInfoViewModelType {
     var statusSubject: BehaviorSubject<ConnectionState?> { get }
@@ -22,9 +23,10 @@ protocol ConnectionStateInfoViewModelType {
 class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let statusSubject = BehaviorSubject<ConnectionState?>(value: nil)
     let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: false)
-    let refreshProtocolSubject: BehaviorSubject<ProtocolPort?>
+    let refreshProtocolSubject = BehaviorSubject<ProtocolPort?>(value: ProtocolPort(DefaultValues.protocol, DefaultValues.port))
 
     let disposeBag = DisposeBag()
+    var cancellables = Set<AnyCancellable>()
 
     let locationsManager: LocationsManagerType
     let vpnManager: VPNManager
@@ -37,7 +39,6 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
         self.preferences = preferences
         self.vpnManager = vpnManager
         self.protocolManager = protocolManager
-        refreshProtocolSubject = protocolManager.currentProtocolSubject
 
         vpnManager.getStatus().subscribe(onNext: { state in
             self.statusSubject.onNext(ConnectionState.state(from: state))
@@ -45,6 +46,13 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
         preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
             self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
+
+
+        // This is after the passing of RxSwift to Combine
+        protocolManager.currentProtocolSubject.sink { [weak self] data in
+            self?.refreshProtocolSubject.onNext(data)
+        }.store(in: &cancellables)
+
     }
 
     var isCustomConfigSelected: Bool {

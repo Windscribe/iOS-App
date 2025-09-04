@@ -8,7 +8,6 @@
 
 import Foundation
 import NetworkExtension
-import RxSwift
 import Swinject
 import Combine
 
@@ -16,12 +15,12 @@ protocol ProtocolManagerType {
     var goodProtocol: ProtocolPort? { get set }
     var resetGoodProtocolTime: Date? { get set }
 
-    var currentProtocolSubject: BehaviorSubject<ProtocolPort?> { get }
-    var connectionProtocolSubject: BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?> { get }
-    var showProtocolSwitchTrigger: PublishSubject<Void> { get }
-    var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
+    var currentProtocolSubject: CurrentValueSubject<ProtocolPort?, Never> { get }
+    var connectionProtocolSubject: CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never> { get }
+    var showProtocolSwitchTrigger: PassthroughSubject<Void, Never> { get }
+    var showAllProtocolsFailedTrigger: PassthroughSubject<Void, Never> { get }
 
-    var displayProtocolsSubject: BehaviorSubject<[DisplayProtocolPort]> { get }
+    var displayProtocolsSubject: CurrentValueSubject<[DisplayProtocolPort], Never> { get }
 
     var failOverTimerCompletedSubject: PassthroughSubject<Void, Never> { get }
 
@@ -40,7 +39,7 @@ protocol ProtocolManagerType {
 
 class ProtocolManager: ProtocolManagerType {
     private let logger: FileLogger
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private let connectivity: Connectivity
     private let localDatabase: LocalDatabase
     private let securedNetwork: SecuredNetworkRepository
@@ -62,7 +61,7 @@ class ProtocolManager: ProtocolManagerType {
     /// List of Protocols in ordered by priority
     private(set) var protocolsToConnectList: [DisplayProtocolPort] = [] {
         didSet {
-            displayProtocolsSubject.onNext(protocolsToConnectList)
+            displayProtocolsSubject.send(protocolsToConnectList)
         }
     }
     /// App selected this protocol automatcally or user selected it
@@ -77,11 +76,11 @@ class ProtocolManager: ProtocolManagerType {
     var manualPort: String = DefaultValues.port
     var connectionMode = DefaultValues.connectionMode
 
-    let currentProtocolSubject = BehaviorSubject<ProtocolPort?>(value: nil)
-    let connectionProtocolSubject = BehaviorSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?>(value: nil)
-    let displayProtocolsSubject = BehaviorSubject<[DisplayProtocolPort]>(value: [])
-    let showProtocolSwitchTrigger = PublishSubject<Void>()
-    let showAllProtocolsFailedTrigger = PublishSubject<Void>()
+    let currentProtocolSubject = CurrentValueSubject<ProtocolPort?, Never>(nil)
+    let connectionProtocolSubject = CurrentValueSubject<(protocolPort: ProtocolPort, connectionType: ConnectionType)?, Never>(nil)
+    let displayProtocolsSubject = CurrentValueSubject<[DisplayProtocolPort], Never>([])
+    let showProtocolSwitchTrigger = PassthroughSubject<Void, Never>()
+    let showAllProtocolsFailedTrigger = PassthroughSubject<Void, Never>()
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
@@ -100,36 +99,70 @@ class ProtocolManager: ProtocolManagerType {
     }
 
     func bindData() {
-        preferences.getConnectionMode().subscribe(onNext: { [weak self] mode in
-            self?.connectionMode = mode ?? DefaultValues.connectionMode
-        }).disposed(by: disposeBag)
+        preferences.getConnectionMode()
+            .toPublisher(initialValue: DefaultValues.connectionMode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ProtocolManager", "Connection Mode error: \(error)")
+                }
+            }, receiveValue: { [weak self] mode in
+                self?.connectionMode = mode ?? DefaultValues.connectionMode
+            })
+            .store(in: &cancellables)
 
-        preferences.getSelectedProtocol().subscribe(onNext: { [weak self] proto in
-            self?.manualProtocol = proto ?? DefaultValues.protocol
-        }).disposed(by: disposeBag)
+        preferences.getSelectedProtocol()
+            .toPublisher(initialValue: DefaultValues.protocol)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ProtocolManager", "Preferred Protocol error: \(error)")
+                }
+            }, receiveValue: { [weak self] preferredProtocol in
+                self?.manualProtocol = preferredProtocol ?? DefaultValues.protocol
+            })
+            .store(in: &cancellables)
 
-        preferences.getSelectedPort().subscribe(onNext: { [weak self] port in
-            self?.manualPort = port ?? DefaultValues.port
-        }).disposed(by: disposeBag)
+        preferences.getSelectedPort()
+            .toPublisher(initialValue: DefaultValues.port)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ProtocolManager", "Preferred Port error: \(error)")
+                }
+            }, receiveValue: { [weak self] preferredPort in
+                self?.manualPort = preferredPort ?? DefaultValues.port
+            })
+            .store(in: &cancellables)
 
-        connectivity.network.debounce(.milliseconds(500), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] _ in
-            Task { @MainActor in
-                await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
-            }
-        }).disposed(by: disposeBag)
+        connectivity.network
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ProtocolManager", "Connectivity Network error: \(error)")
+                }
+            }, receiveValue: { [weak self] network in
+                Task { @MainActor in
+                    await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
+                }
+            })
+            .store(in: &cancellables)
 
-        securedNetwork.networks.subscribe(onNext: { [weak self] networks in
-            guard let self = self else { return }
-            guard !networks.isEmpty else {
-                self.logger.logD("ProtocolManager", "Networks Empty")
-                return
-            }
-            Task { @MainActor in
-                self.logger.logD("ProtocolManager", "Secured Networks : \(networks)")
-                await self.refreshProtocols(shouldReset: false, shouldReconnect: false)
-            }
-        }).disposed(by: disposeBag)
+        securedNetwork.networks
+            .asPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("ProtocolManager", "SecuredNetworks Network error: \(error)")
+                }
+            }, receiveValue: { [weak self] network in
+                Task { @MainActor in
+                    self?.logger.logD("ProtocolManager", "Secured Networks : \(network)")
+                    await self?.refreshProtocols(shouldReset: false, shouldReconnect: false)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: - Actions
@@ -194,12 +227,12 @@ class ProtocolManager: ProtocolManagerType {
 
         let locationID = locationManager.getId()
         if !locationID.isEmpty,
-            let locationType = locationManager.getLocationType(),
-            locationType == .custom,
-            let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(),
-            let protocolName = config.protocolType, let portName = config.port {
-                appendPort(proto: protocolName, port: portName)
-                setPriority(proto: protocolName, type: .normal)
+           let locationType = locationManager.getLocationType(),
+           locationType == .custom,
+           let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel(),
+           let protocolName = config.protocolType, let portName = config.port {
+            appendPort(proto: protocolName, port: portName)
+            setPriority(proto: protocolName, type: .normal)
         }
 
         if !isFromFailover, !shouldReconnect,
@@ -213,9 +246,9 @@ class ProtocolManager: ProtocolManagerType {
         logger.logI("ProtocolManager", log)
 
         let firstProtocol = getFirstProtocol()
-        displayProtocolsSubject.onNext(protocolsToConnectList)
-        currentProtocolSubject.onNext(firstProtocol)
-        connectionProtocolSubject.onNext(shouldReconnect ? (protocolPort: firstProtocol, connectionType: .user) : nil)
+        displayProtocolsSubject.send(protocolsToConnectList)
+        currentProtocolSubject.send(firstProtocol)
+        connectionProtocolSubject.send(shouldReconnect ? (protocolPort: firstProtocol, connectionType: .user) : nil)
     }
 
     func getRefreshedProtocols() async -> [DisplayProtocolPort] {
@@ -272,8 +305,8 @@ class ProtocolManager: ProtocolManagerType {
         userSelected = proto
         setPriority(proto: proto.protocolName)
         let firstProtocol = getFirstProtocol()
-        currentProtocolSubject.onNext(firstProtocol)
-        connectionProtocolSubject.onNext((protocolPort: firstProtocol, connectionType: connectionType))
+        currentProtocolSubject.send(firstProtocol)
+        connectionProtocolSubject.send((protocolPort: firstProtocol, connectionType: connectionType))
     }
 
     /// Resetting good Protocol after 12 hours(43200 seconds).
@@ -299,12 +332,12 @@ class ProtocolManager: ProtocolManagerType {
         if protocolsToConnectList.filter({ $0.viewType != .fail}).count <= 0 {
             logger.logI("ProtocolManager", "No more protocol left to connect.")
             await reset()
-            showAllProtocolsFailedTrigger.onNext(())
+            showAllProtocolsFailedTrigger.send(())
         } else {
             await refreshProtocols(shouldReset: false, shouldReconnect: false, isFromFailover: true)
             startCountdownTimer()
         }
-        currentProtocolSubject.onNext(getFirstProtocol())
+        currentProtocolSubject.send(getFirstProtocol())
     }
 
     func scheduleTimer() {
@@ -404,7 +437,7 @@ extension ProtocolManager {
             self.countdownTimer?.resume()
 
             // Trigger subjects
-            self.showProtocolSwitchTrigger.onNext(())
+            self.showProtocolSwitchTrigger.send(())
         }
     }
 

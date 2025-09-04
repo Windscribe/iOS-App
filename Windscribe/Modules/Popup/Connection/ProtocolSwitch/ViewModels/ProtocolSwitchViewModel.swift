@@ -78,17 +78,11 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
             .store(in: &cancellables)
 
         protocolManager.displayProtocolsSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ProtocolSwitchViewModel", "Display Protocols error: \(error)")
-                }
-            }, receiveValue: { [weak self] displayProtocols in
+            .sink { [weak self] displayProtocols in
                 guard !displayProtocols.isEmpty  else { return }
                 self?.updateDisplayProtocols(displayProtocols)
-
-            })
+            }
             .store(in: &cancellables)
 
         // Protocol selection reactive handling
