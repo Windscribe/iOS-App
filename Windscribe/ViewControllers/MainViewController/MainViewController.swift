@@ -197,15 +197,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     func showPrivacyConfirmationPopup(willConnectOnAccepting: Bool = false) {
         if willConnectOnAccepting {
             // Observe privacy acceptance through the state manager
-            let privacyStateManager = Assembler.resolve(PrivacyStateManaging.self)
-
-            privacyStateManager.privacyAcceptedSubject
-                .take(1) // Only take the first acceptance
-                .observe(on: MainScheduler.instance)
-                .subscribe(onNext: { [weak self] _ in
-                    self?.enableVPNConnection()
-                })
-                .disposed(by: disposeBag)
+            vpnConnectionViewModel.checkForPrivacyConsent()
         }
 
         popupRouter?.routeTo(to: .privacyView, from: self)
