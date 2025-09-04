@@ -108,6 +108,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var currentNetwork: AppNetwork?
     private var currentWifiAutoSecured = false
     private var currentConnectionType: ConnectionType = .user
+    private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -203,11 +204,11 @@ class ConnectionViewModel: ConnectionViewModelType {
             }).disposed(by: disposeBag)
 
         appReviewManager.reviewRequestTrigger
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
                 self?.reviewRequestTrigger.onNext(())
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 }
 

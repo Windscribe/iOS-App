@@ -7,14 +7,14 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol AppReviewManaging {
     var preferences: Preferences { get }
     var localDatabase: LocalDatabase { get }
     var logger: FileLogger { get }
 
-    var reviewRequestTrigger: PublishSubject<Void> { get }
+    var reviewRequestTrigger: PassthroughSubject<Void, Never> { get }
 
     func requestReviewIfAvailable(session: Session?)
     func promptReviewWithConfirmation()

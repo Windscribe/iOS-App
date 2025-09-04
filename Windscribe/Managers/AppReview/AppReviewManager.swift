@@ -8,7 +8,7 @@
 
 import Combine
 import Foundation
-import RxSwift
+import Combine
 import StoreKit
 
 class AppReviewManager: AppReviewManaging {
@@ -26,7 +26,7 @@ class AppReviewManager: AppReviewManaging {
     let logger: FileLogger
     var reviewCriteria: [AppReviewCriteriaType]
     private var cancellables = Set<AnyCancellable>()
-    let reviewRequestTrigger = PublishSubject<Void>()
+    let reviewRequestTrigger = PassthroughSubject<Void, Never>()
 
     init (preferences: Preferences, localDatabase: LocalDatabase, logger: FileLogger) {
         self.preferences = preferences
@@ -232,7 +232,7 @@ extension AppReviewManager {
     }
 
     internal func promptReviewWithConfirmation() {
-         reviewRequestTrigger.onNext(())
+         reviewRequestTrigger.send(())
      }
 
     func openAppStoreForReview() {
