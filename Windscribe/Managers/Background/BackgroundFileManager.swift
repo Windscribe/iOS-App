@@ -7,18 +7,13 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol BackgroundFileManaging {
-    var backgroundFileSavedSubject: PublishSubject<Void> { get }
-
     func saveImageFile(from sourceURL: URL, for domain: BackgroundAssetDomainType, completion: @escaping (URL?) -> Void)
     func getImageURL(for domain: BackgroundAssetDomainType) -> URL?
 }
 
 final class BackgroundFileManager: BackgroundFileManaging {
-    let backgroundFileSavedSubject = PublishSubject<Void>()
-
     let logger: FileLogger
 
     init(logger: FileLogger) {
@@ -67,7 +62,6 @@ final class BackgroundFileManager: BackgroundFileManaging {
                 DispatchQueue.main.async {
                     completion(destinationURL)
                 }
-                self.backgroundFileSavedSubject.onNext(())
             } catch {
                 self.logger.logE("SoundFileManager", "CopyItem error: \(error)")
 
