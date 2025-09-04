@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 import StoreKit
 
 protocol MainViewModelType {
@@ -104,8 +105,8 @@ class MainViewModel: MainViewModelType {
     let showNotificationsTrigger: PublishSubject<Void>
     let becameActiveTrigger: PublishSubject<Void>
     let updateSSIDTrigger = PublishSubject<Void>()
-    let showProtocolSwitchTrigger: PublishSubject<Void>
-    let showAllProtocolsFailedTrigger: PublishSubject<Void>
+    let showProtocolSwitchTrigger = PublishSubject<Void>()
+    let showAllProtocolsFailedTrigger = PublishSubject<Void>()
 
     var oldSession: OldSession? { localDatabase.getOldSession() }
 
@@ -116,6 +117,8 @@ class MainViewModel: MainViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
 
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
+
     init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepository: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType, protocolManager: ProtocolManagerType) {
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
@@ -137,8 +140,6 @@ class MainViewModel: MainViewModelType {
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
         becameActiveTrigger = livecycleManager.becameActiveTrigger
-        showProtocolSwitchTrigger = protocolManager.showProtocolSwitchTrigger
-        showAllProtocolsFailedTrigger = protocolManager.showAllProtocolsFailedTrigger
 
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadNotifications()
@@ -173,6 +174,19 @@ class MainViewModel: MainViewModelType {
             guard let self = self else { return }
             self.serverList.onNext(data)
         }, onError: { _ in }).disposed(by: disposeBag)
+
+        protocolManager.showProtocolSwitchTrigger
+            .sink { [weak self] _ in
+                self?.showProtocolSwitchTrigger.onNext(())
+            }
+            .store(in: &cancellables)
+
+        protocolManager.showAllProtocolsFailedTrigger
+            .sink { [weak self] _ in
+                self?.showAllProtocolsFailedTrigger.onNext(())
+            }
+            .store(in: &cancellables)
+
     }
 
     private func observeWifiNetwork() {

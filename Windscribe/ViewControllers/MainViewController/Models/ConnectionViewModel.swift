@@ -86,8 +86,12 @@ class ConnectionViewModel: ConnectionViewModelType {
     let reloadLocationsTrigger = PublishSubject<String>()
     let reviewRequestTrigger = PublishSubject<Void>()
     let showPreferredProtocolView = PublishSubject<String>()
+    
+    let combineVpnInfo = PassthroughSubject<VPNConnectionInfo?, Never>()
 
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
+
     let vpnManager: VPNManager
     let logger: FileLogger
     let apiManager: APIManager
@@ -110,7 +114,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var currentNetwork: AppNetwork?
     private var currentWifiAutoSecured = false
     private var currentConnectionType: ConnectionType = .user
-    private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -143,13 +146,17 @@ class ConnectionViewModel: ConnectionViewModelType {
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
+        vpnManager.vpnInfo.subscribe(onNext: { [weak self] vpnInfo in
+            self?.combineVpnInfo.send(vpnInfo)
+        }).disposed(by: disposeBag)
+        
         vpnManager.getStatus().subscribe(onNext: { state in
             self.updateState(with: ConnectionState.state(from: state))
             self.saveDataForWidget()
         }).disposed(by: disposeBag)
-
-        Observable.combineLatest(vpnManager.vpnInfo, protocolManager.currentProtocolSubject)
-            .bind { [weak self] (info, nextProtocol) in
+        
+        Publishers.CombineLatest(combineVpnInfo, protocolManager.currentProtocolSubject)
+            .sink { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
                     self.selectedProtoPort.onNext(protocolManager.getProtocol())
@@ -158,10 +165,11 @@ class ConnectionViewModel: ConnectionViewModelType {
                 } else if let nextProtocol = nextProtocol {
                     self.selectedProtoPort.onNext(nextProtocol)
                 }
-            }.disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         protocolManager.connectionProtocolSubject
-            .subscribe { [weak self] value in
+            .sink { [weak self] value in
                 guard let self = self, let value = value else { return }
                 // Only block if actually connected, not just matching protocol
                 if let info = try? vpnManager.vpnInfo.value(),
@@ -170,7 +178,8 @@ class ConnectionViewModel: ConnectionViewModelType {
                     return
                 }
                 self.enableConnection(connectionType: value.connectionType)
-            }.disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
 
         locationsManager.selectedLocationUpdatedSubject.subscribe { canReconnect in
             let locationID = locationsManager.getLastSelectedLocation()
