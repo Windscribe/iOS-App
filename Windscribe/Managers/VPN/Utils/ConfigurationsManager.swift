@@ -8,7 +8,7 @@
 
 import Foundation
 import NetworkExtension
-import RxSwift
+import Combine
 import Swinject
 
 protocol ConfigurationsManagerDelegate: AnyObject {
@@ -34,8 +34,8 @@ class ConfigurationsManager {
     weak var delegate: ConfigurationsManagerDelegate?
 
     var managers: [NEVPNManager] = []
-    var reloadManagersTrigger = BehaviorSubject<Void>(value: ())
-    var disposeBag = DisposeBag()
+    var reloadManagersTrigger = PassthroughSubject<Void, Never>()
+    var cancellables = Set<AnyCancellable>()
 
     /// Wait for disconnect event after manager is disabled.
     let disconnectWaitTimeout = 5.0
@@ -108,11 +108,11 @@ class ConfigurationsManager {
     }
 
     private func load() {
-        reloadManagersTrigger.subscribe { [weak self] _ in
+        reloadManagersTrigger.sink { [weak self] _ in
             Task {
                 await self?.reloadManagers()
             }
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func reloadManagers() async {
@@ -157,13 +157,13 @@ class ConfigurationsManager {
     func remove(manager: NEVPNManager) async {
         try? await manager.removeFromPreferences()
         try? await manager.loadFromPreferences()
-        reloadManagersTrigger.onNext(())
+        reloadManagersTrigger.send(())
     }
 
     func saveToPreferences(manager: NEVPNManager) async throws {
         try await manager.saveToPreferences()
         try await manager.loadFromPreferences()
-        reloadManagersTrigger.onNext(())
+        reloadManagersTrigger.send(())
     }
 
     func isIKEV2(manager: NEVPNManager) -> Bool {
