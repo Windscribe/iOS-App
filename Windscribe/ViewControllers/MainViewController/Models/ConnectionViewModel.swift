@@ -54,6 +54,7 @@ protocol ConnectionViewModelType {
     func updateLoadLatencyValuesOnDisconnect(with value: Bool)
     func displayLocalIPAddress()
     func checkForForceDisconnect()
+    func checkForPrivacyConsent()
 
     // Info
     func getSelectedCountryCode() -> String
@@ -101,6 +102,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let localDB: LocalDatabase
     let appReviewManager: AppReviewManaging
     let customSoundPlaybackManager: CustomSoundPlaybackManaging
+    let privacyStateManager: PrivacyStateManaging
 
     private var connectionTaskPublisher: AnyCancellable?
     private var gettingIpAddress = false
@@ -108,6 +110,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var currentNetwork: AppNetwork?
     private var currentWifiAutoSecured = false
     private var currentConnectionType: ConnectionType = .user
+    private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          apiManager: APIManager,
@@ -121,7 +124,8 @@ class ConnectionViewModel: ConnectionViewModelType {
          credentialsRepository: CredentialsRepository,
          ipRepository: IPRepository,
          localDB: LocalDatabase,
-         customSoundPlaybackManager: CustomSoundPlaybackManaging) {
+         customSoundPlaybackManager: CustomSoundPlaybackManaging,
+         privacyStateManager: PrivacyStateManaging) {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
@@ -135,6 +139,8 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.credentialsRepository = credentialsRepository
         self.localDB = localDB
         self.customSoundPlaybackManager = customSoundPlaybackManager
+        self.privacyStateManager = privacyStateManager
+
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
         vpnManager.getStatus().subscribe(onNext: { state in
@@ -595,6 +601,16 @@ extension ConnectionViewModel {
                                                   internetConnectionAvailable: false,
                                                   connectedWifi: nil))
 
+    }
+
+    func checkForPrivacyConsent() {
+        privacyStateManager.privacyAcceptedSubject
+            .prefix(1) // Only take the first acceptance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.enableConnection()
+            }
+            .store(in: &cancellables)
     }
 
     private func checkCanPlayDisconnectedSound() -> Bool {

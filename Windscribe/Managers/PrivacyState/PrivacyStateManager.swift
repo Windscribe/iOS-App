@@ -7,16 +7,16 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol PrivacyStateManaging {
-    var privacyAcceptedSubject: PublishSubject<Void> { get }
+    var privacyAcceptedSubject: PassthroughSubject<Void, Never> { get }
 
     func notifyPrivacyAccepted()
 }
 
 class PrivacyStateManager: PrivacyStateManaging {
-    let privacyAcceptedSubject = PublishSubject<Void>()
+    let privacyAcceptedSubject = PassthroughSubject<Void, Never>()
 
     private let logger: FileLogger
 
@@ -26,6 +26,6 @@ class PrivacyStateManager: PrivacyStateManaging {
 
     func notifyPrivacyAccepted() {
         logger.logI("PrivacyStateManager", "Privacy acceptance notification sent")
-        privacyAcceptedSubject.onNext(())
+        privacyAcceptedSubject.send(())
     }
 }

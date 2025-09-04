@@ -326,7 +326,8 @@ class ViewModels: Assembly {
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
                                 ipRepository: r.resolve(IPRepository.self)!,
                                 localDB: r.resolve(LocalDatabase.self)!,
-                                customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!)
+                                customSoundPlaybackManager: r.resolve(CustomSoundPlaybackManaging.self)!,
+                                privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
         container.register(ListSelectionViewModelType.self) { r in
             ListSelectionViewModel(
