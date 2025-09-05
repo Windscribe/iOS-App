@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Combine
 
 struct BackgroundInfoModel {
     let image: UIImage?
@@ -33,6 +34,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     var currentCountry: String = ""
 
     private var isConnected = false
+    private var cancellables = Set<AnyCancellable>()
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          locationsManager: LocationsManagerType,
@@ -52,11 +54,13 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             self.updateBackgroundImage(isConnected: self.isConnected)
         }).disposed(by: disposeBag)
 
-        vpnManager.getStatus().subscribe(onNext: { [weak self] state in
-            guard let self = self else { return }
-            self.isConnected = state == .connected
-            self.updateBackgroundImage(isConnected: self.isConnected)
-        }).disposed(by: disposeBag)
+        vpnManager.getStatus()
+            .sink { [weak self] state in
+                guard let self = self else { return }
+                self.isConnected = state == .connected
+                self.updateBackgroundImage(isConnected: self.isConnected)
+            }
+            .store(in: &cancellables)
     }
 
     private func updateBackgroundImage(isConnected: Bool) {

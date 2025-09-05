@@ -72,7 +72,7 @@ class LivecycleManager: LivecycleManagerType {
 
     private func checkForKillSwitch() {
         vpnManager.configureForConnectionState()
-        let info = try? vpnManager.vpnInfo.value()
+        let info = vpnManager.vpnInfo.value
         if connectivity.internetConnectionAvailable() {
             if info?.killSwitch == true && vpnManager.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
                 logger.logI("LivecycleManager", "VPN disocnnected, Turning off kill switch.")

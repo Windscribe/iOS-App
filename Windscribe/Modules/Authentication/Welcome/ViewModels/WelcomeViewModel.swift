@@ -145,12 +145,11 @@ class WelcomeViewModelImpl: WelcomeViewModel {
 
     private func listenForVPNStateChange() {
         vpnManager.vpnInfo
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] vpnInfo in
+            .sink { [weak self] vpnInfo in
                 guard let self = self else { return }
                 self.emergencyConnectStatus = vpnInfo?.status == .connected
-            })
+            }
             .store(in: &cancellables)
     }
 
