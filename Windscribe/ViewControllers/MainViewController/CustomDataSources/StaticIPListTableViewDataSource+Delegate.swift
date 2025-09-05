@@ -106,7 +106,7 @@ class StaticIPListTableViewDataSource: WSTableViewDataSource, UITableViewDataSou
 
     func tableView(_: UITableView, willDisplay _: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == 0 && scrollHappened {
-            HapticFeedbackGenerator.shared.run(level: .light)
+            viewModel.runHapticFeedback(level: .light)
         }
     }
 }

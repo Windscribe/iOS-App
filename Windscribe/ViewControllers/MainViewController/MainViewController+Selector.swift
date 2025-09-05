@@ -241,7 +241,7 @@ extension MainViewController {
     }
 
     func connectButtonTapped() {
-        HapticFeedbackGenerator.shared.run(level: .medium)
+        viewModel.runHapticFeedback(level: .medium)
         if vpnConnectionViewModel.isDisconnected() || vpnConnectionViewModel.isDisconnecting() {
             logger.logI("MainViewController", "User tapped to connect.")
 
@@ -302,7 +302,7 @@ extension MainViewController {
 
     func logoButtonTapped() {
         logger.logD("MainViewController", "User tapped to view Preferences view.")
-        //  HapticFeedbackGenerator.shared.run(level: .medium)
+        // viewModel.runHapticFeedback(level: .medium)
         router?.routeTo(to: RouteID.mainMenu, from: self)
     }
 

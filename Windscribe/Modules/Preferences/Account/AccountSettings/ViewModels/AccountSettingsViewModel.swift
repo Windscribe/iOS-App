@@ -10,8 +10,7 @@ import Foundation
 import Combine
 import RxSwift
 
-protocol AccountSettingsViewModel: ObservableObject {
-    var isDarkMode: Bool { get }
+protocol AccountSettingsViewModel: PreferencesBaseViewModel {
     var sections: [AccountSectionModel] { get }
     var loadingState: AccountState { get }
 
@@ -19,25 +18,19 @@ protocol AccountSettingsViewModel: ObservableObject {
     func handleRowAction(_ action: AccountRowAction)
 }
 
-final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
-
-    @Published var isDarkMode: Bool = false
+final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountSettingsViewModel {
     @Published var sections: [AccountSectionModel] = []
     @Published var loadingState: AccountState = .initial
     @Published var activeDialog: AccountDialogType?
     @Published var alertMessage: AccountSettingsAlertContent?
     @Published private(set) var accountEmailStatus: AccountEmailStatusType = .unknown
 
-    private var cancellables = Set<AnyCancellable>()
-
     // Dependencies
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
     private let sessionManager: SessionManaging
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
-    private let logger: FileLogger
 
     private let disposeBag = DisposeBag()
 
@@ -58,29 +51,21 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
          apiManager: APIManager,
          localDatabase: LocalDatabase,
          languageManager: LanguageManager,
-         logger: FileLogger) {
-        self.lookAndFeelRepository = lookAndFeelRepository
+         logger: FileLogger,
+         hapticFeedbackManager: HapticFeedbackManager) {
         self.preferences = preferences
         self.sessionManager = sessionManager
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.languageManager = languageManager
-        self.logger = logger
 
-        bindSubjects()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
     }
 
-    private func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("AccountViewModel", "Theme Adjustment Change: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         NotificationCenter.default.publisher(for: Notifications.sessionUpdated)
             .receive(on: DispatchQueue.main)
@@ -91,6 +76,8 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             }
             .store(in: &cancellables)
     }
+
+    override func reloadItems() { }
 
     func loadSession() {
         loadingState = .loading(isFullScreen: true)
@@ -214,6 +201,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
         if action == .resendEmail {
             resendConfirmationEmail()
         }
+        actionSelected()
     }
 
     private func resendConfirmationEmail() {

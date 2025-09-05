@@ -97,7 +97,7 @@ struct PreferencesMainCategoryView: View {
             }
         }
         .onWillDisappear {
-            HapticFeedbackGenerator.shared.run(level: .medium)
+            viewModel.actionSelected()
         }
     }
 

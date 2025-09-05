@@ -21,8 +21,7 @@ enum RobertEntryType: MenuEntryHeaderType, Hashable, Equatable {
     var icon: String { "" }
 }
 
-protocol RobertSettingsViewModel: ObservableObject {
-    var isDarkMode: Bool { get set }
+protocol RobertSettingsViewModel: PreferencesBaseViewModel {
     var description: AttributedString { get set }
     var errorMessage: String? { get set }
     var safariURL: URL? { get }
@@ -34,8 +33,7 @@ protocol RobertSettingsViewModel: ObservableObject {
     func customRulesSelected()
 }
 
-final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
-    @Published var isDarkMode: Bool = false
+final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSettingsViewModel {
     @Published var description: AttributedString = AttributedString("")
     @Published var errorMessage: String?
     @Published var safariURL: URL?
@@ -43,27 +41,26 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     @Published var customRulesEntry: RobertEntryType = .customRules
     @Published var isLoading: Bool = false
 
-    private let logger: FileLogger
     private let apiManager: APIManager
     private let localDB: LocalDatabase
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
 
     private let disposeBag = DisposeBag()
 
-    private var cancellables = Set<AnyCancellable>()
     private var robertFilters: RobertFilters?
 
     init(logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          apiManager: APIManager,
-         localDB: LocalDatabase,
-         lookAndFeelRepository: LookAndFeelRepositoryType) {
-        self.logger = logger
+         localDB: LocalDatabase) {
         self.apiManager = apiManager
         self.localDB = localDB
-        self.lookAndFeelRepository = lookAndFeelRepository
 
         entries = localDB.getRobertFilters()?.getRules() ?? []
-        bindSubjects()
+
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
 
         description = AttributedString(TextsAsset.Robert.description
                                        + " "
@@ -74,19 +71,8 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
         }
     }
 
-    func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("RobertSettingsViewModel", "Theme Adjustment Change error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-                self?.reloadEntries()
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         apiManager.getRobertFilters()
             .asPublisher()
@@ -112,17 +98,19 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
                 guard let self = self else { return }
                 self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
                 self.robertFilters = robertFilters
-                self.reloadEntries()
+                self.reloadItems()
             })
             .store(in: &cancellables)
     }
 
-    private func reloadEntries() {
+    override func reloadItems() {
         guard let robertFilters = robertFilters else { return }
         entries = robertFilters.getRules()
     }
 
     func filterSelected(_ filter: RobertFilter) {
+        actionSelected()
+
         let status: Int32 = filter.enabled ? 0 : 1
         isLoading = true
 
@@ -184,6 +172,8 @@ final class RobertSettingsViewModelImpl: RobertSettingsViewModel {
     }
 
     func customRulesSelected() {
+        actionSelected()
+
         logger.logI("RobertSettingsViewModelImpl", "User tapped custom rules button.")
         apiManager.getWebSession()
             .asPublisher()

@@ -62,32 +62,27 @@ enum LookAndFeelImportAlertType {
     }
 }
 
-protocol LookAndFeelSettingsViewModel: ObservableObject {
+protocol LookAndFeelSettingsViewModel: PreferencesBaseViewModel {
     var isImporterPresented: Bool { get set }
-    var isDarkMode: Bool { get set }
     var showAlert: Bool { get set }
     var alertType: LookAndFeelImportAlertType { get set }
     var entries: [LookAndFeelEntryType] { get set }
 
     func entrySelected(_ entry: LookAndFeelEntryType,
-                       actionSelected: MenuEntryActionResponseType)
+                       action: MenuEntryActionResponseType)
 }
 
-final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
+final class LookAndFeelSettingsViewModelImpl: PreferencesBaseViewModelImpl, LookAndFeelSettingsViewModel {
     @Published var isImporterPresented: Bool = false
-    @Published var isDarkMode: Bool = false
     @Published var alertType: LookAndFeelImportAlertType = .empty
     @Published var showAlert: Bool = false
     @Published var entries: [LookAndFeelEntryType] = []
 
-    private let logger: FileLogger
     private let preferences: Preferences
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let backgroundFileManager: BackgroundFileManaging
     private let soundFileManager: SoundFileManaging
     private let serverRepository: ServerRepository
 
-    private var cancellables = Set<AnyCancellable>()
     private var appearance: String = ""
     private var aspectRatio: BackgroundAspectRatioType = .stretch
     private var backgroundConnect: BackgroundEffectType = .flag
@@ -95,40 +90,30 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
     private var soundEffectConnect: SoundEffectType = .none
     private var soundEffectDisconnect: SoundEffectType = .none
     private var serverDocumentInfo: DocumentFormatInfo?
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
          backgroundFileManager: BackgroundFileManaging,
          soundFileManager: SoundFileManaging,
          serverRepository: ServerRepository) {
-        self.logger = logger
-        self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
         self.backgroundFileManager = backgroundFileManager
         self.soundFileManager = soundFileManager
         self.serverRepository = serverRepository
+        self.lookAndFeelRepository = lookAndFeelRepository
 
-        bindSubjects()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
+
         serverDocumentInfo = getServersDocumentFormatInfo()
-        reloadItems()
     }
 
-    func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("LookAndFeelSettingsViewModel", "darkTheme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                guard let self = self else { return }
-                self.isDarkMode = isDark
-                self.appearance = isDark ? DefaultValues.appearance.localized : TextsAsset.lightAppearance
-                self.reloadItems()
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         if let soundConnectRaw = preferences.getSoundEffectConnect() {
             soundEffectConnect = SoundEffectType.fromRaw(value: soundConnectRaw)
@@ -141,7 +126,9 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
         backgroundDisconnect = lookAndFeelRepository.backgroundEffectDisconnect
     }
 
-    private func reloadItems() {
+    override func reloadItems() {
+        appearance = isDarkMode ? DefaultValues.appearance.localized : TextsAsset.lightAppearance
+
         entries = [
             .appearance(currentOption: appearance),
             .background(ratio: aspectRatio,
@@ -162,15 +149,16 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
         return URL(fileURLWithPath: longPath).lastPathComponent
     }
 
-    func entrySelected(_ entry: LookAndFeelEntryType,
-                       actionSelected: MenuEntryActionResponseType) {
+    func entrySelected(_ entry: LookAndFeelEntryType, action: MenuEntryActionResponseType) {
+        actionSelected(action)
+
         switch entry {
         case .appearance:
-            if case let .multiple(newOption, _) = actionSelected {
+            if case let .multiple(newOption, _) = action {
                 preferences.saveDarkMode(darkMode: newOption == DefaultValues.appearance)
             }
         case .background:
-            if case let .multiple(newOption, parentId) = actionSelected {
+            if case let .multiple(newOption, parentId) = action {
                 if parentId == LookAndFeelSecondaryEntryIDs.backgroundRatio.id {
                     aspectRatio = BackgroundAspectRatioType(aspectRatioType: newOption)
                     lookAndFeelRepository.updateBackgroundCustomAspectRatio(aspectRatio: aspectRatio)
@@ -189,7 +177,7 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                     backgroundDisconnect = BackgroundEffectType.bundled(subtype: subtype)
                     lookAndFeelRepository.updateBackgroundEffectDisconnect(effect: backgroundDisconnect)
                 }
-            } else if case let .file(selecteURL, parentId) = actionSelected {
+            } else if case let .file(selecteURL, parentId) = action {
                 guard let selecteURL = selecteURL else {
 
                     return
@@ -201,7 +189,7 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                 }
             }
         case .sound:
-            if case let .multiple(newOption, parentId) = actionSelected {
+            if case let .multiple(newOption, parentId) = action {
                 if parentId == LookAndFeelSecondaryEntryIDs.soundConnected.id {
                     let subType = getSoundEffectSubType(from: newOption)
                     soundEffectConnect = SoundEffectType(mainCategory: newOption,
@@ -210,7 +198,7 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                 } else if parentId == LookAndFeelSecondaryEntryIDs.soundDisconnected.id {
                     let subType = getSoundEffectSubType(from: newOption)
                     soundEffectDisconnect = SoundEffectType(mainCategory: newOption,
-                                                         subtypeTitle: subType)
+                                                            subtypeTitle: subType)
                     preferences.saveSoundEffectDisconnect(value: subType ?? newOption)
                 } else if parentId == LookAndFeelSecondaryEntryIDs.bundledConnectedSounds.id {
                     guard let subtype = SoundEffectSubtype(rawValue: newOption) else { return }
@@ -221,7 +209,7 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                     soundEffectDisconnect = SoundEffectType.bundled(subtype: subtype)
                     preferences.saveSoundEffectDisconnect(value: newOption)
                 }
-            } else if case let .file(selecteURL, parentId) = actionSelected {
+            } else if case let .file(selecteURL, parentId) = action {
                 guard let selecteURL = selecteURL else {
 
                     return
@@ -233,16 +221,16 @@ final class LookAndFeelSettingsViewModelImpl: LookAndFeelSettingsViewModel {
                 }
             }
         case .customLocation:
-            if case let .button(parentId) = actionSelected {
+            if case let .button(parentId) = action {
                 if parentId == LookAndFeelSecondaryEntryIDs.customNameReset.id {
                     resetLocations()
                 }
-            } else if case let .file(selecteURL, _) = actionSelected {
+            } else if case let .file(selecteURL, _) = action {
                 guard let selecteURL = selecteURL else {
                     return
                 }
                 importLocationFile(pickedLocationFile: selecteURL)
-            } else if case let .buttonFileExport(success, _) = actionSelected {
+            } else if case let .buttonFileExport(success, _) = action {
                 showAlert(for: success ? .customExportSucceeded : .customExportFailed)
             }
         }
