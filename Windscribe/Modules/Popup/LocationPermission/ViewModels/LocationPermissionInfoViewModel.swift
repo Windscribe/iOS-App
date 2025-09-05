@@ -14,6 +14,7 @@ protocol LocationPermissionInfoViewModel: ObservableObject {
     var accessDenied: Bool { get set }
 
     func handlePrimaryAction()
+    func onDisappear()
 }
 
 final class LocationPermissionInfoViewModelImpl: LocationPermissionInfoViewModel {
@@ -50,23 +51,14 @@ final class LocationPermissionInfoViewModelImpl: LocationPermissionInfoViewModel
             .store(in: &cancellables)
 
         manager.locationStatusSubject
-            .asPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    if case let .failure(error) = completion {
-                        self?.logger.logE("LocationPermissionInfoViewModel", "Permission status error: \(error)")
-                    }
-                },
-                receiveValue: { [weak self] status in
-                    guard let self = self else { return }
-                    self.accessDenied = (status == .denied)
-                    if status == .authorizedWhenInUse {
-                        self.shouldDismiss = true
-                    }
+            .sink { [weak self] status in
+                guard let self = self else { return }
+                self.accessDenied = (status == .denied)
+                if status == .authorizedWhenInUse {
+                    self.shouldDismiss = true
                 }
-            )
-            .store(in: &cancellables)
+            }.store(in: &cancellables)
     }
 
     func handlePrimaryAction() {
@@ -75,5 +67,9 @@ final class LocationPermissionInfoViewModelImpl: LocationPermissionInfoViewModel
         } else {
             manager.grantPermission()
         }
+    }
+
+    func onDisappear() {
+        manager.permissionPopupClosed()
     }
 }

@@ -57,19 +57,6 @@ extension MainViewController {
             self.displaySiriShortcutPopup()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.requestLocationTrigger
-            .flatMap { [weak self] _ -> Single<Void> in
-                guard let self = self else { return .never() }
-                return self.locationPermissionManager.requestLocationPermissionFlow()
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.router?.routeTo(to: RouteID.protocolConnectionResult(protocolName: "", viewType: .connected),
-                                     from: self)
-            })
-            .disposed(by: disposeBag)
-
         vpnConnectionViewModel.loadLatencyValuesSubject.subscribe(onNext: {
             self.loadLatencyValues(force: $0.force, connectToBestLocation: $0.connectToBestLocation)
         }).disposed(by: disposeBag)
@@ -91,13 +78,9 @@ extension MainViewController {
         }.disposed(by: disposeBag)
 
         wifiInfoView.unknownWifiTriggerSubject
-            .flatMap { [weak self] _ -> Single<Void> in
-                guard let self = self else { return .never() }
-                return self.locationPermissionManager.requestLocationPermissionFlow()
-            }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.updateSSID()
+                guard let self = self else { return }
+                self.locationPermissionManager.requestLocationPermission()
             })
             .disposed(by: disposeBag)
     }
@@ -123,15 +106,13 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         viewModel.showNetworkSecurityTrigger
-            .flatMap { [weak self] _ -> Single<Void> in
-                guard let self = self else { return .never() }
-                return self.locationPermissionManager.requestLocationPermissionFlow()
-            }
-            .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-
-                self.popupRouter?.routeTo(to: .networkSecurity, from: self)
+                Task { @MainActor in
+                    self.locationPermissionManager.requestLocationPermission()
+                    await self.locationPermissionManager.waitForPermission()
+                    self.popupRouter?.routeTo(to: .networkSecurity, from: self)
+                }
             })
             .disposed(by: disposeBag)
 

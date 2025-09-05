@@ -39,15 +39,15 @@ extension MainViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 
         locationPermissionManager.shouldShowPermissionUI
-            .observe(on: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] denied in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
                 guard let self else { return }
                 self.router?.routeTo(
                     to: .locationPermission,
                     from: self
                 )
-            })
-            .disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {

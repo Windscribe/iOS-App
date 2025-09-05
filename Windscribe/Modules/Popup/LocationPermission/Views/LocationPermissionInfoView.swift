@@ -93,6 +93,9 @@ struct LocationPermissionInfoView: View, ResponsivePopupLayoutProvider {
                     dismiss()
                 }
             }
+            .onDisappear {
+                viewModel.onDisappear()
+            }
         }
     }
 }
