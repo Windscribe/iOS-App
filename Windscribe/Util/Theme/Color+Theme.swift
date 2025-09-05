@@ -21,6 +21,10 @@ enum MenuColorsType {
     case popUpBackgroundColor
     case captchaBackgroundColor
     case positive
+    case dismissButtonBackgroundColor
+    case dismissButtonTextColor
+    case actionButtonBackgroundColor
+    case actionButtonTextColor
 }
 
 enum MainColorsType {
@@ -65,6 +69,14 @@ extension Color {
             return isDarkMode ? .deepSlate : .white
         case .positive:
             return .positiveGreen
+        case .dismissButtonBackgroundColor:
+            return Color.from(.titleColor, isDarkMode).opacity(isDarkMode ? 0.05 : 0.1)
+        case .dismissButtonTextColor:
+            return isDarkMode ? .white : .black
+        case .actionButtonBackgroundColor:
+            return .loginRegisterEnabledButtonColor
+        case .actionButtonTextColor:
+            return .black
         }
     }
 }
