@@ -9,8 +9,7 @@
 import Foundation
 import Combine
 
-protocol HelpSettingsViewModel: ObservableObject {
-    var isDarkMode: Bool { get set }
+protocol HelpSettingsViewModel: PreferencesBaseViewModel {
     var entries: [HelpMenuEntryType] { get set }
     var sendLogStatus: HelpLogStatus { get }
 
@@ -18,49 +17,38 @@ protocol HelpSettingsViewModel: ObservableObject {
     func submitDebugLog()
 }
 
-class HelpSettingsViewModelImpl: HelpSettingsViewModel {
+class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewModel {
 
-    @Published var isDarkMode: Bool = false
     @Published var entries: [HelpMenuEntryType] = []
     @Published private(set) var sendLogStatus: HelpLogStatus = .idle
     @Published var alert: HelpAlert?
     @Published var safariURL: URL?
     @Published var selectedRoute: HelpRoute?
 
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let sessionManager: SessionManaging
     private let apiManager: APIManager
     private let connectivity: Connectivity
-    private let logger: FileLogger
-
-    private var cancellables = Set<AnyCancellable>()
 
     private var networkStatus: NetworkStatus = .disconnected
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType,
+    init(logger: FileLogger,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          sessionManager: SessionManaging,
          apiManager: APIManager,
-         connectivity: Connectivity,
-         logger: FileLogger) {
+         connectivity: Connectivity) {
 
-        self.lookAndFeelRepository = lookAndFeelRepository
         self.sessionManager = sessionManager
         self.apiManager = apiManager
         self.connectivity = connectivity
-        self.logger = logger
 
-        bindSubjects()
-        reloadEntries()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
     }
 
-    private func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         connectivity.network
             .asPublisher()
@@ -71,7 +59,7 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
             .store(in: &cancellables)
     }
 
-    private func reloadEntries() {
+    override func reloadItems() {
         let isUserPro = sessionManager.session?.isUserPro ?? false
 
         var baseEntries: [HelpMenuEntryType] = [
@@ -80,28 +68,28 @@ class HelpSettingsViewModelImpl: HelpSettingsViewModel {
                   subtitle: TextsAsset.Help.allYouNeedToknowIsHere,
                   urlString: LinkProvider.getWindscribeLink(path: Links.knowledge)),
 
-            .link(icon: ImagesAsset.Help.garry,
-                  title: TextsAsset.Help.talkToGarry,
-                  subtitle: TextsAsset.Help.notAsSmartAsSiri,
-                  urlString: LinkProvider.getWindscribeLink(path: Links.garry)),
+                .link(icon: ImagesAsset.Help.garry,
+                      title: TextsAsset.Help.talkToGarry,
+                      subtitle: TextsAsset.Help.notAsSmartAsSiri,
+                      urlString: LinkProvider.getWindscribeLink(path: Links.garry)),
 
-            .communitySupport(
-                redditURLString: Links.reddit,
-                discordURLString: Links.discord
-            ),
+                .communitySupport(
+                    redditURLString: Links.reddit,
+                    discordURLString: Links.discord
+                ),
 
-            .navigation(icon: ImagesAsset.Preferences.advanceParams,
-                        title: TextsAsset.Preferences.advanceParameters,
-                        subtitle: TextsAsset.Help.advanceParamDescription,
-                        route: .advancedParams),
+                .navigation(icon: ImagesAsset.Preferences.advanceParams,
+                            title: TextsAsset.Preferences.advanceParameters,
+                            subtitle: TextsAsset.Help.advanceParamDescription,
+                            route: .advancedParams),
 
-            .navigation(icon: ImagesAsset.Help.debugView,
-                        title: TextsAsset.Debug.viewLog,
-                        subtitle: nil,
-                        route: .viewLog),
+                .navigation(icon: ImagesAsset.Help.debugView,
+                            title: TextsAsset.Debug.viewLog,
+                            subtitle: nil,
+                            route: .viewLog),
 
-            .sendDebugLog(icon: ImagesAsset.Help.debugSend,
-                          title: TextsAsset.Debug.sendLog)
+                .sendDebugLog(icon: ImagesAsset.Help.debugSend,
+                              title: TextsAsset.Debug.sendLog)
         ]
 
         if isUserPro {

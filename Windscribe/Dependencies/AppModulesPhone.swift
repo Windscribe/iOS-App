@@ -113,7 +113,8 @@ class ViewModels: Assembly {
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
-                preferences: r.resolve(Preferences.self)!)
+                preferences: r.resolve(Preferences.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any AccountSettingsViewModel).self) { r in
@@ -124,13 +125,15 @@ class ViewModels: Assembly {
                 apiManager: r.resolve(APIManager.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
-                logger: r.resolve(FileLogger.self)!)
+                logger: r.resolve(FileLogger.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any ConnectionSettingsViewModel).self) { r in
             ConnectionSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 router: r.resolve(ConnectionsNavigationRouter.self)!,
@@ -141,9 +144,10 @@ class ViewModels: Assembly {
         container.register((any RobertSettingsViewModel).self) { r in
             RobertSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 apiManager: r.resolve(APIManager.self)!,
-                localDB: r.resolve(LocalDatabase.self)!,
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                localDB: r.resolve(LocalDatabase.self)!
             )
         }.inObjectScope(.transient)
 
@@ -159,6 +163,7 @@ class ViewModels: Assembly {
             LookAndFeelSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
                 soundFileManager: r.resolve(SoundFileManaging.self)!,
@@ -168,11 +173,12 @@ class ViewModels: Assembly {
 
         container.register((any HelpSettingsViewModel).self) { r in
             HelpSettingsViewModelImpl(
+                logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 sessionManager: r.resolve(SessionManaging.self)!,
                 apiManager: r.resolve(APIManager.self)!,
-                connectivity: r.resolve(Connectivity.self)!,
-                logger: r.resolve(FileLogger.self)!)
+                connectivity: r.resolve(Connectivity.self)!)
         }.inObjectScope(.transient)
 
         container.register((any SendTicketViewModel).self) { r in
@@ -203,7 +209,8 @@ class ViewModels: Assembly {
 
         container.register((any ScreenTestViewModel).self) { r in
             ScreenTestViewModelImpl(
-                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
+                lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any LocationPermissionInfoViewModel).self) { r in
@@ -303,7 +310,23 @@ class ViewModels: Assembly {
                 privacyStateManager: r.resolve(PrivacyStateManaging.self)!)
         }.inObjectScope(.transient)
         container.register(MainViewModelType.self) { r in
-            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!, serverRepository: r.resolve(ServerRepository.self)!, portMapRepo: r.resolve(PortMapRepository.self)!, staticIpRepository: r.resolve(StaticIpRepository.self)!, preferences: r.resolve(Preferences.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!, notificationsRepo: r.resolve(NotificationRepository.self)!, credentialsRepository: r.resolve(CredentialsRepository.self)!, connectivity: r.resolve(Connectivity.self)!, livecycleManager: r.resolve(LivecycleManagerType.self)!, locationsManager: r.resolve(LocationsManagerType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            MainViewModel(localDatabase: r.resolve(LocalDatabase.self)!,
+                          vpnManager: r.resolve(VPNManager.self)!,
+                          logger: r.resolve(FileLogger.self)!,
+                          serverRepository: r.resolve(ServerRepository.self)!,
+                          portMapRepo: r.resolve(PortMapRepository.self)!,
+                          staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                          preferences: r.resolve(Preferences.self)!,
+                          latencyRepo: r.resolve(LatencyRepository.self)!,
+                          lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                          pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!,
+                          notificationsRepo: r.resolve(NotificationRepository.self)!,
+                          credentialsRepository: r.resolve(CredentialsRepository.self)!,
+                          connectivity: r.resolve(Connectivity.self)!,
+                          livecycleManager: r.resolve(LivecycleManagerType.self)!,
+                          locationsManager: r.resolve(LocationsManagerType.self)!,
+                          protocolManager: r.resolve(ProtocolManagerType.self)!,
+                          hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
         }.inObjectScope(.transient)
         container.register(SearchLocationsViewModelType.self) { r in
             SearchLocationsViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
@@ -515,7 +538,8 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
-                    preferences: r.resolve(Preferences.self)!
+                    preferences: r.resolve(Preferences.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!
                 ), router: r.resolve(PreferencesNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
@@ -523,6 +547,7 @@ class ViewControllerModule: Assembly {
             GeneralSettingsView(viewModel: GeneralSettingsViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!
@@ -538,7 +563,8 @@ class ViewControllerModule: Assembly {
                     apiManager: r.resolve(APIManager.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     languageManager: r.resolve(LanguageManager.self)!,
-                    logger: r.resolve(FileLogger.self)!)
+                    logger: r.resolve(FileLogger.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!)
             )
         }.inObjectScope(.transient)
 
@@ -547,6 +573,7 @@ class ViewControllerModule: Assembly {
                 viewModel: ConnectionSettingsViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     router: r.resolve(ConnectionsNavigationRouter.self)!,
@@ -560,6 +587,7 @@ class ViewControllerModule: Assembly {
                 viewModel: NetworkOptionsSecurityViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
@@ -573,6 +601,7 @@ class ViewControllerModule: Assembly {
                 viewModel: NetworkSettingsViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     connectivity: r.resolve(Connectivity.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     vpnManager: r.resolve(VPNManager.self)!,
@@ -585,9 +614,10 @@ class ViewControllerModule: Assembly {
             RobertSettingsView(
                 viewModel: RobertSettingsViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    localDB: r.resolve(LocalDatabase.self)!,
-                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!
+                    localDB: r.resolve(LocalDatabase.self)!
                 )
             )
         }.inObjectScope(.transient)
@@ -606,6 +636,7 @@ class ViewControllerModule: Assembly {
                 viewModel: LookAndFeelSettingsViewModelImpl(
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
                     backgroundFileManager: r.resolve(BackgroundFileManaging.self)!,
                     soundFileManager: r.resolve(SoundFileManaging.self)!,
@@ -617,11 +648,12 @@ class ViewControllerModule: Assembly {
         container.register(HelpSettingsView.self) { r in
             HelpSettingsView(
                 viewModel: HelpSettingsViewModelImpl(
+                    logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     sessionManager: r.resolve(SessionManaging.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    connectivity: r.resolve(Connectivity.self)!,
-                    logger: r.resolve(FileLogger.self)!),
+                    connectivity: r.resolve(Connectivity.self)!),
                 router: r.resolve(HelpNavigationRouter.self)!)
         }.inObjectScope(.transient)
 
@@ -661,7 +693,8 @@ class ViewControllerModule: Assembly {
         container.register(ScreenTestView.self) { r in
             ScreenTestView(
                 viewModel: ScreenTestViewModelImpl(
-                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!),
+                    lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
+                    hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!),
                 router: r.resolve(ScreenTestNavigationRouter.self)!)
         }.inObjectScope(.transient)
 

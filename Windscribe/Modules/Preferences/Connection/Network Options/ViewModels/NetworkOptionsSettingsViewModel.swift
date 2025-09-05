@@ -11,8 +11,7 @@ import Combine
 import UserNotifications
 import UIKit
 
-protocol NetworkOptionsSecurityViewModel: ObservableObject {
-    var isDarkMode: Bool { get set }
+protocol NetworkOptionsSecurityViewModel: PreferencesBaseViewModel {
     var autoSecureEntry: NetworkOptionsEntryType? { get set }
     var currentNetworkEntry: NetworkOptionsEntryType? { get set }
     var networkListEntry: NetworkOptionsEntryType? { get set }
@@ -22,55 +21,41 @@ protocol NetworkOptionsSecurityViewModel: ObservableObject {
     func loadEntries()
 }
 
-class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
-    @Published var isDarkMode: Bool = false
+class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, NetworkOptionsSecurityViewModel {
     @Published var autoSecureEntry: NetworkOptionsEntryType?
     @Published var currentNetworkEntry: NetworkOptionsEntryType?
     @Published var networkListEntry: NetworkOptionsEntryType?
     @Published var router: ConnectionsNavigationRouter
 
-    private var cancellables = Set<AnyCancellable>()
     private var networks: [WifiNetwork] = []
     private var currentNetwork: AppNetwork?
     private var isAutoSecureEnabled = DefaultValues.autoSecure
     private var hasLoaded = false
 
     // MARK: - Dependencies
-    private let logger: FileLogger
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
     private let connectivity: Connectivity
     private let localDatabase: LocalDatabase
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
          connectivity: Connectivity,
          localDatabase: LocalDatabase,
          router: ConnectionsNavigationRouter) {
-        self.logger = logger
-        self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
         self.connectivity = connectivity
         self.localDatabase = localDatabase
         self.router = router
 
-        bindSubjects()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
     }
 
-    private func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("NetworkOptionsSecurityViewModel", "darkTheme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-                self?.reloadEntries()
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         preferences.getAutoSecureNewNetworks()
             .toPublisher(initialValue: DefaultValues.autoSecure)
@@ -82,7 +67,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] enabled in
                 guard let self = self else { return }
                 self.isAutoSecureEnabled = enabled ?? DefaultValues.autoSecure
-                self.reloadEntries()
+                self.reloadItems()
             })
             .store(in: &cancellables)
 
@@ -96,7 +81,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] network in
                 guard let self = self else { return }
                 self.currentNetwork = network
-                self.reloadEntries()
+                self.reloadItems()
             })
             .store(in: &cancellables)
 
@@ -110,12 +95,12 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
             }, receiveValue: { [weak self] networks in
                 guard let self = self else { return }
                 self.networks = networks
-                self.reloadEntries()
+                self.reloadItems()
             })
             .store(in: &cancellables)
     }
 
-    private func reloadEntries() {
+    override func reloadItems() {
         autoSecureEntry = .autoSecure(isSelected: isAutoSecureEnabled)
         if let network = getCurrentWifiNetwork() {
             currentNetworkEntry = .network(info: NetworkEntryInfo(name: network.SSID, isSecured: !network.status))
@@ -141,7 +126,7 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
 
     func loadEntries() {
         guard !hasLoaded else { return }
-        reloadEntries()
+        reloadItems()
     }
 
     private func getCurrentWifiNetwork() -> WifiNetwork? {
@@ -150,6 +135,8 @@ class NetworkOptionsSecurityViewModelImpl: NetworkOptionsSecurityViewModel {
     }
 
     func entrySelected(_ entry: NetworkOptionsEntryType, action: MenuEntryActionResponseType) {
+        actionSelected(action)
+
         switch entry {
         case .autoSecure:
             if case .toggle(let isSelected, _) = action {

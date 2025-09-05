@@ -127,7 +127,7 @@ struct AccountSettingsView: View {
             PlanUpgradeViewControllerWrapper()
                 .edgesIgnoringSafeArea(.all)
         }.onAppear {
-            HapticFeedbackGenerator.shared.run(level: .medium)
+            viewModel.actionSelected()
         }
     }
 

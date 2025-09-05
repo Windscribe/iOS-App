@@ -18,9 +18,8 @@ enum PreferencesActionDisplay {
     case hideAll
 }
 
-protocol PreferencesMainCategoryViewModel: ObservableObject {
+protocol PreferencesMainCategoryViewModel: PreferencesBaseViewModel {
     var actionDisplay: PreferencesActionDisplay { get set }
-    var isDarkMode: Bool { get set }
     var currentLanguage: String? { get set }
     var visibleItems: [PreferenceItemType] { get set }
     var isScreenTestEnabled: Bool { get }
@@ -31,20 +30,15 @@ protocol PreferencesMainCategoryViewModel: ObservableObject {
     func logout()
 }
 
-final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewModel {
+final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, PreferencesMainCategoryViewModel {
     @Published var actionDisplay: PreferencesActionDisplay = .hideAll
-    @Published var isDarkMode: Bool = false
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []
 
     var isScreenTestEnabled: Bool = true
 
-    private var cancellables = Set<AnyCancellable>()
-
     private let sessionManager: SessionManaging
     private let alertManager: AlertManagerV2
-    private let logger: FileLogger
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let languageManager: LanguageManager
     private let preferences: Preferences
 
@@ -54,32 +48,23 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
         logger: FileLogger,
         lookAndFeelRepository: LookAndFeelRepositoryType,
         languageManager: LanguageManager,
-        preferences: Preferences
+        preferences: Preferences,
+        hapticFeedbackManager: HapticFeedbackManager
     ) {
         self.sessionManager = sessionManager
         self.alertManager = alertManager
-        self.logger = logger
-        self.lookAndFeelRepository = lookAndFeelRepository
         self.languageManager = languageManager
         self.preferences = preferences
 
-        bind()
-        reloadItems()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
+
         updateActionDisplay()
     }
 
-    private func bind() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("PreferencesViewModel", "darkTheme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         languageManager.activelanguage
             .asPublisher()
@@ -132,7 +117,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
         }
     }
 
-    func reloadItems() {
+    override func reloadItems() {
         let isGhost = sessionManager.session?.isUserGhost ?? false
         let count = isGhost ? 9 : 10
         visibleItems = (0..<count).compactMap {
@@ -151,7 +136,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     func logout() {
         logger.logD("PreferencesViewModel", "User tapped logout")
 
-        HapticFeedbackGenerator.shared.run(level: .medium)
+        actionSelected()
 
         alertManager.showYesNoAlert(
             title: TextsAsset.Preferences.logout,

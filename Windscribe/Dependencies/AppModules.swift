@@ -145,11 +145,12 @@ class Managers: Assembly {
         container.register(SessionManaging.self) { _ in
             SessionManager()
         }.inObjectScope(.userScope)
-        #if os(iOS)
-            container.register(HapticFeedbackGeneratorV2.self) { r in
-                HapticFeedbackGenerator(preference: r.resolve(Preferences.self)!)
-            }.inObjectScope(.userScope)
-        #endif
+#if os(iOS)
+        container.register(HapticFeedbackManager.self) { r in
+            HapticFeedbackManagerImpl(preferences: r.resolve(Preferences.self)!,
+                                      logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
+#endif
         container.register(AlertManagerV2.self) { _ in
             AlertManager()
         }.inObjectScope(.userScope)

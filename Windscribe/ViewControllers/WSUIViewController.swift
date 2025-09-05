@@ -28,6 +28,7 @@ class WSUIViewController: UIViewController {
 
     lazy var apiManager = Assembler.resolve(APIManager.self)
     lazy var sessionManager = Assembler.resolve(SessionManaging.self)
+    let hapticFeedbackManager: HapticFeedbackManager = Assembler.resolve(HapticFeedbackManager.self)
     let disposeBag = DisposeBag()
     var cancellables = Set<AnyCancellable>()
 
@@ -239,7 +240,7 @@ class WSNavigationViewController: WSUIViewController {
         } else {
             dismiss(animated: true) {}
         }
-        HapticFeedbackGenerator.shared.run(level: .medium)
+        hapticFeedbackManager.run(level: .medium)
     }
 
     func setupViews(isDark: Bool) {

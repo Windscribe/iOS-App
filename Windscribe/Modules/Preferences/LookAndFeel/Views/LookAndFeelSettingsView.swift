@@ -31,7 +31,7 @@ struct LookAndFeelSettingsView: View {
                         MenuEntryView(item: entry,
                                       isDarkMode: viewModel.isDarkMode,
                                       action: { actionType in
-                            viewModel.entrySelected(entry, actionSelected: actionType)
+                            viewModel.entrySelected(entry, action: actionType)
                         })
                     }
                     .padding(.top, 8)

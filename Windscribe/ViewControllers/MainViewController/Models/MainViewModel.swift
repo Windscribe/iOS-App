@@ -63,6 +63,7 @@ protocol MainViewModelType {
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
     func updateSSID()
     func getServerModel(from groupId: Int) -> ServerModel?
+    func runHapticFeedback(level: UIImpactFeedbackGenerator.FeedbackStyle)
 }
 
 class MainViewModel: MainViewModelType {
@@ -82,6 +83,7 @@ class MainViewModel: MainViewModelType {
     let livecycleManager: LivecycleManagerType
     let locationsManager: LocationsManagerType
     let protocolManager: ProtocolManagerType
+    let hapticFeedbackManager: HapticFeedbackManager
 
     let serverList = BehaviorSubject<[ServerModel]>(value: [])
     var lastConnection = BehaviorSubject<VPNConnection?>(value: nil)
@@ -119,7 +121,24 @@ class MainViewModel: MainViewModelType {
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(localDatabase: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, serverRepository: ServerRepository, portMapRepo: PortMapRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, latencyRepo: LatencyRepository, lookAndFeelRepository: LookAndFeelRepositoryType, pushNotificationsManager: PushNotificationManagerV2, notificationsRepo: NotificationRepository, credentialsRepository: CredentialsRepository, connectivity: Connectivity, livecycleManager: LivecycleManagerType, locationsManager: LocationsManagerType, protocolManager: ProtocolManagerType) {
+    init(localDatabase: LocalDatabase,
+         vpnManager: VPNManager,
+         logger: FileLogger,
+         serverRepository: ServerRepository,
+         portMapRepo: PortMapRepository,
+         staticIpRepository: StaticIpRepository,
+         preferences: Preferences,
+         latencyRepo: LatencyRepository,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         pushNotificationsManager: PushNotificationManagerV2,
+         notificationsRepo: NotificationRepository,
+         credentialsRepository: CredentialsRepository,
+         connectivity: Connectivity,
+         livecycleManager: LivecycleManagerType,
+         locationsManager: LocationsManagerType,
+         protocolManager: ProtocolManagerType,
+         hapticFeedbackManager: HapticFeedbackManager) {
+
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
         self.logger = logger
@@ -136,6 +155,7 @@ class MainViewModel: MainViewModelType {
         self.livecycleManager = livecycleManager
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
+        self.hapticFeedbackManager = hapticFeedbackManager
 
         showNetworkSecurityTrigger = livecycleManager.showNetworkSecurityTrigger
         showNotificationsTrigger = livecycleManager.showNotificationsTrigger
@@ -520,5 +540,9 @@ class MainViewModel: MainViewModelType {
 
     func getServerModel(from groupId: Int) -> ServerModel? {
         try? locationsManager.getLocation(from: String(groupId)).0
+    }
+
+    func runHapticFeedback(level: UIImpactFeedbackGenerator.FeedbackStyle) {
+        hapticFeedbackManager.run(level: .light)
     }
 }

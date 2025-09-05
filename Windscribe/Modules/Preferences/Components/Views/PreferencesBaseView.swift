@@ -7,11 +7,14 @@
 //
 
 import SwiftUI
+import Swinject
 
 struct PreferencesBaseView<Content: View>: View {
     @Binding var isDarkMode: Bool
     var useHapticFeedback: Bool = true
     let content: () -> Content
+
+    private let hapticFeedbackManager: HapticFeedbackManager = Assembler.resolve(HapticFeedbackManager.self)
 
     var body: some View {
         ZStack {
@@ -20,7 +23,7 @@ struct PreferencesBaseView<Content: View>: View {
         .background(Color.from(.screenBackgroundColor, isDarkMode).ignoresSafeArea())
         .onAppear {
             if useHapticFeedback {
-                HapticFeedbackGenerator.shared.run(level: .medium)
+                hapticFeedbackManager.run(level: .medium)
             }
         }
     }

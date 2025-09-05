@@ -11,18 +11,15 @@ import Combine
 import UserNotifications
 import UIKit
 
-protocol GeneralSettingsViewModel: ObservableObject {
-    var isDarkMode: Bool { get set }
+protocol GeneralSettingsViewModel: PreferencesBaseViewModel {
     var entries: [GeneralMenuEntryType] { get set }
 
     func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionResponseType)
 }
 
-class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
-    @Published var isDarkMode: Bool = false
+class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSettingsViewModel {
     @Published var entries: [GeneralMenuEntryType] = []
 
-    private var cancellables = Set<AnyCancellable>()
     private var currentLanguage: String = DefaultValues.language
     private var locationOrder: String = DefaultValues.orderLocationsBy
     private var isHapticFeedbackEnabled = DefaultValues.hapticFeedback
@@ -30,40 +27,28 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     private var notificationsEnabled = false
 
     // MARK: - Dependencies
-    private let logger: FileLogger
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let languageManager: LanguageManager
     private let preferences: Preferences
     private let pushNotificationManager: PushNotificationManagerV2
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          languageManager: LanguageManager,
          preferences: Preferences,
          pushNotificationManager: PushNotificationManagerV2) {
-        self.logger = logger
-        self.lookAndFeelRepository = lookAndFeelRepository
+
         self.languageManager = languageManager
         self.preferences = preferences
         self.pushNotificationManager = pushNotificationManager
 
-        bindSubjects()
-        reloadItems()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
     }
 
-    private func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Theme Adjustment Change error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-                self?.reloadItems()
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
         languageManager.activelanguage
             .asPublisher()
@@ -127,7 +112,7 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
         locationOrder = value.localized
     }
 
-    private func reloadItems() {
+    override func reloadItems() {
         let orderPreferences = zip(TextsAsset.orderPreferences,
                                         Fields.orderPreferences)
             .map { MenuOption(title: $0, fieldKey: $1) }
@@ -177,6 +162,8 @@ class GeneralSettingsViewModelImpl: GeneralSettingsViewModel {
     }
 
     func entrySelected(_ entry: GeneralMenuEntryType, action: MenuEntryActionResponseType) {
+        actionSelected(action)
+
         switch entry {
         case .hapticFeedback:
             if case .toggle(let isSelected, _) = action {

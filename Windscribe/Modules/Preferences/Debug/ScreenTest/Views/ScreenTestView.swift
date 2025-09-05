@@ -39,7 +39,7 @@ struct ScreenTestView: View {
         .navigationTitle("Screen Test")
         .navigationBarTitleDisplayMode(.inline)
         .onWillDisappear {
-            HapticFeedbackGenerator.shared.run(level: .medium)
+            viewModel.runHapticfeedback()
         }
         .fullScreenCover(item: Binding(
             get: { viewModel.presentedScreen.map(ScreenTestRouteWrapper.init) },

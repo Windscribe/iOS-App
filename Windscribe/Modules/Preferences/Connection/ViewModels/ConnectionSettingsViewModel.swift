@@ -12,8 +12,7 @@ import UserNotifications
 import UIKit
 import RxSwift
 
-protocol ConnectionSettingsViewModel: ObservableObject {
-    var isDarkMode: Bool { get set }
+protocol ConnectionSettingsViewModel: PreferencesBaseViewModel {
     var entries: [ConnectionsEntryType] { get set }
     var safariURL: URL? { get }
     var router: ConnectionsNavigationRouter { get }
@@ -21,13 +20,11 @@ protocol ConnectionSettingsViewModel: ObservableObject {
     func entrySelected(_ entry: ConnectionsEntryType, action: MenuEntryActionResponseType)
 }
 
-class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
-    @Published var isDarkMode: Bool = false
+class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionSettingsViewModel {
     @Published var entries: [ConnectionsEntryType] = []
     @Published var safariURL: URL?
     @Published var router: ConnectionsNavigationRouter
 
-    private var cancellables = Set<AnyCancellable>()
     private var currentProtocol = DefaultValues.protocol
     private var currentPort = DefaultValues.port
     private var killSwitchSelected = DefaultValues.killSwitch
@@ -38,44 +35,31 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     private var connectedDNS = DefaultValues.connectedDNS
 
     // MARK: - Dependencies
-    private let logger: FileLogger
-    private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
     private let localDatabase: LocalDatabase
     private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
          localDatabase: LocalDatabase,
          router: ConnectionsNavigationRouter,
          protocolManager: ProtocolManagerType) {
-        self.logger = logger
-        self.lookAndFeelRepository = lookAndFeelRepository
         self.preferences = preferences
         self.localDatabase = localDatabase
         self.router = router
         self.protocolManager = protocolManager
 
-        bindSubjects()
-        reloadItems()
+        super.init(logger: logger,
+                   lookAndFeelRepository: lookAndFeelRepository,
+                   hapticFeedbackManager: hapticFeedbackManager)
     }
 
-    private func bindSubjects() {
-        lookAndFeelRepository.isDarkModeSubject
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "darkTheme error: \(error)")
-                }
-            }, receiveValue: { [weak self] isDark in
-                self?.isDarkMode = isDark
-                self?.reloadItems()
-            })
-            .store(in: &cancellables)
+    override func bindSubjects() {
+        super.bindSubjects()
 
-            preferences.getSelectedProtocol()
+        preferences.getSelectedProtocol()
             .toPublisher(initialValue: DefaultValues.protocol)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -89,7 +73,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
             })
             .store(in: &cancellables)
 
-            preferences.getSelectedPort()
+        preferences.getSelectedPort()
             .toPublisher(initialValue: DefaultValues.port)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -174,13 +158,13 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
             .store(in: &cancellables)
     }
 
-    private func reloadItems() {
+    override func reloadItems() {
         let customDNSValue = preferences.getCustomDNSValue().value
         let connectionModes = zip(TextsAsset.connectionModes,
-                                        Fields.connectionModes)
+                                  Fields.connectionModes)
             .map { MenuOption(title: $0, fieldKey: $1) }
         let connectedDNSOptions = zip(TextsAsset.connectedDNSOptions,
-                                        Fields.connectedDNSOptions)
+                                      Fields.connectedDNSOptions)
             .map { MenuOption(title: $0, fieldKey: $1) }
 
         let protocolOptions = getProtocols()
@@ -208,6 +192,8 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     }
 
     func entrySelected(_ entry: ConnectionsEntryType, action: MenuEntryActionResponseType) {
+        actionSelected(action)
+
         switch entry {
         case .networkOptions:
             networkOptionsSelected()
@@ -300,7 +286,7 @@ class ConnectionSettingsViewModelImpl: ConnectionSettingsViewModel {
     private func saveConnectedDNSValue(value: String) {
         DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
             guard let dnsValue = dnsValue,
-            !dnsValue.servers.isEmpty else {
+                  !dnsValue.servers.isEmpty else {
                 return
             }
             self.preferences.saveCustomDNSValue(value: dnsValue)

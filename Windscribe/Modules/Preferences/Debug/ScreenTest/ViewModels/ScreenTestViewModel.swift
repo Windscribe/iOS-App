@@ -14,6 +14,8 @@ protocol ScreenTestViewModel: ObservableObject {
     var isDarkMode: Bool { get set }
     var visibleItems: [ScreenTestItemType] { get set }
     var presentedScreen: ScreenTestRouteID? { get set }
+
+    func runHapticfeedback()
 }
 
 final class ScreenTestViewModelImpl: ScreenTestViewModel {
@@ -22,10 +24,13 @@ final class ScreenTestViewModelImpl: ScreenTestViewModel {
     @Published var presentedScreen: ScreenTestRouteID?
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let hapticFeedbackManager: HapticFeedbackManager
     private var cancellables = Set<AnyCancellable>()
 
-    init(lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(lookAndFeelRepository: LookAndFeelRepositoryType,
+         hapticFeedbackManager: HapticFeedbackManager) {
         self.lookAndFeelRepository = lookAndFeelRepository
+        self.hapticFeedbackManager = hapticFeedbackManager
         bindSubjects()
         reloadItems()
     }
@@ -42,5 +47,9 @@ final class ScreenTestViewModelImpl: ScreenTestViewModel {
 
     private func reloadItems() {
         visibleItems = ScreenTestItemType.allCases
+    }
+
+    func runHapticfeedback() {
+        hapticFeedbackManager.run(level: .medium)
     }
 }
