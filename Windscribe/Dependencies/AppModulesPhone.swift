@@ -311,7 +311,7 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(LocationPermissionManaging.self) { r in
             LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
-        }.inObjectScope(.transient)
+        }.inObjectScope(.container)
 
         container.register(ConnectionViewModelType.self) { r in
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,

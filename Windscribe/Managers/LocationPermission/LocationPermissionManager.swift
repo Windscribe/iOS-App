@@ -9,32 +9,36 @@
 import CoreLocation
 import Foundation
 import NetworkExtension
-import RxSwift
+import Combine
 import UIKit
 
 protocol LocationPermissionManaging {
-    var locationStatusSubject: BehaviorSubject<CLAuthorizationStatus> { get }
-    var shouldShowPermissionUI: PublishSubject<Void> { get }
+    var locationStatusSubject: CurrentValueSubject<CLAuthorizationStatus, Never> { get }
+    var shouldShowPermissionUI: PassthroughSubject<Void, Never> { get }
 
+    func waitForPermission() async
     func requestLocationPermission()
-    func requestLocationPermissionFlow() -> Single<Void>
     func logStatus()
     func getStatus() -> CLAuthorizationStatus
     func getAccuracyIsOff() -> Bool
     func grantPermission()
     func openSettings()
+    func permissionPopupClosed()
 }
 
 final class LocationPermissionManager: NSObject, LocationPermissionManaging {
     private let locationManager = CLLocationManager()
 
-    let locationStatusSubject = BehaviorSubject<CLAuthorizationStatus>(value: .notDetermined)
-    let shouldShowPermissionUI = PublishSubject<Void>()
+    let locationStatusSubject = CurrentValueSubject<CLAuthorizationStatus, Never>(.notDetermined)
+    let shouldShowPermissionUI = PassthroughSubject<Void, Never>()
 
     private let connectivityManager: ProtocolManagerType
     private let logger: FileLogger
     private let connectivity: Connectivity
     private let wifiManager: WifiManager
+
+    private var hasBeenAuthorizedWhenInUse = PassthroughSubject<Bool, Never>()
+    private var cancellables = Set<AnyCancellable>()
 
     init(connectivityManager: ProtocolManagerType,
          logger: FileLogger,
@@ -44,52 +48,38 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
         self.logger = logger
         self.connectivity = connectivity
         self.wifiManager = wifiManager
+
+        super.init()
+
+        locationManager.delegate = self
     }
 
     func requestLocationPermission() {
         let status = getStatus()
 
         if getAccuracyIsOff() {
-            shouldShowPermissionUI.onNext(())
-            emitStatus(for: status == .notDetermined ? .notDetermined : .denied)
+            shouldShowPermissionUI.send(())
+            locationStatusSubject.send(status == .notDetermined ? .notDetermined : .denied)
             return
         }
 
         switch status {
         case .notDetermined, .denied:
-            shouldShowPermissionUI.onNext(())
-            emitStatus(for: status)
+            shouldShowPermissionUI.send(())
+            locationStatusSubject.send(status)
         case .authorizedWhenInUse:
-            locationStatusSubject.onNext(status)
+            locationStatusSubject.send(status)
         default:
-            locationStatusSubject.onNext(status)
+            locationStatusSubject.send(status)
         }
     }
 
-    func requestLocationPermissionFlow() -> Single<Void> {
-        return Single.create { [weak self] single in
-            guard let self = self else {
-                single(.failure(RxBridgeError.missingInitialValue))
-                return Disposables.create()
-            }
-
-            let disposable = self.locationStatusSubject
-                .filter { $0 == .authorizedWhenInUse }
-                .take(1)
-                .subscribe(onNext: { _ in
-                    single(.success(()))
-                })
-
-            self.requestLocationPermission()
-
-            return Disposables.create {
-                disposable.dispose()
+    func waitForPermission() async {
+        if let isAuthorised = await hasBeenAuthorizedWhenInUse.values.first(where: { _ in true }) {
+            if isAuthorised {
+                return
             }
         }
-    }
-
-    func emitStatus(for status: CLAuthorizationStatus) {
-        locationStatusSubject.onNext(status)
     }
 
     func logStatus() {
@@ -106,7 +96,6 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
 
     func grantPermission() {
         logger.logD("LocationPermissionManager", "Location Permission granted")
-        locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
     }
 
@@ -114,12 +103,18 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
         logger.logD("LocationPermissionManager", "Opening settings for location permission")
         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
     }
+
+    func permissionPopupClosed() {
+        let status = locationStatusSubject.value
+        let permissionGranted = status == .authorizedWhenInUse || status == .authorizedAlways
+        hasBeenAuthorizedWhenInUse.send(permissionGranted)
+    }
 }
 
 extension LocationPermissionManager: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let status = manager.authorizationStatus
-        locationStatusSubject.onNext(status)
+        locationStatusSubject.send(status)
 
         connectivity.refreshNetwork()
         if status == .authorizedWhenInUse {

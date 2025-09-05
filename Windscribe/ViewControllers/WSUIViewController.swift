@@ -10,6 +10,7 @@ import RxSwift
 import SafariServices
 import Swinject
 import UIKit
+import Combine
 
 class WSUIViewController: UIViewController {
     var splashView: LoadingSplashView?
@@ -28,6 +29,7 @@ class WSUIViewController: UIViewController {
     lazy var apiManager = Assembler.resolve(APIManager.self)
     lazy var sessionManager = Assembler.resolve(SessionManaging.self)
     let disposeBag = DisposeBag()
+    var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
         super.viewDidLoad()

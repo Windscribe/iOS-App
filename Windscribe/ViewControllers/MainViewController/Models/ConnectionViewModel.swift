@@ -27,7 +27,6 @@ protocol ConnectionViewModelType {
     var showNoConnectionAlertTrigger: PublishSubject<Void> { get }
     var pushNotificationPermissionsTrigger: PublishSubject<Void> { get }
     var siriShortcutTrigger: PublishSubject<Void> { get }
-    var requestLocationTrigger: PublishSubject<Void> { get }
     var showEditCustomConfigTrigger: PublishSubject<CustomConfigModel> { get }
     var reloadLocationsTrigger: PublishSubject<String> { get }
     var reviewRequestTrigger: PublishSubject<Void> { get }
@@ -80,7 +79,6 @@ class ConnectionViewModel: ConnectionViewModelType {
     let showConnectionFailedTrigger = PublishSubject<Void>()
     let pushNotificationPermissionsTrigger = PublishSubject<Void>()
     let siriShortcutTrigger = PublishSubject<Void>()
-    let requestLocationTrigger = PublishSubject<Void>()
     let showEditCustomConfigTrigger = PublishSubject<CustomConfigModel>()
     let showNoConnectionAlertTrigger = PublishSubject<Void>()
     let reloadLocationsTrigger = PublishSubject<String>()

@@ -134,14 +134,17 @@ class PopupRouter: BaseRouter, RootRouter {
         var isTransparentView = true
 
         switch route {
-        case .newsFeedPopup, .networkSecurity, .shakeForDataPopUp:
+        case .newsFeedPopup:
             isTransparentView = false
         default:
             isTransparentView = true
         }
+
         switch route {
         case .shakeForDataPopUp:
             presentViewModallyWithNavigation(from: from, view: view)
+        case .networkSecurity:
+            pushViewWithoutNavigationBar(from: from, view: view, title: TextsAsset.NetworkSecurity.title)
         default:
             presentViewModally(from: from, view: view, isTransparent: isTransparentView)
         }
