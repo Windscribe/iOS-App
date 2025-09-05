@@ -51,12 +51,15 @@ final class AccountStatusViewModelImpl: AccountStatusViewModel {
     }
 
     var displayDescription: String {
+        return accountStatusType.description
+    }
+
+    var resetDate: String {
         switch accountStatusType {
         case .outOfData:
-            let resetDate = sessionManager.session?.getNextReset() ?? ""
-            return "\(accountStatusType.description) \(resetDate)"
+            return sessionManager.session?.getNextReset() ?? ""
         default:
-            return accountStatusType.description
+            return ""
         }
     }
 

@@ -25,23 +25,55 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
         _viewModel = StateObject(wrappedValue: model)
     }
 
+    private func buttonBackgroundColor(isPrimary: Bool) -> Color {
+        switch viewModel.accountStatusType {
+        case .banned:
+            // Banned has only one dismiss-type button
+            return Color.from(.dismissButtonBackgroundColor, viewModel.isDarkMode)
+        case .outOfData, .proPlanExpired:
+            if isPrimary {
+                // Primary button is action-type (upgrade/renew)
+                return Color.from(.actionButtonBackgroundColor, viewModel.isDarkMode)
+            } else {
+                // Secondary button is dismiss-type (remind me later)
+                return Color.from(.dismissButtonBackgroundColor, viewModel.isDarkMode)
+            }
+        }
+    }
+
+    private func buttonTextColor(isPrimary: Bool) -> Color {
+        switch viewModel.accountStatusType {
+        case .banned:
+            // Banned has only one dismiss-type button
+            return Color.from(.dismissButtonTextColor, viewModel.isDarkMode)
+        case .outOfData, .proPlanExpired:
+            if isPrimary {
+                // Primary button is action-type (upgrade/renew)
+                return Color.from(.actionButtonTextColor, viewModel.isDarkMode)
+            } else {
+                // Secondary button is dismiss-type (remind me later)
+                return Color.from(.dismissButtonTextColor, viewModel.isDarkMode)
+            }
+        }
+    }
+
     var body: some View {
         GeometryReader { geometry in
             let topSpacer = getTopSpacerHeight(for: geometry, deviceType: deviceType)
             let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
             let maxWidth = getMaxWidth(for: geometry)
 
-            VStack(spacing: 32) {
+            VStack(spacing: 0) {
                 Spacer()
                     .frame(height: topSpacer - 64)
 
                 // Character Image
                 Image(viewModel.accountStatusType.imageName)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 120, height: 120)
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
 
-                VStack(spacing: 16) {
+                VStack(spacing: 25) {
                     // Title
                     Text(viewModel.accountStatusType.title)
                         .font(.bold(.title2))
@@ -51,22 +83,34 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
                         .frame(maxWidth: maxWidth)
 
                     // Description
-                    Text(viewModel.displayDescription)
-                        .font(.text(.callout))
-                        .dynamicTypeSize(dynamicTypeRange)
-                        .foregroundColor(.welcomeButtonTextColor)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: maxWidth)
-                }
+                    VStack(spacing: 4) {
+                        Text(viewModel.displayDescription)
+                            .font(.regular(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
+                            .foregroundColor(.welcomeButtonTextColor)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: maxWidth)
 
-                VStack(spacing: 8) {
+                        if !viewModel.resetDate.isEmpty {
+                            Text(viewModel.resetDate)
+                                .font(.regular(.callout))
+                                .dynamicTypeSize(dynamicTypeRange)
+                                .foregroundColor(Color.from(.dismissButtonTextColor, viewModel.isDarkMode))
+                                .multilineTextAlignment(.center)
+                                .frame(maxWidth: maxWidth)
+                        }
+                    }
+                }
+                .padding(.bottom, 25)
+
+                VStack(spacing: 16) {
                     // Primary Action Button
                     Button(action: viewModel.primaryAction) {
                         Text(viewModel.accountStatusType.primaryButtonTitle)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(viewModel.accountStatusType.canTakeAction ? Color.loginRegisterEnabledButtonColor : Color.gray)
-                            .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
+                            .background(buttonBackgroundColor(isPrimary: true))
+                            .foregroundColor(buttonTextColor(isPrimary: true))
                             .font(.bold(.callout))
                             .dynamicTypeSize(dynamicTypeRange)
                             .clipShape(Capsule())
@@ -80,25 +124,23 @@ struct AccountStatusView: View, ResponsivePopupLayoutProvider {
                             Text(secondaryTitle)
                                 .frame(maxWidth: .infinity)
                                 .padding()
-                                .foregroundColor(.welcomeButtonTextColor)
+                                .background(buttonBackgroundColor(isPrimary: false))
+                                .foregroundColor(buttonTextColor(isPrimary: false))
                                 .font(.bold(.callout))
                                 .dynamicTypeSize(dynamicTypeRange)
+                                .clipShape(Capsule())
                         }
                         .frame(maxWidth: maxWidth)
                     }
                 }
 
                 Spacer()
-                    .frame(height: bottomPadding)
+                    .frame(height: bottomPadding + 96)
             }
             .dynamicTypeSize(dynamicTypeRange)
-            .padding(.horizontal, 48)
+            .padding(.horizontal, 64)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                Color.from(.screenBackgroundColor, viewModel.isDarkMode)
-                    .opacity(0.95)
-                    .ignoresSafeArea()
-            )
+            .background(Color.from(.screenBackgroundColor, viewModel.isDarkMode).ignoresSafeArea())
         }
         .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
             if shouldDismiss {

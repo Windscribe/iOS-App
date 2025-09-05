@@ -1090,7 +1090,7 @@ enum TextsAsset {
         }
 
         static var cancel: String {
-            return "I'll wait!".localized
+            return "Back".localized
         }
     }
 
@@ -1108,7 +1108,7 @@ enum TextsAsset {
         }
 
         static var cancel: String {
-            return "Remind me later".localized
+            return "Back".localized
         }
     }
 
@@ -1122,7 +1122,7 @@ enum TextsAsset {
         }
 
         static var action: String {
-            return "Done".localized
+            return "Close".localized
         }
     }
 
@@ -2000,7 +2000,7 @@ enum TextsAsset {
         }
 
         static var checkStatus: String {
-            return "Check status".localized
+            return "Check Location Status".localized
         }
 
         static var cancelTitle: String {
