@@ -26,7 +26,7 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let refreshProtocolSubject = BehaviorSubject<ProtocolPort?>(value: ProtocolPort(DefaultValues.protocol, DefaultValues.port))
 
     let disposeBag = DisposeBag()
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
 
     let locationsManager: LocationsManagerType
     let vpnManager: VPNManager
@@ -39,10 +39,12 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
         self.preferences = preferences
         self.vpnManager = vpnManager
         self.protocolManager = protocolManager
+        vpnManager.getStatus()
+            .sink { [weak self] state in
+                self?.statusSubject.onNext(ConnectionState.state(from: state))
+            }
+            .store(in: &cancellables)
 
-        vpnManager.getStatus().subscribe(onNext: { state in
-            self.statusSubject.onNext(ConnectionState.state(from: state))
-        }).disposed(by: disposeBag)
         preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
             self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)

@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Combine
 import QuartzCore
 
 protocol ConnectButtonViewModelType {
@@ -19,11 +20,14 @@ class ConnectButtonViewModel: ConnectButtonViewModelType {
     let statusSubject = BehaviorSubject<ConnectionState?>(value: nil)
 
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(vpnManager: VPNManager) {
-        vpnManager.getStatus().subscribe(onNext: { state in
-            self.statusSubject.onNext(ConnectionState.state(from: state))
-        }).disposed(by: disposeBag)
+        vpnManager.getStatus()
+            .sink { [weak self] state in
+                self?.statusSubject.onNext(ConnectionState.state(from: state))
+            }
+            .store(in: &cancellables)
     }
 
     func refreshConnectingState() {

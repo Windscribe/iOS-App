@@ -86,7 +86,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let reloadLocationsTrigger = PublishSubject<String>()
     let reviewRequestTrigger = PublishSubject<Void>()
     let showPreferredProtocolView = PublishSubject<String>()
-    
+
     let combineVpnInfo = PassthroughSubject<VPNConnectionInfo?, Never>()
 
     private let disposeBag = DisposeBag()
@@ -113,6 +113,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var loadLatencyValuesOnDisconnect = false
     private var currentNetwork: AppNetwork?
     private var currentWifiAutoSecured = false
+
     private var currentConnectionType: ConnectionType = .user
 
     init(logger: FileLogger,
@@ -146,16 +147,14 @@ class ConnectionViewModel: ConnectionViewModelType {
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
-        vpnManager.vpnInfo.subscribe(onNext: { [weak self] vpnInfo in
-            self?.combineVpnInfo.send(vpnInfo)
-        }).disposed(by: disposeBag)
-        
-        vpnManager.getStatus().subscribe(onNext: { state in
-            self.updateState(with: ConnectionState.state(from: state))
-            self.saveDataForWidget()
-        }).disposed(by: disposeBag)
-        
-        Publishers.CombineLatest(combineVpnInfo, protocolManager.currentProtocolSubject)
+        vpnManager.getStatus()
+            .sink { state in
+                self.updateState(with: ConnectionState.state(from: state))
+                self.saveDataForWidget()
+            }
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest(vpnManager.vpnInfo, protocolManager.currentProtocolSubject)
             .sink { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
@@ -172,7 +171,7 @@ class ConnectionViewModel: ConnectionViewModelType {
             .sink { [weak self] value in
                 guard let self = self, let value = value else { return }
                 // Only block if actually connected, not just matching protocol
-                if let info = try? vpnManager.vpnInfo.value(),
+                if let info = vpnManager.vpnInfo.value,
                    info.selectedProtocol == value.protocolPort.protocolName,
                    info.status == .connected {
                     return
@@ -327,7 +326,7 @@ extension ConnectionViewModel {
     }
 
     private func refreshConnectionFromNetworkChange() {
-        if let info = try? vpnManager.vpnInfo.value() {
+        if let info = vpnManager.vpnInfo.value {
             if connectivity.getNetwork().name == nil || connectivity.getNetwork().name == "Unknown" {
                 return
             }

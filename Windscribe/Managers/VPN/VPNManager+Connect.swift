@@ -50,7 +50,7 @@ extension VPNManager {
     func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
         logger.logI("VPNConfiguration", "Connecting from ViewModel")
         connectionTaskPublisher?.cancel()
-        self.vpnInfo.onNext(VPNConnectionInfo(selectedProtocol: proto.protocolName,
+        self.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
                                               selectedPort: proto.portName,
                                               status: .connecting,
                                               killSwitch: false,
@@ -75,7 +75,7 @@ extension VPNManager {
 
     /// Disconnect and disable killswitch if ON
     private func disableKillSwitchIfRequired() -> AnyPublisher<Void, Never> {
-        guard let info = try? vpnInfo.value(), info.killSwitch == true else {
+        guard let info = vpnInfo.value, info.killSwitch == true else {
             return Just(()).eraseToAnyPublisher()
         }
         return configManager.disconnectAsync()

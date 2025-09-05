@@ -236,7 +236,7 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         if !isFromFailover, !shouldReconnect,
-           let info = try? vpnManager.vpnInfo.value(), info.status == .connected {
+           let info = vpnManager.vpnInfo.value, info.status == .connected {
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
         } else {

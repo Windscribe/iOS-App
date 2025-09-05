@@ -15,31 +15,31 @@ import RealmSwift
 
 extension VPNManager {
     func isConnected() -> Bool {
-        (try? vpnInfo.value())?.status == .connected
+        vpnInfo.value?.status == .connected
     }
 
     func isConnecting() -> Bool {
-        (try? vpnInfo.value())?.status == .connecting
+        vpnInfo.value?.status == .connecting
     }
 
     func isDisconnected() -> Bool {
-        (try? vpnInfo.value())?.status == .disconnected
+        vpnInfo.value?.status == .disconnected
     }
 
     func isDisconnecting() -> Bool {
-        (try? vpnInfo.value())?.status == .disconnecting
+        vpnInfo.value?.status == .disconnecting
     }
 
     func isInvalid() -> Bool {
-        (try? vpnInfo.value())?.status == .invalid
+        vpnInfo.value?.status == .invalid
     }
 
     func connectionStatus() -> NEVPNStatus {
-        return (try? vpnInfo.value()?.status) ?? NEVPNStatus.disconnected
+        return vpnInfo.value?.status ?? NEVPNStatus.disconnected
     }
 
     @objc func connectionStatusChanged(_: Notification?) {
-        connectionStateUpdatedTrigger.onNext(())
+        connectionStateUpdatedTrigger.send(())
     }
 
     func configureForConnectionState() {
@@ -49,7 +49,7 @@ extension VPNManager {
                     return
                 }
                 self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
-                self.vpnInfo.onNext(info)
+                self.vpnInfo.send(info)
                 let connectionStatus = info.status
                 let protocolType = info.selectedProtocol
                 if self.lastConnectionStatus == connectionStatus { return }
@@ -93,7 +93,11 @@ extension VPNManager {
             // Ip is available but its a NON VPN IP.
             if !ip.isInvalidated && !ip.isOurIp {
                 logger.logI("VPNManager", "Updating non VPN IP after connection update from on demand mode.")
-                ipRepository.getIp().subscribe().disposed(by: disposeBag)
+                ipRepository.getIp()
+                        .asPublisher()
+                        .receive(on: DispatchQueue.main)
+                        .sink(receiveCompletion: { _ in }, receiveValue: { })
+                        .store(in: &cancellables)
             }
         default: ()
         }
@@ -119,12 +123,19 @@ extension VPNManager {
                     self.logger.logI("VPNManager", "Disabling VPN Profiles to get access api access.")
                     try await Task.sleep(nanoseconds: 2_000_000_000)
                     self.logger.logI("VPNManager", "Getting new session.")
-                    self.sessionManager.getUppdatedSession().subscribe(onSuccess: { _ in
-                        self.awaitingConnectionCheck = false
-                    }, onFailure: { _ in
-                        self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile.")
-                        self.awaitingConnectionCheck = false
-                    }).disposed(by: self.disposeBag)
+
+                    self.sessionManager.getUppdatedSession()
+                        .asPublisher()
+                        .receive(on: DispatchQueue.main)
+                        .sink(receiveCompletion: { [weak self] completion in
+                            if case let .failure(error) = completion {
+                                self?.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
+                                self?.awaitingConnectionCheck = false
+                            }
+                        }, receiveValue: { [weak self] isDark in
+                            self?.awaitingConnectionCheck = false
+                        })
+                        .store(in: &self.cancellables)
                 }
             } else {
                 self.awaitingConnectionCheck = false

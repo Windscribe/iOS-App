@@ -10,7 +10,6 @@ import Foundation
 import NetworkExtension
 import RealmSwift
 import Combine
-import RxSwift
 import Swinject
 
 enum ConfigurationState {
@@ -23,10 +22,10 @@ enum ConfigurationState {
 protocol VPNManagerProtocol {}
 
 class VPNManager: VPNManagerProtocol {
-    let disposeBag = DisposeBag()
 
-    var vpnInfo = BehaviorSubject<VPNConnectionInfo?>(value: nil)
-    var connectionStateUpdatedTrigger = PublishSubject<Void>()
+    var cancellables = Set<AnyCancellable>()
+    var vpnInfo = CurrentValueSubject<VPNConnectionInfo?, Never>(nil)
+    var connectionStateUpdatedTrigger = PassthroughSubject<Void, Never>()
 
     var lastConnectionStatus: NEVPNStatus = .disconnected
 
@@ -92,10 +91,10 @@ class VPNManager: VPNManagerProtocol {
                                                name: NSNotification.Name.NEVPNStatusDidChange,
                                                object: nil)
         connectionStateUpdatedTrigger
-            .debounce(.milliseconds(250), scheduler: MainScheduler.instance)
-            .subscribe { _ in
-                self.configureForConnectionState()
-        }.disposed(by: disposeBag)
+            .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.configureForConnectionState()
+            }.store(in: &cancellables)
 
         self.configManager.delegate = self
     }
@@ -109,12 +108,13 @@ class VPNManager: VPNManagerProtocol {
     /// This function observes changes in the `vpnInfo` and applies a debounce to avoid rapid updates.
     ///
     /// - Returns: An `Observable` that emits the VPN status as an `NEVPNStatus` value.
-    func getStatus() -> Observable<NEVPNStatus> {
+    func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
         return vpnInfo
-            .debounce(.milliseconds(100), scheduler: MainScheduler.instance)
+            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
             .compactMap { $0 }
-            .map { [weak self] info in
-                guard let self = self else { return NEVPNStatus.invalid }
+            .map { [weak self] info -> NEVPNStatus in
+                guard let self = self else { return .invalid }
+
                 switch self.configurationState {
                 case .configuring:
                     self.logger.logD("VPNConfiguration", "vpnInfo update to: configuring -> connecting")
@@ -129,7 +129,8 @@ class VPNManager: VPNManagerProtocol {
                     return info.status
                 }
             }
-            .distinctUntilChanged()
+            .removeDuplicates()
+            .eraseToAnyPublisher()
     }
 
     func updateOnDemandRules() {

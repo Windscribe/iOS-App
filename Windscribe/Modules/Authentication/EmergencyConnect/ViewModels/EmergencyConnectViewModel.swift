@@ -62,9 +62,8 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
 
     private func observeVPNStateChanges() {
         vpnManager.getStatus()
-            .toPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] state in
+            .sink { [weak self] state in
                 guard let self = self else { return }
 
                 self.logger.logI("EmergencyConnectViewModel", "VPN state changed to \(state)")
@@ -79,12 +78,12 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
                 default:
                     self.connectionState = .disconnected
                 }
-            })
+            }
             .store(in: &cancellables)
     }
 
     func appEnteredForeground() {
-        vpnManager.connectionStateUpdatedTrigger.onNext(())
+        vpnManager.connectionStateUpdatedTrigger.send(())
     }
 
     func connectButtonTapped() {
