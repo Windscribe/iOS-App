@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "garry_con.png",
+      "filename" : "garry_connection.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "garry_con 1.png",
+      "filename" : "garry_connection@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "garry_con@3x.png",
+      "filename" : "garry_connection@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -32,18 +32,18 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
             let bottomPadding = getBottomPadding(for: geometry, deviceType: deviceType)
             let maxWidth = getMaxWidth(for: geometry)
 
-            VStack(spacing: 32) {
+            VStack(spacing: 0) {
                 Spacer()
-                    .frame(height: topSpacer)
+                    .frame(height: topSpacer - 64)
 
-                // Top Image - Garry character
+                // Character Image
                 Image(ImagesAsset.Garry.con)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 94, height: 130)
+                    .scaledToFit()
+                    .frame(maxWidth: .infinity)
 
-                VStack(spacing: 16) {
-                    // Header Title
+                VStack(spacing: 25) {
+                    // Title
                     Text(TextsAsset.MaintenanceLocationPopUp.title)
                         .font(.bold(.title2))
                         .dynamicTypeSize(dynamicTypeRange)
@@ -51,54 +51,51 @@ struct MaintananceLocationView: View, ResponsivePopupLayoutProvider {
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: maxWidth)
 
-                    // Sub Header Text
+                    // Description
                     Text(TextsAsset.MaintenanceLocationPopUp.subtHeader)
-                        .font(.text(.callout))
+                        .font(.regular(.callout))
                         .dynamicTypeSize(dynamicTypeRange)
                         .foregroundColor(.welcomeButtonTextColor)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: maxWidth)
                 }
+                .padding(.bottom, 25)
 
-                VStack(spacing: 8) {
-                    // Check Status Button (hidden for static IP)
-                    if !context.isStaticIp {
-                        Button(action: viewModel.checkStatus) {
-                            Text(TextsAsset.MaintenanceLocationPopUp.checkStatus)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.loginRegisterEnabledButtonColor)
-                                .foregroundColor(.from(.actionBackgroundColor, viewModel.isDarkMode))
-                                .font(.bold(.callout))
-                                .dynamicTypeSize(dynamicTypeRange)
-                                .clipShape(Capsule())
-                        }
-                        .frame(maxWidth: maxWidth)
+                VStack(spacing: 16) {
+                    // Primary Action Button (Check Status)
+                    Button(action: viewModel.checkStatus) {
+                        Text(TextsAsset.MaintenanceLocationPopUp.checkStatus)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.from(.actionButtonBackgroundColor, viewModel.isDarkMode))
+                            .foregroundColor(Color.from(.actionButtonTextColor, viewModel.isDarkMode))
+                            .font(.bold(.callout))
+                            .dynamicTypeSize(dynamicTypeRange)
+                            .clipShape(Capsule())
                     }
+                    .frame(maxWidth: maxWidth)
 
-                    // Cancel Button
+                    // Secondary Action Button (Cancel/Dismiss)
                     Button(action: viewModel.cancel) {
                         Text(TextsAsset.MaintenanceLocationPopUp.cancelTitle)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .foregroundColor(.welcomeButtonTextColor)
+                            .background(Color.from(.dismissButtonBackgroundColor, viewModel.isDarkMode))
+                            .foregroundColor(Color.from(.dismissButtonTextColor, viewModel.isDarkMode))
                             .font(.bold(.callout))
                             .dynamicTypeSize(dynamicTypeRange)
+                            .clipShape(Capsule())
                     }
                     .frame(maxWidth: maxWidth)
                 }
 
                 Spacer()
-                    .frame(height: bottomPadding)
+                    .frame(height: bottomPadding + 96)
             }
             .dynamicTypeSize(dynamicTypeRange)
-            .padding(.horizontal, 48)
+            .padding(.horizontal, 64)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(
-                Color.from(.screenBackgroundColor, viewModel.isDarkMode)
-                    .opacity(0.95)
-                    .ignoresSafeArea()
-            )
+            .background(Color.from(.screenBackgroundColor, viewModel.isDarkMode).ignoresSafeArea())
         }
         .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
             if shouldDismiss {
