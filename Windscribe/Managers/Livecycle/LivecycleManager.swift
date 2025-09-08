@@ -7,14 +7,13 @@
 //
 
 import Combine
-import RxSwift
 import UIKit
 import NetworkExtension
 
 protocol LivecycleManagerType {
-    var showNetworkSecurityTrigger: PublishSubject<Void> { get }
-    var showNotificationsTrigger: PublishSubject<Void> { get }
-    var becameActiveTrigger: PublishSubject<Void> { get }
+    var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
+    var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
+    var becameActiveTrigger: PassthroughSubject<Void, Never> { get }
 
     func onAppStart()
     func appEnteredForeground()
@@ -33,13 +32,14 @@ class LivecycleManager: LivecycleManagerType {
     let connectivityManager: ProtocolManagerType
     let locationsManager: LocationsManagerType
 
-    let showNetworkSecurityTrigger = PublishSubject<Void>()
-    let showNotificationsTrigger = PublishSubject<Void>()
-    let becameActiveTrigger = PublishSubject<Void>()
-    let disposeBag = DisposeBag()
+    let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
+    let showNotificationsTrigger = PassthroughSubject<Void, Never>()
+    let becameActiveTrigger = PassthroughSubject<Void, Never>()
     var disconnectTask: AnyCancellable?
     var connectTask: AnyCancellable?
     var testTask: Task<Void, Error>?
+
+    private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          sessionManager: SessionManaging,
@@ -88,7 +88,7 @@ class LivecycleManager: LivecycleManagerType {
     func appEnteredForeground() {
         checkForKillSwitch()
         logger.logI("LivecycleManager", "App internet moved to foreground.")
-        becameActiveTrigger.onNext(())
+        becameActiveTrigger.send(())
         sessionManager.keepSessionUpdated()
         guard let lastNotificationTimestamp = preferences.getLastNotificationTimestamp() else {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
@@ -105,19 +105,9 @@ class LivecycleManager: LivecycleManagerType {
     private func testConnectivity() -> Task<Void, Error> {
         return Task { @MainActor in
             do {
-                let network = connectivity.getNetwork()
-                self.logger.logI("LivecycleManager", "Network: \(network)")
-
-                try await withCheckedThrowingContinuation { continuation in
-                    ipRepository.getIp().retry(3).subscribe(onSuccess: { _ in
-                        continuation.resume(with: .success(()))
-                    }, onFailure: { _ in
-                        continuation.resume(with: .failure(VPNConfigurationErrors.connectivityTestFailed))
-                    }).disposed(by: disposeBag)
-                }
-
-                self.logger.logI("LivecycleManager", "Internet connectivity validated!")
+                try await ipRepository.getIp().retry(3).asPromise()
                 testTask = nil
+                self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
             } catch {
                 testTask = nil
                 self.logger.logE("LivecycleManager", "Connected to VPN but no internet. \(error)")
@@ -163,8 +153,12 @@ class LivecycleManager: LivecycleManagerType {
 
     private func connectToVPN(updatedLocationId: String) async throws {
         let settings = vpnManager.makeUserSettings()
-        let proto = ProtocolPort(TextsAsset.wireGuard, "443") // TODO: vpnManager  - await vpnManager.getProtocolPort()
-
+        var proto: ProtocolPort
+        if let info = vpnManager.vpnInfo.value {
+            proto = ProtocolPort(info.selectedProtocol, info.selectedPort)
+        } else {
+            proto = ProtocolPort(TextsAsset.wireGuard, "443")
+        }
         try await withCheckedThrowingContinuation { continuation in
             self.connectTask = configManager.connectAsync(
                 locationID: updatedLocationId,
@@ -192,9 +186,9 @@ class LivecycleManager: LivecycleManagerType {
         let shortcut = (UIApplication.shared.delegate as? AppDelegate)?.shortcutType ?? .none
         (UIApplication.shared.delegate as? AppDelegate)?.shortcutType = ShortcutType.none
         if shortcut == .networkSecurity {
-            showNetworkSecurityTrigger.onNext(())
+            showNetworkSecurityTrigger.send(())
         } else if shortcut == .notifications {
-            showNotificationsTrigger.onNext(())
+            showNotificationsTrigger.send(())
         }
 #endif
     }

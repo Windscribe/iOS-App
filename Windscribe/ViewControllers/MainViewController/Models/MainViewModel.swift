@@ -31,9 +31,9 @@ protocol MainViewModelType {
     var session: BehaviorSubject<Session?> { get }
     var favouriteGroups: BehaviorSubject<[GroupModel]> { get }
 
-    var showNetworkSecurityTrigger: PublishSubject<Void> { get }
-    var showNotificationsTrigger: PublishSubject<Void> { get }
-    var becameActiveTrigger: PublishSubject<Void> { get }
+    var showNetworkSecurityTrigger: PassthroughSubject<Void, Never> { get }
+    var showNotificationsTrigger: PassthroughSubject<Void, Never> { get }
+    var becameActiveTrigger: PassthroughSubject<Void, Never> { get }
     var updateSSIDTrigger: PublishSubject<Void> { get }
     var showProtocolSwitchTrigger: PublishSubject<Void> { get }
     var showAllProtocolsFailedTrigger: PublishSubject<Void> { get }
@@ -103,9 +103,9 @@ class MainViewModel: MainViewModelType {
     var favouriteGroups = BehaviorSubject<[GroupModel]>(value: [])
     let promoPayload: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
 
-    let showNetworkSecurityTrigger: PublishSubject<Void>
-    let showNotificationsTrigger: PublishSubject<Void>
-    let becameActiveTrigger: PublishSubject<Void>
+    let showNetworkSecurityTrigger: PassthroughSubject<Void, Never>
+    let showNotificationsTrigger: PassthroughSubject<Void, Never>
+    let becameActiveTrigger: PassthroughSubject<Void, Never>
     let updateSSIDTrigger = PublishSubject<Void>()
     let showProtocolSwitchTrigger = PublishSubject<Void>()
     let showAllProtocolsFailedTrigger = PublishSubject<Void>()
