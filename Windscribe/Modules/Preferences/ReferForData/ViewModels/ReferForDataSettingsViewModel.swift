@@ -21,7 +21,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let sessionManager: SessionManaging
-    private let referFriendManager: ReferAndShareManagerV2
+    private let referFriendManager: ReferAndShareManager
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
 
@@ -35,7 +35,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
         sessionManager: SessionManaging,
-        referFriendManager: ReferAndShareManagerV2,
+        referFriendManager: ReferAndShareManager,
         logger: FileLogger
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
