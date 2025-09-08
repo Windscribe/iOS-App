@@ -881,7 +881,7 @@ container.register(PushNotificationView.self) { r in
     PushNotificationView(viewModel: PushNotificationViewModelImpl(
         logger: r.resolve(FileLogger.self)!,
         lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-        pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+        pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
     )
 }.inObjectScope(.transient)
 ```

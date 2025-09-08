@@ -277,7 +277,7 @@ class SessionManager: SessionManaging {
 
         // Clear Connection and notification count
         preferences.saveConnectionCount(count: 0)
-        Assembler.resolve(PushNotificationManagerV2.self).setNotificationCount(count: 0)
+        Assembler.resolve(PushNotificationManager.self).setNotificationCount(count: 0)
 
         // Clear the local data base
         localDatabase.clean()

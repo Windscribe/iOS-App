@@ -31,7 +31,7 @@ class GeneralViewModel: GeneralViewModelType {
     let lookAndFeelRepository: LookAndFeelRepositoryType
     private let preferences: Preferences
     private let languageManager: LanguageManager
-    private let pushNotificationManager: PushNotificationManagerV2
+    private let pushNotificationManager: PushNotificationManager
 
     // MARK: - State
 
@@ -47,7 +47,7 @@ class GeneralViewModel: GeneralViewModelType {
     init(preferences: Preferences,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          languageManager: LanguageManager,
-         pushNotificationManager: PushNotificationManagerV2) {
+         pushNotificationManager: PushNotificationManager) {
         self.preferences = preferences
         self.lookAndFeelRepository = lookAndFeelRepository
         self.languageManager = languageManager

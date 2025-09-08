@@ -104,7 +104,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     var router: HomeRouter?
     var accountRouter: AccountRouter?
     var popupRouter: PopupRouter?
-    var pushNotificationManager: PushNotificationManagerV2?
+    var pushNotificationManager: PushNotificationManager?
 
     // MARK: View Models
     var viewModel: MainViewModelType!
@@ -152,10 +152,13 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(connectVPNIntentReceived), name: Notifications.connectToVPN, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(enableVPNConnection), name: Notifications.configureVPN, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(showCustomConfigTab), name: Notifications.showCustomConfigTab, object: nil)
-        pushNotificationManager?.notification.compactMap { $0 }.subscribe(onNext: { notification in
-            self.pushNotificationReceived(payload: notification)
-        }).disposed(by: disposeBag)
-        if let payload = try? pushNotificationManager?.notification.value() {
+        pushNotificationManager?.notification
+            .compactMap { $0 }
+            .sink {
+                self.pushNotificationReceived(payload: $0)
+            }
+            .store(in: &cancellables)
+        if let payload = pushNotificationManager?.notification.value {
             if payload.type == "promo" {
                 launchPromoView(payload: payload)
             }

@@ -23,12 +23,12 @@ final class PushNotificationViewModelImpl: PushNotificationViewModel {
 
     private let logger: FileLogger
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let pushNotificationsManager: PushNotificationManagerV2
+    private let pushNotificationsManager: PushNotificationManager
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         pushNotificationsManager: PushNotificationManagerV2) {
+         pushNotificationsManager: PushNotificationManager) {
         self.logger = logger
         self.lookAndFeelRepository = lookAndFeelRepository
         self.pushNotificationsManager = pushNotificationsManager

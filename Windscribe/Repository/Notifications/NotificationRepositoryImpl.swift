@@ -13,11 +13,11 @@ class NotificationRepositoryImpl: NotificationRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
-    private let pushNotificationsManager: PushNotificationManagerV2
+    private let pushNotificationsManager: PushNotificationManager
     private let disposeBag = DisposeBag()
     let notices = BehaviorSubject<[Notice]>(value: [])
 
-    init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger, pushNotificationsManager: PushNotificationManagerV2) {
+    init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger, pushNotificationsManager: PushNotificationManager) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
@@ -25,7 +25,7 @@ class NotificationRepositoryImpl: NotificationRepository {
     }
 
     func getUpdatedNotifications() -> Single<[Notice]> {
-        let pcpid = (try? pushNotificationsManager.notification.value()?.pcpid) ?? ""
+        let pcpid = pushNotificationsManager.notification.value?.pcpid ?? ""
 
         if !pcpid.isEmpty {
             logger.logD("NotificationRepository", "Adding pcpid ID: \(pcpid) to notifications request.")

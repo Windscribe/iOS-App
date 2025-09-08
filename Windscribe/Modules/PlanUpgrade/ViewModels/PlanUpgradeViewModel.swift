@@ -40,7 +40,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let sessionManager: SessionManaging
     private let preferences: Preferences
     private var inAppPurchaseManager: InAppPurchaseManager
-    private let pushNotificationManager: PushNotificationManagerV2
+    private let pushNotificationManager: PushNotificationManager
     private let billingRepository: BillingRepository
     private let logger: FileLogger
 
@@ -63,7 +63,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
     init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, upgradeRouter: UpgradeRouter,
          sessionManager: SessionManaging, preferences: Preferences, inAppPurchaseManager: InAppPurchaseManager,
-         pushNotificationManager: PushNotificationManagerV2, billingRepository: BillingRepository, logger: FileLogger,
+         pushNotificationManager: PushNotificationManager, billingRepository: BillingRepository, logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase

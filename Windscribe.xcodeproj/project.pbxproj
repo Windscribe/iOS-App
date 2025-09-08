@@ -500,8 +500,7 @@
 		59FC74592C51616100021CD1 /* UIEdgeInsets+ Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9219FEE2885AF900026E544 /* UIEdgeInsets+ Extension.swift */; };
 		59FC745B2C5161D900021CD1 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04982A21FA22530046D33B /* UIView+Extension.swift */; };
 		59FC745C2C5161DD00021CD1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F3087237B38670097C6D6 /* UIImageView+Extension.swift */; };
-		59FC745D2C51641D00021CD1 /* PushNotificationManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE012B4F2536004FA857 /* PushNotificationManagerV2.swift */; };
-		59FC745E2C51642100021CD1 /* PushNotificationManagerV2Impl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerV2Impl.swift */; };
+		59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */; };
 		59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDA2280E70300378058 /* Realm+Extension.swift */; };
 		59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */; };
 		59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
@@ -840,8 +839,7 @@
 		C580FDFA2B4DE80A004FA857 /* AppNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDF92B4DE80A004FA857 /* AppNetwork.swift */; };
 		C580FDFD2B4E5FE9004FA857 /* SecuredNetworkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */; };
 		C580FDFF2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */; };
-		C580FE022B4F2536004FA857 /* PushNotificationManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE012B4F2536004FA857 /* PushNotificationManagerV2.swift */; };
-		C580FE042B4F254E004FA857 /* PushNotificationManagerV2Impl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerV2Impl.swift */; };
+		C580FE042B4F254E004FA857 /* PushNotificationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */; };
 		C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE152B507883004FA857 /* UncompletedTransactions.swift */; };
 		C580FE182B5078B3004FA857 /* WindscribeInAppProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE172B5078B3004FA857 /* WindscribeInAppProduct.swift */; };
 		C580FE1A2B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE192B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift */; };
@@ -1848,8 +1846,7 @@
 		C580FDF92B4DE80A004FA857 /* AppNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppNetwork.swift; sourceTree = "<group>"; };
 		C580FDFC2B4E5FE9004FA857 /* SecuredNetworkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuredNetworkRepository.swift; sourceTree = "<group>"; };
 		C580FDFE2B4E5FFC004FA857 /* SecuredNetworkRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecuredNetworkRepositoryImpl.swift; sourceTree = "<group>"; };
-		C580FE012B4F2536004FA857 /* PushNotificationManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManagerV2.swift; sourceTree = "<group>"; };
-		C580FE032B4F254E004FA857 /* PushNotificationManagerV2Impl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManagerV2Impl.swift; sourceTree = "<group>"; };
+		C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManagerImpl.swift; sourceTree = "<group>"; };
 		C580FE152B507883004FA857 /* UncompletedTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UncompletedTransactions.swift; sourceTree = "<group>"; };
 		C580FE172B5078B3004FA857 /* WindscribeInAppProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindscribeInAppProduct.swift; sourceTree = "<group>"; };
 		C580FE192B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManagerDelegate.swift; sourceTree = "<group>"; };
@@ -3804,8 +3801,7 @@
 		C580FE002B4F250D004FA857 /* PushNotification */ = {
 			isa = PBXGroup;
 			children = (
-				C580FE012B4F2536004FA857 /* PushNotificationManagerV2.swift */,
-				C580FE032B4F254E004FA857 /* PushNotificationManagerV2Impl.swift */,
+				C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */,
 			);
 			path = PushNotification;
 			sourceTree = "<group>";
@@ -6272,7 +6268,6 @@
 				59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */,
 				1E8C8F382C65000800CBFDC5 /* ConnectionsViewModel.swift in Sources */,
 				59FC74282C5155B000021CD1 /* Proxy.swift in Sources */,
-				59FC745D2C51641D00021CD1 /* PushNotificationManagerV2.swift in Sources */,
 				F4F29E512D68D6D500933633 /* UIImage+Extension.swift in Sources */,
 				59C96D692C69C55F00546C72 /* ServerListViewController.swift in Sources */,
 				59FC73DC2C514BC600021CD1 /* Connectivity.swift in Sources */,
@@ -6355,7 +6350,7 @@
 				59FC73F42C51527500021CD1 /* User.swift in Sources */,
 				59FC73E22C51504600021CD1 /* APIManager.swift in Sources */,
 				59FC73EF2C51513100021CD1 /* UserRepository.swift in Sources */,
-				59FC745E2C51642100021CD1 /* PushNotificationManagerV2Impl.swift in Sources */,
+				59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */,
 				599BA2AA2C5D202A00F0D1E4 /* LocalDatabaseImpl+Migration.swift in Sources */,
 				59FC73E92C51507800021CD1 /* APIManagerImpl+Account.swift in Sources */,
 				F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */,
@@ -6609,7 +6604,7 @@
 				F4F3A5B72E26C855006D967F /* EnterCredentialsView.swift in Sources */,
 				AF2A752D230C52FB00548088 /* WSTableViewDataSource.swift in Sources */,
 				C524AA5E26B231AC00FCB1B6 /* AboutItem.swift in Sources */,
-				C580FE042B4F254E004FA857 /* PushNotificationManagerV2Impl.swift in Sources */,
+				C580FE042B4F254E004FA857 /* PushNotificationManagerImpl.swift in Sources */,
 				F43184BD2E1DA58F007C96E3 /* LocationPermissionInfoViewModel.swift in Sources */,
 				F4888E322D930D75005EF149 /* BaseNavigationRouter.swift in Sources */,
 				F49C45C42DCD3201007E5EF1 /* LookAndFeelSettingsViewModel.swift in Sources */,
@@ -6917,7 +6912,6 @@
 				AF02A9EB22B14D4700A9F44B /* SelectedNode.swift in Sources */,
 				1EAEF75F2E2A934200F3C51F /* ShakeForDataGameView.swift in Sources */,
 				AF914A7423CE2012002D3041 /* Token.swift in Sources */,
-				C580FE022B4F2536004FA857 /* PushNotificationManagerV2.swift in Sources */,
 				C5592B782B37FA7D00F2F110 /* APIManagerImpl+Robert.swift in Sources */,
 				F45BA5A22D54010100CFDB82 /* UpgradeSuccessShareView.swift in Sources */,
 				F48705B62DE61A67007435EB /* MenuTextFieldDialogView.swift in Sources */,
