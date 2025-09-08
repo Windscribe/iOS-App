@@ -1,5 +1,5 @@
 //
-//  PushNotificationManagerV2Impl.swift
+//  PushNotificationManagerImpl.swift
 //  Windscribe
 //
 //  Created by Ginder Singh on 2024-01-10.
@@ -7,11 +7,20 @@
 //
 
 import Foundation
-import RxSwift
 import UIKit
+import Combine
 
-class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
-    let notification: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
+protocol PushNotificationManager {
+    func askForPushNotificationPermission()
+    func handleSilentPushNotificationActions(payload: PushNotificationPayload)
+    func addPushNotification(notificationPayload: PushNotificationPayload?)
+    func setNotificationCount(count: Int)
+    func isAuthorizedForPushNotifications(completion: @escaping (_ result: Bool) -> Void)
+    var notification: CurrentValueSubject<PushNotificationPayload?, Never> { get }
+}
+
+class PushNotificationManagerImpl: PushNotificationManager {
+    let notification: CurrentValueSubject<PushNotificationPayload?, Never> = CurrentValueSubject(nil)
     let vpnManager: VPNManager
     let session: SessionManaging
     let logger: FileLogger
@@ -23,8 +32,8 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     }
 
     func addPushNotification(notificationPayload: PushNotificationPayload?) {
-        notification.onNext(notificationPayload)
         if let notificationPayload = notificationPayload {
+            notification.send(notificationPayload)
             handleSilentPushNotificationActions(payload: notificationPayload)
         }
     }
@@ -37,7 +46,7 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
         case "account_downgraded":
             session.keepSessionUpdated()
         case "promo":
-            notification.onNext(payload)
+            notification.send(payload)
         default:
             return
         }

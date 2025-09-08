@@ -29,14 +29,14 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
     // MARK: - Dependencies
     private let languageManager: LanguageManager
     private let preferences: Preferences
-    private let pushNotificationManager: PushNotificationManagerV2
+    private let pushNotificationManager: PushNotificationManager
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          languageManager: LanguageManager,
          preferences: Preferences,
-         pushNotificationManager: PushNotificationManagerV2) {
+         pushNotificationManager: PushNotificationManager) {
 
         self.languageManager = languageManager
         self.preferences = preferences

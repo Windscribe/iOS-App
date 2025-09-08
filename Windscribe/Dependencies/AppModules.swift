@@ -63,7 +63,7 @@ class Repository: Assembly {
             BillingRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(NotificationRepository.self) { r in
-            NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+            NotificationRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger, pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.userScope)
         container.register(StaticIpRepository.self) { r in
             StaticIpRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
@@ -184,8 +184,8 @@ class Managers: Assembly {
             LocalizationBridge.setup(localizer)
             return LanguageManagerImpl(preference: prefs, localizationService: localizer)
         }.inObjectScope(.userScope)
-        container.register(PushNotificationManagerV2.self) { r in
-            PushNotificationManagerV2Impl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!)
+        container.register(PushNotificationManager.self) { r in
+            PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
             ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManagerType.self)!)

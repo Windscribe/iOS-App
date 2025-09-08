@@ -68,7 +68,7 @@ class ViewModels: Assembly {
                 sessionManager: r.resolve(SessionManaging.self)!,
                 preferences: r.resolve(Preferences.self)!,
                 inAppPurchaseManager: r.resolve(InAppPurchaseManager.self)!,
-                pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!,
+                pushNotificationManager: r.resolve(PushNotificationManager.self)!,
                 billingRepository: r.resolve(BillingRepository.self)!,
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)
@@ -224,14 +224,14 @@ class ViewModels: Assembly {
             PushNotificationViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+                pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any RestrictiveNetworkViewModel).self) { r in
             RestrictiveNetworkViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+                pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any EnterCredentialsViewModel).self) { r in
@@ -319,7 +319,7 @@ class ViewModels: Assembly {
                           preferences: r.resolve(Preferences.self)!,
                           latencyRepo: r.resolve(LatencyRepository.self)!,
                           lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                          pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!,
+                          pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
                           notificationsRepo: r.resolve(NotificationRepository.self)!,
                           credentialsRepository: r.resolve(CredentialsRepository.self)!,
                           connectivity: r.resolve(Connectivity.self)!,
@@ -550,7 +550,7 @@ class ViewControllerModule: Assembly {
                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 languageManager: r.resolve(LanguageManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                pushNotificationManager: r.resolve(PushNotificationManagerV2.self)!
+                pushNotificationManager: r.resolve(PushNotificationManager.self)!
             ))
         }.inObjectScope(.transient)
 
@@ -819,7 +819,7 @@ class ViewControllerModule: Assembly {
             PushNotificationView(viewModel: PushNotificationViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+                pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
             )
         }.inObjectScope(.transient)
 
@@ -827,7 +827,7 @@ class ViewControllerModule: Assembly {
             RestrictiveNetworkView(viewModel: RestrictiveNetworkViewModelImpl(
                 logger: r.resolve(FileLogger.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
-                pushNotificationsManager: r.resolve(PushNotificationManagerV2.self)!)
+                pushNotificationsManager: r.resolve(PushNotificationManager.self)!)
             )
         }.inObjectScope(.transient)
 

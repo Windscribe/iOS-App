@@ -77,7 +77,7 @@ class MainViewModel: MainViewModelType {
     let preferences: Preferences
     let latencyRepo: LatencyRepository
     let connectivity: Connectivity
-    let pushNotificationsManager: PushNotificationManagerV2!
+    let pushNotificationsManager: PushNotificationManager!
     let notificationsRepo: NotificationRepository!
     let credentialsRepository: CredentialsRepository
     let livecycleManager: LivecycleManagerType
@@ -130,7 +130,7 @@ class MainViewModel: MainViewModelType {
          preferences: Preferences,
          latencyRepo: LatencyRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
-         pushNotificationsManager: PushNotificationManagerV2,
+         pushNotificationsManager: PushNotificationManager,
          notificationsRepo: NotificationRepository,
          credentialsRepository: CredentialsRepository,
          connectivity: Connectivity,
@@ -483,9 +483,12 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadNotifications() {
-        pushNotificationsManager.notification.compactMap { $0 }
-            .subscribe(onNext: { self.promoPayload.onNext($0) })
-            .disposed(by: disposeBag)
+        pushNotificationsManager.notification
+            .compactMap { $0 }
+            .sink {
+                self.promoPayload.onNext($0)
+            }
+            .store(in: &cancellables)
         notices = notificationsRepo.notices
     }
 
