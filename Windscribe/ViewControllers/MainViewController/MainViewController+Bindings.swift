@@ -106,25 +106,30 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         viewModel.showNetworkSecurityTrigger
-            .subscribe(onNext: { [weak self] in
+            .sink {[weak self] in
                 guard let self = self else { return }
                 Task { @MainActor in
                     self.locationPermissionManager.requestLocationPermission()
                     await self.locationPermissionManager.waitForPermission()
                     self.popupRouter?.routeTo(to: .networkSecurity, from: self)
                 }
-            })
-            .disposed(by: disposeBag)
+            }.store(in: &cancellables)
 
-        viewModel.showNotificationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.showNotificationsViewController()
-        }).disposed(by: disposeBag)
+        viewModel.showNotificationsTrigger
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] in
+                guard let self = self else { return }
+                self.showNotificationsViewController()
+            }.store(in: &cancellables)
 
-        viewModel.becameActiveTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {
-            self.clearScrollHappened()
-            self.checkAndShowShareDialogIfNeed()
-            self.updateConnectedState()
-        }).disposed(by: disposeBag)
+        viewModel.showNotificationsTrigger
+            .receive(on: DispatchQueue.main)
+            .sink {[weak self] in
+                guard let self = self else { return }
+                self.clearScrollHappened()
+                self.checkAndShowShareDialogIfNeed()
+                self.updateConnectedState()
+            }.store(in: &cancellables)
 
         vpnConnectionViewModel.reloadLocationsTrigger.subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: {  id in
             if id.starts(with: "static") {
@@ -137,9 +142,9 @@ extension MainViewController {
         }).disposed(by: disposeBag)
 
         vpnConnectionViewModel.reviewRequestTrigger
-             .observe(on: MainScheduler.instance)
-             .subscribe(onNext: { [weak self] in
-                 self?.displayReviewConfirmationAlert()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.displayReviewConfirmationAlert()
              })
              .disposed(by: disposeBag)
 
