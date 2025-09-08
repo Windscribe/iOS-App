@@ -7,18 +7,17 @@
 //
 
 import Foundation
-import RxSwift
-import Swinject
 
-class ReferAndShareManager: ReferAndShareManagerV2 {
-    private let disposeBag = DisposeBag()
+protocol ReferAndShareManager {
+    func checkAndShowDialogFirstTime() async -> Bool
+    func setShowedShareDialog(showed: Bool)
+}
 
+class ReferAndShareManagerImpl: ReferAndShareManager {
     private let sessionManager: SessionManaging
     private let preference: Preferences
     private let vpnManager: VPNManager
 	private let logger: FileLogger
-
-    static let shared = ReferAndShareManager(preferences: SharedSecretDefaults.shared, sessionManager: Assembler.resolve(SessionManaging.self), vpnManager: Assembler.resolve(VPNManager.self), logger: Assembler.resolve(FileLogger.self))
 
     init(preferences: Preferences, sessionManager: SessionManaging, vpnManager: VPNManager, logger: FileLogger) {
         preference = preferences
@@ -27,34 +26,36 @@ class ReferAndShareManager: ReferAndShareManagerV2 {
         self.logger = logger
     }
 
-    func checkAndShowDialogFirstTime(completion: @escaping () -> Void) {
-        guard !didShowedDialog() else {
-            return
+    func checkAndShowDialogFirstTime() async -> Bool {
+        guard !preference.getShowedShareDialog() else {
+            return false
         }
-        Task {
-            guard await vpnManager.isActive() else { return }
-            safeSession { session in
-                guard let regDate = session?.regDate else { return }
-                let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
-                let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
-                if !(session?.isUserPro ?? false) && !(session?.isUserGhost ?? false) && daysRegisteredSince > 30 {
-                    self.setShowedShareDialog()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                        completion()
-                    }
-                }
+        
+        guard await vpnManager.isActive() else { 
+            return false 
+        }
+
+        return await MainActor.run {
+            guard let session = sessionManager.session else { 
+                return false 
             }
-        }
-    }
+            let regDate = session.regDate
 
-    func safeSession(completion: @escaping (Session?) -> Void) {
-        DispatchQueue.main.async {
-            completion(self.sessionManager.session)
-        }
-    }
+            let registerDate = Date(timeIntervalSince1970: TimeInterval(regDate))
+            let daysRegisteredSince = Calendar.current.numberOfDaysBetween(registerDate, and: Date())
 
-    func didShowedDialog() -> Bool {
-        return preference.getShowedShareDialog()
+            if !session.isUserPro && !session.isUserGhost && daysRegisteredSince > 30 {
+                self.setShowedShareDialog()
+                
+                Task {
+                    try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
+                }
+                
+                return true
+            }
+            
+            return false
+        }
     }
 
     func setShowedShareDialog(showed: Bool = true) {

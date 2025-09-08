@@ -181,8 +181,12 @@ class Managers: Assembly {
                        alertManager: r.resolve(AlertManagerV2.self)!,
                        locationsManager: r.resolve(LocationsManagerType.self)!)
         }.inObjectScope(.userScope)
-        container.register(ReferAndShareManagerV2.self) { r in
-            ReferAndShareManager(preferences: r.resolve(Preferences.self)!, sessionManager: r.resolve(SessionManaging.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: r.resolve(FileLogger.self)!)
+        container.register(ReferAndShareManager.self) { r in
+            ReferAndShareManagerImpl(
+                preferences: r.resolve(Preferences.self)!,
+                sessionManager: r.resolve(SessionManaging.self)!,
+                vpnManager: r.resolve(VPNManager.self)!,
+                logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)

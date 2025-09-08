@@ -155,7 +155,7 @@ class ViewModels: Assembly {
             ReferForDataSettingsViewModelImpl(
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 sessionManager: r.resolve(SessionManaging.self)!,
-                referFriendManager: r.resolve(ReferAndShareManagerV2.self)!,
+                referFriendManager: r.resolve(ReferAndShareManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
 
@@ -627,7 +627,7 @@ class ViewControllerModule: Assembly {
                 viewModel: ReferForDataSettingsViewModelImpl(
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     sessionManager: r.resolve(SessionManaging.self)!,
-                    referFriendManager: r.resolve(ReferAndShareManagerV2.self)!,
+                    referFriendManager: r.resolve(ReferAndShareManager.self)!,
                     logger: r.resolve(FileLogger.self)!))
         }.inObjectScope(.transient)
 
@@ -757,6 +757,7 @@ class ViewControllerModule: Assembly {
             vc.favNodesListViewModel = r.resolve(FavouriteListViewModelType.self)
             vc.serverListViewModel = r.resolve(ServerListViewModelType.self)
             vc.latencyViewModel = r.resolve(LatencyViewModel.self)
+            vc.referAndShareManager = r.resolve(ReferAndShareManager.self)
         }.inObjectScope(.transient)
 
         container.register(PlanUpgradeViewController.self) { _ in

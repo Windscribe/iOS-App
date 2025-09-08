@@ -281,7 +281,6 @@
 		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
 		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
-		591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
 		59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
 		592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592CA7992C4EC0FF0078D487 /* LoginViewController.swift */; };
 		592CA7A32C4FF8910078D487 /* Login2FA.xib in Resources */ = {isa = PBXBuildFile; fileRef = 592CA7A22C4FF8910078D487 /* Login2FA.xib */; };
@@ -521,7 +520,6 @@
 		59FC74722C516D9700021CD1 /* InAppPurchaseManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF16CA1722272EBE00997A2A /* InAppPurchaseManagerImpl.swift */; };
 		59FC74732C516DC400021CD1 /* InAppPurchaseManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE192B5078F0004FA857 /* InAppPurchaseManagerDelegate.swift */; };
 		59FC74742C51726700021CD1 /* InAppPurchaseManager+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1B2B50794B004FA857 /* InAppPurchaseManager+Observer.swift */; };
-		59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */; };
 		59FC74792C51741000021CD1 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		59FC747A2C51741F00021CD1 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFFA716321C99B2F00349195 /* Date+Extension.swift */; };
 		59FC747B2C518BE400021CD1 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54AE8712B8E5BEF00646529 /* LoginViewModel.swift */; };
@@ -1546,7 +1544,6 @@
 		1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfirmEmailPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
 		591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManager.swift; sourceTree = "<group>"; };
-		591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManagerV2.swift; sourceTree = "<group>"; };
 		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B82BBF1160004DEB48 /* SubmitLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitLogViewModel.swift; sourceTree = "<group>"; };
@@ -3041,7 +3038,6 @@
 			isa = PBXGroup;
 			children = (
 				591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */,
-				591CF9A82BB4796A004DEB48 /* ReferAndShareManagerV2.swift */,
 			);
 			path = ReferAndShareManager;
 			sourceTree = "<group>";
@@ -6567,7 +6563,6 @@
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,
 				59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */,
 				59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */,
-				59FC74782C51740C00021CD1 /* ReferAndShareManagerV2.swift in Sources */,
 				59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */,
 				1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */,
 				1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */,
@@ -7030,7 +7025,6 @@
 				1E5553BD2D8D883700F16AF0 /* ConnectionStateInfoView.swift in Sources */,
 				1EDAA9232CD3CA910014E678 /* ConfigurationsManager+Info.swift in Sources */,
 				E90FD02B273977C100721874 /* SearchLocationsView.swift in Sources */,
-				591CF9A92BB4796A004DEB48 /* ReferAndShareManagerV2.swift in Sources */,
 				C5592B832B39408E00F2F110 /* IPRepository.swift in Sources */,
 				1EA91DCE2BEA693700496DF8 /* MainViewController+CustomConfigPicker.swift in Sources */,
 				AF018E0D21B1921600B225FF /* Session.swift in Sources */,

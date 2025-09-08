@@ -118,7 +118,7 @@ class MainViewController: WSUIViewController, UIGestureRecognizerDelegate {
     // MARK: Managers
     var soundManager: SoundManaging!
     var locationPermissionManager: LocationPermissionManaging!
-
+    var referAndShareManager: ReferAndShareManager!
     var logger: FileLogger!
 
     // MARK: constraints

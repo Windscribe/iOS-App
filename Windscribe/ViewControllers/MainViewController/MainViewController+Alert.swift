@@ -38,8 +38,13 @@ extension MainViewController {
     }
 
     func checkAndShowShareDialogIfNeed() {
-        ReferAndShareManager.shared.checkAndShowDialogFirstTime {
-            self.router?.routeTo(to: RouteID.shareWithFriends, from: self)
+        Task {
+            let shouldShow = await referAndShareManager.checkAndShowDialogFirstTime()
+            if shouldShow {
+                await MainActor.run {
+                    self.router?.routeTo(to: RouteID.shareWithFriends, from: self)
+                }
+            }
         }
     }
 
