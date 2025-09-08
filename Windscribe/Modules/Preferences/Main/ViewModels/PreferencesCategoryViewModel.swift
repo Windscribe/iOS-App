@@ -35,7 +35,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []
 
-    var isScreenTestEnabled: Bool = true
+    var isScreenTestEnabled: Bool = false
 
     private let sessionManager: SessionManaging
     private let alertManager: AlertManagerV2
