@@ -10,25 +10,58 @@ import Foundation
 import StoreKit
 
 extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransactionObserver {
-    func request(_: SKRequest, didFailWithError _: Error) {
+    func request(_: SKRequest, didFailWithError error: Error) {
+        availableProductsSubject.send(.failed(error: error))
+
         delegate?.failedToLoadProducts()
+
+        if let continuation = productsFetchContinuation {
+            productsFetchContinuation = nil
+            continuation.resume(throwing: error)
+        }
     }
 
     func productsRequest(_: SKProductsRequest, didReceive response: SKProductsResponse) {
         let products = response.products
         guard products.isEmpty == false else {
+            let error = InAppPurchaseError.noProductsAvailable
+            availableProductsSubject.send(.failed(error: error))
+
             delegate?.failedToLoadProducts()
+
+            if let continuation = productsFetchContinuation {
+                productsFetchContinuation = nil
+                continuation.resume(throwing: error)
+            }
             return
         }
+
         guard let plans = localDatabase.getMobilePlans() else {
+            let error = InAppPurchaseError.productsFetchFailed("Failed to load mobile plans")
+            availableProductsSubject.send(.failed(error: error))
+
             delegate?.failedToLoadProducts()
+
+            if let continuation = productsFetchContinuation {
+                productsFetchContinuation = nil
+                continuation.resume(throwing: error)
+            }
             return
         }
+
         let windscribeProducts = products.map { item in
             WindscribeInAppProduct(product: item, plans: Array(plans))
         }
         iapProducts = windscribeProducts
+
+        availableProductsSubject.send(.loaded(windscribeProducts))
+
         delegate?.didFetchAvailableProducts(windscribeProducts: iapProducts)
+
+        if let continuation = productsFetchContinuation {
+            productsFetchContinuation = nil
+            continuation.resume(returning: windscribeProducts)
+        }
     }
 
     private func formatterCurrency(number: NSNumber, locale: Locale) -> String? {
@@ -86,11 +119,26 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
 
     func paymentQueueRestoreCompletedTransactionsFinished(_: SKPaymentQueue) {
         logger.logI("InAppPurchaseManager", "Uncompleted transations: \(uncompletedTransactions)")
+
+        restoreStateSubject.send(.success)
+
         verifyUncompletedTransactions(transactions: uncompletedTransactions)
+
+        if let continuation = restoreContinuation {
+            restoreContinuation = nil
+            continuation.resume()
+        }
     }
 
     func paymentQueue(_: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+        restoreStateSubject.send(.failed(error: error))
+
         delegate?.unableToRestorePurchase(error: error)
+
+        if let continuation = restoreContinuation {
+            restoreContinuation = nil
+            continuation.resume(throwing: error)
+        }
     }
 
     func paymentQueue(_: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
@@ -104,14 +152,43 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
         for transaction in transactions {
             switch transaction.transactionState {
             case .purchased:
+                purchaseStateSubject.send(.success(transaction: transaction))
+
                 matchInAppPurchaseWithWindscribeData(transaction: transaction)
                 SKPaymentQueue.default().finishTransaction(transaction)
                 logger.logI("InAppPurchaseManager", "Apple InApp Purchase successful.")
 
+                if let continuation = purchaseContinuation,
+                   let appleData = transaction.appleData,
+                   let transactionID = transaction.transactionIdentifier,
+                   let signature = transaction.signature {
+                    purchaseContinuation = nil
+                    let result = PurchaseResult.success(
+                        transaction: transaction,
+                        appleID: transactionID,
+                        appleData: appleData,
+                        signature: signature
+                    )
+                    continuation.resume(returning: result)
+                }
+
             case .failed:
                 logger.logI("InAppPurchaseManager", "Failed to purchase")
+
+                let error = transaction.error ?? InAppPurchaseError.transactionFailed("Unknown error")
+                purchaseStateSubject.send(.failed(error: error))
+
                 handleTransactionError(transaction: transaction)
                 SKPaymentQueue.default().finishTransaction(transaction)
+
+                if let continuation = purchaseContinuation {
+                    purchaseContinuation = nil
+                    if let skError = transaction.error as? SKError, skError.code == .paymentCancelled {
+                        continuation.resume(returning: .cancelled)
+                    } else {
+                        continuation.resume(returning: .failed(error))
+                    }
+                }
 
             default:
                 break
