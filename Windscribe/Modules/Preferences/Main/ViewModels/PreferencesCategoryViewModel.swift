@@ -37,7 +37,7 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesMainCategoryViewMod
     @Published var currentLanguage: String?
     @Published var visibleItems: [PreferenceItemType] = []
 
-    var isScreenTestEnabled: Bool = true
+    var isScreenTestEnabled: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
