@@ -37,6 +37,32 @@ extension LocalDatabaseImpl {
         }
     }
 
+    private func writeObject<T: Object>(object: T, realm: Realm) throws {
+        // Check if the object is already managed by Realm
+        if !object.isInvalidated {
+            try realm.safeWrite {
+                realm.add(object, update: .modified)
+            }
+        } else {
+            print("Realm object is invalidated and cannot be updated.")
+        }
+    }
+
+    func updateRealmObject<T: Object>(object: T) {
+        Task { @MainActor in
+            do {
+                if let realm = object.realm {
+                    try writeObject(object: object, realm: realm)
+                } else {
+                    let realm = try Realm()
+                    try writeObject(object: object, realm: realm)
+                }
+            } catch {
+                print("Error updating Realm object: \(error.localizedDescription)")
+            }
+        }
+    }
+
     func updateRealmObject<T: Object>(object: T) -> Disposable {
         // Check if the object is already managed by Realm
         if let realm = object.realm {

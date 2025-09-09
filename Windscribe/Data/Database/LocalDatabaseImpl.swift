@@ -156,7 +156,7 @@ class LocalDatabaseImpl: LocalDatabase {
         return getRealmObjects(type: WifiNetwork.self)
     }
 
-    func saveNetwork(wifiNetwork: WifiNetwork) -> Disposable {
+    func saveNetwork(wifiNetwork: WifiNetwork) {
         return updateRealmObject(object: wifiNetwork)
     }
 

@@ -64,7 +64,6 @@ class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
         if let networkName = connectivity.getNetwork().name {
             let updated = WifiNetwork(SSID: networkName, status: status, protocolType: protocolType, port: port, preferredProtocol: preferredProtocol, preferredPort: preferredPort)
             localdatabase.saveNetwork(wifiNetwork: updated)
-                .disposed(by: disposeBag)
             // if this is the first object being added to database, add observer again.
             if !isObserving {
                 loadNetworks()

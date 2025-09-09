@@ -9,7 +9,7 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
+import Combine
 import Swinject
 import SystemConfiguration.CaptiveNetwork
 
@@ -23,7 +23,6 @@ class WifiManager {
     private lazy var logger = Assembler.resolve(FileLogger.self)
     private lazy var vpnManager = Assembler.resolve(VPNManager.self)
 
-    private let disposeBag = DisposeBag()
     var selectedProtocol: String?
     var selectedPort: String?
     var selectedPreferredProtocol: String?
@@ -31,21 +30,43 @@ class WifiManager {
     var selectedPreferredProtocolStatus: Bool?
 
     private var connectedSecuredNetwork: WifiNetwork?
-    private var autoSecureNewNetworks = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
-    private var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
-    private var securedNetworksStatus = BehaviorSubject<[[String: Bool]]>(value: [])
+    private var autoSecureNewNetworks = CurrentValueSubject<Bool, Never>(DefaultValues.autoSecureNewNetworks)
+    private var connectionMode = CurrentValueSubject<String, Never>(DefaultValues.connectionMode)
+    private var securedNetworksStatus = CurrentValueSubject<[[String: Bool]], Never>([])
     private var observingNetworks = false
     private var initialNetworkFetch = true
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         observeSecuredNetworks()
-        observeAutoSecureSettings()
-        preferences.getConnectionMode().subscribe { data in
-            self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
-        }.disposed(by: disposeBag)
-        preferences.getAutoSecureNewNetworks().subscribe { data in
-            self.autoSecureNewNetworks.onNext(data ?? DefaultValues.autoSecureNewNetworks)
-        }.disposed(by: disposeBag)
+
+        preferences.getConnectionMode()
+            .toPublisher(initialValue: DefaultValues.connectionMode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("WifiManager", "Get Connection Mode error: \(error)")
+                }
+            }, receiveValue: { [weak self] data in
+                self?.connectionMode.send(data ?? DefaultValues.connectionMode)
+            })
+            .store(in: &cancellables)
+
+        preferences.getAutoSecureNewNetworks()
+            .toPublisher(initialValue: DefaultValues.autoSecureNewNetworks)
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                guard let self = self else { return }
+                if case let .failure(error) = completion {
+                    self.logger.logE("WifiManager", "Error getting auto secure property. \(error)")
+                }
+            }, receiveValue: { [weak self] autoSecure in
+                guard let self = self else { return }
+                self.logger.logI("WifiManager", "Auto secure network setting: \(autoSecure)")
+                self.autoSecureNewNetworks.send(autoSecure)
+            })
+            .store(in: &cancellables)
     }
 
     func getConnectedNetwork() -> WifiNetwork? {
@@ -53,60 +74,87 @@ class WifiManager {
     }
 
     func isConnectedWifiTrusted() -> Bool {
-        guard let results = try? securedNetworksStatus.value(),
-              let connectedNetwork = connectivity.getWifiSSID() else {
+        guard let connectedNetwork = connectivity.getWifiSSID() else {
             return false
         }
-        let trustedSSIDs = results.flatMap { $0.filter { $0.value }.keys }
+        let trustedSSIDs = securedNetworksStatus.value.flatMap { $0.filter { $0.value }.keys }
         return trustedSSIDs.contains(connectedNetwork)
     }
 
     func saveCurrentWifiNetworks() {
-        _ = connectivity.network.take(1).map { $0.name }.timeout(RxTimeInterval.milliseconds(100), scheduler: MainScheduler.instance).subscribe(on: MainScheduler.asyncInstance).observe(on: MainScheduler.asyncInstance).subscribe(onNext: { wifiSSID in
-            guard let wifiSSID = wifiSSID else {
-                return
-            }
-            var defaultProtocol = TextsAsset.General.protocols[0]
-            var defaultPort = self.localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-
-            if let suggestedPorts = self.localDb.getSuggestedPorts()?.first, suggestedPorts.protocolType != "", suggestedPorts.port != "" {
-                defaultProtocol = suggestedPorts.protocolType
-                defaultPort = suggestedPorts.port
-            }
-            guard let autoSecureNewNetworks = try? self.autoSecureNewNetworks.value() else { return }
-            let wifiNetwork = WifiNetwork(SSID: wifiSSID,
-                                          status: !autoSecureNewNetworks,
-                                          protocolType: defaultProtocol,
-                                          port: defaultPort,
-                                          preferredProtocol: defaultProtocol,
-                                          preferredPort: defaultPort)
-
-            let savedNetworks = self.localDb.getNetworksSync() ?? []
-            let SSIDs = savedNetworks.map { $0.SSID }
-            if !SSIDs.contains(wifiNetwork.SSID) {
-                if wifiNetwork.SSID != "Unknown" {
-                    self.vpnManager.updateOnDemandRules()
+        connectivity.network
+            .asPublisher()
+            .prefix(1)
+            .map { $0.name }
+            .timeout(.seconds(5), scheduler: DispatchQueue.main)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.logger.logE("WifiManager", "Unable to get network name, error: \(error)")
                 }
-                self.setSelectedNetworkSettings(wifiNetwork, existingNetwork: false, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
+            }, receiveValue: { [weak self] wifiSSID in
+                guard let self = self,
+                      let wifiSSID = wifiSSID else { return }
 
-            } else {
-                if let network = savedNetworks.filter({ $0.SSID == wifiSSID }).first {
-                    self.setSelectedNetworkSettings(network, existingNetwork: true, defaultProtocol: defaultProtocol, defaultPort: defaultPort)
+                var defaultProtocol = TextsAsset.General.protocols[0]
+                var defaultPort = self.localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+
+                if let suggestedPorts = self.localDb.getSuggestedPorts()?.first,
+                   suggestedPorts.protocolType != "",
+                   suggestedPorts.port != "" {
+                    defaultProtocol = suggestedPorts.protocolType
+                    defaultPort = suggestedPorts.port
                 }
-            }
-        }, onError: { _ in
-            self.logger.logI("WifiManager", "Unable to get network name")
-        })
+
+                let wifiNetwork = WifiNetwork(SSID: wifiSSID,
+                                              status: !self.autoSecureNewNetworks.value,
+                                              protocolType: defaultProtocol,
+                                              port: defaultPort,
+                                              preferredProtocol: defaultProtocol,
+                                              preferredPort: defaultPort)
+                let savedNetworks = self.localDb.getNetworksSync() ?? []
+                let SSIDs = savedNetworks.map { $0.SSID }
+                if !SSIDs.contains(wifiNetwork.SSID) {
+                    if wifiNetwork.SSID != "Unknown" {
+                        self.vpnManager.updateOnDemandRules()
+                    }
+                    self.setSelectedNetworkSettings(wifiNetwork,
+                                                    existingNetwork: false,
+                                                    defaultProtocol: defaultProtocol,
+                                                    defaultPort: defaultPort)
+                } else {
+                    if let network = savedNetworks.filter({ $0.SSID == wifiSSID }).first {
+                        self.setSelectedNetworkSettings(network,
+                                                        existingNetwork: true,
+                                                        defaultProtocol: defaultProtocol,
+                                                        defaultPort: defaultPort)
+                    }
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func observeSecuredNetworks() {
         observingNetworks = true
-        let networksObservable = localDb.getNetworks().map { $0.compactMap { $0.freeze() } }
-        Observable.combineLatest( networksObservable, connectivity.network.asObservable() )
+        let networksPublisher = localDb.getNetworks()
+            .toPublisher(initialValue: [])
+            .map { $0.compactMap { $0.freeze() } }
+            .eraseToAnyPublisher()
+
+        let networkPublisher = connectivity.network
+            .asPublisher()
+            .eraseToAnyPublisher()
+        Publishers.CombineLatest(networksPublisher, networkPublisher)
             .filter { $0.0.allSatisfy { !$0.isInvalidated } }
-            .subscribe(onNext: { [weak self] (networks, network) in
+            .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
-                self.securedNetworksStatus.onNext(networks.map { [$0.SSID: $0.status] })
+                if case let .failure(error) = completion {
+                    self.logger.logE("WifiManager", "Error getting network list. \(error)")
+                }
+                self.observingNetworks = false
+            }, receiveValue: { [weak self] (networks, network) in
+                guard let self = self else { return }
+                self.securedNetworksStatus.send(networks.map { [$0.SSID: $0.status] })
                 guard !networks.isEmpty else {
                     self.connectedSecuredNetwork = nil
                     return
@@ -127,40 +175,24 @@ class WifiManager {
                         self.saveNewNetwork(wifiSSID: networkName)
                     }
                 }
-            }, onError: { [weak self] e in
-                guard let self = self else { return }
-                self.logger.logE("WifiManager", "Error getting network list. \(e)")
-            }, onCompleted: { [weak self] in
-                guard let self = self else { return }
-                self.observingNetworks = false
-            }).disposed(by: disposeBag)
-    }
 
-    private func observeAutoSecureSettings() {
-        preferences.getAutoSecureNewNetworks().compactMap { $0 }.subscribe(onNext: { autoSecure in
-            self.logger.logI("WifiManager", "Auto secure network setting: \(autoSecure)")
-        }, onError: { e in
-            self.logger.logE("WifiManager", "Error getting auto secure property. \(e)")
-        }, onCompleted: {
-            self.logger.logI("WifiManager", "Auto secure property is empty.")
-        }).disposed(by: disposeBag)
+            })
+            .store(in: &cancellables)
     }
 
     private func saveNewNetwork(wifiSSID: String) {
-        if let autoSecureNewNetworks = try? autoSecureNewNetworks.value() {
-            let defaultProtocol = TextsAsset.General.protocols[0]
-            let defaultPort = localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
-            let network = WifiNetwork(SSID: wifiSSID,
-                                      status: !autoSecureNewNetworks,
-                                      protocolType: defaultProtocol,
-                                      port: defaultPort,
-                                      preferredProtocol: defaultProtocol,
-                                      preferredPort: defaultPort)
-            logger.logI("WifiManager", "Adding \"\(wifiSSID)\" to \(network.status ? "Unsecured" : "secured") networks database.")
-            localDb.saveNetwork(wifiNetwork: network).disposed(by: disposeBag)
-            if !observingNetworks {
-                observeSecuredNetworks()
-            }
+        let defaultProtocol = TextsAsset.General.protocols[0]
+        let defaultPort = localDb.getPorts(protocolType: defaultProtocol)?.first ?? "443"
+        let network = WifiNetwork(SSID: wifiSSID,
+                                  status: !autoSecureNewNetworks.value,
+                                  protocolType: defaultProtocol,
+                                  port: defaultPort,
+                                  preferredProtocol: defaultProtocol,
+                                  preferredPort: defaultPort)
+        logger.logI("WifiManager", "Adding \"\(wifiSSID)\" to \(network.status ? "Unsecured" : "secured") networks database.")
+        localDb.saveNetwork(wifiNetwork: network)
+        if !observingNetworks {
+            observeSecuredNetworks()
         }
     }
 
@@ -201,8 +233,8 @@ class WifiManager {
             selectedPreferredPort = network.preferredPort
             selectedProtocol = network.protocolType
             selectedPort = network.port
-            guard let connectionMode = try? connectionMode.value() else { return }
-            if connectionMode != Fields.Values.manual, network.preferredProtocolStatus == false {
+
+            if connectionMode.value != Fields.Values.manual, network.preferredProtocolStatus == false {
                 if network.protocolType != defaultProtocol {
                     logger.logI("WifiManager", "Updating \"\(network.SSID)\"'s protocol settings to \(defaultProtocol):\(defaultPort)")
                     localDb.updateWifiNetwork(network: network,
@@ -216,7 +248,7 @@ class WifiManager {
             }
         } else {
             if network.SSID != "Unknown" {
-                localDb.saveNetwork(wifiNetwork: network).disposed(by: disposeBag)
+                localDb.saveNetwork(wifiNetwork: network)
             }
             selectedPreferredProtocolStatus = false
             selectedProtocol = defaultProtocol
