@@ -81,28 +81,22 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
 
         showLoading = true
 
-        apiManager
-            .addEmail(email: email)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    guard let self = self else {
-                        return
-                    }
-
-                    switch completion {
-                    case .finished:
-                        self.sessionManager.keepSessionUpdated()
-                        self.submitEmailResult.send(.success(()))
-                    case .failure(let error):
-                        self.submitEmailResult.send(.failure(EmailError.from(error)))
-                    }
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await apiManager.addEmail(email: email)
+                await MainActor.run {
+                    self.sessionManager.keepSessionUpdated()
+                    self.submitEmailResult.send(.success(()))
                     self.showLoading = false
-                },
-                receiveValue: { _ in }
-            )
-            .store(in: &cancellables)
+                }
+            } catch {
+                await MainActor.run {
+                    self.submitEmailResult.send(.failure(EmailError.from(error)))
+                    self.showLoading = false
+                }
+            }
+        }
     }
 }
 

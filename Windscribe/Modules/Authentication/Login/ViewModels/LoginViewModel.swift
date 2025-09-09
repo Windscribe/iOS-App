@@ -122,46 +122,44 @@ class LoginViewModelImpl: LoginViewModel {
         showLoadingView = true
 
         // iOS - iPadOS is using captcha with puzzle
-        apiCallManager.authTokenLogin(useAsciiCaptcha: false)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let tokenResponse = try await apiCallManager.authTokenLogin(useAsciiCaptcha: false)
+                await MainActor.run {
+                    self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
+                    self.secureToken = tokenResponse.data.token
 
-                if case let .failure(error) = completion {
+                    // If CAPTCHA required
+                    if let captcha = tokenResponse.data.captcha {
+                        self.logger.logI("LoginViewModel", "Captcha required before login.")
+                        if let popupModel = CaptchaPopupModel(from: captcha) {
+                            self.captchaData = popupModel
+                            self.showCaptchaPopup = true
+                        } else {
+                            self.logger.logE("LoginViewModel", "Failed to decode captcha images.")
+                            self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
+                        }
+                        self.showLoadingView = false
+                        return
+                    }
+
+                    // No captcha → proceed to login
+                    let code2fa = self.show2FAField && !self.twoFactorCode.isEmpty ? self.twoFactorCode : ""
+                    self.loginWithCredentials(
+                        username: self.username,
+                        password: self.password,
+                        code2fa: code2fa,
+                        secureToken: self.secureToken)
+                }
+            } catch {
+                await MainActor.run {
                     self.logger.logE("LoginViewModel", "Failed to get auth token: \(error)")
                     self.failedState = .network("\(TextsAsset.Authentication.tokenRetrievalFailed) \(error)")
                     self.showLoadingView = false
                 }
-            } receiveValue: { [weak self] tokenResponse in
-                guard let self = self else { return }
-
-                self.logger.logI("LoginViewModel", "Token received: \(tokenResponse.data.token)")
-                self.secureToken = tokenResponse.data.token
-
-                // If CAPTCHA required
-                if let captcha = tokenResponse.data.captcha {
-                    self.logger.logI("LoginViewModel", "Captcha required before login.")
-                    if let popupModel = CaptchaPopupModel(from: captcha) {
-                        self.captchaData = popupModel
-                        self.showCaptchaPopup = true
-                    } else {
-                        self.logger.logE("LoginViewModel", "Failed to decode captcha images.")
-                        self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
-                    }
-                    self.showLoadingView = false
-                    return
-                }
-
-                // No captcha → proceed to login
-                let code2fa = show2FAField && !twoFactorCode.isEmpty ? twoFactorCode : ""
-                self.loginWithCredentials(
-                    username: username,
-                    password: password,
-                    code2fa: code2fa,
-                    secureToken: secureToken)
             }
-            .store(in: &cancellables)
+        }
     }
 
     /// Submits the captcha result from the user interaction in the popup.
@@ -216,21 +214,24 @@ class LoginViewModelImpl: LoginViewModel {
         captchaSolution: String = "",
         captchaTrailX: [CGFloat] = [],
         captchaTrailY: [CGFloat] = []) {
-            apiCallManager.login(
-                username: username,
-                password: password,
-                code2fa: code2fa,
-                secureToken: secureToken,
-                captchaSolution: captchaSolution,
-                captchaTrailX: captchaTrailX,
-                captchaTrailY: captchaTrailY
-            )
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
 
-                if case let .failure(error) = completion {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let session = try await apiCallManager.login(
+                    username: username,
+                    password: password,
+                    code2fa: code2fa,
+                    secureToken: secureToken,
+                    captchaSolution: captchaSolution,
+                    captchaTrailX: captchaTrailX,
+                    captchaTrailY: captchaTrailY
+                )
+                await MainActor.run {
+                    self.handleSuccessfulLogin(session: session)
+                }
+            } catch {
+                await MainActor.run {
                     self.logger.logE("LoginViewModel", "Failed to login: \(error)")
 
                     switch error {
@@ -253,29 +254,28 @@ class LoginViewModelImpl: LoginViewModel {
                     }
 
                     self.showLoadingView = false
-                    return
                 }
-            } receiveValue: { [weak self] session in
-                self?.handleSuccessfulLogin(session: session)
             }
-            .store(in: &cancellables)
+        }
     }
 
     /// Generate Code Logic
     func generateCodeTapped() {
-        apiCallManager.getXpressLoginCode()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                if case .failure = completion {
-                    self?.logger.logE("LoginViewModel", "Unable to generate Login code.")
-                    self?.failedState = .loginCode(TextsAsset.TVAsset.loginCodeError)
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let xpressResponse = try await apiCallManager.getXpressLoginCode()
+                await MainActor.run {
+                    self.twoFactorCode = xpressResponse.xPressLoginCode
+                    self.startXPressLoginCodeVerifier(response: xpressResponse)
                 }
-            } receiveValue: { [weak self] xpressResponse in
-                self?.twoFactorCode = xpressResponse.xPressLoginCode
-                self?.startXPressLoginCodeVerifier(response: xpressResponse)
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("LoginViewModel", "Unable to generate Login code.")
+                    self.failedState = .loginCode(TextsAsset.TVAsset.loginCodeError)
+                }
             }
-            .store(in: &cancellables)
+        }
     }
 
     /// Start XPress Login Code Verifier
@@ -287,28 +287,18 @@ class LoginViewModelImpl: LoginViewModel {
             .sink { [weak self] _ in
                 guard let self = self else { return }
 
-                self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
-                    .asPublisher()
-                    .timeout(.seconds(20), scheduler: DispatchQueue.main)
-                    .sink(receiveCompletion: { [weak self] completion in
-                        guard let self = self else { return }
-
-                        if case .failure = completion {
-                            self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
-                            self.timerCancellable?.cancel()
+                Task { [weak self] in
+                    guard let self = self else { return }
+                    do {
+                        let verifyResponse = try await withTimeout(seconds: 20) {
+                            try await self.apiCallManager.verifyXPressLoginCode(code: response.xPressLoginCode, sig: response.signature)
                         }
-                    }, receiveValue: { [weak self] verifyResponse in
-                        guard let self = self else { return }
 
                         let auth = verifyResponse.sessionAuth
 
-                        self.apiCallManager.getSession(sessionAuth: auth)
-                            .asPublisher()
-                            .receive(on: DispatchQueue.main)
-                            .sink(receiveCompletion: { _ in },
-                                  receiveValue: { [weak self] session in
-                                guard let self = self else { return }
-
+                        do {
+                            let session = try await self.apiCallManager.getSession(sessionAuth: auth)
+                            await MainActor.run {
                                 session.sessionAuthHash = auth
                                 WifiManager.shared.saveCurrentWifiNetworks()
 
@@ -319,11 +309,35 @@ class LoginViewModelImpl: LoginViewModel {
                                                  "Login successful with login code, Preparing user data for \(session.username)")
                                 self.prepareUserData()
                                 self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
-                            })
-                            .store(in: &self.cancellables)
-                    })
-                    .store(in: &self.cancellables)
+                            }
+                        } catch {
+                            // Handle getSession error silently, just like the original code
+                        }
+                    } catch {
+                        await MainActor.run {
+                            self.invalidateLoginCode(startTime: startTime, loginCodeResponse: response)
+                            self.timerCancellable?.cancel()
+                        }
+                    }
+                }
             }
+    }
+
+    private func withTimeout<T>(seconds: TimeInterval, operation: @escaping () async throws -> T) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask {
+                try await operation()
+            }
+
+            group.addTask {
+                try await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+                throw CancellationError()
+            }
+
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
     }
 
     /// Invalidate Login Code

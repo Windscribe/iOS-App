@@ -47,26 +47,39 @@ class ServerRepositoryImpl: ServerRepository {
             return Single.error(Errors.validationFailure)
         }
         let countryCode = advanceRepository.getCountryOverride() ?? ""
-        return apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
-            .observe(on: MainScheduler.instance)
-            .map { serverList in
-                let servers = Array(serverList.servers)
-                for s in servers {
-                    for g in s.groups {
-                        g.setBestNode(advanceRepository: self.advanceRepository)
+
+        return Single.create { single in
+            let task = Task {
+                do {
+                    let serverList = try await self.apiManager.getServerList(languageCode: countryCode, revision: user.locationHash, isPro: user.allAccessPlan, alcList: user.alcList)
+
+                    await MainActor.run {
+                        let servers = Array(serverList.servers)
+                        for s in servers {
+                            for g in s.groups {
+                                g.setBestNode(advanceRepository: self.advanceRepository)
+                            }
+                        }
+                        self.localDatabase.saveServers(servers: servers)
+                        self.updateServerModels(servers: servers)
+                        single(.success(servers))
+                    }
+                } catch {
+                    await MainActor.run {
+                        if let servers = self.localDatabase.getServers() {
+                            self.updateServerModels(servers: servers)
+                            single(.success(servers))
+                        } else {
+                            single(.failure(error))
+                        }
                     }
                 }
-                self.localDatabase.saveServers(servers: servers)
-                self.updateServerModels(servers: servers)
-                return servers
-            }.catch { error in
-                if let servers = self.localDatabase.getServers() {
-                    self.updateServerModels(servers: servers)
-                    return Single.just(servers)
-                } else {
-                    return Single.error(error)
-                }
             }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 
     func updateRegions(with regions: [ExportedRegion]) {

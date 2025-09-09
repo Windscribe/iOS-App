@@ -88,12 +88,18 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
             self.buildSections(from: session)
         }
 
-        apiManager.getSession(nil)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                if case let .failure(error) = completion {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let session = try await apiManager.getSession(nil)
+                await MainActor.run {
+                    self.accountEmailStatus = self.calculateEmailStatus(from: session)
+                    self.buildSections(from: session)
+                    self.loadingState = .success
+                    self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
+                }
+            } catch {
+                await MainActor.run {
                     guard let session = localDatabase.getSessionSync() else {
                         self.loadingState = .error(error.localizedDescription)
                         self.logger.logE("AccountViewModel", "Failed to load session: \(error)")
@@ -102,16 +108,9 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
                     self.accountEmailStatus = self.calculateEmailStatus(from: session)
                     self.buildSections(from: session)
                     self.loadingState = .success
-
                 }
-            }, receiveValue: { [weak self] session in
-                guard let self = self else { return }
-                self.accountEmailStatus = self.calculateEmailStatus(from: session)
-                self.buildSections(from: session)
-                self.loadingState = .success
-                self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     private func buildSections(from session: Session) {
@@ -207,123 +206,122 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
     private func resendConfirmationEmail() {
         loadingState = .loading(isFullScreen: false)
 
-        apiManager.confirmEmail()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.loadingState = .error(error.localizedDescription)
-                    self?.alertMessage = AccountSettingsAlertContent(
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await apiManager.confirmEmail()
+                await MainActor.run {
+                    self.loadingState = .success
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.ConfirmationEmailSentAlert.title,
+                        message: TextsAsset.ConfirmationEmailSentAlert.message,
+                        buttonText: TextsAsset.okay
+                    )
+                }
+            } catch {
+                await MainActor.run {
+                    self.loadingState = .error(error.localizedDescription)
+                    self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.ConfirmationEmailSentAlert.title,
                         message: error.localizedDescription,
                         buttonText: TextsAsset.okay
                     )
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.loadingState = .success
-                self?.alertMessage = AccountSettingsAlertContent(
-                    title: TextsAsset.ConfirmationEmailSentAlert.title,
-                    message: TextsAsset.ConfirmationEmailSentAlert.message,
-                    buttonText: TextsAsset.okay
-                )
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     func confirmCancelAccount(password: String) {
         loadingState = .loading(isFullScreen: false)
-        apiManager.cancelAccount(password: password)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure(let error):
-                    guard let self = self else { return }
 
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await apiManager.cancelAccount(password: password)
+                await MainActor.run {
+                    self.loadingState = .success
+                    self.logoutUser()
+                }
+            } catch {
+                await MainActor.run {
                     self.loadingState = .error(error.localizedDescription)
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
                         message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
-                case .finished:
-                    break
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.loadingState = .success
-                self?.logoutUser()
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     func verifyLazyLogin(code: String) {
         loadingState = .loading(isFullScreen: false)
 
-        apiManager.verifyTvLoginCode(code: code)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                if case let .failure(error) = completion {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await apiManager.verifyTvLoginCode(code: code)
+                await MainActor.run {
+                    self.loadingState = .success
+                    self.alertMessage = AccountSettingsAlertContent(
+                        title: TextsAsset.Account.lazyLogin,
+                        message: TextsAsset.Account.lazyLoginSuccess,
+                        buttonText: TextsAsset.okay)
+                }
+            } catch {
+                await MainActor.run {
                     self.loadingState = .error(error.localizedDescription)
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.error,
                         message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.loadingState = .success
-                self?.alertMessage = AccountSettingsAlertContent(
-                    title: TextsAsset.Account.lazyLogin,
-                    message: TextsAsset.Account.lazyLoginSuccess,
-                    buttonText: TextsAsset.okay)
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     func verifyVoucher(code: String) {
         loadingState = .loading(isFullScreen: false)
 
-        apiManager.claimVoucherCode(code: code)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    guard let self = self else { return }
-
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let response = try await apiManager.claimVoucherCode(code: code)
+                await MainActor.run {
+                    self.loadingState = .success
+                    if response.isClaimed {
+                        self.alertMessage = AccountSettingsAlertContent(
+                            title: TextsAsset.voucherCode,
+                            message: TextsAsset.Account.voucherCodeSuccessful,
+                            buttonText: TextsAsset.okay)
+                        self.loadSession()
+                    } else if response.emailRequired == true {
+                        self.alertMessage = AccountSettingsAlertContent(
+                            title: TextsAsset.voucherCode,
+                            message: TextsAsset.Account.emailRequired,
+                            buttonText: TextsAsset.okay)
+                    } else if response.isUsed {
+                        self.alertMessage = AccountSettingsAlertContent(
+                            title: TextsAsset.voucherCode,
+                            message: TextsAsset.Account.voucherAlreadyMessage,
+                            buttonText: TextsAsset.okay)
+                    } else {
+                        self.alertMessage = AccountSettingsAlertContent(
+                            title: TextsAsset.voucherCode,
+                            message: TextsAsset.Account.invalidVoucherCode,
+                            buttonText: TextsAsset.okay)
+                    }
+                }
+            } catch {
+                await MainActor.run {
                     self.loadingState = .error(error.localizedDescription)
                     self.alertMessage = AccountSettingsAlertContent(
                         title: TextsAsset.voucherCode,
                         message: self.fetchErrorMessage(from: error),
                         buttonText: TextsAsset.okay)
                 }
-            }, receiveValue: { [weak self] response in
-                guard let self else { return }
-
-                self.loadingState = .success
-                if response.isClaimed {
-                    self.alertMessage = AccountSettingsAlertContent(
-                        title: TextsAsset.voucherCode,
-                        message: TextsAsset.Account.voucherCodeSuccessful,
-                        buttonText: TextsAsset.okay)
-                    self.loadSession()
-                } else if response.emailRequired == true {
-                    self.alertMessage = AccountSettingsAlertContent(
-                        title: TextsAsset.voucherCode,
-                        message: TextsAsset.Account.emailRequired,
-                        buttonText: TextsAsset.okay)
-                } else if response.isUsed {
-                    self.alertMessage = AccountSettingsAlertContent(
-                        title: TextsAsset.voucherCode,
-                        message: TextsAsset.Account.voucherAlreadyMessage,
-                        buttonText: TextsAsset.okay)
-                } else {
-                    self.alertMessage = AccountSettingsAlertContent(
-                        title: TextsAsset.voucherCode,
-                        message: TextsAsset.Account.invalidVoucherCode,
-                        buttonText: TextsAsset.okay)
-                }
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     private func calculateEmailStatus(from session: Session) -> AccountEmailStatusType {

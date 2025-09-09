@@ -157,7 +157,9 @@ class WSUIViewController: UIViewController {
 extension WSUIViewController: SFSafariViewControllerDelegate {
     func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
         controller.dismiss(animated: true, completion: nil)
-        apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+        Task {
+            _ = try? await apiManager.getSession(nil)
+        }
     }
 }
 

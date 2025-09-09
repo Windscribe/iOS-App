@@ -8,7 +8,6 @@
 
 import Foundation
 import NetworkExtension
-import RxSwift
 import Swinject
 
 class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
@@ -20,38 +19,38 @@ class ShowLocationIntentHandler: NSObject, ShowLocationIntentHandling {
 
     private lazy var api: WSNetServerAPI = resolver.getApi()
 
-    private let dispose = DisposeBag()
+    private lazy var apiUtil: APIUtilService = resolver.getApiUtil()
 
     func handle(intent _: ShowLocationIntent, completion: @escaping (ShowLocationIntentResponse) -> Void) {
-        getIPAddress().subscribe(onSuccess: { ip in
-            let protocolType = self.preferences.getActiveManagerKey() ?? "WireGuard"
-            getActiveManager(for: protocolType) { result in
-                switch result {
-                case let .success(manager):
-                    guard let serverName = self.preferences.getServerNameKey(),
-                          let nickName = self.preferences.getNickNameKey()
-                    else {
-                        completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
-                        return
-                    }
-                    if manager.connection.status == .connected {
-                        completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ip.userIp))
-                    } else {
+        Task {
+            do {
+                let ip = try await apiUtil.makeApiCall(modalType: IntentMyIP.self) { completion in
+                    self.api.myIP(completion)
+                }
+
+                let protocolType = self.preferences.getActiveManagerKey() ?? "WireGuard"
+
+                getActiveManager(for: protocolType) { result in
+                    switch result {
+                    case let .success(manager):
+                        guard let serverName = self.preferences.getServerNameKey(),
+                              let nickName = self.preferences.getNickNameKey()
+                        else {
+                            completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
+                            return
+                        }
+                        if manager.connection.status == .connected {
+                            completion(ShowLocationIntentResponse.success(cityName: serverName, nickName: nickName, ipAddress: ip.userIp))
+                        } else {
+                            completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
+                        }
+                    case .failure:
                         completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
                     }
-                case .failure:
-                    completion(ShowLocationIntentResponse.successWithNoConnection(ipAddress: ip.userIp))
                 }
+            } catch {
+                completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
             }
-
-        }, onFailure: { _ in
-            completion(ShowLocationIntentResponse(code: .failure, userActivity: nil))
-        }).disposed(by: dispose)
-    }
-
-    fileprivate func getIPAddress() -> Single<IntentMyIP> {
-        return makeApiCall(modalType: IntentMyIP.self) { completion in
-            self.api.myIP(completion)
         }
     }
 }

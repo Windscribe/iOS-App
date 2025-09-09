@@ -115,26 +115,29 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         wgCrendentials.load()
         logger.logI("PacketTunnelProvider", "Starting WireGuard Tunnel from the " + (activationAttemptId == nil ? "OS directly, rather than the app" : "app"))
         if !preferences.isCustomConfigSelected() && !wgCrendentials.initialized() {
-            apiCallManager.getSession().subscribe(onSuccess: { [weak self] session in
+            Task { [weak self] in
                 guard let self = self else { return }
-                if session.status == 1 {
-                    self.logger.logI("PacketTunnelProvider", "User status is Okay, attempt rebuilding credentials.")
-                    self.runningHealthCheck = true
-                    self.requestNewInterfaceIp(completionHandler: completionHandler)
-                } else {
-                    self.logger.logI("PacketTunnelProvider", "User status is \(session.status), do not reconnect.")
-                    stopTunnel(completionHandler: completionHandler)
+                do {
+                    let session = try await apiCallManager.getSession()
+                    if session.status == 1 {
+                        self.logger.logI("PacketTunnelProvider", "User status is Okay, attempt rebuilding credentials.")
+                        self.runningHealthCheck = true
+                        self.requestNewInterfaceIp(completionHandler: completionHandler)
+                    } else {
+                        self.logger.logI("PacketTunnelProvider", "User status is \(session.status), do not reconnect.")
+                        stopTunnel(completionHandler: completionHandler)
+                    }
+                } catch {
+                    let errorDescription: String
+                    if let wsError = error as? Errors {
+                        errorDescription = wsError.unlocalizedDescription
+                    } else {
+                        errorDescription = error.localizedDescription
+                    }
+                    self.logger.logE("PacketTunnelProvider", "Error getting user session: \(errorDescription)")
+                    completionHandler(error)
                 }
-            }, onFailure: { error in
-                let errorDescription: String
-                if let wsError = error as? Errors {
-                    errorDescription = wsError.unlocalizedDescription
-                } else {
-                    errorDescription = error.localizedDescription
-                }
-                self.logger.logE("PacketTunnelProvider", "Error getting user session: \(errorDescription)")
-                completionHandler(error)
-            }).disposed(by: disposeBag)
+            }
             return
         }
 
@@ -272,8 +275,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         // Ensure LocalizationBridge is initialized before potential error handling
         ensureLocalizationInitialized()
         logger.logI("PacketTunnelProvider", "Requesting user session update.")
-        apiCallManager.getSession()
-            .subscribe(onSuccess: { [self] data in
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let data = try await apiCallManager.getSession()
                 if data.status == 1 {
                     self.requestNewInterfaceIp()
                 } else {
@@ -283,7 +288,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                     self.logger.logI("PacketTunnelProvider", "User status is banned/expired")
                     self.cancelTunnelWithError(NSError(domain: "com.windscribe", code: 50))
                 }
-            }, onFailure: { error in
+            } catch {
                 self.runningHealthCheck = false
                 if let wsError = error as? Errors {
                     self.logger.logE("PacketTunnelProvider", "Get Session failed with Windscribe error - \(wsError.unlocalizedDescription).")
@@ -297,7 +302,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                         self.runningHealthCheck = false
                     }
                 }
-            }).disposed(by: disposeBag)
+            }
+        }
     }
 
     /// Request new interface address to check if it has changed.

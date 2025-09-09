@@ -74,33 +74,34 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
     override func bindSubjects() {
         super.bindSubjects()
 
-        apiManager.getRobertFilters()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                if case let .failure(error) = completion,
-                   let error = error as? Errors {
-                    var newError = ""
-                    switch error {
-                    case let .apiError(e):
-                        newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
-                    default:
-                        newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
-                    }
-                    self.logger.logE("GeneralSettingsViewModel", newError)
-                    errorMessage = newError
-                    if self.entries.isEmpty {
-                        self.entries = self.localDB.getRobertFilters()?.getRules() ?? []
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let robertFilters = try await apiManager.getRobertFilters()
+                await MainActor.run {
+                    self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
+                    self.robertFilters = robertFilters
+                    self.reloadItems()
+                }
+            } catch {
+                await MainActor.run {
+                    if let error = error as? Errors {
+                        var newError = ""
+                        switch error {
+                        case let .apiError(e):
+                            newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
+                        default:
+                            newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
+                        }
+                        self.logger.logE("GeneralSettingsViewModel", newError)
+                        self.errorMessage = newError
+                        if self.entries.isEmpty {
+                            self.entries = self.localDB.getRobertFilters()?.getRules() ?? []
+                        }
                     }
                 }
-            }, receiveValue: { [weak self] robertFilters in
-                guard let self = self else { return }
-                self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
-                self.robertFilters = robertFilters
-                self.reloadItems()
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     override func reloadItems() {
@@ -114,41 +115,31 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
         let status: Int32 = filter.enabled ? 0 : 1
         isLoading = true
 
-        apiManager.updateRobertSettings(id: filter.id, status: status)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                self.isLoading = false
-
-                if case let .failure(error) = completion,
-                   let error = error as? Errors {
-                    var newError = ""
-                    switch error {
-                    case let .apiError(e):
-                        newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
-                    default:
-                        newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await apiManager.updateRobertSettings(id: filter.id, status: status)
+                await MainActor.run {
+                    self.localDB.toggleRobertRule(id: filter.id)
+                    guard let robertFilters = self.localDB.getRobertFilters() else {
+                        let newError = "Unable to load robert rules. Check your network connection."
+                        self.logger.logE("GeneralSettingsViewModel", self.errorMessage ?? "")
+                        self.errorMessage = newError
+                        self.isLoading = false
+                        return
                     }
-                    self.logger.logE("GeneralSettingsViewModel", newError)
-                    errorMessage = newError
+                    self.entries = robertFilters.getRules()
                 }
-            }, receiveValue: { [weak self] robertFilters in
-                guard let self = self else { return }
-                self.localDB.toggleRobertRule(id: filter.id)
-                guard let robertFilters = self.localDB.getRobertFilters() else {
-                    let newError = "Unable to load robert rules. Check your network connection."
-                    self.logger.logE("GeneralSettingsViewModel", errorMessage ?? "")
-                    errorMessage = newError
-                    return
-                }
-                self.entries = robertFilters.getRules()
-                self.apiManager.syncRobertFilters()
-                    .asPublisher()
-                    .sink(receiveCompletion: { [weak self] completion in
-                        guard let self = self else { return }
-                        if case let .failure(error) = completion,
-                           let error = error as? Errors {
+
+                // Sync Robert filters after successful update
+                do {
+                    _ = try await apiManager.syncRobertFilters()
+                    await MainActor.run {
+                        self.isLoading = false
+                    }
+                } catch {
+                    await MainActor.run {
+                        if let error = error as? Errors {
                             var newError = ""
                             switch error {
                             case let .apiError(e):
@@ -157,14 +148,28 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
                                 newError = "Failed to sync Robert Settings. \(error.description)"
                             }
                             self.logger.logE("GeneralSettingsViewModel", newError)
-                            errorMessage = newError
+                            self.errorMessage = newError
                         }
-                    }, receiveValue: {_ in})
-                    .store(in: &cancellables)
-
-                self.isLoading = false
-            })
-            .store(in: &cancellables)
+                        self.isLoading = false
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.isLoading = false
+                    if let error = error as? Errors {
+                        var newError = ""
+                        switch error {
+                        case let .apiError(e):
+                            newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
+                        default:
+                            newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
+                        }
+                        self.logger.logE("GeneralSettingsViewModel", newError)
+                        self.errorMessage = newError
+                    }
+                }
+            }
+        }
     }
 
     func infoSelected() {
@@ -175,26 +180,29 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
         actionSelected()
 
         logger.logI("RobertSettingsViewModelImpl", "User tapped custom rules button.")
-        apiManager.getWebSession()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                if case let .failure(error) = completion,
-                   let error = error as? Errors {
-                    var newError = ""
-                    switch error {
-                    case let .apiError(e):
-                        newError = e.errorMessage ?? "Failed to update Robert Session for custom rules."
-                    default:
-                        newError = "Failed to update Robert Session for custom rules. \(error.description)"
-                    }
-                    self.logger.logE("GeneralSettingsViewModel", newError)
-                    errorMessage = newError
+
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let webSession = try await apiManager.getWebSession()
+                await MainActor.run {
+                    self.safariURL = LinkProvider.getRobertRulesUrl(session: webSession.tempSession)
                 }
-            }, receiveValue: { [weak self] webSession in
-                self?.safariURL = LinkProvider.getRobertRulesUrl(session: webSession.tempSession)
-            })
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    if let error = error as? Errors {
+                        var newError = ""
+                        switch error {
+                        case let .apiError(e):
+                            newError = e.errorMessage ?? "Failed to update Robert Session for custom rules."
+                        default:
+                            newError = "Failed to update Robert Session for custom rules. \(error.description)"
+                        }
+                        self.logger.logE("GeneralSettingsViewModel", newError)
+                        self.errorMessage = newError
+                    }
+                }
+            }
+        }
     }
 }

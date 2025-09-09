@@ -52,23 +52,32 @@ class WelcomeViewModelImpl: WelcomeViewModel {
             return
         }
         showLoadingView.onNext(true)
-        apiManager.regToken().observe(on: MainScheduler.instance)
-            .flatMap { result in
-                return self.apiManager.signUpUsingToken(token: result.token)
-            }.subscribe(onSuccess: { [weak self] session in
-                self?.keyChainDatabase.setGhostAccountCreated()
-                self?.userRepository.login(session: session)
-                self?.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
-                self?.prepareUserData()
-            },onFailure: { [weak self] error in
-                switch error {
-                case Errors.apiError(let e):
-                        self?.logger.logE("WelcomeViewModelImpl", "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
-                default: ()
+
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let result = try await self.apiManager.regToken()
+                let session = try await self.apiManager.signUpUsingToken(token: result.token)
+
+                await MainActor.run {
+                    self.keyChainDatabase.setGhostAccountCreated()
+                    self.userRepository.login(session: session)
+                    self.logger.logE("WelcomeViewModelImpl", "Ghost account registration successful, Preparing user data for \(session.userId)")
+                    self.prepareUserData()
                 }
-                self?.showLoadingView.onNext(false)
-                self?.routeToSignup.onNext(true)
-            }).disposed(by: disposeBag)
+            } catch {
+                await MainActor.run {
+                    switch error {
+                    case Errors.apiError(let e):
+                        self.logger.logE("WelcomeViewModelImpl", "Failed to get ghost registration token: \(String(describing: e.errorMessage))")
+                    default: ()
+                    }
+                    self.showLoadingView.onNext(false)
+                    self.routeToSignup.onNext(true)
+                }
+            }
+        }
     }
 
     private func prepareUserData() {

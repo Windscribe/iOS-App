@@ -57,10 +57,21 @@ class ConfirmEmailPopupViewController: BasePopUpViewController {
     private func resendButtonTapped() {
         resendButton.isEnabled = false
         resendButton.layer.opacity = 0.35
-        ceViewModel.apiManager.confirmEmail().subscribe(onSuccess: { _ in
-            self.ceViewModel.alertManager.showSimpleAlert(viewController: self,
-                                                          title: TextsAsset.ConfirmationEmailSentAlert.title, message: TextsAsset.ConfirmationEmailSentAlert.message,
-                                                          buttonText: TextsAsset.okay)
-        }, onFailure: { _ in }).disposed(by: disposeBag)
+
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.ceViewModel.apiManager.confirmEmail()
+                await MainActor.run {
+                    self.ceViewModel.alertManager.showSimpleAlert(viewController: self,
+                                                                  title: TextsAsset.ConfirmationEmailSentAlert.title,
+                                                                  message: TextsAsset.ConfirmationEmailSentAlert.message,
+                                                                  buttonText: TextsAsset.okay)
+                }
+            } catch {
+                // Handle error silently as per original implementation
+            }
+        }
     }
 }

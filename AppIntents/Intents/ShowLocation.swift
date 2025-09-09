@@ -9,7 +9,6 @@
 import AppIntents
 import Foundation
 import NetworkExtension
-import RxSwift
 @preconcurrency import Swinject
 
 @available(iOS 16.0, *)
@@ -34,7 +33,13 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
         }
     }
 
-    fileprivate let resolver = ContainerResolver()
+    private var resolver: ContainerResolver {
+        ContainerResolver()
+    }
+
+    private var apiUtil: APIUtilService {
+        return resolver.getApiUtil()
+    }
 
     var preferences: Preferences {
         return resolver.getPreferences()
@@ -64,21 +69,11 @@ struct ShowLocation: AppIntent, WidgetConfigurationIntent, CustomIntentMigratedA
         }
     }
 
-    fileprivate func getIPAddress() -> Single<IntentMyIP> {
-        return makeApiCall(modalType: IntentMyIP.self) { completion in
+    func getMyIp() async throws -> String {
+        let result = try await apiUtil.makeApiCall(modalType: IntentMyIP.self) { completion in
             self.resolver.getApi().myIP(completion)
         }
-    }
-
-    func getMyIp() async throws -> String {
-        return try await withCheckedThrowingContinuation { continuation in
-            _ = getIPAddress()
-                .subscribe(onSuccess: { result in
-                    continuation.resume(returning: result.userIp)
-                }, onFailure: { error in
-                    continuation.resume(throwing: error)
-                })
-        }
+        return result.userIp
     }
 }
 

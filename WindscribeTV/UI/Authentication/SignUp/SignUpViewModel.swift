@@ -108,55 +108,58 @@ class SignUpViewModelImpl: SignUpViewModel {
         showLoadingView.onNext(true)
         logger.logD("SignUpViewModelImpl", "Signing up for account.")
 
-        apiCallManager.authTokenSignup(useAsciiCaptcha: true)
-            .observe(on: MainScheduler.instance)
-            .flatMap { [weak self] response -> Single<Session> in
-                guard let self = self else { return .never() }
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let response = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: true)
 
                 if let captcha = response.data.captcha,
                    let asciiArt = captcha.asciiArt {
 
-                    self.logger.logD("SignupViewModel", "Captcha required — creating captcha view model.")
+                    await MainActor.run {
+                        self.logger.logD("SignupViewModel", "Captcha required — creating captcha view model.")
 
-                    let captchaVM = CaptchaViewModel(
-                        asciiArtBase64: asciiArt,
-                        username: username,
-                        password: password,
-                        twoFactorCode: twoFactorCode,
-                        secureToken: response.data.token,
-                        apiCallManager: self.apiCallManager,
-                        logger: self.logger
-                    )
+                        let captchaVM = CaptchaViewModel(
+                            asciiArtBase64: asciiArt,
+                            username: username,
+                            password: password,
+                            twoFactorCode: twoFactorCode,
+                            secureToken: response.data.token,
+                            apiCallManager: self.apiCallManager,
+                            logger: self.logger
+                        )
 
-                    captchaVM.isLoading
-                        .distinctUntilChanged()
-                        .take(until: captchaVM.captchaDismiss)
-                        .bind(to: self.showLoadingView)
-                        .disposed(by: self.disposeBag)
+                        captchaVM.isLoading
+                            .distinctUntilChanged()
+                            .take(until: captchaVM.captchaDismiss)
+                            .bind(to: self.showLoadingView)
+                            .disposed(by: self.disposeBag)
 
-                    captchaVM.loginSuccess
-                        .observe(on: MainScheduler.instance)
-                        .bind { [weak self] session in
-                            self?.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
-                            self?.showLoadingView.onNext(true)
+                        captchaVM.loginSuccess
+                            .observe(on: MainScheduler.instance)
+                            .bind { [weak self] session in
+                                self?.logger.logI("SignupViewModel", "Captcha login success. Preparing user data.")
+                                self?.showLoadingView.onNext(true)
+                                self?.handleSignupSuccess(session: session)
+                            }
+                            .disposed(by: self.disposeBag)
 
-                            self?.handleSignupSuccess(session: session)
-                        }
-                        .disposed(by: self.disposeBag)
+                        captchaVM.loginError
+                            .observe(on: MainScheduler.instance)
+                            .bind { [weak self] error in
+                                self?.handleSignupError(error)
+                            }
+                            .disposed(by: self.disposeBag)
 
-                    captchaVM.loginError
-                        .observe(on: MainScheduler.instance)
-                        .bind { [weak self] error in
-                            self?.handleSignupError(error)
-                        }
-                        .disposed(by: self.disposeBag)
-
-                    self.showCaptchaViewModel.onNext(captchaVM)
-                    return .never()
+                        self.showCaptchaViewModel.onNext(captchaVM)
+                    }
+                    return
                 }
 
+                // No captcha required, proceed with direct login
                 self.logger.logD("LoginViewModel", "AuthToken succeeded. Logging in with secureToken.")
-                return self.apiCallManager.login(
+                let session = try await self.apiCallManager.login(
                     username: username,
                     password: password,
                     code2fa: twoFactorCode ?? "",
@@ -165,44 +168,47 @@ class SignUpViewModelImpl: SignUpViewModel {
                     captchaTrailX: [],
                     captchaTrailY: []
                 )
-            }
-            .catch { [weak self] error in
-                self?.handleAuthTokenError(error)
-                return .never()
-            }
-            .observe(on: MainScheduler.instance)
-            .subscribe(
-                onSuccess: { [weak self] session in
-                    self?.handleSignupSuccess(session: session)
-                },
-                onFailure: { [weak self] error in
-                    self?.handleSignupError(error)
+
+                await MainActor.run {
+                    self.handleSignupSuccess(session: session)
                 }
-            )
-            .disposed(by: disposeBag)
+            } catch {
+                await MainActor.run {
+                    self.handleAuthTokenError(error)
+                }
+            }
+        }
     }
 
     private func signUpUser(username: String, password: String, email: String, referralUsername: String, voucherCode: String) {
         showLoadingView.onNext(true)
         logger.logD("SignUpViewModelImpl", "Signing up for account.")
-        apiCallManager.signup(
-            username: username,
-            password: password,
-            referringUsername: referralUsername,
-            email: email,
-            voucherCode: voucherCode,
-            secureToken: "",
-            captchaSolution: "",
-            captchaTrailX: [],
-            captchaTrailY: [])
-        .observe(on: MainScheduler.instance)
-        .subscribe(onSuccess: { [weak self] session in
-            self?.handleSignupSuccess(session: session)
 
-        }, onFailure: { [weak self] error in
-            self?.handleSignupError(error)
+        Task { [weak self] in
+            guard let self = self else { return }
 
-        }).disposed(by: disposeBag)
+            do {
+                let session = try await self.apiCallManager.signup(
+                    username: username,
+                    password: password,
+                    referringUsername: referralUsername,
+                    email: email,
+                    voucherCode: voucherCode,
+                    secureToken: "",
+                    captchaSolution: "",
+                    captchaTrailX: [],
+                    captchaTrailY: []
+                )
+
+                await MainActor.run {
+                    self.handleSignupSuccess(session: session)
+                }
+            } catch {
+                await MainActor.run {
+                    self.handleSignupError(error)
+                }
+            }
+        }
     }
 
     private func handleSignupSuccess(session: Session) {
@@ -256,22 +262,32 @@ class SignUpViewModelImpl: SignUpViewModel {
         showLoadingView.onNext(true)
         logger.logD("SignUpViewModelImpl", "Claiming account.")
 
-        apiCallManager.claimAccount(
-            username: username,
-            password: password,
-            email: email)
-        .observe(on: MainScheduler.instance).subscribe(onSuccess: { [self] _ in
-            let isPro = try? isPremiumUser.value()
-            if isPro == false {
-                getUpdatedUser(email: email)
-            } else {
-                logger.logD("SignUpViewModelImpl", "Getting user data.")
-                prepareUserData(ignoreError: true)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.apiCallManager.claimAccount(
+                    username: username,
+                    password: password,
+                    email: email
+                )
+
+                await MainActor.run {
+                    let isPro = try? self.isPremiumUser.value()
+                    if isPro == false {
+                        self.getUpdatedUser(email: email)
+                    } else {
+                        self.logger.logD("SignUpViewModelImpl", "Getting user data.")
+                        self.prepareUserData(ignoreError: true)
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logD("SignUpViewModelImpl", "Error claming account. \(error)")
+                    self.handleSignupError(error)
+                }
             }
-        }, onFailure: { [self] error in
-            logger.logD("SignUpViewModelImpl", "Error claming account. \(error)")
-            handleSignupError(error)
-        }).disposed(by: disposeBag)
+        }
     }
 
     private func getUpdatedUser(email: String) {

@@ -13,6 +13,9 @@ class ContainerResolver: ContainerResolvertype {
     private lazy var container: Container = {
         self.container = Container()
         container.injectCore()
+        container.register(APIUtilService.self) { _ in
+            APIUtilServiceImpl()
+        }.inObjectScope(.container)
         return container
     }()
 
@@ -30,5 +33,9 @@ class ContainerResolver: ContainerResolvertype {
 
     func getLocalizationService() -> LocalizationService {
         return container.resolve(LocalizationService.self)!
+    }
+
+    func getApiUtil() -> APIUtilService {
+        return container.resolve(APIUtilService.self)!
     }
 }

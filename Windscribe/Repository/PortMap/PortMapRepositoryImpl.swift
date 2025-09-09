@@ -21,17 +21,35 @@ class PortMapRepositoryImpl: PortMapRepository {
     }
 
     func getUpdatedPortMap() -> Single<[PortMap]> {
-        return apiManager.getPortMap(version: APIParameterValues.portMapVersion, forceProtocols: APIParameterValues.forceProtocols).map { portList in
-            self.localDatabase.savePortMap(portMap: Array(portList.portMaps))
-            if let suggested = portList.suggested {
-                self.localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let portList = try await self.apiManager.getPortMap(version: APIParameterValues.portMapVersion, forceProtocols: APIParameterValues.forceProtocols)
+                    await MainActor.run {
+                        self.localDatabase.savePortMap(portMap: Array(portList.portMaps))
+                        if let suggested = portList.suggested {
+                            self.localDatabase.saveSuggestedPorts(suggestedPorts: [suggested])
+                        }
+                        single(.success(Array(portList.portMaps)))
+                    }
+                } catch {
+                    await MainActor.run {
+                        if let portMaps = self.localDatabase.getPortMap() {
+                            single(.success(portMaps))
+                        } else {
+                            single(.failure(error))
+                        }
+                    }
+                }
             }
-            return Array(portList.portMaps)
-        }.catch { error in
-            if let portMaps = self.localDatabase.getPortMap() {
-                return Single.just(portMaps)
-            } else {
-                return Single.error(error)
+
+            return Disposables.create {
+                task.cancel()
             }
         }
     }

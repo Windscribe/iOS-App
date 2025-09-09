@@ -49,22 +49,41 @@ class IPRepositoryImpl: IPRepository {
     func getIp() -> Single<Void> {
         let lastState = try? ipState.value()
         updateState(.updating)
-        return apiManager.getIp()
-            .flatMap { [weak self] data -> Single<Void> in
-                guard let self = self else { return Single.just(()) }
-                if !self.wasObserved {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.load()
-                        self?.updateState(.available(data))
+
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.success(()))
+                    return
+                }
+
+                do {
+                    let data = try await self.apiManager.getIp()
+
+                    await MainActor.run {
+                        if !self.wasObserved {
+                            self.load()
+                            self.updateState(.available(data))
+                        }
+
+                        self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
+                        self.localDatabase.saveIp(myip: data)
+                            .disposed(by: self.disposeBag)
+
+                        single(.success(()))
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.updateState(lastState)
+                        single(.failure(error))
                     }
                 }
-                self.logger.logI("IPRepositoryImpl", "Ip was refreshed with: \(data.userIp) Windscribe IP: \(data.isOurIp)")
-                self.localDatabase.saveIp(myip: data)
-                    .disposed(by: self.disposeBag)
-                return Single.just(())
-            }.do(onError: { [weak self] _ in
-                self?.updateState(lastState)
-            })
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 
     private func updateState(_ ipState: IPState?) {

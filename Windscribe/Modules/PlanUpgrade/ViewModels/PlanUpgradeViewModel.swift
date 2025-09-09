@@ -162,25 +162,43 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
 
     private func upgrade() {
         self.logger.logI("DefaultUpgradePlanViewModel", "Getting new session.")
-        apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { session in
-            self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
-            self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
-            self.upgradeState.onNext(.success(session.isUserGhost))
-        }, onFailure: { _ in
-            self.logger.logE("DefaultUpgradePlanViewModel", "Failure to update session.")
-            self.upgradeState.onNext(.success(false))
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let session = try await self.apiManager.getSession(nil)
+                await MainActor.run {
+                    self.logger.logI("DefaultUpgradePlanViewModel", "Received updated session.")
+                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                    self.upgradeState.onNext(.success(session.isUserGhost))
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("DefaultUpgradePlanViewModel", "Failure to update session. \(error.localizedDescription)")
+                    self.upgradeState.onNext(.success(false))
+                }
+            }
+        }
     }
 
     private func postpcpID() {
         if let payID = pcpID {
             logger.logD("DefaultUpgradePlanViewModel", "Posting pcpID")
-            apiManager.postBillingCpID(pcpID: payID).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { _ in
-                self.upgrade()
-            }, onFailure: { _ in
-                self.logger.logE("DefaultUpgradePlanViewModel", "Failed to post pcpID")
-                self.upgrade()
-            }).disposed(by: disposeBag)
+            Task { [weak self] in
+                guard let self = self else { return }
+
+                do {
+                    _ = try await self.apiManager.postBillingCpID(pcpID: payID)
+                    await MainActor.run {
+                        self.upgrade()
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.logger.logE("DefaultUpgradePlanViewModel", "Failed to post pcpID \(error.localizedDescription)")
+                        self.upgrade()
+                    }
+                }
+            }
         } else {
             logger.logE("DefaultUpgradePlanViewModel", "No pcpID now upgrading.")
             upgrade()
@@ -213,14 +231,18 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
     func purchasedSuccessfully(transaction _: SKPaymentTransaction, appleID: String, appleData: String, appleSIG: String) {
         logger.logD("DefaultUpgradePlanViewModel", "Purchase successful.")
 
-        apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-            .subscribe(
-                onSuccess: { _ in
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+                await MainActor.run {
                     self.logger.logD("DefaultUpgradePlanViewModel", "Purchase verified successfully")
                     self.saveAppleData(appleID: nil, appleData: nil, appleSig: nil)
                     self.postpcpID()
-                },
-                onFailure: { error in
+                }
+            } catch {
+                await MainActor.run {
                     self.logger.logE("DefaultUpgradePlanViewModel", "Failed to verify payment and saving for later. \(error)")
                     self.saveAppleData(appleID: appleID, appleData: appleData, appleSig: appleSIG)
                     if let error = error as? Errors {
@@ -232,8 +254,8 @@ extension DefaultUpgradePlanViewModel: InAppPurchaseManagerDelegate {
                         }
                     }
                 }
-            )
-            .disposed(by: disposeBag)
+            }
+        }
     }
 
     func failedToPurchase() {

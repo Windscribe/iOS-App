@@ -21,16 +21,34 @@ class StaticIpRepositoryImpl: StaticIpRepository {
     }
 
     func getStaticServers() -> Single<[StaticIP]> {
-        return apiManager.getStaticIpList().map {
-            self.localDatabase.deleteStaticIps(ignore: Array($0.staticIPs).map { $0.staticIP })
-            self.localDatabase.saveStaticIPs(staticIps: Array($0.staticIPs))
-            return Array($0.staticIPs)
-        }.catch { error in
-            self.logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
-            if let ips = self.localDatabase.getStaticIPs() {
-                return Single.just(ips)
-            } else {
-                return Single.error(error)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let result = try await self.apiManager.getStaticIpList()
+                    await MainActor.run {
+                        self.localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
+                        self.localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
+                        single(.success(Array(result.staticIPs)))
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
+                        if let ips = self.localDatabase.getStaticIPs() {
+                            single(.success(ips))
+                        } else {
+                            single(.failure(error))
+                        }
+                    }
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
             }
         }
     }

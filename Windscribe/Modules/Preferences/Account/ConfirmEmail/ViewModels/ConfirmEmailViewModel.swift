@@ -92,16 +92,19 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
     func resendEmail() {
         resendButtonDisabled = true
 
-        apiManager.confirmEmail()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure = completion {
-                    self?.resendButtonDisabled = false
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.apiManager.confirmEmail()
+                await MainActor.run {
+                    self.resendEmailSuccess = true
                 }
-            }, receiveValue: { [weak self] _ in
-                self?.resendEmailSuccess = true
-            })
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.resendButtonDisabled = false
+                }
+            }
+        }
     }
 }

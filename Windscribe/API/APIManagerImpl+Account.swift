@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RxSwift
 
 extension APIManagerImpl {
     func login(username: String,
@@ -16,9 +15,9 @@ extension APIManagerImpl {
                secureToken: String,
                captchaSolution: String,
                captchaTrailX: [CGFloat],
-               captchaTrailY: [CGFloat]) -> Single<Session> {
+               captchaTrailY: [CGFloat]) async throws -> Session {
 
-        return makeApiCall(modalType: Session.self) { [weak self] completion in
+        return try await apiUtil.makeApiCall(modalType: Session.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -44,9 +43,9 @@ extension APIManagerImpl {
                 secureToken: String,
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
-                captchaTrailY: [CGFloat]) -> Single<Session> {
+                captchaTrailY: [CGFloat]) async throws -> Session {
 
-        return makeApiCall(modalType: Session.self) { [weak self] completion in
+        return try await apiUtil.makeApiCall(modalType: Session.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -65,8 +64,8 @@ extension APIManagerImpl {
             )
         }
     }
-    func authTokenLogin(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse> {
-        return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
+    func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+        return try await apiUtil.makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -76,8 +75,8 @@ extension APIManagerImpl {
         }
     }
 
-    func authTokenSignup(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse> {
-        return makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
+    func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
+        return try await apiUtil.makeApiCall(modalType: AuthTokenResponse.self) { [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -86,20 +85,20 @@ extension APIManagerImpl {
         }
     }
 
-    func regToken() -> RxSwift.Single<Token> {
-        return makeApiCall(modalType: Token.self) { completion in
+    func regToken() async throws -> Token {
+        return try await apiUtil.makeApiCall(modalType: Token.self) { completion in
             self.api.regToken(completion)
         }
     }
 
-    func signUpUsingToken(token: String) -> RxSwift.Single<Session> {
-        return makeApiCall(modalType: Session.self) { completion in
+    func signUpUsingToken(token: String) async throws -> Session {
+        return try await apiUtil.makeApiCall(modalType: Session.self) { completion in
             self.api.signup(usingToken: token, callback: completion)
         }
     }
 
-    func ssoSession(token: String) -> RxSwift.Single<SSOSession> {
-        return makeApiCall(modalType: SSOSession.self) {  [weak self] completion in
+    func ssoSession(token: String) async throws -> SSOSession {
+        return try await apiUtil.makeApiCall(modalType: SSOSession.self) {  [weak self] completion in
             guard let self = self else {
                 return nil
             }
@@ -108,68 +107,68 @@ extension APIManagerImpl {
         }
     }
 
-    func addEmail(email: String) -> RxSwift.Single<APIMessage> {
+    func addEmail(email: String) async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.addEmail(sessionAuth, email: email, callback: completion)
         }
     }
 
-    func confirmEmail() -> RxSwift.Single<APIMessage> {
+    func confirmEmail() async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.confirmEmail(sessionAuth, callback: completion)
         }
     }
 
-    func claimAccount(username: String, password: String, email: String) -> RxSwift.Single<APIMessage> {
+    func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.claimAccount(sessionAuth, username: username, password: password, email: email, voucherCode: "", claimAccount: "1", callback: completion)
         }
     }
 
-    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse> {
-        return makeApiCall(modalType: XPressLoginCodeResponse.self) { completion in
+    func getXpressLoginCode() async throws -> XPressLoginCodeResponse {
+        return try await apiUtil.makeApiCall(modalType: XPressLoginCodeResponse.self) { completion in
             self.api.getXpressLoginCode(completion)
         }
     }
 
-    func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse> {
-        return makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
+    func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse {
+        return try await apiUtil.makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
             self.api.verifyXpressLoginCode(code, sig: sig, callback: completion)
         }
     }
 
-    func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse> {
+    func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: XPressLoginVerifyResponse.self) { completion in
             self.api.verifyTvLoginCode(sessionAuth, xpressCode: code, callback: completion)
         }
     }
 
-    func cancelAccount(password: String) -> RxSwift.Single<APIMessage> {
+    func cancelAccount(password: String) async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.cancelAccount(sessionAuth, password: password, callback: completion)
         }
     }
 
-    func claimVoucherCode(code: String) -> RxSwift.Single<ClaimVoucherCodeResponse> {
+    func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: ClaimVoucherCodeResponse.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: ClaimVoucherCodeResponse.self) { completion in
             self.api.claimVoucherCode(sessionAuth, voucherCode: code, callback: completion)
         }
     }

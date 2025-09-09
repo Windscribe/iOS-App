@@ -57,12 +57,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 self.latencyRepository.loadLatency()
             }
         }
-        apiManager.getSession(nil).observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-            localDatabase.saveOldSession()
-            localDatabase.saveSession(session: session).disposed(by: disposeBag)
-        }, onFailure: { [self] error in
-            logger.logE("AppDelegate", "Failed to get session from server with error \(error).")
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let session = try await self.apiManager.getSession(nil)
+                await MainActor.run {
+                    self.localDatabase.saveOldSession()
+                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("AppDelegate", "Failed to get session from server with error \(error).")
+                }
+            }
+        }
 
         Task.detached { [unowned self] in
             try? await latencyRepository.loadCustomConfigLatency().await(with: disposeBag)
@@ -81,11 +90,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func recordInstallIfFirstLoad() {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
-            apiManager.recordInstall(platform: "tvos").subscribe(onSuccess: { _ in
-                self.logger.logI("AppDelegate", "Successfully recorded new install.")
-            }, onFailure: { error in
-                self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
-            }).disposed(by: disposeBag)
+            Task { [weak self] in
+                guard let self = self else { return }
+
+                do {
+                    _ = try await self.apiManager.recordInstall(platform: "tvos")
+                    self.logger.logI("AppDelegate", "Successfully recorded new install.")
+                } catch {
+                    self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
+                }
+            }
         }
     }
 

@@ -40,12 +40,32 @@ class UserRepositoryImpl: UserRepository {
     }
 
     func getUpdatedUser() -> Single<User> {
-        return apiManager.getSession(nil).flatMap { session in
-            self.localDatabase.saveOldSession()
-            self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
-            let user = User(session: session)
-            self.user.onNext(user)
-            return Single.just(user)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let session = try await self.apiManager.getSession(nil)
+                    await MainActor.run {
+                        self.localDatabase.saveOldSession()
+                        self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                        let user = User(session: session)
+                        self.user.onNext(user)
+                        single(.success(user))
+                    }
+                } catch {
+                    await MainActor.run {
+                        single(.failure(error))
+                    }
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 

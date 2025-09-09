@@ -22,10 +22,19 @@ class ShakeDataRepositoryImpl: ShakeDataRepository {
     }
 
     func getLeaderboardScores() -> Single<[ShakeForDataScore]> {
-        return apiManager.getShakeForDataLeaderboard().flatMap { scoreList in
-            Single.just(scoreList.scores)
-        }.catch { error in
-            Single.error(error)
+        return Single.create { single in
+            let task = Task {
+                do {
+                    let scoreList = try await self.apiManager.getShakeForDataLeaderboard()
+                    single(.success(scoreList.scores))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 
@@ -33,10 +42,20 @@ class ShakeDataRepositoryImpl: ShakeDataRepository {
         guard let userID = sessionManager.session?.userId else {
             return Single.error(Errors.sessionIsInvalid)
         }
-        return apiManager.recordShakeForDataScore(score: score, userID: userID).flatMap { apiMessage in
-            Single.just(apiMessage.message)
-        }.catch { error in
-            Single.error(error)
+
+        return Single.create { single in
+            let task = Task {
+                do {
+                    let apiMessage = try await self.apiManager.recordShakeForDataScore(score: score, userID: userID)
+                    single(.success(apiMessage.message))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 
