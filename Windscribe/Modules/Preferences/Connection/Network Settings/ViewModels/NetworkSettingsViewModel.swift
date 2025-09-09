@@ -131,7 +131,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
         guard let network = displayingNetwork else { return }
         let port = getPorts(by: value).first ?? DefaultValues.port
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: value, preferredPort: port, preferredProtocolStatus: network.preferredProtocolStatus)
-        localDatabase.saveNetwork(wifiNetwork: updated).disposed(by: disposeBag)
+        localDatabase.saveNetwork(wifiNetwork: updated)
         Task {
             await protocolManager.refreshProtocols(shouldReset: true,
                                                    shouldReconnect: vpnManager.isConnected())
@@ -141,7 +141,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private func updatePreferredPort(value: String) {
         guard let network = displayingNetwork else { return }
         let updated = WifiNetwork(SSID: network.SSID, status: network.status, protocolType: network.protocolType, port: network.port, preferredProtocol: network.preferredProtocol, preferredPort: value, preferredProtocolStatus: network.preferredProtocolStatus)
-        localDatabase.saveNetwork(wifiNetwork: updated).disposed(by: disposeBag)
+        localDatabase.saveNetwork(wifiNetwork: updated)
         reloadItems()
     }
 
