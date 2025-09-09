@@ -173,47 +173,47 @@ class SignUpViewModelImpl: SignUpViewModel {
         logger.logD("SignUpViewModel", "Requesting auth token for signup")
         showLoadingView = true
 
-        apiCallManager.authTokenSignup(useAsciiCaptcha: false)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] result in
-                guard let self = self else { return }
+        Task { [weak self] in
+            guard let self = self else { return }
 
-                if case .failure(let error) = result {
+            do {
+                let tokenResponse = try await self.apiCallManager.authTokenSignup(useAsciiCaptcha: false)
+
+                await MainActor.run {
+                    self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token)")
+                    self.secureToken = tokenResponse.data.token
+
+                    // CAPTCHA required
+                    if let captcha = tokenResponse.data.captcha {
+                        self.logger.logI("SignUpViewModel", "Captcha required before signup.")
+                        if let popupModel = CaptchaPopupModel(from: captcha) {
+                            self.captchaData = popupModel
+                            self.showCaptchaPopup = true
+                        } else {
+                            self.logger.logE("SignUpViewModel", "Failed to decode captcha images.")
+                            self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
+                        }
+                        self.showLoadingView = false
+                        return
+                    }
+
+                    // No captcha, proceed directly
+                    self.signUpWithCredentials(
+                        username: self.username,
+                        password: self.password,
+                        referringUsername: self.referralUsername,
+                        email: self.email,
+                        voucherCode: self.voucherCode,
+                        secureToken: self.secureToken)
+                }
+            } catch {
+                await MainActor.run {
                     self.logger.logE("SignUpViewModel", "Failed to get auth token: \(error)")
                     self.failedState = .network("\(TextsAsset.Authentication.tokenRetrievalFailed) \(error)")
                     self.showLoadingView = false
                 }
-            }, receiveValue: { [weak self] tokenResponse in
-                guard let self = self else { return }
-
-                self.logger.logD("SignUpViewModel", "Token received: \(tokenResponse.data.token)")
-                self.secureToken = tokenResponse.data.token
-
-                // CAPTCHA required
-                if let captcha = tokenResponse.data.captcha {
-                    self.logger.logI("SignUpViewModel", "Captcha required before signup.")
-                    if let popupModel = CaptchaPopupModel(from: captcha) {
-                        self.captchaData = popupModel
-                        self.showCaptchaPopup = true
-                    } else {
-                        self.logger.logE("SignUpViewModel", "Failed to decode captcha images.")
-                        self.failedState = .network(TextsAsset.Authentication.captchaImageDecodingFailed)
-                    }
-                    self.showLoadingView = false
-                    return
-                }
-
-                // No captcha, proceed directly
-                self.signUpWithCredentials(
-                    username: username,
-                    password: password,
-                    referringUsername: referralUsername,
-                    email: email,
-                    voucherCode: voucherCode,
-                    secureToken: secureToken)
-            })
-            .store(in: &cancellables)
+            }
+        }
     }
 
     /// Called when user completes the captcha interaction during signup.
@@ -254,7 +254,11 @@ class SignUpViewModelImpl: SignUpViewModel {
         captchaSolution: String = "",
         captchaTrailX: [CGFloat] = [],
         captchaTrailY: [CGFloat] = []) {
-            apiCallManager.signup(
+            Task { [weak self] in
+                guard let self = self else { return }
+
+                do {
+                    let session = try await self.apiCallManager.signup(
                 username: username,
                 password: password,
                 referringUsername: referralUsername,
@@ -264,50 +268,47 @@ class SignUpViewModelImpl: SignUpViewModel {
                 captchaSolution: captchaSolution,
                 captchaTrailX: captchaTrailX,
                 captchaTrailY: captchaTrailY
-            )
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] result in
-                guard let self = self else { return }
+                    )
 
-                if case .failure(let error) = result {
-                    self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")
-                    self.handleError(error)
+                    await MainActor.run {
+                        self.userRepository.login(session: session)
+                        self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
+                        self.prepareUserData()
+                    }
+                } catch {
+                    await MainActor.run {
+                        self.logger.logE("SignUpViewModel", "Failed to signup: \(error)")
+                        self.handleError(error)
+                        self.showLoadingView = false
+                    }
                 }
-                self.showLoadingView = false
-            }, receiveValue: { [weak self] session in
-                guard let self = self else { return }
-
-                self.userRepository.login(session: session)
-                self.logger.logI("SignUpViewModel", "Signup successful for \(session.username)")
-                self.prepareUserData()
-            })
-            .store(in: &cancellables)
+            }
     }
 
     private func claimGhostAccount() {
         logger.logD("SignUpViewModel", "Claiming ghost account.")
         showLoadingView = true
 
-        apiCallManager.claimAccount(username: username, password: password, email: email)
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] result in
-                guard let self = self else { return }
+        Task { [weak self] in
+            guard let self = self else { return }
 
-                if case .failure(let error) = result {
-                    logger.logD("SignUpViewModel", "Error claming account. \(error)")
+            do {
+                _ = try await self.apiCallManager.claimAccount(username: self.username, password: self.password, email: self.email)
+
+                await MainActor.run {
+                    if self.isPremiumUser == false {
+                        self.getUpdatedUser()
+                    } else {
+                        self.prepareUserData(ignoreError: true)
+                    }
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logD("SignUpViewModel", "Error claming account. \(error)")
                     self.handleError(error)
                 }
-            }, receiveValue: { [weak self] _ in
-                guard let self = self else { return }
-
-                if self.isPremiumUser == false {
-                    self.getUpdatedUser()
-                } else {
-                    self.prepareUserData(ignoreError: true)
-                }
-            }).store(in: &cancellables)
+            }
+        }
     }
 
     private func getUpdatedUser() {

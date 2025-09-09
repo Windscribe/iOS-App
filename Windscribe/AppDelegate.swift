@@ -95,11 +95,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func recordInstallIfFirstLoad() {
         if preferences.getFirstInstall() == false {
             preferences.saveFirstInstall(bool: true)
-            apiManager.recordInstall(platform: "ios").subscribe(onSuccess: { _ in
-                self.logger.logD("AppDelegate", "Successfully recorded new install.")
-            }, onFailure: { error in
-                self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
-            }).disposed(by: disposeBag)
+            Task { [weak self] in
+                guard let self = self else { return }
+
+                do {
+                    _ = try await self.apiManager.recordInstall(platform: "ios")
+                    self.logger.logD("AppDelegate", "Successfully recorded new install.")
+                } catch {
+                    self.logger.logE("AppDelegate", "Failed to record new install: \(error)")
+                }
+            }
         }
     }
 
@@ -193,16 +198,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let token = deviceToken.reduce("") { $0 + String(format: "%02.2hhX", $1) }
         logger.logI("AppDelegate", "Sending notifcation token to server.")
-        apiManager.getSession(token)
-            .subscribe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [self] session in
-            logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
-            localDatabase.saveOldSession()
-            localDatabase.saveSession(session: session).disposed(by: disposeBag)
-            preferences.saveRegisteredForPushNotifications(bool: true)
-        }, onFailure: { [self] error in
-            logger.logE("AppDelegate", "Failed to register remote notification token with server \(error).")
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let session = try await self.apiManager.getSession(token)
+                await MainActor.run {
+                    self.logger.logI("AppDelegate", "Remote notification token registered with server. \(token)")
+                    self.localDatabase.saveOldSession()
+                    self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                    self.preferences.saveRegisteredForPushNotifications(bool: true)
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("AppDelegate", "Failed to register remote notification token with server \(error).")
+                }
+            }
+        }
     }
 
     /// Called when registerForRemoteNotification calls fails. App will retry on next app launch.

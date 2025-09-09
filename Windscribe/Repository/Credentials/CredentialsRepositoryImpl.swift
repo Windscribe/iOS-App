@@ -43,43 +43,93 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     }
 
     func getUpdatedOpenVPNCrendentials() -> Single<OpenVPNServerCredentials?> {
-        return apiManager.getOpenVPNServerCredentials().map { credentials in
-            self.localDatabase.saveOpenVPNServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
-            return credentials
-        }.catch { error in
-            if let credentials = self.localDatabase.getOpenVPNServerCredentials() {
-                return Single.just(credentials)
-            } else {
-                return Single.error(error)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.success(nil))
+                    return
+                }
+
+                do {
+                    let credentials = try await self.apiManager.getOpenVPNServerCredentials()
+                    await MainActor.run {
+                        self.localDatabase.saveOpenVPNServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
+                        single(.success(credentials))
+                    }
+                } catch {
+                    await MainActor.run {
+                        if let credentials = self.localDatabase.getOpenVPNServerCredentials() {
+                            single(.success(credentials))
+                        } else {
+                            single(.failure(error))
+                        }
+                    }
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
 
     func getUpdatedIKEv2Crendentials() -> Single<IKEv2ServerCredentials?> {
-        return apiManager.getIKEv2ServerCredentials().map { credentials in
-            self.localDatabase.saveIKEv2ServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
-            return credentials
-        }.catch { error in
-            if let credentials = self.localDatabase.getIKEv2ServerCredentials() {
-                return Single.just(credentials)
-            } else {
-                return Single.error(error)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.success(nil))
+                    return
+                }
+
+                do {
+                    let credentials = try await self.apiManager.getIKEv2ServerCredentials()
+                    await MainActor.run {
+                        self.localDatabase.saveIKEv2ServerCredentials(credentials: credentials).disposed(by: self.disposeBag)
+                        single(.success(credentials))
+                    }
+                } catch {
+                    await MainActor.run {
+                        if let credentials = self.localDatabase.getIKEv2ServerCredentials() {
+                            single(.success(credentials))
+                        } else {
+                            single(.failure(error))
+                        }
+                    }
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
 
     func getUpdatedServerConfig() -> Single<String> {
-        return apiManager.getOpenVPNServerConfig(openVPNVersion: APIParameterValues.openVPNVersion).map { config in
-            if let data = Data(base64Encoded: config) {
-                self.fileDatabase.removeFile(path: FilePaths.openVPN)
-                self.fileDatabase.saveFile(data: data, path: FilePaths.openVPN)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let config = try await self.apiManager.getOpenVPNServerConfig(openVPNVersion: APIParameterValues.openVPNVersion)
+                    if let data = Data(base64Encoded: config) {
+                        self.fileDatabase.removeFile(path: FilePaths.openVPN)
+                        self.fileDatabase.saveFile(data: data, path: FilePaths.openVPN)
+                    }
+                    single(.success(config))
+                } catch {
+                    if let fileContent = self.fileDatabase.readFile(path: FilePaths.openVPN), let serverConfig = String(data: fileContent, encoding: .utf8) {
+                        single(.success(serverConfig))
+                    } else {
+                        single(.failure(error))
+                    }
+                }
             }
-            return config
-        }.catch { error in
-            if let fileContent = self.fileDatabase.readFile(path: FilePaths.openVPN), let serverConfig = String(data: fileContent, encoding: .utf8) {
-                return Single.just(serverConfig)
-            } else {
-                return Single.error(error)
+
+            return Disposables.create {
+                task.cancel()
             }
         }
     }
@@ -115,10 +165,13 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         if preferences.getSessionAuthHash() == nil {
             return
         }
+
         getUpdatedOpenVPNCrendentials().flatMap { _ in
             return self.getUpdatedServerConfig()
         }.subscribe(onSuccess: { _ in
             self.logger.logI("CredentialsRepositoryImpl", "Server config updated.")
-        }, onFailure: { _ in self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.") }).disposed(by: disposeBag)
+        }, onFailure: { _ in
+            self.logger.logE("CredentialsRepositoryImpl", "Failed to update server config.")
+        }).disposed(by: disposeBag)
     }
 }

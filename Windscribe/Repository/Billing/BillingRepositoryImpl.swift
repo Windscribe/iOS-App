@@ -21,11 +21,31 @@ class BillingRepositoryImpl: BillingRepository {
     }
 
     func getMobilePlans(promo: String?) -> Single<[MobilePlan]> {
-        return apiManager.getMobileBillingPlans(promo: promo).flatMap { plans in
-            self.localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
-            return Single.just(Array(plans.mobilePlans))
-        }.catch { error in
-            self.loadFromDatabase(error: error)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let plans = try await self.apiManager.getMobileBillingPlans(promo: promo)
+                    await MainActor.run {
+                        self.localDatabase.saveMobilePlans(mobilePlansList: Array(plans.mobilePlans))
+                        single(.success(Array(plans.mobilePlans)))
+                    }
+                } catch {
+                    self.loadFromDatabase(error: error).subscribe(onSuccess: { plans in
+                        single(.success(plans))
+                    }, onFailure: { dbError in
+                        single(.failure(dbError))
+                    }).disposed(by: self.disposeBag)
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 

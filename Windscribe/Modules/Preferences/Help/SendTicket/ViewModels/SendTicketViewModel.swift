@@ -96,26 +96,31 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
         let platform = "Brand: Apple | OS: \(device.systemVersion) | Model: \(UIDevice.modelName)"
         let name = sessionManager.session?.userId ?? ""
 
-        apiManager.sendTicket(
-            email: email,
-            name: name,
-            subject: subject,
-            message: message,
-            category: "\(categoryIndex + 1)",
-            type: category, channel: "app_ios", platform: platform)
-                .asPublisher()
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    self?.showProgress = false
-                    if case .failure(let error) = completion {
-                        self?.errorMessage = error.localizedDescription.isEmpty
-                            ? TextsAsset.SubmitTicket.failedToSendTicket
-                            : error.localizedDescription
-                        self?.showError = true
-                    }
-                }, receiveValue: { [weak self] _ in
-                    self?.showSuccess = true
-                })
-                .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await apiManager.sendTicket(
+                    email: email,
+                    name: name,
+                    subject: subject,
+                    message: message,
+                    category: "\(categoryIndex + 1)",
+                    type: category, channel: "app_ios", platform: platform)
+
+                await MainActor.run {
+                    self.showProgress = false
+                    self.showSuccess = true
+                }
+            } catch {
+                await MainActor.run {
+                    self.showProgress = false
+                    self.errorMessage = error.localizedDescription.isEmpty
+                        ? TextsAsset.SubmitTicket.failedToSendTicket
+                        : error.localizedDescription
+                    self.showError = true
+                }
+            }
+        }
     }
 }

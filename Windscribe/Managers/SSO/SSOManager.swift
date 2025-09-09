@@ -70,29 +70,30 @@ extension SSOManager: ASAuthorizationControllerDelegate {
 
         logger.logI("SSOManager", "Requesting sso session for token")
 
-        apiManager.ssoSession(token: token)
-            .flatMap { ssoSession -> Single<Session> in
-                self.apiManager.getSession(sessionAuth: ssoSession.sessionAuth)
-                    .map { session in
-                        // Get session from "\GET" will not have session auth set.
-                        session.sessionAuthHash = ssoSession.sessionAuth
-                        return session
-                    }
-            }
-            .asPublisher()
-            .sink(receiveCompletion: { completion in
-                guard case .failure(let error) = completion,
-                      let typedError = error as? Errors else {
-                    return
-                }
+        Task { [weak self] in
+            guard let self = self else { return }
 
-                self.ssoSession?.send(completion: .failure(typedError))
-            },
-            receiveValue: { session in
-                self.ssoSession?.send(session)
-                self.ssoSession?.send(completion: .finished)
-            })
-            .store(in: &cancellables)
+            do {
+                let ssoSession = try await self.apiManager.ssoSession(token: token)
+                let session = try await self.apiManager.getSession(sessionAuth: ssoSession.sessionAuth)
+
+                // Get session from "\GET" will not have session auth set.
+                session.sessionAuthHash = ssoSession.sessionAuth
+
+                await MainActor.run {
+                    self.ssoSession?.send(session)
+                    self.ssoSession?.send(completion: .finished)
+                }
+            } catch {
+                await MainActor.run {
+                    if let typedError = error as? Errors {
+                        self.ssoSession?.send(completion: .failure(typedError))
+                    } else {
+                        self.ssoSession?.send(completion: .failure(Errors.appleSsoError("SSO session failed")))
+                    }
+                }
+            }
+        }
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {

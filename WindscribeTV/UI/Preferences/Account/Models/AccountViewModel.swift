@@ -94,58 +94,101 @@ class AccountViewModel: AccountViewModelType {
     }
 
     func resendConfirmEmail(success: (() -> Void)?, failure: ((String) -> Void)?) {
-        apiCallManager.confirmEmail().subscribe(onSuccess: { _ in
-            success?()
-        }, onFailure: { error in
-            failure?(error.localizedDescription)
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.apiCallManager.confirmEmail()
+                await MainActor.run {
+                    success?()
+                }
+            } catch {
+                await MainActor.run {
+                    failure?(error.localizedDescription)
+                }
+            }
+        }
     }
 
     func getWebSession(success: ((String) -> Void)?, failure: ((String) -> Void)?) {
-        apiCallManager.getWebSession().subscribe(onSuccess: { session in
-            let url = LinkProvider.getWindscribeLinkWithAutoLogin(
-                path: Links.acccount,
-                tempSession: session.tempSession
-            )
-            success?(url)
-        }, onFailure: { error in
-            failure?(error.localizedDescription)
-        }).disposed(by: disposeBag)
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let session = try await self.apiCallManager.getWebSession()
+                await MainActor.run {
+                    let url = LinkProvider.getWindscribeLinkWithAutoLogin(
+                        path: Links.acccount,
+                        tempSession: session.tempSession
+                    )
+                    success?(url)
+                }
+            } catch {
+                await MainActor.run {
+                    failure?(error.localizedDescription)
+                }
+            }
+        }
     }
 
     func cancelAccount(password: String) {
         cancelAccountState.onNext(.loading)
-        apiCallManager.cancelAccount(password: password).subscribe(onSuccess: { [weak self] _ in
-            self?.cancelAccountState.onNext(.success)
-        }, onFailure: { [weak self] error in
+        Task { [weak self] in
             guard let self = self else { return }
-            switch error {
-            case Errors.validationFailure:
-                self.cancelAccountState.onNext(.error("Password is incorrect."))
-            case let Errors.apiError(e):
-                self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
-            default:
-                self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
+
+            do {
+                _ = try await self.apiCallManager.cancelAccount(password: password)
+                await MainActor.run {
+                    self.cancelAccountState.onNext(.success)
+                }
+            } catch {
+                await MainActor.run {
+                    switch error {
+                    case Errors.validationFailure:
+                        self.cancelAccountState.onNext(.error("Password is incorrect."))
+                    case let Errors.apiError(e):
+                        self.cancelAccountState.onNext(.error(e.errorMessage ?? ""))
+                    default:
+                        self.cancelAccountState.onNext(.error("Unable to reach server. Check your internet connection."))
+                    }
+                    self.logger.logE("AccountViewModel", error.localizedDescription)
+                }
             }
-            self.logger.logE("AccountViewModel", error.localizedDescription)
-        }).disposed(by: disposeBag)
+        }
     }
 
     func loadSession() -> Single<Session> {
-        let sessionSingle = apiCallManager.getSession(nil)
-        sessionSingle.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
-            guard let self = self else { return }
-            self.localDatabase.saveOldSession()
-            self.localDatabase.saveSession(session: session).disposed(by: disposeBag)
-            let oldSession = self.localDatabase.getOldSession()
-            let sessionSync = self.localDatabase.getSessionSync()
-            if self.localDatabase.getOldSession() != self.localDatabase.getSessionSync() {
-                self.sessionUpdatedTrigger.onNext(())
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let session = try await self.apiCallManager.getSession(nil)
+                    await MainActor.run {
+                        self.localDatabase.saveOldSession()
+                        self.localDatabase.saveSession(session: session).disposed(by: self.disposeBag)
+                        let oldSession = self.localDatabase.getOldSession()
+                        let sessionSync = self.localDatabase.getSessionSync()
+                        if self.localDatabase.getOldSession() != self.localDatabase.getSessionSync() {
+                            self.sessionUpdatedTrigger.onNext(())
+                        }
+                    }
+                    single(.success(session))
+                } catch {
+                    await MainActor.run {
+                        self.logger.logE("AccountViewModel", "Failed to get session from server with error \(error).")
+                    }
+                    single(.failure(error))
+                }
             }
-        }, onFailure: { [self] error in
-            logger.logE("AccountViewModel", "Failed to get session from server with error \(error).")
-        }).disposed(by: disposeBag)
-        return sessionSingle
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 
     func logoutUser() {
@@ -153,33 +196,51 @@ class AccountViewModel: AccountViewModelType {
     }
 
     func verifyCodeEntered(code: String, success: (() -> Void)?, failure: ((String) -> Void)?) {
-        apiCallManager.verifyTvLoginCode(code: code).subscribe(onSuccess: { _ in
-            success?()
-        }, onFailure: { error in
-            if let error = error as? Errors {
-                switch error {
-                case let .apiError(e):
-                    failure?(e.errorMessage ?? "Failed to verify login code.")
-                default:
-                    failure?("Failed to verify login code \(error.description)")
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                _ = try await self.apiCallManager.verifyTvLoginCode(code: code)
+                await MainActor.run {
+                    success?()
+                }
+            } catch {
+                await MainActor.run {
+                    if let error = error as? Errors {
+                        switch error {
+                        case let .apiError(e):
+                            failure?(e.errorMessage ?? "Failed to verify login code.")
+                        default:
+                            failure?("Failed to verify login code \(error.description)")
+                        }
+                    }
                 }
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     func verifyVoucherEntered(code: String, success: ((ClaimVoucherCodeResponse) -> Void)?, failure: ((String) -> Void)?) {
-        apiCallManager.claimVoucherCode(code: code).subscribe(onSuccess: { response in
-            success?(response)
-        }, onFailure: { error in
-            if let error = error as? Errors {
-                switch error {
-                case let .apiError(e):
-                    failure?(e.errorMessage ?? "Error applying Voucher Code: \(code)")
-                default:
-                    failure?("Error applying Voucher Code: \(error.description)")
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            do {
+                let response = try await self.apiCallManager.claimVoucherCode(code: code)
+                await MainActor.run {
+                    success?(response)
+                }
+            } catch {
+                await MainActor.run {
+                    if let error = error as? Errors {
+                        switch error {
+                        case let .apiError(e):
+                            failure?(e.errorMessage ?? "Error applying Voucher Code: \(code)")
+                        default:
+                            failure?("Error applying Voucher Code: \(error.description)")
+                        }
+                    }
                 }
             }
-        }).disposed(by: disposeBag)
+        }
     }
 
     func updateSession() {

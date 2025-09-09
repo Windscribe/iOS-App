@@ -50,37 +50,72 @@ class SessionManager: SessionManaging {
     @objc func keepSessionUpdated() {
         if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
             sessionFetchInProgress = true
+
+            // Use RxSwift properly for database operations, then convert to async for API
             localDatabase.getSession().first()
-                .flatMap { savedSession in
-                    if case _ = savedSession {
+                .subscribe(onSuccess: { [weak self] savedSession in
+                    guard let self = self else { return }
+
+                    if savedSession != nil {
                         self.localDatabase.saveOldSession()
-                        return self.apiManager.getSession(nil)
+
+                        Task {
+                            do {
+                                let session = try await self.apiManager.getSession(nil)
+                                await MainActor.run {
+                                    self.userRepo.update(session: session)
+                                    self.logger.logI("SessionManager", "Session updated for \(session.username)")
+                                    self.sessionFetchInProgress = false
+                                }
+                            } catch {
+                                await MainActor.run {
+                                    self.logger.logE("SessionManager", "Failed to update error: \(error)")
+                                    self.sessionFetchInProgress = false
+                                }
+                            }
+                        }
                     } else {
-                        return Single.error(Errors.sessionIsInvalid)
+                        DispatchQueue.main.async {
+                            self.logoutUser()
+                            self.sessionFetchInProgress = false
+                        }
                     }
-                }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
-                    self?.userRepo.update(session: session)
-                    self?.logger.logI("SessionManager", "Session updated for \(session.username)")
-                    self?.sessionFetchInProgress = false
                 }, onFailure: { [weak self] error in
-                    if let errors = error as? Errors,
-                       errors == .sessionIsInvalid {
-                        self?.logoutUser()
-                    } else {
-                        self?.logger.logE("SessionManager", "Failed to update error: \(error)")
+                    DispatchQueue.main.async {
+                        self?.logger.logE("SessionManager", "Failed to get saved session: \(error)")
+                        self?.sessionFetchInProgress = false
                     }
-                    self?.sessionFetchInProgress = false
-                }).disposed(by: disposeBag)
+                })
+                .disposed(by: disposeBag)
         }
         updateServerConfigs()
     }
 
     func getUppdatedSession() -> Single<Session> {
-        return apiManager.getSession(nil)
-            .flatMap { session in
-                self.userRepo.update(session: session)
-                return Single.just(session)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let session = try await self.apiManager.getSession(nil)
+                    await MainActor.run {
+                        self.userRepo.update(session: session)
+                        single(.success(session))
+                    }
+                } catch {
+                    await MainActor.run {
+                        single(.failure(error))
+                    }
+                }
             }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 
     func canAccesstoProLocation() -> Bool {
@@ -252,20 +287,35 @@ class SessionManager: SessionManaging {
         ssoManager.signOut()
 
         // Delete Session
-        apiManager.deleteSession()
-            .retry(3) // Retry up to 3 times if an error occurs
-            .subscribe(on: MainScheduler.asyncInstance)
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(onSuccess: { [self] response in
-                if response.success {
-                    logger.logI("SessionManager", "Session successfully deleted: \(response.message)")
-                } else {
-                    logger.logI("SessionManager", "Delete session API returned failure: \(response.message)")
+        Task { [weak self] in
+            guard let self = self else { return }
+
+            var retryCount = 0
+            let maxRetries = 3
+
+            while retryCount < maxRetries {
+                do {
+                    let response = try await self.apiManager.deleteSession()
+                    await MainActor.run {
+                        if response.success {
+                            self.logger.logI("SessionManager", "Session successfully deleted: \(response.message)")
+                        } else {
+                            self.logger.logI("SessionManager", "Delete session API returned failure: \(response.message)")
+                        }
+                    }
+                    break
+                } catch {
+                    retryCount += 1
+                    if retryCount >= maxRetries {
+                        await MainActor.run {
+                            self.logger.logE("SessionManager", "Failed to delete session after retries: \(error.localizedDescription)")
+                        }
+                        break
+                    }
+                    try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay between retries
                 }
-            }, onFailure: { [self] error in
-                logger.logE("SessionManager", "Failed to delete session after retries: \(error.localizedDescription)")
-            })
-            .disposed(by: disposeBag)
+            }
+        }
 
         NotificationCenter.default.post(Notification(name: Notifications.userLoggedOut))
 

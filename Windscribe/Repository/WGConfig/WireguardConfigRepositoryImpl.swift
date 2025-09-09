@@ -50,21 +50,21 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                     let userPublicKey = await self.wgCrendentials.getPublicKey() ?? ""
 
                     do {
-                        let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: false)
+                        let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: false)
                         self.wgCrendentials.saveInitResponse(config: config)
                         single(.success(true))
                     } catch let error as Errors where error == .wgLimitExceeded {
                         if let alertManager = self.alertManager {
                             let accept = try await alertManager.askUser(message: error.description).asPromise()
                             if accept {
-                                let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: true)
+                                let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)
                                 self.wgCrendentials.saveInitResponse(config: config)
                                 single(.success(true))
                             } else {
                                 single(.failure(Errors.handled))
                             }
                         } else {
-                            let config = try await self.apiCallManager.wgConfigInitAsync(clientPublicKey: userPublicKey, deleteOldestKey: true)
+                            let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)
                             self.wgCrendentials.saveInitResponse(config: config)
                             single(.success(true))
                         }
@@ -85,7 +85,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                     let publicKey = await self.wgCrendentials.getPublicKey() ?? ""
                     let hostName = self.wgCrendentials.serverHostName ?? ""
 
-                    let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
+                    let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: publicKey, hostname: hostName, deviceId: deviceID)
                     self.wgCrendentials.saveConnectResponse(config: config)
                     single(.success(true))
 
@@ -94,7 +94,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                         self.wgCrendentials.delete()
                         _ = try await self.wgInit().asPromise()
                         let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
-                        let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
+                        let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
                         self.wgCrendentials.saveConnectResponse(config: config)
                         single(.success(true))
                     } catch {
@@ -104,7 +104,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                 } catch let Errors.apiError(code) where code.errorCode == unableToSelectWgIp {
                     do {
                         let retryKey = await self.wgCrendentials.getPublicKey() ?? ""
-                        let config = try await self.apiCallManager.wgConfigConnectAsync(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
+                        let config = try await self.apiCallManager.wgConfigConnect(clientPublicKey: retryKey, hostname: self.wgCrendentials.serverHostName ?? "", deviceId: UIDevice.current.identifierForVendor?.uuidString ?? "")
                         self.wgCrendentials.saveConnectResponse(config: config)
                         single(.success(true))
                     } catch {

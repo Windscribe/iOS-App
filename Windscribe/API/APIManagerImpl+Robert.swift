@@ -10,29 +10,29 @@ import Foundation
 import RxSwift
 
 extension APIManagerImpl {
-    func getRobertFilters() -> Single<RobertFilters> {
+    func getRobertFilters() async throws -> RobertFilters {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: RobertFilters.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: RobertFilters.self) { completion in
             self.api.getRobertFilters(sessionAuth, callback: completion)
         }
     }
 
-    func updateRobertSettings(id: String, status: Int32) -> Single<APIMessage> {
+    func updateRobertSettings(id: String, status: Int32) async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.setRobertFilter(sessionAuth, id: id, status: status, callback: completion)
         }
     }
 
-    func syncRobertFilters() -> Single<APIMessage> {
+    func syncRobertFilters() async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.syncRobert(sessionAuth, callback: completion)
         }
     }

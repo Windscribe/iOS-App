@@ -7,14 +7,13 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol APIManager {
     // Session
-    func getSession(_ appleID: String?) -> Single<Session>
-    func getWebSession() -> Single<WebSession>
-    func deleteSession() -> Single<APIMessage>
-    func getSession(sessionAuth: String) -> Single<Session>
+    func getSession(_ appleID: String?) async throws -> Session
+    func getWebSession() async throws -> WebSession
+    func deleteSession() async throws -> APIMessage
+    func getSession(sessionAuth: String) async throws -> Session
 
     // Signup and Login
     func login(username: String,
@@ -23,7 +22,7 @@ protocol APIManager {
                secureToken: String,
                captchaSolution: String,
                captchaTrailX: [CGFloat],
-               captchaTrailY: [CGFloat]) -> Single<Session>
+               captchaTrailY: [CGFloat]) async throws -> Session
     func signup(username: String,
                 password: String,
                 referringUsername: String,
@@ -32,47 +31,47 @@ protocol APIManager {
                 secureToken: String,
                 captchaSolution: String,
                 captchaTrailX: [CGFloat],
-                captchaTrailY: [CGFloat]) -> Single<Session>
-    func authTokenLogin(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse>
-    func authTokenSignup(useAsciiCaptcha: Bool) -> RxSwift.Single<AuthTokenResponse>
-    func regToken() -> RxSwift.Single<Token>
-    func signUpUsingToken(token: String) -> RxSwift.Single<Session>
-    func ssoSession(token: String) -> RxSwift.Single<SSOSession>
+                captchaTrailY: [CGFloat]) async throws -> Session
+    func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
+    func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse
+    func regToken() async throws -> Token
+    func signUpUsingToken(token: String) async throws -> Session
+    func ssoSession(token: String) async throws -> SSOSession
 
     // Account
-    func addEmail(email: String) -> Single<APIMessage>
-    func confirmEmail() -> Single<APIMessage>
-    func claimAccount(username: String, password: String, email: String) -> RxSwift.Single<APIMessage>
-    func getXpressLoginCode() -> RxSwift.Single<XPressLoginCodeResponse>
-    func verifyXPressLoginCode(code: String, sig: String) -> RxSwift.Single<XPressLoginVerifyResponse>
-    func cancelAccount(password: String) -> RxSwift.Single<APIMessage>
-    func verifyTvLoginCode(code: String) -> RxSwift.Single<XPressLoginVerifyResponse>
-    func claimVoucherCode(code: String) -> RxSwift.Single<ClaimVoucherCodeResponse>
+    func addEmail(email: String) async throws -> APIMessage
+    func confirmEmail() async throws -> APIMessage
+    func claimAccount(username: String, password: String, email: String) async throws -> APIMessage
+    func getXpressLoginCode() async throws -> XPressLoginCodeResponse
+    func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse
+    func cancelAccount(password: String) async throws -> APIMessage
+    func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse
+    func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse
 
     // VPN
-    func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) -> Single<ServerList>
-    func getStaticIpList() -> Single<StaticIPList>
-    func getOpenVPNServerConfig(openVPNVersion: String) -> Single<String>
-    func getIKEv2ServerCredentials() -> Single<IKEv2ServerCredentials>
-    func getOpenVPNServerCredentials() -> Single<OpenVPNServerCredentials>
-    func getPortMap(version: Int, forceProtocols: [String]) -> Single<PortMapList>
+    func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) async throws -> ServerList
+    func getStaticIpList() async throws -> StaticIPList
+    func getOpenVPNServerConfig(openVPNVersion: String) async throws -> String
+    func getIKEv2ServerCredentials() async throws -> IKEv2ServerCredentials
+    func getOpenVPNServerCredentials() async throws -> OpenVPNServerCredentials
+    func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList
 
     // Billing
-    func getMobileBillingPlans(promo: String?) -> Single<MobilePlanList>
-    func postBillingCpID(pcpID: String) -> Single<APIMessage>
-    func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) -> Single<APIMessage>
+    func getMobileBillingPlans(promo: String?) async throws -> MobilePlanList
+    func postBillingCpID(pcpID: String) async throws -> APIMessage
+    func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) async throws -> APIMessage
 
     // Robert
-    func getRobertFilters() -> Single<RobertFilters>
-    func updateRobertSettings(id: String, status: Int32) -> Single<APIMessage>
-    func syncRobertFilters() -> Single<APIMessage>
+    func getRobertFilters() async throws -> RobertFilters
+    func updateRobertSettings(id: String, status: Int32) async throws -> APIMessage
+    func syncRobertFilters() async throws -> APIMessage
 
     // Other
-    func recordInstall(platform: String) -> Single<APIMessage>
-    func getNotifications(pcpid: String) -> Single<NoticeList>
-    func getIp() -> Single<MyIP>
+    func recordInstall(platform: String) async throws -> APIMessage
+    func getNotifications(pcpid: String) async throws -> NoticeList
+    func getIp() async throws -> MyIP
     func sendDebugLog(username: String, log: String) async throws -> APIMessage
-    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) -> Single<APIMessage>
-    func getShakeForDataLeaderboard() -> Single<Leaderboard>
-    func recordShakeForDataScore(score: Int, userID: String) -> Single<APIMessage>
+    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage
+    func getShakeForDataLeaderboard() async throws -> Leaderboard
+    func recordShakeForDataScore(score: Int, userID: String) async throws -> APIMessage
 }

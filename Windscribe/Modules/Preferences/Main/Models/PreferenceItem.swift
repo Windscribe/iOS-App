@@ -109,7 +109,11 @@ extension PreferenceItemType {
         case .lookAndFeel: return .lookAndFeel
         case .helpMe: return .help
         case .about: return .about
+#if os(tvOS)
+        case .screenTest: return nil
+#else
         case .screenTest: return .screenTest
+#endif
         case .logout: return nil
         }
     }

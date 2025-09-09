@@ -501,7 +501,6 @@
 		59FC745C2C5161DD00021CD1 /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7F3087237B38670097C6D6 /* UIImageView+Extension.swift */; };
 		59FC745E2C51642100021CD1 /* PushNotificationManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE032B4F254E004FA857 /* PushNotificationManagerImpl.swift */; };
 		59FC745F2C51647500021CD1 /* Realm+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF97EFDA2280E70300378058 /* Realm+Extension.swift */; };
-		59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */; };
 		59FC74612C51678000021CD1 /* UserRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983BF2B34C23C0069FF3A /* UserRepositoryImpl.swift */; };
 		59FC74622C51679000021CD1 /* UserDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384F2B917EF300AA725C /* UserDataRepository.swift */; };
 		59FC74632C51679F00021CD1 /* NotificationRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D42B43EE710001CFA0 /* NotificationRepository.swift */; };
@@ -696,8 +695,6 @@
 		C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207A2B606E2200266B23 /* WireguardModule.swift */; };
 		C50F207E2B60B40500266B23 /* WireguardAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */; };
 		C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */; };
-		C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */; };
-		C50F20822B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */; };
 		C50F20832B60B79600266B23 /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		C50F20852B60BCCE00266B23 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
@@ -1777,7 +1774,6 @@
 		C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50F207A2B606E2200266B23 /* WireguardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardModule.swift; sourceTree = "<group>"; };
 		C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAPIManager.swift; sourceTree = "<group>"; };
-		C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAPIManagerImpl.swift; sourceTree = "<group>"; };
 		C50F20C52B61760000266B23 /* CoreModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModule.swift; sourceTree = "<group>"; };
 		C50F20E12B62328F00266B23 /* ViewLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewLogViewModel.swift; sourceTree = "<group>"; };
 		C512546A2DE76C7A003A58BD /* SSOManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SSOManager.swift; sourceTree = "<group>"; };
@@ -3969,7 +3965,6 @@
 				C5D983C12B34DA3F0069FF3A /* APIUtil.swift */,
 				C5592B752B37F3F200F2F110 /* WSNetErrors.swift */,
 				C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */,
-				C50F20802B60B42A00266B23 /* WireguardAPIManagerImpl.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -6563,7 +6558,7 @@
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,
 				59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */,
 				59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */,
-				59FC74602C51676700021CD1 /* WireguardAPIManagerImpl.swift in Sources */,
+				59FC74602C51676700021CD1 /* WireguardAPIManager.swift in Sources */,
 				1EF7BB3D2C74AFFE0032A4DF /* RatePopupViewController.swift in Sources */,
 				1EF7BB502C7618410032A4DF /* EnterEmailViewModel.swift in Sources */,
 				1E0D9D7B2C6107E6008AFF2D /* GeneralViewType.swift in Sources */,
@@ -6899,7 +6894,6 @@
 				F49C45B82DCD2CE0007E5EF1 /* ConnectionSettingsViewModel.swift in Sources */,
 				AF4E926821EFC6EC00A3F584 /* Color+Extension.swift in Sources */,
 				F484B7A22E314C9800BABA98 /* PrivacyInfoView.swift in Sources */,
-				C50F20812B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */,
 				F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */,
 				1ED6163C2DC52EC4006CDC99 /* LookAndFeelRepository.swift in Sources */,
@@ -7202,7 +7196,6 @@
 				C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */,
 				C50F20762B606B1D00266B23 /* WireguardConfigRepository.swift in Sources */,
 				C52DA5242B638EA400E5C571 /* CustomConfig.swift in Sources */,
-				C50F20822B60B42A00266B23 /* WireguardAPIManagerImpl.swift in Sources */,
 				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,
 				C535D29A27E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
 				F49C45792DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,

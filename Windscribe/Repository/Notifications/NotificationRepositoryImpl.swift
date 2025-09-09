@@ -25,17 +25,35 @@ class NotificationRepositoryImpl: NotificationRepository {
     }
 
     func getUpdatedNotifications() -> Single<[Notice]> {
-        let pcpid = pushNotificationsManager.notification.value?.pcpid ?? ""
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
 
-        if !pcpid.isEmpty {
-            logger.logD("NotificationRepository", "Adding pcpid ID: \(pcpid) to notifications request.")
-        }
+                let pcpid = self.pushNotificationsManager.notification.value?.pcpid ?? ""
 
-        return apiManager.getNotifications(pcpid: pcpid).map {
-            self.localDatabase.saveNotifications(notifications: Array($0.notices))
-            return Array($0.notices)
-        }.flatMap { notifications in
-            Single.just(notifications)
+                if !pcpid.isEmpty {
+                    self.logger.logD("NotificationRepository", "Adding pcpid ID: \(pcpid) to notifications request.")
+                }
+
+                do {
+                    let result = try await self.apiManager.getNotifications(pcpid: pcpid)
+                    await MainActor.run {
+                        self.localDatabase.saveNotifications(notifications: Array(result.notices))
+                        single(.success(Array(result.notices)))
+                    }
+                } catch {
+                    await MainActor.run {
+                        single(.failure(error))
+                    }
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 

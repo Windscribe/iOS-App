@@ -165,18 +165,28 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
         if let appleID = preferences.getActiveAppleID(),
            let appleData = preferences.getActiveAppleData(),
            let appleSIG = preferences.getActiveAppleSig() {
-            apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG).subscribe(onSuccess: { _ in
-                self.apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: self.dispose)
-                self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
-                // setting nil for successfull validation
-                self.preferences.saveActiveAppleID(id: nil)
-                self.preferences.saveActiveAppleSig(sig: nil)
-                self.preferences.saveActiveAppleData(data: nil)
-            }, onFailure: { error in
-                if let error = error as? Errors {
-                    self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
+
+            Task { [weak self] in
+                guard let self = self else { return }
+
+                do {
+                    _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
+
+                    // Verify successful - now get updated session
+                    _ = try? await self.apiManager.getSession(nil)
+
+                    self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
+                    // setting nil for successfull validation
+                    self.preferences.saveActiveAppleID(id: nil)
+                    self.preferences.saveActiveAppleSig(sig: nil)
+                    self.preferences.saveActiveAppleData(data: nil)
+
+                } catch {
+                    if let error = error as? Errors {
+                        self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
+                    }
                 }
-            }).disposed(by: dispose)
+            }
         }
     }
 
@@ -187,26 +197,26 @@ class InAppPurchaseManagerImpl: NSObject, InAppPurchaseManager, ModernInAppPurch
             return
         }
 
-        return try await withCheckedThrowingContinuation { continuation in
-            apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
-                .subscribe(
-                    onSuccess: { _ in
-                        self.apiManager.getSession(nil).subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: self.dispose)
-                        self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
+        Task { [weak self] in
+            guard let self = self else { return }
 
-                        self.preferences.saveActiveAppleID(id: nil)
-                        self.preferences.saveActiveAppleSig(sig: nil)
-                        self.preferences.saveActiveAppleData(data: nil)
+            do {
+                _ = try await self.apiManager.verifyApplePayment(appleID: appleID, appleData: appleData, appleSIG: appleSIG)
 
-                        continuation.resume()
-                    },
-                    onFailure: { error in
-                        if let error = error as? Errors {
-                            self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
-                        }
-                        continuation.resume(throwing: error)
-                    }
-                ).disposed(by: self.dispose)
+                // Verify successful - now get updated session
+                _ = try? await self.apiManager.getSession(nil)
+
+                self.logger.logI("InAppPurchaseManagerImpl", "Sending Apple purchase data successful.")
+                // setting nil for successfull validation
+                self.preferences.saveActiveAppleID(id: nil)
+                self.preferences.saveActiveAppleSig(sig: nil)
+                self.preferences.saveActiveAppleData(data: nil)
+
+            } catch {
+                if let error = error as? Errors {
+                    self.logger.logE("InAppPurchaseManagerImpl", "\(error.description)")
+                }
+            }
         }
     }
 }

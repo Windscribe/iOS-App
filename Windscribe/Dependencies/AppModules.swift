@@ -9,7 +9,6 @@
 import Foundation
 import NetworkExtension
 import RealmSwift
-import RxSwift
 import Swinject
 
 // MARK: - App
@@ -30,17 +29,20 @@ class App: Assembly {
 class Network: Assembly {
     func assemble(container: Swinject.Container) {
         container.injectCore()
+        container.register(APIUtilService.self) { _ in
+            APIUtilServiceImpl()
+        }.inObjectScope(.userScope)
         container.register(Connectivity.self) { r in
             ConnectivityImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(APIManager.self) { r in
-            APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, logger: r.resolve(FileLogger.self)!)
+            APIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, logger: r.resolve(FileLogger.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.initCompleted { r, apiManager in
             // Note: Api manager and user repository both have circular dependency on each other.
             (apiManager as? APIManagerImpl)?.userRepository = r.resolve(UserRepository.self)
         }.inObjectScope(.userScope)
         container.register(WireguardAPIManager.self) { r in
-            WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!)
+            WireguardAPIManagerImpl(api: r.resolve(WSNetServerAPI.self)!, preferences: r.resolve(Preferences.self)!, apiUtil: r.resolve(APIUtilService.self)!)
         }.inObjectScope(.userScope)
     }
 }

@@ -32,13 +32,28 @@ class EnterEmailViewModelImpl: EnterEmailViewModel {
         self.alertManager = alertManager
         self.apiManager = apiManager
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
+
     }
 
     func changeEmailAddress(email: String) -> Single<APIMessage> {
-        return apiManager.addEmail(email: email).map { apimessage in
-            apimessage
-        }.catch { error in
-            Single.error(error)
+        return Single.create { single in
+            let task = Task { [weak self] in
+                guard let self = self else {
+                    single(.failure(Errors.validationFailure))
+                    return
+                }
+
+                do {
+                    let apiMessage = try await self.apiManager.addEmail(email: email)
+                    single(.success(apiMessage))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
         }
     }
 }

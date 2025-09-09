@@ -7,54 +7,53 @@
 //
 
 import Foundation
-import RxSwift
 
 extension APIManagerImpl {
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
-        return try await makeApiCallAsync(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.debugLog(username, strLog: log, callback: completion)
         }
     }
 
-    func getIp() -> Single<MyIP> {
-        return makeApiCall(modalType: MyIP.self) { completion in
+    func getIp() async throws -> MyIP {
+        return try await apiUtil.makeApiCall(modalType: MyIP.self) { completion in
             self.api.myIP(completion)
         }
     }
 
-    func getNotifications(pcpid: String) -> Single<NoticeList> {
+    func getNotifications(pcpid: String) async throws -> NoticeList {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: NoticeList.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: NoticeList.self) { completion in
             self.api.notifications(sessionAuth, pcpid: pcpid, callback: completion)
         }
     }
 
-    func recordInstall(platform _: String) -> Single<APIMessage> {
-        return makeApiCall(modalType: APIMessage.self) { completion in
+    func recordInstall(platform _: String) async throws -> APIMessage {
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.recordInstall(false, callback: completion)
         }
     }
 
-    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform _: String) -> Single<APIMessage> {
-        return makeApiCall(modalType: APIMessage.self) { completion in
+    func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform _: String) async throws -> APIMessage {
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.sendSupportTicket(email, supportName: name, supportSubject: subject, supportMessage: message, supportCategory: category, type: type, channel: channel, callback: completion)
         }
     }
 
-    func getShakeForDataLeaderboard() -> Single<Leaderboard> {
+    func getShakeForDataLeaderboard() async throws -> Leaderboard {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
-        return makeApiCall(modalType: Leaderboard.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: Leaderboard.self) { completion in
             self.api.shakeData(sessionAuth, callback: completion)
         }
     }
 
-    func recordShakeForDataScore(score: Int, userID: String) -> Single<APIMessage> {
+    func recordShakeForDataScore(score: Int, userID: String) async throws -> APIMessage {
         guard let sessionAuth = userRepository?.sessionAuth else {
-            return Single.error(Errors.validationFailure)
+            throw Errors.validationFailure
         }
         var signatureText = ""
         signatureText.append(sessionAuth)
@@ -63,7 +62,7 @@ extension APIManagerImpl {
         signatureText.append("\(score)")
         signatureText.append("swiftMETROtaylorSTATION127!")
 
-        return makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
             self.api.recordShake(forDataScore: sessionAuth,
                                  score: "\(score)",
                                  signature: signatureText,

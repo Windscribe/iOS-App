@@ -80,30 +80,33 @@ class CaptchaViewModel {
         isLoading.onNext(true)
         logger.logD("CaptchaViewModel", "Verifying captcha with solution: \(solution)")
 
-        apiCallManager.login(
-            username: username,
-            password: password,
-            code2fa: twoFactorCode ?? "",
-            secureToken: secureToken,
-            captchaSolution: solution,
-            captchaTrailX: [],
-            captchaTrailY: []
-        )
-        .observe(on: MainScheduler.instance)
-        .subscribe(onSuccess: { [weak self] session in
+        Task { [weak self] in
             guard let self = self else { return }
-            self.logger.logI("CaptchaViewModel", "Login successful after captcha.")
-            self.captchaDismiss.onNext(())
 
-            self.loginSuccess.onNext(session)
-        }, onFailure: { [weak self] error in
-            guard let self else { return }
-            self.logger.logE("CaptchaViewModel", "Captcha login failed: \(error)")
-            self.isLoading.onNext(false)
-            self.captchaDismiss.onNext(())
+            do {
+                let session = try await self.apiCallManager.login(
+                    username: self.username,
+                    password: self.password,
+                    code2fa: self.twoFactorCode ?? "",
+                    secureToken: self.secureToken,
+                    captchaSolution: solution,
+                    captchaTrailX: [],
+                    captchaTrailY: []
+                )
 
-            self.loginError.onNext(error)
-        })
-        .disposed(by: disposeBag)
+                await MainActor.run {
+                    self.logger.logI("CaptchaViewModel", "Login successful after captcha.")
+                    self.captchaDismiss.onNext(())
+                    self.loginSuccess.onNext(session)
+                }
+            } catch {
+                await MainActor.run {
+                    self.logger.logE("CaptchaViewModel", "Captcha login failed: \(error)")
+                    self.isLoading.onNext(false)
+                    self.captchaDismiss.onNext(())
+                    self.loginError.onNext(error)
+                }
+            }
+        }
     }
 }

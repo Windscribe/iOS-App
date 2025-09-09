@@ -12,4 +12,5 @@ protocol ContainerResolvertype {
     func getPreferences() -> Preferences
     func getLogger() -> FileLogger
     func getApi() -> WSNetServerAPI
+    func getApiUtil() -> APIUtilService
 }

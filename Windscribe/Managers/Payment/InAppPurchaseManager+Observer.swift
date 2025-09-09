@@ -75,28 +75,29 @@ extension InAppPurchaseManagerImpl: SKProductsRequestDelegate, SKPaymentTransact
     ///  Backend will only verify items which are valid and never added to the database.
     /// - Parameter transactions: transactions added to queue as a result of user request of restore all completed transactions.
     private func verifyUncompletedTransactions(transactions: [UncompletedTransactions]) {
-        var firstVerifiedTransaction: UncompletedTransactions?
-        var firstError: String?
-        let group = DispatchGroup()
-        for transaction in transactions {
-            group.enter()
-            apiManager.verifyApplePayment(
-                appleID: transaction.transactionID,
-                appleData: transaction.appleData,
-                appleSIG: transaction.signature).subscribe(onSuccess: { _ in
-                defer { group.leave() }
-                if firstVerifiedTransaction == nil {
-                    firstVerifiedTransaction = transaction
+        Task {
+            var firstVerifiedTransaction: UncompletedTransactions?
+            var firstError: String?
+
+            for transaction in transactions {
+                do {
+                    _ = try await apiManager.verifyApplePayment(
+                        appleID: transaction.transactionID,
+                        appleData: transaction.appleData,
+                        appleSIG: transaction.signature)
+                    if firstVerifiedTransaction == nil {
+                        firstVerifiedTransaction = transaction
+                    }
+                } catch {
+                    if firstError == nil {
+                        firstError = "\(error)"
+                    }
                 }
-            }, onFailure: { error in
-                defer { group.leave() }
-                if firstError == nil {
-                    firstError = "\(error)"
-                }
-            }).disposed(by: dispose)
-        }
-        group.notify(queue: .main) {
-            self.delegate?.setVerifiedTransaction(transaction: firstVerifiedTransaction, error: firstError)
+            }
+
+            await MainActor.run {
+                self.delegate?.setVerifiedTransaction(transaction: firstVerifiedTransaction, error: firstError)
+            }
         }
     }
 
