@@ -54,6 +54,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     // MARK: - Dependencies
 
     let preferences: Preferences, disposeBag = DisposeBag(), lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType
+    private let dnsSettingsManager: DNSSettingsManagerType
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -68,7 +69,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
     let languageUpdatedTrigger = PublishSubject<Void>()
 
-    init(preferences: Preferences, lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType) {
+    init(preferences: Preferences, lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType, dnsSettingsManager: DNSSettingsManagerType) {
         self.preferences = preferences
         self.lookAndFeelRepository = lookAndFeelRepository
         self.localDb = localDb
@@ -76,6 +77,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         self.networkRepository = networkRepository
         self.languageManager = languageManager
         self.protocolManager = protocolManager
+        self.dnsSettingsManager = dnsSettingsManager
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
         loadData()
     }
@@ -186,7 +188,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     func saveConnectedDNSValue(value: String, completion: @escaping (_ isValid: Bool) -> Void) {
-        DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
+        dnsSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
             guard let dnsValue = dnsValue else {
                 completion(false)
                 return

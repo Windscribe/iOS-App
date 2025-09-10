@@ -137,7 +137,8 @@ class ViewModels: Assembly {
                 preferences: r.resolve(Preferences.self)!,
                 localDatabase: r.resolve(LocalDatabase.self)!,
                 router: r.resolve(ConnectionsNavigationRouter.self)!,
-                protocolManager: r.resolve(ProtocolManagerType.self)!
+                protocolManager: r.resolve(ProtocolManagerType.self)!,
+                dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!
             )
         }.inObjectScope(.transient)
 
@@ -577,7 +578,8 @@ class ViewControllerModule: Assembly {
                     preferences: r.resolve(Preferences.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     router: r.resolve(ConnectionsNavigationRouter.self)!,
-                    protocolManager: r.resolve(ProtocolManagerType.self)!
+                    protocolManager: r.resolve(ProtocolManagerType.self)!,
+                    dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!
                 )
            )
         }.inObjectScope(.transient)

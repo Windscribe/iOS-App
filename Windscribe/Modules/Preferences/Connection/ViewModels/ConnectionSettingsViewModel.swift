@@ -38,6 +38,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     private let preferences: Preferences
     private let localDatabase: LocalDatabase
     private let protocolManager: ProtocolManagerType
+    private let dnsSettingsManager: DNSSettingsManagerType
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
@@ -45,11 +46,13 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
          preferences: Preferences,
          localDatabase: LocalDatabase,
          router: ConnectionsNavigationRouter,
-         protocolManager: ProtocolManagerType) {
+         protocolManager: ProtocolManagerType,
+         dnsSettingsManager: DNSSettingsManagerType) {
         self.preferences = preferences
         self.localDatabase = localDatabase
         self.router = router
         self.protocolManager = protocolManager
+        self.dnsSettingsManager = dnsSettingsManager
 
         super.init(logger: logger,
                    lookAndFeelRepository: lookAndFeelRepository,
@@ -284,7 +287,7 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
     }
 
     private func saveConnectedDNSValue(value: String) {
-        DNSSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
+        dnsSettingsManager.getDNSValue(from: value, opensURL: UIApplication.shared, completionDNS: { dnsValue in
             guard let dnsValue = dnsValue,
                   !dnsValue.servers.isEmpty else {
                 return

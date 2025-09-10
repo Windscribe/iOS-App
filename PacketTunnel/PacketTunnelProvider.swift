@@ -26,6 +26,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private lazy var preferences: Preferences = container.resolve(Preferences.self)!
 
+    private lazy var dnsSettingsManager: DNSSettingsManagerType = container.resolve(DNSSettingsManagerType.self)!
+
     // MARK: Properties
 
     private var startHandler: ((Error?) -> Void)?
@@ -177,7 +179,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
             logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
-            if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
+            if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
                 networkSettings?.dnsSettings = dnsSettings
             }
         }

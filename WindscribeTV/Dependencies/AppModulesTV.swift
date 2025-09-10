@@ -36,7 +36,7 @@ class TVViewModels: Assembly {
             AccountViewModel(apiCallManager: r.resolve(APIManager.self)!, alertManager: r.resolve(AlertManagerV2.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, sessionManager: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!, languageManager: r.resolve(LanguageManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!)
         }.inObjectScope(.transient)
         container.register(ConnectionsViewModelType.self) { r in
-            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            ConnectionsViewModel(preferences: r.resolve(Preferences.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!, localDb: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, networkRepository: r.resolve(SecuredNetworkRepository.self)!, languageManager: r.resolve(LanguageManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!, dnsSettingsManager: r.resolve(DNSSettingsManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ViewLogViewModel.self) { r in
             ViewLogViewModelImpl(logger: r.resolve(FileLogger.self)!, lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!)

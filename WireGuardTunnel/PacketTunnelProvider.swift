@@ -38,6 +38,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         return logger
     }()
 
+    private lazy var dnsSettingsManager: DNSSettingsManagerType = container.resolve(DNSSettingsManagerType.self)!
+
     // MARK: Properties
 
     private var runningHealthCheck = false
@@ -156,7 +158,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
             logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
-            if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
+            if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
                 tunnelConfiguration.dnsSettings = dnsSettings
             }
         }
@@ -317,7 +319,9 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
-            wgConfigRepository.getCredentials().subscribe(onCompleted: {
+            wgConfigRepository.getCredentials().subscribe(onCompleted: { [weak self] in
+                guard let self = self else { return }
+
                 self.runningHealthCheck = false
                 // Restart extesnion if connection to apply new configuration.
                 if let completionHandler = completionHandler {
@@ -331,7 +335,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                             if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
                                 let customDNSValue = self.preferences.getCustomDNSValue()
                                 self.logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
-                                if let dnsSettings = DNSSettingsManager.makeDNSSettings(from: customDNSValue) {
+                                if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
                                     updatedConfig.dnsSettings = dnsSettings
                                 }
                             }
