@@ -30,14 +30,14 @@ class ReferAndShareManagerImpl: ReferAndShareManager {
         guard !preference.getShowedShareDialog() else {
             return false
         }
-        
-        guard await vpnManager.isActive() else { 
-            return false 
+
+        guard await vpnManager.isActive() else {
+            return false
         }
 
         return await MainActor.run {
-            guard let session = sessionManager.session else { 
-                return false 
+            guard let session = sessionManager.session else {
+                return false
             }
             let regDate = session.regDate
 
@@ -46,14 +46,14 @@ class ReferAndShareManagerImpl: ReferAndShareManager {
 
             if !session.isUserPro && !session.isUserGhost && daysRegisteredSince > 30 {
                 self.setShowedShareDialog()
-                
+
                 Task {
                     try? await Task.sleep(nanoseconds: 5_000_000_000) // 5 seconds
                 }
-                
+
                 return true
             }
-            
+
             return false
         }
     }
