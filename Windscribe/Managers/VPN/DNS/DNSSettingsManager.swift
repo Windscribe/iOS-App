@@ -13,9 +13,17 @@ protocol OpensURlType {
     func canOpenURL(_ url: URL) -> Bool
 }
 
-enum DNSSettingsManager {
-    static func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings? {
-        guard #available(iOS 14.0, *), !dnsValue.value.isEmpty else { return nil }
+protocol DNSSettingsManagerType {
+    func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings?
+    func getDNSValue(from value: String, opensURL: OpensURlType,
+                     completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,
+                     completion: @escaping (_ isValid: Bool) -> Void)
+}
+
+class DNSSettingsManager: DNSSettingsManagerType {
+    func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings? {
+        guard !dnsValue.value.isEmpty else { return nil }
+        
         switch dnsValue.type {
         case .ipAddress:
             let settings = NEDNSSettings(servers: dnsValue.servers)
@@ -34,9 +42,9 @@ enum DNSSettingsManager {
         }
     }
 
-    static func getDNSValue(from value: String, opensURL _: OpensURlType,
-                            completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,
-                            completion: @escaping (_ isValid: Bool) -> Void) {
+    func getDNSValue(from value: String, opensURL _: OpensURlType,
+                     completionDNS: @escaping (_ dnsValue: DNSValue?) -> Void,
+                     completion: @escaping (_ isValid: Bool) -> Void) {
         let customValue = value.lowercased()
         if IPv4Address(customValue) != nil || IPv6Address(customValue) != nil {
             completion(true)
@@ -49,14 +57,14 @@ enum DNSSettingsManager {
             let range = NSRange(location: 0, length: customValue.utf16.count)
             if urlHttpsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
-                DNSSettingsManager.resolveHosts(fromURL: customValue) {
+                self.resolveHosts(fromURL: customValue) {
                     completionDNS(DNSValue(type: .overHttps, value: value,
                                            servers: $0))
                 }
                 return
             } else if urlTlsRegex.firstMatch(in: customValue, options: [], range: range) != nil {
                 completion(true)
-                DNSSettingsManager.resolveHosts(fromURL: customValue, isTls: true) {
+                self.resolveHosts(fromURL: customValue, isTls: true) {
                     completionDNS(DNSValue(type: .overTLS, value: value, servers: $0))
                 }
                 return
@@ -66,16 +74,16 @@ enum DNSSettingsManager {
         completionDNS(nil)
     }
 
-    private static func resolveHosts(fromURL urlValue: String, isTls: Bool = false, completion: @escaping (_ resolvedHosts: [String]) -> Void) {
+    private func resolveHosts(fromURL urlValue: String, isTls: Bool = false, completion: @escaping (_ resolvedHosts: [String]) -> Void) {
         let correctedUrl = isTls ? "https://\(urlValue)" : urlValue
         guard let url = URL(string: correctedUrl), let hostname = url.host else {
             completion([])
             return
         }
-        return DNSSettingsManager.resolveHosts(for: hostname, completion: completion)
+        return self.resolveHosts(for: hostname, completion: completion)
     }
 
-    private static func resolveHosts(for hostname: String, completion: @escaping (_ resolvedHosts: [String]) -> Void) {
+    private func resolveHosts(for hostname: String, completion: @escaping (_ resolvedHosts: [String]) -> Void) {
         let timeout: TimeInterval = 5.0
         var flag = true
         var workItem: DispatchWorkItem? = DispatchWorkItem {
