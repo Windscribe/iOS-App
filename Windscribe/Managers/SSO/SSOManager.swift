@@ -7,7 +7,6 @@
 //
 import AuthenticationServices
 import Combine
-import RxSwift
 
 protocol SSOManaging {
     func getSession() -> AnyPublisher<Session, Errors>
