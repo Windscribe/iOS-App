@@ -6,6 +6,7 @@
 //  Copyright © 2023 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import UIKit
 
@@ -40,6 +41,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let sessionManager: SessionManaging
     let logger: FileLogger
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let alertManager: AlertManagerV2
     let preferences: Preferences
     let lookAndFeelRepository: LookAndFeelRepositoryType
@@ -57,9 +59,9 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     }
 
     private func observeLanguage() {
-        languageManager.activelanguage.subscribe(onNext: { [weak self] updatedLanguage in
+        languageManager.activelanguage.sink { [weak self] updatedLanguage in
             self?.currentLanguage.onNext(updatedLanguage.name)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func getActionButtonDisplay() {

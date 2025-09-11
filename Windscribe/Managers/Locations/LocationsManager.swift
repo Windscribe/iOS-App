@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 
 struct LocationUIInfo {
@@ -46,9 +47,9 @@ class LocationsManager: LocationsManagerType {
     private let serverRepository: ServerRepository
 
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     let selectedLocationUpdatedSubject = BehaviorSubject<Bool>(value: (false))
-
 
     init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManager, serverRepository: ServerRepository) {
         self.localDatabase = localDatabase
@@ -57,15 +58,13 @@ class LocationsManager: LocationsManagerType {
         self.languageManager = languageManager
         self.serverRepository = serverRepository
 
-        languageManager.activelanguage.subscribe { [weak self] _ in
+        languageManager.activelanguage.sink { [weak self] _ in
             self?.selectedLocationUpdatedSubject.onNext(false)
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         serverRepository.updatedServerModelsSubject.subscribe { [weak self] _ in
             self?.selectedLocationUpdatedSubject.onNext(false)
         }.disposed(by: disposeBag)
-
-
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {

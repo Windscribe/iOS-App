@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import UIKit
 import RxSwift
 
@@ -37,12 +38,12 @@ class ListHeaderViewModel: ListHeaderViewModelType {
     let isDarkMode: BehaviorSubject<Bool>
     let type = BehaviorSubject<ListHeaderViewType>(value: .empty)
     let refreshLanguage = PublishSubject<Void>()
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.subscribe { _ in self.refreshLanguage.onNext(()) }
-            .disposed(by: disposeBag)
+        languageManager.activelanguage.sink { _ in self.refreshLanguage.onNext(()) }
+            .store(in: &cancellables)
     }
 
     func updateType(with type: ListHeaderViewType) {

@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 
@@ -34,14 +35,14 @@ class SearchLocationsViewModel: SearchLocationsViewModelType {
     let refreshLanguage = PublishSubject<Void>()
 
     let isDarkMode: BehaviorSubject<Bool>
-    let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     weak var delegate: SearchCountryViewDelegate?
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType, languageManager: LanguageManager) {
         isDarkMode = lookAndFeelRepository.isDarkModeSubject
-        languageManager.activelanguage.subscribe { _ in self.refreshLanguage.onNext(()) }
-            .disposed(by: disposeBag)
+        languageManager.activelanguage.sink { _ in self.refreshLanguage.onNext(()) }
+            .store(in: &cancellables)
     }
 
     func toggleSearch() {

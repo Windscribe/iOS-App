@@ -355,9 +355,9 @@ class MainViewController: PreferredFocusedViewController {
                 self.refreshProtocol(from: network, with: protocolPort)
         }.disposed(by: disposeBag)
 
-        languageManager.activelanguage.observe(on: MainScheduler.asyncInstance).subscribe(onNext: { [self] _ in
+        languageManager.activelanguage.sink { [self] _ in
             localisation()
-        }, onError: { _ in }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         viewModel.locationOrderBy.subscribe(on: MainScheduler.instance).bind(onNext: { _ in
             self.setFlagImages()

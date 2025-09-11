@@ -6,6 +6,7 @@
 //  Copyright © 2020 Windscribe. All rights reserved.
 //
 
+import Combine
 import RealmSwift
 import RxSwift
 import SafariServices
@@ -20,6 +21,7 @@ class CustomConfigListFooterView: WSView {
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     lazy var lookAndFeelRepository = Assembler.resolve(LookAndFeelRepositoryType.self)
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,9 +43,12 @@ class CustomConfigListFooterView: WSView {
         actionButton.rx.tap.bind { [weak self] _ in
             self?.delegate?.addCustomConfig()
         }.disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe(onNext: { [weak self] _ in
-            self?.label.text = TextsAsset.addCustomConfig
-        }).disposed(by: disposeBag)
+
+        languageManager.activelanguage
+            .sink { [weak self] _ in
+                self?.label.text = TextsAsset.addCustomConfig
+            }
+            .store(in: &cancellables)
 
         lookAndFeelRepository.isDarkModeSubject.subscribe(onNext: { [weak self] isDarkMode in
             self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)

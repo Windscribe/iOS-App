@@ -6,6 +6,7 @@
 //	Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import Network
 import RxSwift
@@ -55,6 +56,7 @@ class ConnectionsViewModel: ConnectionsViewModelType {
 
     let preferences: Preferences, disposeBag = DisposeBag(), lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
+    private var cancellables = Set<AnyCancellable>()
 
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
@@ -124,9 +126,9 @@ class ConnectionsViewModel: ConnectionsViewModelType {
             }
             self.shouldShowCustomDNSOption.onNext(true)
         }.disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe { [weak self] _ in
+        languageManager.activelanguage.sink { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func updateChangeFirewallStatus() {

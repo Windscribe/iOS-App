@@ -67,19 +67,14 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
         super.bindSubjects()
 
         languageManager.activelanguage
-            .asPublisher()
             .map { $0.name }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("PreferencesViewModel", "language error: \(error)")
-                }
-            }, receiveValue: { [weak self] name in
+            .sink { [weak self] name in
                 guard let self = self else { return }
                 self.reloadItems()
                 self.currentLanguage = name
                 self.updateActionDisplay()
-            })
+            }
             .store(in: &cancellables)
     }
 

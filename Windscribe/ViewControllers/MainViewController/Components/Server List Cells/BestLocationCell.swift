@@ -6,6 +6,7 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import Swinject
 import UIKit
@@ -74,6 +75,7 @@ class BestLocationCell: ServerListCell {
     }
 
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
+    private var cancellables = Set<AnyCancellable>()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -91,8 +93,8 @@ class BestLocationCell: ServerListCell {
 
     override func bindViews(isDarkMode: BehaviorSubject<Bool>) {
         super.bindViews(isDarkMode: isDarkMode)
-        languageManager.activelanguage.subscribe { _ in
+        languageManager.activelanguage.sink { _ in
             self.updateUI()
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 }
