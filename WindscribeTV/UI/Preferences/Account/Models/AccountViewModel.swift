@@ -6,6 +6,7 @@
 //    Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 
@@ -48,6 +49,7 @@ class AccountViewModel: AccountViewModelType {
 
     var sections = [AccountSectionItem]()
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let isDarkMode: BehaviorSubject<Bool>
     let cancelAccountState = BehaviorSubject(value: ManageAccountState.initial)
     let languageUpdatedTrigger = PublishSubject<Void>()
@@ -67,9 +69,9 @@ class AccountViewModel: AccountViewModelType {
         #else
             sections = [.info, .plan]
         #endif
-        languageManager.activelanguage.subscribe { [weak self] _ in
+        languageManager.activelanguage.sink { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func getSections() -> [AccountSectionItem] {

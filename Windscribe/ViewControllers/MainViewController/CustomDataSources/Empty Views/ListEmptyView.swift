@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import Swinject
@@ -60,6 +61,7 @@ enum ListEmptyViewType {
 class ListEmptyView: UIView {
     var isDarkMode: BehaviorSubject<Bool>
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
 
     let label = UILabel()
@@ -151,9 +153,9 @@ class ListEmptyView: UIView {
             self.label.textColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
             self.imageView.tintColor = ThemeUtils.primaryTextColor(isDarkMode: $0)
         }).disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe(onNext: { [weak self] _ in
+        languageManager.activelanguage.sink { [weak self] _ in
             self?.label.text = self?.type.description
             self?.config.title = self?.type.buttonTitle
-        }, onError: { _ in }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 }

@@ -6,12 +6,12 @@
 //  Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
-import RxSwift
 import UIKit
 
 protocol LanguageManager {
-    var activelanguage: BehaviorSubject<Languages> { get }
+    var activelanguage: CurrentValueSubject<Languages, Never> { get }
     func setAppLanguage()
     func setLanguage(language: Languages)
     func getCurrentLanguage() -> Languages
@@ -19,7 +19,7 @@ protocol LanguageManager {
 
 class LanguageManagerImpl: LanguageManager {
 
-    var activelanguage = BehaviorSubject(value: Languages.english)
+    var activelanguage = CurrentValueSubject<Languages, Never>(Languages.english)
     private var language = Languages.english
     private var currentLanguage: Languages = .english
 
@@ -47,7 +47,7 @@ class LanguageManagerImpl: LanguageManager {
     private let preference: Preferences
     private let localizationService: LocalizationService
 
-    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(preference: Preferences, localizationService: LocalizationService) {
         self.preference = preference
@@ -60,17 +60,27 @@ class LanguageManagerImpl: LanguageManager {
 
     private func bindData() {
         preference.getLanguageManagerSelectedLanguage()
-            .flatMap { languageName in
-                Single.just(Languages.allCases.first { $0.name == languageName }?.rawValue ?? Languages.english.rawValue)
-            }.subscribe(onNext: { languageCode in
-                self.language = Languages(rawValue: languageCode) ?? Languages.english
-                self.activelanguage.onNext(self.language)
-                self.currentLanguage = self.getCurrentLanguage()
-                self.localizationService.updateLanguage(self.currentLanguage)
-            }, onError: { _ in
-                self.language = Languages.english
-                self.activelanguage.onNext(Languages.english)
-            }).disposed(by: disposeBag)
+            .toPublisher(initialValue: Languages.english.name)
+            .compactMap { (languageName: String?) -> String in
+                Languages.allCases.first { $0.name == languageName }?.rawValue ?? Languages.english.rawValue
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure = completion {
+                        self?.language = Languages.english
+                        self?.activelanguage.send(Languages.english)
+                    }
+                },
+                receiveValue: { [weak self] (languageCode: String) in
+                    guard let self = self else { return }
+                    self.language = Languages(rawValue: languageCode) ?? Languages.english
+                    self.activelanguage.send(self.language)
+                    self.currentLanguage = self.getCurrentLanguage()
+                    self.localizationService.updateLanguage(self.currentLanguage)
+                }
+            )
+            .store(in: &cancellables)
     }
 
     func getCurrentLanguage() -> Languages {
@@ -88,7 +98,7 @@ class LanguageManagerImpl: LanguageManager {
     func setLanguage(language: Languages) {
         preference.setLanguageManagerSelectedLanguage(language: language)
         localizationService.updateLanguage(language)
-        activelanguage.onNext(language)
+        activelanguage.send(language)
     }
 
     func setAppLanguage() {

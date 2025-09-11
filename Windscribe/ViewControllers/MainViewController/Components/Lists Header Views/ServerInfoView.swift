@@ -8,6 +8,7 @@
 
 import UIKit
 import RxSwift
+import Combine
 
 protocol ServerInfoViewModelType {
     var serverCountSubject: PublishSubject<Int> { get }
@@ -19,6 +20,7 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     let serverCountSubject = PublishSubject<Int>()
     let isDarkMode = BehaviorSubject<Bool>(value: DefaultValues.darkMode)
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
 
@@ -38,9 +40,11 @@ class ServerInfoViewModel: ServerInfoViewModelType {
             self.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 
-        languageManager.activelanguage.subscribe { _ in
-            self.serverCountSubject.onNext(self.count)
-        }.disposed(by: disposeBag)
+        languageManager.activelanguage
+            .sink { _ in
+                self.serverCountSubject.onNext(self.count)
+            }
+            .store(in: &cancellables)
     }
 
     func updateWithSearchCount(searchCount: Int) {

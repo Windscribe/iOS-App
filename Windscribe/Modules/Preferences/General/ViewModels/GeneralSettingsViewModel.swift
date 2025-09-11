@@ -51,18 +51,13 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
         super.bindSubjects()
 
         languageManager.activelanguage
-            .asPublisher()
             .map { $0.name }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Language change error: \(error)")
-                }
-            }, receiveValue: { [weak self] name in
+            .sink { [weak self] name in
                 self?.currentLanguage = name
                 self?.setLocationOrder(with: self?.locationOrder ?? DefaultValues.orderLocationsBy)
                 self?.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getShowServerHealth()

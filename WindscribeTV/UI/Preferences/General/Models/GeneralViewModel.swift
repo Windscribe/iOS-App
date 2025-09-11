@@ -6,6 +6,7 @@
 //    Copyright © 2022 Windscribe. All rights reserved.
 //
 
+import Combine
 import Foundation
 import RxSwift
 import UIKit
@@ -36,6 +37,7 @@ class GeneralViewModel: GeneralViewModelType {
     // MARK: - State
 
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let hapticFeedback = BehaviorSubject<Bool>(value: DefaultValues.hapticFeedback)
 
     let locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
@@ -68,9 +70,9 @@ class GeneralViewModel: GeneralViewModelType {
             self?.isDarkMode.onNext(data)
         }.disposed(by: disposeBag)
 
-        languageManager.activelanguage.subscribe { [weak self] _ in
+        languageManager.activelanguage.sink { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func updateHapticFeedback() {

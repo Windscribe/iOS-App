@@ -6,6 +6,7 @@
 //  Copyright © 2019 Windscribe. All rights reserved.
 //
 
+import Combine
 import RealmSwift
 import RxSwift
 import SafariServices
@@ -20,6 +21,7 @@ class StaticIPListFooterView: WSView {
     lazy var backgroundView = UIView()
     lazy var languageManager = Assembler.resolve(LanguageManager.self)
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var viewModel: MainViewModelType? {
         didSet {
             bindViews()
@@ -51,9 +53,11 @@ class StaticIPListFooterView: WSView {
         actionButton.rx.tap.bind { [weak self] _ in
             self?.delegate?.addStaticIP()
         }.disposed(by: disposeBag)
-        languageManager.activelanguage.subscribe { [weak self] _ in
-            self?.label.text = TextsAsset.addStaticIP
-        }.disposed(by: disposeBag)
+        languageManager.activelanguage
+            .sink { [weak self] _ in
+                self?.label.text = TextsAsset.addStaticIP
+            }
+            .store(in: &cancellables)
         viewModel?.isDarkMode.subscribe { [weak self] isDarkMode in
             self?.backgroundView.backgroundColor = .from(.pressStateColor, isDarkMode)
             self?.backgroundColor = .from(.backgroundColor, isDarkMode)
