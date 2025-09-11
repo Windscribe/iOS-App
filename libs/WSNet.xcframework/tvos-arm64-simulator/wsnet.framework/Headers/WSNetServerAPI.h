@@ -9,7 +9,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface WSNetServerAPI : BridgeObject
 
--(void)setApiResolutionsSettings:(BOOL)isAutomatic manualAddress:(NSString*)manualAddress;
+-(void)setApiResolutionsSettings:(NSString*)apiRoot assetsRoot:(NSString*)assetsRoot checkIpRoot:(NSString*)checkIpRoot;
 -(void)setIgnoreSslErrors:(BOOL)bIgnore;
 -(void)resetFailover;
 -(WSNetCancelableCallback*)setTryingBackupEndpointCallback:(void(^)(unsigned int, unsigned int))tryingBackupEndpointCallback;
