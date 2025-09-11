@@ -28,7 +28,7 @@ extension ResponsivePopupLayoutProvider {
         case .iPadPortrait:
             return geometry.size.height * 0.24
         case .iPadLandscape:
-            return geometry.size.height * 0.12
+            return geometry.size.height * 0.06
         default:
             return 12
         }
@@ -38,6 +38,8 @@ extension ResponsivePopupLayoutProvider {
         switch deviceType {
         case .iPadPortrait:
             return geometry.size.height * 0.24
+        case .iPadLandscape:
+            return geometry.size.height * 0.18
         default:
             return geometry.size.height * 0.12
         }
