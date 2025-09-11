@@ -46,14 +46,13 @@ class BaseRouter: NSObject, SFSafariViewControllerDelegate {
     }
 
     func presentViewModally<V: View>(from viewController: WSUIViewController, view: V, isTransparent: Bool = false) {
-        let hostingController = UIHostingController(rootView: view)
+        let hostingController = UIHostingController(rootView: view).then {
+            $0.modalPresentationStyle = .fullScreen
+        }
 
         if isTransparent {
-            hostingController.modalPresentationStyle = .overCurrentContext
             hostingController.modalTransitionStyle = .crossDissolve
             hostingController.view.backgroundColor = UIColor.clear
-        } else {
-            hostingController.modalPresentationStyle = .fullScreen
         }
 
         viewController.present(hostingController, animated: true)
