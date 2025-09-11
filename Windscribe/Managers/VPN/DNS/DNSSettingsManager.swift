@@ -23,7 +23,7 @@ protocol DNSSettingsManagerType {
 class DNSSettingsManager: DNSSettingsManagerType {
     func makeDNSSettings(from dnsValue: DNSValue) -> NEDNSSettings? {
         guard !dnsValue.value.isEmpty else { return nil }
-        
+
         switch dnsValue.type {
         case .ipAddress:
             let settings = NEDNSSettings(servers: dnsValue.servers)

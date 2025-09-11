@@ -49,7 +49,6 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
             self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
 
-
         // This is after the passing of RxSwift to Combine
         protocolManager.currentProtocolSubject.sink { [weak self] data in
             self?.refreshProtocolSubject.onNext(data)
@@ -134,9 +133,12 @@ class ConnectionStateInfoView: UIView {
         }.disposed(by: disposeBag)
 
         actionButton.rx.tap.bind { [weak self] in
-            guard let self = self else { return }
+            guard let self = self,
+                  viewModel.isConnected else { return }
             self.delegate?.protocolPortTapped()
         }.disposed(by: disposeBag)
+
+        actionIcon.isHidden = !viewModel.isConnected
     }
 
     private func updateConnectionInfo(_ state: ConnectionState) {
@@ -163,7 +165,7 @@ class ConnectionStateInfoView: UIView {
             isEnabled = ![.disconnected, .disconnecting].contains(state)
         }
         actionIcon.isHidden = !(state == .connected && isEnabled)
-        actionButton.isUserInteractionEnabled = isEnabled
+        actionButton.isUserInteractionEnabled = (state == .connected && isEnabled)
         actionIcon.setImageColor(color: state.statusColor)
 
         protocolLabel.textColor = state.statusColor
