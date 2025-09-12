@@ -21,7 +21,7 @@ protocol LivecycleManagerType {
 
 class LivecycleManager: LivecycleManagerType {
     let logger: FileLogger
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let preferences: Preferences
     let vpnManager: VPNManager
     let connectivity: Connectivity
@@ -42,7 +42,7 @@ class LivecycleManager: LivecycleManagerType {
     private var cancellables = Set<AnyCancellable>()
 
     init(logger: FileLogger,
-         sessionManager: SessionManaging,
+         sessionManager: SessionManager,
          preferences: Preferences,
          vpnManager: VPNManager,
          connectivity: Connectivity,
@@ -105,7 +105,7 @@ class LivecycleManager: LivecycleManagerType {
     private func testConnectivity() -> Task<Void, Error> {
         return Task { @MainActor in
             do {
-                try await ipRepository.getIp().retry(3).asPromise()
+                try await ipRepository.getIp().retry(3).value
                 testTask = nil
                 self.logger.logI("LivecycleManager", "Internet connectivity validated for \(connectivity.getNetwork())!")
             } catch {

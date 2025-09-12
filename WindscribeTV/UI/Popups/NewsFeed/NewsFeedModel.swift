@@ -20,7 +20,7 @@ protocol NewsFeedModelType {
 
 class NewsFeedModel: NewsFeedModelType {
     let localDatabase: LocalDatabase
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let logger: FileLogger
     let htmlParser: HTMLParsing
     let disposeBag = DisposeBag()
@@ -28,7 +28,7 @@ class NewsFeedModel: NewsFeedModelType {
     let readStatus: BehaviorSubject<[Int]> = BehaviorSubject(value: [])
     let viewToLaunch: BehaviorSubject<NewsFeedViewToLaunch> = BehaviorSubject(value: .unknown)
 
-    init(localDatabase: LocalDatabase, sessionManager: SessionManaging, fileLogger: FileLogger, htmlParser: HTMLParsing) {
+    init(localDatabase: LocalDatabase, sessionManager: SessionManager, fileLogger: FileLogger, htmlParser: HTMLParsing) {
         self.localDatabase = localDatabase
         self.sessionManager = sessionManager
         self.htmlParser = htmlParser

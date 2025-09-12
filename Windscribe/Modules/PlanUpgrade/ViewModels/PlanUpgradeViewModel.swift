@@ -37,7 +37,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let upgradeRouter: UpgradeRouter
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let preferences: Preferences
     private var inAppPurchaseManager: InAppPurchaseManager
     private let pushNotificationManager: PushNotificationManager
@@ -62,7 +62,7 @@ class DefaultUpgradePlanViewModel: PlanUpgradeViewModel {
     private let disposeBag = DisposeBag()
 
     init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, upgradeRouter: UpgradeRouter,
-         sessionManager: SessionManaging, preferences: Preferences, inAppPurchaseManager: InAppPurchaseManager,
+         sessionManager: SessionManager, preferences: Preferences, inAppPurchaseManager: InAppPurchaseManager,
          pushNotificationManager: PushNotificationManager, billingRepository: BillingRepository, logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager

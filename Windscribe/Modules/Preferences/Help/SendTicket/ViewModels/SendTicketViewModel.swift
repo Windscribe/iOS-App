@@ -48,7 +48,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
 
     // Dependencies
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let apiManager: APIManager
 
     // Cancellables
@@ -62,7 +62,7 @@ final class SendTicketViewModelImpl: SendTicketViewModel {
     init(
         apiManager: APIManager,
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        sessionManager: SessionManaging
+        sessionManager: SessionManager
     ) {
         self.apiManager = apiManager
         self.lookAndFeelRepository = lookAndFeelRepository

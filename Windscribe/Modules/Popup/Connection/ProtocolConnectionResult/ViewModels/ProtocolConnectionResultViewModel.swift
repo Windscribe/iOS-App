@@ -37,7 +37,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
     private let securedNetwork: SecuredNetworkRepository
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let apiManager: APIManager
     private let protocolManager: ProtocolManagerType
 
@@ -90,7 +90,7 @@ final class ProtocolConnectionResultViewModelImpl: ProtocolConnectionResultViewM
         securedNetwork: SecuredNetworkRepository,
         localDatabase: LocalDatabase,
         logger: FileLogger,
-        sessionManager: SessionManaging,
+        sessionManager: SessionManager,
         apiManager: APIManager,
         protocolManager: ProtocolManagerType
     ) {

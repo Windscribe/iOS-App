@@ -38,7 +38,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let isDarkMode: BehaviorSubject<Bool>
     var currentLanguage: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let logger: FileLogger
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
@@ -47,7 +47,7 @@ class PreferencesMainViewModelImpOld: PreferencesMainViewModelOld {
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let languageManager: LanguageManager
 
-    init(sessionManager: SessionManaging, logger: FileLogger, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, preferences: Preferences, languageManager: LanguageManager) {
+    init(sessionManager: SessionManager, logger: FileLogger, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, preferences: Preferences, languageManager: LanguageManager) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.alertManager = alertManager

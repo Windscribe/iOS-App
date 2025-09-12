@@ -25,7 +25,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     @Published var safariURL: URL?
     @Published var selectedRoute: HelpRoute?
 
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let apiManager: APIManager
     private let connectivity: Connectivity
 
@@ -34,7 +34,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
-         sessionManager: SessionManaging,
+         sessionManager: SessionManager,
          apiManager: APIManager,
          connectivity: Connectivity) {
 

@@ -30,7 +30,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
     @Published var isDarkMode: Bool = false
     @Published private(set) var showLoading: Bool = false
 
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let alertManager: AlertManagerV2
     private let apiManager: APIManager
 
@@ -52,7 +52,7 @@ final class EnterEmailViewModelImpl: EnterEmailViewModel {
         !(sessionManager.session?.isUserPro ?? false)
     }
 
-    init(sessionManager: SessionManaging,
+    init(sessionManager: SessionManager,
          alertManager: AlertManagerV2,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType) {

@@ -20,8 +20,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let logger: FileLogger
     private let vpnManager: VPNManager
     private let locationsManager: LocationsManager
-    private var sessionManager: SessionManaging {
-        return Assembler.resolve(SessionManaging.self)
+    private var sessionManager: SessionManager {
+        return Assembler.resolve(SessionManager.self)
     }
 
     private let disposeBag = DisposeBag()

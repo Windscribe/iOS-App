@@ -20,7 +20,7 @@ protocol ServerSectionCellModelType: ServerCellModelType {
 
 class ServerSectionCellModel: ServerSectionCellModelType {
     let preferences = Assembler.resolve(Preferences.self)
-    var sessionManager = Assembler.resolve(SessionManaging.self)
+    var sessionManager = Assembler.resolve(SessionManager.self)
     let disposeBag = DisposeBag()
     let updateUISubject = PublishSubject<Void>()
 

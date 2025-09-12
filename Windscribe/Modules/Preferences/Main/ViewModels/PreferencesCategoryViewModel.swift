@@ -37,13 +37,13 @@ final class PreferencesMainCategoryViewModelImpl: PreferencesBaseViewModelImpl, 
 
     var isScreenTestEnabled: Bool = false
 
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let alertManager: AlertManagerV2
     private let languageManager: LanguageManager
     private let preferences: Preferences
 
     init(
-        sessionManager: SessionManaging,
+        sessionManager: SessionManager,
         alertManager: AlertManagerV2,
         logger: FileLogger,
         lookAndFeelRepository: LookAndFeelRepositoryType,

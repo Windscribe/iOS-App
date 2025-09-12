@@ -56,7 +56,7 @@ class MainViewController: PreferredFocusedViewController {
     private var cancellables = Set<AnyCancellable>()
     var logger: FileLogger!
     var isFromServer: Bool = false
-    lazy var sessionManager = Assembler.resolve(SessionManaging.self)
+    lazy var sessionManager = Assembler.resolve(SessionManager.self)
     private lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
     override func viewDidLoad() {

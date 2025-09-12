@@ -118,24 +118,18 @@ extension VPNManager {
             if error == .credentialsFailure {
                 AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: "VPN will be disconnected due to credential failure", buttonText: TextsAsset.okay)
                 self.logger.logE("VPNManager", "VPN disconnected due to credential failure")
-                Task {
+                Task { @MainActor in
                     await self.resetProfiles()
                     self.logger.logI("VPNManager", "Disabling VPN Profiles to get access api access.")
                     try await Task.sleep(nanoseconds: 2_000_000_000)
                     self.logger.logI("VPNManager", "Getting new session.")
 
-                    self.sessionManager.getUppdatedSession()
-                        .asPublisher()
-                        .receive(on: DispatchQueue.main)
-                        .sink(receiveCompletion: { [weak self] completion in
-                            if case let .failure(error) = completion {
-                                self?.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
-                                self?.awaitingConnectionCheck = false
-                            }
-                        }, receiveValue: { [weak self] isDark in
-                            self?.awaitingConnectionCheck = false
-                        })
-                        .store(in: &self.cancellables)
+                    do {
+                        _ = try await self.sessionManager.getUpdatedSession()
+                    } catch let error {
+                        self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
+                    }
+                    self.awaitingConnectionCheck = false
                 }
             } else {
                 self.awaitingConnectionCheck = false

@@ -29,14 +29,14 @@ final class AccountStatusViewModelImpl: AccountStatusViewModel {
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
 
     private var cancellables = Set<AnyCancellable>()
 
     init(accountStatusType: AccountStatusType = .banned,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
-         sessionManager: SessionManaging) {
+         sessionManager: SessionManager) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
         self.sessionManager = sessionManager

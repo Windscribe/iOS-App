@@ -31,7 +31,7 @@ extension APIManagerImpl {
         guard let sessionAuth = userRepository?.sessionAuth else {
             throw Errors.validationFailure
         }
-        return try await apiUtil.makeApiCall(modalType: APIMessage.self) { completion in
+        return try await apiUtil.makeApiCall(modalType: APIMessage.self, maxRetries: 3) { completion in
             self.api.deleteSession(sessionAuth, callback: completion)
         }
     }

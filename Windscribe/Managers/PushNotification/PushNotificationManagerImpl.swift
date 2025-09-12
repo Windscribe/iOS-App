@@ -22,10 +22,10 @@ protocol PushNotificationManager {
 class PushNotificationManagerImpl: PushNotificationManager {
     let notification: CurrentValueSubject<PushNotificationPayload?, Never> = CurrentValueSubject(nil)
     let vpnManager: VPNManager
-    let session: SessionManaging
+    let session: SessionManager
     let logger: FileLogger
 
-    init(vpnManager: VPNManager, session: SessionManaging, logger: FileLogger) {
+    init(vpnManager: VPNManager, session: SessionManager, logger: FileLogger) {
         self.vpnManager = vpnManager
         self.session = session
         self.logger = logger

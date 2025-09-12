@@ -14,12 +14,12 @@ protocol ReferAndShareManager {
 }
 
 class ReferAndShareManagerImpl: ReferAndShareManager {
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let preference: Preferences
     private let vpnManager: VPNManager
 	private let logger: FileLogger
 
-    init(preferences: Preferences, sessionManager: SessionManaging, vpnManager: VPNManager, logger: FileLogger) {
+    init(preferences: Preferences, sessionManager: SessionManager, vpnManager: VPNManager, logger: FileLogger) {
         preference = preferences
         self.sessionManager = sessionManager
         self.vpnManager = vpnManager

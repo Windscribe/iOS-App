@@ -20,7 +20,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
     @Published var isDarkMode: Bool = false
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let referFriendManager: ReferAndShareManager
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
@@ -34,7 +34,7 @@ final class ReferForDataSettingsViewModelImpl: ReferForDataSettingsViewModel {
 
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
-        sessionManager: SessionManaging,
+        sessionManager: SessionManager,
         referFriendManager: ReferAndShareManager,
         logger: FileLogger
     ) {

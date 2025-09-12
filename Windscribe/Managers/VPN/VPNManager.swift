@@ -57,7 +57,7 @@ class VPNManager: VPNManagerProtocol {
 
     lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
     lazy var ipRepository: IPRepository =  Assembler.resolve(IPRepository.self)
-    lazy var sessionManager: SessionManaging = Assembler.resolve(SessionManaging.self)
+    lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
     lazy var protocolManager: ProtocolManagerType =  Assembler.resolve(ProtocolManagerType.self)
 
     /// The current configuration state of the VPN, with thread-safe access.
