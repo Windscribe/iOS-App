@@ -20,6 +20,7 @@ protocol BaseNodeCellViewModelType: ServerCellModelType {
     var groupId: String { get }
     var isActionVisible: Bool { get }
     var isSignalVisible: Bool { get }
+    var isDisabled: Bool { get }
 
     func favoriteSelected()
 }
@@ -88,6 +89,8 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     var isSignalVisible: Bool { true }
 
+    var isDisabled: Bool { false }
+
     var latencyValue: NSAttributedString {
         if minTime > 0 {
             let latencyText = "\(minTime.description)ms"
@@ -152,6 +155,8 @@ class BaseNodeCell: ServerListCell {
     var latencyLabel = UILabel()
     var signalBarsIcon = UIImageView()
     var latencyView = UIView()
+    var disabledIcon = UIImageView()
+    var disabledContainer = UIView()
 
     var baseNodeCellViewModel: BaseNodeCellViewModelType? {
         didSet {
@@ -183,6 +188,10 @@ class BaseNodeCell: ServerListCell {
         latencyView.addSubview(signalBarsIcon)
 
         iconsStackView.insertArrangedSubview(latencyView, at: 0)
+
+        disabledIcon.image = UIImage(named: ImagesAsset.locationDown)?.withRenderingMode(.alwaysTemplate)
+        disabledContainer.addSubview(disabledIcon)
+        iconsStackView.insertArrangedSubview(disabledContainer, at: 0)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -196,6 +205,7 @@ class BaseNodeCell: ServerListCell {
             self.latencyLabel.textColor = .from(.textColor, isDarkMode)
             self.signalBarsIcon.setImageColor(color: .from(.iconColor, isDarkMode))
             self.icon.setImageColor(color: .from(.iconColor, isDarkMode))
+            self.disabledIcon.setImageColor(color: .from(.iconColor, isDarkMode))
         }).disposed(by: disposeBag)
     }
 
@@ -207,6 +217,8 @@ class BaseNodeCell: ServerListCell {
         signalBarsIcon.translatesAutoresizingMaskIntoConstraints = false
         nickNameLabel.translatesAutoresizingMaskIntoConstraints = false
         latencyView.translatesAutoresizingMaskIntoConstraints = false
+        disabledContainer.translatesAutoresizingMaskIntoConstraints = false
+        disabledIcon.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             // nickNameLabel
@@ -217,6 +229,17 @@ class BaseNodeCell: ServerListCell {
             favButton.centerXAnchor.constraint(equalTo: actionImage.centerXAnchor),
             favButton.heightAnchor.constraint(equalTo: actionImage.heightAnchor, constant: 8),
             favButton.widthAnchor.constraint(equalTo: actionImage.widthAnchor, constant: 8),
+
+            // disabledContainer
+            disabledContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            disabledContainer.heightAnchor.constraint(equalToConstant: 24),
+            disabledContainer.widthAnchor.constraint(equalToConstant: 24),
+
+            // disabledIcon
+            disabledIcon.centerYAnchor.constraint(equalTo: disabledContainer.centerYAnchor),
+            disabledIcon.centerXAnchor.constraint(equalTo: disabledContainer.centerXAnchor),
+            disabledIcon.heightAnchor.constraint(equalToConstant: 16),
+            disabledIcon.widthAnchor.constraint(equalToConstant: 14),
 
             // latencyView
             latencyView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -244,8 +267,8 @@ class BaseNodeCell: ServerListCell {
         signalBarsIcon.image = baseNodeCellViewModel?.signalImage
         nickNameLabel.text = baseNodeCellViewModel?.nickName
 
-        latencyLabel.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
-        signalBarsIcon.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
+        latencyView.isHidden = !(baseNodeCellViewModel?.isSignalVisible ?? false)
+        disabledIcon.isHidden = !(baseNodeCellViewModel?.isDisabled ?? false)
 
         super.updateUI()
     }
