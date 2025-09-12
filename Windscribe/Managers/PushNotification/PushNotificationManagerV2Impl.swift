@@ -9,12 +9,28 @@
 import Foundation
 import RxSwift
 import UIKit
+import Combine
+
+enum PushNotificationActionType: String, CaseIterable {
+    case userDowngraded = "user_downgraded"
+    case userExpired = "user_expired"
+    case promo = "promo"
+
+    init?(from string: String?) {
+        guard let string = string,
+              let type = PushNotificationActionType(rawValue: string) else {
+            return nil
+        }
+        self = type
+    }
+}
 
 class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     let notification: BehaviorSubject<PushNotificationPayload?> = BehaviorSubject(value: nil)
     let vpnManager: VPNManager
     let session: SessionManaging
     let logger: FileLogger
+    private var cancellables = Set<AnyCancellable>()
 
     init(vpnManager: VPNManager, session: SessionManaging, logger: FileLogger) {
         self.vpnManager = vpnManager
@@ -30,16 +46,22 @@ class PushNotificationManagerV2Impl: PushNotificationManagerV2 {
     }
 
     func handleSilentPushNotificationActions(payload: PushNotificationPayload) {
-        guard let type = payload.type else { return }
-        switch type {
-        case "disable_ondemand", "force_disconnect":
-            vpnManager.simpleDisableConnection()
-        case "account_downgraded":
-            session.keepSessionUpdated()
-        case "promo":
-            notification.onNext(payload)
-        default:
+        guard let actionType = PushNotificationActionType(from: payload.type) else {
             return
+        }
+        
+        switch actionType {
+        case .userDowngraded:
+            session.keepSessionUpdated()
+        case .userExpired:
+            vpnManager.disconnectFromViewModel()
+                .sink(receiveCompletion: { [weak self] _ in
+                    self?.session.keepSessionUpdated()
+                }, receiveValue: { _ in })
+                .store(in: &cancellables)
+        case .promo:
+            notification.onNext(payload)
+
         }
     }
 
