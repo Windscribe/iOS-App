@@ -13,6 +13,8 @@ import RxSwift
 import Swinject
 import UIKit
 
+typealias LocationsManagerType = LocationsManager
+
 // MARK: - ViewModels
 
 class TVViewModels: Assembly {

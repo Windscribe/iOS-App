@@ -28,12 +28,12 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
     let vpnManager: VPNManager
     let preferences: Preferences
     let protocolManager: ProtocolManagerType
 
-    init(vpnManager: VPNManager, locationsManager: LocationsManagerType,
+    init(vpnManager: VPNManager, locationsManager: LocationsManager,
          preferences: Preferences, protocolManager: ProtocolManagerType) {
         self.locationsManager = locationsManager
         self.preferences = preferences

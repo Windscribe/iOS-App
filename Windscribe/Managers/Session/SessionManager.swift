@@ -31,7 +31,7 @@ class SessionManager: SessionManaging {
     let preferences = Assembler.resolve(Preferences.self)
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
     let userRepo = Assembler.resolve(UserRepository.self)
-    let locationsManager = Assembler.resolve(LocationsManagerType.self)
+    let locationsManager = Assembler.resolve(LocationsManager.self)
 
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
     private lazy var ssoManager = Assembler.resolve(SSOManaging.self)

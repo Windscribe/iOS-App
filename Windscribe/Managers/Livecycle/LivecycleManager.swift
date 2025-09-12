@@ -30,7 +30,7 @@ class LivecycleManager: LivecycleManagerType {
     let ipRepository: IPRepository
     let configManager: ConfigurationsManager
     let connectivityManager: ProtocolManagerType
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
 
     let showNetworkSecurityTrigger = PassthroughSubject<Void, Never>()
     let showNotificationsTrigger = PassthroughSubject<Void, Never>()
@@ -51,7 +51,7 @@ class LivecycleManager: LivecycleManagerType {
          ipRepository: IPRepository,
          configManager: ConfigurationsManager,
          connectivityManager: ProtocolManagerType,
-         locationsManager: LocationsManagerType) {
+         locationsManager: LocationsManager) {
         self.logger = logger
         self.sessionManager = sessionManager
         self.preferences = preferences

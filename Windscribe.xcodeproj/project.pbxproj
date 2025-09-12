@@ -258,8 +258,6 @@
 		1EE74F872BD94A6E0031185F /* ShakeDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F862BD94A6E0031185F /* ShakeDataRepository.swift */; };
 		1EE74F892BD94AA80031185F /* ShakeDataRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */; };
 		1EF11EE32C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */; };
-		1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF43D512CF897B000B56C01 /* LocationsManager.swift */; };
-		1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF43D512CF897B000B56C01 /* LocationsManager.swift */; };
 		1EF7BB282C6B92F90032A4DF /* UpgradePopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */; };
 		1EF7BB2A2C6B930C0032A4DF /* UpgradePopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */; };
 		1EF7BB2E2C6BA16F0032A4DF /* ConfirmEmailAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailAction.swift */; };
@@ -994,7 +992,7 @@
 		F40B8AEE2E54FB7300609902 /* ScreenTestNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */; };
 		F40B8AF02E54FB8500609902 /* ScreenTestRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */; };
 		F40B8AF32E55025700609902 /* ScreenTestItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B8AF12E55025700609902 /* ScreenTestItemType.swift */; };
-		F410FABC2E709C84007762A1 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
+		F410FABA2E6F5FEB007762A1 /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */; };
 		F410FABD2E709C97007762A1 /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
 		F41190242D7FC77A00AC7EB6 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */; };
 		F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */; };
@@ -1189,6 +1187,8 @@
 		F4B8E1FA2DCE8CD9004D9BF6 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E1F92DCE8CD9004D9BF6 /* ShareSheetView.swift */; };
 		F4B8E21C2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E21B2DD67874004D9BF6 /* AuthenticationCaptchaPopupView.swift */; };
 		F4B8E2212DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
+		F4D3C0432E7330DF006E5AFA /* RxSwift+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45F19192D7A43270028D0C2 /* RxSwift+Extension.swift */; };
+		F4D3C0442E733102006E5AFA /* LocationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */; };
 		F4E48D712DB9C2B0005CB047 /* ws_button_farton.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5D2DB9C2B0005CB047 /* ws_button_farton.m4a */; };
 		F4E48D722DB9C2B0005CB047 /* ws_button_wizbyon.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D6F2DB9C2B0005CB047 /* ws_button_wizbyon.m4a */; };
 		F4E48D732DB9C2B0005CB047 /* ws_button_boingoff.m4a in Resources */ = {isa = PBXBuildFile; fileRef = F4E48D5A2DB9C2B0005CB047 /* ws_button_boingoff.m4a */; };
@@ -1525,7 +1525,6 @@
 		1EE74F882BD94AA80031185F /* ShakeDataRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDataRepositoryImpl.swift; sourceTree = "<group>"; };
 		1EF11EE22C91DED300C3FD64 /* UIViewController+PreferedFocusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+PreferedFocusView.swift"; sourceTree = "<group>"; };
 		1EF11EE72C94791100C3FD64 /* bn */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bn; path = bn.lproj/Localizable.strings; sourceTree = "<group>"; };
-		1EF43D512CF897B000B56C01 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		1EF7BB272C6B92F90032A4DF /* UpgradePopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradePopViewController.swift; sourceTree = "<group>"; };
 		1EF7BB292C6B930C0032A4DF /* UpgradePopViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UpgradePopViewController.xib; sourceTree = "<group>"; };
 		1EF7BB2C2C6BA16F0032A4DF /* ConfirmEmailAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailAction.swift; sourceTree = "<group>"; };
@@ -1963,6 +1962,7 @@
 		F40B8AED2E54FB7300609902 /* ScreenTestNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestNavigationRouter.swift; sourceTree = "<group>"; };
 		F40B8AEF2E54FB8500609902 /* ScreenTestRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestRouteID.swift; sourceTree = "<group>"; };
 		F40B8AF12E55025700609902 /* ScreenTestItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenTestItemType.swift; sourceTree = "<group>"; };
+		F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationsManager.swift; sourceTree = "<group>"; };
 		F41190222D7FC77A00AC7EB6 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		F41190262D7FC79C00AC7EB6 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		F41541FE2E12F94400833EC5 /* CaptchaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaView.swift; sourceTree = "<group>"; };
@@ -2985,7 +2985,7 @@
 		1EF43D502CF897A500B56C01 /* Locations */ = {
 			isa = PBXGroup;
 			children = (
-				1EF43D512CF897B000B56C01 /* LocationsManager.swift */,
+				F410FAB92E6F5FEB007762A1 /* LocationsManager.swift */,
 			);
 			path = Locations;
 			sourceTree = "<group>";
@@ -6377,7 +6377,6 @@
 				F43374512E4682B000333190 /* ProtocolSwitchModels.swift in Sources */,
 				59FC742F2C5156A000021CD1 /* TunnelConfiguration+WgQuickConfig.swift in Sources */,
 				59A2186A2C3C9C24000D89FA /* SharedUserDefaults.swift in Sources */,
-				1EF43D522CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				59FC740E2C51540300021CD1 /* SuggestedPorts.swift in Sources */,
 				1EA4FA732D3E8D920021C656 /* ConfigurationsManager+config.swift in Sources */,
 				59C96D6A2C6A883300546C72 /* LatencyViewModel.swift in Sources */,
@@ -6472,6 +6471,7 @@
 				59FC74852C52D9ED00021CD1 /* RouteIDTv.swift in Sources */,
 				59FC74892C530A4100021CD1 /* LoginRouter.swift in Sources */,
 				59FC74872C52FCEE00021CD1 /* Router.swift in Sources */,
+				F410FABA2E6F5FEB007762A1 /* LocationsManager.swift in Sources */,
 				59FC740F2C51540600021CD1 /* WireGuardConfig.swift in Sources */,
 				59FC74372C515A8000021CD1 /* Data+Extension.swift in Sources */,
 				59FC748C2C53151D00021CD1 /* XPressLoginCodeResponse.swift in Sources */,
@@ -6766,6 +6766,7 @@
 				AF4E927621F8D17500A3F584 /* MainViewController+UI.swift in Sources */,
 				C56FCBF02B2B9F11008DE7D4 /* Assembler.swift in Sources */,
 				F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */,
+				F4D3C0442E733102006E5AFA /* LocationsManager.swift in Sources */,
 				F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */,
 				C57BDE3D29B93E9900337E63 /* NSDate+Extension.swift in Sources */,
 				1A88F5842819250F00FCD310 /* WSView.swift in Sources */,
@@ -6898,7 +6899,6 @@
 				F49C45A62DCACFAA007E5EF1 /* PreferencesNavigationRouter.swift in Sources */,
 				F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */,
 				1ED6163C2DC52EC4006CDC99 /* LookAndFeelRepository.swift in Sources */,
-				1EF43D532CF897B500B56C01 /* LocationsManager.swift in Sources */,
 				AF02A9EB22B14D4700A9F44B /* SelectedNode.swift in Sources */,
 				1EAEF75F2E2A934200F3C51F /* ShakeForDataGameView.swift in Sources */,
 				AF914A7423CE2012002D3041 /* Token.swift in Sources */,
@@ -7107,7 +7107,7 @@
 				1E7A19602C36F71900851AE2 /* DNSSettingsManager.swift in Sources */,
 				C561237A2C5F25750090EB5A /* Resolver.swift in Sources */,
 				5993396D2B4CD28200EC615D /* DefaultValues.swift in Sources */,
-				F410FABC2E709C84007762A1 /* RxSwift+Extension.swift in Sources */,
+				F4D3C0432E7330DF006E5AFA /* RxSwift+Extension.swift in Sources */,
 				1E818F132C3D6D780088066C /* RegexConstants.swift in Sources */,
 				E9425BA62743707B008B8786 /* URLs.swift in Sources */,
 				C51EEDCA2C1779AA00B01F8F /* LanguageManager.swift in Sources */,

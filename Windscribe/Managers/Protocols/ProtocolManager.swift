@@ -44,7 +44,7 @@ class ProtocolManager: ProtocolManagerType {
     private let localDatabase: LocalDatabase
     private let securedNetwork: SecuredNetworkRepository
     private let preferences: Preferences
-    private let locationManager: LocationsManagerType
+    private let locationManager: LocationsManager
     static var shared = Assembler.resolve(ProtocolManagerType.self)
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
 
@@ -84,7 +84,7 @@ class ProtocolManager: ProtocolManagerType {
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
-    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManagerType) {
+    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManager) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences

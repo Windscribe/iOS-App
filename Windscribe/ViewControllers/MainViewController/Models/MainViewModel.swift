@@ -81,7 +81,7 @@ class MainViewModel: MainViewModelType {
     let notificationsRepo: NotificationRepository!
     let credentialsRepository: CredentialsRepository
     let livecycleManager: LivecycleManagerType
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let hapticFeedbackManager: HapticFeedbackManager
 
@@ -135,7 +135,7 @@ class MainViewModel: MainViewModelType {
          credentialsRepository: CredentialsRepository,
          connectivity: Connectivity,
          livecycleManager: LivecycleManagerType,
-         locationsManager: LocationsManagerType,
+         locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          hapticFeedbackManager: HapticFeedbackManager) {
 

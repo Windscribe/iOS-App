@@ -31,7 +31,7 @@ class ServerListViewModel: ServerListViewModelType {
     private let connectivity: Connectivity
     private let localDataBase: LocalDatabase
     private let sessionManager: SessionManaging
-    private let locationsManager: LocationsManagerType
+    private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
 
     let disposeBag = DisposeBag()
@@ -41,7 +41,7 @@ class ServerListViewModel: ServerListViewModelType {
          connectivity: Connectivity,
          localDataBase: LocalDatabase,
          sessionManager: SessionManaging,
-         locationsManager: LocationsManagerType,
+         locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.vpnManager = vpnManager
