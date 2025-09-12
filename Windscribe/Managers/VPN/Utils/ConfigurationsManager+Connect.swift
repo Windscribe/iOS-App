@@ -157,7 +157,7 @@ extension ConfigurationsManager {
                         }
                     }
                 }
-            } catch {
+            } catch let error {
                 self.logger.logE("VPNConfiguration", "Failed connection with error: \(error).")
                 progressPublisher.send(completion: .failure(error))
             }

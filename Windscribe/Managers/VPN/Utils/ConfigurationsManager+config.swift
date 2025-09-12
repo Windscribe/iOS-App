@@ -113,7 +113,7 @@ extension ConfigurationsManager {
     private func updateWireguardConfig(ip: String, hostname: String, serverPublicKey: String, port: String, vpnSettings: VPNUserSettings) async throws {
         wgCredentials.setNodeToConnect(serverEndPoint: ip, serverHostName: hostname, serverPublicKey: serverPublicKey, port: port)
         wgCredentials.deleteOldestKey = vpnSettings.deleteOldestKey
-        return try await wgRepository.getCredentials().value
+        return try await wgRepository.getCredentials()
     }
 
     /// Creates an IKEv2 VPN configuration for the specified location.

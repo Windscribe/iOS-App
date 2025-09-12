@@ -319,46 +319,47 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
             let lastIpAddress = tunnelConfig?.interface.addresses[0].stringRepresentation ?? ""
             let oldKey = wgCrendentials.presharedKey
-            wgConfigRepository.getCredentials().subscribe(onCompleted: { [weak self] in
-                guard let self = self else { return }
-
-                self.runningHealthCheck = false
-                // Restart extesnion if connection to apply new configuration.
-                if let completionHandler = completionHandler {
-                    completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                    return
-                }
-                if let newAddress = self.wgCrendentials.address, let key = self.wgCrendentials.presharedKey {
-                    if newAddress != lastIpAddress || oldKey != key {
-                        do {
-                            let updatedConfig = try TunnelConfiguration(fromWgQuickConfig: self.wgCrendentials.asWgCredentialsString()!)
-                            if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
-                                let customDNSValue = self.preferences.getCustomDNSValue()
-                                self.logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
-                                if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
-                                    updatedConfig.dnsSettings = dnsSettings
+            Task {
+                do {
+                    try await wgConfigRepository.getCredentials()
+                    self.runningHealthCheck = false
+                    // Restart extesnion if connection to apply new configuration.
+                    if let completionHandler = completionHandler {
+                        completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                        return
+                    }
+                    if let newAddress = self.wgCrendentials.address, let key = self.wgCrendentials.presharedKey {
+                        if newAddress != lastIpAddress || oldKey != key {
+                            do {
+                                let updatedConfig = try TunnelConfiguration(fromWgQuickConfig: self.wgCrendentials.asWgCredentialsString()!)
+                                if ConnectedDNSType(value: self.preferences.getConnectedDNS()) == .custom {
+                                    let customDNSValue = self.preferences.getCustomDNSValue()
+                                    self.logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
+                                    if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
+                                        updatedConfig.dnsSettings = dnsSettings
+                                    }
                                 }
+                                self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
+                            } catch {
+                                self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration: \(error.localizedDescription)")
                             }
-                            self.setNewTunnelInterfaceIp(updatedConfig: updatedConfig)
-                        } catch {
-                            self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration: \(error.localizedDescription)")
                         }
                     }
+                } catch let error {
+                    self.runningHealthCheck = false
+                    let errorDesc: String
+                    if let wsError = error as? Errors {
+                        errorDesc = wsError.unlocalizedDescription
+                    } else {
+                        errorDesc = error.localizedDescription
+                    }
+                    self.logger.logE("PacketTunnelProvider", "Failed to build get wg configuration from api: \(errorDesc)")
+                    if let completionHandler = completionHandler {
+                        completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
+                        return
+                    }
                 }
-            }, onError: { error in
-                self.runningHealthCheck = false
-                let errorDesc: String
-                if let wsError = error as? Errors {
-                    errorDesc = wsError.unlocalizedDescription
-                } else {
-                    errorDesc = error.localizedDescription
-                }
-                self.logger.logE("PacketTunnelProvider", "Failed to build get wg configuration from api: \(errorDesc)")
-                if let completionHandler = completionHandler {
-                    completionHandler(PacketTunnelProviderError.savedProtocolConfigurationIsInvalid)
-                    return
-                }
-            }).disposed(by: disposeBag)
+            }
         } catch let e {
             self.logger.logE("PacketTunnelProvider", "Failed to get wg configuration. \(e.localizedDescription)")
             self.runningHealthCheck = false
