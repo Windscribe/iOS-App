@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var lookAndFeelRepository: LookAndFeelRepositoryType = Assembler.resolve(LookAndFeelRepositoryType.self)
 
-    private lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
+    private lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
 

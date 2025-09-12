@@ -40,7 +40,7 @@ protocol ProtocolManagerType {
 class ProtocolManager: ProtocolManagerType {
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let localDatabase: LocalDatabase
     private let securedNetwork: SecuredNetworkRepository
     private let preferences: Preferences
@@ -84,7 +84,7 @@ class ProtocolManager: ProtocolManagerType {
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
-    init(logger: FileLogger, connectivity: Connectivity, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManager) {
+    init(logger: FileLogger, connectivity: ConnectivityManager, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManager) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences
@@ -136,7 +136,6 @@ class ProtocolManager: ProtocolManagerType {
             .store(in: &cancellables)
 
         connectivity.network
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {

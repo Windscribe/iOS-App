@@ -37,7 +37,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let customConfigRepository: CustomConfigRepository
     let vpnManager: VPNManager
     let localDataBase: LocalDatabase
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
@@ -54,7 +54,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          customConfigRepository: CustomConfigRepository,
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger

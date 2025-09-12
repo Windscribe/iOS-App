@@ -28,7 +28,7 @@ class ServerListViewModel: ServerListViewModelType {
 
     private let logger: FileLogger
     private let vpnManager: VPNManager
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let localDataBase: LocalDatabase
     private let sessionManager: SessionManager
     private let locationsManager: LocationsManager
@@ -38,7 +38,7 @@ class ServerListViewModel: ServerListViewModelType {
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          localDataBase: LocalDatabase,
          sessionManager: SessionManager,
          locationsManager: LocationsManager,

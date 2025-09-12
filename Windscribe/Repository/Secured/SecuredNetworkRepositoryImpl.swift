@@ -14,14 +14,14 @@ import RealmSwift
 class SecuredNetworkRepositoryImpl: SecuredNetworkRepository {
     private let preferences: Preferences
     private let localdatabase: LocalDatabase
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let logger: FileLogger
 
     private var isObserving = false
     private let disposeBag = DisposeBag()
     let networks: BehaviorSubject<[WifiNetwork]> = BehaviorSubject(value: [])
 
-    init(preferences: Preferences, localdatabase: LocalDatabase, connectivity: Connectivity, logger: FileLogger) {
+    init(preferences: Preferences, localdatabase: LocalDatabase, connectivity: ConnectivityManager, logger: FileLogger) {
         self.preferences = preferences
         self.localdatabase = localdatabase
         self.connectivity = connectivity

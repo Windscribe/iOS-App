@@ -27,7 +27,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
 
     private let sessionManager: SessionManager
     private let apiManager: APIManager
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
 
     private var networkStatus: NetworkStatus = .disconnected
 
@@ -36,7 +36,7 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
          hapticFeedbackManager: HapticFeedbackManager,
          sessionManager: SessionManager,
          apiManager: APIManager,
-         connectivity: Connectivity) {
+         connectivity: ConnectivityManager) {
 
         self.sessionManager = sessionManager
         self.apiManager = apiManager
@@ -51,7 +51,6 @@ class HelpSettingsViewModelImpl: PreferencesBaseViewModelImpl, HelpSettingsViewM
         super.bindSubjects()
 
         connectivity.network
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] network in
                 self?.networkStatus = network.status

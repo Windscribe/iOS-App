@@ -96,7 +96,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let preferences: Preferences
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let wifiManager: WifiManager
     let securedNetwork: SecuredNetworkRepository
     let credentialsRepository: CredentialsRepository
@@ -120,7 +120,7 @@ class ConnectionViewModel: ConnectionViewModelType {
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          preferences: Preferences,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          wifiManager: WifiManager,
          securedNetwork: SecuredNetworkRepository,
          credentialsRepository: CredentialsRepository,
@@ -187,8 +187,9 @@ class ConnectionViewModel: ConnectionViewModelType {
         }.store(in: &cancellables)
 
         connectivity.network
-            .debounce(.seconds(1), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { network in
+            .debounce(for: .seconds(1), scheduler: DispatchQueue.main)
+            .sink { [weak self] network in
+                guard let self = self else { return }
                 guard network.networkType != .none else {
                     return
                 }
@@ -199,7 +200,7 @@ class ConnectionViewModel: ConnectionViewModelType {
                     self.refreshConnectionFromNetworkChange()
                 }
                 self.currentNetwork = network
-            }, onError: { _ in }).disposed(by: disposeBag)
+            }.store(in: &cancellables)
 
         localDB.getNetworks()
             .subscribe(onNext: {
@@ -255,10 +256,7 @@ extension ConnectionViewModel {
     func isNetworkCellularWhileConnecting(for network: WifiNetwork?) -> Bool {
         if isConnecting() && network?.SSID == "Cellular" { return true }
         if isConnecting() || isConnected() {
-            if let appNetwork = try? connectivity.network.value() {
-                return appNetwork.networkType == NetworkType.none
-            }
-            return network?.SSID.uppercased() == TextsAsset.NetworkSecurity.unknownNetwork.uppercased()
+            return connectivity.network.value.networkType == NetworkType.none
         }
         return false
     }

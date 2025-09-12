@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import Network
 import RxSwift
+import Combine
 import UIKit
 
 protocol ConnectionsViewModelType {
@@ -52,12 +53,20 @@ protocol ConnectionsViewModelType {
 }
 
 class ConnectionsViewModel: ConnectionsViewModelType {
-    // MARK: - Dependencies
 
-    let preferences: Preferences, disposeBag = DisposeBag(), lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType
+    // MARK: - Dependencies
+    private let preferences: Preferences
+    private let lookAndFeelRepository: LookAndFeelRepositoryType
+    private let localDb: LocalDatabase
+    private let connectivity: ConnectivityManager
+    private let networkRepository: SecuredNetworkRepository
+    private let languageManager: LanguageManager
+    private let protocolManager: ProtocolManagerType
     private let dnsSettingsManager: DNSSettingsManagerType
     private var cancellables = Set<AnyCancellable>()
 
+    private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
     private var firewall = BehaviorSubject<Bool>(value: DefaultValues.firewallMode)
@@ -66,12 +75,20 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var autoSecure = BehaviorSubject<Bool>(value: DefaultValues.autoSecureNewNetworks)
     private var connectionMode = ConnectionModeType.defaultValue()
     private var connectedDNS = ConnectedDNSType.defaultValue()
+
     let isCircumventCensorshipEnabled = BehaviorSubject<Bool>(value: DefaultValues.circumventCensorship)
     let isDarkMode: BehaviorSubject<Bool>
     let shouldShowCustomDNSOption = BehaviorSubject<Bool>(value: true)
     let languageUpdatedTrigger = PublishSubject<Void>()
 
-    init(preferences: Preferences, lookAndFeelRepository: LookAndFeelRepositoryType, localDb: LocalDatabase, connectivity: Connectivity, networkRepository: SecuredNetworkRepository, languageManager: LanguageManager, protocolManager: ProtocolManagerType, dnsSettingsManager: DNSSettingsManagerType) {
+    init(preferences: Preferences,
+         lookAndFeelRepository: LookAndFeelRepositoryType,
+         localDb: LocalDatabase,
+         connectivity: ConnectivityManager,
+         networkRepository: SecuredNetworkRepository,
+         languageManager: LanguageManager,
+         protocolManager: ProtocolManagerType,
+         dnsSettingsManager: DNSSettingsManagerType) {
         self.preferences = preferences
         self.lookAndFeelRepository = lookAndFeelRepository
         self.localDb = localDb
@@ -112,20 +129,30 @@ class ConnectionsViewModel: ConnectionsViewModelType {
         preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
             self?.isCircumventCensorshipEnabled.onNext(data)
         }.disposed(by: disposeBag)
-        Observable.combineLatest(preferences.getConnectionMode(), preferences.getSelectedProtocol(), connectivity.network).bind { [weak self] connectionMode, selectedProtocol, network in
-            guard let self = self else { return }
-            if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
-                self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
-                return
-            }
-            if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {
-                if connectionMode == Fields.Values.manual {
-                    self.shouldShowCustomDNSOption.onNext(selectedProtocol != TextsAsset.iKEv2)
+
+        let connectionModePublisher = preferences.getConnectionMode()
+            .toPublisher().eraseToAnyPublisher()
+
+        let selectedProtocolPublisher = preferences.getSelectedProtocol()
+            .toPublisher().eraseToAnyPublisher()
+
+        Publishers.CombineLatest3(connectionModePublisher, selectedProtocolPublisher, connectivity.$network)
+            .sink { [weak self] (connectionMode, selectedProtocol, network) in
+                guard let self = self else { return }
+                if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {
+                    self.shouldShowCustomDNSOption.onNext(currentNetwork.preferredProtocol != TextsAsset.iKEv2)
                     return
                 }
+                if let connectionMode = connectionMode, let selectedProtocol = selectedProtocol {
+                    if connectionMode == Fields.Values.manual {
+                        self.shouldShowCustomDNSOption.onNext(selectedProtocol != TextsAsset.iKEv2)
+                        return
+                    }
+                }
+                self.shouldShowCustomDNSOption.onNext(true)
             }
-            self.shouldShowCustomDNSOption.onNext(true)
-        }.disposed(by: disposeBag)
+            .store(in: &cancellables)
+
         languageManager.activelanguage.sink { [weak self] _ in
             self?.languageUpdatedTrigger.onNext(())
         }.store(in: &cancellables)

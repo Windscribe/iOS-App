@@ -36,13 +36,13 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
 
     private let logger: FileLogger
     private let vpnManager: VPNManager
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger

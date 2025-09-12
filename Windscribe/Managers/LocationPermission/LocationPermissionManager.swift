@@ -34,7 +34,7 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
 
     private let connectivityManager: ProtocolManagerType
     private let logger: FileLogger
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let wifiManager: WifiManager
 
     private var hasBeenAuthorizedWhenInUse = PassthroughSubject<Bool, Never>()
@@ -42,7 +42,7 @@ final class LocationPermissionManager: NSObject, LocationPermissionManaging {
 
     init(connectivityManager: ProtocolManagerType,
          logger: FileLogger,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          wifiManager: WifiManager) {
         self.connectivityManager = connectivityManager
         self.logger = logger

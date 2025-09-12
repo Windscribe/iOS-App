@@ -34,14 +34,14 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
 
     // MARK: - Dependencies
     private let preferences: Preferences
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let localDatabase: LocalDatabase
 
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
          preferences: Preferences,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          localDatabase: LocalDatabase,
          router: ConnectionsNavigationRouter) {
         self.preferences = preferences
@@ -72,7 +72,6 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
             .store(in: &cancellables)
 
         connectivity.network
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
