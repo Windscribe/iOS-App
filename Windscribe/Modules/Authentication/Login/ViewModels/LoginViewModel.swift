@@ -58,7 +58,7 @@ class LoginViewModelImpl: LoginViewModel {
     private let vpnManager: VPNManager
     private let protocolManager: ProtocolManagerType
     private let latencyRepository: LatencyRepository
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
@@ -78,7 +78,7 @@ class LoginViewModelImpl: LoginViewModel {
          vpnManager: VPNManager,
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
 
@@ -418,7 +418,6 @@ class LoginViewModelImpl: LoginViewModel {
     /// Network Listener
     private func registerNetworkEventListener() {
         connectivity.network
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] appNetwork in
                 if appNetwork.status == .connected {

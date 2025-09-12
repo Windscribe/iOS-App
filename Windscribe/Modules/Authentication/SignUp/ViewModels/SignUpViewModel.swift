@@ -72,7 +72,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     private let userRepository: UserRepository
     private let userDataRepository: UserDataRepository
     private let preferences: Preferences
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let emergencyConnectRepository: EmergencyRepository
     private let vpnManager: VPNManager
     private let protocolManager: ProtocolManagerType
@@ -86,7 +86,7 @@ class SignUpViewModelImpl: SignUpViewModel {
          userRepository: UserRepository,
          userDataRepository: UserDataRepository,
          preferences: Preferences,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          vpnManager: VPNManager,
          protocolManager: ProtocolManagerType,
          latencyRepository: LatencyRepository,
@@ -423,7 +423,6 @@ class SignUpViewModelImpl: SignUpViewModel {
 
     private func registerNetworkEventListener() {
         connectivity.network
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink { _ in } receiveValue: { [weak self] appNetwork in
                 if case .network = self?.failedState, appNetwork.status == .connected {

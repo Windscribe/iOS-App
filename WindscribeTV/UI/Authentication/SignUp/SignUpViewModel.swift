@@ -51,14 +51,14 @@ class SignUpViewModelImpl: SignUpViewModel {
     let userDataRepository: UserDataRepository
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let vpnManager: VPNManager
     let protocolManager: ProtocolManagerType
     let latencyRepository: LatencyRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: Connectivity, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, userDataRepository: UserDataRepository, preferences: Preferences, connectivity: ConnectivityManager, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, emergencyConnectRepository: EmergencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.userDataRepository = userDataRepository

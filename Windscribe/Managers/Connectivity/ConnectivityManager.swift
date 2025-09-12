@@ -2,17 +2,25 @@ import Combine
 import Swinject
 import Foundation
 import Network
-import RxSwift
+
+protocol ConnectivityManager {
+    var network: CurrentValueSubject<AppNetwork, Never> { get }
+    func getNetwork() -> AppNetwork
+    func refreshNetwork()
+    func internetConnectionAvailable() -> Bool
+    func getWifiSSID() -> String?
+    func awaitNetwork(maxTime: Double) async throws
+}
 
 /// Manages network connectivity state using reachability and network path monitor.
-class ConnectivityImpl: Connectivity {
+class ConnectivityManagerImpl: ConnectivityManager {
     func getWifiSSID() -> String? {
-        return try? network.value().name
+        return network.value.name
     }
 
     private let logger: FileLogger
     /// Observe this subject to get network change events.
-    let network: BehaviorSubject<AppNetwork> = BehaviorSubject(value: AppNetwork(.disconnected))
+    let network = CurrentValueSubject<AppNetwork, Never>(AppNetwork(.disconnected))
     private let monitor = NWPathMonitor()
     private var lastEvent: AppNetwork?
     private var debounceTimer: Timer?
@@ -28,11 +36,7 @@ class ConnectivityImpl: Connectivity {
 
     /// Gets current network Infomation
     func getNetwork() -> AppNetwork {
-        do {
-            return try network.value()
-        } catch {
-            return AppNetwork(.disconnected)
-        }
+        return network.value
     }
 
     func refreshNetwork() {
@@ -56,10 +60,8 @@ class ConnectivityImpl: Connectivity {
 
     private func refreshNetworkPathMonitor(path: NWPath) {
         let networkType = getNetworkType(path: path)
-        getNetworkName(networkType: networkType) { [weak self] ssid in
-            guard let self = self else { return }
-
-            var networkName = ssid
+        Task {
+            var networkName = await getNetworkName(networkType: networkType)
             if networkName == nil && networkType == .wifi {
                 networkName = self.lastValidNetworkName
             }
@@ -75,10 +77,10 @@ class ConnectivityImpl: Connectivity {
                 isVPN: self.isVPN(path: path)
             )
             if lastEvent != appNetwork {
-                DispatchQueue.main.async {
-                    self.logger.logD("Connectivity",  appNetwork.description)
-                    self.network.onNext(appNetwork)
-                    if !self.emergencyConnect.isConnected() {
+                await MainActor.run {
+                    logger.logD("Connectivity",  appNetwork.description)
+                    network.send(appNetwork)
+                    if !emergencyConnect.isConnected() {
                         WSNet.instance().setIsConnectedToVpnState(appNetwork.isVPN)
                     }
                     WSNet.instance().setConnectivityState(appNetwork.status == .connected)
@@ -147,16 +149,14 @@ class ConnectivityImpl: Connectivity {
     }
 
     /// Returns  optional network carier name or SSID for network type
-    private func getNetworkName(networkType: NetworkType, completion: @escaping (String?) -> Void) {
+    private func getNetworkName(networkType: NetworkType) async -> String? {
         switch networkType {
         case .cellular:
-            completion(getCellularNetworkName())
+            return getCellularNetworkName()
         case .wifi:
-            getSsidFromNeHotspotHelper { ssid in
-                completion(ssid)
-            }
+            return await getSsidFromNeHotspotHelper()
         case .none:
-            completion(nil)
+            return nil
         }
     }
 
@@ -167,6 +167,6 @@ class ConnectivityImpl: Connectivity {
     }
 
     func internetConnectionAvailable() -> Bool {
-        return (try? network.value().status == .connected) != nil
+        return network.value.status == .connected
     }
 }

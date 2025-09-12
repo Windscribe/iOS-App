@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import Combine
 
 protocol LocalDatabase {
     func migrate()
@@ -40,6 +41,7 @@ protocol LocalDatabase {
     func getIp() -> Observable<MyIP?>
     func saveIp(myip: MyIP) -> Disposable
     func getNetworks() -> Observable<[WifiNetwork]>
+    func getPublishedNetworks() -> AnyPublisher<[WifiNetwork], Never>
     func saveNetwork(wifiNetwork: WifiNetwork)
     func removeNetwork(wifiNetwork: WifiNetwork)
     func addPingData(pingData: PingData)

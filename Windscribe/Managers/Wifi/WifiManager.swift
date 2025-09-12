@@ -17,7 +17,7 @@ class WifiManager {
     static let shared = WifiManager()
     lazy var preferences: Preferences = Assembler.resolve(Preferences.self)
 
-    lazy var connectivity: Connectivity = Assembler.resolve(Connectivity.self)
+    lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
 
     private lazy var localDb = Assembler.resolve(LocalDatabase.self)
     private lazy var logger = Assembler.resolve(FileLogger.self)
@@ -83,7 +83,6 @@ class WifiManager {
 
     func saveCurrentWifiNetworks() {
         connectivity.network
-            .asPublisher()
             .prefix(1)
             .map { $0.name }
             .timeout(.seconds(5), scheduler: DispatchQueue.main)
@@ -136,15 +135,7 @@ class WifiManager {
 
     private func observeSecuredNetworks() {
         observingNetworks = true
-        let networksPublisher = localDb.getNetworks()
-            .toPublisher(initialValue: [])
-            .map { $0.compactMap { $0.freeze() } }
-            .eraseToAnyPublisher()
-
-        let networkPublisher = connectivity.network
-            .asPublisher()
-            .eraseToAnyPublisher()
-        Publishers.CombineLatest(networksPublisher, networkPublisher)
+        Publishers.CombineLatest(localDb.getPublishedNetworks(), connectivity.network.eraseToAnyPublisher())
             .filter { $0.0.allSatisfy { !$0.isInvalidated } }
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
@@ -175,7 +166,6 @@ class WifiManager {
                         self.saveNewNetwork(wifiSSID: networkName)
                     }
                 }
-
             })
             .store(in: &cancellables)
     }

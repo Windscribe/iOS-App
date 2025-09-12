@@ -48,7 +48,7 @@ class VPNManager: VPNManagerProtocol {
     let serverRepository: ServerRepository
     let staticIpRepository: StaticIpRepository
     let preferences: Preferences
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let configManager: ConfigurationsManager
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManager
@@ -75,7 +75,7 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManager) {
+    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: ConnectivityManager, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManager) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository

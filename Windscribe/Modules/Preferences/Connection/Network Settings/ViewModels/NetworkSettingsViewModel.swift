@@ -27,7 +27,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private var preferredPort: String?
 
     // MARK: - Dependencies
-    private let connectivity: Connectivity
+    private let connectivity: ConnectivityManager
     private let localDatabase: LocalDatabase
     private let vpnManager: VPNManager
     private let protocolManager: ProtocolManagerType
@@ -37,7 +37,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     init(logger: FileLogger,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          hapticFeedbackManager: HapticFeedbackManager,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          localDatabase: LocalDatabase,
          vpnManager: VPNManager,
          protocolManager: ProtocolManagerType) {

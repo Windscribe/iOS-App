@@ -10,6 +10,7 @@ import Foundation
 import Realm
 import RealmSwift
 import RxSwift
+import Combine
 
 extension LocalDatabaseImpl {
     func getRealmObject<T: Object>(type: T.Type, primaryKey: String) -> T? {
@@ -169,6 +170,39 @@ extension LocalDatabaseImpl {
         let realm = try? Realm()
         try? realm?.safeWrite {
             realm?.delete(objects)
+        }
+    }
+
+    // MARK: - Combine Equivalents
+
+    func getSafeRealmPublisher<T: Object>(type: T.Type) -> AnyPublisher<[T], Never> {
+        let cleanPublisher = cleanSubject
+            .map { _ in [T]() }
+            .eraseToAnyPublisher()
+        let realmPublisher = getRealmArrayPublisher(type: T.self)
+
+        return Publishers.Merge(cleanPublisher, realmPublisher)
+            .replaceError(with: [])
+            .eraseToAnyPublisher()
+    }
+
+    private func getRealmArrayPublisher<T: Object>(type: T.Type) -> AnyPublisher<[T], Never> {
+        do {
+            let realm = try Realm()
+            let objects = realm.objects(type.self)
+
+            return objects.collectionPublisher
+                .map { results in
+                    guard !results.isInvalidated else { return [] }
+                    return Array(results)
+                }
+                .replaceError(with: [])
+                .eraseToAnyPublisher()
+
+        } catch {
+            // If Realm init fails, return an empty publisher
+            return Just<[T]>([])
+                .eraseToAnyPublisher()
         }
     }
 }

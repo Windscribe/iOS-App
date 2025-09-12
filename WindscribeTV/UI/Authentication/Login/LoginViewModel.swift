@@ -41,7 +41,7 @@ class LoginViewModelImpl: LoginViewModel {
 
     let apiCallManager: APIManager
     let userRepository: UserRepository
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let preferences: Preferences
     let emergencyConnectRepository: EmergencyRepository
     let userDataRepository: UserDataRepository
@@ -52,7 +52,7 @@ class LoginViewModelImpl: LoginViewModel {
     let disposeBag = DisposeBag()
     private var appCancellable = [AnyCancellable]()
 
-    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: Connectivity, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(apiCallManager: APIManager, userRepository: UserRepository, connectivity: ConnectivityManager, preferences: Preferences, emergencyConnectRepository: EmergencyRepository, userDataRepository: UserDataRepository, vpnManager: VPNManager, protocolManager: ProtocolManagerType, latencyRepository: LatencyRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.apiCallManager = apiCallManager
         self.userRepository = userRepository
         self.connectivity = connectivity

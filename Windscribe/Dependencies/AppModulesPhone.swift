@@ -26,7 +26,7 @@ class ViewModels: Assembly {
                 vpnManager: r.resolve(VPNManager.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
-                connectivity: r.resolve(Connectivity.self)!,
+                connectivity: r.resolve(ConnectivityManager.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.transient)
@@ -37,7 +37,7 @@ class ViewModels: Assembly {
                 userRepository: r.resolve(UserRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                connectivity: r.resolve(Connectivity.self)!,
+                connectivity: r.resolve(ConnectivityManager.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
@@ -179,7 +179,7 @@ class ViewModels: Assembly {
                 hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                 sessionManager: r.resolve(SessionManager.self)!,
                 apiManager: r.resolve(APIManager.self)!,
-                connectivity: r.resolve(Connectivity.self)!)
+                connectivity: r.resolve(ConnectivityManager.self)!)
         }.inObjectScope(.transient)
 
         container.register((any SendTicketViewModel).self) { r in
@@ -323,7 +323,7 @@ class ViewModels: Assembly {
                           pushNotificationsManager: r.resolve(PushNotificationManager.self)!,
                           notificationsRepo: r.resolve(NotificationRepository.self)!,
                           credentialsRepository: r.resolve(CredentialsRepository.self)!,
-                          connectivity: r.resolve(Connectivity.self)!,
+                          connectivity: r.resolve(ConnectivityManager.self)!,
                           livecycleManager: r.resolve(LivecycleManagerType.self)!,
                           locationsManager: r.resolve(LocationsManager.self)!,
                           protocolManager: r.resolve(ProtocolManagerType.self)!,
@@ -334,7 +334,7 @@ class ViewModels: Assembly {
                                      languageManager: r.resolve(LanguageManager.self)!)
         }.inObjectScope(.transient)
         container.register(LocationPermissionManaging.self) { r in
-            LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, wifiManager: WifiManager.shared)
+            LocationPermissionManager(connectivityManager: r.resolve(ProtocolManagerType.self)!, logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(ConnectivityManager.self)!, wifiManager: WifiManager.shared)
         }.inObjectScope(.container)
 
         container.register(ConnectionViewModelType.self) { r in
@@ -344,7 +344,7 @@ class ViewModels: Assembly {
                                 locationsManager: r.resolve(LocationsManager.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                                 preferences: r.resolve(Preferences.self)!,
-                                connectivity: r.resolve(Connectivity.self)!,
+                                connectivity: r.resolve(ConnectivityManager.self)!,
                                 wifiManager: WifiManager.shared,
                                 securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
                                 credentialsRepository: r.resolve(CredentialsRepository.self)!,
@@ -365,14 +365,14 @@ class ViewModels: Assembly {
                                         customConfigRepository: r.resolve(CustomConfigRepository.self)!,
                                         vpnManager: r.resolve(VPNManager.self)!,
                                         localDataBase: r.resolve(LocalDatabase.self)!,
-                                        connectivity: r.resolve(Connectivity.self)!,
+                                        connectivity: r.resolve(ConnectivityManager.self)!,
                                         locationsManager: r.resolve(LocationsManager.self)!,
                                         protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(FavouriteListViewModelType.self) { r in
             FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
-                                  connectivity: r.resolve(Connectivity.self)!,
+                                  connectivity: r.resolve(ConnectivityManager.self)!,
                                   sessionManager: r.resolve(SessionManager.self)!,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
@@ -380,7 +380,7 @@ class ViewModels: Assembly {
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
-                                connectivity: r.resolve(Connectivity.self)!,
+                                connectivity: r.resolve(ConnectivityManager.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
                                 sessionManager: r.resolve(SessionManager.self)!,
                                 locationsManager: r.resolve(LocationsManager.self)!,
@@ -389,7 +389,7 @@ class ViewModels: Assembly {
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
                                   vpnManager: r.resolve(VPNManager.self)!,
-                                  connectivity: r.resolve(Connectivity.self)!,
+                                  connectivity: r.resolve(ConnectivityManager.self)!,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
@@ -471,7 +471,7 @@ class ViewControllerModule: Assembly {
                     vpnManager: r.resolve(VPNManager.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!,
                     latencyRepository: r.resolve(LatencyRepository.self)!,
-                    connectivity: r.resolve(Connectivity.self)!,
+                    connectivity: r.resolve(ConnectivityManager.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     logger: r.resolve(FileLogger.self)!
                 ), router: r.resolve(AuthenticationNavigationRouter.self)!)
@@ -483,7 +483,7 @@ class ViewControllerModule: Assembly {
                 userRepository: r.resolve(UserRepository.self)!,
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                connectivity: r.resolve(Connectivity.self)!,
+                connectivity: r.resolve(ConnectivityManager.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                 latencyRepository: r.resolve(LatencyRepository.self)!,
@@ -591,7 +591,7 @@ class ViewControllerModule: Assembly {
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     preferences: r.resolve(Preferences.self)!,
-                    connectivity: r.resolve(Connectivity.self)!,
+                    connectivity: r.resolve(ConnectivityManager.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     router: r.resolve(ConnectionsNavigationRouter.self)!
                 )
@@ -604,7 +604,7 @@ class ViewControllerModule: Assembly {
                     logger: r.resolve(FileLogger.self)!,
                     lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
-                    connectivity: r.resolve(Connectivity.self)!,
+                    connectivity: r.resolve(ConnectivityManager.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     vpnManager: r.resolve(VPNManager.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!
@@ -655,7 +655,7 @@ class ViewControllerModule: Assembly {
                     hapticFeedbackManager: r.resolve(HapticFeedbackManager.self)!,
                     sessionManager: r.resolve(SessionManager.self)!,
                     apiManager: r.resolve(APIManager.self)!,
-                    connectivity: r.resolve(Connectivity.self)!),
+                    connectivity: r.resolve(ConnectivityManager.self)!),
                 router: r.resolve(HelpNavigationRouter.self)!)
         }.inObjectScope(.transient)
 

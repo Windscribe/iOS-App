@@ -24,7 +24,7 @@ class LivecycleManager: LivecycleManagerType {
     let sessionManager: SessionManager
     let preferences: Preferences
     let vpnManager: VPNManager
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let credentialsRepo: CredentialsRepository
     let notificationRepo: NotificationRepository
     let ipRepository: IPRepository
@@ -45,7 +45,7 @@ class LivecycleManager: LivecycleManagerType {
          sessionManager: SessionManager,
          preferences: Preferences,
          vpnManager: VPNManager,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          credentialsRepo: CredentialsRepository,
          notificationRepo: NotificationRepository,
          ipRepository: IPRepository,

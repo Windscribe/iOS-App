@@ -22,13 +22,13 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     var alertManager: AlertManagerV2
     var sessionManager: SessionManager
     var apiManager: APIManager
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
 
     let dispose = DisposeBag()
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(sessionManager: SessionManager, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
+    init(sessionManager: SessionManager, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: ConnectivityManager) {
         self.sessionManager = sessionManager
         self.apiManager = apiManager
         self.alertManager = alertManager

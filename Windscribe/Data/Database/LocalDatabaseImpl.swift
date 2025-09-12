@@ -10,11 +10,13 @@ import Foundation
 import Realm
 import RealmSwift
 import RxSwift
+import Combine
 
 class LocalDatabaseImpl: LocalDatabase {
     let logger: FileLogger
     let disposeBag = DisposeBag()
     let cleanTrigger = PublishSubject<Void>()
+    let cleanSubject = PassthroughSubject<Void, Never>()
     let preferences: Preferences
 
     init(logger: FileLogger, preferences: Preferences) {
@@ -152,6 +154,10 @@ class LocalDatabaseImpl: LocalDatabase {
         return getSafeRealmObservable(type: WifiNetwork.self)
     }
 
+    func getPublishedNetworks() -> AnyPublisher<[WifiNetwork], Never> {
+        return getSafeRealmPublisher(type: WifiNetwork.self)
+    }
+
     func getNetworksSync() -> [WifiNetwork]? {
         return getRealmObjects(type: WifiNetwork.self)
     }
@@ -252,6 +258,7 @@ class LocalDatabaseImpl: LocalDatabase {
         let realm = try? Realm()
 
         cleanTrigger.onNext(())
+        cleanSubject.send(())
         guard let realm = realm else { return }
 
         try? realm.write {

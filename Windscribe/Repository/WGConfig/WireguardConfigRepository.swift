@@ -34,7 +34,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
         try await wgConnect()
         try retrieveTemplateWgConfig()
     }
-    
+
     private func retrieveTemplateWgConfig() throws {
         guard let wgConfig = wgCrendentials.asWgCredentialsString(),
               let data = wgConfig.data(using: .utf8) else {
@@ -57,7 +57,7 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
                 self.wgCrendentials.saveInitResponse(config: config)
                 return
             }
-            let accept = try await alertManager.askUser(message: error.description).asPromise()
+            let accept = try await alertManager.askUser(message: error.description).value
             guard accept else { throw Errors.handled }
 
             let config = try await self.apiCallManager.wgConfigInit(clientPublicKey: userPublicKey, deleteOldestKey: true)

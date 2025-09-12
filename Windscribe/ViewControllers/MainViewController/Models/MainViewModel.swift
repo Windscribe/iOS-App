@@ -76,7 +76,7 @@ class MainViewModel: MainViewModelType {
     let staticIpRepository: StaticIpRepository
     let preferences: Preferences
     let latencyRepo: LatencyRepository
-    let connectivity: Connectivity
+    let connectivity: ConnectivityManager
     let pushNotificationsManager: PushNotificationManager!
     let notificationsRepo: NotificationRepository!
     let credentialsRepository: CredentialsRepository
@@ -133,7 +133,7 @@ class MainViewModel: MainViewModelType {
          pushNotificationsManager: PushNotificationManager,
          notificationsRepo: NotificationRepository,
          credentialsRepository: CredentialsRepository,
-         connectivity: Connectivity,
+         connectivity: ConnectivityManager,
          livecycleManager: LivecycleManagerType,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
@@ -210,13 +210,17 @@ class MainViewModel: MainViewModelType {
     }
 
     private func observeWifiNetwork() {
-        Observable.combineLatest(localDatabase.getNetworks(), connectivity.network).observe(on: MainScheduler.asyncInstance).subscribe(on: MainScheduler.asyncInstance).subscribe(onNext: { [weak self] (networks, appNetwork) in
-            guard let self = self else { return }
-            guard let matchingNetwork = networks.first(where: {
-                $0.isInvalidated == false && $0.SSID == appNetwork.name
-            }) else { return }
-            self.wifiNetwork.onNext(matchingNetwork)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        Publishers.CombineLatest(localDatabase.getPublishedNetworks(), connectivity.network.eraseToAnyPublisher())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] (networks, appNetwork) in
+                guard let self = self else { return }
+                guard let matchingNetwork = networks.first(where: {
+                    $0.isInvalidated == false && $0.SSID == appNetwork.name
+                }) else { return }
+                self.wifiNetwork.onNext(matchingNetwork)
+            })
+            .store(in: &cancellables)
     }
 
     private func observeSession() {
@@ -227,10 +231,12 @@ class MainViewModel: MainViewModelType {
     }
 
     func observeNetworkStatus() {
-        connectivity.network.subscribe(onNext: { [weak self] network in
-            guard let self = self else { return }
-            self.appNetwork.onNext(network)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        connectivity.network
+            .sink { [weak self] network in
+                guard let self = self else { return }
+                self.appNetwork.onNext(network)
+            }
+            .store(in: &cancellables)
     }
 
     func sortFavouriteNodesUsingUserPreferences(favList: [GroupModel]) -> [GroupModel] {
