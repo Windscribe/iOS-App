@@ -381,8 +381,7 @@
 		59FC73CD2C514A7A00021CD1 /* AppModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */; };
 		59FC73CE2C514A8800021CD1 /* WgCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9816B6D27D8E9BE0059D275 /* WgCredentials.swift */; };
 		59FC73CF2C514AC300021CD1 /* UserScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = C571C6732C135C3600786DA5 /* UserScope.swift */; };
-		59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
-		59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
+		59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		59FC73D22C514AF000021CD1 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
 		59FC73D32C514B0500021CD1 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E927021F26A1400A3F584 /* AlertManager.swift */; };
 		59FC73D42C514B1300021CD1 /* UIConstants+Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4E926A21F2309000A3F584 /* UIConstants+Text.swift */; };
@@ -687,15 +686,13 @@
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
 		C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */; };
 		C50B2CE82CD282B200EED01A /* VPNConfigurationErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */; };
-		C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
-		C50F20762B606B1D00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */; };
-		C50F20782B606B3000266B23 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
+		C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		C50F207B2B606E2200266B23 /* WireguardModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207A2B606E2200266B23 /* WireguardModule.swift */; };
 		C50F207E2B60B40500266B23 /* WireguardAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */; };
 		C50F207F2B60B40500266B23 /* WireguardAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */; };
 		C50F20832B60B79600266B23 /* APIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D983C12B34DA3F0069FF3A /* APIUtil.swift */; };
 		C50F20842B60B83900266B23 /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
-		C50F20852B60BCCE00266B23 /* WireguardConfigRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */; };
+		C50F20852B60BCCE00266B23 /* WireguardConfigRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */; };
 		C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F32B45A3880001CFA0 /* FileLogger.swift */; };
 		C50F20B12B616DF700266B23 /* FileLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F32B45A3880001CFA0 /* FileLogger.swift */; };
 		C50F20B22B616DF900266B23 /* FileLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930F32B45A3880001CFA0 /* FileLogger.swift */; };
@@ -1771,8 +1768,7 @@
 		C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C50B2CE52CD2804D00EED01A /* ConfigurationsManager+config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ConfigurationsManager+config.swift"; sourceTree = "<group>"; };
 		C50B2CE72CD282B200EED01A /* VPNConfigurationErrors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNConfigurationErrors.swift; sourceTree = "<group>"; };
-		C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
-		C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepositoryImpl.swift; sourceTree = "<group>"; };
+		C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigRepository.swift; sourceTree = "<group>"; };
 		C50F207A2B606E2200266B23 /* WireguardModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardModule.swift; sourceTree = "<group>"; };
 		C50F207D2B60B40500266B23 /* WireguardAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAPIManager.swift; sourceTree = "<group>"; };
 		C50F20C52B61760000266B23 /* CoreModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreModule.swift; sourceTree = "<group>"; };
@@ -3597,8 +3593,7 @@
 		C50F20732B606AF200266B23 /* WGConfig */ = {
 			isa = PBXGroup;
 			children = (
-				C50F20742B606B0C00266B23 /* WireguardConfigRepository.swift */,
-				C50F20772B606B3000266B23 /* WireguardConfigRepositoryImpl.swift */,
+				C50F20772B606B3000266B23 /* WireguardConfigRepository.swift */,
 			);
 			path = WGConfig;
 			sourceTree = "<group>";
@@ -6308,7 +6303,7 @@
 				59FC74572C51612D00021CD1 /* NWInterface+Extension.swift in Sources */,
 				F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */,
 				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
-				59FC73D12C514AD600021CD1 /* WireguardConfigRepositoryImpl.swift in Sources */,
+				59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				1ED23F7E2DBBCB7400C7BEE5 /* SoundManaging.swift in Sources */,
 				59FC74102C51540C00021CD1 /* HelpItem.swift in Sources */,
@@ -6456,7 +6451,6 @@
 				59FC74672C5167CF00021CD1 /* BillingRepository.swift in Sources */,
 				59FC73E32C51504B00021CD1 /* APIManagerImpl.swift in Sources */,
 				1E0D9D7D2C612D32008AFF2D /* PreferencesAccountView.swift in Sources */,
-				59FC73D02C514AD100021CD1 /* WireguardConfigRepository.swift in Sources */,
 				C5007D552CAF9EB10035AE21 /* PreferencePrivacyView.swift in Sources */,
 				F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */,
 				F42ADD212D5BB4A50021AF6E /* AppReviewManager.swift in Sources */,
@@ -6617,7 +6611,7 @@
 				1EB67FAD2DE9E29D00729052 /* ConnectionsRouteID.swift in Sources */,
 				C56FCBF42B2BA50A008DE7D4 /* HomeRouter.swift in Sources */,
 				AF16C98D2225CDAB00997A2A /* ClosestCountry.swift in Sources */,
-				C50F20782B606B3000266B23 /* WireguardConfigRepositoryImpl.swift in Sources */,
+				C50F20782B606B3000266B23 /* WireguardConfigRepository.swift in Sources */,
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
 				C5592B852B3940AE00F2F110 /* IPRepositoryImpl.swift in Sources */,
 				F49C45CE2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift in Sources */,
@@ -7061,7 +7055,6 @@
 				1ED23F812DBBD37000C7BEE5 /* IPInfoViewModel.swift in Sources */,
 				C50B2CE62CD2804D00EED01A /* ConfigurationsManager+config.swift in Sources */,
 				AF54C6BC228215A700DAAB07 /* UIDevice+Extension.swift in Sources */,
-				C50F20752B606B0C00266B23 /* WireguardConfigRepository.swift in Sources */,
 				AF36BF1022FC971E00FCC6F4 /* WSTextField.swift in Sources */,
 				F41190272D7FC79C00AC7EB6 /* WelcomeView.swift in Sources */,
 				1EB67FA52DE8C28E00729052 /* NetworkSettingsViewModel.swift in Sources */,
@@ -7196,7 +7189,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5A930FB2B45A5F40001CFA0 /* FileLoggerImpl.swift in Sources */,
-				C50F20762B606B1D00266B23 /* WireguardConfigRepository.swift in Sources */,
 				C52DA5242B638EA400E5C571 /* CustomConfig.swift in Sources */,
 				F485CBBA2D4D52D40063EA3A /* Then.swift in Sources */,
 				C535D29A27E4E85700C08345 /* SharedUserDefaults.swift in Sources */,
@@ -7245,7 +7237,7 @@
 				C5D0E40E29BB8BE70091FB14 /* FileManager+Extension.swift in Sources */,
 				C5E18EDB286B40C700DD3B07 /* APIMessage.swift in Sources */,
 				C590D76927F2A55D007515B3 /* Session.swift in Sources */,
-				C50F20852B60BCCE00266B23 /* WireguardConfigRepositoryImpl.swift in Sources */,
+				C50F20852B60BCCE00266B23 /* WireguardConfigRepository.swift in Sources */,
 				C5D0E40A29BB8BE70091FB14 /* String+ArrayConversion.swift in Sources */,
 				1E7A19572C34237E00851AE2 /* DNSValue.swift in Sources */,
 				C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */,

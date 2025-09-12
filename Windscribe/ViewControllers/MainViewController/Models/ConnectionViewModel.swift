@@ -411,7 +411,9 @@ extension ConnectionViewModel {
                             }
                         } else {
                             self.logger.logE("ConnectionViewModel", "Enable Connection with unknown error: \(error.localizedDescription)")
-                            self.checkAutoModeFail()
+                            if let error = error as? Errors, error != Errors.handled {
+                                self.checkAutoModeFail()
+                            }
                         }
                     }
                 }, receiveValue: { state in
