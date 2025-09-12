@@ -7,7 +7,6 @@
 //
 
 import Combine
-import RxSwift
 
 struct LocationUIInfo {
     let nickName: String
@@ -15,7 +14,7 @@ struct LocationUIInfo {
     let countryCode: String
 }
 
-protocol LocationsManagerType {
+protocol LocationsManager {
     func getBestLocationModel(from groupId: String) -> BestLocationModel?
     func getLocation(from groupId: String) throws -> (ServerModel, GroupModel)
     func getLocationUIInfo() -> LocationUIInfo
@@ -35,10 +34,10 @@ protocol LocationsManagerType {
     func checkLocationValidity(checkProAccess: () -> Bool)
     func checkForForceDisconnect() -> Bool
 
-    var selectedLocationUpdatedSubject: BehaviorSubject<Bool> { get }
+    var selectedLocationUpdated: CurrentValueSubject<Bool, Never> { get }
 }
 
-class LocationsManager: LocationsManagerType {
+class LocationsManagerImpl: LocationsManager {
     private let localDatabase: LocalDatabase
     private let preferences: Preferences
     private let logger: FileLogger
@@ -46,10 +45,9 @@ class LocationsManager: LocationsManagerType {
     private let languageManager: LanguageManager
     private let serverRepository: ServerRepository
 
-    private let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    let selectedLocationUpdatedSubject = BehaviorSubject<Bool>(value: (false))
+    let selectedLocationUpdated = CurrentValueSubject<Bool, Never>(false)
 
     init(localDatabase: LocalDatabase, preferences: Preferences, logger: FileLogger, languageManager: LanguageManager, serverRepository: ServerRepository) {
         self.localDatabase = localDatabase
@@ -59,12 +57,15 @@ class LocationsManager: LocationsManagerType {
         self.serverRepository = serverRepository
 
         languageManager.activelanguage.sink { [weak self] _ in
-            self?.selectedLocationUpdatedSubject.onNext(false)
+            self?.selectedLocationUpdated.send(false)
         }.store(in: &cancellables)
 
-        serverRepository.updatedServerModelsSubject.subscribe { [weak self] _ in
-            self?.selectedLocationUpdatedSubject.onNext(false)
-        }.disposed(by: disposeBag)
+        serverRepository.updatedServerModelsSubject
+            .toPublisher()
+            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
+                self?.selectedLocationUpdated.send(false)
+            })
+            .store(in: &cancellables)
     }
 
     func getBestLocationModel(from groupId: String) -> BestLocationModel? {
@@ -114,6 +115,7 @@ class LocationsManager: LocationsManagerType {
         return getEmptyUIInfo()
     }
 
+
     private func getEmptyUIInfo() -> LocationUIInfo {
         return LocationUIInfo(nickName: "", cityName: "", countryCode: "")
     }
@@ -134,7 +136,7 @@ class LocationsManager: LocationsManagerType {
     func saveLastSelectedLocation(with locationID: String) {
         guard locationID != getLastSelectedLocation() else { return }
         preferences.saveLastSelectedLocation(with: locationID)
-        selectedLocationUpdatedSubject.onNext(true)
+        selectedLocationUpdated.send(true)
     }
     func saveStaticIP(withID staticID: Int?) {
         saveLastSelectedLocation(with: "static_\(staticID ?? 0)")
@@ -222,7 +224,7 @@ class LocationsManager: LocationsManagerType {
     }
 }
 
-extension LocationsManager {
+extension LocationsManagerImpl {
     private func updateToBestLocation() {
         saveLastSelectedLocation(with: getBestLocation())
     }

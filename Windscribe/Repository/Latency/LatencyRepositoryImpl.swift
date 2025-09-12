@@ -19,7 +19,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnManager: VPNManager
-    private let locationsManager: LocationsManagerType
+    private let locationsManager: LocationsManager
     private var sessionManager: SessionManaging {
         return Assembler.resolve(SessionManaging.self)
     }
@@ -30,7 +30,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
 
-    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManagerType) {
+    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManager) {
         self.pingManager = pingManager
         self.database = database
         self.vpnManager = vpnManager

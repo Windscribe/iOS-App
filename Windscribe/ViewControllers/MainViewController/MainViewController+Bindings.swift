@@ -6,6 +6,7 @@
 //  Copyright © 2025 Windscribe. All rights reserved.
 //
 
+import Combine
 import RxSwift
 import UIKit
 
@@ -38,11 +39,11 @@ extension MainViewController {
             self.showConnectionFailed()
         }).disposed(by: disposeBag)
 
-        vpnConnectionViewModel.selectedLocationUpdatedSubject
-            .delaySubscription(RxTimeInterval.seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: MainScheduler.instance)
-            .subscribe(onNext: {
+        vpnConnectionViewModel.selectedLocationUpdated
+            .delay(for: .seconds(vpnConnectionViewModel.getSelectedCountryInfo().countryCode.isEmpty ? 2 : 0), scheduler: RunLoop.main)
+            .sink { _ in
                 self.updateSelectedLocationUI()
-            }).disposed(by: disposeBag)
+            }.store(in: &cancellables)
 
         Observable.combineLatest(viewModel.wifiNetwork,
                                  vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in

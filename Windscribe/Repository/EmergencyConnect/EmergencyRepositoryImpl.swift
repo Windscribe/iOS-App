@@ -16,12 +16,12 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let fileDatabase: FileDatabase
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
-    private let locationsManager: LocationsManagerType
+    private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
-    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManagerType, protocolManager: ProtocolManagerType) {
+    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManager, protocolManager: ProtocolManagerType) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
         self.vpnManager = vpnManager
         self.fileDatabase = fileDatabase

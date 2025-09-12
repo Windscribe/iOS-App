@@ -51,7 +51,7 @@ class VPNManager: VPNManagerProtocol {
     let connectivity: Connectivity
     let configManager: ConfigurationsManager
     let alertManager: AlertManagerV2
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
 
     var connectionTaskPublisher: AnyCancellable?
 
@@ -75,7 +75,7 @@ class VPNManager: VPNManagerProtocol {
         }
     }
 
-    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManagerType) {
+    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: Connectivity, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManager) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository

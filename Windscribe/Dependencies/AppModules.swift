@@ -83,10 +83,10 @@ class Repository: Assembly {
             SecuredNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!, localdatabase: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(Connectivity.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
-            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: logger, locationsManager: r.resolve(LocationsManagerType.self)!)
+            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: logger, locationsManager: r.resolve(LocationsManager.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
-            EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!, locationsManager: r.resolve(LocationsManagerType.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!, locationsManager: r.resolve(LocationsManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.userScope)
         container.register(CustomConfigRepository.self) { r in
             CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
@@ -107,7 +107,7 @@ class Repository: Assembly {
                                   wgRepository: r.resolve(WireguardConfigRepository.self)!,
                                   wgCredentials: r.resolve(WgCredentials.self)!,
                                   preferences: r.resolve(Preferences.self)!,
-                                  locationsManager: r.resolve(LocationsManagerType.self)!,
+                                  locationsManager: r.resolve(LocationsManager.self)!,
                                   ipRepository: r.resolve(IPRepository.self)!)
         }.inObjectScope(.userScope)
 
@@ -170,12 +170,12 @@ class Managers: Assembly {
         container.register(AlertManagerV2.self) { _ in
             AlertManager()
         }.inObjectScope(.userScope)
-        container.register(LocationsManagerType.self) { r in
-            LocationsManager(localDatabase: r.resolve(LocalDatabase.self)!,
-                             preferences: r.resolve(Preferences.self)!,
-                             logger: r.resolve(FileLogger.self)!,
-                             languageManager: r.resolve(LanguageManager.self)!,
-                             serverRepository: r.resolve(ServerRepository.self)!)
+        container.register(LocationsManager.self) { r in
+            LocationsManagerImpl(localDatabase: r.resolve(LocalDatabase.self)!,
+                                 preferences: r.resolve(Preferences.self)!,
+                                 logger: r.resolve(FileLogger.self)!,
+                                 languageManager: r.resolve(LanguageManager.self)!,
+                                 serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
             VPNManager(logger: r.resolve(FileLogger.self)!,
@@ -186,7 +186,7 @@ class Managers: Assembly {
                        connectivity: r.resolve(Connectivity.self)!,
                        configManager: r.resolve(ConfigurationsManager.self)!,
                        alertManager: r.resolve(AlertManagerV2.self)!,
-                       locationsManager: r.resolve(LocationsManagerType.self)!)
+                       locationsManager: r.resolve(LocationsManager.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManager.self) { r in
             ReferAndShareManagerImpl(
@@ -208,7 +208,7 @@ class Managers: Assembly {
             PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
-            ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManagerType.self)!)
+            ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManager.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
@@ -222,7 +222,7 @@ class Managers: Assembly {
                              ipRepository: r.resolve(IPRepository.self)!,
                              configManager: r.resolve(ConfigurationsManager.self)!,
                              connectivityManager: r.resolve(ProtocolManagerType.self)!,
-                             locationsManager: r.resolve(LocationsManagerType.self)!)
+                             locationsManager: r.resolve(LocationsManager.self)!)
         }.inObjectScope(.userScope)
 
         container.register(SSOManaging.self) { r in

@@ -6,6 +6,7 @@
 //  Copyright © 2024 Windscribe. All rights reserved.
 //
 
+import Combine
 import NetworkExtension
 import RxSwift
 import Swinject
@@ -52,6 +53,7 @@ class MainViewController: PreferredFocusedViewController {
     var staticIPListViewModel: StaticIPListViewModelType!
     var router: HomeRouter!
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var logger: FileLogger!
     var isFromServer: Bool = false
     lazy var sessionManager = Assembler.resolve(SessionManaging.self)
@@ -309,9 +311,9 @@ class MainViewController: PreferredFocusedViewController {
         vpnConnectionViewModel.displayLocalIPAddress()
         setFlagImages()
 
-        vpnConnectionViewModel.selectedLocationUpdatedSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
+        vpnConnectionViewModel.selectedLocationUpdated.sink { _ in
             self.setConnectionLabelValuesForSelectedNode()
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         ipInfoViewModel.ipAddressSubject.observe(on: MainScheduler.asyncInstance).subscribe(onNext: {
             self.showSecureIPAddressState(ipAddress: $0)

@@ -17,7 +17,7 @@ import WidgetKit
 protocol ConnectionViewModelType {
     var connectedState: BehaviorSubject<ConnectionStateInfo> { get }
     var selectedProtoPort: BehaviorSubject<ProtocolPort?> { get }
-    var selectedLocationUpdatedSubject: BehaviorSubject<Void> { get }
+    var selectedLocationUpdated: CurrentValueSubject<Void, Never> { get }
 
     var loadLatencyValuesSubject: PublishSubject<LoadLatencyInfo> {get}
     var showUpgradeRequiredTrigger: PublishSubject<Void> { get }
@@ -70,7 +70,7 @@ protocol ConnectionViewModelType {
 class ConnectionViewModel: ConnectionViewModelType {
     let connectedState = BehaviorSubject<ConnectionStateInfo>(value: ConnectionStateInfo.defaultValue())
     let selectedProtoPort = BehaviorSubject<ProtocolPort?>(value: nil)
-    let selectedLocationUpdatedSubject = BehaviorSubject<Void>(value: ())
+    let selectedLocationUpdated = CurrentValueSubject<Void, Never>(())
 
     var loadLatencyValuesSubject = PublishSubject<LoadLatencyInfo>()
     let showUpgradeRequiredTrigger = PublishSubject<Void>()
@@ -93,7 +93,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     let vpnManager: VPNManager
     let logger: FileLogger
     let apiManager: APIManager
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
     let preferences: Preferences
     let connectivity: Connectivity
@@ -117,7 +117,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     init(logger: FileLogger,
          apiManager: APIManager,
          vpnManager: VPNManager,
-         locationsManager: LocationsManagerType,
+         locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          preferences: Preferences,
          connectivity: Connectivity,
@@ -178,13 +178,13 @@ class ConnectionViewModel: ConnectionViewModelType {
             }
             .store(in: &cancellables)
 
-        locationsManager.selectedLocationUpdatedSubject.subscribe { canReconnect in
+        locationsManager.selectedLocationUpdated.sink { canReconnect in
             let locationID = locationsManager.getLastSelectedLocation()
             if canReconnect, !locationID.isEmpty, locationID != "0", self.isConnected() {
                 self.enableConnection()
             }
-            self.selectedLocationUpdatedSubject.onNext(())
-        }.disposed(by: disposeBag)
+            self.selectedLocationUpdated.send(())
+        }.store(in: &cancellables)
 
         connectivity.network
             .debounce(.seconds(1), scheduler: MainScheduler.instance)

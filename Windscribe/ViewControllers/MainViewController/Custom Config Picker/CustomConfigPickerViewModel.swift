@@ -38,7 +38,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let vpnManager: VPNManager
     let localDataBase: LocalDatabase
     let connectivity: Connectivity
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
     var displayAllertTrigger = PublishSubject<ConfigAlertType>()
@@ -55,7 +55,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
          vpnManager: VPNManager,
          localDataBase: LocalDatabase,
          connectivity: Connectivity,
-         locationsManager: LocationsManagerType,
+         locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
         self.alertManager = alertManager

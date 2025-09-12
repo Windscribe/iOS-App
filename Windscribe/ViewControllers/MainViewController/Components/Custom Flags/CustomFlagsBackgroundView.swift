@@ -27,7 +27,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     let backgroundInfoSubject = BehaviorSubject<BackgroundInfoModel?>(value: nil)
 
     let disposeBag = DisposeBag()
-    let locationsManager: LocationsManagerType
+    let locationsManager: LocationsManager
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let backgroundFileManager: BackgroundFileManaging
 
@@ -37,17 +37,17 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
     private var cancellables = Set<AnyCancellable>()
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
-         locationsManager: LocationsManagerType,
+         locationsManager: LocationsManager,
          vpnManager: VPNManager,
          backgroundFileManager: BackgroundFileManaging) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.locationsManager = locationsManager
         self.backgroundFileManager = backgroundFileManager
 
-        locationsManager.selectedLocationUpdatedSubject.subscribe(onNext: { [weak self] _ in
+        locationsManager.selectedLocationUpdated.sink { [weak self] _ in
             guard let self = self else { return }
             self.updateBackgroundImage(isConnected: self.isConnected)
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         lookAndFeelRepository.backgroundChangedTrigger.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
