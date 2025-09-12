@@ -20,7 +20,7 @@ protocol NodeTableViewCellModelType: BaseNodeCellViewModelType {
 }
 
 class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType {
-    var sessionManager = Assembler.resolve(SessionManaging.self)
+    var sessionManager = Assembler.resolve(SessionManager.self)
     var latencyRepository = Assembler.resolve(LatencyRepository.self)
 
     var displayingGroup: GroupModel?

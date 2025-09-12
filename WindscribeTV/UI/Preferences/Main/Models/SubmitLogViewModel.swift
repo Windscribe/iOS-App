@@ -11,7 +11,7 @@ import RxSwift
 import Swinject
 
 protocol SubmitLogViewModel {
-    var sessionManager: SessionManaging { get }
+    var sessionManager: SessionManager { get }
     var apiManager: APIManager { get }
     var alertManager: AlertManagerV2 { get }
     var networkStatus: NetworkStatus { get }
@@ -20,7 +20,7 @@ protocol SubmitLogViewModel {
 
 class SubmitLogViewModelImpl: SubmitLogViewModel {
     var alertManager: AlertManagerV2
-    var sessionManager: SessionManaging
+    var sessionManager: SessionManager
     var apiManager: APIManager
     let connectivity: Connectivity
 
@@ -28,7 +28,7 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
-    init(sessionManager: SessionManaging, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
+    init(sessionManager: SessionManager, apiManager: APIManager, alertManager: AlertManagerV2, connectivity: Connectivity) {
         self.sessionManager = sessionManager
         self.apiManager = apiManager
         self.alertManager = alertManager

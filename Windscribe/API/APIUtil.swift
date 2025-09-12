@@ -12,6 +12,9 @@ import Foundation
 
 protocol APIUtilService {
     func makeApiCall<T: Decodable>(modalType: T.Type, apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> T
+    func makeApiCall<T: Decodable>(modalType: T.Type,
+                                   maxRetries: Int,
+                                   apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> T
     func mapToSuccess<T: Decodable>(json: String, modeType: T.Type) -> T?
     func mapToAPIError(error: String?) -> Errors
 }
@@ -49,22 +52,34 @@ final class APIUtilServiceImpl: APIUtilService {
 
     func makeApiCall<T: Decodable>(modalType: T.Type,
                                    apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> T {
+        return try await makeApiCall(modalType: modalType, maxRetries: 0, apiCall: apiCall)
+    }
+
+    func makeApiCall<T: Decodable>(modalType: T.Type,
+                                   maxRetries: Int,
+                                   apiCall: @escaping (@escaping (Int32, String) -> Void) -> WSNetCancelableCallback?) async throws -> T {
         return try await withCheckedThrowingContinuation { continuation in
-            let cancelable = apiCall { statusCode, responseData in
-                if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
-                    continuation.resume(throwing: wsNetError)
-                } else {
-                    guard let apiResult = self.mapToSuccess(json: responseData, modeType: modalType) else {
-                        continuation.resume(throwing: self.mapToAPIError(error: responseData))
-                        return
+            var retries = maxRetries
+
+            func attemptCall() {
+                _ = apiCall { statusCode, responseData in
+                    if let wsNetError = WSNetErrors(rawValue: statusCode)?.error {
+                        if retries <= 0 {
+                            continuation.resume(throwing: wsNetError)
+                        } else {
+                            retries -= 1
+                            attemptCall()
+                        }
+                    } else {
+                        guard let apiResult = self.mapToSuccess(json: responseData, modeType: modalType) else {
+                            continuation.resume(throwing: self.mapToAPIError(error: responseData))
+                            return
+                        }
+                        continuation.resume(returning: apiResult)
                     }
-                    continuation.resume(returning: apiResult)
                 }
             }
-
-            // Store the cancelable for potential cancellation
-            // Note: Swift's structured concurrency will handle cancellation automatically
-            _ = cancelable
+            attemptCall()
         }
     }
 }

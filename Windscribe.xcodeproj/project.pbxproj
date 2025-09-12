@@ -473,7 +473,6 @@
 		59FC743A2C515A9900021CD1 /* ServerRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930E52B44711A0001CFA0 /* ServerRepositoryImpl.swift */; };
 		59FC743B2C515B7E00021CD1 /* StaticIpRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930D92B43EF0D0001CFA0 /* StaticIpRepository.swift */; };
 		59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930DB2B43EF390001CFA0 /* StaticIpRepositoryImpl.swift */; };
-		59FC743D2C515B9B00021CD1 /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManaging.swift */; };
 		59FC743F2C515BAC00021CD1 /* CredentialsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930DE2B43F00A0001CFA0 /* CredentialsRepository.swift */; };
 		59FC74402C515BB000021CD1 /* CredentialsRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A930E02B43F0270001CFA0 /* CredentialsRepositoryImpl.swift */; };
 		59FC74412C515BC000021CD1 /* WifiManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2531B5220A27FB0001CF96 /* WifiManager.swift */; };
@@ -836,7 +835,6 @@
 		C580FE1C2B50794B004FA857 /* InAppPurchaseManager+Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1B2B50794B004FA857 /* InAppPurchaseManager+Observer.swift */; };
 		C580FE1E2B50799C004FA857 /* SKPaymentTransaction+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */; };
 		C580FE202B507B60004FA857 /* InAppPurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */; };
-		C580FE252B507E46004FA857 /* SessionManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE242B507E46004FA857 /* SessionManaging.swift */; };
 		C580FE282B50829B004FA857 /* LatencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE272B50829B004FA857 /* LatencyRepository.swift */; };
 		C580FE2A2B5082B2004FA857 /* LatencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */; };
 		C580FE2C2B5101CC004FA857 /* PingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C580FE2B2B5101CC004FA857 /* PingData.swift */; };
@@ -1843,7 +1841,6 @@
 		C580FE1B2B50794B004FA857 /* InAppPurchaseManager+Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InAppPurchaseManager+Observer.swift"; sourceTree = "<group>"; };
 		C580FE1D2B50799C004FA857 /* SKPaymentTransaction+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKPaymentTransaction+Ext.swift"; sourceTree = "<group>"; };
 		C580FE1F2B507B60004FA857 /* InAppPurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseManager.swift; sourceTree = "<group>"; };
-		C580FE242B507E46004FA857 /* SessionManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManaging.swift; sourceTree = "<group>"; };
 		C580FE272B50829B004FA857 /* LatencyRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepository.swift; sourceTree = "<group>"; };
 		C580FE292B5082B2004FA857 /* LatencyRepositoryImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatencyRepositoryImpl.swift; sourceTree = "<group>"; };
 		C580FE2B2B5101CC004FA857 /* PingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PingData.swift; sourceTree = "<group>"; };
@@ -3811,7 +3808,6 @@
 			isa = PBXGroup;
 			children = (
 				AF3FC11C227B68EB0050B224 /* SessionManager.swift */,
-				C580FE242B507E46004FA857 /* SessionManaging.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -6262,7 +6258,6 @@
 				59FC74682C5167D300021CD1 /* BillingRepositoryImpl.swift in Sources */,
 				59FC74332C515A3B00021CD1 /* LocalDatabaseImpl.swift in Sources */,
 				59FC747A2C51741F00021CD1 /* Date+Extension.swift in Sources */,
-				59FC743D2C515B9B00021CD1 /* SessionManaging.swift in Sources */,
 				59FC74072C5153D300021CD1 /* UserPreferences.swift in Sources */,
 				59FC746C2C5167F500021CD1 /* CustomConfigRepositoryImpl.swift in Sources */,
 				59FC74312C51571600021CD1 /* UIDevice+Extension.swift in Sources */,
@@ -6751,7 +6746,6 @@
 				E9219FED2885A3AE0026E544 /* UIView+Constraints.swift in Sources */,
 				F40B8AE42E54F13700609902 /* ScreenTestView.swift in Sources */,
 				E90FD02527394FA800721874 /* UIConstants+Fields.swift in Sources */,
-				C580FE252B507E46004FA857 /* SessionManaging.swift in Sources */,
 				AF914A7223CD0C7D002D3041 /* PromptBackgroundView.swift in Sources */,
 				C5A930D02B43C5880001CFA0 /* BillingRepository.swift in Sources */,
 				AF4B92F2221DCBEC0054580D /* Email.swift in Sources */,

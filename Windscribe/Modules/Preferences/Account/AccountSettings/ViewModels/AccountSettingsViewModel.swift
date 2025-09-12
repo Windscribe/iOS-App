@@ -27,7 +27,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
 
     // Dependencies
     private let preferences: Preferences
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let languageManager: LanguageManager
@@ -47,7 +47,7 @@ final class AccountSettingsViewModelImpl: PreferencesBaseViewModelImpl, AccountS
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          preferences: Preferences,
-         sessionManager: SessionManaging,
+         sessionManager: SessionManager,
          apiManager: APIManager,
          localDatabase: LocalDatabase,
          languageManager: LanguageManager,

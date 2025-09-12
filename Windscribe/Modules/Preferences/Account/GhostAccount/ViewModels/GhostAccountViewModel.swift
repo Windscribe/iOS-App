@@ -22,13 +22,13 @@ class GhostAccountViewModelImpl: GhostAccountViewModel {
 
     @Published var isDarkMode: Bool = false
 
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionManager: SessionManaging,
+    init(sessionManager: SessionManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
         self.sessionManager = sessionManager

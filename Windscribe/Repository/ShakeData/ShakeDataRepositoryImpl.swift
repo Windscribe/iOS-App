@@ -13,10 +13,10 @@ class ShakeDataRepositoryImpl: ShakeDataRepository {
     var currentScore: Int = 0
 
     private let apiManager: APIManager
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let disposeBag = DisposeBag()
 
-    init(apiManager: APIManager, sessionManager: SessionManaging) {
+    init(apiManager: APIManager, sessionManager: SessionManager) {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
     }

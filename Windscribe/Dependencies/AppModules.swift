@@ -96,7 +96,7 @@ class Repository: Assembly {
         }.inObjectScope(.userScope)
         container.register(ShakeDataRepository.self) { r in
             ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
-                                    sessionManager: r.resolve(SessionManaging.self)!)
+                                    sessionManager: r.resolve(SessionManager.self)!)
         }.inObjectScope(.userScope)
         container.register(ConfigurationsManager.self) { r in
             ConfigurationsManager(logger: r.resolve(FileLogger.self)!,
@@ -158,8 +158,8 @@ class Managers: Assembly {
         container.register(HTMLParsing.self) { r in
             HTMLParser(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
-        container.register(SessionManaging.self) { _ in
-            SessionManager()
+        container.register(SessionManager.self) { _ in
+            SessionManagerImpl()
         }.inObjectScope(.userScope)
 #if os(iOS)
         container.register(HapticFeedbackManager.self) { r in
@@ -191,7 +191,7 @@ class Managers: Assembly {
         container.register(ReferAndShareManager.self) { r in
             ReferAndShareManagerImpl(
                 preferences: r.resolve(Preferences.self)!,
-                sessionManager: r.resolve(SessionManaging.self)!,
+                sessionManager: r.resolve(SessionManager.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
@@ -205,7 +205,7 @@ class Managers: Assembly {
             return LanguageManagerImpl(preference: prefs, localizationService: localizer)
         }.inObjectScope(.userScope)
         container.register(PushNotificationManager.self) { r in
-            PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManaging.self)!, logger: r.resolve(FileLogger.self)!)
+            PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
             ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(Connectivity.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManager.self)!)
@@ -213,7 +213,7 @@ class Managers: Assembly {
 
         container.register(LivecycleManagerType.self) { r in
             LivecycleManager(logger: r.resolve(FileLogger.self)!,
-                             sessionManager: r.resolve(SessionManaging.self)!,
+                             sessionManager: r.resolve(SessionManager.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              vpnManager: r.resolve(VPNManager.self)!,
                              connectivity: r.resolve(Connectivity.self)!,

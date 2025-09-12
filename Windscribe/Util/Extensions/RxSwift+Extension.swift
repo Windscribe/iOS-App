@@ -35,20 +35,6 @@ extension PrimitiveSequence where Trait == SingleTrait {
         }
         .eraseToAnyPublisher()
     }
-
-    func asPromise() async throws -> Element {
-           try await withCheckedThrowingContinuation { continuation in
-               let disposable = self.subscribe(
-                onSuccess: { value in
-                       continuation.resume(returning: value) },
-                onFailure: { error in
-                       continuation.resume(throwing: error)
-                   }
-               )
-
-               _ = disposable
-           }
-       }
 }
 
 // MARK: BehaviorSubject -> Combine (with error propagation)

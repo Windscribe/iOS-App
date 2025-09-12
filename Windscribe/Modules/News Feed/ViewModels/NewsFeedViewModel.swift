@@ -26,7 +26,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     @Published var isDarkMode: Bool = false
 
     let localDatabase: LocalDatabase
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let lookAndFeelRepository: LookAndFeelRepositoryType
     let logger: FileLogger
     let router: AccountRouter
@@ -36,7 +36,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
     private var cancellables = Set<AnyCancellable>()
 
     init(localDatabase: LocalDatabase,
-         sessionManager: SessionManaging,
+         sessionManager: SessionManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger,
          router: AccountRouter,

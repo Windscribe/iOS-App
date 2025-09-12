@@ -25,7 +25,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
     @Published var shouldDismiss: Bool = false
     @Published var isDarkMode: Bool = false
 
-    private let sessionManager: SessionManaging
+    private let sessionManager: SessionManager
     private let localDatabase: LocalDatabase
     private let apiManager: APIManager
     private let logger: FileLogger
@@ -33,7 +33,7 @@ final class ConfirmEmailViewModelImpl: ObservableObject, ConfirmEmailViewModel {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(sessionManager: SessionManaging,
+    init(sessionManager: SessionManager,
          localDatabase: LocalDatabase,
          apiManager: APIManager,
          lookAndFeelRepository: LookAndFeelRepositoryType,

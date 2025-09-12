@@ -44,7 +44,7 @@ class AccountViewModel: AccountViewModelType {
     let alertManager: AlertManagerV2
     let apiCallManager: APIManager
     let logger: FileLogger
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let localDatabase: LocalDatabase
 
     var sections = [AccountSectionItem]()
@@ -56,7 +56,7 @@ class AccountViewModel: AccountViewModelType {
     var sessionUpdatedTrigger = PublishSubject<Void>()
     let session = BehaviorSubject<Session?>(value: nil)
 
-    init(apiCallManager: APIManager, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManaging, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
+    init(apiCallManager: APIManager, alertManager: AlertManagerV2, lookAndFeelRepository: LookAndFeelRepositoryType, sessionManager: SessionManager, logger: FileLogger, languageManager: LanguageManager, localDatabase: LocalDatabase) {
         self.apiCallManager = apiCallManager
         self.logger = logger
         self.sessionManager = sessionManager

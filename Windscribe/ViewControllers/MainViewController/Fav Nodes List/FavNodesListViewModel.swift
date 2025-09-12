@@ -24,14 +24,14 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     var logger: FileLogger
     var vpnManager: VPNManager
     var connectivity: Connectivity
-    var sessionManager: SessionManaging
+    var sessionManager: SessionManager
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
          vpnManager: VPNManager,
          connectivity: Connectivity,
-         sessionManager: SessionManaging,
+         sessionManager: SessionManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger

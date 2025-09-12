@@ -56,7 +56,7 @@ class ServerDetailTableViewCell: UITableViewCell {
         return myPreferredFocusedView
     }
 
-    lazy var sessionManager: SessionManaging = Assembler.resolve(SessionManaging.self)
+    lazy var sessionManager: SessionManager = Assembler.resolve(SessionManager.self)
 
     var displayingFavGroup: GroupModel? {
         didSet {

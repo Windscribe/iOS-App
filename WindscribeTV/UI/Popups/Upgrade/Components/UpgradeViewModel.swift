@@ -52,7 +52,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     let alertManager: AlertManagerV2
     let localDatabase: LocalDatabase
     let apiManager: APIManager
-    let sessionManager: SessionManaging
+    let sessionManager: SessionManager
     let preferences: Preferences
     var inAppPurchaseManager: InAppPurchaseManager
     let pushNotificationManager: PushNotificationManager
@@ -73,7 +73,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlan]?
 
-    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManaging, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManager, billingRepository: BillingRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
+    init(alertManager: AlertManagerV2, localDatabase: LocalDatabase, apiManager: APIManager, sessionManager: SessionManager, preferences: Preferences, inAppManager: InAppPurchaseManager, pushNotificationManager: PushNotificationManager, billingRepository: BillingRepository, logger: FileLogger, lookAndFeelRepository: LookAndFeelRepositoryType) {
         self.alertManager = alertManager
         self.localDatabase = localDatabase
         self.apiManager = apiManager
