@@ -36,6 +36,11 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
         isFavourited = isNodeFavorited()
     }
 
+    override var isSignalVisible: Bool { !isDisabled }
+    override var isDisabled: Bool {
+        return !(displayingGroup?.canConnect() ?? true)
+    }
+
     override var serverHealth: CGFloat {
         CGFloat(self.displayingGroup?.health ?? 0)
     }
