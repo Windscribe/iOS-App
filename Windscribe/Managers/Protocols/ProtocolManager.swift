@@ -35,6 +35,7 @@ protocol ProtocolManagerType {
     func onConnectStateChange(state: NEVPNStatus)
     func scheduleTimer()
     func saveCurrentWifiNetworks()
+    func cancelFailoverTimer()
 }
 
 class ProtocolManager: ProtocolManagerType {
@@ -486,5 +487,19 @@ extension ProtocolManager {
                 onUserSelectProtocol(proto: nextUpProtocol.protocolPort, connectionType: .failover)
             }
         }
+    }
+
+    /// Cancels the failover countdown timer when user dismisses the protocol switch screen
+    /// This prevents automatic protocol switching after user has dismissed the dialog
+    func cancelFailoverTimer() {
+        logger.logI("ProtocolManager", "Failover timer cancelled by user - stopping countdown")
+        
+        // Reset any nextUp protocols back to normal state
+        if let nextUpProtocol = protocolsToConnectList.first(where: { $0.viewType.isNextup }) {
+            setPriority(proto: nextUpProtocol.protocolPort.protocolName, type: .normal)
+        }
+        
+        // Stop the timer
+        stopCountdownTimer()
     }
 }
