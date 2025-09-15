@@ -48,31 +48,33 @@ class SessionManager: SessionManaging {
     }
 
     @objc func keepSessionUpdated() {
-        if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-            sessionFetchInProgress = true
-            localDatabase.getSession().first()
-                .flatMap { savedSession in
-                    if case _ = savedSession {
-                        self.localDatabase.saveOldSession()
-                        return self.apiManager.getSession(nil)
-                    } else {
-                        return Single.error(Errors.sessionIsInvalid)
-                    }
-                }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
-                    self?.userRepo.update(session: session)
-                    self?.logger.logI("SessionManager", "Session updated for \(session.username)")
-                    self?.sessionFetchInProgress = false
-                }, onFailure: { [weak self] error in
-                    if let errors = error as? Errors,
-                       errors == .sessionIsInvalid {
-                        self?.logoutUser()
-                    } else {
-                        self?.logger.logE("SessionManager", "Failed to update error: \(error)")
-                    }
-                    self?.sessionFetchInProgress = false
-                }).disposed(by: disposeBag)
+        Task { @MainActor in
+            if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
+                sessionFetchInProgress = true
+                localDatabase.getSession().first()
+                    .flatMap { savedSession in
+                        if case _ = savedSession {
+                            self.localDatabase.saveOldSession()
+                            return self.apiManager.getSession(nil)
+                        } else {
+                            return Single.error(Errors.sessionIsInvalid)
+                        }
+                    }.observe(on: MainScheduler.asyncInstance).subscribe(onSuccess: { [weak self] session in
+                        self?.userRepo.update(session: session)
+                        self?.logger.logI("SessionManager", "Session updated for \(session.username)")
+                        self?.sessionFetchInProgress = false
+                    }, onFailure: { [weak self] error in
+                        if let errors = error as? Errors,
+                           errors == .sessionIsInvalid {
+                            self?.logoutUser()
+                        } else {
+                            self?.logger.logE("SessionManager", "Failed to update error: \(error)")
+                        }
+                        self?.sessionFetchInProgress = false
+                    }).disposed(by: disposeBag)
+            }
+            updateServerConfigs()
         }
-        updateServerConfigs()
     }
 
     func getUppdatedSession() -> Single<Session> {
