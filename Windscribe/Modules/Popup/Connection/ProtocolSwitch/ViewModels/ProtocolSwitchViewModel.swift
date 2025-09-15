@@ -176,11 +176,16 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     }
 
     func dismiss() {
+        // Cancel any active failover timer to prevent automatic protocol switching
+        protocolManager.cancelFailoverTimer()
         shouldDismiss = true
     }
 
     /// Handles cancel button action based on current connection state
     func cancelSelection() {
+        // Always cancel any active failover timer when user cancels
+        protocolManager.cancelFailoverTimer()
+        
         if vpnManager.isConnected() {
             // Connected state - just dismiss the dialog
             logger.logI("ProtocolSwitchViewModel", "Canceling protocol selection - connected")
