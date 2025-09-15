@@ -40,6 +40,14 @@ struct DataLeftModel {
         return isPremium || billingPlanId == -9
     }
 
+    var isUserUnlimited: Bool {
+        return billingPlanId == -9
+    }
+
+    var isUserCustom: Bool {
+        return !isUserPro && !alc.isEmpty
+    }
+
     var hasUserAddedEmail: Bool {
         return email != ""
     }

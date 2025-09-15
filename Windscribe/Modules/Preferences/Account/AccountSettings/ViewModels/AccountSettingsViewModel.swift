@@ -106,6 +106,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 guard let self = self else { return }
+
                 if case let .failure(error) = completion {
                     guard let session = localDatabase.getSessionSync() else {
                         self.loadingState = .error(error.localizedDescription)
@@ -171,9 +172,7 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                 title: session.isUserPro
                     ? TextsAsset.UpgradeView.unlimitedData
                     : "\(session.getDataMax())/\(TextsAsset.UpgradeView.month)",
-                value: session.isUserPro
-                    ? (session.billingPlanId == -9 ? TextsAsset.unlimited : TextsAsset.pro)
-                    : TextsAsset.Account.freeAccountDescription
+                value: getUserTypeDisplayText(from: session)
             ),
             action: nil
         ))
@@ -336,6 +335,15 @@ final class AccountSettingsViewModelImpl: AccountSettingsViewModel {
                 }
             })
             .store(in: &cancellables)
+    }
+
+
+    private func getUserTypeDisplayText(from session: Session) -> String {
+        if session.isUserPro {
+            return session.isUserUnlimited ? TextsAsset.unlimited : TextsAsset.pro
+        } else {
+            return session.isUserCustom ? TextsAsset.General.custom : TextsAsset.Account.freeAccountDescription
+        }
     }
 
     private func calculateEmailStatus(from session: Session) -> AccountEmailStatusType {
