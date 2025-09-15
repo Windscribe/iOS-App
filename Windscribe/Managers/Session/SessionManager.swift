@@ -60,34 +60,32 @@ class SessionManagerImpl: SessionManager {
     }
 
     @objc func keepSessionUpdated() {
-        if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
-            guard let savedSession = localDatabase.getSessionSync() else {
-                self.logoutUser()
-                return
-            }
-            sessionFetchInProgress = true
-            localDatabase.saveOldSession()
-            Task {
+        Task { @MainActor in
+            if !sessionFetchInProgress && preferences.getSessionAuthHash() != nil {
+                guard let savedSession = localDatabase.getSessionSync() else {
+                    self.logoutUser()
+                    return
+                }
+                sessionFetchInProgress = true
+                localDatabase.saveOldSession()
+                
                 do {
                     let session = try await self.apiManager.getSession(nil)
-                    await MainActor.run {
-                        self.userRepo.update(session: session)
-                        self.logger.logI("SessionManager", "Session updated for \(session.username)")
-                        self.sessionFetchInProgress = false
-                    }
+                    self.userRepo.update(session: session)
+                    self.logger.logI("SessionManager", "Session updated for \(session.username)")
+                    self.sessionFetchInProgress = false
                 } catch let error {
-                    await MainActor.run {
-                        if let errors = error as? Errors,
-                           errors == .sessionIsInvalid {
-                            self.logoutUser()
-                        } else {
-                            self.logger.logE("SessionManager", "Failed to update error: \(error)")
-                        }
-                        self.sessionFetchInProgress = false
+                    if let errors = error as? Errors,
+                       errors == .sessionIsInvalid {
+                        self.logoutUser()
+                    } else {
+                        self.logger.logE("SessionManager", "Failed to update error: \(error)")
                     }
+                    self.sessionFetchInProgress = false
                 }
+                
+                updateServerConfigs()
             }
-            updateServerConfigs()
         }
     }
 
