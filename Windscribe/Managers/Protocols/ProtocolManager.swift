@@ -493,12 +493,12 @@ extension ProtocolManager {
     /// This prevents automatic protocol switching after user has dismissed the dialog
     func cancelFailoverTimer() {
         logger.logI("ProtocolManager", "Failover timer cancelled by user - stopping countdown")
-        
+
         // Reset any nextUp protocols back to normal state
         if let nextUpProtocol = protocolsToConnectList.first(where: { $0.viewType.isNextup }) {
             setPriority(proto: nextUpProtocol.protocolPort.protocolName, type: .normal)
         }
-        
+
         // Stop the timer
         stopCountdownTimer()
     }
