@@ -38,7 +38,23 @@ class NodeTableViewCellModel: BaseNodeCellViewModel, NodeTableViewCellModelType 
 
     override var isSignalVisible: Bool { !isDisabled }
     override var isDisabled: Bool {
-        return !(displayingGroup?.canConnect() ?? true)
+        guard let displayingGroup else { return true }
+        guard let session = sessionManager.session else { return true }
+
+        // If there is no best node means user cannot connect to this location
+        if displayingGroup.bestNode == nil {
+            // this can be because the user is free and the location is pro
+            // and in that case we should just show it as pro location - it is not disabled
+            if !session.isUserPro && displayingGroup.premiumOnly { return false }
+            // if the locations has a node that is not best node check forceDisconnect
+            // if it forces to disconnect then the location is disabled
+            if let node = displayingGroup.nodes.first {
+                return node.forceDisconnect
+            }
+            // this locations is disabled as all the reasons have been exausted
+            return true
+        }
+        return false
     }
 
     override var serverHealth: CGFloat {
