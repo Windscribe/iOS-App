@@ -68,7 +68,7 @@ class SessionManagerImpl: SessionManager {
                 }
                 sessionFetchInProgress = true
                 localDatabase.saveOldSession()
-                
+
                 do {
                     let session = try await self.apiManager.getSession(nil)
                     self.userRepo.update(session: session)
@@ -83,7 +83,7 @@ class SessionManagerImpl: SessionManager {
                     }
                     self.sessionFetchInProgress = false
                 }
-                
+
                 updateServerConfigs()
             }
         }
