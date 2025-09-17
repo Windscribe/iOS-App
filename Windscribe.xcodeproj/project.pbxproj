@@ -897,6 +897,10 @@
 		C5B8DF052C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
 		C5B8DF072C9FD3450072333E /* VPNErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B8DF012C9FD3450072333E /* VPNErrors.swift */; };
+		C5BC5F002E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
+		C5BC5F012E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7A195D2C36F71900851AE2 /* DNSSettingsManager.swift */; };
+		C5BC5F022E7B6402006A5AB3 /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
+		C5BC5F032E7B6402006A5AB3 /* RegexConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E818F112C3D6D560088066C /* RegexConstants.swift */; };
 		C5BF0D52277454EB009C95DF /* PushNotificationPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF0D51277454EB009C95DF /* PushNotificationPayload.swift */; };
 		C5BF38502B917EF300AA725C /* UserDataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5BF384F2B917EF300AA725C /* UserDataRepository.swift */; };
 		C5D0E3ED29BB85280091FB14 /* NETunnelProviderManager+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D0E3EC29BB85280091FB14 /* NETunnelProviderManager+Ext.swift */; };
@@ -7134,6 +7138,7 @@
 				C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */,
 				C5DD96072CA7257500FFABBC /* Data+Extension.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
+				C5BC5F002E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
 				F469F0DE2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				1E3F77612DB13CA0008308A8 /* ExportedLocations.swift in Sources */,
@@ -7146,6 +7151,7 @@
 				C50F20D12B62110500266B23 /* Bundle+Extension.swift in Sources */,
 				C52DA5112B63821000E5C571 /* RepositoryErrors.swift in Sources */,
 				C585F3E32C8E79A400A70524 /* Preferences+Favourites.swift in Sources */,
+				C5BC5F022E7B6402006A5AB3 /* RegexConstants.swift in Sources */,
 				1E7A7A922E007DAF00A6EAA6 /* SiriOldIntents.intentdefinition in Sources */,
 				C56FCBE02B2B8C52008DE7D4 /* Preferences.swift in Sources */,
 				C52DA52F2B63913300E5C571 /* FileDatabaseImpl.swift in Sources */,
@@ -7265,6 +7271,7 @@
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
+				C5BC5F032E7B6402006A5AB3 /* RegexConstants.swift in Sources */,
 				F469F0DC2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
 				C561237D2C5F25790090EB5A /* Resolver.swift in Sources */,
@@ -7288,6 +7295,7 @@
 				C5DEF9F12C52ED9700696D06 /* String+ArrayConversion.swift in Sources */,
 				1E60E0282CAD6F5A00623CD5 /* Connect.swift in Sources */,
 				C50F20D32B62110800266B23 /* Bundle+Extension.swift in Sources */,
+				C5BC5F012E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
 				C5B8DF062C9FD3450072333E /* VPNErrors.swift in Sources */,
 				C571C6782C135C3600786DA5 /* UserScope.swift in Sources */,
 				C56FCBED2B2B8E50008DE7D4 /* SharedKeys.swift in Sources */,
