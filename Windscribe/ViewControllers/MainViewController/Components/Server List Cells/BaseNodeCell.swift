@@ -73,15 +73,16 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
     var hasProLocked: Bool { false }
 
     var signalImage: UIImage? {
+        if minTime < 0 { return UIImage(named: ImagesAsset.CellSignalBars.none) }
         switch getSignalLevel(minTime: minTime) {
         case 1:
-            UIImage(named: ImagesAsset.CellSignalBars.low)
+            return UIImage(named: ImagesAsset.CellSignalBars.low)
         case 2:
-            UIImage(named: ImagesAsset.CellSignalBars.medium)
+            return UIImage(named: ImagesAsset.CellSignalBars.medium)
         case 3:
-            UIImage(named: ImagesAsset.CellSignalBars.full)
+            return UIImage(named: ImagesAsset.CellSignalBars.full)
         default:
-            UIImage(named: ImagesAsset.CellSignalBars.full)
+            return UIImage(named: ImagesAsset.CellSignalBars.full)
         }
     }
 

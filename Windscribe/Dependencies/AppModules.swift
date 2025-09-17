@@ -83,7 +83,13 @@ class Repository: Assembly {
             SecuredNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!, localdatabase: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
-            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(), database: r.resolve(LocalDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, logger: logger, locationsManager: r.resolve(LocationsManager.self)!)
+            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(),
+                                  database: r.resolve(LocalDatabase.self)!,
+                                  vpnManager: r.resolve(VPNManager.self)!,
+                                  logger: logger,
+                                  locationsManager: r.resolve(LocationsManager.self)!,
+                                  preferences: r.resolve(Preferences.self)!,
+                                  advanceRepository: r.resolve(AdvanceRepository.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
             EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!, locationsManager: r.resolve(LocationsManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)

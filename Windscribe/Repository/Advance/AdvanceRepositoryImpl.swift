@@ -41,6 +41,11 @@ class AdvanceRepositoryImpl: AdvanceRepository {
         return getValue(key: wsForceNode)
     }
 
+    func getPingType() -> Int32 {
+        let pingType = getValue(key: wsUsesICMPPings) ?? "false"
+        return pingType == "true" ? 1 : 0
+    }
+
     private func getValue(key: String) -> String? {
         return preferences.getAdvanceParams().splitToArray(separator: "\n").first { keyValue in
             let pair = keyValue.splitToArray(separator: "=")

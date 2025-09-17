@@ -210,6 +210,7 @@ enum ImagesAsset {
     }
 
     enum CellSignalBars {
+        static let none = "cell-signal-none"
         static let low = "cell-signal-low"
         static let medium = "cell-signal-med"
         static let full = "cell-signal-full"

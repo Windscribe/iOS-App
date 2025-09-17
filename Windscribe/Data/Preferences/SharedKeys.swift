@@ -37,6 +37,7 @@ enum SharedKeys {
     static let selectedProtocol = "selectedProtocol"
     static let serverHealth = "serverHealth"
     static let darkMode = "darkMode"
+    static let pingMethod = "pingMethod"
     static let connectedDNSValue = "connectedDNSValue"
     static let appSkinType = "appSkinType"
 

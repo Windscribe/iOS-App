@@ -39,6 +39,9 @@ protocol Preferences {
     func getDarkMode() -> Observable<Bool?>
     func saveShowServerHealth(show: Bool)
     func getShowServerHealth() -> Observable<Bool?>
+    func savePingMethod(method: String)
+    func getPingMethod() -> Observable<String?>
+    func getPingMethodSync() -> String
 
     // PersistenceManager+UserDefaults
     func getConnectionCount() -> Int?

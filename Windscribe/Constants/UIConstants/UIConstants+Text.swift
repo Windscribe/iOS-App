@@ -1439,6 +1439,8 @@ enum TextsAsset {
         return ["Geography".localized, "Alphabet".localized, "Latency".localized]
     }
 
+    static let http = "http"
+    static let icmp = "icmp"
     static let openVPN = "OpenVPN"
     static let iKEv2 = "IKEv2"
     static let wireGuard = "WireGuard"
