@@ -27,7 +27,15 @@ extension UINavigationBar {
 
         appearance.backButtonAppearance = backButtonAppearance
 
-        if let backImage = UIImage(named: "back_chevron") {
+        let backImageName: String
+
+        if #available(iOS 26.0, *) {
+            backImageName = "back_chevron_glass"
+        } else {
+            backImageName = "back_chevron"
+        }
+
+        if let backImage = UIImage(named: backImageName) {
             appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
         }
 

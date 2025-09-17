@@ -46,7 +46,17 @@ class RoutedHostingController<Content: View>: UIHostingController<Content>, UIGe
                 }
                 appearance.backButtonAppearance = backButtonAppearance
 
-                if let templateChevronImage = UIImage(named: "back_chevron")?.withRenderingMode(.alwaysTemplate) {
+                // Using a diffrent back button image for Liquid Glass
+                let backImageName: String
+
+                if #available(iOS 26.0, *) {
+                    backImageName = "back_chevron_glass"
+                } else {
+                    backImageName = "back_chevron"
+                }
+
+                // Template Image created for teh back button diffrent colro modes
+                if let templateChevronImage = UIImage(named: backImageName)?.withRenderingMode(.alwaysTemplate) {
                     let colorChevron = templateChevronImage.withTintColor(titleColor, renderingMode: .alwaysOriginal)
                     appearance.setBackIndicatorImage(colorChevron, transitionMaskImage: templateChevronImage)
                 }

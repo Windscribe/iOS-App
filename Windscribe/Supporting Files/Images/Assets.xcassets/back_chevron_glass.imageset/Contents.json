@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "back_chevron_glass.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
