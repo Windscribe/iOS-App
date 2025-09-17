@@ -62,5 +62,8 @@ extension Container {
             }
             return WSNet.instance().serverAPI()
         }.inObjectScope(.container)
+        register(DNSSettingsManagerType.self) { _ in
+            DNSSettingsManager()
+        }.inObjectScope(.container)
     }
 }

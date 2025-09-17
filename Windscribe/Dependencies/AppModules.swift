@@ -143,10 +143,6 @@ class Managers: Assembly {
             HTMLParser(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
 
-        container.register(DNSSettingsManagerType.self) { r in
-            DNSSettingsManager()
-        }.inObjectScope(.userScope)
-
         container.register(SoundManaging.self) { r in
             SoundManager(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
