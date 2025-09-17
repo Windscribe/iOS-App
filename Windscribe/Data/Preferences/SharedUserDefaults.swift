@@ -408,6 +408,18 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.rx.observe(Bool.self, SharedKeys.serverHealth) ?? Observable.just(DefaultValues.showServerHealth)
     }
 
+    func savePingMethod(method: String) {
+        setString(method, forKey: SharedKeys.pingMethod)
+    }
+
+    func getPingMethod() -> RxSwift.Observable<String?> {
+        return sharedDefault?.rx.observe(String.self, SharedKeys.pingMethod) ?? Observable.just(DefaultValues.pingMethod)
+    }
+
+    func getPingMethodSync() -> String {
+        return sharedDefault?.string(forKey: SharedKeys.pingMethod) ?? DefaultValues.pingMethod
+    }
+
     func saveAdvanceParams(params: String) {
         setString(params, forKey: SharedKeys.advanceParams)
     }

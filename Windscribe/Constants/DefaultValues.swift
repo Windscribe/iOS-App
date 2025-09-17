@@ -31,4 +31,5 @@ enum DefaultValues {
     static let showServerHealth = false
     static let circumventCensorship = false
     static let aspectRatio = "Stretch"
+    static let pingMethod = "http"
 }

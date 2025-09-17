@@ -11,6 +11,7 @@ import Foundation
 // Keys
 let wsServerOverrride = "ws-serverlist-country-override"
 let wsForceNode = "ws-force-node"
+let wsUsesICMPPings = "ws-use-icmp-pings"
 // Values
 let ignoreCountryOverride = "ignore"
 let ignoreCountryCode = "ZZ"

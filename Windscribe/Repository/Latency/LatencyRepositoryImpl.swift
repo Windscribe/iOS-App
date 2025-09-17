@@ -20,6 +20,8 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let logger: FileLogger
     private let vpnManager: VPNManager
     private let locationsManager: LocationsManager
+    private let preferences: Preferences
+    private let advanceRepository: AdvanceRepository
     private var sessionManager: SessionManager {
         return Assembler.resolve(SessionManager.self)
     }
@@ -30,12 +32,20 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
 
-    init(pingManager: WSNetPingManager, database: LocalDatabase, vpnManager: VPNManager, logger: FileLogger, locationsManager: LocationsManager) {
+    init(pingManager: WSNetPingManager,
+         database: LocalDatabase,
+         vpnManager: VPNManager,
+         logger: FileLogger,
+         locationsManager: LocationsManager,
+         preferences: Preferences,
+         advanceRepository: AdvanceRepository) {
         self.pingManager = pingManager
         self.database = database
         self.vpnManager = vpnManager
         self.logger = logger
         self.locationsManager = locationsManager
+        self.preferences = preferences
+        self.advanceRepository = advanceRepository
         latency.onNext(self.database.getAllPingData())
         observeFavouriteList()
     }
@@ -216,7 +226,9 @@ class LatencyRepositoryImpl: LatencyRepository {
                                 promise(.success($0))
                             }
                         }
-                    self.pingManager.ping(ip, hostname: host, pingType: 0) { ip, _, time, success in
+
+                    self.pingManager.ping(ip, hostname: host,
+                                          pingType: self.advanceRepository.getPingType()) { ip, _, time, success in
                         if !hasDeliveredResult {
                             hasDeliveredResult = true
                             timeoutCancellable.cancel() // Cancel timeout if we get a response
