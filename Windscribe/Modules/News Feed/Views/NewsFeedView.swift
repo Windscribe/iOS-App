@@ -95,7 +95,13 @@ struct NewsFeedView: View {
                             .imageScale(.medium)
                             .foregroundColor(.from(.iconColor, viewModel.isDarkMode))
                     })
-                    .padding(.trailing, 16)
+                    .padding(.trailing, {
+                        if #available(iOS 26.0, *) {
+                            return 0
+                        } else {
+                            return 16
+                        }
+                    }())
                 )
             }
         }
