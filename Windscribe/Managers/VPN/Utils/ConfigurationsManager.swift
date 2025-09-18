@@ -34,7 +34,7 @@ class ConfigurationsManager {
     weak var delegate: ConfigurationsManagerDelegate?
 
     var managers: [NEVPNManager] = []
-    var reloadManagersTrigger = PassthroughSubject<Void, Never>()
+    var reloadManagersTrigger = CurrentValueSubject<Void, Never>(())
     var cancellables = Set<AnyCancellable>()
 
     /// Wait for disconnect event after manager is disabled.
