@@ -8,8 +8,7 @@
 
 import Foundation
 import RealmSwift
-import RxCocoa
-import RxSwift
+import Combine
 
 enum LocationType {
     case server
@@ -17,10 +16,46 @@ enum LocationType {
     case custom
 }
 
-class SharedSecretDefaults: Preferences {
-    static let shared = SharedSecretDefaults()
-    let sharedDefault = UserDefaults(suiteName: SharedKeys.sharedGroup)
-    let standardDefault = UserDefaults.standard
+class PreferencesImpl: Preferences {
+    let sharedDefault: UserDefaults?
+
+    init() {
+        self.sharedDefault = UserDefaults(suiteName: SharedKeys.sharedGroup)
+    }
+
+    // MARK: - Generic Combine Helpers
+
+    private func observeKey<T>(_ key: String, type: T.Type, defaultValue: T?) -> AnyPublisher<T?, Never> {
+        guard let sharedDefault = sharedDefault else {
+            return Just(defaultValue).eraseToAnyPublisher()
+        }
+
+        return sharedDefault.publisher(for: key, type: type)
+            .map { $0 ?? defaultValue }
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+
+    private func observeKeyEmpty<T>(_ key: String, type: T.Type) -> AnyPublisher<T?, Never> {
+        guard let sharedDefault = sharedDefault else {
+            return Empty().eraseToAnyPublisher()
+        }
+
+        return sharedDefault.publisher(for: key, type: type)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
+
+    private func observeKeyNonOptional<T>(_ key: String, type: T.Type, defaultValue: T, transform: @escaping (T?) -> T) -> AnyPublisher<T, Never> {
+        guard let sharedDefault = sharedDefault else {
+            return Just(defaultValue).eraseToAnyPublisher()
+        }
+
+        return sharedDefault.publisher(for: key, type: type)
+            .map(transform)
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+    }
 
     func saveShowedShareDialog(showed: Bool = true) {
         setBool(showed, forKey: SharedKeys.referAndShareUserDefautsKeys)
@@ -42,8 +77,8 @@ class SharedSecretDefaults: Preferences {
         setString(language.name, forKey: SharedKeys.languageManagerSelectedLanguage)
     }
 
-    func getLanguageManagerSelectedLanguage() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.languageManagerSelectedLanguage) ?? Observable.just(Languages.english.rawValue)
+    func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.languageManagerSelectedLanguage, type: String.self, defaultValue: Languages.english.rawValue)
     }
 
     func getLanguageManagerLanguage() -> String? {
@@ -90,16 +125,16 @@ class SharedSecretDefaults: Preferences {
         setString(mode, forKey: SharedKeys.connectedDNS)
     }
 
-    func getConnectionMode() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.connectionMode) ?? Observable.just(DefaultValues.connectionMode)
+    func getConnectionMode() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.connectionMode, type: String.self, defaultValue: DefaultValues.connectionMode)
     }
 
     func getConnectedDNS() -> String {
         return getString(forKey: SharedKeys.connectedDNS) ?? DefaultValues.connectedDNS
     }
 
-    func getConnectedDNSObservable() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.connectedDNS) ?? Observable.just(DefaultValues.connectedDNS)
+    func getConnectedDNSObservable() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.connectedDNS, type: String.self, defaultValue: DefaultValues.connectedDNS)
     }
 
     func getConnectionModeSync() -> String {
@@ -110,8 +145,8 @@ class SharedSecretDefaults: Preferences {
         setBool(autoSecure, forKey: SharedKeys.autoSecureNewNetworks)
     }
 
-    func getAutoSecureNewNetworks() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.autoSecureNewNetworks) ?? Observable.just(DefaultValues.autoSecureNewNetworks)
+    func getAutoSecureNewNetworks() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.autoSecureNewNetworks, type: Bool.self, defaultValue: DefaultValues.autoSecureNewNetworks)
     }
 
     func saveBlurStaticIpAddress(bool: Bool?) {
@@ -299,40 +334,40 @@ class SharedSecretDefaults: Preferences {
         setString(order, forKey: SharedKeys.orderLocationsBy)
     }
 
-    func getOrderLocationsBy() -> RxSwift.Observable<String?> {
-        sharedDefault?.rx.observe(String.self, SharedKeys.orderLocationsBy) ?? Observable.just(DefaultValues.orderLocationsBy)
+    func getOrderLocationsBy() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.orderLocationsBy, type: String.self, defaultValue: DefaultValues.orderLocationsBy)
     }
 
     func saveAppSkinPreferences(type: String) {
         setString(type, forKey: SharedKeys.appSkinType)
     }
 
-    func getAppSkinPreferences() -> RxSwift.Observable<String?> {
-        sharedDefault?.rx.observe(String.self, SharedKeys.appSkinType) ?? Observable.just(DefaultValues.appSkin)
+    func getAppSkinPreferences() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.appSkinType, type: String.self, defaultValue: DefaultValues.appSkin)
     }
 
     func saveLanguage(language: String) {
         setString(language, forKey: SharedKeys.language)
     }
 
-    func getLanguage() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.language) ?? Observable.just(DefaultValues.language)
+    func getLanguage() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.language, type: String.self, defaultValue: DefaultValues.language)
     }
 
     func saveFirewallMode(firewall: Bool) {
         setBool(firewall, forKey: SharedKeys.firewall)
     }
 
-    func getFirewallMode() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.firewall) ?? Observable.just(DefaultValues.firewallMode)
+    func getFirewallMode() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.firewall, type: Bool.self, defaultValue: DefaultValues.firewallMode)
     }
 
     func saveKillSwitch(killSwitch: Bool) {
         setBool(killSwitch, forKey: SharedKeys.killSwitch)
     }
 
-    func getKillSwitch() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.killSwitch) ?? Observable.just(DefaultValues.killSwitch)
+    func getKillSwitch() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.killSwitch, type: Bool.self, defaultValue: DefaultValues.killSwitch)
     }
 
     func getKillSwitchSync() -> Bool {
@@ -347,16 +382,16 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.bool(forKey: SharedKeys.allowLanMode) ?? DefaultValues.allowLANMode
     }
 
-    func getAllowLAN() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.allowLanMode) ?? Observable.just(DefaultValues.allowLANMode)
+    func getAllowLAN() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.allowLanMode, type: Bool.self, defaultValue: DefaultValues.allowLANMode)
     }
 
     func saveHapticFeedback(haptic: Bool) {
         setBool(haptic, forKey: SharedKeys.hapticFeedback)
     }
 
-    func getHapticFeedback() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.hapticFeedback) ?? Observable.just(DefaultValues.hapticFeedback)
+    func getHapticFeedback() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.hapticFeedback, type: Bool.self, defaultValue: DefaultValues.hapticFeedback)
     }
 
     func saveCustomDNSValue(value: DNSValue) {
@@ -371,8 +406,8 @@ class SharedSecretDefaults: Preferences {
         setString(selectedProtocol, forKey: SharedKeys.selectedProtocol)
     }
 
-    func getSelectedProtocol() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.selectedProtocol) ?? Observable.just(DefaultValues.protocol)
+    func getSelectedProtocol() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.selectedProtocol, type: String.self, defaultValue: DefaultValues.protocol)
     }
 
     func getSelectedProtocolSync() -> String {
@@ -387,33 +422,32 @@ class SharedSecretDefaults: Preferences {
         setString(port, forKey: SharedKeys.port)
     }
 
-    func getSelectedPort() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.port) ?? Observable.just(DefaultValues.port)
+    func getSelectedPort() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.port, type: String.self, defaultValue: DefaultValues.port)
     }
 
     func saveDarkMode(darkMode: Bool) {
         setBool(darkMode, forKey: SharedKeys.darkMode)
     }
 
-    func getDarkMode() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.darkMode) ?? Observable.just(DefaultValues.darkMode)
+    func getDarkMode() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.darkMode, type: Bool.self, defaultValue: DefaultValues.darkMode)
     }
-
 
     func saveShowServerHealth(show: Bool) {
         setBool(show, forKey: SharedKeys.serverHealth)
     }
 
-    func getShowServerHealth() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.serverHealth) ?? Observable.just(DefaultValues.showServerHealth)
+    func getShowServerHealth() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.serverHealth, type: Bool.self, defaultValue: DefaultValues.showServerHealth)
     }
 
     func savePingMethod(method: String) {
         setString(method, forKey: SharedKeys.pingMethod)
     }
 
-    func getPingMethod() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.pingMethod) ?? Observable.just(DefaultValues.pingMethod)
+    func getPingMethod() -> AnyPublisher<String?, Never> {
+        return observeKey(SharedKeys.pingMethod, type: String.self, defaultValue: DefaultValues.pingMethod)
     }
 
     func getPingMethodSync() -> String {
@@ -424,8 +458,8 @@ class SharedSecretDefaults: Preferences {
         setString(params, forKey: SharedKeys.advanceParams)
     }
 
-    func getAdvanceParams() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.advanceParams) ?? Observable.empty()
+    func getAdvanceParams() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.advanceParams, type: String.self)
     }
 
     func getAdvanceParams() -> String? {
@@ -452,8 +486,8 @@ class SharedSecretDefaults: Preferences {
         setBool(status, forKey: SharedKeys.circumventCensorship)
     }
 
-    func getCircumventCensorshipEnabled() -> RxSwift.Observable<Bool> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.circumventCensorship).map { $0 ?? self.isRestrictedCountry() } ?? Observable.just(isRestrictedCountry())
+    func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never> {
+        return observeKeyNonOptional(SharedKeys.circumventCensorship, type: Bool.self, defaultValue: isRestrictedCountry()) { $0 ?? self.isRestrictedCountry() }
     }
 
     func isCircumventCensorshipEnabled() -> Bool {
@@ -495,8 +529,8 @@ class SharedSecretDefaults: Preferences {
         setBool(value, forKey: SharedKeys.forceDisconnect)
     }
 
-    func getForceDisconnect() -> RxSwift.Observable<Bool?> {
-        return sharedDefault?.rx.observe(Bool.self, SharedKeys.forceDisconnect) ?? Observable.just(false)
+    func getForceDisconnect() -> AnyPublisher<Bool?, Never> {
+        return observeKey(SharedKeys.forceDisconnect, type: Bool.self, defaultValue: false)
     }
 
     func saveConnectionRequested(value: Bool) {
@@ -560,8 +594,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.aspectRatio)
     }
 
-    func aspectRatio() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.aspectRatio) ?? Observable.empty()
+    func aspectRatio() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.aspectRatio, type: String.self)
     }
 
     // Sounds
@@ -606,8 +640,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.connectBackgroundEffect)
     }
 
-    func backgroundEffectConnect() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.connectBackgroundEffect) ?? Observable.empty()
+    func backgroundEffectConnect() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.connectBackgroundEffect, type: String.self)
     }
 
     func saveBackgroundCustomConnectPath(value: String) {
@@ -618,8 +652,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.connectBackgroundCustomPath)
     }
 
-    func backgroundCustomConnectPath() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.connectBackgroundCustomPath) ?? Observable.empty()
+    func backgroundCustomConnectPath() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.connectBackgroundCustomPath, type: String.self)
     }
 
     func saveBackgroundEffectDisconnect(value: String) {
@@ -630,8 +664,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.disconnectBackgroundEffect)
     }
 
-    func backgroundEffectDisconnect() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.disconnectBackgroundEffect) ?? Observable.empty()
+    func backgroundEffectDisconnect() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.disconnectBackgroundEffect, type: String.self)
     }
 
     func saveBackgroundCustomDisconnectPath(value: String) {
@@ -642,8 +676,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.string(forKey: SharedKeys.disconnectBackgroundCustomPath)
     }
 
-    func backgroundCustomDisconnectPath() -> RxSwift.Observable<String?> {
-        return sharedDefault?.rx.observe(String.self, SharedKeys.disconnectBackgroundCustomPath) ?? Observable.empty()
+    func backgroundCustomDisconnectPath() -> AnyPublisher<String?, Never> {
+        return observeKeyEmpty(SharedKeys.disconnectBackgroundCustomPath, type: String.self)
     }
 
     // Custom Locations Names {
@@ -654,32 +688,24 @@ class SharedSecretDefaults: Preferences {
     func getCustomLocationsNames() -> [ExportedRegion] {
         getObject(forKey: SharedKeys.customLocationNames) ?? []
     }
+}
 
-    // MARK: - Base Types
+// MARK: Utility Methods
 
-    func setString(_ value: String?, forKey: String) {
-        sharedDefault?.setValue(value, forKey: forKey)
-    }
-
-    func setBool(_ value: Bool?, forKey: String) {
-        sharedDefault?.setValue(value, forKey: forKey)
-    }
-
+extension PreferencesImpl {
     func getString(forKey: String) -> String? {
         return sharedDefault?.string(forKey: forKey)
     }
 
-    func removeObjects(forKey: [String]) {
-        for key in forKey {
-            sharedDefault?.removeObject(forKey: key)
-        }
+    func setString(_ value: String?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
     }
 
     func getBool(key: String) -> Bool {
         return sharedDefault?.bool(forKey: key) ?? false
     }
 
-    func setInt(_ value: Int?, forKey: String) {
+    func setBool(_ value: Bool?, forKey: String) {
         sharedDefault?.setValue(value, forKey: forKey)
     }
 
@@ -687,8 +713,8 @@ class SharedSecretDefaults: Preferences {
         return sharedDefault?.integer(forKey: forKey)
     }
 
-    func setDate(_: Any?, forKey: String) {
-        sharedDefault?.set(Date(), forKey: forKey)
+    func setInt(_ value: Int?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
     }
 
     func getDate(forKey: String) -> Date? {
@@ -696,77 +722,52 @@ class SharedSecretDefaults: Preferences {
         return date
     }
 
-    func setDouble(_ value: Double?, forKey: String) {
-        sharedDefault?.setValue(value, forKey: forKey)
+    func setDate(_: Any?, forKey: String) {
+        sharedDefault?.set(Date(), forKey: forKey)
     }
 
     func getDouble(forKey: String) -> Double? {
         return sharedDefault?.double(forKey: forKey)
     }
 
-    func saveData(value: Any, key: String) {
-        sharedDefault?.setValue(value, forKey: key)
+    func setDouble(_ value: Double?, forKey: String) {
+        sharedDefault?.setValue(value, forKey: forKey)
     }
 
     func getData(key: String) -> Any? {
         return sharedDefault?.value(forKey: key)
     }
 
+    func saveData(value: Any, key: String) {
+        sharedDefault?.setValue(value, forKey: key)
+    }
+
     func removeData(key: String) {
         sharedDefault?.removeObject(forKey: key)
     }
 
-    private func saveObject<T: Codable>(object: T, forKey: String) {
+    func saveObject<T: Codable>(object: T, forKey: String) {
         do {
             let data = try JSONEncoder().encode(object)
             sharedDefault?.set(data, forKey: forKey)
         } catch {
-            // Fallback
+            //TODO: Add logger
         }
     }
 
-    private func getObject<T: Codable>(forKey: String) -> T? {
+    func getObject<T: Codable>(forKey: String) -> T? {
         guard let data = sharedDefault?.data(forKey: forKey) else { return nil }
         do {
             return try JSONDecoder().decode(T.self, from: data)
         } catch {
-            // Fallback
+            // TODO: Add logger
             return nil
         }
     }
 
-    private func observeObject<T: Codable>(forKey: String) -> Observable<T?>? {
-        sharedDefault?.rx_observe(T.self, forKey: forKey)
-    }
-
-    func migrate() {
-        let sessionAuth = standardDefault.string(forKey: SharedKeys.activeUserSessionAuth)
-        setString(sessionAuth, forKey: SharedKeys.activeUserSessionAuth)
-
-        let privacyPopupAccepted = standardDefault.bool(forKey: SharedKeys.privacyPopupAccepted)
-        setBool(privacyPopupAccepted, forKey: SharedKeys.privacyPopupAccepted)
-    }
-}
-
-extension UserDefaults {
-    func rx_observe<T: Codable>(_: T.Type, forKey key: String) -> Observable<T?> {
-        return Observable.create { observer in
-            if let data = self.data(forKey: key), let value = try? JSONDecoder().decode(T.self, from: data) {
-                observer.onNext(value)
-            } else {
-                observer.onNext(nil)
-            }
-            let notificationName = UserDefaults.didChangeNotification
-            let notificationObserver = NotificationCenter.default.addObserver(forName: notificationName, object: nil, queue: nil) { _ in
-                if let data = self.data(forKey: key), let value = try? JSONDecoder().decode(T.self, from: data) {
-                    observer.onNext(value)
-                } else {
-                    observer.onNext(nil)
-                }
-            }
-            return Disposables.create {
-                NotificationCenter.default.removeObserver(notificationObserver)
-            }
+    func removeObjects(forKey: [String]) {
+        for key in forKey {
+            sharedDefault?.removeObject(forKey: key)
         }
     }
 }

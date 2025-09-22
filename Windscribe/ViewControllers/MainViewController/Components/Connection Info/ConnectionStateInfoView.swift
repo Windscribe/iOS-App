@@ -45,9 +45,12 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
             }
             .store(in: &cancellables)
 
-        preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
-            self?.isCircumventCensorshipEnabled.onNext(data)
-        }.disposed(by: disposeBag)
+        preferences.getCircumventCensorshipEnabled()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                self?.isCircumventCensorshipEnabled.onNext(data)
+            }
+            .store(in: &cancellables)
 
         // This is after the passing of RxSwift to Combine
         protocolManager.currentProtocolSubject.sink { [weak self] data in

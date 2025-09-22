@@ -9,6 +9,7 @@
 import Foundation
 import RealmSwift
 import RxSwift
+import Combine
 
 class CredentialsRepositoryImpl: CredentialsRepository {
     private let apiManager: APIManager
@@ -19,6 +20,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private let logger: FileLogger
     private let preferences: Preferences
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let connectionMode: BehaviorSubject<String?> = BehaviorSubject(value: nil)
     let selectedProtocol: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
@@ -34,12 +36,19 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     }
 
     private func loadData() {
-        preferences.getConnectionMode().subscribe(onNext: { [self] data in
-            connectionMode.onNext(data)
-        }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getSelectedProtocol().subscribe(onNext: { [self] data in
-            selectedProtocol.onNext(data)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        preferences.getConnectionMode()
+            .receive(on: DispatchQueue.main)
+            .sink { [self] data in
+                connectionMode.onNext(data)
+            }
+            .store(in: &cancellables)
+
+        preferences.getSelectedProtocol()
+            .receive(on: DispatchQueue.main)
+            .sink { [self] data in
+                selectedProtocol.onNext(data)
+            }
+            .store(in: &cancellables)
     }
 
     func getUpdatedOpenVPNCrendentials() -> Single<OpenVPNServerCredentials?> {

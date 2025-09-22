@@ -8,10 +8,12 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 @testable import Windscribe
 
 class MockLocalDatabase: LocalDatabase {
+
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
 
     func migrate() {}
@@ -112,9 +114,6 @@ class MockLocalDatabase: LocalDatabase {
         return Observable.just([])
     }
 
-    func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) -> Disposable {
-        return Disposables.create()
-    }
 
     func removeNetwork(wifiNetwork: Windscribe.WifiNetwork) {}
 
@@ -200,5 +199,29 @@ class MockLocalDatabase: LocalDatabase {
 
     func getNetworksSync() -> [Windscribe.WifiNetwork]? {
         return []
+    }
+
+    func getPublishedNetworks() -> AnyPublisher<[Windscribe.WifiNetwork], Never> {
+        return Just([]).eraseToAnyPublisher()
+    }
+
+    func saveNetwork(wifiNetwork: Windscribe.WifiNetwork) {
+        // Mock implementation - no-op
+    }
+
+    func saveFavourite(favourite: Windscribe.Favourite) -> any RxSwift.Disposable {
+        return Disposables.create()
+    }
+
+    func getFavouriteListObservable() -> RxSwift.Observable<[Windscribe.Favourite]> {
+        return Observable.just([])
+    }
+
+    func getFavouriteList() -> [Windscribe.Favourite] {
+        return []
+    }
+
+    func removeFavourite(groupId: String) {
+        // Mock implementation - no-op
     }
 }

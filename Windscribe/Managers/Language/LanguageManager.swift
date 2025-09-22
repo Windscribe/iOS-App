@@ -60,26 +60,18 @@ class LanguageManagerImpl: LanguageManager {
 
     private func bindData() {
         preference.getLanguageManagerSelectedLanguage()
-            .toPublisher(initialValue: Languages.english.name)
-            .compactMap { (languageName: String?) -> String in
-                Languages.allCases.first { $0.name == languageName }?.rawValue ?? Languages.english.rawValue
+            .compactMap { languageName -> String? in
+                guard let name = languageName else { return Languages.english.rawValue }
+                return Languages.allCases.first { $0.name == name }?.rawValue ?? Languages.english.rawValue
             }
             .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    if case .failure = completion {
-                        self?.language = Languages.english
-                        self?.activelanguage.send(Languages.english)
-                    }
-                },
-                receiveValue: { [weak self] (languageCode: String) in
-                    guard let self = self else { return }
-                    self.language = Languages(rawValue: languageCode) ?? Languages.english
-                    self.activelanguage.send(self.language)
-                    self.currentLanguage = self.getCurrentLanguage()
-                    self.localizationService.updateLanguage(self.currentLanguage)
-                }
-            )
+            .sink { [weak self] languageCode in
+                guard let self = self else { return }
+                self.language = Languages(rawValue: languageCode) ?? Languages.english
+                self.activelanguage.send(self.language)
+                self.currentLanguage = self.getCurrentLanguage()
+                self.localizationService.updateLanguage(self.currentLanguage)
+            }
             .store(in: &cancellables)
     }
 

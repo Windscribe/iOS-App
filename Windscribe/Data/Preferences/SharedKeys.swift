@@ -11,8 +11,8 @@ import Foundation
 enum SharedKeys {
     static let privateKey = "DynamicWireguardPrivateKey"
     static let activeUserSessionAuth = "activeSessionAuthHash"
-    static let sharedGroup = "group.\(getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
-    static let sharedKeychainGroup = "\(getValueFromPlistFile(key: "CFAccountID")).\(getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
+    static let sharedGroup = "group.\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
+    static let sharedKeychainGroup = "\(SharedKeys.getValueFromPlistFile(key: "CFAccountID")).\(SharedKeys.getValueFromPlistFile(key: "CFAPP_BUNDLE_ID"))"
     static let preSharedKey = "preSharedKey"
     static let allowedIp = "allowedIp"
     static let dns = "dns"
@@ -109,16 +109,20 @@ enum SharedKeys {
 
     // Custom Locations Names
     static let customLocationNames = "customLocationNames"
-}
 
-/// Read value from plist file or not found returns empty string.
-func getValueFromPlistFile(key: String) -> String {
-    if let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),
-       let plistData = FileManager.default.contents(atPath: plistPath) {
-        if let plistDictionary = try? PropertyListSerialization.propertyList(
-            from: plistData, options: [], format: nil) as? [String: Any] {
-            return plistDictionary[key] as? String ?? ""
+    /// Cached plist dictionary to avoid repeated file I/O
+    private static let plistDictionary: [String: Any] = {
+        guard let plistPath = Bundle.main.path(forResource: "Info", ofType: "plist"),
+              let plistData = FileManager.default.contents(atPath: plistPath),
+              let dictionary = try? PropertyListSerialization.propertyList(
+                from: plistData, options: [], format: nil) as? [String: Any] else {
+            return [:]
         }
+        return dictionary
+    }()
+
+    /// Read value from plist file or not found returns empty string.
+    private static func getValueFromPlistFile(key: String) -> String {
+        return plistDictionary[key] as? String ?? ""
     }
-    return ""
 }

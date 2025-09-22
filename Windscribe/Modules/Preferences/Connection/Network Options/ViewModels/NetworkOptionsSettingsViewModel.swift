@@ -58,17 +58,12 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
         super.bindSubjects()
 
         preferences.getAutoSecureNewNetworks()
-            .toPublisher(initialValue: DefaultValues.autoSecure)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("NetworkOptionsSecurityViewModel", "Auto Secure New Networks error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.isAutoSecureEnabled = enabled ?? DefaultValues.autoSecure
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         connectivity.network
@@ -85,7 +80,7 @@ class NetworkOptionsSecurityViewModelImpl: PreferencesBaseViewModelImpl, Network
             .store(in: &cancellables)
 
         localDatabase.getNetworks()
-            .toPublisher(initialValue: [])
+            .toPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {

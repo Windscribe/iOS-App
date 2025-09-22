@@ -7,24 +7,43 @@
 //
 
 import Foundation
-import RxSwift
 
 @testable import Windscribe
 
 class MockLogger: FileLogger {
     var logDirectory: URL?
 
-    func logDeviceInfo() {}
-
-    func getLogData() -> RxSwift.Single<String> {
-        Single.just("Test Logs")
+    func getLogData() async throws -> String {
+        return "Test Logs"
     }
 
-    func logI(_ tag: Any, _ message: String) {}
+    func logDeviceInfo() {}
 
-    func logE(_ tag: Any, _ message: String) {}
+    func logD(_ tag: String, _ message: String) {
+        print("[MOCK LOGGER DEBUG] \(tag): \(message)")
+    }
+
+    func logI(_ tag: String, _ message: String) {
+        print("[MOCK LOGGER INFO] \(tag): \(message)")
+    }
+
+    func logE(_ tag: String, _ message: String) {
+        print("[MOCK LOGGER ERROR] \(tag): \(message)")
+    }
+
+    func logWSNet(_ message: String) {
+        print("[MOCK LOGGER WSNET] \(message)")
+    }
+
+    func logI(_ tag: Any, _ message: String) {
+        print("[MOCK LOGGER INFO] \(tag): \(message)")
+    }
+
+    func logE(_ tag: Any, _ message: String) {
+        print("[MOCK LOGGER ERROR] \(tag): \(message)")
+    }
 
     func logD(_ object: Any, _ message: String) {
-        print("[MOCK LOGGER] \(message)")
+        print("[MOCK LOGGER DEBUG] \(object): \(message)")
     }
 }

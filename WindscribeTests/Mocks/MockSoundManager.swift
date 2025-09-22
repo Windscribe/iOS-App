@@ -42,4 +42,15 @@ class MockSoundManager: SoundManaging {
     func quickPlay(named name: String, extension ext: String) {
         playedSounds.append((name: name, style: nil, tag: nil))
     }
+
+    func playCustomSound(from path: String, volume: Float, tag: String?) {
+        playedSounds.append((name: path, style: nil, tag: tag))
+    }
+
+    func stopAllSounds() {
+        playedSounds.removeAll()
+        pausedSounds.removeAll()
+        resumedSounds.removeAll()
+        fadeOutTimersTriggered.removeAll()
+    }
 }

@@ -101,39 +101,24 @@ class ProtocolManager: ProtocolManagerType {
 
     func bindData() {
         preferences.getConnectionMode()
-            .toPublisher(initialValue: DefaultValues.connectionMode)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ProtocolManager", "Connection Mode error: \(error)")
-                }
-            }, receiveValue: { [weak self] mode in
+            .sink { [weak self] mode in
                 self?.connectionMode = mode ?? DefaultValues.connectionMode
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getSelectedProtocol()
-            .toPublisher(initialValue: DefaultValues.protocol)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ProtocolManager", "Preferred Protocol error: \(error)")
-                }
-            }, receiveValue: { [weak self] preferredProtocol in
+            .sink { [weak self] preferredProtocol in
                 self?.manualProtocol = preferredProtocol ?? DefaultValues.protocol
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getSelectedPort()
-            .toPublisher(initialValue: DefaultValues.port)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ProtocolManager", "Preferred Port error: \(error)")
-                }
-            }, receiveValue: { [weak self] preferredPort in
+            .sink { [weak self] preferredPort in
                 self?.manualPort = preferredPort ?? DefaultValues.port
-            })
+            }
             .store(in: &cancellables)
 
         connectivity.network

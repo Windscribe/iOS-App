@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol LookAndFeelRepositoryType {
     // Subjects
@@ -49,6 +50,7 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
     let preferences: Preferences
 
     private let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(preferences: Preferences) {
         self.preferences = preferences
@@ -61,13 +63,11 @@ class LookAndFeelRepository: LookAndFeelRepositoryType {
         isDarkMode = true
 
         preferences.getDarkMode()
-            .subscribe(onNext: { theme in
+            .sink { theme in
                 self.isDarkMode = theme ?? DefaultValues.darkMode
                 self.isDarkModeSubject.onNext(self.isDarkMode)
-            }, onError: { _ in
-                self.isDarkMode = true
-                self.isDarkModeSubject.onNext(self.isDarkMode)
-            }).disposed(by: disposeBag)
+            }
+            .store(in: &cancellables)
     }
 
     func updateBackgroundEffectConnect(effect: BackgroundEffectType) {

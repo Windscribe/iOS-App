@@ -64,11 +64,10 @@ final class AdvancedParametersViewModelImpl: AdvancedParametersViewModel {
         hasLoaded = true
 
         preferences.getAdvanceParams()
-            .toInitialPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] params in
+            .sink { [weak self] params in
                 self?.advanceParams = params ?? ""
-            })
+            }
             .store(in: &cancellables)
     }
 

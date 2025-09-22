@@ -13,14 +13,16 @@ import Swinject
 extension Container {
     func injectLocalDatabase() -> LocalDatabase {
         register(LocalDatabase.self) { _ in
-            LocalDatabaseImpl(logger: FileLoggerImpl(), preferences: SharedSecretDefaults())
+            LocalDatabaseImpl(
+                logger: FileLoggerImpl(),
+                preferences: PreferencesImpl())
         }
         return resolve(LocalDatabase.self)!
     }
 
     func injectPreferences() -> Preferences {
         register(Preferences.self) { _ in
-            SharedSecretDefaults()
+            PreferencesImpl()
         }
         return resolve(Preferences.self)!
     }

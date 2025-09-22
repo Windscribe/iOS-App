@@ -14,6 +14,7 @@ import UIKit
 class BestLocationCellModel: ServerCellModelType {
     let preferences = Assembler.resolve(Preferences.self)
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let updateUISubject = PublishSubject<Void>()
 
     var displayingBestLocation: BestLocationModel?
@@ -50,11 +51,14 @@ class BestLocationCellModel: ServerCellModelType {
     }
 
     init() {
-        preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
-            guard let self = self else { return }
-            self.showServerHealth = enabled ?? DefaultValues.showServerHealth
-            self.updateUISubject.onNext(())
-        }).disposed(by: disposeBag)
+        preferences.getShowServerHealth()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] enabled in
+                guard let self = self else { return }
+                self.showServerHealth = enabled ?? DefaultValues.showServerHealth
+                self.updateUISubject.onNext(())
+            }
+            .store(in: &cancellables)
     }
 
     func nameColor(for isDarkMode: Bool) -> UIColor {

@@ -31,16 +31,10 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
 
     private func loadHapticFeedback() {
         preferences.getHapticFeedback()
-            .toPublisher(initialValue: true)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("HapticFeedbackGenerator", "darkTheme error: \(error)")
-                }
-                self?.hapticFeedback = true
-            }, receiveValue: { [weak self] data in
+            .sink { [weak self] data in
                 self?.hapticFeedback = data ?? true
-            })
+            }
             .store(in: &cancellables)
     }
 

@@ -61,45 +61,30 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
             .store(in: &cancellables)
 
         preferences.getShowServerHealth()
-            .toPublisher(initialValue: DefaultValues.showServerHealth)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Location Load error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.isLocationLoadEnabled = enabled ?? DefaultValues.showServerHealth
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getHapticFeedback()
-            .toPublisher(initialValue: DefaultValues.hapticFeedback)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Haptic Feedback error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.isHapticFeedbackEnabled = enabled ?? DefaultValues.hapticFeedback
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getOrderLocationsBy()
-            .toPublisher(initialValue: DefaultValues.orderLocationsBy)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("GeneralSettingsViewModel", "Order Location By error: \(error)")
-                }
-            }, receiveValue: { [weak self] order in
+            .sink { [weak self] order in
                 guard let self = self else { return }
                 self.setLocationOrder(with: order ?? DefaultValues.orderLocationsBy)
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
     }
 

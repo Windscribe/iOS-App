@@ -11,6 +11,7 @@ import RealmSwift
 import RxSwift
 import Swinject
 import UIKit
+import Combine
 
 protocol BaseNodeCellViewModelType: ServerCellModelType {
     var signalImage: UIImage? { get }
@@ -31,6 +32,7 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
 
     let updateUISubject = PublishSubject<Void>()
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     private var locationLoad: Bool = DefaultValues.showServerHealth
 
@@ -119,11 +121,14 @@ class BaseNodeCellViewModel: BaseNodeCellViewModelType {
             }
         }).disposed(by: disposeBag)
 
-        preferences.getShowServerHealth().subscribe(onNext: { [weak self] enabled in
-            guard let self = self else { return }
-            self.locationLoad = enabled ?? DefaultValues.showServerHealth
-            self.updateUISubject.onNext(())
-        }).disposed(by: disposeBag)
+        preferences.getShowServerHealth()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] enabled in
+                guard let self = self else { return }
+                self.locationLoad = enabled ?? DefaultValues.showServerHealth
+                self.updateUISubject.onNext(())
+            }
+            .store(in: &cancellables)
     }
 
     func favoriteSelected() { }

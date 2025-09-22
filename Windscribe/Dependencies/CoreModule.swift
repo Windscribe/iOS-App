@@ -21,7 +21,7 @@ extension Container {
             FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(Preferences.self) { _ in
-            SharedSecretDefaults.shared
+            PreferencesImpl()
         }.inObjectScope(.container)
         register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)

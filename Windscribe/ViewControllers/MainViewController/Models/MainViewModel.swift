@@ -171,25 +171,37 @@ class MainViewModel: MainViewModelType {
         observeNetworkStatus()
         observeWifiNetwork()
         observeSession()
-        preferences.getOrderLocationsBy().subscribe(onNext: { [weak self] order in
-            guard let self = self else { return }
-            self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        preferences.getOrderLocationsBy()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] order in
+                guard let self = self else { return }
+                self.locationOrderBy.onNext(order ?? DefaultValues.orderLocationsBy)
+            }
+            .store(in: &cancellables)
         loadLastConnection()
         loadLatencies()
         getNotices()
-        preferences.getSelectedProtocol().subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.selectedProtocol.onNext(data ?? DefaultValues.protocol)
-        }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getSelectedPort().subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.selectedPort.onNext(data ?? DefaultValues.port)
-        }, onError: { _ in }).disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        preferences.getSelectedProtocol()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.selectedProtocol.onNext(data ?? DefaultValues.protocol)
+            }
+            .store(in: &cancellables)
+        preferences.getSelectedPort()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.selectedPort.onNext(data ?? DefaultValues.port)
+            }
+            .store(in: &cancellables)
+        preferences.getConnectionMode()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
+            }
+            .store(in: &cancellables)
         serverRepository.updatedServerModelsSubject.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             self.serverList.onNext(data)
@@ -370,11 +382,15 @@ class MainViewModel: MainViewModelType {
     }
 
     private func loadTvFavourites() {
-        Observable.combineLatest(preferences.observeFavouriteIds(), serverList).map { ids, servers in
-            ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
-        }.subscribe(onNext: { groups in
-            self.favouriteGroups.onNext(groups)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        Publishers.CombineLatest(preferences.observeFavouriteIds(), serverList.toPublisher().replaceError(with: []))
+            .map { ids, servers in
+                ids.compactMap { id in self.getFavouriteGroup(id: id, servers: servers) }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { groups in
+                self.favouriteGroups.onNext(groups)
+            }
+            .store(in: &cancellables)
     }
 
     func loadFavourite() {

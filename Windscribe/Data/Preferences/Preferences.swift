@@ -7,40 +7,40 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol Preferences {
     func saveAdvanceParams(params: String)
-    func getAdvanceParams() -> Observable<String?>
+    func getAdvanceParams() -> AnyPublisher<String?, Never>
     func getAdvanceParams() -> String?
     func saveUserSessionAuth(sessionAuth: String?)
     func userSessionAuth() -> String?
 
     // UserPreferenceManager
     func saveOrderLocationsBy(order: String)
-    func getOrderLocationsBy() -> Observable<String?>
+    func getOrderLocationsBy() -> AnyPublisher<String?, Never>
     func saveLanguage(language: String)
-    func getLanguage() -> Observable<String?>
+    func getLanguage() -> AnyPublisher<String?, Never>
     func saveFirewallMode(firewall: Bool)
-    func getFirewallMode() -> Observable<Bool?>
+    func getFirewallMode() -> AnyPublisher<Bool?, Never>
     func saveKillSwitch(killSwitch: Bool)
-    func getKillSwitch() -> Observable<Bool?>
+    func getKillSwitch() -> AnyPublisher<Bool?, Never>
     func getKillSwitchSync() -> Bool
     func saveAllowLane(mode: Bool)
     func getAllowLaneSync() -> Bool
-    func getAllowLAN() -> Observable<Bool?>
+    func getAllowLAN() -> AnyPublisher<Bool?, Never>
     func saveHapticFeedback(haptic: Bool)
-    func getHapticFeedback() -> Observable<Bool?>
+    func getHapticFeedback() -> AnyPublisher<Bool?, Never>
     func saveSelectedProtocol(selectedProtocol: String)
-    func getSelectedProtocol() -> Observable<String?>
+    func getSelectedProtocol() -> AnyPublisher<String?, Never>
     func saveSelectedPort(port: String)
-    func getSelectedPort() -> Observable<String?>
+    func getSelectedPort() -> AnyPublisher<String?, Never>
     func saveDarkMode(darkMode: Bool)
-    func getDarkMode() -> Observable<Bool?>
+    func getDarkMode() -> AnyPublisher<Bool?, Never>
     func saveShowServerHealth(show: Bool)
-    func getShowServerHealth() -> Observable<Bool?>
+    func getShowServerHealth() -> AnyPublisher<Bool?, Never>
     func savePingMethod(method: String)
-    func getPingMethod() -> Observable<String?>
+    func getPingMethod() -> AnyPublisher<String?, Never>
     func getPingMethodSync() -> String
 
     // PersistenceManager+UserDefaults
@@ -98,24 +98,24 @@ protocol Preferences {
     func getcountryCodeKey() -> String?
     func saveNickNameKey(key: String?)
     func getNickNameKey() -> String?
-    func getCircumventCensorshipEnabled() -> RxSwift.Observable<Bool>
+    func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never>
     func isCircumventCensorshipEnabled() -> Bool
     func saveCircumventCensorshipStatus(status: Bool)
 
     func setLanguageManagerSelectedLanguage(language: Languages)
     func setLanguageManagerDefaultLanguage(language: String)
     func getLanguageManagerDefaultLanguage() -> String?
-    func getLanguageManagerSelectedLanguage() -> RxSwift.Observable<String?>
+    func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never>
 
     func getServerCredentialTypeKey() -> String?
 
     func setServerCredentialTypeKey(typeKey: String)
 
-    func getAutoSecureNewNetworks() -> RxSwift.Observable<Bool?>
+    func getAutoSecureNewNetworks() -> AnyPublisher<Bool?, Never>
     func saveAutoSecureNewNetworks(autoSecure: Bool)
 
-    func getConnectionMode() -> RxSwift.Observable<String?>
-    func getConnectedDNSObservable() -> RxSwift.Observable<String?>
+    func getConnectionMode() -> AnyPublisher<String?, Never>
+    func getConnectedDNSObservable() -> AnyPublisher<String?, Never>
     func getConnectedDNS() -> String
     func saveConnectionMode(mode: String)
     func saveConnectedDNS(mode: String)
@@ -133,8 +133,8 @@ protocol Preferences {
     func saveWireguardWakeupTime(value: Double)
     func getWireguardWakeupTime() -> Double
     func saveForceDisconnect(value: Bool)
-    func getForceDisconnect() -> RxSwift.Observable<Bool?>
-    func observeFavouriteIds() -> Observable<[String]>
+    func getForceDisconnect() -> AnyPublisher<Bool?, Never>
+    func observeFavouriteIds() -> AnyPublisher<[String], Never>
     func addFavouriteId(_ id: String)
     func removeFavouriteId(_ id: String)
     func clearFavourites()
@@ -159,7 +159,7 @@ protocol Preferences {
     // AspectRatio
     func saveAspectRatio(value: String)
     func getAspectRatio() -> String?
-    func aspectRatio() -> RxSwift.Observable<String?>
+    func aspectRatio() -> AnyPublisher<String?, Never>
 
     // Backgrounds
     func saveBackgroundEffectConnect(value: String)
@@ -187,4 +187,29 @@ protocol Preferences {
     // Custom Locations Names {
     func saveCustomLocationsNames(value: [ExportedRegion])
     func getCustomLocationsNames() -> [ExportedRegion]
+
+    // WireGuard Interface Configuration
+    func saveWireGuardAddress(_ address: String?)
+    func getWireGuardAddress() -> String?
+    func saveWireGuardDNS(_ dns: String?)
+    func getWireGuardDNS() -> String?
+
+    // WireGuard Peer Configuration
+    func saveWireGuardPresharedKey(_ key: String?)
+    func getWireGuardPresharedKey() -> String?
+    func saveWireGuardAllowedIPs(_ ips: String?)
+    func getWireGuardAllowedIPs() -> String?
+
+    // WireGuard Server Configuration
+    func saveWireGuardServerEndpoint(_ endpoint: String?)
+    func getWireGuardServerEndpoint() -> String?
+    func saveWireGuardServerHostname(_ hostname: String?)
+    func getWireGuardServerHostname() -> String?
+    func saveWireGuardServerPublicKey(_ key: String?)
+    func getWireGuardServerPublicKey() -> String?
+    func saveWireGuardServerPort(_ port: String?)
+    func getWireGuardServerPort() -> String?
+
+    // WireGuard Cleanup
+    func clearWireGuardConfiguration()
 }

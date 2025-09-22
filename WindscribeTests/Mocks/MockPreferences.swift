@@ -7,43 +7,65 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 @testable import Windscribe
 
 class MockPreferences: Preferences {
 
     var mockConnectionCount = 0
-
-    var mockDataUsedMB = 0
-
+    var mockAdvanceParams: String?
     var mockLastReviewDate: Date?
-
     var mockLoginDate: Date?
-
     var mockHasReviewed = false
 
-    func saveAdvanceParams(params: String) {}
+    // Additional mock storage variables
+    var mockLanguage: String?
+    var mockSelectedProtocol: String?
+    var mockSelectedPort: String?
+    var mockFirewallMode: Bool?
+    var mockKillSwitch: Bool?
+    var mockDarkMode: Bool?
+    var mockConnectionMode: String?
+    var mockFavouriteIds: [String] = []
+    private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
+    var mockLastSelectedLocation: String = ""
+    var mockBestLocation: String = ""
 
-    func getConnectionCount() -> Int { return mockConnectionCount }
-    func getDataUsedInMB() -> Int { return mockDataUsedMB }
-    func getWhenRateUsPopupDisplayed() -> Date? { return mockLastReviewDate }
-    func getLoginDate() -> Date? { return mockLoginDate }
-    func getRateUsActionCompleted() -> Bool { return mockHasReviewed }
+    func saveAdvanceParams(params: String) {
+        mockAdvanceParams = params
+    }
 
-    func saveWhenRateUsPopupDisplayed(date: Date) { mockLastReviewDate = date }
-    func saveRateUsActionCompleted(bool: Bool) { mockHasReviewed = bool }
-
-    func getAdvanceParams() -> Observable<String?> {
-        return Observable.just(nil)
+    func getAdvanceParams() -> AnyPublisher<String?, Never> {
+        return Just(mockAdvanceParams).eraseToAnyPublisher()
     }
 
     func getAdvanceParams() -> String? {
-        nil
+        return mockAdvanceParams
     }
 
-    func getAdvanceParamsSync() -> String? {
-        return nil
+    func getConnectionCount() -> Int {
+        return mockConnectionCount
+    }
+
+    func getWhenRateUsPopupDisplayed() -> Date? {
+        return mockLastReviewDate
+    }
+
+    func getLoginDate() -> Date? {
+        return mockLoginDate
+    }
+
+    func getRateUsActionCompleted() -> Bool {
+        return mockHasReviewed
+    }
+
+    func saveWhenRateUsPopupDisplayed(date: Date) {
+        mockLastReviewDate = date
+    }
+
+    func saveRateUsActionCompleted(bool: Bool) {
+        mockHasReviewed = bool
     }
 
     func saveUserSessionAuth(sessionAuth: String?) {}
@@ -52,40 +74,34 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveLatencyType(latencyType: String) {}
-
-    func getLatencyType() -> Observable<String> {
-        return Observable.just("")
-    }
-
     func saveOrderLocationsBy(order: String) {}
 
-    func getOrderLocationsBy() -> Observable<String?> {
-        return Observable.just(nil)
+    func getOrderLocationsBy() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
-    func saveAppSkinPreferences(type: String) {}
-
-    func getAppSkinPreferences() -> Observable<String?> {
-        return Observable.just(nil)
+    func saveLanguage(language: String) {
+        mockLanguage = language
     }
 
-    func saveLanguage(language: String) {}
-
-    func getLanguage() -> Observable<String?> {
-        return Observable.just(nil)
+    func getLanguage() -> AnyPublisher<String?, Never> {
+        return Just(mockLanguage).eraseToAnyPublisher()
     }
 
-    func saveFirewallMode(firewall: Bool) {}
-
-    func getFirewallMode() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func saveFirewallMode(firewall: Bool) {
+        mockFirewallMode = firewall
     }
 
-    func saveKillSwitch(killSwitch: Bool) {}
+    func getFirewallMode() -> AnyPublisher<Bool?, Never> {
+        return Just(mockFirewallMode).eraseToAnyPublisher()
+    }
 
-    func getKillSwitch() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func saveKillSwitch(killSwitch: Bool) {
+        mockKillSwitch = killSwitch
+    }
+
+    func getKillSwitch() -> AnyPublisher<Bool?, Never> {
+        return Just(mockKillSwitch).eraseToAnyPublisher()
     }
 
     func getKillSwitchSync() -> Bool {
@@ -98,43 +114,67 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func getAllowLAN() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func getAllowLAN() -> AnyPublisher<Bool?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
     func saveHapticFeedback(haptic: Bool) {}
 
-    func getHapticFeedback() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func getHapticFeedback() -> AnyPublisher<Bool?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
-    func saveSelectedProtocol(selectedProtocol: String) {}
-
-    func getSelectedProtocol() -> Observable<String?> {
-        return Observable.just(nil)
+    func saveSelectedProtocol(selectedProtocol: String) {
+        mockSelectedProtocol = selectedProtocol
     }
 
-    func saveSelectedPort(port: String) {}
+    func getSelectedProtocol() -> AnyPublisher<String?, Never> {
+        return Just(mockSelectedProtocol).eraseToAnyPublisher()
+    }
 
-    func getSelectedPort() -> Observable<String?> {
-        return Observable.just(nil)
+    func saveSelectedPort(port: String) {
+        mockSelectedPort = port
+    }
+
+    func getSelectedPort() -> AnyPublisher<String?, Never> {
+        return Just(mockSelectedPort).eraseToAnyPublisher()
     }
 
     func saveShowServerHealth(show: Bool) {}
 
-    func saveDarkMode(darkMode: Bool) {}
+    func getShowServerHealth() -> AnyPublisher<Bool?, Never> {
+        return Just(nil).eraseToAnyPublisher()
+    }
 
-    func getDarkMode() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func saveDarkMode(darkMode: Bool) {
+        mockDarkMode = darkMode
+    }
+
+    func getDarkMode() -> AnyPublisher<Bool?, Never> {
+        return Just(mockDarkMode).eraseToAnyPublisher()
+    }
+
+    func savePingMethod(method: String) {}
+
+    func getPingMethod() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
+    }
+
+    func getPingMethodSync() -> String {
+        return ""
     }
 
     func getConnectionCount() -> Int? {
-        return 0
+        return mockConnectionCount
     }
 
-    func increaseConnectionCount() {}
+    func increaseConnectionCount() {
+        mockConnectionCount += 1
+    }
 
-    func saveConnectionCount(count: Int) {}
+    func saveConnectionCount(count: Int) {
+        mockConnectionCount = count
+    }
 
     func getLastConnectedNetworkName() -> String? {
         return nil
@@ -226,9 +266,7 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveAppleLanguage(languge language: String?) {
-
-    }
+    func saveAppleLanguage(languge: String?) {}
 
     func getAppleLanguage() -> String? {
         return nil
@@ -274,8 +312,8 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func getCircumventCensorshipEnabled() -> Observable<Bool> {
-        return Observable.just(false)
+    func getCircumventCensorshipEnabled() -> AnyPublisher<Bool, Never> {
+        return Just(false).eraseToAnyPublisher()
     }
 
     func isCircumventCensorshipEnabled() -> Bool {
@@ -292,8 +330,8 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func getLanguageManagerSelectedLanguage() -> Observable<String?> {
-        return Observable.just(nil)
+    func getLanguageManagerSelectedLanguage() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
     func getServerCredentialTypeKey() -> String? {
@@ -302,18 +340,18 @@ class MockPreferences: Preferences {
 
     func setServerCredentialTypeKey(typeKey: String) {}
 
-    func getAutoSecureNewNetworks() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func getAutoSecureNewNetworks() -> AnyPublisher<Bool?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
     func saveAutoSecureNewNetworks(autoSecure: Bool) {}
 
-    func getConnectionMode() -> Observable<String?> {
-        return Observable.just(nil)
+    func getConnectionMode() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
-    func getConnectedDNSObservable() -> Observable<String?> {
-        return Observable.just(nil)
+    func getConnectedDNSObservable() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
     func getConnectedDNS() -> String {
@@ -362,19 +400,30 @@ class MockPreferences: Preferences {
 
     func saveForceDisconnect(value: Bool) {}
 
-    func getForceDisconnect() -> Observable<Bool?> {
-        return Observable.just(nil)
+    func getForceDisconnect() -> AnyPublisher<Bool?, Never> {
+        return Just(nil).eraseToAnyPublisher()
     }
 
-    func observeFavouriteIds() -> Observable<[String]> {
-        return Observable.just([])
+    func observeFavouriteIds() -> AnyPublisher<[String], Never> {
+        return favouriteIdsSubject.eraseToAnyPublisher()
     }
 
-    func addFavouriteId(_ id: String) {}
+    func addFavouriteId(_ id: String) {
+        if !mockFavouriteIds.contains(id) {
+            mockFavouriteIds.append(id)
+            favouriteIdsSubject.send(mockFavouriteIds)
+        }
+    }
 
-    func removeFavouriteId(_ id: String) {}
+    func removeFavouriteId(_ id: String) {
+        mockFavouriteIds.removeAll { $0 == id }
+        favouriteIdsSubject.send(mockFavouriteIds)
+    }
 
-    func clearFavourites() {}
+    func clearFavourites() {
+        mockFavouriteIds.removeAll()
+        favouriteIdsSubject.send(mockFavouriteIds)
+    }
 
     func saveLoginDate(date: Date) {}
 
@@ -384,18 +433,25 @@ class MockPreferences: Preferences {
         return false
     }
 
-    func clearSelectedLocations() {}
-
-    func saveLastSelectedLocation(with locationID: String) {}
-
-    func getLastSelectedLocation() -> String {
-        return ""
+    func clearSelectedLocations() {
+        mockLastSelectedLocation = ""
+        mockBestLocation = ""
     }
 
-    func saveBestLocation(with locationID: String) {}
+    func saveLastSelectedLocation(with locationID: String) {
+        mockLastSelectedLocation = locationID
+    }
+
+    func getLastSelectedLocation() -> String {
+        return mockLastSelectedLocation
+    }
+
+    func saveBestLocation(with locationID: String) {
+        mockBestLocation = locationID
+    }
 
     func getBestLocation() -> String {
-        return ""
+        return mockBestLocation
     }
 
     func isCustomConfigSelected() -> Bool {
@@ -410,19 +466,117 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveHasCustomBackground(value: Bool) { }
+    func saveAspectRatio(value: String) {}
 
-    func getHasCustomBackground() -> Bool {
-        return false
-    }
-
-    func getHasCustomBackgroundObservable() -> RxSwift.Observable<Bool?> {
-        return Observable.just(nil)
-    }
-
-    func saveCurrentCustomBackground(value: String) { }
-
-    func getCurrentCustomBackground() -> String? {
+    func getAspectRatio() -> String? {
         return nil
     }
+
+    func aspectRatio() -> AnyPublisher<String?, Never> {
+        return Just(nil).eraseToAnyPublisher()
+    }
+
+    func saveBackgroundEffectConnect(value: String) {}
+
+    func getBackgroundEffectConnect() -> String? {
+        return nil
+    }
+
+    func saveBackgroundCustomConnectPath(value: String) {}
+
+    func getBackgroundCustomConnectPath() -> String? {
+        return nil
+    }
+
+    func saveBackgroundEffectDisconnect(value: String) {}
+
+    func getBackgroundEffectDisconnect() -> String? {
+        return nil
+    }
+
+    func saveBackgroundCustomDisconnectPath(value: String) {}
+
+    func getBackgroundCustomDisconnectPath() -> String? {
+        return nil
+    }
+
+    func saveSoundEffectConnect(value: String) {}
+
+    func getSoundEffectConnect() -> String? {
+        return nil
+    }
+
+    func saveSoundEffectDisconnect(value: String) {}
+
+    func getSoundEffectDisconnect() -> String? {
+        return nil
+    }
+
+    func saveCustomSoundEffectPathConnect(_ path: String) {}
+
+    func saveCustomSoundEffectPathDisconnect(_ path: String) {}
+
+    func getCustomSoundEffectPathConnect() -> String? {
+        return nil
+    }
+
+    func getCustomSoundEffectPathDisconnect() -> String? {
+        return nil
+    }
+
+    func saveCustomLocationsNames(value: [Windscribe.ExportedRegion]) {}
+
+    func getCustomLocationsNames() -> [Windscribe.ExportedRegion] {
+        return []
+    }
+
+    func saveWireGuardAddress(_ address: String?) {}
+
+    func getWireGuardAddress() -> String? {
+        return nil
+    }
+
+    func saveWireGuardDNS(_ dns: String?) {}
+
+    func getWireGuardDNS() -> String? {
+        return nil
+    }
+
+    func saveWireGuardPresharedKey(_ key: String?) {}
+
+    func getWireGuardPresharedKey() -> String? {
+        return nil
+    }
+
+    func saveWireGuardAllowedIPs(_ ips: String?) {}
+
+    func getWireGuardAllowedIPs() -> String? {
+        return nil
+    }
+
+    func saveWireGuardServerEndpoint(_ endpoint: String?) {}
+
+    func getWireGuardServerEndpoint() -> String? {
+        return nil
+    }
+
+    func saveWireGuardServerHostname(_ hostname: String?) {}
+
+    func getWireGuardServerHostname() -> String? {
+        return nil
+    }
+
+    func saveWireGuardServerPublicKey(_ key: String?) {}
+
+    func getWireGuardServerPublicKey() -> String? {
+        return nil
+    }
+
+    func saveWireGuardServerPort(_ port: String?) {}
+
+    func getWireGuardServerPort() -> String? {
+        return nil
+    }
+
+    func clearWireGuardConfiguration() {}
 }

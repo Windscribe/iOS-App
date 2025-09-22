@@ -7,15 +7,20 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
-extension SharedSecretDefaults {
-    func observeFavouriteIds() -> Observable<[String]> {
-        return sharedDefault?.rx
-            .observe([String].self, SharedKeys.tvFavourites)
+extension PreferencesImpl {
+    func observeFavouriteIds() -> AnyPublisher<[String], Never> {
+        guard let sharedDefault = sharedDefault else {
+            return Just([]).eraseToAnyPublisher()
+        }
+
+        return sharedDefault.publisher(for: \.self)
+            .compactMap { _ in sharedDefault.stringArray(forKey: SharedKeys.tvFavourites) }
+            .prepend(sharedDefault.stringArray(forKey: SharedKeys.tvFavourites))
             .map { $0 ?? [] }
-            .startWith(sharedDefault?.stringArray(forKey: SharedKeys.tvFavourites) ?? [])
-            .asObservable() ?? Observable.empty()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     func addFavouriteId(_ id: String) {

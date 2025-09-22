@@ -41,31 +41,20 @@ class WifiManager {
         observeSecuredNetworks()
 
         preferences.getConnectionMode()
-            .toPublisher(initialValue: DefaultValues.connectionMode)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("WifiManager", "Get Connection Mode error: \(error)")
-                }
-            }, receiveValue: { [weak self] data in
+            .sink { [weak self] data in
                 self?.connectionMode.send(data ?? DefaultValues.connectionMode)
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getAutoSecureNewNetworks()
-            .toPublisher(initialValue: DefaultValues.autoSecureNewNetworks)
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                guard let self = self else { return }
-                if case let .failure(error) = completion {
-                    self.logger.logE("WifiManager", "Error getting auto secure property. \(error)")
-                }
-            }, receiveValue: { [weak self] autoSecure in
+            .sink { [weak self] autoSecure in
                 guard let self = self else { return }
                 self.logger.logI("WifiManager", "Auto secure network setting: \(autoSecure)")
                 self.autoSecureNewNetworks.send(autoSecure)
-            })
+            }
             .store(in: &cancellables)
     }
 

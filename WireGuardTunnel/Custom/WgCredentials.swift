@@ -32,15 +32,15 @@ class WgCredentials {
 
     func load() {
         // Load state from saved
-        address = SharedSecretDefaults.shared.getString(forKey: SharedKeys.address)
-        presharedKey = SharedSecretDefaults.shared.getString(forKey: SharedKeys.preSharedKey)
-        allowedIps = SharedSecretDefaults.shared.getString(forKey: SharedKeys.allowedIp)
+        address = preferences.getWireGuardAddress()
+        presharedKey = preferences.getWireGuardPresharedKey()
+        allowedIps = preferences.getWireGuardAllowedIPs()
 
-        serverEndPoint = SharedSecretDefaults.shared.getString(forKey: SharedKeys.serverEndPoint)
-        serverHostName = SharedSecretDefaults.shared.getString(forKey: SharedKeys.serverHostName)
-        serverPublicKey = SharedSecretDefaults.shared.getString(forKey: SharedKeys.serverPublicKey)
-        port = SharedSecretDefaults.shared.getString(forKey: SharedKeys.wgPort)
-        dns = SharedSecretDefaults.shared.getString(forKey: SharedKeys.dns)
+        serverEndPoint = preferences.getWireGuardServerEndpoint()
+        serverHostName = preferences.getWireGuardServerHostname()
+        serverPublicKey = preferences.getWireGuardServerPublicKey()
+        port = preferences.getWireGuardServerPort()
+        dns = preferences.getWireGuardDNS()
     }
 
     func getPublicKey() async -> String? {
@@ -67,8 +67,8 @@ class WgCredentials {
     }
 
     func getWgInitResponse() -> DynamicWireGuardConfig? {
-        presharedKey = SharedSecretDefaults.shared.getString(forKey: SharedKeys.preSharedKey)
-        allowedIps = SharedSecretDefaults.shared.getString(forKey: SharedKeys.allowedIp)
+        presharedKey = preferences.getWireGuardPresharedKey()
+        allowedIps = preferences.getWireGuardAllowedIPs()
         if presharedKey != nil, allowedIps != nil {
             let config = DynamicWireGuardConfig()
             config.presharedKey = presharedKey
@@ -81,16 +81,16 @@ class WgCredentials {
     func saveInitResponse(config: DynamicWireGuardConfig) {
         presharedKey = config.presharedKey
         allowedIps = config.allowedIPs
-        SharedSecretDefaults.shared.setString(config.presharedKey, forKey: SharedKeys.preSharedKey)
-        SharedSecretDefaults.shared.setString(config.allowedIPs, forKey: SharedKeys.allowedIp)
+        preferences.saveWireGuardPresharedKey(config.presharedKey)
+        preferences.saveWireGuardAllowedIPs(config.allowedIPs)
     }
 
     // wg Connect
     func saveConnectResponse(config: DynamicWireGuardConnect) {
         dns = config.dns
         address = config.address
-        SharedSecretDefaults.shared.setString(config.address, forKey: SharedKeys.address)
-        SharedSecretDefaults.shared.setString(config.dns, forKey: SharedKeys.dns)
+        preferences.saveWireGuardAddress(config.address)
+        preferences.saveWireGuardDNS(config.dns)
     }
 
     func setNodeToConnect(serverEndPoint: String, serverHostName: String, serverPublicKey: String, port: String) {
@@ -98,10 +98,10 @@ class WgCredentials {
         self.serverHostName = serverHostName
         self.serverPublicKey = serverPublicKey
         self.port = port
-        SharedSecretDefaults.shared.setString(serverEndPoint, forKey: SharedKeys.serverEndPoint)
-        SharedSecretDefaults.shared.setString(serverHostName, forKey: SharedKeys.serverHostName)
-        SharedSecretDefaults.shared.setString(serverPublicKey, forKey: SharedKeys.serverPublicKey)
-        SharedSecretDefaults.shared.setString(port, forKey: SharedKeys.wgPort)
+        preferences.saveWireGuardServerEndpoint(serverEndPoint)
+        preferences.saveWireGuardServerHostname(serverHostName)
+        preferences.saveWireGuardServerPublicKey(serverPublicKey)
+        preferences.saveWireGuardServerPort(port)
     }
 
     // Delete credentials and key if user status changes
@@ -111,7 +111,7 @@ class WgCredentials {
         address = nil
         presharedKey = nil
         allowedIps = nil
-        SharedSecretDefaults.shared.removeObjects(forKey: [SharedKeys.preSharedKey, SharedKeys.allowedIp, SharedKeys.dns, SharedKeys.address])
+        preferences.clearWireGuardConfiguration()
     }
 
     func asWgCredentialsString() -> String? {

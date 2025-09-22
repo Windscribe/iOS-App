@@ -63,101 +63,66 @@ class ConnectionSettingsViewModelImpl: PreferencesBaseViewModelImpl, ConnectionS
         super.bindSubjects()
 
         preferences.getSelectedProtocol()
-            .toPublisher(initialValue: DefaultValues.protocol)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Preferred Protocol error: \(error)")
-                }
-            }, receiveValue: { [weak self] preferredProtocol in
+            .sink { [weak self] preferredProtocol in
                 guard let self = self else { return }
                 self.currentProtocol = preferredProtocol ?? DefaultValues.protocol
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getSelectedPort()
-            .toPublisher(initialValue: DefaultValues.port)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Preferred Port error: \(error)")
-                }
-            }, receiveValue: { [weak self] port in
+            .sink { [weak self] port in
                 guard let self = self else { return }
                 self.currentPort = port ?? DefaultValues.port
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getKillSwitch()
-            .toPublisher(initialValue: DefaultValues.killSwitch)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Kill Switch error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.killSwitchSelected = enabled ?? DefaultValues.killSwitch
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getAllowLAN()
-            .toPublisher(initialValue: DefaultValues.allowLANMode)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Allow LAN error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.allowLanSelected = enabled ?? DefaultValues.allowLANMode
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getCircumventCensorshipEnabled()
-            .toPublisher(initialValue: DefaultValues.circumventCensorship)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Circumvent Censorship error: \(error)")
-                }
-            }, receiveValue: { [weak self] enabled in
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
                 self.circumventCensorshipSelected = enabled
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getConnectionMode()
-            .toPublisher(initialValue: DefaultValues.connectionMode)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Connection Mode error: \(error)")
-                }
-            }, receiveValue: { [weak self] mode in
+            .sink { [weak self] mode in
                 guard let self = self else { return }
                 self.connectionMode = (mode ?? DefaultValues.connectionMode).localized
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
 
         preferences.getConnectedDNSObservable()
-            .toPublisher(initialValue: DefaultValues.connectedDNS)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.logger.logE("ConnectionSettingsViewModel", "Connected DNS error: \(error)")
-                }
-            }, receiveValue: { [weak self] mode in
+            .sink { [weak self] mode in
                 guard let self = self else { return }
                 self.connectedDNS = (mode ?? DefaultValues.connectedDNS).localized
                 self.reloadItems()
-            })
+            }
             .store(in: &cancellables)
     }
 
