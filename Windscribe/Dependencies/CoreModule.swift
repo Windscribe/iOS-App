@@ -20,8 +20,8 @@ extension Container {
         register(FileDatabase.self) { r in
             FileDatabaseImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
-        register(Preferences.self) { _ in
-            PreferencesImpl()
+        register(Preferences.self) { r in
+            PreferencesImpl(logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.container)
         register(LocalizationService.self) { r in
             LocalizationServiceImpl(logger: r.resolve(FileLogger.self)!)

@@ -15,14 +15,14 @@ extension Container {
         register(LocalDatabase.self) { _ in
             LocalDatabaseImpl(
                 logger: FileLoggerImpl(),
-                preferences: PreferencesImpl())
+                preferences: PreferencesImpl(logger: FileLoggerImpl()))
         }
         return resolve(LocalDatabase.self)!
     }
 
     func injectPreferences() -> Preferences {
         register(Preferences.self) { _ in
-            PreferencesImpl()
+            PreferencesImpl(logger: FileLoggerImpl())
         }
         return resolve(Preferences.self)!
     }

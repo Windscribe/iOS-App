@@ -74,30 +74,26 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
     override func bindSubjects() {
         super.bindSubjects()
 
-        Task { [weak self] in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
                 let robertFilters = try await apiManager.getRobertFilters()
-                await MainActor.run {
-                    self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
-                    self.robertFilters = robertFilters
-                    self.reloadItems()
-                }
+                self.localDB.saveRobertFilters(filters: robertFilters).disposed(by: self.disposeBag)
+                self.robertFilters = robertFilters
+                self.reloadItems()
             } catch {
-                await MainActor.run {
-                    if let error = error as? Errors {
-                        var newError = ""
-                        switch error {
-                        case let .apiError(e):
-                            newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
-                        default:
-                            newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
-                        }
-                        self.logger.logE("GeneralSettingsViewModel", newError)
-                        self.errorMessage = newError
-                        if self.entries.isEmpty {
-                            self.entries = self.localDB.getRobertFilters()?.getRules() ?? []
-                        }
+                if let error = error as? Errors {
+                    var newError = ""
+                    switch error {
+                    case let .apiError(e):
+                        newError = e.errorMessage ?? TextsAsset.Robert.failedToGetFilters
+                    default:
+                        newError = "\(TextsAsset.Robert.failedToGetFilters) \(error.description)"
+                    }
+                    self.logger.logE("GeneralSettingsViewModel", newError)
+                    self.errorMessage = newError
+                    if self.entries.isEmpty {
+                        self.entries = self.localDB.getRobertFilters()?.getRules() ?? []
                     }
                 }
             }
@@ -112,15 +108,17 @@ final class RobertSettingsViewModelImpl: PreferencesBaseViewModelImpl, RobertSet
     func filterSelected(_ filter: RobertFilter) {
         actionSelected()
 
+        // Extract Realm object properties on main thread before entering Task
+        let filterId = filter.id
         let status: Int32 = filter.enabled ? 0 : 1
         isLoading = true
 
         Task { [weak self] in
             guard let self = self else { return }
             do {
-                _ = try await apiManager.updateRobertSettings(id: filter.id, status: status)
+                _ = try await apiManager.updateRobertSettings(id: filterId, status: status)
                 await MainActor.run {
-                    self.localDB.toggleRobertRule(id: filter.id)
+                    self.localDB.toggleRobertRule(id: filterId)
                     guard let robertFilters = self.localDB.getRobertFilters() else {
                         let newError = "Unable to load robert rules. Check your network connection."
                         self.logger.logE("GeneralSettingsViewModel", self.errorMessage ?? "")
