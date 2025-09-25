@@ -31,6 +31,7 @@ class MockPreferences: Preferences {
     private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
     var mockLastSelectedLocation: String = ""
     var mockBestLocation: String = ""
+    var clearWireGuardConfigurationCalled = false
 
     func saveAdvanceParams(params: String) {
         mockAdvanceParams = params
@@ -578,5 +579,7 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func clearWireGuardConfiguration() {}
+    func clearWireGuardConfiguration() {
+        clearWireGuardConfigurationCalled = true
+    }
 }

@@ -65,5 +65,8 @@ extension Container {
         register(DNSSettingsManagerType.self) { _ in
             DNSSettingsManager()
         }.inObjectScope(.container)
+        register(KeychainManager.self) { r in
+            KeychainManagerImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.container)
     }
 }

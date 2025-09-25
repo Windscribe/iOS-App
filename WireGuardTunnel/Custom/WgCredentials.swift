@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import SimpleKeychain
 import Swinject
 import WireGuardKit
 
@@ -24,10 +23,11 @@ class WgCredentials {
     var deleteOldestKey = true
     private let logger: FileLogger
     private let preferences: Preferences
-    private let simpleKeychain = SimpleKeychain(service: "WireguardService", accessGroup: SharedKeys.sharedKeychainGroup)
-    init(preferences: Preferences, logger: FileLogger) {
+    private let keychainManager: KeychainManager
+    init(preferences: Preferences, logger: FileLogger, keychainManager: KeychainManager) {
         self.preferences = preferences
         self.logger = logger
+        self.keychainManager = keychainManager
     }
 
     func load() {
@@ -53,12 +53,27 @@ class WgCredentials {
 
     // Generate private key if not available and save it to keychain.
     func getPrivateKey() -> String? {
-        guard let currentKey = try? simpleKeychain.string(forKey: SharedKeys.privateKey) else {
-            let privateKey = PrivateKey().base64Key
-            try? simpleKeychain.set(privateKey, forKey: SharedKeys.privateKey)
-            return privateKey
+        do {
+            let currentKey = try keychainManager.getString(
+                forKey: SharedKeys.privateKey,
+                service: "WireguardService",
+                accessGroup: SharedKeys.sharedKeychainGroup)
+            return currentKey
+        } catch {
+            // Key doesn't exist, generate new one
+            do {
+                let privateKey = PrivateKey().base64Key
+                try keychainManager.setString(
+                    privateKey,
+                    forKey: SharedKeys.privateKey,
+                    service: "WireguardService",
+                    accessGroup: SharedKeys.sharedKeychainGroup)
+                return privateKey
+            } catch {
+                logger.logE("WgCredentials", "Error saving new private key to keychain: \(error)")
+                return nil
+            }
         }
-        return currentKey
     }
 
     // wg Init
@@ -106,7 +121,11 @@ class WgCredentials {
 
     // Delete credentials and key if user status changes
     func delete() {
-        try? simpleKeychain.deleteItem(forKey: SharedKeys.privateKey)
+        do {
+            try keychainManager.deleteItem(forKey: SharedKeys.privateKey, service: "WireguardService", accessGroup: SharedKeys.sharedKeychainGroup)
+        } catch {
+            logger.logE("WgCredentials", "Error deleting private key from keychain: \(error)")
+        }
         dns = nil
         address = nil
         presharedKey = nil

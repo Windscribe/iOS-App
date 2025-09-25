@@ -15,7 +15,7 @@ extension Container {
         self.init()
         injectCore(ext: isExt)
         register(WgCredentials.self) { r in
-            WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
+            WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)
         }.inObjectScope(.container)
         register(APIUtilService.self) { _ in
             APIUtilServiceImpl()

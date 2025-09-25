@@ -23,11 +23,6 @@
 		1E0A6DA42D78823A0075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA32D78823A0075B8F5 /* RealmSwift */; };
 		1E0A6DA82D7882580075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DA72D7882580075B8F5 /* RealmSwift */; };
 		1E0A6DAC2D7882630075B8F5 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAB2D7882630075B8F5 /* RealmSwift */; };
-		1E0A6DAF2D7884530075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DAE2D7884530075B8F5 /* SimpleKeychain */; };
-		1E0A6DB12D7884C50075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB02D7884C50075B8F5 /* SimpleKeychain */; };
-		1E0A6DB32D7884DE0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB22D7884DE0075B8F5 /* SimpleKeychain */; };
-		1E0A6DB52D7884ED0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB42D7884ED0075B8F5 /* SimpleKeychain */; };
-		1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DB62D7884FD0075B8F5 /* SimpleKeychain */; };
 		1E0A6DC02D788B4F0075B8F5 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */; };
 		1E0A6DC32D7894280075B8F5 /* ExpyTableView in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DC22D7894280075B8F5 /* ExpyTableView */; };
 		1E0A6DC62D7894520075B8F5 /* SwipeCellKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1E0A6DC52D7894520075B8F5 /* SwipeCellKit */; };
@@ -676,7 +671,6 @@
 		C5035A182CBE2BF600A46B6D /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD24CA321C179DF00BBCE1E /* APIError.swift */; };
 		C5035A192CBE2C0100A46B6D /* WSNetErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B752B37F3F200F2F110 /* WSNetErrors.swift */; };
 		C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */; };
-		C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0982B3B672B0011EF56 /* TestModules.swift */; };
 		C50537AA2CD34B9E00EA8856 /* WSNet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59532A0B2CB852670069CC8F /* WSNet.xcframework */; };
 		C50AF6C42B60250300A3FBE0 /* EmergencyRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C32B60250300A3FBE0 /* EmergencyRepository.swift */; };
 		C50AF6C62B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C50AF6C52B60251D00A3FBE0 /* EmergencyRepositoryImpl.swift */; };
@@ -1027,6 +1021,21 @@
 		F440F3022D8DECE6006F1A6D /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3012D8DECE6006F1A6D /* LoginView.swift */; };
 		F440F3042D8DF088006F1A6D /* LoginTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3032D8DF088006F1A6D /* LoginTextField.swift */; };
 		F440F3082D8E102D006F1A6D /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F440F3072D8E102D006F1A6D /* LoginViewModel.swift */; };
+		F4433D032E830A340012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D042E830A340012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D052E830A340012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D062E830A340012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D082E8310790012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D092E8310790012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D0A2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D0B2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D0C2E8312470012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D0D2E8312470012EA34 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D022E830A340012EA34 /* KeychainManager.swift */; };
+		F4433D0E2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D0F2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */; };
+		F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D102E8315800012EA34 /* MockKeychainManager.swift */; };
+		F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D122E8316CF0012EA34 /* KeychainManagerTests.swift */; };
+		F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4433D152E8333360012EA34 /* KeychainDatabaseTests.swift */; };
 		F443EA532E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F443EA542E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
 		F443EA572E0B1F5F00FFC75E /* UIConstants+ErrorTexts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */; };
@@ -1133,6 +1142,7 @@
 		F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E452D9658EB005EF149 /* ViewPositionReader.swift */; };
 		F489F2582E4E55FF00E0D898 /* RestrictiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */; };
 		F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */; };
+		F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */; };
 		F48F41362DB938E300AFFC30 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353A2DA994BC00108558 /* SoundManager.swift */; };
 		F48F41372DB938EB00AFFC30 /* SoundManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353D2DA9953900108558 /* SoundManaging.swift */; };
 		F48F41392DB955F100AFFC30 /* CustomSoundPlaybackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */; };
@@ -1818,7 +1828,6 @@
 		C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseImpl.swift; sourceTree = "<group>"; };
 		C55AF0912B3A68820011EF56 /* PreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesTests.swift; sourceTree = "<group>"; };
 		C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseTests.swift; sourceTree = "<group>"; };
-		C55AF0982B3B672B0011EF56 /* TestModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModules.swift; sourceTree = "<group>"; };
 		C55AF09A2B3B75D10011EF56 /* PreferencesSampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesSampleData.swift; sourceTree = "<group>"; };
 		C55AF0A32B3E80300011EF56 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+VPN.swift"; sourceTree = "<group>"; };
@@ -2000,6 +2009,11 @@
 		F440F3012D8DECE6006F1A6D /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		F440F3032D8DF088006F1A6D /* LoginTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginTextField.swift; sourceTree = "<group>"; };
 		F440F3072D8E102D006F1A6D /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
+		F4433D022E830A340012EA34 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
+		F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerImpl.swift; sourceTree = "<group>"; };
+		F4433D102E8315800012EA34 /* MockKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockKeychainManager.swift; sourceTree = "<group>"; };
+		F4433D122E8316CF0012EA34 /* KeychainManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManagerTests.swift; sourceTree = "<group>"; };
+		F4433D152E8333360012EA34 /* KeychainDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainDatabaseTests.swift; sourceTree = "<group>"; };
 		F443EA522E0B1F4B00FFC75E /* UIConstants+ErrorTexts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIConstants+ErrorTexts.swift"; sourceTree = "<group>"; };
 		F44A0E682E0F2A48008297CA /* CaptchaViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptchaViewModel.swift; sourceTree = "<group>"; };
 		F44F275A2D84B79E00A47E37 /* NewsFeedDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedDetailView.swift; sourceTree = "<group>"; };
@@ -2070,6 +2084,7 @@
 		F4888E452D9658EB005EF149 /* ViewPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPositionReader.swift; sourceTree = "<group>"; };
 		F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkView.swift; sourceTree = "<group>"; };
 		F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkViewModel.swift; sourceTree = "<group>"; };
+		F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGCredentialsTests.swift; sourceTree = "<group>"; };
 		F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundPlaybackManager.swift; sourceTree = "<group>"; };
 		F499351B2DA6D93700108558 /* RoutedHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutedHostingController.swift; sourceTree = "<group>"; };
 		F499352B2DA71F0800108558 /* GhostAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GhostAccountView.swift; sourceTree = "<group>"; };
@@ -2168,7 +2183,6 @@
 				1ED33DEB2D7B3DAD00B980D3 /* RxSwift in Frameworks */,
 				1ED33DE72D7B3DAD00B980D3 /* RxBlocking in Frameworks */,
 				C56123892C5F26290090EB5A /* libresolv.9.tbd in Frameworks */,
-				1E0A6DB72D7884FD0075B8F5 /* SimpleKeychain in Frameworks */,
 				C561238A2C5F26310090EB5A /* libresolv.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2189,7 +2203,6 @@
 				AF9E08A425E6B1BF00A0E372 /* Resolver in Frameworks */,
 				1ED33DC92D7B384C00B980D3 /* RxRelay in Frameworks */,
 				1ED33E052D7B3E5700B980D3 /* RxCocoa in Frameworks */,
-				1E0A6DAF2D7884530075B8F5 /* SimpleKeychain in Frameworks */,
 				1E0A6DC02D788B4F0075B8F5 /* IQKeyboardManagerSwift in Frameworks */,
 				AFF20A69230758C100AFA7E4 /* CloudKit.framework in Frameworks */,
 				59532A132CB852700069CC8F /* WSNet.xcframework in Frameworks */,
@@ -2242,7 +2255,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E0A6DB52D7884ED0075B8F5 /* SimpleKeychain in Frameworks */,
 				C56123832C5F25E10090EB5A /* libresolv.9.tbd in Frameworks */,
 				1E0A6DF62D79EB900075B8F5 /* Swinject in Frameworks */,
 				AF20AE3222DF767300375489 /* NetworkExtension.framework in Frameworks */,
@@ -2268,7 +2280,6 @@
 				1ED33DF72D7B3DC800B980D3 /* RxSwift in Frameworks */,
 				C598706B2C63210B00DA4DB1 /* WireGuardKit in Frameworks */,
 				1E0A6E0C2D79ECF60075B8F5 /* Swinject in Frameworks */,
-				1E0A6DB12D7884C50075B8F5 /* SimpleKeychain in Frameworks */,
 				C56123862C5F26080090EB5A /* libresolv.tbd in Frameworks */,
 				C56123852C5F26000090EB5A /* libresolv.9.tbd in Frameworks */,
 			);
@@ -2285,7 +2296,6 @@
 				1ED33DED2D7B3DBC00B980D3 /* RxBlocking in Frameworks */,
 				59532A112CB852670069CC8F /* WSNet.xcframework in Frameworks */,
 				1E0A6E102D79ED0B0075B8F5 /* Swinject in Frameworks */,
-				1E0A6DB32D7884DE0075B8F5 /* SimpleKeychain in Frameworks */,
 				1E0A6DFA2D79EC9C0075B8F5 /* Swinject in Frameworks */,
 				1ED33DEF2D7B3DBC00B980D3 /* RxCocoa in Frameworks */,
 				AFDF934A255EB93C002B1FBA /* WidgetKit.framework in Frameworks */,
@@ -3328,13 +3338,13 @@
 		AF018E1721B1AA2D00B225FF /* WindscribeTests */ = {
 			isa = PBXGroup;
 			children = (
-				C55AF0902B3A686E0011EF56 /* Preferences */,
+				F4433D142E8316DB0012EA34 /* Data */,
 				F40419432D8232190005EF97 /* Managers */,
-				C55AF0952B3B58940011EF56 /* Database */,
 				C5D983C52B34E5690069FF3A /* API */,
+				F48DDC132E85B90400B66315 /* Protocol */,
 				C55AF09C2B3B76060011EF56 /* Utils */,
-				F434A1B22D834A3D0059415F /* SampleData */,
 				F4EF7A092D5D31A200E4EB9F /* Mocks */,
+				F434A1B22D834A3D0059415F /* SampleData */,
 				AF018E1A21B1AA2D00B225FF /* Info.plist */,
 			);
 			path = WindscribeTests;
@@ -3687,22 +3697,6 @@
 			path = User;
 			sourceTree = "<group>";
 		};
-		C55AF0902B3A686E0011EF56 /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				C55AF0912B3A68820011EF56 /* PreferencesTests.swift */,
-			);
-			path = Preferences;
-			sourceTree = "<group>";
-		};
-		C55AF0952B3B58940011EF56 /* Database */ = {
-			isa = PBXGroup;
-			children = (
-				C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */,
-			);
-			path = Database;
-			sourceTree = "<group>";
-		};
 		C55AF09C2B3B76060011EF56 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -3755,7 +3749,6 @@
 				C56FCBEF2B2B9F11008DE7D4 /* Assembler.swift */,
 				C50F20C52B61760000266B23 /* CoreModule.swift */,
 				C56FCBF12B2B9F37008DE7D4 /* AppModules.swift */,
-				C55AF0982B3B672B0011EF56 /* TestModules.swift */,
 				C50F207A2B606E2200266B23 /* WireguardModule.swift */,
 				C571C6732C135C3600786DA5 /* UserScope.swift */,
 				59A2186D2C3C9D7D000D89FA /* AppModulesPhone.swift */,
@@ -3780,6 +3773,8 @@
 		C580FDE82B4D70CD004FA857 /* KeyChainDatabase */ = {
 			isa = PBXGroup;
 			children = (
+				F4433D022E830A340012EA34 /* KeychainManager.swift */,
+				F4433D072E8310790012EA34 /* KeychainManagerImpl.swift */,
 				C580FDE92B4D70EE004FA857 /* KeyChainDatabase.swift */,
 				C580FDEB2B4D711D004FA857 /* KeyChainDatabaseImpl.swift */,
 			);
@@ -4516,6 +4511,17 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		F4433D142E8316DB0012EA34 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				C55AF0912B3A68820011EF56 /* PreferencesTests.swift */,
+				F4433D152E8333360012EA34 /* KeychainDatabaseTests.swift */,
+				F4433D122E8316CF0012EA34 /* KeychainManagerTests.swift */,
+				C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		F45BA5932D53F96000CFDB82 /* PlanUpgrade */ = {
 			isa = PBXGroup;
 			children = (
@@ -4915,6 +4921,22 @@
 				F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		F48DDC132E85B90400B66315 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				F48DDC152E85BEA800B66315 /* WireGuard */,
+			);
+			path = Protocol;
+			sourceTree = "<group>";
+		};
+		F48DDC152E85BEA800B66315 /* WireGuard */ = {
+			isa = PBXGroup;
+			children = (
+				F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */,
+			);
+			path = WireGuard;
 			sourceTree = "<group>";
 		};
 		F499351E2DA7170F00108558 /* Preferences */ = {
@@ -5498,9 +5520,10 @@
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
+				F4433D102E8315800012EA34 /* MockKeychainManager.swift */,
+				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
 				F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */,
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
-				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
 				F49935402DA9973100108558 /* MockSoundManager.swift */,
@@ -5691,7 +5714,6 @@
 			packageProductDependencies = (
 				C598706C2C63212700DA4DB1 /* WireGuardKit */,
 				1E0A6DAB2D7882630075B8F5 /* RealmSwift */,
-				1E0A6DB62D7884FD0075B8F5 /* SimpleKeychain */,
 				1E0A6E132D79ED160075B8F5 /* Swinject */,
 				1ED33DE62D7B3DAD00B980D3 /* RxBlocking */,
 				1ED33DE82D7B3DAD00B980D3 /* RxCocoa */,
@@ -5732,7 +5754,6 @@
 				C56D5AEF2C4DFECC0069DB6E /* WireGuardKit */,
 				C56D5AF42C4DFF300069DB6E /* WireGuardKit */,
 				F485CBC52D4D76BA0063EA3A /* SnapKit */,
-				1E0A6DAE2D7884530075B8F5 /* SimpleKeychain */,
 				1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */,
 				1E0A6DC22D7894280075B8F5 /* ExpyTableView */,
 				1E0A6DC52D7894520075B8F5 /* SwipeCellKit */,
@@ -5830,7 +5851,6 @@
 			packageProductDependencies = (
 				C598706A2C63210B00DA4DB1 /* WireGuardKit */,
 				1E0A6DA72D7882580075B8F5 /* RealmSwift */,
-				1E0A6DB02D7884C50075B8F5 /* SimpleKeychain */,
 				1E0A6E0B2D79ECF60075B8F5 /* Swinject */,
 				1ED33DF22D7B3DC800B980D3 /* RxBlocking */,
 				1ED33DF42D7B3DC800B980D3 /* RxCocoa */,
@@ -5987,7 +6007,6 @@
 				C59870692C6320F400DA4DB1 /* XCRemoteSwiftPackageReference "wireguard-apple" */,
 				F485CBC42D4D76A20063EA3A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */,
-				1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */,
 				1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 				1E0A6DC12D7894280075B8F5 /* XCRemoteSwiftPackageReference "ExpyTableView" */,
 				1E0A6DC42D7894520075B8F5 /* XCRemoteSwiftPackageReference "SwipeCellKit" */,
@@ -6341,6 +6360,7 @@
 				59FC73E92C51507800021CD1 /* APIManagerImpl+Account.swift in Sources */,
 				F42ADD242D5BDADB0021AF6E /* UIApplication+Extension.swift in Sources */,
 				59FC74122C51541300021CD1 /* AboutItem.swift in Sources */,
+				F4433D0A2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				59DF45882C59C30400EB6DC1 /* SignupRouter.swift in Sources */,
 				59FC74092C5153E400021CD1 /* AutomaticMode.swift in Sources */,
 				F49E61D02E00A2030087386F /* CustomSoundEffectType.swift in Sources */,
@@ -6551,6 +6571,7 @@
 				59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */,
 				59656F6A2C72E05500707EA2 /* SideMenuOptionsView.swift in Sources */,
 				59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */,
+				F4433D042E830A340012EA34 /* KeychainManager.swift in Sources */,
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,
 				59FC73F52C5152C500021CD1 /* MobilePlan.swift in Sources */,
 				59FC73D62C514B3D00021CD1 /* UIConstants+Fields.swift in Sources */,
@@ -6615,6 +6636,7 @@
 				AF619DF324AB5DAE00BB331C /* CustomConfigListFooterView.swift in Sources */,
 				C5592B852B3940AE00F2F110 /* IPRepositoryImpl.swift in Sources */,
 				F49C45CE2DCD33AE007E5EF1 /* AboutSettingsViewModel.swift in Sources */,
+				F4433D092E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				AFFA716421C99B2F00349195 /* Date+Extension.swift in Sources */,
 				AF16CA1822272EBE00997A2A /* InAppPurchaseManagerImpl.swift in Sources */,
 				F499352C2DA71F0800108558 /* GhostAccountView.swift in Sources */,
@@ -6735,6 +6757,7 @@
 				F47EC5362DEA1B7800AF5089 /* AdvancedParametersView.swift in Sources */,
 				F49C45C62DCD32D4007E5EF1 /* HelpSettingsView.swift in Sources */,
 				F485CBD22D51509C0063EA3A /* PlanUpgradeSelectionView.swift in Sources */,
+				F4433D052E830A340012EA34 /* KeychainManager.swift in Sources */,
 				F49C45BE2DCD304E007E5EF1 /* ReferForDataSettingsView.swift in Sources */,
 				AF443D6D22C170FD004986DA /* ImageButton.swift in Sources */,
 				C56A3A292C064D0500D54DB9 /* ManagerErrors.swift in Sources */,
@@ -6979,7 +7002,6 @@
 				C585F3E12C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				1EB67FA72DE8C2A800729052 /* NetworkSettingsEntryTpe.swift in Sources */,
 				C580FE162B507883004FA857 /* UncompletedTransactions.swift in Sources */,
-				C50537A92CD3436E00EA8856 /* TestModules.swift in Sources */,
 				1E2366CA2BC03925000DF098 /* PopupRouter.swift in Sources */,
 				AF21995C2270B147009B42E5 /* QNNTraceRoute.m in Sources */,
 				AF537A192249318C00A66683 /* MainViewController+Siri.swift in Sources */,
@@ -7073,18 +7095,22 @@
 			files = (
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
 				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,
+				F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */,
 				C50537A72CD33A0D00EA8856 /* PreferencesSampleData.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
+				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
+				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				C5592B802B388B2800F2F110 /* APISampleData.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
+				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,
 			);
@@ -7117,6 +7143,7 @@
 				C585F3E22C8E79A400A70524 /* PreferencesImpl+Favourites.swift in Sources */,
 				C571C6752C135C3600786DA5 /* UserScope.swift in Sources */,
 				596E60062B8F77EC00D51E20 /* Language.swift in Sources */,
+				F4433D0E2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */,
 				C50F20D02B62110400266B23 /* Bundle+Extension.swift in Sources */,
 				AF0B9EEC226E0C4500DCD026 /* PacketTunnelProvider.swift in Sources */,
 				1E3F77662DB13D29008308A8 /* ExportedLocations.swift in Sources */,
@@ -7131,6 +7158,7 @@
 				C50F20B02B616DF600266B23 /* FileLogger.swift in Sources */,
 				E9425B9A27437024008B8786 /* APIParameters.swift in Sources */,
 				AFBD019622946B3400FED749 /* String+Extension.swift in Sources */,
+				F4433D0C2E8312470012EA34 /* KeychainManager.swift in Sources */,
 				C5DEF9F32C52ED9A00696D06 /* String+ArrayConversion.swift in Sources */,
 				C5DEF9F72C52EDCF00696D06 /* AdvanceKeys.swift in Sources */,
 				F470F5592E81B00400F8400D /* UserDefaults+Extension.swift in Sources */,
@@ -7151,6 +7179,7 @@
 				C59FF1A32CBB8D890072EF70 /* ContainerResolver.swift in Sources */,
 				C5DD96072CA7257500FFABBC /* Data+Extension.swift in Sources */,
 				C561237B2C5F25760090EB5A /* Resolver.swift in Sources */,
+				F4433D0B2E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				C5BC5F002E7B63E8006A5AB3 /* DNSSettingsManager.swift in Sources */,
 				C571C6762C135C3600786DA5 /* UserScope.swift in Sources */,
 				F469F0DE2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
@@ -7172,6 +7201,7 @@
 				C50F20CA2B61777C00266B23 /* CoreModule.swift in Sources */,
 				C59FF1A12CBB89050072EF70 /* APIUtil.swift in Sources */,
 				F49C45822DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
+				F4433D062E830A340012EA34 /* KeychainManager.swift in Sources */,
 				C50F20B72B61734500266B23 /* FileLoggerImpl.swift in Sources */,
 				C5DEF9F22C52ED9900696D06 /* String+ArrayConversion.swift in Sources */,
 				C59FF1A72CBB8DE50072EF70 /* APIParameters.swift in Sources */,
@@ -7242,6 +7272,7 @@
 				1E818F142C3D6D790088066C /* RegexConstants.swift in Sources */,
 				AF619C4524AA348900BB331C /* PacketTunnelProvider.swift in Sources */,
 				F469F0DF2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
+				F4433D0F2E8312500012EA34 /* KeychainManagerImpl.swift in Sources */,
 				C535D28C27E2E39100C08345 /* String+Extension.swift in Sources */,
 				C5D0E40829BB8BE70091FB14 /* NETunnelProviderProtocol+Extension.swift in Sources */,
 				C50F20C72B61769F00266B23 /* WireguardModule.swift in Sources */,
@@ -7255,6 +7286,7 @@
 				F470F54F2E7C9DD500F8400D /* PreferencesImpl+WireGuard.swift in Sources */,
 				C5D0E40C29BB8BE70091FB14 /* Keychain.swift in Sources */,
 				5993396F2B4CD28300EC615D /* DefaultValues.swift in Sources */,
+				F4433D0D2E8312470012EA34 /* KeychainManager.swift in Sources */,
 				C535D27927E2811D00C08345 /* DynamicWireGuardConfig.swift in Sources */,
 				C561237C2C5F25770090EB5A /* Resolver.swift in Sources */,
 				C5328D0A2B6CB12200A12756 /* AlertManagerV2.swift in Sources */,
@@ -7280,6 +7312,7 @@
 				C5DEF9F42C52EDCD00696D06 /* AdvanceKeys.swift in Sources */,
 				1E60E0242CAD693500623CD5 /* AppConstants.swift in Sources */,
 				F410FABD2E709C97007762A1 /* RxSwift+Extension.swift in Sources */,
+				F4433D082E8310790012EA34 /* KeychainManagerImpl.swift in Sources */,
 				1E60E0212CAD68C600623CD5 /* KeyChainDatabase.swift in Sources */,
 				F49C45782DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				1E3F77622DB13CA0008308A8 /* ExportedLocations.swift in Sources */,
@@ -7289,6 +7322,7 @@
 				1E60E0272CAD6F5400623CD5 /* Disconnect.swift in Sources */,
 				C56FCBE62B2B8E1C008DE7D4 /* Preferences.swift in Sources */,
 				1AF57D48280FED3C004E8082 /* Language.swift in Sources */,
+				F4433D032E830A340012EA34 /* KeychainManager.swift in Sources */,
 				C5BC5F032E7B6402006A5AB3 /* RegexConstants.swift in Sources */,
 				F469F0DC2D7BA7F1004DC6AB /* KeychainConstants.swift in Sources */,
 				C59FF1A02CB998610072EF70 /* IntentCommon.swift in Sources */,
@@ -8827,14 +8861,6 @@
 				minimumVersion = 10.54.5;
 			};
 		};
-		1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/auth0/SimpleKeychain";
-			requirement = {
-				kind = exactVersion;
-				version = 1.2.0;
-			};
-		};
 		1E0A6DBE2D7889170075B8F5 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager.git";
@@ -8953,31 +8979,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 1E0A6D9C2D7882080075B8F5 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
-		};
-		1E0A6DAE2D7884530075B8F5 /* SimpleKeychain */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
-			productName = SimpleKeychain;
-		};
-		1E0A6DB02D7884C50075B8F5 /* SimpleKeychain */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
-			productName = SimpleKeychain;
-		};
-		1E0A6DB22D7884DE0075B8F5 /* SimpleKeychain */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
-			productName = SimpleKeychain;
-		};
-		1E0A6DB42D7884ED0075B8F5 /* SimpleKeychain */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
-			productName = SimpleKeychain;
-		};
-		1E0A6DB62D7884FD0075B8F5 /* SimpleKeychain */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1E0A6DAD2D7884530075B8F5 /* XCRemoteSwiftPackageReference "SimpleKeychain" */;
-			productName = SimpleKeychain;
 		};
 		1E0A6DBF2D788B4F0075B8F5 /* IQKeyboardManagerSwift */ = {
 			isa = XCSwiftPackageProductDependency;

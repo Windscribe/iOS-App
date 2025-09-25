@@ -26,11 +26,17 @@ class LocalDatabaseTests: XCTestCase {
         super.setUp()
 
         mockContainer = Container()
-        localDatabase = mockContainer.injectLocalDatabase()
+        mockContainer.register(LocalDatabase.self) { _ in
+            LocalDatabaseImpl(
+                logger: FileLoggerImpl(),
+                preferences: PreferencesImpl(logger: FileLoggerImpl()))
+        }.inObjectScope(.container)
+
+        localDatabase = mockContainer.resolve(LocalDatabase.self)!
     }
 
     override func tearDown() {
-        mockContainer.injectLocalDatabase().clean()
+        localDatabase.clean()
         mockContainer = nil
         localDatabase = nil
 
@@ -38,7 +44,7 @@ class LocalDatabaseTests: XCTestCase {
     }
 
     func testMyIpSave() {
-        mockContainer.injectLocalDatabase().clean()
+        localDatabase.clean()
 
         let expection = expectation(description: "Waiting for getIp call to finish.")
         // Check no saved ip object found

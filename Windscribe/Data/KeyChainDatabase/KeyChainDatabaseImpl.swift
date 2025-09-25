@@ -7,52 +7,40 @@
 //
 
 import Foundation
-import SimpleKeychain
 
 class KeyChainDatabaseImpl: KeyChainDatabase {
     private let logger: FileLogger
-    private let simpleKeychain = SimpleKeychain(accessGroup: SharedKeys.sharedKeychainGroup)
+    private let keychainManager: KeychainManager
 
-    init(logger: FileLogger) {
+    init(logger: FileLogger, keychainManager: KeychainManager) {
         self.logger = logger
+        self.keychainManager = keychainManager
     }
 
     func save(username: String, password: String) {
         logger.logD("KeyChainDatabase", "Saving credentials to keychain")
-        guard let passwordData = password.data(using: String.Encoding.utf8, allowLossyConversion: false),
-              let accountData = username.data(using: String.Encoding.utf8, allowLossyConversion: false) else { return }
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecAttrGeneric as String: accountData,
-                                    kSecAttrService as String: AppConstants.service,
-                                    kSecAttrAccount as String: accountData,
-                                    kSecValueData as String: passwordData]
-        SecItemDelete(query as CFDictionary)
-        SecItemAdd(query as CFDictionary, nil)
-        logger.logI("KeyChainDatabase", "Saved credentials to keychain")
+        do {
+            try keychainManager.setString(password, forKey: username, service: AppConstants.service, accessGroup: nil)
+            logger.logI("KeyChainDatabase", "Saved credentials to keychain")
+        } catch {
+            logger.logE("KeyChainDatabase", "Failed to save credentials to keychain: \(error.localizedDescription)")
+        }
     }
 
     func retrieve(username: String) -> Data? {
         logger.logD("KeyChainDatabase", "Retrieving credentials from keychain")
-        guard let accountData = username.data(using: String.Encoding.utf8, allowLossyConversion: false) else { return nil }
-        let query: [String: Any] = [kSecClass as String: kSecClassGenericPassword,
-                                    kSecAttrGeneric as String: accountData,
-                                    kSecAttrService as String: AppConstants.service,
-                                    kSecAttrAccount as String: accountData,
-                                    kSecMatchLimit as String: kSecMatchLimitOne,
-                                    kSecReturnPersistentRef as String: kCFBooleanTrue as Any]
-        var result: CFTypeRef?
-        let status = SecItemCopyMatching(query as CFDictionary, &result)
-        if status == errSecSuccess {
+        do {
+            let password = try keychainManager.getString(forKey: username, service: AppConstants.service, accessGroup: nil)
             logger.logI("KeyChainDatabase", "Retrieved credentials from keychain")
-            return result as? Data
-        } else {
-            logger.logE("KeyChainDatabase", "Error when retriving data from keychain. \(errSecItemNotFound)")
+            return password.data(using: .utf8)
+        } catch {
+            logger.logE("KeyChainDatabase", "Error when retrieving data from keychain: \(error.localizedDescription)")
             return nil
         }
     }
 
     func isGhostAccountCreated() -> Bool {
-        if let value = try? simpleKeychain.data(forKey: KeyChainkeys.ghostAccountCreated) {
+        if let value = try? keychainManager.getBundleData(forKey: KeyChainkeys.ghostAccountCreated) {
             let isGhostAccountCreated = String(data: value, encoding: .utf8).flatMap(Bool.init) ?? false
             return isGhostAccountCreated
         }
@@ -60,6 +48,8 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     }
 
     func setGhostAccountCreated() {
-        try? simpleKeychain.set(true.data, forKey: KeyChainkeys.ghostAccountCreated)
+        if let data = "true".data(using: .utf8) {
+            try? keychainManager.setBundleData(data, forKey: KeyChainkeys.ghostAccountCreated)
+        }
     }
 }

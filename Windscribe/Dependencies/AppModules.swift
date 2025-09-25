@@ -16,7 +16,7 @@ import Swinject
 class App: Assembly {
     func assemble(container: Swinject.Container) {
         container.register(WgCredentials.self) { r in
-            WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!)
+            WgCredentials(preferences: r.resolve(Preferences.self)!, logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)
         }.inObjectScope(.userScope)
         container.register(WireguardConfigRepository.self) { r in
             WireguardConfigRepositoryImpl(apiCallManager: r.resolve(WireguardAPIManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, wgCrendentials: r.resolve(WgCredentials.self)!, alertManager: r.resolve(AlertManagerV2.self), logger: r.resolve(FileLogger.self)!)
@@ -243,7 +243,7 @@ class Database: Assembly {
             LocalDatabaseImpl(logger: r.resolve(FileLogger.self)!, preferences: r.resolve(Preferences.self)!)
         }.inObjectScope(.userScope)
         container.register(KeyChainDatabase.self) { r in
-            KeyChainDatabaseImpl(logger: r.resolve(FileLogger.self)!)
+            KeyChainDatabaseImpl(logger: r.resolve(FileLogger.self)!, keychainManager: r.resolve(KeychainManager.self)!)
         }.inObjectScope(.userScope)
     }
 }
