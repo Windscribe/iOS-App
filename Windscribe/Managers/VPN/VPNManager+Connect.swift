@@ -51,26 +51,34 @@ extension VPNManager {
         logger.logI("VPNConfiguration", "Connecting from ViewModel")
         connectionTaskPublisher?.cancel()
         self.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
-                                              selectedPort: proto.portName,
-                                              status: .connecting,
-                                              killSwitch: false,
-                                              onDemand: false))
+                                            selectedPort: proto.portName,
+                                            status: .connecting,
+                                            killSwitch: vpnInfo.value?.killSwitch ?? false,
+                                            onDemand: false))
+
         return disableKillSwitchIfRequired()
             .flatMap { _ in
+                self.logger.logI("VPNConfiguration", "Checkin if user has access to location \(locationId) for \(connectionType) connection")
                 return self.configManager.validateAccessToLocation(locationID: locationId, connectionType: connectionType).eraseToAnyPublisher()
-            }.flatMap { () in
-            let status = self.connectivity.getNetwork().status
-            if [NetworkStatus.disconnected].contains(status) {
-                return Fail<VPNConnectionState, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
-            }
-            return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
-        }.handleEvents(receiveSubscription: { _ in
-            self.configurationState = .configuring
-        }, receiveCompletion: { _ in
-            self.configurationState = .initial
-        }, receiveCancel: {
-            self.configurationState = .initial
-        }).eraseToAnyPublisher()
+            }.flatMap { _ in
+                let status = self.connectivity.getNetwork().status
+                self.logger.logI("VPNConfiguration", "Checkin status of the connections: \(status)")
+                if [NetworkStatus.disconnected].contains(status) {
+                    self.logger.logI("VPNConfiguration", "Failed connecting as network is offline")
+                    return Fail<VPNConnectionState, Error>(error: VPNConfigurationErrors.networkIsOffline).eraseToAnyPublisher()
+                }
+                self.logger.logI("VPNConfiguration", "Will try to Connect with retries")
+                return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
+            }.handleEvents(receiveSubscription: { _ in
+                self.logger.logI("VPNConfiguration", "Received Connection event")
+                self.configurationState = .configuring
+            }, receiveCompletion: { _ in
+                self.logger.logI("VPNConfiguration", "Connection has completed")
+                self.configurationState = .initial
+            }, receiveCancel: {
+                self.logger.logI("VPNConfiguration", "Connection was cancelled")
+                self.configurationState = .initial
+            }).eraseToAnyPublisher()
     }
 
     /// Disconnect and disable killswitch if ON
@@ -117,7 +125,7 @@ extension VPNManager {
                                     self.configManager.connectAsync(locationID: updatedLocation ?? id, proto: proto, port: port, vpnSettings: self.makeUserSettings(), connectionType: connectionType)
                                 }.eraseToAnyPublisher()
                         }
-                    // Retry protocol once with new node.
+                        // Retry protocol once with new node.
                     case .connectionTimeout, .connectivityTestFailed:
                         if connectionType == .user, self.locationsManager.getLocationType(id: id) != .custom {
                             self.logger.logI("VPNConfiguration", "Fail to connect with current node. Trying with next node.")
