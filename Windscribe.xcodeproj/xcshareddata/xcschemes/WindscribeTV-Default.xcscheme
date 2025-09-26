@@ -52,7 +52,7 @@
       </BuildableProductRunnable>
       <AdditionalOptions>
          <AdditionalOption
-            key = "MallocStackLogging"
+            key = "MallocScribble"
             value = ""
             isEnabled = "YES">
          </AdditionalOption>
@@ -62,7 +62,7 @@
             isEnabled = "YES">
          </AdditionalOption>
          <AdditionalOption
-            key = "MallocScribble"
+            key = "MallocStackLogging"
             value = ""
             isEnabled = "YES">
          </AdditionalOption>

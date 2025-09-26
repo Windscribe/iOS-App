@@ -133,7 +133,7 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logD(_ tag: String, _ message: String) {
-        #if DEBUG
+        #if DEVELOPMENT
         addToBatch(.debug, tag: tag, message: message)
         #endif
     }
@@ -171,6 +171,9 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func addLogBufferModelToBatch(_ logEntry: LogBufferModel) {
+#if DEVELOPMENT
+        print(logEntry.toOrderedJSONString())
+#endif
         batchQueue.async { [weak self] in
             guard let self = self else { return }
             self.logBuffer.append(logEntry)
