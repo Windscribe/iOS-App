@@ -82,6 +82,15 @@ protocol KeychainManager {
     /// - Throws: KeychainError if the operation fails
     func deleteBundleItem(forKey key: String) throws
 
+    /// Get persistent reference for keychain item (for iOS system usage)
+    /// - Parameters:
+    ///   - key: The key to retrieve
+    ///   - service: The service name
+    ///   - accessGroup: Optional access group for sharing between apps
+    /// - Returns: The persistent reference data if found
+    /// - Throws: KeychainError if the operation fails
+    func getPersistentRef(forKey key: String, service: String, accessGroup: String?) throws -> Data
+
     /// Check if item exists using Bundle ID as service with access group
     /// - Parameter key: The key to check
     /// - Returns: True if the item exists, false otherwise

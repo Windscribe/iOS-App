@@ -60,7 +60,7 @@ class KeyChainDatabaseTests: XCTestCase {
 
     // MARK: - VPN Credentials Tests
 
-    func test_saveAndRetrieveCredentials_shouldStoreAndRetrievePassword() {
+    func test_saveAndRetrieveCredentials_shouldStoreAndRetrievePersistentReference() {
         // Clean up first
         let keychainManager = mockContainer.resolve(KeychainManager.self)!
         try? keychainManager.deleteItem(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
@@ -68,16 +68,13 @@ class KeyChainDatabaseTests: XCTestCase {
         // Save credentials
         keyChainDatabase.save(username: testUsername, password: testPassword)
 
-        // Retrieve credentials
+        // Retrieve persistent reference (for iOS system use)
         let retrievedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(retrievedData, "Retrieved data should not be nil")
+        XCTAssertNotNil(retrievedData, "Retrieved persistent reference should not be nil")
 
-        if let data = retrievedData,
-           let retrievedPassword = String(data: data, encoding: .utf8) {
-            XCTAssertEqual(retrievedPassword, testPassword, "Retrieved password should match saved password")
-        } else {
-            XCTFail("Failed to convert retrieved data to string")
-        }
+        // Verify we can also get the actual password directly from KeychainManager
+        let actualPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(actualPassword, testPassword, "Direct keychain access should return actual password")
     }
 
     func test_saveCredentials_existingUsername_shouldUpdatePassword() {
@@ -88,19 +85,21 @@ class KeyChainDatabaseTests: XCTestCase {
         // Save initial credentials
         keyChainDatabase.save(username: testUsername, password: testPassword)
 
-        // Verify initial save
-        let initialData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(initialData)
-        XCTAssertEqual(String(data: initialData!, encoding: .utf8), testPassword)
+        // Verify initial save with direct keychain access
+        let initialPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(initialPassword, testPassword, "Initial password should be saved")
 
         // Update with new password
         let newPassword = "newPassword789"
         keyChainDatabase.save(username: testUsername, password: newPassword)
 
-        // Verify update
-        let updatedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(updatedData)
-        XCTAssertEqual(String(data: updatedData!, encoding: .utf8), newPassword)
+        // Verify update with direct keychain access
+        let updatedPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(updatedPassword, newPassword, "Password should be updated")
+
+        // Verify persistent reference is still available
+        let persistentRef = keyChainDatabase.retrieve(username: testUsername)
+        XCTAssertNotNil(persistentRef, "Persistent reference should be available after update")
     }
 
     func test_retrieveCredentials_nonExistentUsername_shouldReturnNil() {
@@ -123,15 +122,21 @@ class KeyChainDatabaseTests: XCTestCase {
         keyChainDatabase.save(username: testUsername, password: testPassword)
         keyChainDatabase.save(username: testUsername2, password: testPassword2)
 
-        // Retrieve and verify both
-        let data1 = keyChainDatabase.retrieve(username: testUsername)
-        let data2 = keyChainDatabase.retrieve(username: testUsername2)
+        // Verify persistent references are available for both
+        let persistentRef1 = keyChainDatabase.retrieve(username: testUsername)
+        let persistentRef2 = keyChainDatabase.retrieve(username: testUsername2)
 
-        XCTAssertNotNil(data1)
-        XCTAssertNotNil(data2)
-        XCTAssertEqual(String(data: data1!, encoding: .utf8), testPassword)
-        XCTAssertEqual(String(data: data2!, encoding: .utf8), testPassword2)
-        XCTAssertNotEqual(String(data: data1!, encoding: .utf8), String(data: data2!, encoding: .utf8))
+        XCTAssertNotNil(persistentRef1, "Persistent reference should be available for first user")
+        XCTAssertNotNil(persistentRef2, "Persistent reference should be available for second user")
+        XCTAssertNotEqual(persistentRef1, persistentRef2, "Persistent references should be different for different users")
+
+        // Verify actual passwords via direct keychain access
+        let password1 = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        let password2 = try? keychainManager.getString(forKey: testUsername2, service: AppConstants.service, accessGroup: nil)
+
+        XCTAssertEqual(password1, testPassword, "First password should match")
+        XCTAssertEqual(password2, testPassword2, "Second password should match")
+        XCTAssertNotEqual(password1, password2, "Passwords should be different")
     }
 
     // MARK: - Ghost Account Tests
@@ -188,13 +193,16 @@ class KeyChainDatabaseTests: XCTestCase {
         keyChainDatabase.setGhostAccountCreated()
 
         // Verify both work independently
-        let retrievedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), testPassword)
+        let persistentRef = keyChainDatabase.retrieve(username: testUsername)
+        XCTAssertNotNil(persistentRef, "Persistent reference should be available")
+
+        // Verify actual password via direct keychain access
+        let keychainManager = mockContainer.resolve(KeychainManager.self)!
+        let actualPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(actualPassword, testPassword, "Actual password should match")
         XCTAssertTrue(keyChainDatabase.isGhostAccountCreated())
 
         // Delete VPN credentials, ghost account should remain
-        let keychainManager = mockContainer.resolve(KeychainManager.self)!
         try? keychainManager.deleteItem(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
 
         XCTAssertNil(keyChainDatabase.retrieve(username: testUsername))
@@ -211,9 +219,12 @@ class KeyChainDatabaseTests: XCTestCase {
         let emptyPassword = ""
         keyChainDatabase.save(username: testUsername, password: emptyPassword)
 
-        let retrievedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), emptyPassword)
+        let persistentRef = keyChainDatabase.retrieve(username: testUsername)
+        XCTAssertNotNil(persistentRef, "Persistent reference should be available for empty password")
+
+        // Verify actual empty password via direct keychain access
+        let actualPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(actualPassword, emptyPassword, "Empty password should be stored correctly")
     }
 
     func test_saveCredentials_specialCharacters_shouldStore() {
@@ -224,9 +235,12 @@ class KeyChainDatabaseTests: XCTestCase {
         let specialPassword = "!@#$%^&*()_+-={}[]|\\:;\"'<>?,./"
         keyChainDatabase.save(username: testUsername, password: specialPassword)
 
-        let retrievedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), specialPassword)
+        let persistentRef = keyChainDatabase.retrieve(username: testUsername)
+        XCTAssertNotNil(persistentRef, "Persistent reference should be available for special characters")
+
+        // Verify actual special password via direct keychain access
+        let actualPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(actualPassword, specialPassword, "Special character password should be stored correctly")
     }
 
     func test_saveCredentials_longPassword_shouldStore() {
@@ -237,8 +251,11 @@ class KeyChainDatabaseTests: XCTestCase {
         let longPassword = String(repeating: "SecurePassword123!", count: 50)
         keyChainDatabase.save(username: testUsername, password: longPassword)
 
-        let retrievedData = keyChainDatabase.retrieve(username: testUsername)
-        XCTAssertNotNil(retrievedData)
-        XCTAssertEqual(String(data: retrievedData!, encoding: .utf8), longPassword)
+        let persistentRef = keyChainDatabase.retrieve(username: testUsername)
+        XCTAssertNotNil(persistentRef, "Persistent reference should be available for long password")
+
+        // Verify actual long password via direct keychain access
+        let actualPassword = try? keychainManager.getString(forKey: testUsername, service: AppConstants.service, accessGroup: nil)
+        XCTAssertEqual(actualPassword, longPassword, "Long password should be stored correctly")
     }
 }

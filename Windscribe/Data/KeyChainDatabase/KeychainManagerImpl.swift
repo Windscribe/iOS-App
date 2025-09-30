@@ -273,4 +273,33 @@ class KeychainManagerImpl: KeychainManager {
         query[kSecMatchLimit as String] = kSecMatchLimitOne
         return query
     }
+
+    private func buildPersistentRefQuery(key: String, service: String, accessGroup: String?) -> [String: Any] {
+        var query = buildBaseQuery(key: key, service: service, accessGroup: accessGroup)
+        query[kSecReturnPersistentRef as String] = kCFBooleanTrue
+        query[kSecMatchLimit as String] = kSecMatchLimitOne
+        return query
+    }
+
+    /// Gets persistent reference for keychain item (for iOS system usage)
+    func getPersistentRef(forKey key: String, service: String, accessGroup: String?) throws -> Data {
+        let query = buildPersistentRefQuery(key: key, service: service, accessGroup: accessGroup)
+
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+
+        if status != errSecSuccess {
+            let error = KeychainError(status: status)
+            logger.logE("KeychainManager", "Failed to retrieve persistent ref for key '\(key)' in service '\(service)': \(error.localizedDescription)")
+            throw error
+        }
+
+        guard let data = result as? Data else {
+            let error = KeychainError.unknown(message: "Unable to cast the retrieved persistent ref to a Data value")
+            logger.logE("KeychainManager", "Failed to cast retrieved persistent ref to Data for key '\(key)' in service '\(service)': \(error.localizedDescription)")
+            throw error
+        }
+
+        return data
+    }
 }

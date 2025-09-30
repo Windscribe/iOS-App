@@ -30,9 +30,9 @@ class KeyChainDatabaseImpl: KeyChainDatabase {
     func retrieve(username: String) -> Data? {
         logger.logD("KeyChainDatabase", "Retrieving credentials from keychain")
         do {
-            let password = try keychainManager.getString(forKey: username, service: AppConstants.service, accessGroup: nil)
+            let persistentRef = try keychainManager.getPersistentRef(forKey: username, service: AppConstants.service, accessGroup: nil)
             logger.logI("KeyChainDatabase", "Retrieved credentials from keychain")
-            return password.data(using: .utf8)
+            return persistentRef
         } catch {
             logger.logE("KeyChainDatabase", "Error when retrieving data from keychain: \(error.localizedDescription)")
             return nil

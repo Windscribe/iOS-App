@@ -107,6 +107,19 @@ class MockKeychainManager: KeychainManager {
         return exists(key: key, service: bundleId, accessGroup: accessGroup)
     }
 
+    func getPersistentRef(forKey key: String, service: String, accessGroup: String?) throws -> Data {
+        if shouldThrowError {
+            throw errorToThrow
+        }
+        let storageKey = buildStorageKey(key: key, service: service, accessGroup: accessGroup)
+        guard storage[storageKey] != nil else {
+            throw KeychainError.itemNotFound
+        }
+        // Return a mock persistent reference (in real keychain this would be a reference, not the data)
+        let mockRef = "mock-persistent-ref-\(storageKey)".data(using: .utf8)!
+        return mockRef
+    }
+
     // Helper methods
     func clearStorage() {
         storage.removeAll()
