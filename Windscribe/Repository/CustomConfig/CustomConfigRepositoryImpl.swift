@@ -22,7 +22,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         self.logger = logger
     }
 
-    func saveWgConfig(url: URL) -> RepositoryError? {
+    func saveWgConfig(url: URL) async -> RepositoryError? {
         logger.logI("CustomConfigRepositoryImpl", "Saving custom WireGuard config file.")
         do {
             var data = try Data(contentsOf: url)
@@ -46,13 +46,27 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 }
                 guard let configData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return RepositoryError.invalidConfigData }
                 data = configData
-                let customConfig = CustomConfig(id: fileId,
-                                                name: serverName,
-                                                serverAddress: serverAddress,
-                                                protocolType: TextsAsset.wireGuard, port: port)
-                localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
-                fileDatabase.saveFile(data: data, path: path)
-                return nil
+                // Capture individual values for thread safety
+                let configId = fileId
+                let configName = serverName
+                let configServerAddress = serverAddress
+                let configProtocolType = TextsAsset.wireGuard
+                let configPort = port
+
+                do {
+                    // File operation first (async)
+                    try await fileDatabase.saveFile(data: data, path: path)
+
+                    // Realm operation on main thread
+                    await MainActor.run {
+                        let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort)
+                        localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
+                    }
+                    return nil
+                } catch {
+                    logger.logE("CustomConfigRepositoryImpl", "Failed to save WG config file: \(error)")
+                    return RepositoryError.invalidConfigData
+                }
             }
         } catch {
             logger.logE("CustomConfigRepositoryImpl", "Error when saving custom config file. \(error.localizedDescription)")
@@ -60,7 +74,7 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         return RepositoryError.invalidConfigData
     }
 
-    func saveOpenVPNConfig(url: URL) -> RepositoryError? {
+    func saveOpenVPNConfig(url: URL) async -> RepositoryError? {
         logger.logI("CustomConfigRepositoryImpl", "Saving custom OpenVPN config file.")
         do {
             var data = try Data(contentsOf: url)
@@ -128,10 +142,28 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
                 guard let configData = lines.joined(separator: "\n").data(using: String.Encoding.utf8) else { return RepositoryError.invalidConfigData }
                 data = configData
 
-                let customConfig = CustomConfig(id: fileId, name: serverName, serverAddress: serverAddress, protocolType: protocolType, port: port, authRequired: authRequired)
-                localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
-                fileDatabase.saveFile(data: data, path: path)
-                return nil
+                // Capture individual values for thread safety
+                let configId = fileId
+                let configName = serverName
+                let configServerAddress = serverAddress
+                let configProtocolType = protocolType
+                let configPort = port
+                let configAuthRequired = authRequired
+
+                do {
+                    // File operation first (async)
+                    try await fileDatabase.saveFile(data: data, path: path)
+
+                    // Realm operation on main thread
+                    await MainActor.run {
+                        let customConfig = CustomConfig(id: configId, name: configName, serverAddress: configServerAddress, protocolType: configProtocolType, port: configPort, authRequired: configAuthRequired)
+                        localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
+                    }
+                    return nil
+                } catch {
+                    logger.logE("CustomConfigRepositoryImpl", "Failed to save OpenVPN config file: \(error)")
+                    return RepositoryError.invalidConfigData
+                }
             }
         } catch {
             logger.logE("CustomConfigRepositoryImpl", "Error when saving custom OpenVPN config file. \(error.localizedDescription)")
@@ -139,15 +171,19 @@ class CustomConfigRepositoryImpl: CustomConfigRepository {
         return RepositoryError.invalidConfigData
     }
 
-    func removeOpenVPNConfig(fileId: String) {
+    func removeOpenVPNConfig(fileId: String) async {
         logger.logI("CustomConfigRepositoryImpl", "Removing custom OpenVPN config file.")
-        fileDatabase.removeFile(path: "\(fileId).ovpn")
-        localDatabase.removeCustomConfig(fileId: fileId)
+        try? await fileDatabase.removeFile(path: "\(fileId).ovpn")
+        await MainActor.run {
+            localDatabase.removeCustomConfig(fileId: fileId)
+        }
     }
 
-    func removeWgConfig(fileId: String) {
+    func removeWgConfig(fileId: String) async {
         logger.logI("CustomConfigRepositoryImpl", "Removing custom config file.")
-        fileDatabase.removeFile(path: "\(fileId).conf")
-        localDatabase.removeCustomConfig(fileId: fileId)
+        try? await fileDatabase.removeFile(path: "\(fileId).conf")
+        await MainActor.run {
+            localDatabase.removeCustomConfig(fileId: fileId)
+        }
     }
 }

@@ -10,8 +10,8 @@ import Foundation
 import RxSwift
 
 protocol CustomConfigRepository {
-    func saveWgConfig(url: URL) -> RepositoryError?
-    func removeWgConfig(fileId: String)
-    func saveOpenVPNConfig(url: URL) -> RepositoryError?
-    func removeOpenVPNConfig(fileId: String)
+    func saveWgConfig(url: URL) async -> RepositoryError?
+    func removeWgConfig(fileId: String) async
+    func saveOpenVPNConfig(url: URL) async -> RepositoryError?
+    func removeOpenVPNConfig(fileId: String) async
 }

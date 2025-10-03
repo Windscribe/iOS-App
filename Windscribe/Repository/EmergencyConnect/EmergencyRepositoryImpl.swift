@@ -95,10 +95,13 @@ class EmergencyRepositoryImpl: EmergencyRepository {
         }
         .flatMap { data -> AnyPublisher<CustomConfig, Error> in
             Future<CustomConfig, Error> { promise in
-                DispatchQueue.main.async {
+                Task {
                     do {
-                        let customConfig = self.saveConfiguration(data: data, configInfo: configInfo)
-                        self.locationsManager.saveCustomConfig(withID: customConfig.id)
+                        let customConfig = try await self.saveConfiguration(data: data, configInfo: configInfo)
+                        // LocationsManager call must be on main thread
+                        await MainActor.run {
+                            self.locationsManager.saveCustomConfig(withID: customConfig.id)
+                        }
                         promise(.success(customConfig))
                     } catch {
                         promise(.failure(error))
@@ -125,12 +128,21 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     /// Saves configuration as file and custom config model
-    private func saveConfiguration(data: Data, configInfo: OpenVPNConnectionInfo) -> CustomConfig {
+    private func saveConfiguration(data: Data, configInfo: OpenVPNConnectionInfo) async throws -> CustomConfig {
         let fileId = UUID().uuidString
         let path = "\(fileId).ovpn"
-        fileDatabase.saveFile(data: data, path: path)
+
+        // Async file operation
+        try await fileDatabase.saveFile(data: data, path: path)
+
+        // Create config model
         let customConfig = CustomConfig(id: fileId, name: configuationName, serverAddress: configInfo.ip, protocolType: configInfo.protocolName, port: configInfo.port, username: configInfo.username, password: configInfo.password, authRequired: true)
-        localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
+
+        // Realm operations must be on main thread
+        await MainActor.run {
+            localDatabase.saveCustomConfig(customConfig: customConfig).disposed(by: disposeBag)
+        }
+
         return customConfig
     }
 

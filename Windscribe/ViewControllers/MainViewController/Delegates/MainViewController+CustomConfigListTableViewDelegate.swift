@@ -54,10 +54,12 @@ extension MainViewController: CustomConfigListTableViewDelegate {
 
     func showRemoveAlertForCustomConfig(id: String, protocolType: String) {
         let yesAction = UIAlertAction(title: TextsAsset.remove, style: .destructive) { _ in
-            if protocolType == wireGuard {
-                self.customConfigRepository?.removeWgConfig(fileId: id)
-            } else {
-                self.customConfigRepository?.removeOpenVPNConfig(fileId: id)
+            Task {
+                if protocolType == wireGuard {
+                    await self.customConfigRepository?.removeWgConfig(fileId: id)
+                } else {
+                    await self.customConfigRepository?.removeOpenVPNConfig(fileId: id)
+                }
             }
             if self.vpnManager.selectedNode?.customConfig?.id == id {
                 self.resetConnectionStatus()

@@ -139,17 +139,29 @@ extension AppDelegate {
         if preferences.userSessionAuth() != nil {
             if url.isFileURL && url.pathExtension == "ovpn" {
                 logger.logI("AppDelegate", "Importing OpenVPN .ovpn file")
-                if let error = customConfigRepository.saveOpenVPNConfig(url: url) {
-                    AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                } else {
-                    NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
+                Task {
+                    if let error = await customConfigRepository.saveOpenVPNConfig(url: url) {
+                        await MainActor.run {
+                            AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                        }
+                    } else {
+                        await MainActor.run {
+                            NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
+                        }
+                    }
                 }
             } else if url.isFileURL && url.pathExtension == "conf" {
                 logger.logI("AppDelegate", "Importing WireGuard .conf file")
-                if let error = customConfigRepository.saveWgConfig(url: url) {
-                    AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
-                } else {
-                    NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
+                Task {
+                    if let error = await customConfigRepository.saveWgConfig(url: url) {
+                        await MainActor.run {
+                            AlertManager.shared.showSimpleAlert(title: TextsAsset.error, message: error.description, buttonText: TextsAsset.okay)
+                        }
+                    } else {
+                        await MainActor.run {
+                            NotificationCenter.default.post(Notification(name: Notifications.showCustomConfigTab))
+                        }
+                    }
                 }
             } else {
                 if url.absoluteString.contains("disconnect") {

@@ -32,15 +32,15 @@ class WireguardConfigRepositoryImpl: WireguardConfigRepository {
     func getCredentials() async throws {
         try await wgInit()
         try await wgConnect()
-        try retrieveTemplateWgConfig()
+        try await retrieveTemplateWgConfig()
     }
 
-    private func retrieveTemplateWgConfig() throws {
+    private func retrieveTemplateWgConfig() async throws {
         guard let wgConfig = wgCrendentials.asWgCredentialsString(),
               let data = wgConfig.data(using: .utf8) else {
             throw RepositoryError.failedToTemplateWgConfig
         }
-        fileDatabase.saveFile(data: data, path: FilePaths.wireGuard)
+        try await fileDatabase.saveFile(data: data, path: FilePaths.wireGuard)
     }
 
     private func wgInit() async throws {

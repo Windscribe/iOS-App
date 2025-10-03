@@ -21,13 +21,13 @@ extension ConfigurationsManager {
         if locationType == .custom {
             let locationId = locationsManager.getId(location: location)
             do {
-                return try wgConfigFromCustomConfig(locationID: locationId)
+                return try await wgConfigFromCustomConfig(locationID: locationId)
             } catch {
-                return try openConfigFromCustomConfig(locationID: locationId)
+                return try await openConfigFromCustomConfig(locationID: locationId)
             }
         }
         if [udp, tcp, wsTunnel, stealth].contains(proto) {
-            return try buildOpenVPNConfig(location: location, proto: proto, port: port, userSettings: userSettings)
+            return try await buildOpenVPNConfig(location: location, proto: proto, port: port, userSettings: userSettings)
         } else if proto == TextsAsset.iKEv2 {
             return try buildIKEv2Config(location: location)
         } else {
@@ -36,26 +36,36 @@ extension ConfigurationsManager {
     }
 
     /// Builds WireGuard configuration from a custom  config's location id..
-    private func wgConfigFromCustomConfig(locationID: String) throws -> WireguardVPNConfiguration {
+    private func wgConfigFromCustomConfig(locationID: String) async throws -> WireguardVPNConfiguration {
         let configFilePath = "\(locationID).conf"
-        return try wgConfigurationFromPath(path: configFilePath)
+        return try await wgConfigurationFromPath(path: configFilePath)
     }
 
     /// Gets the protocol type from the stored configuration based on location ID.
-    func getProtoFromConfig(locationId: String) -> String? {
-        if (try? wgConfigFromCustomConfig(locationID: locationId)) != nil {
+    func getProtoFromConfig(locationId: String) async -> String? {
+        do {
+            _ = try await wgConfigFromCustomConfig(locationID: locationId)
             return TextsAsset.wireGuard
+        } catch {
+            do {
+                let config = try await openConfigFromCustomConfig(locationID: locationId)
+                return config.proto
+            } catch {
+                return nil
+            }
         }
-        if let config = try? openConfigFromCustomConfig(locationID: locationId) {
-            return config.proto
-        }
-        return nil
     }
 
     /// Buildsn OpenVPN configuration from a custom config location.
-    private func openConfigFromCustomConfig(locationID: String) throws -> OpenVPNConfiguration {
+    private func openConfigFromCustomConfig(locationID: String) async throws -> OpenVPNConfiguration {
         let configFilePath = "\(locationID).ovpn"
-        guard let configData = fileDatabase.readFile(path: configFilePath) else {
+        let configData: Data
+        do {
+            configData = try await fileDatabase.readFile(path: configFilePath)
+        } catch FileDatabaseError.fileNotFound {
+            throw VPNConfigurationErrors.configNotFound
+        } catch {
+            logger.logE("ConfigurationsManager", "Error reading custom config \(configFilePath): \(error.localizedDescription)")
             throw VPNConfigurationErrors.configNotFound
         }
         guard let config = localDatabase.getCustomConfigs().first(where: { $0.id == locationID })?.getModel() else {
@@ -67,8 +77,14 @@ extension ConfigurationsManager {
     }
 
     /// Loads a WireGuard configuration from a file path.
-    private func wgConfigurationFromPath(path: String) throws -> WireguardVPNConfiguration {
-        guard let configData = fileDatabase.readFile(path: path) else {
+    private func wgConfigurationFromPath(path: String) async throws -> WireguardVPNConfiguration {
+        let configData: Data
+        do {
+            configData = try await fileDatabase.readFile(path: path)
+        } catch FileDatabaseError.fileNotFound {
+            throw VPNConfigurationErrors.configNotFound
+        } catch {
+            logger.logE("ConfigurationsManager", "Error reading WireGuard config \(path): \(error.localizedDescription)")
             throw VPNConfigurationErrors.configNotFound
         }
         guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else {
@@ -91,7 +107,7 @@ extension ConfigurationsManager {
             let hostname = node.hostname
             let publickey = location.1.wgPublicKey
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
-            return try wgConfigurationFromPath(path: FilePaths.wireGuard)
+            return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         case .staticIP:
             let location = try getStaticIPLocation(id: location)
@@ -102,7 +118,7 @@ extension ConfigurationsManager {
             let hostname = node.hostname
             let publickey = location.wgPublicKey
             try await updateWireguardConfig(ip: ip, hostname: hostname, serverPublicKey: publickey, port: port, vpnSettings: vpnSettings)
-            return try wgConfigurationFromPath(path: FilePaths.wireGuard)
+            return try await wgConfigurationFromPath(path: FilePaths.wireGuard)
 
         default:
             throw VPNConfigurationErrors.customConfigSupportNotAvailable
@@ -159,7 +175,7 @@ extension ConfigurationsManager {
     }
 
     /// Constructs an OpenVPN configuration using location, protocol, port, and user preferences.
-    private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) throws -> OpenVPNConfiguration {
+    private func buildOpenVPNConfig(location: String, proto: String, port: String, userSettings: VPNUserSettings) async throws -> OpenVPNConfiguration {
         let locationID = locationsManager.getId(location: location)
         guard let locationType = locationsManager.getLocationType(id: location) else {
             throw VPNConfigurationErrors.invalidLocationType
@@ -174,7 +190,7 @@ extension ConfigurationsManager {
             let node = try getRandomNode(nodes: Array(location.1.nodes))
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
-            let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.1.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: hostname, username: username, password: password, path: config.0, data: config.1)
         case .staticIP:
             let location = try getStaticIPLocation(id: locationID)
@@ -188,7 +204,7 @@ extension ConfigurationsManager {
             keychainDb.save(username: username, password: password)
             let proxyInfo = getProxyInfo(proto: proto, port: port, ip1: node.ip1, ip3: node.ip3)
             let hostname = node.ip2
-            let config = try editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
+            let config = try await editOpenVPNConfig(proto: proto, serverAddress: hostname, port: port, x509Name: location.ovpnX509, proxyInfo: proxyInfo, userSettings: userSettings)
             return OpenVPNConfiguration(proto: proto, ip: node.hostname, username: username, password: password, path: config.0, data: config.1)
         default:
             throw VPNConfigurationErrors.customConfigSupportNotAvailable
@@ -227,7 +243,7 @@ extension ConfigurationsManager {
      - The modified configuration data as `Data`.
      If the existing configuration file does not contain the protocol, remote, or x509 settings, they are added at specified positions in the configuration file.
      */
-    private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) throws -> (String, Data) {
+    private func editOpenVPNConfig(proto: String, serverAddress: String, port: String, x509Name: String, proxyInfo: ProxyInfo?, userSettings: VPNUserSettings) async throws -> (String, Data) {
         var protoLine = "proto \(proto.lowercased())"
         if [stealth, wsTunnel].contains(proto) {
             protoLine = "proto tcp"
@@ -235,10 +251,17 @@ extension ConfigurationsManager {
         let remoteLine = "remote \(serverAddress) \(port)"
         let x509NameLine = "verify-x509-name \(x509Name) name"
         let proxyLine = proxyInfo?.text
-        guard let configData = fileDatabase.readFile(path: FilePaths.openVPN),
-              let stringData = String(data: configData,
-                                      encoding: String.Encoding.utf8)
-        else {
+        let configData: Data
+        do {
+            configData = try await fileDatabase.readFile(path: FilePaths.openVPN)
+        } catch FileDatabaseError.fileNotFound {
+            throw VPNConfigurationErrors.invalidServerConfig
+        } catch {
+            logger.logE("ConfigurationsManager", "Error reading OpenVPN config: \(error.localizedDescription)")
+            throw VPNConfigurationErrors.invalidServerConfig
+        }
+
+        guard let stringData = String(data: configData, encoding: String.Encoding.utf8) else {
             throw VPNConfigurationErrors.invalidServerConfig
         }
         var lines = stringData.components(separatedBy: "\n")
@@ -281,9 +304,13 @@ extension ConfigurationsManager {
             throw VPNConfigurationErrors.invalidServerConfig
         }
 
-        fileDatabase.removeFile(path: FilePaths.openVPN)
-        fileDatabase.saveFile(data: appendedConfigData,
-                              path: FilePaths.openVPN)
+        do {
+            try? await fileDatabase.removeFile(path: FilePaths.openVPN)
+            try await fileDatabase.saveFile(data: appendedConfigData, path: FilePaths.openVPN)
+        } catch {
+            logger.logE("ConfigurationsManager", "Failed to save modified OpenVPN config: \(error.localizedDescription)")
+            throw VPNConfigurationErrors.invalidServerConfig
+        }
         return (FilePaths.openVPN, appendedConfigData)
     }
 
@@ -359,9 +386,9 @@ extension ConfigurationsManager {
                 return lastLocation
             case .custom:
                 do {
-                    _ = try wgConfigFromCustomConfig(locationID: locationID)
+                    _ = try await wgConfigFromCustomConfig(locationID: locationID)
                 } catch {
-                    _ = try openConfigFromCustomConfig(locationID: locationID)
+                    _ = try await openConfigFromCustomConfig(locationID: locationID)
                 }
                 return lastLocation
             }
