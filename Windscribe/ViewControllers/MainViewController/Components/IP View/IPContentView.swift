@@ -34,8 +34,10 @@ class IPInfoView: UIView {
     var refreshButton = UIButton()
     var closeButton = UIButton()
     var openButton = UIButton()
-    var ipLabel = BlurredLabel()
+    var ipLabel = SlotMachineLabel()
     var stackView = UIStackView()
+
+    private var isFirstIPUpdate = true
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -50,8 +52,14 @@ class IPInfoView: UIView {
     private func showSecureIPAddressState(ipAddress: String) {
         DispatchQueue.main.async {
             let formattedIP = ipAddress.formatIpAddress().maxLength(length: 15)
-            UIView.animate(withDuration: 0.25) {
-                self.ipLabel.text = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
+            let displayIP = formattedIP.isEmpty ? "---.---.---.---" : formattedIP
+
+            // Don't animate the first IP update
+            let shouldAnimate = !self.isFirstIPUpdate
+            self.ipLabel.setText(displayIP, animated: shouldAnimate)
+
+            if self.isFirstIPUpdate {
+                self.isFirstIPUpdate = false
             }
         }
     }
@@ -95,6 +103,7 @@ class IPInfoView: UIView {
     }
 
     private func addViews() {
+        ipLabel.translatesAutoresizingMaskIntoConstraints = false
         ipLabel.isUserInteractionEnabled = true
         ipLabel.tag = 0
         ipLabel.font = UIFont.medium(size: 16)
