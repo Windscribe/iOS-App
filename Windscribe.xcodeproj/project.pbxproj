@@ -1011,6 +1011,7 @@
 		F434A1C72D84AEF70059415F /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3FC11C227B68EB0050B224 /* SessionManager.swift */; };
 		F43653532DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */; };
 		F43653542DF2339200D4171B /* UINavigationBar+Appearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */; };
+		F437916A2E9042C400ED6141 /* SlotMachineLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43791692E9042C400ED6141 /* SlotMachineLabel.swift */; };
 		F43E24A72E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */; };
 		F43E24A82E4A6B750011C65B /* ProtocolSwitchRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */; };
 		F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
@@ -2004,6 +2005,7 @@
 		F434A1BA2D8378340059415F /* NewsFeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedViewModel.swift; sourceTree = "<group>"; };
 		F434A1C42D84AB200059415F /* NewsFeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsFeedModel.swift; sourceTree = "<group>"; };
 		F43653522DF2339200D4171B /* UINavigationBar+Appearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+Appearance.swift"; sourceTree = "<group>"; };
+		F43791692E9042C400ED6141 /* SlotMachineLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlotMachineLabel.swift; sourceTree = "<group>"; };
 		F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchNavigationRouter.swift; sourceTree = "<group>"; };
 		F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProtocolSwitchRouteID.swift; sourceTree = "<group>"; };
 		F440F2F72D8CAA8E006F1A6D /* DeviceTypeProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceTypeProvider.swift; sourceTree = "<group>"; };
@@ -4215,6 +4217,7 @@
 			children = (
 				AF15B8CE2475BCEA0086BB2A /* SpacedLabel.swift */,
 				5932857A29DA8009009D0C3C /* BlurredLabel.swift */,
+				F43791692E9042C400ED6141 /* SlotMachineLabel.swift */,
 			);
 			path = Label;
 			sourceTree = "<group>";
@@ -7073,6 +7076,7 @@
 				F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */,
 				AF0AED382203549000039CAF /* ServerListTableViewDataSource+Delegate.swift in Sources */,
 				F49C458B2DC96A73007E5EF1 /* PreferencesMainCategoryView.swift in Sources */,
+				F437916A2E9042C400ED6141 /* SlotMachineLabel.swift in Sources */,
 				C5A930D72B43EE9A0001CFA0 /* NotificationRepositoryImpl.swift in Sources */,
 				C51EEDD02C18897600B01F8F /* LatencyViewModel.swift in Sources */,
 				AF04EDA321E50E99005C6576 /* PortMap.swift in Sources */,
