@@ -203,6 +203,10 @@ class SlotMachineLabel: UIView {
                     view.animateToCharacter(newChar, delay: delay, duration: baseDuration)
                 }
             }
+            // Update layout after character sizes may have changed
+            invalidateIntrinsicContentSize()
+            setNeedsLayout()
+            layoutIfNeeded()
             return
         }
 
@@ -330,12 +334,16 @@ private class CharacterRollerView: UIView {
         if newCharacter == "." || currentCharacter == "." {
             characterLabel.text = newCharacter
             currentCharacter = newCharacter
+            invalidateIntrinsicContentSize()
             return
         }
 
-        // Update current character and animate
-        performSlotMachineAnimation(to: newCharacter, delay: delay, duration: duration)
+        // Update current character first so size is correct
         currentCharacter = newCharacter
+        invalidateIntrinsicContentSize()
+
+        // Then animate
+        performSlotMachineAnimation(to: newCharacter, delay: delay, duration: duration)
     }
 
     private func performSlotMachineAnimation(to newCharacter: String, delay: TimeInterval, duration: TimeInterval) {
@@ -397,7 +405,6 @@ private class CharacterRollerView: UIView {
 
                     // Clean up and show final character
                     self.characterLabel.text = newCharacter
-                    self.currentCharacter = newCharacter
                     self.characterLabel.alpha = 1
                     rollerView.removeFromSuperview()
                 })
