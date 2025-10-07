@@ -481,7 +481,7 @@
 "Add Email (Get 10 GB/Month)" = "新增電郵（獲取每月 10GB）";
 "Free" = "免費";
 "Upgrade to Pro" = "升級為 Pro";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe 會將所有新網絡標記為「已保護」，並在裝置連線時自動啟用。";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe 會將所有新網絡標記為「已保護」，並在裝置連線時自動啟用。";
 "Windscribe will turn ON automatically if your device connects to this network." = "若您的裝置連接此網絡，Windscribe 將自動啟用。";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "發生錯誤。請確認您已輸入有效的 DNS 伺服器。";
 "Invalid DNS server" = "無效的 DNS 伺服器";
@@ -568,3 +568,5 @@
 "Sending..." = "正在發送...";
 "Connected to" = "已連接至";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "我們已收到您的除錯日誌。如需協助解決此問題，請聯絡客服。";
+
+"Network Security" = "網絡安全";

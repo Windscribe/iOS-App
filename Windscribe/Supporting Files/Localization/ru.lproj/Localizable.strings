@@ -483,7 +483,7 @@
 "Add Email (Get 10 GB/Month)" = "Добавить почту (получить 10 ГБ/мес)";
 "Free" = "Бесплатно";
 "Upgrade to Pro" = "Обновить до Pro";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe будет отмечать каждую новую сеть как \"Безопасную\" и включаться автоматически при подключении устройства.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe будет отмечать каждую новую сеть как \"Безопасную\" и включаться автоматически при подключении устройства.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe включится автоматически, если устройство подключится к этой сети.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Что-то пошло не так. Убедитесь, что вы ввели корректный DNS-сервер.";
 "Invalid DNS server" = "Недопустимый DNS-сервер";
@@ -587,3 +587,5 @@
 "Sending..." = "Отправка...";
 "Connected to" = "Подключено к";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Ваш журнал отладки получен. Пожалуйста, свяжитесь со службой поддержки, если вам нужна помощь с этой проблемой.";
+
+"Network Security" = "Безопасность сети";

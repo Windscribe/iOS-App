@@ -481,7 +481,7 @@
 "Add Email (Get 10 GB/Month)" = "E-Mail hinzufügen (10 GB/Monat erhalten)";
 "Free" = "Kostenlos";
 "Upgrade to Pro" = "Auf Pro upgraden";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe markiert jedes neue Netzwerk als \"Gesichert\" und wird automatisch aktiviert, wenn Ihr Gerät sich verbindet.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe markiert jedes neue Netzwerk als \"Gesichert\" und wird automatisch aktiviert, wenn Ihr Gerät sich verbindet.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe wird automatisch aktiviert, wenn sich Ihr Gerät mit diesem Netzwerk verbindet.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Etwas ist schiefgelaufen. Bitte stellen Sie sicher, dass Sie einen gültigen DNS-Server eingegeben haben.";
 "Invalid DNS server" = "Ungültiger DNS-Server";
@@ -584,3 +584,5 @@
 "Sending..." = "Senden...";
 "Connected to" = "Verbunden mit";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Ihr Debug-Protokoll wurde empfangen. Bitte wenden Sie sich an den Support, wenn Sie Hilfe bei diesem Problem benötigen.";
+
+"Network Security" = "Netzwerksicherheit";

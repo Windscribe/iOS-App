@@ -481,7 +481,7 @@
 "Add Email (Get 10 GB/Month)" = "Tambahkan Email (Dapatkan 10GB/Bulan)";
 "Free" = "Gratis";
 "Upgrade to Pro" = "Tingkatkan ke Pro";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe akan menandai setiap jaringan baru sebagai \"Aman\" dan menyala secara otomatis saat perangkat Anda terhubung.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe akan menandai setiap jaringan baru sebagai \"Aman\" dan menyala secara otomatis saat perangkat Anda terhubung.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe akan menyala secara otomatis jika perangkat Anda terhubung ke jaringan ini.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Terjadi kesalahan. Pastikan Anda telah memasukkan server DNS yang valid.";
 "Invalid DNS server" = "Server DNS tidak valid";
@@ -568,3 +568,5 @@
 "Sending..." = "Mengirim...";
 "Connected to" = "Terhubung ke";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Log debug Anda telah diterima. Silakan hubungi dukungan jika Anda memerlukan bantuan untuk masalah ini.";
+
+"Network Security" = "Keamanan Jaringan";

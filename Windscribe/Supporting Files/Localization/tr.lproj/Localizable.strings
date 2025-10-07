@@ -496,7 +496,7 @@
 "Add Email (Get 10 GB/Month)" = "E-posta Ekle (Aylık 10 GB Al)";
 "Free" = "Ücretsiz";
 "Upgrade to Pro" = "Pro'ya Yükselt";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe her yeni ağı \"Güvenli\" olarak işaretleyecek ve cihazınız bağlandığında otomatik olarak açılacaktır.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe her yeni ağı \"Güvenli\" olarak işaretleyecek ve cihazınız bağlandığında otomatik olarak açılacaktır.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Cihazınız bu ağa bağlanırsa Windscribe otomatik olarak açılır.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Bir şeyler ters gitti. Lütfen geçerli bir DNS sunucusu girdiğinizden emin olun.";
 "Invalid DNS server" = "Geçersiz DNS sunucusu";
@@ -584,3 +584,5 @@
 "Sending..." = "Gönderiliyor...";
 "Connected to" = "Bağlanılan";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Hata ayıklama günlüğünüz alındı. Bu sorunla ilgili yardım almak istiyorsanız lütfen destek ekibimizle iletişime geçin.";
+
+"Network Security" = "Ağ Güvenliği";

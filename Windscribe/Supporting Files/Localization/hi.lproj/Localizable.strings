@@ -505,7 +505,7 @@
 "Add Email (Get 10 GB/Month)" = "ईमेल जोड़ें (10GB/माह प्राप्त करें)";
 "Free" = "मुफ़्त";
 "Upgrade to Pro" = "Pro में अपग्रेड करें";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe हर नए नेटवर्क को \"सुरक्षित\" के रूप में चिह्नित करेगा और आपके डिवाइस के कनेक्ट होते ही स्वचालित रूप से चालू हो जाएगा।";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe हर नए नेटवर्क को \"सुरक्षित\" के रूप में चिह्नित करेगा और आपके डिवाइस के कनेक्ट होते ही स्वचालित रूप से चालू हो जाएगा।";
 "Windscribe will turn ON automatically if your device connects to this network." = "यदि आपका डिवाइस इस नेटवर्क से जुड़ता है, तो Windscribe स्वचालित रूप से चालू हो जाएगा।";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "कुछ गलत हो गया। कृपया सुनिश्चित करें कि आपने एक मान्य DNS सर्वर दर्ज किया है।";
 "Invalid DNS server" = "अमान्य DNS सर्वर";
@@ -592,3 +592,5 @@
 "Sending..." = "भेजा जा रहा है...";
 "Connected to" = "से जुड़ा हुआ";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "आपकी डिबग लॉग प्राप्त हो गई है। यदि आपको इस समस्या में सहायता चाहिए, तो कृपया समर्थन से संपर्क करें।";
+
+"Network Security" = "नेटवर्क सुरक्षा";
