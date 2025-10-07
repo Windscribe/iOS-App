@@ -491,7 +491,7 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Add Email (Get 10 GB/Month)" = "Thêm Email (Nhận 10 GB/tháng)";
 "Free" = "Miễn phí";
 "Upgrade to Pro" = "Nâng cấp lên Pro";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe sẽ đánh dấu mọi mạng mới là \"Đã bảo mật\" và tự động bật khi thiết bị của bạn kết nối.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe sẽ đánh dấu mọi mạng mới là \"Đã bảo mật\" và tự động bật khi thiết bị của bạn kết nối.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe sẽ tự động bật nếu thiết bị của bạn kết nối với mạng này.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Đã xảy ra lỗi. Vui lòng đảm bảo rằng bạn đã nhập máy chủ DNS hợp lệ.";
 "Invalid DNS server" = "Máy chủ DNS không hợp lệ";
@@ -580,3 +580,5 @@ vẫn có thể trả lời các câu hỏi của bạn.";
 "Sending..." = "Đang gửi...";
 "Connected to" = "Đã kết nối với";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Nhật ký gỡ lỗi của bạn đã được nhận. Vui lòng liên hệ hỗ trợ nếu bạn cần trợ giúp với sự cố này.";
+
+"Network Security" = "Bảo mật mạng";

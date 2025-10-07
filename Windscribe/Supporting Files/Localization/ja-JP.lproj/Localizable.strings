@@ -484,7 +484,7 @@
 "Add Email (Get 10 GB/Month)" = "メールを追加（10GB/月を取得）";
 "Free" = "無料";
 "Upgrade to Pro" = "Proにアップグレード";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribeはすべての新しいネットワークを「保護された」としてマークし、デバイスが接続すると自動的にオンになります。";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribeはすべての新しいネットワークを「保護された」としてマークし、デバイスが接続すると自動的にオンになります。";
 "Windscribe will turn ON automatically if your device connects to this network." = "デバイスがこのネットワークに接続すると、Windscribeは自動的にオンになります。";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "エラーが発生しました。有効なDNSサーバーを入力したか確認してください。";
 "Invalid DNS server" = "無効なDNSサーバー";
@@ -572,3 +572,5 @@
 "Sending..." = "送信中...";
 "Connected to" = "接続先";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "デバッグログを受信しました。この問題について支援が必要な場合は、サポートにご連絡ください。";
+
+"Network Security" = "ネットワークセキュリティ";

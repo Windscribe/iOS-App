@@ -363,7 +363,7 @@
 "Go to the address above on your phone or computer for all support related inquiries." = "Vaya a la dirección anterior en su teléfono o computadora para todas las consultas relacionadas con el soporte.";
 "Enter Code" = "Introduzca el código";
 "Enter code here" = "Introduce el código aquí";
-"Login into Windscribe's TV apps with a short code" = "Inicie sesión en las aplicaciones de TV de Windscribe \\ \\s con un código corto";
+"Login into Windscribe's TV apps with a short code" = "Inicia sesión en las aplicaciones de TV de Windscribe con un código corto";
 "Sweet, you should be all good to go now" = "Dulce, deberías estar listo para irte ahora.";
 "This Location is Under Maintenance. Try again later or go to our Status page for more info. https://windscribe.com/status" = "Esta ubicación está en mantenimiento. Inténtalo de nuevo más tarde o ve a nuestra página de Estado para obtener más información. https://windscribe.com/status";
 "Location Maintenance" = "Mantenimiento de la ubicación";
@@ -481,7 +481,7 @@
 "Add Email (Get 10 GB/Month)" = "Agregar correo (Obtener 10 GB/Mes)";
 "Free" = "Gratis";
 "Upgrade to Pro" = "Actualizar a Pro";
-"Windscribe will mark every new network as \"Secured\" and turn ON automatically when your device connects to them." = "Windscribe marcará cada nueva red como \"Segura\" y se activará automáticamente cuando tu dispositivo se conecte.";
+"Windscribe will mark every new network as “Secured” and turn ON automatically when your device connects to them." = "Windscribe marcará cada nueva red como \"Segura\" y se activará automáticamente cuando tu dispositivo se conecte.";
 "Windscribe will turn ON automatically if your device connects to this network." = "Windscribe se activará automáticamente si tu dispositivo se conecta a esta red.";
 "Something went wrong. Please make sure you have entered a valid DNS server." = "Algo salió mal. Asegúrate de haber ingresado un servidor DNS válido.";
 "Invalid DNS server" = "Servidor DNS no válido";
@@ -569,3 +569,5 @@
 "Sending..." = "Enviando...";
 "Connected to" = "Conectado a";
 "Your debug log has been received. Please contact support if you want assistance with this issue." = "Se ha recibido tu registro de depuración. Ponte en contacto con el soporte si deseas asistencia con este problema.";
+
+"Network Security" = "Seguridad de red";
