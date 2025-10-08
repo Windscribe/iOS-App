@@ -1016,6 +1016,9 @@
 		F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */; };
 		F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F437917F2E95A20800ED6141 /* MockAPIManager.swift */; };
 		F43791822E95A21900ED6141 /* MockSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43791812E95A21900ED6141 /* MockSessionManager.swift */; };
+		F43791842E95AA7C00ED6141 /* MenuEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED6164B2DCA7139006CDC99 /* MenuEntryViewModel.swift */; };
+		F43791862E95AFD400ED6141 /* PrivacyStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F484B7A62E317D6000BABA98 /* PrivacyStateManager.swift */; };
+		F43791872E95B27700ED6141 /* HapticFeedbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFBBAD14250A674A000B6750 /* HapticFeedbackManager.swift */; };
 		F43E24A72E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A42E4A6B750011C65B /* ProtocolSwitchNavigationRouter.swift */; };
 		F43E24A82E4A6B750011C65B /* ProtocolSwitchRouteID.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43E24A52E4A6B750011C65B /* ProtocolSwitchRouteID.swift */; };
 		F440BCFE2DE78FA90057A01F /* AuthenticationTokenResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B8E2202DD6A2B1004D9BF6 /* AuthenticationTokenResponse.swift */; };
@@ -6528,6 +6531,7 @@
 				59FC74692C5167DF00021CD1 /* EmergencyRepository.swift in Sources */,
 				F49C457B2DC3D1AD007E5EF1 /* LocalizationService.swift in Sources */,
 				59FC741F2C51548000021CD1 /* VPNManager.swift in Sources */,
+				F43791842E95AA7C00ED6141 /* MenuEntryViewModel.swift in Sources */,
 				1EF7BB4B2C75F6840032A4DF /* AddEmailPopupViewController.swift in Sources */,
 				59FC73F82C51536900021CD1 /* StaticIP.swift in Sources */,
 				F49C457F2DC3D204007E5EF1 /* LocalizationBridge.swift in Sources */,
@@ -6578,6 +6582,7 @@
 				59FC74472C515DC500021CD1 /* LatencyRepositoryImpl.swift in Sources */,
 				59DA7FC92C3DC4FD00042E57 /* Session.swift in Sources */,
 				1EA9D6F92C7747C300566A93 /* NewsFeedViewController.swift in Sources */,
+				F43791872E95B27700ED6141 /* HapticFeedbackManager.swift in Sources */,
 				1EA9D7002C7754BD00566A93 /* OptionSelectionView.swift in Sources */,
 				1E5553D82DA6AA2A00F16AF0 /* ExportedLocations.swift in Sources */,
 				C511EC1E2E43BCF7009D2C12 /* ShakeDataRepository.swift in Sources */,
@@ -6599,6 +6604,7 @@
 				59DA7FC82C3DC4EA00042E57 /* APIError.swift in Sources */,
 				59FC743C2C515B8100021CD1 /* StaticIpRepositoryImpl.swift in Sources */,
 				59656F6A2C72E05500707EA2 /* SideMenuOptionsView.swift in Sources */,
+				F43791862E95AFD400ED6141 /* PrivacyStateManager.swift in Sources */,
 				59FC74052C5153CE00021CD1 /* BestNode.swift in Sources */,
 				F4433D042E830A340012EA34 /* KeychainManager.swift in Sources */,
 				1E0D9D7A2C6105A2008AFF2D /* GeneralViewModel.swift in Sources */,

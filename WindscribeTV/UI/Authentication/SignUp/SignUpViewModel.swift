@@ -374,7 +374,7 @@ class SignUpViewModelImpl: SignUpViewModel {
     }
 
     private func registerNetworkEventListener() {
-        connectivity.network.observe(on: MainScheduler.instance).subscribe(onNext: { [weak self] appNetwork in
+        connectivity.network.receive(on: DispatchQueue.main).sink { [weak self] appNetwork in
             if let loginError = try? self?.failedState.value() {
                 switch loginError {
                 case SignUpErrorState.network:
@@ -386,7 +386,7 @@ class SignUpViewModelImpl: SignUpViewModel {
                 }
             }
 
-        }).disposed(by: disposeBag)
+        }.store(in: &appCancellable)
     }
 
     private func checkUserStatus() {

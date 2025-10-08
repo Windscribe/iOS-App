@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 import Swinject
 
 protocol SubmitLogViewModel {
@@ -24,7 +25,7 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     var apiManager: APIManager
     let connectivity: ConnectivityManager
 
-    let dispose = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var networkStatus = NetworkStatus.disconnected
     let logger = Assembler.resolve(FileLogger.self)
 
@@ -38,13 +39,10 @@ class SubmitLogViewModelImpl: SubmitLogViewModel {
     }
 
     private func observerConnectivity() {
-        connectivity.network.subscribe(
-            onNext: { [weak self] appNetwork in
-                guard let self = self else { return }
-                self.networkStatus = appNetwork.status
-            },
-            onError: { _ in})
-        .disposed(by: dispose)
+        connectivity.network.sink { [weak self] appNetwork in
+            guard let self = self else { return }
+            self.networkStatus = appNetwork.status
+        }.store(in: &cancellables)
     }
 
     func submitDebugLog(username: String? = nil, completion: @escaping (_ result: Bool?, _ error: String?) -> Void) {

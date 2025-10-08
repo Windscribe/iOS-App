@@ -66,7 +66,6 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     private var cancellables = Set<AnyCancellable>()
 
     private let disposeBag = DisposeBag()
-    private var cancellables = Set<AnyCancellable>()
     private var currentProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     private var currentPort = BehaviorSubject<String>(value: DefaultValues.port)
     private var firewall = BehaviorSubject<Bool>(value: DefaultValues.firewallMode)
@@ -102,41 +101,39 @@ class ConnectionsViewModel: ConnectionsViewModelType {
     }
 
     private func loadData() {
-        preferences.getSelectedProtocol().subscribe { [weak self] data in
+        preferences.getSelectedProtocol().sink { [weak self] data in
             self?.currentProtocol.onNext(data ?? DefaultValues.protocol)
-        }.disposed(by: disposeBag)
-        preferences.getSelectedPort().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getSelectedPort().sink { [weak self] data in
             self?.currentPort.onNext(data ?? DefaultValues.port)
-        }.disposed(by: disposeBag)
-        preferences.getFirewallMode().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getFirewallMode().sink { [weak self] data in
             self?.firewall.onNext(data ?? DefaultValues.firewallMode)
-        }.disposed(by: disposeBag)
-        preferences.getKillSwitch().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getKillSwitch().sink { [weak self] data in
             self?.killSwitch.onNext(data ?? DefaultValues.killSwitch)
-        }.disposed(by: disposeBag)
-        preferences.getAllowLAN().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getAllowLAN().sink { [weak self] data in
             self?.allowLane.onNext(data ?? DefaultValues.allowLANMode)
-        }.disposed(by: disposeBag)
-        preferences.getAutoSecureNewNetworks().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getAutoSecureNewNetworks().sink { [weak self] data in
             self?.autoSecure.onNext(data ?? DefaultValues.autoSecureNewNetworks)
-        }.disposed(by: disposeBag)
-        preferences.getConnectionMode().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getConnectionMode().sink { [weak self] data in
             self?.connectionMode = ConnectionModeType(fieldValue: data ?? DefaultValues.connectionMode)
-        }.disposed(by: disposeBag)
-        preferences.getConnectedDNSObservable().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getConnectedDNSObservable().sink { [weak self] data in
             self?.connectedDNS = ConnectedDNSType(fieldValue: data ?? DefaultValues.connectedDNS)
-        }.disposed(by: disposeBag)
-        preferences.getCircumventCensorshipEnabled().subscribe { [weak self] data in
+        }.store(in: &cancellables)
+        preferences.getCircumventCensorshipEnabled().sink { [weak self] data in
             self?.isCircumventCensorshipEnabled.onNext(data)
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         let connectionModePublisher = preferences.getConnectionMode()
-            .toPublisher().eraseToAnyPublisher()
 
         let selectedProtocolPublisher = preferences.getSelectedProtocol()
-            .toPublisher().eraseToAnyPublisher()
 
-        Publishers.CombineLatest3(connectionModePublisher, selectedProtocolPublisher, connectivity.$network)
+        Publishers.CombineLatest3(connectionModePublisher, selectedProtocolPublisher, connectivity.network)
             .sink { [weak self] (connectionMode, selectedProtocol, network) in
                 guard let self = self else { return }
                 if network.networkType == .wifi, let currentNetwork = self.networkRepository.getCurrentNetwork(), currentNetwork.preferredProtocolStatus {

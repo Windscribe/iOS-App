@@ -58,13 +58,13 @@ class GeneralViewModel: GeneralViewModelType {
     }
 
     private func load() {
-        preferences.getHapticFeedback().subscribe { [weak self] data in
+        preferences.getHapticFeedback().sink { [weak self] data in
             self?.hapticFeedback.onNext(data ?? DefaultValues.hapticFeedback)
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
-        preferences.getOrderLocationsBy().subscribe { [weak self] data in
+        preferences.getOrderLocationsBy().sink { [weak self] data in
             self?.locationOrderBy.onNext(data ?? DefaultValues.orderLocationsBy)
-        }.disposed(by: disposeBag)
+        }.store(in: &cancellables)
 
         lookAndFeelRepository.isDarkModeSubject.subscribe { [weak self] data in
             self?.isDarkMode.onNext(data)

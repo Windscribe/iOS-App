@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 
 protocol WelcomeViewModel {
     var showLoadingView: BehaviorSubject<Bool> { get }
@@ -33,6 +34,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let vpnManager: VPNManager
     let logger: FileLogger
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
 
     init(userRepository: UserRepository, keyChainDatabase: KeyChainDatabase, userDataRepository: UserDataRepository, apiManager: APIManager, preferences: Preferences,vpnManager: VPNManager, logger: FileLogger) {
         self.userRepository = userRepository
@@ -103,12 +105,12 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func listenForVPNStateChange() {
-        vpnManager.vpnInfo.subscribe(onNext: { [weak self] vpnInfo in
+        vpnManager.vpnInfo.sink { [weak self] vpnInfo in
             if vpnInfo != nil && vpnInfo?.status == .connected {
                 self?.emergencyConnectStatus.onNext(true)
             } else {
                 self?.emergencyConnectStatus.onNext(false)
             }
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 }

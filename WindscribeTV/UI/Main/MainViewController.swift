@@ -352,10 +352,13 @@ class MainViewController: PreferredFocusedViewController {
             self.checkSessionChanges(session: $0)
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.wifiNetwork,
-                                 vpnConnectionViewModel.selectedProtoPort).bind { (network, protocolPort) in
-                self.refreshProtocol(from: network, with: protocolPort)
-        }.disposed(by: disposeBag)
+        Publishers.CombineLatest(
+            viewModel.wifiNetwork.asPublisher().replaceError(with: nil),
+            vpnConnectionViewModel.selectedProtoPort.asPublisher().replaceError(with: nil)
+        )
+        .sink { (network, protocolPort) in
+            self.refreshProtocol(from: network, with: protocolPort)
+        }.store(in: &cancellables)
 
         languageManager.activelanguage.sink { [self] _ in
             localisation()
@@ -365,10 +368,14 @@ class MainViewController: PreferredFocusedViewController {
             self.setFlagImages()
         }).disposed(by: disposeBag)
 
-        Observable.combineLatest(viewModel.session, languageManager.activelanguage)
-            .subscribe(on: MainScheduler.instance).bind(onNext: { [weak self] session, _ in
-                self?.setUpgradeButton(session: session)
-            }).disposed(by: disposeBag)
+        Publishers.CombineLatest(
+            viewModel.session.asPublisher().replaceError(with: nil),
+            languageManager.activelanguage
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] session, _ in
+            self?.setUpgradeButton(session: session)
+        }.store(in: &cancellables)
     }
 
     func localisation() {

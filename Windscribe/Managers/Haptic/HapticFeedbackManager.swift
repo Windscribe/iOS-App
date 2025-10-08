@@ -12,8 +12,16 @@ import Combine
 import Swinject
 import UIKit
 
+enum HapticFeedbackLevel {
+    case light
+    case medium
+    case heavy
+    case soft
+    case rigid
+}
+
 protocol HapticFeedbackManager {
-    func run(level: UIImpactFeedbackGenerator.FeedbackStyle)
+    func run(level: HapticFeedbackLevel)
 }
 
 class HapticFeedbackManagerImpl: HapticFeedbackManager {
@@ -38,11 +46,27 @@ class HapticFeedbackManagerImpl: HapticFeedbackManager {
             .store(in: &cancellables)
     }
 
-    func run(level: UIImpactFeedbackGenerator.FeedbackStyle) {
+    func run(level: HapticFeedbackLevel) {
+        #if !os(tvOS)
         if hapticFeedback {
-            let hapticFeedbackgenerator = UIImpactFeedbackGenerator(style: level)
+            let style: UIImpactFeedbackGenerator.FeedbackStyle
+            switch level {
+            case .light:
+                style = .light
+            case .medium:
+                style = .medium
+            case .heavy:
+                style = .heavy
+            case .soft:
+                style = .soft
+            case .rigid:
+                style = .rigid
+            }
+            let hapticFeedbackgenerator = UIImpactFeedbackGenerator(style: style)
             hapticFeedbackgenerator.prepare()
             hapticFeedbackgenerator.impactOccurred()
         }
+        #endif
+        // No-op on tvOS - haptic feedback not supported
     }
 }

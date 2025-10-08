@@ -63,7 +63,7 @@ protocol MainViewModelType {
     func updatePreferred(port: String, and proto: String, for network: WifiNetwork)
     func updateSSID()
     func getServerModel(from groupId: Int) -> ServerModel?
-    func runHapticFeedback(level: UIImpactFeedbackGenerator.FeedbackStyle)
+    func runHapticFeedback(level: HapticFeedbackLevel)
 }
 
 class MainViewModel: MainViewModelType {
@@ -567,7 +567,7 @@ class MainViewModel: MainViewModelType {
         try? locationsManager.getLocation(from: String(groupId)).0
     }
 
-    func runHapticFeedback(level: UIImpactFeedbackGenerator.FeedbackStyle) {
-        hapticFeedbackManager.run(level: .light)
+    func runHapticFeedback(level: HapticFeedbackLevel) {
+        hapticFeedbackManager.run(level: level)
     }
 }

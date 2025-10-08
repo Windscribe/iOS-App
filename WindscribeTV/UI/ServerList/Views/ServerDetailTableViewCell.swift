@@ -7,6 +7,7 @@
 //
 
 import RxSwift
+import Combine
 import Swinject
 import UIKit
 
@@ -49,6 +50,7 @@ class ServerDetailTableViewCell: UITableViewCell {
     var displayingNodeServer: ServerModel?
     var favIDs: [String] = []
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     let vpnManager = Assembler.resolve(VPNManager.self)
     var myPreferredFocusedView: UIView?
 
@@ -161,13 +163,13 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             proIcon.isHidden = true
         }
-        preferences.observeFavouriteIds().subscribe(onNext: { favIDs in
+        preferences.observeFavouriteIds().sink { favIDs in
             self.favIDs = favIDs
             if let id = self.displayingFavGroup?.id {
                 self.isFavourited = favIDs.map { $0 }.contains("\(id)")
                 self.setFavButtonImage()
             }
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func updetaUIForStaticIP() {
@@ -313,11 +315,11 @@ class ServerDetailTableViewCell: UITableViewCell {
         } else {
             latencyLabel.text = "  "
         }
-        preferences.observeFavouriteIds().subscribe(onNext: { favIDs in
+        preferences.observeFavouriteIds().sink { favIDs in
             self.favIDs = favIDs
             self.isFavourited = favIDs.map { $0 }.contains("\(group.id)")
             self.setupUI()
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     @objc func favButtonTapped() {

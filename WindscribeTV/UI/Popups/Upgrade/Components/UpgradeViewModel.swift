@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import Combine
 import StoreKit
 
 enum UpgradeState {
@@ -69,6 +70,7 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
 
     var selectedPlan: WindscribeInAppProduct?
     let disposeBag = DisposeBag()
+    private var cancellables = Set<AnyCancellable>()
     var pcpID: String?
     var pushNotificationPayload: PushNotificationPayload?
     private var mobilePlans: [MobilePlan]?
@@ -259,9 +261,9 @@ class UpgradeViewModelImpl: UpgradeViewModel, InAppPurchaseManagerDelegate, Conf
     }
 
     private func listenPushNotificationPayload() {
-        pushNotificationManager.notification.subscribe(onNext: { [weak self] payload in
+        pushNotificationManager.notification.sink { [weak self] payload in
             self?.pushNotificationPayload = payload
-        }).disposed(by: disposeBag)
+        }.store(in: &cancellables)
     }
 
     func failedToPurchase() {

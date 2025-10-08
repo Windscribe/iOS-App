@@ -33,6 +33,7 @@ struct DocumentFormatInfo: Hashable {
     }
 }
 
+#if !os(tvOS)
 struct MultiFormatDocument: FileDocument {
     static var readableContentTypes: [UTType] = [.plainText, .json]
 
@@ -51,6 +52,7 @@ struct MultiFormatDocument: FileDocument {
         return FileWrapper(regularFileWithContents: documentInfo.fileData)
     }
 }
+#endif
 
 enum MenuEntryActionType: Hashable {
     case multiple(currentOption: String, options: [MenuOption], parentId: Int)
