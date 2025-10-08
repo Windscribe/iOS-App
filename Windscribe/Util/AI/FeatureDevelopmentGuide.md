@@ -1066,3 +1066,596 @@ Use this pattern when:
 - [ ] **Test Integration**: Verify state flows correctly between components
 
 This pattern eliminates architectural complexity while maintaining clean separation between routing and state management.
+
+---
+
+## Real-World Migration Example 3: Repository Conversion (RxSwift → Combine)
+
+### Repository Migration Pattern
+
+This example demonstrates how to convert repositories from RxSwift to pure Combine, based on the **ShakeDataRepository** conversion completed on 2025-10-07.
+
+#### Migration Overview
+
+**Goal**: Convert repositories from RxSwift to Combine while maintaining compatibility with existing ViewModels and removing RxSwift bridge dependencies.
+
+**Pattern**: Repository Layer Conversion
+- **Before**: Repository uses RxSwift (`Single<T>`, `Observable<T>`, `DisposeBag`)
+- **After**: Repository uses Combine (`AnyPublisher<T, Error>`, `Future`, no DisposeBag)
+- **Impact**: ViewModels remove `.asPublisher()` bridge calls and use publishers directly
+
+---
+
+### Step-by-Step Repository Migration
+
+#### Phase 1: Protocol Conversion
+
+**Before (RxSwift):**
+```swift
+import Foundation
+import RxSwift
+
+protocol ShakeDataRepository {
+    var currentScore: Int { get }
+
+    func getLeaderboardScores() -> Single<[ShakeForDataScore]>
+    func recordShakeForDataScore(score: Int) -> Single<String>
+    func updateCurrentScore(_ score: Int)
+}
+```
+
+**After (Combine):**
+```swift
+import Foundation
+import Combine
+
+protocol ShakeDataRepository {
+    var currentScore: Int { get }
+
+    func getLeaderboardScores() -> AnyPublisher<[ShakeForDataScore], Error>
+    func recordShakeForDataScore(score: Int) -> AnyPublisher<String, Error>
+    func updateCurrentScore(_ score: Int)
+}
+```
+
+**Key Changes:**
+- Replace `import RxSwift` with `import Combine`
+- Convert `Single<T>` → `AnyPublisher<T, Error>`
+- Keep synchronous methods unchanged
+
+---
+
+#### Phase 2: Implementation Conversion
+
+**Before (RxSwift):**
+```swift
+import Foundation
+import RxSwift
+
+class ShakeDataRepositoryImpl: ShakeDataRepository {
+    var currentScore: Int = 0
+
+    private let apiManager: APIManager
+    private let sessionManager: SessionManager
+    private let disposeBag = DisposeBag()
+
+    init(apiManager: APIManager, sessionManager: SessionManager) {
+        self.apiManager = apiManager
+        self.sessionManager = sessionManager
+    }
+
+    func getLeaderboardScores() -> Single<[ShakeForDataScore]> {
+        return Single.create { single in
+            let task = Task {
+                do {
+                    let scoreList = try await self.apiManager.getShakeForDataLeaderboard()
+                    single(.success(scoreList.scores))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+
+    func recordShakeForDataScore(score: Int) -> Single<String> {
+        guard let userID = sessionManager.session?.userId else {
+            return Single.error(Errors.sessionIsInvalid)
+        }
+
+        return Single.create { single in
+            let task = Task {
+                do {
+                    let apiMessage = try await self.apiManager.recordShakeForDataScore(score: score, userID: userID)
+                    single(.success(apiMessage.message))
+                } catch {
+                    single(.failure(error))
+                }
+            }
+
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+
+    func updateCurrentScore(_ score: Int) {
+        currentScore = score
+    }
+}
+```
+
+**After (Combine):**
+```swift
+import Foundation
+import Combine
+
+class ShakeDataRepositoryImpl: ShakeDataRepository {
+    var currentScore: Int = 0
+
+    private let apiManager: APIManager
+    private let sessionManager: SessionManager
+
+    init(apiManager: APIManager, sessionManager: SessionManager) {
+        self.apiManager = apiManager
+        self.sessionManager = sessionManager
+    }
+
+    func getLeaderboardScores() -> AnyPublisher<[ShakeForDataScore], Error> {
+        return Future { promise in
+            Task {
+                do {
+                    let scoreList = try await self.apiManager.getShakeForDataLeaderboard()
+                    promise(.success(scoreList.scores))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func recordShakeForDataScore(score: Int) -> AnyPublisher<String, Error> {
+        guard let userID = sessionManager.session?.userId else {
+            return Fail(error: Errors.sessionIsInvalid)
+                .eraseToAnyPublisher()
+        }
+
+        return Future { promise in
+            Task {
+                do {
+                    let apiMessage = try await self.apiManager.recordShakeForDataScore(score: score, userID: userID)
+                    promise(.success(apiMessage.message))
+                } catch {
+                    promise(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func updateCurrentScore(_ score: Int) {
+        currentScore = score
+    }
+}
+```
+
+**Key Changes:**
+- Replace `import RxSwift` with `import Combine`
+- Remove `disposeBag` property (not needed)
+- Replace `Single.create` with `Future`
+- Replace `Single.error()` with `Fail(error:)`
+- Remove `Disposables.create` (task management is automatic)
+- Add `.eraseToAnyPublisher()` to match protocol
+
+---
+
+#### Phase 3: Update ViewModel Call Sites
+
+**Before (Using RxSwift Bridge):**
+```swift
+// In ViewModel
+repository.recordShakeForDataScore(score: finalScore)
+    .asPublisher()  // ⚠️ Bridge call needed
+    .receive(on: DispatchQueue.main)
+    .sink(receiveCompletion: { _ in },
+          receiveValue: { [weak self] message in
+        self?.apiMessage = message
+    })
+    .store(in: &cancellables)
+```
+
+**After (Direct Combine):**
+```swift
+// In ViewModel
+repository.recordShakeForDataScore(score: finalScore)
+    // ✅ No .asPublisher() needed!
+    .receive(on: DispatchQueue.main)
+    .sink(receiveCompletion: { _ in },
+          receiveValue: { [weak self] message in
+        self?.apiMessage = message
+    })
+    .store(in: &cancellables)
+```
+
+**Key Changes:**
+- Remove `.asPublisher()` bridge call
+- Direct Combine subscription
+
+---
+
+### Testing Strategy for Repository Conversion
+
+#### Test Infrastructure Setup
+
+**1. Create Sample Data File**
+
+Create `WindscribeTests/SampleData/SampleData[RepositoryName].swift`:
+
+```swift
+//  SampleDataShakeData.swift
+import Foundation
+
+class SampleDataShakeData {
+    static let leaderboardJSON = """
+    {
+        "data": {
+            "leaderboard": [
+                {
+                    "score": 100,
+                    "user": "player1",
+                    "you": 0
+                }
+            ]
+        }
+    }
+    """
+
+    static let apiMessageSuccessJSON = """
+    {
+        "data": {
+            "message": "Score recorded successfully",
+            "success": 1
+        }
+    }
+    """
+}
+```
+
+**2. Create Mock Dependencies**
+
+Create `WindscribeTests/Mocks/Mock[DependencyName].swift`:
+
+```swift
+//  MockAPIManager.swift
+import Foundation
+@testable import Windscribe
+
+class MockAPIManager: APIManager {
+    var shouldThrowError = false
+    var customError: Error = Errors.sessionIsInvalid
+
+    // Mock storage
+    var mockLeaderboard: Leaderboard?
+
+    // Track calls
+    var getLeaderboardCalled = false
+
+    func reset() {
+        shouldThrowError = false
+        mockLeaderboard = nil
+        getLeaderboardCalled = false
+    }
+
+    // Implement only needed methods
+    func getShakeForDataLeaderboard() async throws -> Leaderboard {
+        getLeaderboardCalled = true
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let leaderboard = mockLeaderboard else {
+            let jsonData = SampleDataShakeData.leaderboardJSON.data(using: .utf8)!
+            return try! JSONDecoder().decode(Leaderboard.self, from: jsonData)
+        }
+
+        return leaderboard
+    }
+
+    // All other protocol methods: fatalError("Not implemented for tests")
+    func getSession(_ appleID: String?) async throws -> Session {
+        fatalError("Not implemented for this test")
+    }
+    // ... etc for all other methods
+}
+```
+
+**Important**: Mock ALL protocol methods, but only implement those needed for the repository tests.
+
+**3. Create Comprehensive Tests**
+
+Create `WindscribeTests/Repository/[RepositoryName]Tests.swift`:
+
+```swift
+//  ShakeDataRepositoryTests.swift
+import Foundation
+import Combine
+import Swinject
+@testable import Windscribe
+import XCTest
+
+class ShakeDataRepositoryTests: XCTestCase {
+
+    var mockContainer: Container!
+    var repository: ShakeDataRepository!
+    var mockAPIManager: MockAPIManager!
+    var mockSessionManager: MockSessionManager!
+    private var cancellables = Set<AnyCancellable>()
+
+    override func setUp() {
+        super.setUp()
+        mockContainer = Container()
+        mockAPIManager = MockAPIManager()
+        mockSessionManager = MockSessionManager()
+
+        // Register mocks
+        mockContainer.register(APIManager.self) { _ in
+            return self.mockAPIManager
+        }.inObjectScope(.container)
+
+        mockContainer.register(SessionManager.self) { _ in
+            return self.mockSessionManager
+        }.inObjectScope(.container)
+
+        // Register repository
+        mockContainer.register(ShakeDataRepository.self) { r in
+            return ShakeDataRepositoryImpl(
+                apiManager: r.resolve(APIManager.self)!,
+                sessionManager: r.resolve(SessionManager.self)!
+            )
+        }.inObjectScope(.container)
+
+        repository = mockContainer.resolve(ShakeDataRepository.self)!
+    }
+
+    override func tearDown() {
+        cancellables.removeAll()
+        mockAPIManager.reset()
+        mockSessionManager.reset()
+        mockContainer = nil
+        repository = nil
+        super.tearDown()
+    }
+
+    // MARK: - Success Tests
+
+    func test_getLeaderboardScores_success_shouldReturnScores() {
+        let expectation = self.expectation(description: "Get leaderboard scores")
+
+        repository.getLeaderboardScores()
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    XCTFail("Expected success, but got error: \(error)")
+                }
+            }, receiveValue: { scores in
+                XCTAssertTrue(self.mockAPIManager.getLeaderboardCalled)
+                XCTAssertEqual(scores.count, 1)
+                XCTAssertEqual(scores[0].score, 100)
+                expectation.fulfill()
+            })
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    // MARK: - Failure Tests
+
+    func test_getLeaderboardScores_apiFailure_shouldReturnError() {
+        mockAPIManager.shouldThrowError = true
+        mockAPIManager.customError = Errors.noDataReceived
+
+        let expectation = self.expectation(description: "API failure")
+
+        repository.getLeaderboardScores()
+            .sink(receiveCompletion: { completion in
+                if case .failure = completion {
+                    XCTAssertTrue(self.mockAPIManager.getLeaderboardCalled)
+                    expectation.fulfill()
+                }
+            }, receiveValue: { _ in
+                XCTFail("Expected error, but got success")
+            })
+            .store(in: &cancellables)
+
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+
+    // MARK: - Edge Cases
+
+    func test_updateCurrentScore_shouldUpdateValue() {
+        XCTAssertEqual(repository.currentScore, 0)
+
+        repository.updateCurrentScore(150)
+
+        XCTAssertEqual(repository.currentScore, 150)
+    }
+}
+```
+
+---
+
+### Repository Conversion Checklist
+
+Use this checklist for each repository conversion:
+
+#### Phase 1: Repository Code Changes
+- [ ] **Update Protocol**: Replace `import RxSwift` with `import Combine`
+- [ ] **Convert Return Types**: `Single<T>` → `AnyPublisher<T, Error>`
+- [ ] **Update Implementation**: Replace `import RxSwift` with `import Combine`
+- [ ] **Remove DisposeBag**: Delete `private let disposeBag = DisposeBag()`
+- [ ] **Convert Methods**: `Single.create` → `Future`
+- [ ] **Convert Errors**: `Single.error()` → `Fail(error:)`
+- [ ] **Add Type Erasure**: Add `.eraseToAnyPublisher()` to all methods
+
+#### Phase 2: ViewModel Updates
+- [ ] **Find All Usages**: Search for all places using the repository
+- [ ] **Remove Bridge Calls**: Delete `.asPublisher()` from repository method calls
+- [ ] **Verify Compilation**: Ensure all ViewModels compile correctly
+
+#### Phase 3: Testing
+- [ ] **Create Sample Data**: Add JSON test data to `SampleData` folder
+- [ ] **Create Mocks**: Implement mocks for all dependencies
+- [ ] **Write Tests**: Cover success cases, failures, edge cases
+- [ ] **Add to Xcode**: Add test files to `WindscribeTests` target
+- [ ] **Run Tests**: Verify all tests pass
+
+#### Phase 4: Verification
+- [ ] **Check Targets**: Verify changes in both iOS and tvOS targets
+- [ ] **Remove Unused Imports**: Clean up any remaining RxSwift imports
+- [ ] **Document Changes**: Update any relevant documentation
+
+---
+
+### Common Conversion Patterns
+
+#### Pattern 1: Async/Await Wrapped in Publishers
+
+```swift
+// RxSwift
+func getData() -> Single<Data> {
+    return Single.create { single in
+        let task = Task {
+            do {
+                let data = try await self.api.fetchData()
+                single(.success(data))
+            } catch {
+                single(.failure(error))
+            }
+        }
+        return Disposables.create { task.cancel() }
+    }
+}
+
+// Combine
+func getData() -> AnyPublisher<Data, Error> {
+    return Future { promise in
+        Task {
+            do {
+                let data = try await self.api.fetchData()
+                promise(.success(data))
+            } catch {
+                promise(.failure(error))
+            }
+        }
+    }
+    .eraseToAnyPublisher()
+}
+```
+
+#### Pattern 2: Guard Error Handling
+
+```swift
+// RxSwift
+func process() -> Single<Result> {
+    guard let value = someValue else {
+        return Single.error(Errors.missingValue)
+    }
+    // ... rest of implementation
+}
+
+// Combine
+func process() -> AnyPublisher<Result, Error> {
+    guard let value = someValue else {
+        return Fail(error: Errors.missingValue)
+            .eraseToAnyPublisher()
+    }
+    // ... rest of implementation
+}
+```
+
+#### Pattern 3: Synchronous Methods
+
+```swift
+// Both RxSwift and Combine - No changes needed
+func updateValue(_ value: Int) {
+    currentValue = value
+}
+
+var currentValue: Int { get }
+```
+
+---
+
+### Test Coverage Guidelines
+
+**Minimum test coverage for each repository:**
+
+1. **Success Cases (per method)**
+   - Happy path with valid data
+   - Verify return values match expected data
+   - Verify dependencies were called correctly
+
+2. **Failure Cases (per method)**
+   - API/network failures
+   - Invalid session/authentication errors
+   - Missing required data
+
+3. **Edge Cases**
+   - Empty results
+   - Null/optional handling
+   - Boundary values (zero, negative, very large numbers)
+
+4. **Integration Tests**
+   - Multiple method calls in sequence
+   - Concurrent operations
+   - State persistence across calls
+
+**Target**: 15-25 tests per repository (depending on complexity)
+
+---
+
+### Migration Benefits
+
+**Before Repository Conversion:**
+- ViewModels use `.asPublisher()` bridge
+- Repository depends on RxSwift
+- DisposeBag memory management required
+- Mixed reactive paradigms
+
+**After Repository Conversion:**
+- ViewModels use direct Combine publishers
+- Repository is pure Combine
+- Automatic Combine cancellation
+- Consistent reactive architecture
+
+**Result**: Cleaner code, better performance, easier maintenance
+
+---
+
+### Real-World Example: ShakeDataRepository
+
+**Files Changed:**
+1. `ShakeDataRepository.swift` (protocol)
+2. `ShakeDataRepositoryImpl.swift` (implementation)
+3. `ShakeForDataResultsViewModel.swift` (removed bridge)
+4. `ShakeForDataLeaderboardModel.swift` (removed bridge)
+
+**Files Created:**
+1. `MockAPIManager.swift` (39 protocol methods)
+2. `MockSessionManager.swift` (7 protocol methods)
+3. `SampleDataLeaderboard.swift` (test JSON data)
+4. `ShakeDataRepositoryTests.swift` (24 test cases)
+
+**Results:**
+- ✅ 24/24 tests passing
+- ✅ No RxSwift dependencies in repository layer
+- ✅ ViewModels simplified (no bridge calls)
+- ✅ Full Combine integration
+
+---
+
+**Key Takeaway**: Repository conversion is straightforward when following this pattern. The most time-consuming part is creating comprehensive mocks and tests, but this ensures reliability and prevents regressions.

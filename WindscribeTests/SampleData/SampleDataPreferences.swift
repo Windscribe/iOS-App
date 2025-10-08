@@ -1,5 +1,5 @@
 //
-//  PreferencesSampleData.swift
+//  SampleDataPrefrences.swift
 //  WindscribeTests
 //
 //  Created by Ginder Singh on 2023-12-26.

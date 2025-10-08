@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol ShakeDataRepository {
     var currentScore: Int { get }
 
-    func getLeaderboardScores() -> Single<[ShakeForDataScore]>
-    func recordShakeForDataScore(score: Int) -> Single<String>
+    func getLeaderboardScores() -> AnyPublisher<[ShakeForDataScore], Error>
+    func recordShakeForDataScore(score: Int) -> AnyPublisher<String, Error>
     func updateCurrentScore(_ score: Int)
 }

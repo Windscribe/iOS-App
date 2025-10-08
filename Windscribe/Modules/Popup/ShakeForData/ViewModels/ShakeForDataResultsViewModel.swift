@@ -55,7 +55,6 @@ class ShakeForDataResultsViewModelImpl: ShakeForDataResultsViewModel {
             isNewHighScore = true
             preferences.saveShakeForDataHighestScore(score: finalScore)
             repository.recordShakeForDataScore(score: finalScore)
-                .asPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in
                 }, receiveValue: { [weak self] message in

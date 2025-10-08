@@ -7,56 +7,50 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 class ShakeDataRepositoryImpl: ShakeDataRepository {
     var currentScore: Int = 0
 
     private let apiManager: APIManager
     private let sessionManager: SessionManager
-    private let disposeBag = DisposeBag()
 
     init(apiManager: APIManager, sessionManager: SessionManager) {
         self.apiManager = apiManager
         self.sessionManager = sessionManager
     }
 
-    func getLeaderboardScores() -> Single<[ShakeForDataScore]> {
-        return Single.create { single in
-            let task = Task {
+    func getLeaderboardScores() -> AnyPublisher<[ShakeForDataScore], Error> {
+        return Future { promise in
+            Task {
                 do {
                     let scoreList = try await self.apiManager.getShakeForDataLeaderboard()
-                    single(.success(scoreList.scores))
+                    promise(.success(scoreList.scores))
                 } catch {
-                    single(.failure(error))
+                    promise(.failure(error))
                 }
             }
-
-            return Disposables.create {
-                task.cancel()
-            }
         }
+        .eraseToAnyPublisher()
     }
 
-    func recordShakeForDataScore(score: Int) -> Single<String> {
+    func recordShakeForDataScore(score: Int) -> AnyPublisher<String, Error> {
         guard let userID = sessionManager.session?.userId else {
-            return Single.error(Errors.sessionIsInvalid)
+            return Fail(error: Errors.sessionIsInvalid)
+                .eraseToAnyPublisher()
         }
 
-        return Single.create { single in
-            let task = Task {
+        return Future { promise in
+            Task {
                 do {
                     let apiMessage = try await self.apiManager.recordShakeForDataScore(score: score, userID: userID)
-                    single(.success(apiMessage.message))
+                    promise(.success(apiMessage.message))
                 } catch {
-                    single(.failure(error))
+                    promise(.failure(error))
                 }
             }
-
-            return Disposables.create {
-                task.cancel()
-            }
         }
+        .eraseToAnyPublisher()
     }
 
     func updateCurrentScore(_ score: Int) {

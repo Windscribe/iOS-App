@@ -39,7 +39,6 @@ class ShakeForDataLeaderboardModelImpl: ShakeForDataLeaderboardModel {
         isDarkMode = lookAndFeelRepository.isDarkMode
 
         repository.getLeaderboardScores()
-            .asPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {

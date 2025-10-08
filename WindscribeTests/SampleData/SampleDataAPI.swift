@@ -1,5 +1,5 @@
 //
-//  APISampleData.swift
+//  SampleDataAPI.swift
 //  WindscribeTests
 //
 //  Created by Ginder Singh on 2023-12-24.
