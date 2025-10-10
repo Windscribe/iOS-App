@@ -55,7 +55,6 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
             .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.currentLanguage = name
-                self?.setLocationOrder(with: self?.locationOrder ?? DefaultValues.orderLocationsBy)
                 self?.reloadItems()
             }
             .store(in: &cancellables)
@@ -78,9 +77,9 @@ class GeneralSettingsViewModelImpl: PreferencesBaseViewModelImpl, GeneralSetting
             }
             .store(in: &cancellables)
 
-        preferences.getOrderLocationsBy()
+        preferences.getOrderLocationsBy().combineLatest(languageManager.activelanguage)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] order in
+            .sink { [weak self] (order, _) in
                 guard let self = self else { return }
                 self.setLocationOrder(with: order ?? DefaultValues.orderLocationsBy)
                 self.reloadItems()
