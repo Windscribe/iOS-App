@@ -58,7 +58,10 @@ extension ConfigurationsManager {
                 guard !Task.isCancelled else { return }
                 self.logger.logI("VPNConfiguration", "disconnectExistingConnections")
                 try await self.disconnectExistingConnections(proto: wrapperProtocol, progressPublisher: progressPublisher)
-
+                
+                self.logger.logI("VPNConfiguration", "WaitingDisconnect")
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                
                 guard !Task.isCancelled else { return }
                 self.logger.logI("VPNConfiguration", "prepareNextManager")
                 nextManager = try await self.prepareNextManager(proto: wrapperProtocol, progressPublisher: progressPublisher)
