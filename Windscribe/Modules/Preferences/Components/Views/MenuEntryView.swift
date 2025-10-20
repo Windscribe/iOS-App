@@ -26,7 +26,7 @@ struct MenuEntryView: View {
             if item.action != nil || item.secondaryEntries.count != 0 {
                 MenuEntryInteractiveView(item: item, isDarkMode: isDarkMode, action: action)
             } else {
-                MenuEntryInfoView(item: item, isDarkMode: isDarkMode)
+                MenuEntryInfoView(item: item, title: item.title, isDarkMode: isDarkMode)
             }
         }
         .background(Color.from(.backgroundColor, isDarkMode))
@@ -134,10 +134,11 @@ struct MenuEntryInteractiveView: View {
 
 struct MenuEntryInfoView: View {
     let item: any MenuEntryHeaderType
+    let title: String
     let isDarkMode: Bool
     var body: some View {
         HStack {
-            Text(item.title)
+            Text(title)
                 .foregroundColor(.from(.titleColor, isDarkMode))
                 .font(.medium(.callout))
             Spacer()
