@@ -27,7 +27,7 @@ class ServerListViewModel: ServerListViewModelType {
     var reloadTrigger = PublishSubject<Void>()
 
     private let logger: FileLogger
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let connectivity: ConnectivityManager
     private let localDataBase: LocalDatabase
     private let sessionManager: SessionManager
@@ -37,14 +37,14 @@ class ServerListViewModel: ServerListViewModelType {
     let disposeBag = DisposeBag()
 
     init(logger: FileLogger,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          localDataBase: LocalDatabase,
          sessionManager: SessionManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.localDataBase = localDataBase
         self.sessionManager = sessionManager
@@ -67,7 +67,7 @@ class ServerListViewModel: ServerListViewModelType {
             return
         } else if !group.canConnect() {
             reloadTrigger.onNext(())
-        } else if vpnManager.configurationState == ConfigurationState.initial {
+        } else if vpnStateRepository.configurationState == ConfigurationState.initial {
             guard let bestNode = group.bestNode else { return }
             logger.logD("ServerListViewModel", "Tapped on a node with groupID: \(group.id) \(bestNode.hostname) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(group.id)")
@@ -81,7 +81,7 @@ class ServerListViewModel: ServerListViewModelType {
 
     func connectToBestLocation() {
         let locationID = locationsManager.getBestLocation()
-        if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
+        if !locationID.isEmpty, locationID != "0", !self.vpnStateRepository.isConnecting() {
             self.logger.logD("ServerListViewModel", "Tapped on Best Location with ID \(locationID) from the server list.")
             self.locationsManager.selectBestLocation(with: locationID)
             Task {

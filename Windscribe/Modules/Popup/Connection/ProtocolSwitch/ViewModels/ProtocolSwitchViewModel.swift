@@ -33,6 +33,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
 
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let protocolManager: ProtocolManagerType
+    private let vpnStateRepository: VPNStateRepository
     private let vpnManager: VPNManager
     private let logger: FileLogger
 
@@ -46,11 +47,13 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     init(
         lookAndFeelRepository: LookAndFeelRepositoryType,
         protocolManager: ProtocolManagerType,
+        vpnStateRepository: VPNStateRepository,
         vpnManager: VPNManager,
         logger: FileLogger
     ) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.protocolManager = protocolManager
+        self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.logger = logger
 
@@ -98,9 +101,9 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     /// Updates VPN manager flags based on connection state
     /// This handles the protocol switching context (failover vs manual change)
     private func updateProtocolFlags() {
-        let isConnected = vpnManager.isConnected()
-        vpnManager.isFromProtocolFailover = !isConnected
-        vpnManager.isFromProtocolChange = isConnected
+        let isConnected = vpnStateRepository.isConnected()
+        vpnStateRepository.setIsFromProtocolFailover(!isConnected)
+        vpnStateRepository.setIsFromProtocolChange(isConnected)
 
         logger.logD("ProtocolSwitchViewModel",
                    "Protocol flags - failover: \(!isConnected), change: \(isConnected)")
@@ -175,7 +178,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         // Always cancel any active failover timer when user cancels
         protocolManager.cancelFailoverTimer()
 
-        if vpnManager.isConnected() {
+        if vpnStateRepository.isConnected() {
             // Connected state - just dismiss the dialog
             logger.logI("ProtocolSwitchViewModel", "Canceling protocol selection - connected")
             shouldDismiss = true
@@ -208,7 +211,7 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
     private func disableVPNConnection() {
         guard !WifiManager.shared.isConnectedWifiTrusted() else {
             logger.logI("ProtocolSwitchViewModel", "User leaving untrusted network")
-            vpnManager.untrustedOneTimeOnlySSID = ""
+            vpnStateRepository.setUntrustedOneTimeOnlySSID("")
             vpnManager.simpleDisableConnection()
             return
         }

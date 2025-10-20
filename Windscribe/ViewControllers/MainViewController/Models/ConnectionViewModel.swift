@@ -91,6 +91,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     private var cancellables = Set<AnyCancellable>()
 
     let vpnManager: VPNManager
+    let vpnStateRepository: VPNStateRepository
     let logger: FileLogger
     let apiManager: APIManager
     let locationsManager: LocationsManager
@@ -117,6 +118,7 @@ class ConnectionViewModel: ConnectionViewModelType {
     init(logger: FileLogger,
          apiManager: APIManager,
          vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType,
          preferences: Preferences,
@@ -131,6 +133,7 @@ class ConnectionViewModel: ConnectionViewModelType {
         self.logger = logger
         self.apiManager = apiManager
         self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
         self.preferences = preferences
@@ -145,14 +148,14 @@ class ConnectionViewModel: ConnectionViewModelType {
 
         appReviewManager = AppReviewManager(preferences: preferences, localDatabase: localDB, logger: logger)
 
-        vpnManager.getStatus()
+        vpnStateRepository.getStatus()
             .sink { state in
                 self.updateState(with: ConnectionState.state(from: state))
                 self.saveDataForWidget()
             }
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(vpnManager.vpnInfo, protocolManager.currentProtocolSubject)
+        Publishers.CombineLatest(vpnStateRepository.vpnInfo, protocolManager.currentProtocolSubject)
             .sink { [weak self] (info, nextProtocol) in
                 guard let self = self else { return }
                 if info == nil && nextProtocol == nil {
@@ -169,7 +172,7 @@ class ConnectionViewModel: ConnectionViewModelType {
             .sink { [weak self] value in
                 guard let self = self, let value = value else { return }
                 // Only block if actually connected, not just matching protocol
-                if let info = vpnManager.vpnInfo.value,
+                if let info = vpnStateRepository.vpnInfo.value,
                    info.selectedProtocol == value.protocolPort.protocolName,
                    info.status == .connected {
                     return
@@ -322,7 +325,7 @@ extension ConnectionViewModel {
     }
 
     private func refreshConnectionFromNetworkChange() {
-        if let info = vpnManager.vpnInfo.value {
+        if let info = vpnStateRepository.vpnInfo.value {
             if connectivity.getNetwork().name == nil || connectivity.getNetwork().name == "Unknown" {
                 return
             }
@@ -377,7 +380,7 @@ extension ConnectionViewModel {
                 logger.logI("ConnectionViewModel", "User joining untrusted network")
 
                 let currentNetwork = securedNetwork.getCurrentNetwork()
-                vpnManager.untrustedOneTimeOnlySSID = currentNetwork?.SSID ?? ""
+                vpnStateRepository.setUntrustedOneTimeOnlySSID(currentNetwork?.SSID ?? "")
                 vpnManager.simpleEnableConnection()
                 return
             }
@@ -435,7 +438,7 @@ extension ConnectionViewModel {
     func disableConnection() {
         guard !WifiManager.shared.isConnectedWifiTrusted() else {
             logger.logI("ConnectionViewModel", "User leaving untrusted network")
-            vpnManager.untrustedOneTimeOnlySSID = ""
+            vpnStateRepository.setUntrustedOneTimeOnlySSID("")
             vpnManager.simpleDisableConnection()
             return
         }

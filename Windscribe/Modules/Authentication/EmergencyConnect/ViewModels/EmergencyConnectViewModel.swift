@@ -26,18 +26,18 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     @Published var connectionState: EmergencyConnectState = .disconnected
     @Published var isDarkMode: Bool = false
 
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let emergencyRepository: EmergencyRepository
     private let lookAndFeelRepository: LookAndFeelRepositoryType
     private let logger: FileLogger
     private var cancellables = Set<AnyCancellable>()
     private var ovpnInfoList: [OpenVPNConnectionInfo] = []
 
-    init(vpnManager: VPNManager,
+    init(vpnStateRepository: VPNStateRepository,
          emergencyRepository: EmergencyRepository,
          lookAndFeelRepository: LookAndFeelRepositoryType,
          logger: FileLogger) {
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.emergencyRepository = emergencyRepository
         self.lookAndFeelRepository = lookAndFeelRepository
         self.logger = logger
@@ -56,7 +56,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     }
 
     private func observeVPNStateChanges() {
-        vpnManager.getStatus()
+        vpnStateRepository.getStatus()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] state in
                 guard let self = self else { return }
@@ -78,7 +78,7 @@ class EmergencyConnectViewModelImpl: EmergencyConnectViewModel {
     }
 
     func appEnteredForeground() {
-        vpnManager.connectionStateUpdatedTrigger.send(())
+        vpnStateRepository.connectionStateUpdatedTrigger.send(())
     }
 
     func connectButtonTapped() {

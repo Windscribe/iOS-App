@@ -29,17 +29,17 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     private var cancellables = Set<AnyCancellable>()
 
     let locationsManager: LocationsManager
-    let vpnManager: VPNManager
+    let vpnStateRepository: VPNStateRepository
     let preferences: Preferences
     let protocolManager: ProtocolManagerType
 
-    init(vpnManager: VPNManager, locationsManager: LocationsManager,
+    init(vpnStateRepository: VPNStateRepository, locationsManager: LocationsManager,
          preferences: Preferences, protocolManager: ProtocolManagerType) {
         self.locationsManager = locationsManager
         self.preferences = preferences
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
-        vpnManager.getStatus()
+        vpnStateRepository.getStatus()
             .sink { [weak self] state in
                 self?.statusSubject.onNext(ConnectionState.state(from: state))
             }
@@ -68,11 +68,11 @@ class ConnectionStateInfoViewModel: ConnectionStateInfoViewModelType {
     }
 
     var isConnecting: Bool {
-        vpnManager.isConnecting()
+        vpnStateRepository.isConnecting()
     }
 
     var isConnected: Bool {
-        vpnManager.isConnected()
+        vpnStateRepository.isConnected()
     }
 }
 

@@ -13,6 +13,7 @@ import RxSwift
 class EmergencyRepositoryImpl: EmergencyRepository {
     private let wsnetEmergencyConnect: WSNetEmergencyConnect
     private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let fileDatabase: FileDatabase
     private let localDatabase: LocalDatabase
     private let logger: FileLogger
@@ -21,8 +22,16 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     private let disposeBag = DisposeBag()
     private let configuationName = "emergency-connect"
 
-    init(wsnetEmergencyConnect: WSNetEmergencyConnect, vpnManager: VPNManager, fileDatabase: FileDatabase, localDatabase: LocalDatabase, logger: FileLogger, locationsManager: LocationsManager, protocolManager: ProtocolManagerType) {
+    init(wsnetEmergencyConnect: WSNetEmergencyConnect,
+         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
+         fileDatabase: FileDatabase,
+         localDatabase: LocalDatabase,
+         logger: FileLogger,
+         locationsManager: LocationsManager,
+         protocolManager: ProtocolManagerType) {
         self.wsnetEmergencyConnect = wsnetEmergencyConnect
+        self.vpnStateRepository = vpnStateRepository
         self.vpnManager = vpnManager
         self.fileDatabase = fileDatabase
         self.localDatabase = localDatabase
@@ -57,7 +66,7 @@ class EmergencyRepositoryImpl: EmergencyRepository {
     }
 
     func isConnected() -> Bool {
-        return vpnManager.isConnected()
+        return vpnStateRepository.isConnected()
     }
 
     func cleansEmergencyConfigs() {

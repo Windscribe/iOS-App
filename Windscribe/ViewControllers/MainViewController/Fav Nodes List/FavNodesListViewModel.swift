@@ -22,20 +22,20 @@ class FavouriteListViewModel: FavouriteListViewModelType {
     var showUpgradeTrigger = PublishSubject<Void>()
 
     var logger: FileLogger
-    var vpnManager: VPNManager
+    var vpnStateRepository: VPNStateRepository
     var connectivity: ConnectivityManager
     var sessionManager: SessionManager
     let locationsManager: LocationsManager
     let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          sessionManager: SessionManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.sessionManager = sessionManager
         self.locationsManager = locationsManager
@@ -44,14 +44,14 @@ class FavouriteListViewModel: FavouriteListViewModelType {
 
     func setSelectedFav(favourite: GroupModel) {
         if !connectivity.internetConnectionAvailable() { return }
-        if vpnManager.configurationState == ConfigurationState.disabling {
+        if vpnStateRepository.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
         if !canAccesstoProLocation() && favourite.premiumOnly {
             showUpgradeTrigger.onNext(())
             return
-        } else if vpnManager.configurationState == ConfigurationState.initial {
+        } else if vpnStateRepository.configurationState == ConfigurationState.initial {
             logger.logD("FavouriteListViewModel", "Tapped on Favourite \(favourite.city) from the server list.")
             locationsManager.saveLastSelectedLocation(with: "\(favourite.id)")
             Task {

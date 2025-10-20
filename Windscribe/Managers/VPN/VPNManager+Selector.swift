@@ -13,7 +13,7 @@ import Combine
 import RxSwift
 import Swinject
 
-extension VPNManager {
+extension VPNManagerImpl {
     func simpleEnableConnection() {
         let nextProtocol = protocolManager.getProtocol()
         let locationID = locationsManager.getLastSelectedLocation()

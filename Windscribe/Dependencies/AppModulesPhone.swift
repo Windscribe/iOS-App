@@ -53,7 +53,7 @@ class ViewModels: Assembly {
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                vpnManager: r.resolve(VPNManager.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 ssoManager: r.resolve(SSOManaging.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
@@ -76,7 +76,7 @@ class ViewModels: Assembly {
 
         container.register((any EmergencyConnectViewModel).self) { r in
             EmergencyConnectViewModelImpl(
-                vpnManager: r.resolve(VPNManager.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!)
@@ -262,6 +262,7 @@ class ViewModels: Assembly {
             ProtocolSwitchViewModelImpl(
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 protocolManager: r.resolve(ProtocolManagerType.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 vpnManager: r.resolve(VPNManager.self)!,
                 logger: r.resolve(FileLogger.self)!
             )
@@ -341,6 +342,7 @@ class ViewModels: Assembly {
             ConnectionViewModel(logger: r.resolve(FileLogger.self)!,
                                 apiManager: r.resolve(APIManager.self)!,
                                 vpnManager: r.resolve(VPNManager.self)!,
+                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 locationsManager: r.resolve(LocationsManager.self)!,
                                 protocolManager: r.resolve(ProtocolManagerType.self)!,
                                 preferences: r.resolve(Preferences.self)!,
@@ -363,7 +365,7 @@ class ViewModels: Assembly {
             CustomConfigPickerViewModel(logger: r.resolve(FileLogger.self)!,
                                         alertManager: r.resolve(AlertManagerV2.self)!,
                                         customConfigRepository: r.resolve(CustomConfigRepository.self)!,
-                                        vpnManager: r.resolve(VPNManager.self)!,
+                                        vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                         localDataBase: r.resolve(LocalDatabase.self)!,
                                         connectivity: r.resolve(ConnectivityManager.self)!,
                                         locationsManager: r.resolve(LocationsManager.self)!,
@@ -371,15 +373,15 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(FavouriteListViewModelType.self) { r in
             FavouriteListViewModel(logger: r.resolve(FileLogger.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!,
-                                  connectivity: r.resolve(ConnectivityManager.self)!,
-                                  sessionManager: r.resolve(SessionManager.self)!,
-                                  locationsManager: r.resolve(LocationsManager.self)!,
-                                  protocolManager: r.resolve(ProtocolManagerType.self)!)
+                                   vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                                   connectivity: r.resolve(ConnectivityManager.self)!,
+                                   sessionManager: r.resolve(SessionManager.self)!,
+                                   locationsManager: r.resolve(LocationsManager.self)!,
+                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.transient)
         container.register(ServerListViewModelType.self) { r in
             ServerListViewModel(logger: r.resolve(FileLogger.self)!,
-                                vpnManager: r.resolve(VPNManager.self)!,
+                                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                 connectivity: r.resolve(ConnectivityManager.self)!,
                                 localDataBase: r.resolve(LocalDatabase.self)!,
                                 sessionManager: r.resolve(SessionManager.self)!,
@@ -388,7 +390,7 @@ class ViewModels: Assembly {
         }.inObjectScope(.transient)
         container.register(StaticIPListViewModelType.self) { r in
             StaticIPListViewModel(logger: r.resolve(FileLogger.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!,
+                                  vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                   connectivity: r.resolve(ConnectivityManager.self)!,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   protocolManager: r.resolve(ProtocolManagerType.self)!)
@@ -403,16 +405,16 @@ class ViewModels: Assembly {
         container.register(FlagsBackgroundViewModelType.self) { r in
             FlagsBackgroundViewModel(lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                                      locationsManager: r.resolve(LocationsManager.self)!,
-                                     vpnManager: r.resolve(VPNManager.self)!,
+                                     vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                      backgroundFileManager: r.resolve(BackgroundFileManaging.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConnectButtonViewModelType.self) { r in
-            ConnectButtonViewModel(vpnManager: r.resolve(VPNManager.self)!)
+            ConnectButtonViewModel(vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.transient)
 
         container.register(ConnectionStateInfoViewModelType.self) { r in
-            ConnectionStateInfoViewModel(vpnManager: r.resolve(VPNManager.self)!,
+            ConnectionStateInfoViewModel(vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                          locationsManager: r.resolve(LocationsManager.self)!,
                                          preferences: r.resolve(Preferences.self)!,
                                          protocolManager: r.resolve(ProtocolManagerType.self)!)
@@ -455,7 +457,7 @@ class ViewControllerModule: Assembly {
                 userDataRepository: r.resolve(UserDataRepository.self)!,
                 apiManager: r.resolve(APIManager.self)!,
                 preferences: r.resolve(Preferences.self)!,
-                vpnManager: r.resolve(VPNManager.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 ssoManager: r.resolve(SSOManaging.self)!,
                 logger: r.resolve(FileLogger.self)!
             ), router: r.resolve(AuthenticationNavigationRouter.self)!)
@@ -495,7 +497,7 @@ class ViewControllerModule: Assembly {
 
         container.register(EmergencyConnectView.self) { r in
             EmergencyConnectView(viewModel: EmergencyConnectViewModelImpl(
-                vpnManager: r.resolve(VPNManager.self)!,
+                vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                 emergencyRepository: r.resolve(EmergencyRepository.self)!,
                 lookAndFeelRepository: r.resolve(LookAndFeelRepositoryType.self)!,
                 logger: r.resolve(FileLogger.self)!
@@ -607,6 +609,7 @@ class ViewControllerModule: Assembly {
                     connectivity: r.resolve(ConnectivityManager.self)!,
                     localDatabase: r.resolve(LocalDatabase.self)!,
                     vpnManager: r.resolve(VPNManager.self)!,
+                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                     protocolManager: r.resolve(ProtocolManagerType.self)!
                 )
             )

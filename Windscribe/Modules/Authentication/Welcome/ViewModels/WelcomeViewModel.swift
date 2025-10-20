@@ -61,7 +61,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     private let userDataRepository: UserDataRepository
     private let apiManager: APIManager
     private let preferences: Preferences
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let ssoManager: SSOManaging
     private let logger: FileLogger
 
@@ -72,7 +72,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
          userDataRepository: UserDataRepository,
          apiManager: APIManager,
          preferences: Preferences,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          ssoManager: SSOManaging,
          logger: FileLogger) {
         self.userRepository = userRepository
@@ -80,7 +80,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
         self.preferences = preferences
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.ssoManager = ssoManager
         self.logger = logger
 
@@ -144,7 +144,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func listenForVPNStateChange() {
-        vpnManager.vpnInfo
+        vpnStateRepository.vpnInfo
             .receive(on: DispatchQueue.main)
             .sink { [weak self] vpnInfo in
                 guard let self = self else { return }

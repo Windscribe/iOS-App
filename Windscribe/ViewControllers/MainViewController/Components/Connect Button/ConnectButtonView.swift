@@ -22,8 +22,8 @@ class ConnectButtonViewModel: ConnectButtonViewModelType {
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(vpnManager: VPNManager) {
-        vpnManager.getStatus()
+    init(vpnStateRepository: VPNStateRepository) {
+        vpnStateRepository.getStatus()
             .sink { [weak self] state in
                 self?.statusSubject.onNext(ConnectionState.state(from: state))
             }

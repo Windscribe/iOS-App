@@ -24,6 +24,7 @@ class LivecycleManager: LivecycleManagerType {
     let sessionManager: SessionManager
     let preferences: Preferences
     let vpnManager: VPNManager
+    let vpnStateRepository: VPNStateRepository
     let connectivity: ConnectivityManager
     let credentialsRepo: CredentialsRepository
     let notificationRepo: NotificationRepository
@@ -45,6 +46,7 @@ class LivecycleManager: LivecycleManagerType {
          sessionManager: SessionManager,
          preferences: Preferences,
          vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          credentialsRepo: CredentialsRepository,
          notificationRepo: NotificationRepository,
@@ -56,6 +58,7 @@ class LivecycleManager: LivecycleManagerType {
         self.sessionManager = sessionManager
         self.preferences = preferences
         self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.credentialsRepo = credentialsRepo
         self.notificationRepo = notificationRepo
@@ -74,12 +77,12 @@ class LivecycleManager: LivecycleManagerType {
 
     private func checkForKillSwitch() {
         vpnManager.configureForConnectionState()
-        let info = vpnManager.vpnInfo.value
+        let info = vpnStateRepository.vpnInfo.value
         if connectivity.internetConnectionAvailable() {
-            if info?.killSwitch == true && vpnManager.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
+            if info?.killSwitch == true && vpnStateRepository.isDisconnected() && !WifiManager.shared.isConnectedWifiTrusted() {
                 logger.logI("LivecycleManager", "VPN disocnnected, Turning off kill switch.")
                 vpnManager.simpleDisableConnection()
-            } else if vpnManager.isConnected() && testTask == nil {
+            } else if vpnStateRepository.isConnected() && testTask == nil {
                 logger.logI("LivecycleManager", "VPN conencted. testing conenctivity.")
                 testTask = testConnectivity()
             }
@@ -158,7 +161,7 @@ class LivecycleManager: LivecycleManagerType {
     private func connectToVPN(updatedLocationId: String) async throws {
         let settings = vpnManager.makeUserSettings()
         var proto: ProtocolPort
-        if let info = vpnManager.vpnInfo.value {
+        if let info = vpnStateRepository.vpnInfo.value {
             proto = ProtocolPort(info.selectedProtocol, info.selectedPort)
         } else {
             proto = ProtocolPort(TextsAsset.wireGuard, "443")

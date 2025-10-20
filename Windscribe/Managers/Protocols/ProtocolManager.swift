@@ -46,8 +46,7 @@ class ProtocolManager: ProtocolManagerType {
     private let securedNetwork: SecuredNetworkRepository
     private let preferences: Preferences
     private let locationManager: LocationsManager
-    static var shared = Assembler.resolve(ProtocolManagerType.self)
-    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+    private let vpnStateRepository: VPNStateRepository
 
     private let defaultCountdownTime = 10
     private var countdownTimer: DispatchSourceTimer?
@@ -85,13 +84,21 @@ class ProtocolManager: ProtocolManagerType {
 
     let failOverTimerCompletedSubject = PassthroughSubject<Void, Never>()
 
-    init(logger: FileLogger, connectivity: ConnectivityManager, preferences: Preferences, securedNetwork: SecuredNetworkRepository, localDatabase: LocalDatabase, locationManager: LocationsManager) {
+    init(logger: FileLogger,
+         connectivity: ConnectivityManager,
+         preferences: Preferences,
+         securedNetwork: SecuredNetworkRepository,
+         localDatabase: LocalDatabase,
+         locationManager: LocationsManager,
+         vpnStateRepository: VPNStateRepository) {
         self.logger = logger
         self.connectivity = connectivity
         self.preferences = preferences
         self.securedNetwork = securedNetwork
         self.localDatabase = localDatabase
         self.locationManager = locationManager
+        self.vpnStateRepository = vpnStateRepository
+
         logger.logI("ProtocolManager", "Starting connection manager.")
         bindData()
         Task {
@@ -221,7 +228,7 @@ class ProtocolManager: ProtocolManagerType {
         }
 
         if !isFromFailover, !shouldReconnect,
-           let info = vpnManager.vpnInfo.value, info.status == .connected {
+           let info = vpnStateRepository.vpnInfo.value, info.status == .connected {
             appendPort(proto: info.selectedProtocol, port: info.selectedPort)
             setPriority(proto: info.selectedProtocol, type: .connected)
         } else {
@@ -466,7 +473,7 @@ extension ProtocolManager {
                 return
             }
 
-            if !vpnManager.isConnected() {
+            if !vpnStateRepository.isConnected() {
                 logger.logI("ProtocolManager",
                             "Countdown completed - auto selecting: \(nextUpProtocol.protocolPort)")
                 onUserSelectProtocol(proto: nextUpProtocol.protocolPort, connectionType: .failover)

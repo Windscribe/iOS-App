@@ -38,7 +38,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
 
     init(lookAndFeelRepository: LookAndFeelRepositoryType,
          locationsManager: LocationsManager,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          backgroundFileManager: BackgroundFileManaging) {
         self.lookAndFeelRepository = lookAndFeelRepository
         self.locationsManager = locationsManager
@@ -54,7 +54,7 @@ class FlagsBackgroundViewModel: FlagsBackgroundViewModelType {
             self.updateBackgroundImage(isConnected: self.isConnected)
         }.store(in: &cancellables)
 
-        vpnManager.getStatus()
+        vpnStateRepository.getStatus()
             .sink { [weak self] state in
                 guard let self = self else { return }
                 self.isConnected = state == .connected

@@ -13,33 +13,10 @@ import RealmSwift
     import RxSwift
 #endif
 
-extension VPNManager {
-    func isConnected() -> Bool {
-        vpnInfo.value?.status == .connected
-    }
-
-    func isConnecting() -> Bool {
-        vpnInfo.value?.status == .connecting
-    }
-
-    func isDisconnected() -> Bool {
-        vpnInfo.value?.status == .disconnected
-    }
-
-    func isDisconnecting() -> Bool {
-        vpnInfo.value?.status == .disconnecting
-    }
-
-    func isInvalid() -> Bool {
-        vpnInfo.value?.status == .invalid
-    }
-
-    func connectionStatus() -> NEVPNStatus {
-        return vpnInfo.value?.status ?? NEVPNStatus.disconnected
-    }
+extension VPNManagerImpl {
 
     @objc func connectionStatusChanged(_: Notification?) {
-        connectionStateUpdatedTrigger.send(())
+        vpnStateRepository.connectionStateUpdatedTrigger.send(())
     }
 
     func configureForConnectionState() {
@@ -49,18 +26,18 @@ extension VPNManager {
                     return
                 }
                 self.logger.logI("VPNConfiguration", "Updated connection Info: \(info.description)")
-                self.vpnInfo.send(info)
+                self.vpnStateRepository.vpnInfo.send(info)
                 let connectionStatus = info.status
                 let protocolType = info.selectedProtocol
-                if self.lastConnectionStatus == connectionStatus { return }
-                self.lastConnectionStatus = connectionStatus
+                if self.vpnStateRepository.lastConnectionStatus == connectionStatus { return }
+                self.vpnStateRepository.setLastConnectionStatus(connectionStatus)
                 switch connectionStatus {
                 case .connecting:
                     self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connecting")
                     self.checkIfUserIsOutOfData()
                 case .connected:
                     self.logger.logI("VPNConfiguration", "[\(protocolType)] VPN Status: Connected")
-                    untrustedOneTimeOnlySSID = ""
+                    vpnStateRepository.setUntrustedOneTimeOnlySSID("")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
                         self?.updateUserIpIfRequired()
                     }
@@ -82,7 +59,7 @@ extension VPNManager {
     /// push an update.
     private func updateUserIpIfRequired() {
         // State changed from background or on demand mode.
-        guard let ipState = try? ipRepository.ipState.value(), configurationState == .initial else {
+        guard let ipState = try? ipRepository.ipState.value(), vpnStateRepository.configurationState == .initial else {
             return
         }
         if ipState == .updating {
@@ -104,7 +81,7 @@ extension VPNManager {
     }
 }
 
-extension VPNManager {
+extension VPNManagerImpl {
     private func handleConnectError() {
         if awaitingConnectionCheck {
             return

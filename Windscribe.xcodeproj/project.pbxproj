@@ -273,6 +273,9 @@
 		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
 		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
 		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
+		1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */; };
+		1EF7CEFA2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
+		1EF7CEFB2EA146CE001AE14E /* VPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */; };
 		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
 		1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
@@ -1591,6 +1594,8 @@
 		1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddEmailPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfirmEmailPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
+		1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNManager.swift; sourceTree = "<group>"; };
+		1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepository.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
 		1EFFD0422E993898005603FB /* MockUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
@@ -3100,9 +3105,18 @@
 			path = Emails;
 			sourceTree = "<group>";
 		};
+		1EF7CEFC2EA146DD001AE14E /* VPN State */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */,
+			);
+			path = "VPN State";
+			sourceTree = "<group>";
+		};
 		1EFFD03F2E99382D005603FB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7CEE32EA1181D001AE14E /* MockVPNManager.swift */,
 				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
 				F437917F2E95A20800ED6141 /* MockAPIManager.swift */,
@@ -4063,6 +4077,7 @@
 		C5D983BC2B34C1B10069FF3A /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7CEFC2EA146DD001AE14E /* VPN State */,
 				1ED6163A2DC52EA0006CDC99 /* LookAndFeel */,
 				1EE74F852BD94A580031185F /* ShakeData */,
 				C5D1C2D02BBFE1710083B9EC /* Advance */,
@@ -6430,6 +6445,7 @@
 				F49C45832DC951F5007E5EF1 /* CustomBackgroundEffectType.swift in Sources */,
 				59FC74562C51606200021CD1 /* SecuredNetworkRepositoryImpl.swift in Sources */,
 				59FC73D12C514AD600021CD1 /* WireguardConfigRepository.swift in Sources */,
+				1EF7CEFA2EA146CE001AE14E /* VPNStateRepository.swift in Sources */,
 				59FC741C2C51545500021CD1 /* ManagerErrors.swift in Sources */,
 				1ED23F7E2DBBCB7400C7BEE5 /* SoundManaging.swift in Sources */,
 				59FC74102C51540C00021CD1 /* HelpItem.swift in Sources */,
@@ -6878,6 +6894,7 @@
 				1E5553A82D830EE200F16AF0 /* ServerListCell.swift in Sources */,
 				F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */,
 				1E7918C32CDE2FD100C20723 /* LivecycleManager.swift in Sources */,
+				1EF7CEFB2EA146CE001AE14E /* VPNStateRepository.swift in Sources */,
 				AF16C98F2225EB8A00997A2A /* LoadingSplashView.swift in Sources */,
 				AF2199592270B147009B42E5 /* QNNUtil.m in Sources */,
 				AF2AB9F022F333F600DC0604 /* SwitchButton.swift in Sources */,
@@ -7208,6 +7225,7 @@
 			files = (
 				C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */,
 				F48DDC1D2E8C50EB00B66315 /* MockFileDatabase.swift in Sources */,
+				1EF7CEE42EA11824001AE14E /* MockVPNManager.swift in Sources */,
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
 				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,

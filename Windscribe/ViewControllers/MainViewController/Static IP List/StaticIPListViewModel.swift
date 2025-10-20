@@ -35,18 +35,18 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
     let presentAlertTrigger = PublishSubject<StaticIPAlertType>()
 
     private let logger: FileLogger
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let connectivity: ConnectivityManager
     private let locationsManager: LocationsManager
     private let protocolManager: ProtocolManagerType
 
     init(logger: FileLogger,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          connectivity: ConnectivityManager,
          locationsManager: LocationsManager,
          protocolManager: ProtocolManagerType) {
         self.logger = logger
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.connectivity = connectivity
         self.locationsManager = locationsManager
         self.protocolManager = protocolManager
@@ -60,12 +60,12 @@ class StaticIPListViewModel: NSObject, StaticIPListViewModelType {
             return
         }
 
-        if vpnManager.configurationState == ConfigurationState.disabling {
+        if vpnStateRepository.configurationState == ConfigurationState.disabling {
             presentAlertTrigger.onNext(.disconnecting)
             return
         }
 
-        if vpnManager.configurationState == ConfigurationState.initial {
+        if vpnStateRepository.configurationState == ConfigurationState.initial {
             locationsManager.saveStaticIP(withID: staticIP.id)
             Task {
                 await protocolManager.refreshProtocols(shouldReset: true, shouldReconnect: true)

@@ -18,7 +18,7 @@ enum ConnectionType {
 }
 
 /// Extension of `VPNManager` responsible for managing the connection process, updating preferences, and handling connection errors and retries.
-extension VPNManager {
+extension VPNManagerImpl {
     /// Initiates a disconnect action from the ViewModel, updating the connection state throughout the process.
     /// - Returns: An `AnyPublisher` that publishes updates on the disconnection `State` or an error if the disconnection fails.
     ///
@@ -28,11 +28,11 @@ extension VPNManager {
         connectionTaskPublisher?.cancel()
         return configManager.disconnectAsync()
             .handleEvents(receiveSubscription: { _ in
-                self.configurationState = .disabling
+                self.vpnStateRepository.setConfigurationState(.disabling)
             }, receiveCompletion: { _ in
-                self.configurationState = .initial
+                self.vpnStateRepository.setConfigurationState(.initial)
             }, receiveCancel: {
-                self.configurationState = .initial
+                self.vpnStateRepository.setConfigurationState(.initial)
             }).eraseToAnyPublisher()
     }
 
@@ -47,14 +47,14 @@ extension VPNManager {
     /// 2. Validate the current state and ensure the conditions are met to start a connection.
     /// 3. Call this function to initiate the connection process.
     /// 4. See connectTask func for more info
-    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType = .user) -> AnyPublisher<VPNConnectionState, Error> {
+    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType) -> AnyPublisher<VPNConnectionState, Error> {
         logger.logI("VPNConfiguration", "Connecting from ViewModel")
         connectionTaskPublisher?.cancel()
-        self.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
-                                            selectedPort: proto.portName,
-                                            status: .connecting,
-                                            killSwitch: vpnInfo.value?.killSwitch ?? false,
-                                            onDemand: false))
+        self.vpnStateRepository.vpnInfo.send(VPNConnectionInfo(selectedProtocol: proto.protocolName,
+                                                               selectedPort: proto.portName,
+                                                               status: .connecting,
+                                                               killSwitch: self.vpnStateRepository.vpnInfo.value?.killSwitch ?? false,
+                                                               onDemand: false))
 
         return disableKillSwitchIfRequired()
             .flatMap { _ in
@@ -71,19 +71,20 @@ extension VPNManager {
                 return self.connectWithInitialRetry(id: locationId, proto: proto.protocolName, port: proto.portName, connectionType: connectionType)
             }.handleEvents(receiveSubscription: { _ in
                 self.logger.logI("VPNConfiguration", "Received Connection event")
-                self.configurationState = .configuring
+                self.vpnStateRepository.setConfigurationState(.configuring)
             }, receiveCompletion: { _ in
                 self.logger.logI("VPNConfiguration", "Connection has completed")
-                self.configurationState = .initial
+                self.vpnStateRepository.setConfigurationState(.initial)
             }, receiveCancel: {
                 self.logger.logI("VPNConfiguration", "Connection was cancelled")
-                self.configurationState = .initial
+                self.vpnStateRepository.setConfigurationState(.initial)
             }).eraseToAnyPublisher()
     }
 
     /// Disconnect and disable killswitch if ON
     private func disableKillSwitchIfRequired() -> AnyPublisher<Void, Never> {
-        guard let info = vpnInfo.value, info.killSwitch == true else {
+        guard let info = vpnStateRepository.vpnInfo.value,
+              info.killSwitch == true else {
             return Just(()).eraseToAnyPublisher()
         }
         return configManager.disconnectAsync()

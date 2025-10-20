@@ -12,34 +12,34 @@ import RealmSwift
 import Combine
 import Swinject
 
-enum ConfigurationState {
-    case configuring
-    case disabling
-    case initial
-    case testing
+protocol VPNManager {
+    func configureForConnectionState()
+
+    func isActive() async -> Bool
+
+    // Set Methods
+    func updateOnDemandRules()
+    func resetProfiles() async
+
+    // Connection Methods
+    func disconnectFromViewModel() -> AnyPublisher<VPNConnectionState, Error>
+    func connectFromViewModel(locationId: String, proto: ProtocolPort) -> AnyPublisher<VPNConnectionState, Error>
+    func connectFromViewModel(locationId: String, proto: ProtocolPort, connectionType: ConnectionType) -> AnyPublisher<VPNConnectionState, Error>
+    func simpleDisableConnection()
+    func simpleEnableConnection()
+
+    // Util Methods
+    func makeUserSettings() -> VPNUserSettings
 }
 
-protocol VPNManagerProtocol {}
+extension VPNManager {
+    func connectFromViewModel(locationId: String, proto: ProtocolPort) -> AnyPublisher<VPNConnectionState, Error> {
+        return connectFromViewModel(locationId: locationId, proto: proto, connectionType: .user)
+    }
+}
 
-class VPNManager: VPNManagerProtocol {
-
+class VPNManagerImpl: VPNManager {
     var cancellables = Set<AnyCancellable>()
-    var vpnInfo = CurrentValueSubject<VPNConnectionInfo?, Never>(nil)
-    var connectionStateUpdatedTrigger = PassthroughSubject<Void, Never>()
-
-    var lastConnectionStatus: NEVPNStatus = .disconnected
-
-    var isFromProtocolFailover: Bool = false
-    var isFromProtocolChange: Bool = false
-    var awaitingConnectionCheck = false
-
-    var untrustedOneTimeOnlySSID: String = ""
-
-    /// Represents the configuration state of the VPN.
-    private var _configurationState = ConfigurationState.initial
-
-    /// A lock used to synchronize access to the configuration state.
-    private let configureStateLock = NSLock()
 
     private let activeManagerKey = "activeManager"
 
@@ -52,8 +52,11 @@ class VPNManager: VPNManagerProtocol {
     let configManager: ConfigurationsManager
     let alertManager: AlertManagerV2
     let locationsManager: LocationsManager
+    let vpnStateRepository: VPNStateRepository
 
     var connectionTaskPublisher: AnyCancellable?
+
+    var awaitingConnectionCheck = false
 
     lazy var credentialsRepository: CredentialsRepository = Assembler.resolve(CredentialsRepository.self)
     lazy var ipRepository: IPRepository =  Assembler.resolve(IPRepository.self)
@@ -61,21 +64,17 @@ class VPNManager: VPNManagerProtocol {
     lazy var protocolManager: ProtocolManagerType =  Assembler.resolve(ProtocolManagerType.self)
 
     /// The current configuration state of the VPN, with thread-safe access.
-    var configurationState: ConfigurationState {
-        get {
-            configureStateLock.lock()
-            defer { configureStateLock.unlock() }
-            return _configurationState
-        }
-        set {
-            configureStateLock.lock()
-            _configurationState = newValue
-            configureStateLock.unlock()
-            configureForConnectionState()
-        }
-    }
 
-    init(logger: FileLogger, localDB: LocalDatabase, serverRepository: ServerRepository, staticIpRepository: StaticIpRepository, preferences: Preferences, connectivity: ConnectivityManager, configManager: ConfigurationsManager, alertManager: AlertManagerV2, locationsManager: LocationsManager) {
+    init(logger: FileLogger,
+         localDB: LocalDatabase,
+         serverRepository: ServerRepository,
+         staticIpRepository: StaticIpRepository,
+         preferences: Preferences,
+         connectivity: ConnectivityManager,
+         configManager: ConfigurationsManager,
+         alertManager: AlertManagerV2,
+         locationsManager: LocationsManager,
+         vpnStateRepository: VPNStateRepository) {
         self.logger = logger
         self.localDB = localDB
         self.serverRepository = serverRepository
@@ -85,12 +84,19 @@ class VPNManager: VPNManagerProtocol {
         self.configManager = configManager
         self.alertManager = alertManager
         self.locationsManager = locationsManager
+        self.vpnStateRepository = vpnStateRepository
 
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(connectionStatusChanged(_:)),
                                                name: NSNotification.Name.NEVPNStatusDidChange,
                                                object: nil)
-        connectionStateUpdatedTrigger
+        self.vpnStateRepository.connectionStateUpdatedTrigger
+            .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.configureForConnectionState()
+            }.store(in: &cancellables)
+
+        self.vpnStateRepository.configurationStateUpdatedTrigger
             .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.configureForConnectionState()
@@ -102,35 +108,6 @@ class VPNManager: VPNManagerProtocol {
     func isActive() async -> Bool {
         guard (try? await configManager.getConfiguredManager()) != nil else { return false }
         return true
-    }
-
-    /// Returns an observable that emits the VPN status with a debounce and custom mapping logic.
-    /// This function observes changes in the `vpnInfo` and applies a debounce to avoid rapid updates.
-    ///
-    /// - Returns: An `Observable` that emits the VPN status as an `NEVPNStatus` value.
-    func getStatus() -> AnyPublisher<NEVPNStatus, Never> {
-        return vpnInfo
-            .debounce(for: .milliseconds(100), scheduler: DispatchQueue.main)
-            .compactMap { $0 }
-            .map { [weak self] info -> NEVPNStatus in
-                guard let self = self else { return .invalid }
-
-                switch self.configurationState {
-                case .configuring:
-                    self.logger.logD("VPNConfiguration", "vpnInfo update to: configuring -> connecting")
-                    return NEVPNStatus.connecting
-                case .disabling:
-                    self.logger.logD("VPNConfiguration", "vpnInfo update to: disabling -> disconnecting")
-                    return NEVPNStatus.disconnecting
-                case .initial:
-                    self.logger.logD("VPNConfiguration", "vpnInfo update to: Initial -> \(info.description)")
-                    return info.status
-                case .testing:
-                    return info.status
-                }
-            }
-            .removeDuplicates()
-            .eraseToAnyPublisher()
     }
 
     func updateOnDemandRules() {
@@ -175,12 +152,12 @@ class VPNManager: VPNManagerProtocol {
     }
 }
 
-extension VPNManager {
+extension VPNManagerImpl {
     private func getOnDemandRules() -> [NEOnDemandRule] {
         var onDemandRules: [NEOnDemandRule] = []
         if let networks = localDB.getNetworksSync() {
             networks.filter { $0.status == true }.forEach { network in
-                if network.SSID == TextsAsset.cellular && network.SSID != untrustedOneTimeOnlySSID {
+                if network.SSID == TextsAsset.cellular && network.SSID != vpnStateRepository.untrustedOneTimeOnlySSID {
                     let ruleDisconnect = NEOnDemandRuleDisconnect()
                     #if os(iOS)
                         ruleDisconnect.interfaceTypeMatch = .cellular
@@ -189,7 +166,7 @@ extension VPNManager {
                     logger.logD("VPNManager", "Added On demand disconnect rule for cellular network.")
                 }
             }
-            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
+            let unsecureWifiNetworks = networks.filter { $0.status == true && $0.SSID != TextsAsset.cellular && $0.SSID != vpnStateRepository.untrustedOneTimeOnlySSID }.map { $0.SSID }.sorted()
             if unsecureWifiNetworks.count > 0 {
                 let ruleDisconnect = NEOnDemandRuleDisconnect()
                 ruleDisconnect.ssidMatch = unsecureWifiNetworks
@@ -245,7 +222,7 @@ struct VPNConnectionInfo: CustomStringConvertible {
     }
 }
 
-extension VPNManager: ConfigurationsManagerDelegate {
+extension VPNManagerImpl: ConfigurationsManagerDelegate {
     func setActiveManager(with type: VPNManagerType?) {
         guard let type = type else { return }
         activeVPNManager = type

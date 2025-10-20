@@ -18,7 +18,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private let pingManager: WSNetPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let locationsManager: LocationsManager
     private let preferences: Preferences
     private let advanceRepository: AdvanceRepository
@@ -34,14 +34,14 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     init(pingManager: WSNetPingManager,
          database: LocalDatabase,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          logger: FileLogger,
          locationsManager: LocationsManager,
          preferences: Preferences,
          advanceRepository: AdvanceRepository) {
         self.pingManager = pingManager
         self.database = database
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.logger = logger
         self.locationsManager = locationsManager
         self.preferences = preferences
@@ -81,7 +81,7 @@ class LatencyRepositoryImpl: LatencyRepository {
         if locationsManager.getBestLocation() == "0" {
             self.pickBestLocation()
         }
-        if vpnManager.isConnected() {
+        if vpnStateRepository.isConnected() {
             self.logger.logE("LatencyRepositoryImpl", "Latency not updated as vpn is connected")
             return Completable.empty()
         }
@@ -179,7 +179,7 @@ class LatencyRepositoryImpl: LatencyRepository {
 
     private func getTCPLatency(pingIp: String, completion: @escaping (_ minTime: Int) -> Void) {
 #if os(iOS)
-        if vpnManager.isConnected() {
+        if vpnStateRepository.isConnected() {
             completion(-1)
         } else {
             _ = DispatchQueue(label: "Ping", qos: .default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil).sync {

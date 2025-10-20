@@ -42,6 +42,7 @@ class SessionManagerImpl: SessionManager {
     let latencyRepo = Assembler.resolve(LatencyRepository.self)
     let userRepo = Assembler.resolve(UserRepository.self)
     let locationsManager = Assembler.resolve(LocationsManager.self)
+    let vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
     private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
     private lazy var ssoManager = Assembler.resolve(SSOManaging.self)
@@ -166,7 +167,7 @@ class SessionManagerImpl: SessionManager {
 
     private func checkLocationValidity() {
         Task { @MainActor in
-            if vpnManager.isConnected() {
+            if vpnStateRepository.isConnected() {
                 latencyRepo.refreshBestLocation()
                 locationsManager.checkLocationValidity(checkProAccess: {canAccesstoProLocation()})
             } else {

@@ -74,7 +74,13 @@ class Repository: Assembly {
             ServerRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, userRepository: r.resolve(UserRepository.self)!, preferences: r.resolve(Preferences.self)!, advanceRepository: r.resolve(AdvanceRepository.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(CredentialsRepository.self) { r in
-            CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, fileDatabase: r.resolve(FileDatabase.self)!, vpnManager: r.resolve(VPNManager.self)!, wifiManager: WifiManager.shared, preferences: r.resolve(Preferences.self)!, logger: logger)
+            CredentialsRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
+                                      localDatabase: r.resolve(LocalDatabase.self)!,
+                                      fileDatabase: r.resolve(FileDatabase.self)!,
+                                      vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                                      wifiManager: WifiManager.shared,
+                                      preferences: r.resolve(Preferences.self)!,
+                                      logger: logger)
         }.inObjectScope(.userScope)
         container.register(PortMapRepository.self) { r in
             PortMapRepositoryImpl(apiManager: r.resolve(APIManager.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: logger)
@@ -85,20 +91,28 @@ class Repository: Assembly {
         container.register(LatencyRepository.self) { r in
             LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(),
                                   database: r.resolve(LocalDatabase.self)!,
-                                  vpnManager: r.resolve(VPNManager.self)!,
+                                  vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                   logger: logger,
                                   locationsManager: r.resolve(LocationsManager.self)!,
                                   preferences: r.resolve(Preferences.self)!,
                                   advanceRepository: r.resolve(AdvanceRepository.self)!)
         }.inObjectScope(.container)
         container.register(EmergencyRepository.self) { r in
-            EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(), vpnManager: r.resolve(VPNManager.self)!, fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, logger: r.resolve(FileLogger.self)!, locationsManager: r.resolve(LocationsManager.self)!, protocolManager: r.resolve(ProtocolManagerType.self)!)
+            EmergencyRepositoryImpl(wsnetEmergencyConnect: WSNet.instance().emergencyConnect(),
+                                    vpnManager: r.resolve(VPNManager.self)!,
+                                    vpnStateRepository: r.resolve(VPNStateRepository.self)!,
+                                    fileDatabase: r.resolve(FileDatabase.self)!,
+                                    localDatabase: r.resolve(LocalDatabase.self)!,
+                                    logger: r.resolve(FileLogger.self)!,
+                                    locationsManager: r.resolve(LocationsManager.self)!,
+                                    protocolManager: r.resolve(ProtocolManagerType.self)!)
         }.inObjectScope(.userScope)
         container.register(CustomConfigRepository.self) { r in
             CustomConfigRepositoryImpl(fileDatabase: r.resolve(FileDatabase.self)!, localDatabase: r.resolve(LocalDatabase.self)!, latencyRepo: r.resolve(LatencyRepository.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(AdvanceRepository.self) { r in
-            AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!)
+            AdvanceRepositoryImpl(preferences: r.resolve(Preferences.self)!,
+                                  vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(ShakeDataRepository.self) { r in
             ShakeDataRepositoryImpl(apiManager: r.resolve(APIManager.self)!,
@@ -179,16 +193,20 @@ class Managers: Assembly {
                                  languageManager: r.resolve(LanguageManager.self)!,
                                  serverRepository: r.resolve(ServerRepository.self)!)
         }.inObjectScope(.userScope)
+        container.register(VPNStateRepository.self) { r in
+            VPNStateRepositoryImpl(logger: r.resolve(FileLogger.self)!)
+        }.inObjectScope(.userScope)
         container.register(VPNManager.self) { r in
-            VPNManager(logger: r.resolve(FileLogger.self)!,
-                       localDB: r.resolve(LocalDatabase.self)!,
-                       serverRepository: r.resolve(ServerRepository.self)!,
-                       staticIpRepository: r.resolve(StaticIpRepository.self)!,
-                       preferences: r.resolve(Preferences.self)!,
-                       connectivity: r.resolve(ConnectivityManager.self)!,
-                       configManager: r.resolve(ConfigurationsManager.self)!,
-                       alertManager: r.resolve(AlertManagerV2.self)!,
-                       locationsManager: r.resolve(LocationsManager.self)!)
+            VPNManagerImpl(logger: r.resolve(FileLogger.self)!,
+                           localDB: r.resolve(LocalDatabase.self)!,
+                           serverRepository: r.resolve(ServerRepository.self)!,
+                           staticIpRepository: r.resolve(StaticIpRepository.self)!,
+                           preferences: r.resolve(Preferences.self)!,
+                           connectivity: r.resolve(ConnectivityManager.self)!,
+                           configManager: r.resolve(ConfigurationsManager.self)!,
+                           alertManager: r.resolve(AlertManagerV2.self)!,
+                           locationsManager: r.resolve(LocationsManager.self)!,
+                           vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.userScope)
         container.register(ReferAndShareManager.self) { r in
             ReferAndShareManagerImpl(
@@ -210,7 +228,13 @@ class Managers: Assembly {
             PushNotificationManagerImpl(vpnManager: r.resolve(VPNManager.self)!, session: r.resolve(SessionManager.self)!, logger: r.resolve(FileLogger.self)!)
         }.inObjectScope(.userScope)
         container.register(ProtocolManagerType.self) { r in
-            ProtocolManager(logger: r.resolve(FileLogger.self)!, connectivity: r.resolve(ConnectivityManager.self)!, preferences: r.resolve(Preferences.self)!, securedNetwork: r.resolve(SecuredNetworkRepository.self)!, localDatabase: r.resolve(LocalDatabase.self)!, locationManager: r.resolve(LocationsManager.self)!)
+            ProtocolManager(logger: r.resolve(FileLogger.self)!,
+                            connectivity: r.resolve(ConnectivityManager.self)!,
+                            preferences: r.resolve(Preferences.self)!,
+                            securedNetwork: r.resolve(SecuredNetworkRepository.self)!,
+                            localDatabase: r.resolve(LocalDatabase.self)!,
+                            locationManager: r.resolve(LocationsManager.self)!,
+                            vpnStateRepository: r.resolve(VPNStateRepository.self)!)
         }.inObjectScope(.userScope)
 
         container.register(LivecycleManagerType.self) { r in
@@ -218,6 +242,7 @@ class Managers: Assembly {
                              sessionManager: r.resolve(SessionManager.self)!,
                              preferences: r.resolve(Preferences.self)!,
                              vpnManager: r.resolve(VPNManager.self)!,
+                             vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                              connectivity: r.resolve(ConnectivityManager.self)!,
                              credentialsRepo: r.resolve(CredentialsRepository.self)!,
                              notificationRepo: r.resolve(NotificationRepository.self)!,

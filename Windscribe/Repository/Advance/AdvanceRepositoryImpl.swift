@@ -14,16 +14,18 @@ import Swinject
 class AdvanceRepositoryImpl: AdvanceRepository {
     private let preferences: Preferences
     private let disposeBag = DisposeBag()
-    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+    private let vpnStateRepository: VPNStateRepository!
 
-    init(preferences: Preferences) {
+    init(preferences: Preferences,
+         vpnStateRepository: VPNStateRepository) {
         self.preferences = preferences
+        self.vpnStateRepository = vpnStateRepository
     }
 
     func getCountryOverride() -> String? {
         let countryCode = getValue(key: wsServerOverrride)
         let overriddenCountryCode = preferences.getCountryOverride()
-        let isConnectedVPN = vpnManager.isConnected()
+        let isConnectedVPN = vpnStateRepository.isConnected()
         return if let countryCode = countryCode {
             if countryCode == ignoreCountryOverride {
                 ignoreCountryCode

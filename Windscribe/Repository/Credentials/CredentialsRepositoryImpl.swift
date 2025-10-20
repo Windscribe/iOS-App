@@ -15,7 +15,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
     private let fileDatabase: FileDatabase
-    private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let wifiManager: WifiManager
     private let logger: FileLogger
     private let preferences: Preferences
@@ -24,11 +24,17 @@ class CredentialsRepositoryImpl: CredentialsRepository {
     let connectionMode: BehaviorSubject<String?> = BehaviorSubject(value: nil)
     let selectedProtocol: BehaviorSubject<String?> = BehaviorSubject(value: nil)
 
-    init(apiManager: APIManager, localDatabase: LocalDatabase, fileDatabase: FileDatabase, vpnManager: VPNManager, wifiManager: WifiManager, preferences: Preferences, logger: FileLogger) {
+    init(apiManager: APIManager,
+         localDatabase: LocalDatabase,
+         fileDatabase: FileDatabase,
+         vpnStateRepository: VPNStateRepository,
+         wifiManager: WifiManager,
+         preferences: Preferences,
+         logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.fileDatabase = fileDatabase
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.wifiManager = wifiManager
         self.logger = logger
         self.preferences = preferences
@@ -158,7 +164,7 @@ class CredentialsRepositoryImpl: CredentialsRepository {
         guard let result = wifiManager.getConnectedNetwork() else {
             return OpenVPNServerCredentials.self
         }
-        if result.preferredProtocolStatus == true && !vpnManager.isFromProtocolFailover && !vpnManager.isFromProtocolChange {
+        if result.preferredProtocolStatus == true && !vpnStateRepository.isFromProtocolFailover && !vpnStateRepository.isFromProtocolChange {
             if result.preferredProtocol == TextsAsset.iKEv2 {
                 return IKEv2ServerCredentials.self
             }

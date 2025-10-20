@@ -35,7 +35,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     let logger: FileLogger
     let alertManager: AlertManagerV2
     let customConfigRepository: CustomConfigRepository
-    let vpnManager: VPNManager
+    let vpnStateRepository: VPNStateRepository
     let localDataBase: LocalDatabase
     let connectivity: ConnectivityManager
     let locationsManager: LocationsManager
@@ -52,7 +52,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
     init(logger: FileLogger,
          alertManager: AlertManagerV2,
          customConfigRepository: CustomConfigRepository,
-         vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          localDataBase: LocalDatabase,
          connectivity: ConnectivityManager,
          locationsManager: LocationsManager,
@@ -60,7 +60,7 @@ class CustomConfigPickerViewModel: NSObject, CustomConfigPickerViewModelType {
         self.logger = logger
         self.alertManager = alertManager
         self.customConfigRepository = customConfigRepository
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.localDataBase = localDataBase
         self.connectivity = connectivity
         self.locationsManager = locationsManager
@@ -121,12 +121,12 @@ extension CustomConfigPickerViewModel: AddCustomConfigDelegate {
 extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
     func setSelectedCustomConfig(customConfig: CustomConfigModel) {
         if !connectivity.internetConnectionAvailable() { return }
-        if vpnManager.configurationState == ConfigurationState.disabling {
+        if vpnStateRepository.configurationState == ConfigurationState.disabling {
             displayAllertTrigger.onNext(.disconnecting)
             return
         }
         Task { @MainActor in
-            await continueSetSelected(with: customConfig, and: vpnManager.isConnecting())
+            await continueSetSelected(with: customConfig, and: vpnStateRepository.isConnecting())
         }
     }
 
@@ -172,7 +172,7 @@ extension CustomConfigPickerViewModel: CustomConfigListModelDelegate {
 
     private func setBestLocation() {
         let locationID = locationsManager.getBestLocation()
-        if !locationID.isEmpty, locationID != "0", !self.vpnManager.isConnecting() {
+        if !locationID.isEmpty, locationID != "0", !self.vpnStateRepository.isConnecting() {
             self.logger.logD("CustomConfigPickerViewModel", "Changing selected location to Best location ID \(locationID) from the server list.")
             self.locationsManager.saveLastSelectedLocation(with: locationID)
             self.configureVPNTrigger.onNext(())

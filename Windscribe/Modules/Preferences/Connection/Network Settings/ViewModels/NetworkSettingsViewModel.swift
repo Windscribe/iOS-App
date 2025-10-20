@@ -30,6 +30,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
     private let connectivity: ConnectivityManager
     private let localDatabase: LocalDatabase
     private let vpnManager: VPNManager
+    private let vpnStateRepository: VPNStateRepository
     private let protocolManager: ProtocolManagerType
 
     private let disposeBag = DisposeBag()
@@ -40,10 +41,12 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
          connectivity: ConnectivityManager,
          localDatabase: LocalDatabase,
          vpnManager: VPNManager,
+         vpnStateRepository: VPNStateRepository,
          protocolManager: ProtocolManagerType) {
         self.connectivity = connectivity
         self.localDatabase = localDatabase
         self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.protocolManager = protocolManager
 
         super.init(logger: logger,
@@ -134,7 +137,7 @@ class NetworkSettingsViewModelImpl: PreferencesBaseViewModelImpl, NetworkSetting
         localDatabase.saveNetwork(wifiNetwork: updated)
         Task {
             await protocolManager.refreshProtocols(shouldReset: true,
-                                                   shouldReconnect: vpnManager.isConnected())
+                                                   shouldReconnect: vpnStateRepository.isConnected())
         }
     }
 
