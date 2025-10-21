@@ -21,7 +21,7 @@ protocol SessionManager {
     func checkForSessionChange()
     func keepSessionUpdated()
     func canAccesstoProLocation() -> Bool
-    func getUpdatedSession() async throws -> Session
+    func checkSession() async throws
 }
 
 class SessionManagerImpl: SessionManager {
@@ -90,8 +90,9 @@ class SessionManagerImpl: SessionManager {
         }
     }
 
-    func getUpdatedSession() async throws -> Session {
-        return try await self.apiManager.getSession(nil)
+    func checkSession() async throws {
+        let session = try await apiManager.getSession(nil)
+        userRepo.update(session: session)
     }
 
     func canAccesstoProLocation() -> Bool {

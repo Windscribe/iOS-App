@@ -102,7 +102,7 @@ extension VPNManagerImpl {
                     self.logger.logI("VPNManager", "Getting new session.")
 
                     do {
-                        _ = try await self.sessionManager.getUpdatedSession()
+                       try await self.sessionManager.checkSession()
                     } catch let error {
                         self.logger.logE("VPNManager", "Failure to update session after disabling VPN profile. Error: \(error)")
                     }

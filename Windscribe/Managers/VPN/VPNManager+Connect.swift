@@ -156,7 +156,7 @@ extension VPNManagerImpl {
             Task {
                 do {
                     try await self.connectivity.awaitNetwork(maxTime: 3)
-                    _ = try await self.sessionManager.getUpdatedSession()
+                    try await self.sessionManager.checkSession()
                     _ = try await self.credentialsRepository.getUpdatedOpenVPNCrendentials().value
                     _ = try await self.credentialsRepository.getUpdatedIKEv2Crendentials().value
                     _ = try await self.serverRepository.getUpdatedServers()
