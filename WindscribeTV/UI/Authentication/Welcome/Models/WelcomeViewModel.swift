@@ -31,18 +31,24 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     let userDataRepository: UserDataRepository
     let apiManager: APIManager
     let preferences: Preferences
-    let vpnManager: VPNManager
+    let vpnStateRepository: VPNStateRepository
     let logger: FileLogger
     let disposeBag = DisposeBag()
     private var cancellables = Set<AnyCancellable>()
 
-    init(userRepository: UserRepository, keyChainDatabase: KeyChainDatabase, userDataRepository: UserDataRepository, apiManager: APIManager, preferences: Preferences,vpnManager: VPNManager, logger: FileLogger) {
+    init(userRepository: UserRepository,
+         keyChainDatabase: KeyChainDatabase,
+         userDataRepository: UserDataRepository,
+         apiManager: APIManager,
+         preferences: Preferences,
+         vpnStateRepository: VPNStateRepository,
+         logger: FileLogger) {
         self.userRepository = userRepository
         self.keyChainDatabase = keyChainDatabase
         self.userDataRepository = userDataRepository
         self.apiManager = apiManager
         self.preferences = preferences
-        self.vpnManager = vpnManager
+        self.vpnStateRepository = vpnStateRepository
         self.logger = logger
         listenForVPNStateChange()
     }
@@ -105,7 +111,7 @@ class WelcomeViewModelImpl: WelcomeViewModel {
     }
 
     private func listenForVPNStateChange() {
-        vpnManager.vpnInfo.sink { [weak self] vpnInfo in
+        vpnStateRepository.vpnInfo.sink { [weak self] vpnInfo in
             if vpnInfo != nil && vpnInfo?.status == .connected {
                 self?.emergencyConnectStatus.onNext(true)
             } else {

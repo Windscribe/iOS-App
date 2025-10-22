@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private lazy var logger: FileLogger = Assembler.resolve(FileLogger.self)
 
-    private lazy var vpnManager: VPNManager = Assembler.resolve(VPNManager.self)
+    private lazy var vpnStateRepository: VPNStateRepository = Assembler.resolve(VPNStateRepository.self)
 
     private lazy var localDatabase: LocalDatabase = Assembler.resolve(LocalDatabase.self)
 
@@ -38,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private lazy var connectivity: ConnectivityManager = Assembler.resolve(ConnectivityManager.self)
 
     private lazy var livecycleManager: LivecycleManagerType = Assembler.resolve(LivecycleManagerType.self)
+    
+    private lazy var protocolManager: ProtocolManagerType = Assembler.resolve(ProtocolManagerType.self)
 
     lazy var languageManager: LanguageManager = Assembler.resolve(LanguageManager.self)
 
@@ -107,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
      If vpn state is disconnected on app launch reset country override for the server list.
      */
     private func resetCountryOverrideForServerList() {
-        if vpnManager.isDisconnected() {
+        if vpnStateRepository.isDisconnected() {
             preferences.saveCountryOverrride(value: nil)
         }
     }
@@ -122,7 +124,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_: UIApplication) {
         logger.logI("AppDelegate", "App state changed to WillEnterForeground.")
-        ProtocolManager.shared.resetGoodProtocol()
+        protocolManager.resetGoodProtocol()
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
