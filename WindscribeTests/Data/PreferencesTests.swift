@@ -121,6 +121,7 @@ class PreferencesTests: XCTestCase {
         preferences.saveFirewallMode(firewall: true)
         let firewallExpectation = expectation(description: "Get firewall mode")
         preferences.getFirewallMode()
+            .first()
             .sink { firewall in
                 XCTAssertEqual(firewall, true)
                 firewallExpectation.fulfill()
@@ -131,6 +132,7 @@ class PreferencesTests: XCTestCase {
         preferences.saveKillSwitch(killSwitch: true)
         let killSwitchExpectation = expectation(description: "Get kill switch")
         preferences.getKillSwitch()
+            .first()
             .sink { killSwitch in
                 XCTAssertEqual(killSwitch, true)
                 killSwitchExpectation.fulfill()
@@ -141,6 +143,7 @@ class PreferencesTests: XCTestCase {
         preferences.saveDarkMode(darkMode: true)
         let darkModeExpectation = expectation(description: "Get dark mode")
         preferences.getDarkMode()
+            .first()
             .sink { darkMode in
                 XCTAssertEqual(darkMode, true)
                 darkModeExpectation.fulfill()

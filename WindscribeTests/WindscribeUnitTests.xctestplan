@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "8BE0C5BD-5C6C-4121-BFFB-E5D3E514B874",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Windscribe.xcodeproj",
+      "identifier" : "AF018DE821B0866600B225FF",
+      "name" : "Windscribe"
+    }
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "ConcurrentDictionaryTest",
+        "IpRepositoryTests"
+      ],
+      "target" : {
+        "containerPath" : "container:Windscribe.xcodeproj",
+        "identifier" : "AF018E1521B1AA2D00B225FF",
+        "name" : "WindscribeTests"
+      }
+    }
+  ],
+  "version" : 1
+}

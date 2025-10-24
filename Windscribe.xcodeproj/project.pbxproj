@@ -1064,6 +1064,7 @@
 		F457F1D52D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */; };
 		F457F1D72D53AF2B00C66E08 /* PlanUpgradePromoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */; };
 		F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */; };
+		F458FA3E2EAAC16600EAAE8E /* MockSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F458FA3D2EAAC16600EAAE8E /* MockSessionRepository.swift */; };
 		F45BA5962D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */; };
 		F45BA5982D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */; };
 		F45BA59A2D53FE9100CFDB82 /* UpgradeSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */; };
@@ -1161,7 +1162,7 @@
 		F4888E462D9658EB005EF149 /* ViewPositionReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4888E452D9658EB005EF149 /* ViewPositionReader.swift */; };
 		F489F2582E4E55FF00E0D898 /* RestrictiveNetworkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */; };
 		F489F25A2E4E561100E0D898 /* RestrictiveNetworkViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */; };
-		F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */; };
+		F48DDC162E85BEA800B66315 /* WireGuardCredentialsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DDC142E85BEA800B66315 /* WireGuardCredentialsTests.swift */; };
 		F48DDC1D2E8C50EB00B66315 /* MockFileDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DDC1C2E8C50EB00B66315 /* MockFileDatabase.swift */; };
 		F48DDC1F2E8C9BCC00B66315 /* FileDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48DDC1E2E8C9BCC00B66315 /* FileDatabaseTests.swift */; };
 		F48F41362DB938E300AFFC30 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F499353A2DA994BC00108558 /* SoundManager.swift */; };
@@ -1226,7 +1227,6 @@
 		F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */; };
 		F4B4C1EB2EA022600024D824 /* SampleDataNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1EA2EA022600024D824 /* SampleDataNotifications.swift */; };
 		F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */; };
-		F4B4C1F22EA0416D0024D824 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */; };
 		F4B4C1F42EA169920024D824 /* SampleDataStaticIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1F32EA169920024D824 /* SampleDataStaticIP.swift */; };
 		F4B4C1F62EA16A6C0024D824 /* StaticIpRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */; };
 		F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1F72EA2BB090024D824 /* MockPortMapRepository.swift */; };
@@ -2068,6 +2068,8 @@
 		F457F1D42D53037E00C66E08 /* PlanUpgradeSubscribeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeSubscribeButton.swift; sourceTree = "<group>"; };
 		F457F1D62D53AF2B00C66E08 /* PlanUpgradePromoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradePromoView.swift; sourceTree = "<group>"; };
 		F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LookAndFeelRepositoryTests.swift; sourceTree = "<group>"; };
+		F458FA3D2EAAC16600EAAE8E /* MockSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSessionRepository.swift; sourceTree = "<group>"; };
+		F458FA3F2EAAC2C300EAAE8E /* WindscribeUnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = WindscribeUnitTests.xctestplan; sourceTree = "<group>"; };
 		F45BA5952D53FDDE00CFDB82 /* UpgradeSuccessDataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessDataModels.swift; sourceTree = "<group>"; };
 		F45BA5972D53FE1B00CFDB82 /* UpgradeSuccessViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewModel.swift; sourceTree = "<group>"; };
 		F45BA5992D53FE9100CFDB82 /* UpgradeSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpgradeSuccessViewController.swift; sourceTree = "<group>"; };
@@ -2132,7 +2134,7 @@
 		F4888E452D9658EB005EF149 /* ViewPositionReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPositionReader.swift; sourceTree = "<group>"; };
 		F489F2572E4E55FF00E0D898 /* RestrictiveNetworkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkView.swift; sourceTree = "<group>"; };
 		F489F2592E4E561100E0D898 /* RestrictiveNetworkViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestrictiveNetworkViewModel.swift; sourceTree = "<group>"; };
-		F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WGCredentialsTests.swift; sourceTree = "<group>"; };
+		F48DDC142E85BEA800B66315 /* WireGuardCredentialsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardCredentialsTests.swift; sourceTree = "<group>"; };
 		F48DDC1C2E8C50EB00B66315 /* MockFileDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFileDatabase.swift; sourceTree = "<group>"; };
 		F48DDC1E2E8C9BCC00B66315 /* FileDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDatabaseTests.swift; sourceTree = "<group>"; };
 		F48F41382DB955F100AFFC30 /* CustomSoundPlaybackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSoundPlaybackManager.swift; sourceTree = "<group>"; };
@@ -2178,7 +2180,6 @@
 		F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPushNotificationManager.swift; sourceTree = "<group>"; };
 		F4B4C1EA2EA022600024D824 /* SampleDataNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataNotifications.swift; sourceTree = "<group>"; };
 		F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepositoryTests.swift; sourceTree = "<group>"; };
-		F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		F4B4C1F32EA169920024D824 /* SampleDataStaticIP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataStaticIP.swift; sourceTree = "<group>"; };
 		F4B4C1F52EA16A6C0024D824 /* StaticIpRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticIpRepositoryTests.swift; sourceTree = "<group>"; };
 		F4B4C1F72EA2BB090024D824 /* MockPortMapRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPortMapRepository.swift; sourceTree = "<group>"; };
@@ -3152,6 +3153,7 @@
 				1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */,
 				1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */,
 				F4B4C1F72EA2BB090024D824 /* MockPortMapRepository.swift */,
+				F458FA3D2EAAC16600EAAE8E /* MockSessionRepository.swift */,
 			);
 			path = Repositories;
 			sourceTree = "<group>";
@@ -3450,12 +3452,12 @@
 		AF018E1721B1AA2D00B225FF /* WindscribeTests */ = {
 			isa = PBXGroup;
 			children = (
+				F458FA3F2EAAC2C300EAAE8E /* WindscribeUnitTests.xctestplan */,
 				F4433D142E8316DB0012EA34 /* Data */,
 				F40419432D8232190005EF97 /* Managers */,
 				F437917D2E95A1E500ED6141 /* Repository */,
 				C5D983C52B34E5690069FF3A /* API */,
 				F48DDC132E85B90400B66315 /* Protocol */,
-				C55AF09C2B3B76060011EF56 /* Utils */,
 				F4B4C1F92EA2BCBA0024D824 /* Extensions */,
 				F4EF7A092D5D31A200E4EB9F /* Mocks */,
 				F434A1B22D834A3D0059415F /* SampleData */,
@@ -3808,14 +3810,6 @@
 				C5BF384F2B917EF300AA725C /* UserDataRepository.swift */,
 			);
 			path = User;
-			sourceTree = "<group>";
-		};
-		C55AF09C2B3B76060011EF56 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		C56615F72C4D883E008AA993 /* libs */ = {
@@ -5074,17 +5068,9 @@
 		F48DDC132E85B90400B66315 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
-				F48DDC152E85BEA800B66315 /* WireGuard */,
+				F48DDC142E85BEA800B66315 /* WireGuardCredentialsTests.swift */,
 			);
 			path = Protocol;
-			sourceTree = "<group>";
-		};
-		F48DDC152E85BEA800B66315 /* WireGuard */ = {
-			isa = PBXGroup;
-			children = (
-				F48DDC142E85BEA800B66315 /* WGCredentialsTests.swift */,
-			);
-			path = WireGuard;
 			sourceTree = "<group>";
 		};
 		F499351E2DA7170F00108558 /* Preferences */ = {
@@ -7258,13 +7244,12 @@
 				F437917E2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift in Sources */,
 				F43791802E95A20800ED6141 /* MockAPIManager.swift in Sources */,
 				F465A6392D5D3B6000579B5F /* MockPreferences.swift in Sources */,
-				F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */,
+				F48DDC162E85BEA800B66315 /* WireGuardCredentialsTests.swift in Sources */,
 				F48DDC1F2E8C9BCC00B66315 /* FileDatabaseTests.swift in Sources */,
 				F43791792E95A17000ED6141 /* SampleDataLeaderboard.swift in Sources */,
 				1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				F41AC7A02EA950E400673A11 /* UserSessionRepositoryTests.swift in Sources */,
-				F4B4C1F22EA0416D0024D824 /* RxExtensions.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
@@ -7276,6 +7261,7 @@
 				F4B4C1FD2EA6B5000024D824 /* MobilePlanRepositoryTests.swift in Sources */,
 				F4B4C1FB2EA6AED20024D824 /* SampleDataMobilePlan.swift in Sources */,
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
+				F458FA3E2EAAC16600EAAE8E /* MockSessionRepository.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				1E022C4F2E951EAB00AF8AA7 /* LocalDatabaseTests.swift in Sources */,
 				F4B4C1F82EA2BB090024D824 /* MockPortMapRepository.swift in Sources */,

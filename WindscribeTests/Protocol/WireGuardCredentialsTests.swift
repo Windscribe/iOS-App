@@ -1,5 +1,5 @@
 //
-//  WgCredentialsTests.swift
+//  WireGuardCredentialsTests.swift
 //  WindscribeTests
 //
 //  Created by Soner Yuksel on 2025-09-25.
@@ -11,7 +11,7 @@ import Swinject
 @testable import Windscribe
 import XCTest
 
-class WgCredentialsTests: XCTestCase {
+class WireGuardCredentialsTests: XCTestCase {
 
     var mockContainer: Container!
     var wgCredentials: WgCredentials!
