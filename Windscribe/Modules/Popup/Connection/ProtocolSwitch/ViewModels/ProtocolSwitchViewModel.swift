@@ -57,6 +57,8 @@ final class ProtocolSwitchViewModelImpl: ProtocolSwitchViewModel, ObservableObje
         self.vpnManager = vpnManager
         self.logger = logger
 
+        isDarkMode = lookAndFeelRepository.isDarkMode
+
         setupBindings()
         updateProtocolFlags()
     }
