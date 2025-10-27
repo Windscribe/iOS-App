@@ -13,7 +13,10 @@ protocol FileLogger {
     func logDeviceInfo()
     func getLogData() async throws -> String
     func logD(_ tag: String, _ message: String)
+    func logD(_ tag: String, _ message: String, flushImmediately: Bool)
     func logI(_ tag: String, _ message: String)
+    func logI(_ tag: String, _ message: String, flushImmediately: Bool)
     func logE(_ tag: String, _ message: String)
+    func logE(_ tag: String, _ message: String, flushImmediately: Bool)
     func logWSNet(_ message: String)
 }

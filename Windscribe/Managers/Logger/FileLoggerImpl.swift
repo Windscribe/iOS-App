@@ -116,7 +116,7 @@ class FileLoggerImpl: FileLogger {
     // MARK: - Batching State
     private let batchQueue = DispatchQueue(label: "com.windscribe.logging.batch", qos: .utility)
     private var logBuffer: [LogBufferModel] = []
-    private var batchTimer: Timer?
+    private var batchTimer: DispatchSourceTimer?
     private var currentBufferSize: Int = 0
     var logDirectory: URL? = {
         let containerUrl = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: SharedKeys.sharedGroup)
@@ -133,27 +133,39 @@ class FileLoggerImpl: FileLogger {
     }
 
     func logD(_ tag: String, _ message: String) {
+        logD(tag, message, flushImmediately: false)
+    }
+
+    func logD(_ tag: String, _ message: String, flushImmediately: Bool) {
         #if DEVELOPMENT
-        addToBatch(.debug, tag: tag, message: message)
+        addToBatch(.debug, tag: tag, message: message, flushImmediately: flushImmediately)
         #endif
     }
 
     func logI(_ tag: String, _ message: String) {
-        addToBatch(.info, tag: tag, message: message)
+        logI(tag, message, flushImmediately: false)
+    }
+
+    func logI(_ tag: String, _ message: String, flushImmediately: Bool) {
+        addToBatch(.info, tag: tag, message: message, flushImmediately: flushImmediately)
     }
 
     func logWSNet(_ message: String) {
         guard let jsonData = message.data(using: .utf8),
         let wsnetLog = try? JSONDecoder().decode(LogBufferModel.self, from: jsonData)
         else {
-            addToBatch(.info, tag: "wsnet", message: message)
+            addToBatch(.info, tag: "wsnet", message: message, flushImmediately: false)
             return
         }
-        addLogBufferModelToBatch(wsnetLog)
+        addLogBufferModelToBatch(wsnetLog, flushImmediately: false)
     }
 
     func logE(_ tag: String, _ message: String) {
-        addToBatch(.error, tag: tag, message: message)
+        logE(tag, message, flushImmediately: false)
+    }
+
+    func logE(_ tag: String, _ message: String, flushImmediately: Bool) {
+        addToBatch(.error, tag: tag, message: message, flushImmediately: flushImmediately)
     }
 
     // MARK: - Log Batching Implementation
@@ -165,12 +177,12 @@ class FileLoggerImpl: FileLogger {
         return logDirectory.appendingPathComponent(logFileName)
     }
 
-    private func addToBatch(_ level: LogLevel, tag: String, message: String) {
+    private func addToBatch(_ level: LogLevel, tag: String, message: String, flushImmediately: Bool) {
         let logEntry = LogBufferModel(level: level, tag: tag, message: message)
-        addLogBufferModelToBatch(logEntry)
+        addLogBufferModelToBatch(logEntry, flushImmediately: flushImmediately)
     }
 
-    private func addLogBufferModelToBatch(_ logEntry: LogBufferModel) {
+    private func addLogBufferModelToBatch(_ logEntry: LogBufferModel, flushImmediately: Bool) {
 #if DEVELOPMENT
         print(logEntry.toOrderedJSONString())
 #endif
@@ -180,7 +192,8 @@ class FileLoggerImpl: FileLogger {
             self.currentBufferSize += logEntry.message.count + "\(logEntry.tag)".count
 
             // Check if we should flush the buffer
-            if self.logBuffer.count >= self.batchMaxSize ||
+            if flushImmediately ||
+               self.logBuffer.count >= self.batchMaxSize ||
                self.currentBufferSize >= self.batchMaxMemorySize {
                 self.flushLogBuffer()
             }
@@ -188,9 +201,13 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func startBatchTimer() {
-        self.batchTimer = Timer.scheduledTimer(withTimeInterval: self.batchFlushInterval, repeats: true) { [weak self] _ in
+        let timer = DispatchSource.makeTimerSource(queue: batchQueue)
+        timer.schedule(deadline: .now() + batchFlushInterval, repeating: batchFlushInterval)
+        timer.setEventHandler { [weak self] in
             self?.flushLogBuffer()
         }
+        timer.resume()
+        self.batchTimer = timer
     }
 
     private func flushLogBuffer(completion: (() -> Void)? = nil) {
@@ -218,7 +235,9 @@ class FileLoggerImpl: FileLogger {
     }
 
     private func writeLogsToFile(_ logs: [LogBufferModel]) {
-        guard let logFileURL = getLogFileURL() else { return }
+        guard let logFileURL = getLogFileURL() else {
+            return
+        }
         guard !logs.isEmpty else { return }
 
         do {
@@ -245,7 +264,7 @@ class FileLoggerImpl: FileLogger {
             try finalContent.write(to: logFileURL, atomically: true, encoding: .utf8)
 
         } catch {
-            os_log("Failed to write logs to file: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
+            // Silently fail - logging errors in the logger creates infinite loops
         }
     }
 
@@ -263,14 +282,13 @@ class FileLoggerImpl: FileLogger {
                         let logEntry = try decoder.decode(LogBufferModel.self, from: data)
                         parsedLogs.append(logEntry)
                     } catch {
-                        os_log("Failed to parse log line - Error: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
+                        // Silently skip malformed log lines
                     }
                 }
             }
 
             return parsedLogs
         } catch {
-            os_log("Failed to read existing log file: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
             return []
         }
     }
@@ -306,7 +324,7 @@ class FileLoggerImpl: FileLogger {
     }
 
     deinit {
-        batchTimer?.invalidate()
+        batchTimer?.cancel()
         flushLogBuffer() // Ensure any remaining logs are written
     }
 
@@ -360,14 +378,14 @@ class FileLoggerImpl: FileLogger {
         do {
             try FileManager.default.createDirectory(at: logDirectory, withIntermediateDirectories: true, attributes: nil)
         } catch {
-            os_log("Failed to create log directory: %{public}@", log: OSLog(subsystem: "com.windscribe", category: "FileLogger"), type: .error, error.localizedDescription)
+            // Silently fail - logging errors in the logger creates infinite loops
         }
 
         // Log configuration on startup to the JSON log file
         let retentionHours = Int(maxLogRetentionHours / (60 * 60))
         let maxSizeMB = maxLogFileSize / (1024 * 1024)
         let startupMessage = "JSON log retention: \(retentionHours)h time limit, \(maxSizeMB)MB size limit. Batching: \(batchMaxSize) logs/batch, \(batchFlushInterval)s interval."
-        addToBatch(.info, tag: "FileLogger", message: startupMessage)
+        addToBatch(.info, tag: "FileLogger", message: startupMessage, flushImmediately: false)
     }
 
 
