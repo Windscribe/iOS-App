@@ -49,7 +49,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         else {
             fatalError()
         }
-        logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.")
+        logger.logI("PacketTunnelProvider", "Started OpenVPNAdapter.", flushImmediately: true)
         let properties: OpenVPNConfigurationEvaluation!
         guard let ovpnFileContent: Data = providerConfiguration["ovpn"] as? Data else { return }
         let configuration = OpenVPNConfiguration()
@@ -59,7 +59,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         do {
             properties = try vpnAdapter.apply(configuration: configuration)
         } catch {
-            logger.logE("PacketTunnelProvider", "Failed to apply configuration to OpenVPNAdapter: \(error.localizedDescription)")
+            logger.logE("PacketTunnelProvider", "Failed to apply configuration to OpenVPNAdapter: \(error.localizedDescription)", flushImmediately: true)
             completionHandler(error)
             return
         }
@@ -70,15 +70,16 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 credentials.username = username
                 credentials.password = password
                 do {
-                    logger.logI("PacketTunnelProvider", "Added credentials to OpenVPNAdapter.")
+                    logger.logI("PacketTunnelProvider", "Added credentials to OpenVPNAdapter.", flushImmediately: true)
                     try vpnAdapter.provide(credentials: credentials)
                 } catch {
+                    logger.logE("PacketTunnelProvider", "Failed to provide credentials: \(error.localizedDescription)", flushImmediately: true)
                     completionHandler(error)
                     return
                 }
             }
         }
-        logger.logI("PacketTunnelProvider", "OpenVPN Adapter started successfully.")
+        logger.logI("PacketTunnelProvider", "OpenVPN Adapter started successfully.", flushImmediately: true)
         vpnReachability.startTracking { [weak self] status in
             guard status != .notReachable else { return }
             self?.vpnAdapter.reconnect(afterTimeInterval: 5)
@@ -93,7 +94,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             }
         } else {
             startHandler = completionHandler
-            logger.logI("PacketTunnelProvider", "Connecting to OpenVPNAdapter.")
+            logger.logI("PacketTunnelProvider", "Connecting to OpenVPNAdapter.", flushImmediately: true)
             vpnAdapter.connect(using: packetFlow)
         }
     }
@@ -107,7 +108,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         if reason == .authenticationCanceled {
             preferences.saveForceDisconnect(value: true)
         }
-        logger.logI("PacketTunnelProvider", "Reason for disconnect \(reason.rawValue)")
+        logger.logI("PacketTunnelProvider", "Reason for disconnect \(reason.rawValue)", flushImmediately: true)
         vpnAdapter.disconnect()
     }
 
@@ -156,7 +157,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 }
             }
         } catch {
-            logger.logE("PacketTunnelProvider", "Failed to check/clear proxy log file: \(error)")
+            logger.logE("PacketTunnelProvider", "Failed to check/clear proxy log file: \(error)", flushImmediately: true)
         }
         return path
     }
@@ -178,7 +179,7 @@ extension PacketTunnelProvider: OpenVPNAdapterDelegate {
     func openVPNAdapter(_: OpenVPNAdapter, configureTunnelWithNetworkSettings networkSettings: NEPacketTunnelNetworkSettings?, completionHandler: @escaping (Error?) -> Void) {
         if ConnectedDNSType(value: preferences.getConnectedDNS()) == .custom {
             let customDNSValue = preferences.getCustomDNSValue()
-            logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)")
+            logger.logI("PacketTunnelProvider", "User DNS configuration: \(customDNSValue.description)", flushImmediately: true)
             if let dnsSettings = dnsSettingsManager.makeDNSSettings(from: customDNSValue) {
                 networkSettings?.dnsSettings = dnsSettings
             }
