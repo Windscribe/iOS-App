@@ -279,6 +279,8 @@
 		1EF7CEFE2EA65136001AE14E /* MockVPNStateRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */; };
 		1EF7CF002EA7E61E001AE14E /* SessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */; };
 		1EF7CF012EA7E61E001AE14E /* SessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */; };
+		1EF7CF132EAB8DB1001AE14E /* LocalPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */; };
+		1EF7CF142EAB8DB1001AE14E /* LocalPingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */; };
 		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
 		1EFFD0432E99389B005603FB /* MockUserSessionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */; };
 		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
@@ -1602,6 +1604,7 @@
 		1EF7CEF92EA146BE001AE14E /* VPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNStateRepository.swift; sourceTree = "<group>"; };
 		1EF7CEFD2EA65134001AE14E /* MockVPNStateRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockVPNStateRepository.swift; sourceTree = "<group>"; };
 		1EF7CEFF2EA7E615001AE14E /* SessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionRepository.swift; sourceTree = "<group>"; };
+		1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPingManager.swift; sourceTree = "<group>"; };
 		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
 		1EFFD0422E993898005603FB /* MockUserSessionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserSessionRepository.swift; sourceTree = "<group>"; };
 		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
@@ -3131,6 +3134,14 @@
 			path = Session;
 			sourceTree = "<group>";
 		};
+		1EF7CF112EAB8D9C001AE14E /* Latency */ = {
+			isa = PBXGroup;
+			children = (
+				1EF7CF122EAB8DA5001AE14E /* LocalPingManager.swift */,
+			);
+			path = Latency;
+			sourceTree = "<group>";
+		};
 		1EFFD03F2E99382D005603FB /* Managers */ = {
 			isa = PBXGroup;
 			children = (
@@ -3365,6 +3376,7 @@
 		AF018E0921B0A34D00B225FF /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				1EF7CF112EAB8D9C001AE14E /* Latency */,
 				1EF43D502CF897A500B56C01 /* Locations */,
 				1E7918C12CDE2FBC00C20723 /* Livecycle */,
 				1E2366D32BC5A1C6000DF098 /* Wifi */,
@@ -6648,6 +6660,7 @@
 				F434A1BE2D84A7160059415F /* HTMLParser.swift in Sources */,
 				59FC74192C51544900021CD1 /* UncompletedTransactions.swift in Sources */,
 				59FC74112C51541000021CD1 /* Ticket.swift in Sources */,
+				1EF7CF142EAB8DB1001AE14E /* LocalPingManager.swift in Sources */,
 				F44A0E692E0F2A52008297CA /* CaptchaViewModel.swift in Sources */,
 				59FC742A2C5155DF00021CD1 /* String+ArrayConversion.swift in Sources */,
 				1EB7A3D62E6B1A2D0028EA11 /* PreferencesBaseViewModel.swift in Sources */,
@@ -7164,6 +7177,7 @@
 				AF97EFDF2281F1DD00378058 /* Bundle+Extension.swift in Sources */,
 				E9E5F347273C14F600226BED /* VPNManager+ConnectionStatus.swift in Sources */,
 				AF21995E2270B147009B42E5 /* yudpsocket.c in Sources */,
+				1EF7CF132EAB8DB1001AE14E /* LocalPingManager.swift in Sources */,
 				E93AE6692744BA060097843B /* VPNManager+Selector.swift in Sources */,
 				5947B4AE2A214E7C00C95CF2 /* Latency.swift in Sources */,
 				AF04982B21FA22530046D33B /* UIView+Extension.swift in Sources */,

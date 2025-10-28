@@ -15,7 +15,7 @@ import RealmSwift
 import Combine
 
 class LatencyRepositoryImpl: LatencyRepository {
-    private let pingManager: WSNetPingManager
+    private let pingManager: LocalPingManager
     private let database: LocalDatabase
     private let logger: FileLogger
     private let vpnStateRepository: VPNStateRepository
@@ -30,7 +30,7 @@ class LatencyRepositoryImpl: LatencyRepository {
     private var observingBestLocation = false
     private var cancellables = Set<AnyCancellable>()
 
-    init(pingManager: WSNetPingManager,
+    init(pingManager: LocalPingManager,
          database: LocalDatabase,
          vpnStateRepository: VPNStateRepository,
          logger: FileLogger,

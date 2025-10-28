@@ -92,7 +92,7 @@ class Repository: Assembly {
             SecuredNetworkRepositoryImpl(preferences: r.resolve(Preferences.self)!, localdatabase: r.resolve(LocalDatabase.self)!, connectivity: r.resolve(ConnectivityManager.self)!, logger: logger)
         }.inObjectScope(.userScope)
         container.register(LatencyRepository.self) { r in
-            LatencyRepositoryImpl(pingManager: WSNet.instance().pingManager(),
+            LatencyRepositoryImpl(pingManager: r.resolve(LocalPingManager.self)!,
                                   database: r.resolve(LocalDatabase.self)!,
                                   vpnStateRepository: r.resolve(VPNStateRepository.self)!,
                                   logger: logger,
@@ -267,6 +267,10 @@ class Managers: Assembly {
             SSOManager(logger: r.resolve(FileLogger.self)!,
                        apiManager: r.resolve(APIManager.self )!)
         }.inObjectScope(.userScope)
+
+        container.register(LocalPingManager.self) { r in
+            LocalPingManagerImpl(pingManager: WSNet.instance().pingManager())
+        }.inObjectScope(.container)
     }
 }
 
