@@ -32,7 +32,8 @@ class ServerInfoViewModel: ServerInfoViewModelType {
         self.localDatabase = localDatabase
         self.languageManager = languageManager
         localDatabase.getServersObservable().subscribe {
-            self.count = $0.count
+            // Count total number of groups (cities/endpoints) across all servers
+            self.count = $0.reduce(0) { $0 + $1.groups.count }
             self.serverCountSubject.onNext(self.count)
         }.disposed(by: disposeBag)
 
@@ -50,7 +51,8 @@ class ServerInfoViewModel: ServerInfoViewModelType {
     func updateWithSearchCount(searchCount: Int) {
         if searchCount >= 0 {
             self.serverCountSubject.onNext(searchCount)
-        } else if let count = localDatabase.getServers()?.count {
+        } else if let servers = localDatabase.getServers() {
+            let count = servers.reduce(0) { $0 + $1.groups.count }
             self.serverCountSubject.onNext(count)
         }
     }
