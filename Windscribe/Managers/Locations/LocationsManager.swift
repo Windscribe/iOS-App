@@ -61,7 +61,6 @@ class LocationsManagerImpl: LocationsManager {
         }.store(in: &cancellables)
 
         serverRepository.updatedServerModelsSubject
-            .toPublisher()
             .sink(receiveCompletion: { _ in }, receiveValue: { [weak self] _ in
                 self?.selectedLocationUpdated.send(false)
             })

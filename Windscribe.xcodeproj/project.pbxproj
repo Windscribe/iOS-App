@@ -271,6 +271,10 @@
 		1EF7BB512C761EAA0032A4DF /* ConfirmEmailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */; };
 		1EF7BB532C7634080032A4DF /* ConfirmEmailPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */; };
 		1EF7BB552C7639960032A4DF /* GetMoreDataPopupViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */; };
+		1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */; };
+		1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0422E993898005603FB /* MockUserRepository.swift */; };
+		1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */; };
+		1EFFD04D2E994400005603FB /* ServerList.json in Resources */ = {isa = PBXBuildFile; fileRef = 1EFFD04C2E9943F6005603FB /* ServerList.json */; };
 		591CF9A62BB47948004DEB48 /* ReferAndShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */; };
 		59215B4A2B60E0DA0086CBF6 /* AlertManagerV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59215B492B60E0DA0086CBF6 /* AlertManagerV2.swift */; };
 		592CA79A2C4EC0FF0078D487 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 592CA7992C4EC0FF0078D487 /* LoginViewController.swift */; };
@@ -1578,6 +1582,10 @@
 		1EF7BB4C2C75FB2F0032A4DF /* AddEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddEmailPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7BB522C7634080032A4DF /* ConfirmEmailPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ConfirmEmailPopupViewController.xib; sourceTree = "<group>"; };
 		1EF7BB542C7639960032A4DF /* GetMoreDataPopupViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GetMoreDataPopupViewController.xib; sourceTree = "<group>"; };
+		1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerRepositoryTests.swift; sourceTree = "<group>"; };
+		1EFFD0422E993898005603FB /* MockUserRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserRepository.swift; sourceTree = "<group>"; };
+		1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAdvanceRepository.swift; sourceTree = "<group>"; };
+		1EFFD04C2E9943F6005603FB /* ServerList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ServerList.json; sourceTree = "<group>"; };
 		591CF9A52BB47948004DEB48 /* ReferAndShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferAndShareManager.swift; sourceTree = "<group>"; };
 		591CF9AE2BBB3A37004DEB48 /* EnterEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterEmailViewModel.swift; sourceTree = "<group>"; };
 		591CF9B22BBC65E3004DEB48 /* ConfirmEmailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmEmailViewModel.swift; sourceTree = "<group>"; };
@@ -3078,6 +3086,52 @@
 			path = Emails;
 			sourceTree = "<group>";
 		};
+		1EFFD03F2E99382D005603FB /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
+				F437917F2E95A20800ED6141 /* MockAPIManager.swift */,
+				F4433D102E8315800012EA34 /* MockKeychainManager.swift */,
+				F43791812E95A21900ED6141 /* MockSessionManager.swift */,
+				F49935402DA9973100108558 /* MockSoundManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		1EFFD0402E99383D005603FB /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				1EFFD0442E993A55005603FB /* MockAdvanceRepository.swift */,
+				1EFFD0422E993898005603FB /* MockUserRepository.swift */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		1EFFD0412E99384F005603FB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
+				F48DDC1C2E8C50EB00B66315 /* MockFileDatabase.swift */,
+				F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		1EFFD0482E99424A005603FB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1EFFD04B2E9943EF005603FB /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				1EFFD04C2E9943F6005603FB /* ServerList.json */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		591CF9A72BB47951004DEB48 /* ReferAndShareManager */ = {
 			isa = PBXGroup;
 			children = (
@@ -3726,6 +3780,8 @@
 		C55AF09C2B3B76060011EF56 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1EFFD04B2E9943EF005603FB /* Data */,
+				1EFFD0482E99424A005603FB /* Extensions */,
 				C55AF0A32B3E80300011EF56 /* RxExtensions.swift */,
 			);
 			path = Utils;
@@ -4470,6 +4526,7 @@
 		F437917D2E95A1E500ED6141 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				1EFFD03D2E993748005603FB /* ServerRepositoryTests.swift */,
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
@@ -5561,16 +5618,11 @@
 		F4EF7A092D5D31A200E4EB9F /* Mocks */ = {
 			isa = PBXGroup;
 			children = (
-				F437917F2E95A20800ED6141 /* MockAPIManager.swift */,
-				F48DDC1C2E8C50EB00B66315 /* MockFileDatabase.swift */,
+				1EFFD0412E99384F005603FB /* Data */,
+				1EFFD0402E99383D005603FB /* Repositories */,
+				1EFFD03F2E99382D005603FB /* Managers */,
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
-				F4433D102E8315800012EA34 /* MockKeychainManager.swift */,
-				F465A63C2D5D3B8F00579B5F /* MockLocalDatabase.swift */,
-				F465A63A2D5D3B7F00579B5F /* MockLogger.swift */,
-				F465A6382D5D3B6000579B5F /* MockPreferences.swift */,
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
-				F43791812E95A21900ED6141 /* MockSessionManager.swift */,
-				F49935402DA9973100108558 /* MockSoundManager.swift */,
 				F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */,
 			);
 			path = Mocks;
@@ -6188,6 +6240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EFFD04D2E994400005603FB /* ServerList.json in Resources */,
 				F49935452DA99E5400108558 /* click.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7150,13 +7203,16 @@
 				F48DDC162E85BEA800B66315 /* WGCredentialsTests.swift in Sources */,
 				F48DDC1F2E8C9BCC00B66315 /* FileDatabaseTests.swift in Sources */,
 				F43791792E95A17000ED6141 /* SampleDataLeaderboard.swift in Sources */,
+				1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
 				F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
+				1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */,
 				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
+				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,

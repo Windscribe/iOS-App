@@ -16,6 +16,7 @@ class MockLocalDatabase: LocalDatabase {
 
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
 
+    var mockServers: [Server]? = []
     // PortMap tracking
     var savePortMapCalled = false
     var saveSuggestedPortsCalled = false
@@ -42,14 +43,20 @@ class MockLocalDatabase: LocalDatabase {
     func saveMobilePlans(mobilePlansList: [Windscribe.MobilePlan]) {}
 
     func getServers() -> [Windscribe.Server]? {
-        return []
+        return mockServers
     }
 
     func getServersObservable() -> Observable<[Windscribe.Server]> {
         return Observable.just([])
     }
 
+<<<<<<< ours:WindscribeTests/Mocks/MockLocalDatabase.swift
     func saveServers(servers: [Windscribe.Server]) {}
+=======
+    func saveServers(servers: [Windscribe.Server]) async {
+        mockServers = servers
+    }
+>>>>>>> theirs:WindscribeTests/Mocks/Data/MockLocalDatabase.swift
 
     func getStaticIPs() -> [Windscribe.StaticIP]? {
         return []

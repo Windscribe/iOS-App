@@ -28,6 +28,7 @@ class MockPreferences: Preferences {
     var mockDarkMode: Bool?
     var mockConnectionMode: String?
     var mockFavouriteIds: [String] = []
+    var mockCustomLocations: [ExportedRegion] = []
     private let favouriteIdsSubject = CurrentValueSubject<[String], Never>([])
     var mockLastSelectedLocation: String = ""
     var mockBestLocation: String = ""
@@ -544,10 +545,12 @@ class MockPreferences: Preferences {
         return nil
     }
 
-    func saveCustomLocationsNames(value: [Windscribe.ExportedRegion]) {}
+    func saveCustomLocationsNames(value: [Windscribe.ExportedRegion]) {
+        mockCustomLocations = value
+    }
 
-    func getCustomLocationsNames() -> [Windscribe.ExportedRegion] {
-        return []
+    func getCustomLocationsNames() -> [ExportedRegion] {
+        return mockCustomLocations
     }
 
     func saveWireGuardAddress(_ address: String?) {}

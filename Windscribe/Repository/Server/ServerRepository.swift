@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol ServerRepository {
-    var updatedServerModelsSubject: BehaviorSubject<[ServerModel]> { get }
+    var updatedServerModelsSubject: CurrentValueSubject<[ServerModel], Never> { get }
     var currentServerModels: [ServerModel] { get }
-    func getUpdatedServers() -> Single<[Server]>
+    func getUpdatedServers() async throws -> [Server]
     func updateRegions(with regions: [ExportedRegion])
 }

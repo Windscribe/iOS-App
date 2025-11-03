@@ -43,7 +43,13 @@ class UserDataRepositoryImpl: UserDataRepository {
 
         logger.logI("UserDataRepository", "Getting server list.")
 
-        return serverRepository.getUpdatedServers().flatMap { _ in
+        return Single.create { single in
+            let task = Task { [weak self] in
+                _ = try? await self?.serverRepository.getUpdatedServers()
+                single(.success(()))
+            }
+            return Disposables.create { task.cancel() }
+        }.flatMap { _ in
             self.latencyRepository.pickBestLocation()
             self.logger.logD("UserDataRepository", "Getting iKEv2 credentials.")
             return self.credentialsRepository

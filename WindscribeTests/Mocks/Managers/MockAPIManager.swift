@@ -11,7 +11,7 @@ import Foundation
 
 class MockAPIManager: APIManager {
     var shouldThrowError = false
-    var customError: Error = Errors.sessionIsInvalid
+    var customError: Error = Errors.notDefined
     var mockLeaderboard: Leaderboard?
     var mockAPIMessage: APIMessage?
 
@@ -24,9 +24,11 @@ class MockAPIManager: APIManager {
     var lastRecordedScore: Int?
     var lastRecordedUserId: String?
 
+    var mockServerList: ServerList?
+
     func reset() {
         shouldThrowError = false
-        customError = Errors.sessionIsInvalid
+        customError = Errors.notDefined
         mockLeaderboard = nil
         mockAPIMessage = nil
         portMapListToReturn = nil
@@ -34,6 +36,7 @@ class MockAPIManager: APIManager {
         recordScoreCalled = false
         lastRecordedScore = nil
         lastRecordedUserId = nil
+        mockServerList = nil
     }
 
     // MARK: - ShakeForData Methods (Implemented)
@@ -159,7 +162,10 @@ class MockAPIManager: APIManager {
     // MARK: - VPN Methods
 
     func getServerList(languageCode: String, revision: String, isPro: Bool, alcList: [String]) async throws -> ServerList {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        guard let serverList = mockServerList, !shouldThrowError else {
+            throw customError
+        }
+        return serverList
     }
 
     func getStaticIpList() async throws -> StaticIPList {

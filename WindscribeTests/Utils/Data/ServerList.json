@@ -1,0 +1,278 @@
+{
+    "data": [
+        {
+            "id": 65,
+            "name": "US Central",
+            "country_code": "US",
+            "status": 1,
+            "premium_only": 0,
+            "short_name": "US-C",
+            "p2p": 1,
+            "tz": "America/Chicago",
+            "tz_offset": "-6,CST",
+            "loc_type": "normal",
+            "force_expand": 1,
+            "dns_hostname": "us-central.windscribe.com",
+            "groups": [
+                {
+                    "id": 414,
+                    "city": "Dallas",
+                    "nick": "Trinity",
+                    "pro": 1,
+                    "gps": "32.78,-96.81",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "gSj19b2N8kfxHE9SuU2IS+FGZaOlL5p5b3xth9adhHE=",
+                    "wg_endpoint": "dfw-414-wg.whiskergalaxy.com",
+                    "ovpn_x509": "dfw-414.windscribe.com",
+                    "ping_ip": "84.20.18.33",
+                    "ping_host": "http://us-central-120.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 156,
+                    "city": "Atlanta",
+                    "nick": "Peachtree",
+                    "pro": 0,
+                    "gps": "33.75,-84.39",
+                    "tz": "America/New_York",
+                    "wg_pubkey": "ciOW8sri5RR+ulCmENWpg5TVUFPz1URqHRk9zEYrYHg=",
+                    "wg_endpoint": "atl-156-wg.whiskergalaxy.com",
+                    "ovpn_x509": "atl-156.windscribe.com",
+                    "ping_ip": "23.94.95.2",
+                    "ping_host": "http://us-central-092.whiskergalaxy.com:6464/latency",
+                    "link_speed": "1000",
+                    "nodes": [
+                        {
+                            "ip": "107.172.92.30",
+                            "ip2": "23.94.49.129",
+                            "ip3": "23.94.49.130",
+                            "hostname": "us-central-093.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 34
+                        },
+                        {
+                            "ip": "104.223.110.194",
+                            "ip2": "104.223.110.195",
+                            "ip3": "104.223.110.196",
+                            "hostname": "us-central-122.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 31
+                        },
+                        {
+                            "ip": "23.94.95.10",
+                            "ip2": "107.175.115.1",
+                            "ip3": "107.175.115.2",
+                            "hostname": "us-central-101.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 33
+                        },
+                        {
+                            "ip": "104.223.111.194",
+                            "ip2": "104.223.111.195",
+                            "ip3": "104.223.111.196",
+                            "hostname": "us-central-123.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 35
+                        },
+                        {
+                            "ip": "198.23.148.222",
+                            "ip2": "198.46.249.1",
+                            "ip3": "198.46.249.2",
+                            "hostname": "us-central-091.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 41
+                        },
+                        {
+                            "ip": "23.94.95.2",
+                            "ip2": "23.94.13.97",
+                            "ip3": "23.94.13.98",
+                            "hostname": "us-central-092.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 37
+                        }
+                    ],
+                    "health": 35
+                },
+                {
+                    "id": 371,
+                    "city": "Kansas City",
+                    "nick": "Glinda",
+                    "pro": 1,
+                    "gps": "39.10,-94.58",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "0VAbqR6QprUwYMbgo1Xuel23UzzibC7OIxDJYAe3wx4=",
+                    "wg_endpoint": "mci-371-wg.whiskergalaxy.com",
+                    "ovpn_x509": "mci-371.windscribe.com",
+                    "ping_ip": "74.80.181.146",
+                    "ping_host": "http://us-central-098.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 192,
+                    "city": "Dallas",
+                    "nick": "BBQ",
+                    "pro": 0,
+                    "gps": "32.78,-96.81",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "47tLjymDPpTIBerb+wn02/XNFABF4YDAGwOnijSoZmQ=",
+                    "wg_endpoint": "dfw-192-wg.whiskergalaxy.com",
+                    "ovpn_x509": "dfw-192.windscribe.com",
+                    "ping_ip": "155.94.247.194",
+                    "ping_host": "http://us-central-082.whiskergalaxy.com:6464/latency",
+                    "link_speed": "1000",
+                    "nodes": [
+                        {
+                            "ip": "155.94.251.66",
+                            "ip2": "155.94.251.67",
+                            "ip3": "155.94.251.68",
+                            "hostname": "us-central-084.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 23
+                        },
+                        {
+                            "ip": "104.223.103.66",
+                            "ip2": "104.223.103.67",
+                            "ip3": "104.223.103.68",
+                            "hostname": "us-central-083.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 14
+                        },
+                        {
+                            "ip": "155.94.246.194",
+                            "ip2": "155.94.246.195",
+                            "ip3": "155.94.246.196",
+                            "hostname": "us-central-125.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 17
+                        },
+                        {
+                            "ip": "104.223.104.194",
+                            "ip2": "104.223.104.195",
+                            "ip3": "104.223.104.196",
+                            "hostname": "us-central-074.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 18
+                        },
+                        {
+                            "ip": "155.94.247.194",
+                            "ip2": "155.94.247.195",
+                            "ip3": "155.94.247.196",
+                            "hostname": "us-central-082.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 12
+                        },
+                        {
+                            "ip": "155.94.249.66",
+                            "ip2": "155.94.249.67",
+                            "ip3": "155.94.249.68",
+                            "hostname": "us-central-081.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 18
+                        },
+                        {
+                            "ip": "104.223.102.2",
+                            "ip2": "104.223.102.3",
+                            "ip3": "104.223.102.4",
+                            "hostname": "us-central-085.whiskergalaxy.com",
+                            "weight": 1,
+                            "health": 13
+                        }
+                    ],
+                    "health": 16
+                },
+                {
+                    "id": 86,
+                    "city": "Dallas",
+                    "nick": "Ranch",
+                    "pro": 1,
+                    "gps": "32.78,-96.81",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "pASG4FD9LwOfJukT/wYbUF10gD6v8DVuv5hrNbiOnHQ=",
+                    "wg_endpoint": "dfw-86-wg.whiskergalaxy.com",
+                    "ovpn_x509": "dfw-86.windscribe.com",
+                    "ping_ip": "198.44.137.19",
+                    "ping_host": "http://us-central-110.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 331,
+                    "city": "Atlanta",
+                    "nick": "Piedmont",
+                    "pro": 1,
+                    "gps": "33.75,-84.39",
+                    "tz": "America/New_York",
+                    "wg_pubkey": "v8yTgxOMZjdZkCUoBVMUOiDBYgaNzQ9OfXc+uz2GUDc=",
+                    "wg_endpoint": "atl-331-wg.whiskergalaxy.com",
+                    "ovpn_x509": "atl-331.windscribe.com",
+                    "ping_ip": "154.47.28.143",
+                    "ping_host": "http://us-central-118.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 145,
+                    "city": "Denver",
+                    "nick": "Barley",
+                    "pro": 1,
+                    "gps": "39.74,-104.99",
+                    "tz": "America/Denver",
+                    "wg_pubkey": "c31sdkhmVsucRVa6nSNNSiZ2UHHLdUhq5gvfdJxSnFw=",
+                    "wg_endpoint": "den-145-wg.whiskergalaxy.com",
+                    "ovpn_x509": "den-145.windscribe.com",
+                    "ping_ip": "95.173.221.15",
+                    "ping_host": "http://us-central-106.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 109,
+                    "city": "Atlanta",
+                    "nick": "Mountain",
+                    "pro": 1,
+                    "gps": "33.75,-84.39",
+                    "tz": "America/New_York",
+                    "wg_pubkey": "D2Tx/zEgTy2uoH2HLp5EBIFyLkHGEhkhLMYYedpcUFw=",
+                    "wg_endpoint": "atl-109-wg.whiskergalaxy.com",
+                    "ovpn_x509": "atl-109.windscribe.com",
+                    "ping_ip": "198.44.138.19",
+                    "ping_host": "http://us-central-113.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 424,
+                    "city": "Houston",
+                    "nick": "Space City",
+                    "pro": 1,
+                    "gps": "29.76,-95.37",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "dnHFw0734MSeGM26Rzt1cEdyIrA+QAyqjzlnU5tvj0U=",
+                    "wg_endpoint": "iah-424-wg.whiskergalaxy.com",
+                    "ovpn_x509": "iah-424.windscribe.com",
+                    "ping_ip": "149.40.56.130",
+                    "ping_host": "http://us-central-108.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                },
+                {
+                    "id": 444,
+                    "city": "Kansas City",
+                    "nick": "Barbecue",
+                    "pro": 1,
+                    "gps": "39.10,-94.58",
+                    "tz": "America/Chicago",
+                    "wg_pubkey": "ynzceFP425v6BFcnJA0F8qhtclaUAa5RTpSy7jFonTg=",
+                    "wg_endpoint": "mci-444-wg.whiskergalaxy.com",
+                    "ovpn_x509": "mci-444.windscribe.com",
+                    "ping_ip": "198.44.141.27",
+                    "ping_host": "http://us-central-119.whiskergalaxy.com:6464/latency",
+                    "link_speed": "10000"
+                }
+            ]
+        }
+    ],
+    
+    "info": {
+      "revision": 75208,
+      "revision_hash": "554d6010fe3f080be4b985fb574587920277aae6",
+      "changed": 1,
+      "fc": 1,
+      "pro_datacenters": []
+    }
+}

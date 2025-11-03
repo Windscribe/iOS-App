@@ -201,10 +201,14 @@ class MainViewModel: MainViewModelType {
                 self.connectionMode.onNext(data ?? DefaultValues.connectionMode)
             }
             .store(in: &cancellables)
-        serverRepository.updatedServerModelsSubject.subscribe(onNext: { [weak self] data in
-            guard let self = self else { return }
-            self.serverList.onNext(data)
-        }, onError: { _ in }).disposed(by: disposeBag)
+
+        serverRepository.updatedServerModelsSubject
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.serverList.onNext(data)
+            }
+            .store(in: &cancellables)
 
         protocolManager.showProtocolSwitchTrigger
             .sink { [weak self] _ in
@@ -392,11 +396,12 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadFavourite() {
-        Observable.combineLatest(serverRepository.updatedServerModelsSubject.asObservable(),
-                                 localDatabase.getFavouriteListObservable())
-        .observe(on: MainScheduler.asyncInstance)
-        .subscribe(on: MainScheduler.instance)
-        .subscribe(onNext: { [weak self] (serverModels, favList) in
+        Publishers.CombineLatest(
+            serverRepository.updatedServerModelsSubject,
+            localDatabase.getFavouriteListObservable().toPublisher().replaceError(with: [])
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] (serverModels, favList) in
             guard let self = self else { return }
             let favGroupModels = favList.filter { !$0.isInvalidated }
                 .compactMap { favNode in
@@ -404,7 +409,8 @@ class MainViewModel: MainViewModelType {
                         .first { "\($0.id)" == favNode.id }
                 }
             favouriteList.onNext(favGroupModels)
-        }, onError: { _ in }).disposed(by: disposeBag)
+        }
+        .store(in: &cancellables)
     }
 
     func loadStaticIps() {
@@ -533,7 +539,9 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadServerList() {
-        serverRepository.getUpdatedServers().subscribe(onSuccess: { _ in }, onFailure: { _ in }).disposed(by: disposeBag)
+        Task {
+            _ = try? await serverRepository.getUpdatedServers()
+        }
     }
 
     func getStaticIp() -> [StaticIP] {
