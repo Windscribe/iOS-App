@@ -57,7 +57,7 @@ class UserDataRepositoryImpl: UserDataRepository {
             return self.credentialsRepository.getUpdatedOpenVPNCrendentials().catchAndReturn(nil)
         }.flatMap { _ in
             self.logger.logI("UserDataRepository", "Getting PortMap.")
-            return self.portMapRepository.getUpdatedPortMap()
+            return asyncToSingle { try await self.portMapRepository.getUpdatedPortMap() }
         }.flatMap { _ in
             self.logger.logI("UserDataRepository", "Getting PortMap.")
             return self.staticIpRepository.getStaticServers().catchAndReturn([])

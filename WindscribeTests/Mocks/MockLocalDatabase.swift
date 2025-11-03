@@ -16,6 +16,11 @@ class MockLocalDatabase: LocalDatabase {
 
     let sessionSubject = BehaviorSubject<Windscribe.Session?>(value: nil)
 
+    // PortMap tracking
+    var savePortMapCalled = false
+    var saveSuggestedPortsCalled = false
+    var portMapsToReturn: [Windscribe.PortMap]?
+
     func migrate() {}
 
     func getSession() -> Observable<Windscribe.Session?> {
@@ -71,12 +76,16 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getPortMap() -> [Windscribe.PortMap]? {
-        return []
+        return portMapsToReturn
     }
 
-    func savePortMap(portMap: [Windscribe.PortMap]) {}
+    func savePortMap(portMap: [Windscribe.PortMap]) {
+        savePortMapCalled = true
+    }
 
-    func saveSuggestedPorts(suggestedPorts: [Windscribe.SuggestedPorts]) {}
+    func saveSuggestedPorts(suggestedPorts: [Windscribe.SuggestedPorts]) {
+        saveSuggestedPortsCalled = true
+    }
 
     func getSuggestedPorts() -> [Windscribe.SuggestedPorts]? {
         return []

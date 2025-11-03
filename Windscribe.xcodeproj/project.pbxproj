@@ -1210,6 +1210,9 @@
 		F4ADA60A2D5653A00077C132 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA5F52D564F300077C132 /* ImageCache.swift */; };
 		F4ADA60B2D5653C20077C132 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */; };
 		F4ADA60D2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */; };
+		F4B4C1E32E99812D0024D824 /* PortMapRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */; };
+		F4B4C1E52E9981390024D824 /* MockPortMapRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */; };
+		F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */; };
 		F4B4F3402D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3412D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
@@ -2140,6 +2143,9 @@
 		F4ADA5FC2D564F790077C132 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		F4ADA6032D564FAE0077C132 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
 		F4ADA60C2D568C6B0077C132 /* PlanUpgradeStarsBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanUpgradeStarsBackgroundView.swift; sourceTree = "<group>"; };
+		F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMapRepositoryTests.swift; sourceTree = "<group>"; };
+		F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPortMapRepository.swift; sourceTree = "<group>"; };
+		F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataPorts.swift; sourceTree = "<group>"; };
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B5457D2E32D17A00135E74 /* MaintananceLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintananceLocationView.swift; sourceTree = "<group>"; };
 		F4B5457F2E32D19000135E74 /* MaintananceLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintananceLocationViewModel.swift; sourceTree = "<group>"; };
@@ -3314,7 +3320,6 @@
 				AFFA715B21C407E700349195 /* Notice.swift */,
 				AFFA715F21C43A8E00349195 /* ServerCredentials.swift */,
 				AF04ED9E21DFD1AE005C6576 /* StaticIP.swift */,
-				AF04EDA221E50E99005C6576 /* PortMap.swift */,
 				AF4E91D421ED277A00A3F584 /* MobilePlan.swift */,
 				AF04982F21FA43690046D33B /* Section.swift */,
 				AFA8041D22089ED200F8E379 /* APIEmailSent.swift */,
@@ -3913,6 +3918,7 @@
 			children = (
 				C5A930EE2B44AA730001CFA0 /* PortMapRepository.swift */,
 				C5A930F02B44AA880001CFA0 /* PortMapRepositoryImpl.swift */,
+				AF04EDA221E50E99005C6576 /* PortMap.swift */,
 			);
 			path = PortMap;
 			sourceTree = "<group>";
@@ -4427,6 +4433,7 @@
 				F43791762E95A16000ED6141 /* SampleDataAPI.swift */,
 				F43791782E95A17000ED6141 /* SampleDataLeaderboard.swift */,
 				F437917A2E95A17600ED6141 /* SampleDataPreferences.swift */,
+				F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */,
 				F49935442DA99E5400108558 /* click.caf */,
 			);
 			path = SampleData;
@@ -4461,6 +4468,7 @@
 			isa = PBXGroup;
 			children = (
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
+				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -5559,6 +5567,7 @@
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
 				F43791812E95A21900ED6141 /* MockSessionManager.swift */,
 				F49935402DA9973100108558 /* MockSoundManager.swift */,
+				F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -7147,14 +7156,17 @@
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
 				F49935432DA9987800108558 /* SoundManagerTests.swift in Sources */,
 				F49935412DA9973100108558 /* MockSoundManager.swift in Sources */,
+				F4B4C1E32E99812D0024D824 /* PortMapRepositoryTests.swift in Sources */,
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,
+				F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */,
 				F43791822E95A21900ED6141 /* MockSessionManager.swift in Sources */,
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,
 				F437917B2E95A17600ED6141 /* SampleDataPreferences.swift in Sources */,
+				F4B4C1E52E9981390024D824 /* MockPortMapRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -151,6 +151,26 @@ extension ObservableType {
     }
 }
 
+// MARK: Async/Await -> RxSwift Bridge
+
+/// Converts an async throwing function to RxSwift Single
+func asyncToSingle<T>(_ operation: @escaping () async throws -> T) -> Single<T> {
+    return Single.create { single in
+        let task = Task {
+            do {
+                let result = try await operation()
+                single(.success(result))
+            } catch {
+                single(.failure(error))
+            }
+        }
+
+        return Disposables.create {
+            task.cancel()
+        }
+    }
+}
+
 // MARK: Utility Publisher for Synchronous Void-Returning Functions
 
 /// Wraps a synchronous, non-throwing `Void`-returning function into a Combine-compatible `AnyPublisher`.

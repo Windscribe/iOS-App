@@ -15,6 +15,9 @@ class MockAPIManager: APIManager {
     var mockLeaderboard: Leaderboard?
     var mockAPIMessage: APIMessage?
 
+    // PortMap tracking
+    var portMapListToReturn: PortMapList?
+
     // Track method calls
     var getLeaderboardCalled = false
     var recordScoreCalled = false
@@ -26,6 +29,7 @@ class MockAPIManager: APIManager {
         customError = Errors.sessionIsInvalid
         mockLeaderboard = nil
         mockAPIMessage = nil
+        portMapListToReturn = nil
         getLeaderboardCalled = false
         recordScoreCalled = false
         lastRecordedScore = nil
@@ -175,7 +179,15 @@ class MockAPIManager: APIManager {
     }
 
     func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let portMapList = portMapListToReturn else {
+            throw NSError(domain: "MockAPIManager", code: -1, userInfo: [NSLocalizedDescriptionKey: "No port map list configured"])
+        }
+
+        return portMapList
     }
 
     // MARK: - Billing Methods

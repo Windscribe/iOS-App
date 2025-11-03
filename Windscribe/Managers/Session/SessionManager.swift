@@ -225,7 +225,7 @@ class SessionManagerImpl: SessionManager {
 
             if portMaps.first == nil {
                 _ = try? await serverRepo.getUpdatedServers().value
-                _ = try? await portmapRepo.getUpdatedPortMap().value
+                _ = try? await portmapRepo.getUpdatedPortMap()
             }
         }
     }

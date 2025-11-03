@@ -364,11 +364,10 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadPortMap() {
-        portMapRepo.getUpdatedPortMap().subscribe(onSuccess: { _ in
-            DispatchQueue.main.async {
-                self.portMap.onNext(self.localDatabase.getPortMap())
-            }
-        }).disposed(by: disposeBag)
+        Task { @MainActor in
+            let portMap = try? await portMapRepo.getUpdatedPortMap()
+            self.portMap.onNext(portMap)
+        }
     }
 
     private func getFavouriteGroup(id: String, servers: [ServerModel]) -> GroupModel? {
