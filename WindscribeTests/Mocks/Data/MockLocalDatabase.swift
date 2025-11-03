@@ -22,6 +22,10 @@ class MockLocalDatabase: LocalDatabase {
     var saveSuggestedPortsCalled = false
     var portMapsToReturn: [Windscribe.PortMap]?
 
+    // Notifications tracking
+    var saveNotificationsCalled = false
+    var notificationsToReturn: [Windscribe.Notice]?
+
     func migrate() {}
 
     func getSession() -> Observable<Windscribe.Session?> {
@@ -50,13 +54,9 @@ class MockLocalDatabase: LocalDatabase {
         return Observable.just([])
     }
 
-<<<<<<< ours:WindscribeTests/Mocks/MockLocalDatabase.swift
-    func saveServers(servers: [Windscribe.Server]) {}
-=======
-    func saveServers(servers: [Windscribe.Server]) async {
+    func saveServers(servers: [Windscribe.Server]) {
         mockServers = servers
     }
->>>>>>> theirs:WindscribeTests/Mocks/Data/MockLocalDatabase.swift
 
     func getStaticIPs() -> [Windscribe.StaticIP]? {
         return []
@@ -99,14 +99,17 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getNotifications() -> [Windscribe.Notice]? {
-        return []
+        return notificationsToReturn
     }
 
     func getNotificationsObservable() -> Observable<[Windscribe.Notice]> {
-        return Observable.just([])
+        return Observable.just(notificationsToReturn ?? [])
     }
 
-    func saveNotifications(notifications: [Windscribe.Notice]) {}
+    func saveNotifications(notifications: [Windscribe.Notice]) {
+        saveNotificationsCalled = true
+        notificationsToReturn = notifications
+    }
 
     func getReadNotices() -> [Windscribe.ReadNotice]? {
         return []

@@ -69,7 +69,7 @@ class UserDataRepositoryImpl: UserDataRepository {
             return self.staticIpRepository.getStaticServers().catchAndReturn([])
         }.flatMap { _ in
             self.logger.logI("UserDataRepository", "Getting Notifications.")
-            return self.notificationsRepository.getUpdatedNotifications().catchAndReturn([])
+            return asyncToSingle { try await self.notificationsRepository.getUpdatedNotifications() }.catchAndReturn([])
         }.map { _ in
             DispatchQueue.main.async {
                 if !self.emergencyRepository.isConnected() {

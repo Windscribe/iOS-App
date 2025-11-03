@@ -18,6 +18,11 @@ class MockAPIManager: APIManager {
     // PortMap tracking
     var portMapListToReturn: PortMapList?
 
+    // Notifications tracking
+    var noticeListToReturn: NoticeList?
+    var getNotificationsCalled = false
+    var lastPcpid: String?
+
     // Track method calls
     var getLeaderboardCalled = false
     var recordScoreCalled = false
@@ -32,6 +37,9 @@ class MockAPIManager: APIManager {
         mockLeaderboard = nil
         mockAPIMessage = nil
         portMapListToReturn = nil
+        noticeListToReturn = nil
+        getNotificationsCalled = false
+        lastPcpid = nil
         getLeaderboardCalled = false
         recordScoreCalled = false
         lastRecordedScore = nil
@@ -80,83 +88,83 @@ class MockAPIManager: APIManager {
     // MARK: - Session Methods
 
     func getSession(_ appleID: String?) async throws -> Session {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getWebSession() async throws -> WebSession {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func deleteSession() async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getSession(sessionAuth: String) async throws -> Session {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     // MARK: - Signup and Login Methods
 
     func login(username: String, password: String, code2fa: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> Session {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func signup(username: String, password: String, referringUsername: String, email: String, voucherCode: String, secureToken: String, captchaSolution: String, captchaTrailX: [CGFloat], captchaTrailY: [CGFloat]) async throws -> Session {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func authTokenLogin(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func authTokenSignup(useAsciiCaptcha: Bool) async throws -> AuthTokenResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func regToken() async throws -> Token {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func signUpUsingToken(token: String) async throws -> Session {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func ssoSession(token: String) async throws -> SSOSession {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     // MARK: - Account Methods
 
     func addEmail(email: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func confirmEmail() async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func claimAccount(username: String, password: String, email: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getXpressLoginCode() async throws -> XPressLoginCodeResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func verifyXPressLoginCode(code: String, sig: String) async throws -> XPressLoginVerifyResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func cancelAccount(password: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func verifyTvLoginCode(code: String) async throws -> XPressLoginVerifyResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func claimVoucherCode(code: String) async throws -> ClaimVoucherCodeResponse {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     // MARK: - VPN Methods
@@ -169,19 +177,19 @@ class MockAPIManager: APIManager {
     }
 
     func getStaticIpList() async throws -> StaticIPList {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getOpenVPNServerConfig(openVPNVersion: String) async throws -> String {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getIKEv2ServerCredentials() async throws -> IKEv2ServerCredentials {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getOpenVPNServerCredentials() async throws -> OpenVPNServerCredentials {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getPortMap(version: Int, forceProtocols: [String]) async throws -> PortMapList {
@@ -199,50 +207,64 @@ class MockAPIManager: APIManager {
     // MARK: - Billing Methods
 
     func getMobileBillingPlans(promo: String?) async throws -> MobilePlanList {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func postBillingCpID(pcpID: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func verifyApplePayment(appleID: String, appleData: String, appleSIG: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     // MARK: - Robert Methods
 
     func getRobertFilters() async throws -> RobertFilters {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func updateRobertSettings(id: String, status: Int32) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func syncRobertFilters() async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     // MARK: - Other Methods
 
     func recordInstall(platform: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func getNotifications(pcpid: String) async throws -> NoticeList {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        getNotificationsCalled = true
+        lastPcpid = pcpid
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let noticeList = noticeListToReturn else {
+            // Return default mock notice list from sample data
+            let jsonData = SampleDataNotifications.notificationListJSON.data(using: .utf8)!
+            let noticeList = try! JSONDecoder().decode(NoticeList.self, from: jsonData)
+            return noticeList
+        }
+
+        return noticeList
     }
 
     func getIp() async throws -> MyIP {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func sendDebugLog(username: String, log: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 
     func sendTicket(email: String, name: String, subject: String, message: String, category: String, type: String, channel: String, platform: String) async throws -> APIMessage {
-        fatalError("Not implemented for ShakeDataRepository tests")
+        fatalError("Not implemented")
     }
 }

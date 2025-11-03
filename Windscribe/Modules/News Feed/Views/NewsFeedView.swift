@@ -13,7 +13,6 @@ struct NewsFeedView: View {
     @StateObject private var viewModel: NewsFeedViewModel
 
     @State private var safariItem: SafariItem?
-    @State private var hasLoaded = false
 
     init(viewModel: NewsFeedViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -55,11 +54,8 @@ struct NewsFeedView: View {
                     }
                 }
                 .padding(.top, 1) // keeping the foreground color of navigation
-                .onAppear {
-                    if !hasLoaded {
-                        viewModel.loadNewsFeedData()
-                        hasLoaded = true
-                    }
+                .task {
+                    await viewModel.loadNewsFeedData()
                 }
                 .onChange(of: viewModel.viewToLaunch) { view in
                     switch view {

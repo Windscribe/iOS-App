@@ -758,7 +758,6 @@
 		C5592B8B2B394C0300F2F110 /* LocalDatabaseImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */; };
 		C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0912B3A68820011EF56 /* PreferencesTests.swift */; };
 		C55AF0972B3B58C00011EF56 /* LocalDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */; };
-		C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A32B3E80300011EF56 /* RxExtensions.swift */; };
 		C55AF0A82B41DDE10011EF56 /* APIManagerImpl+VPN.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */; };
 		C561237A2C5F25750090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
 		C561237B2C5F25760090EB5A /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2199462270B146009B42E5 /* Resolver.swift */; };
@@ -1218,6 +1217,10 @@
 		F4B4C1E32E99812D0024D824 /* PortMapRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */; };
 		F4B4C1E52E9981390024D824 /* MockPortMapRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */; };
 		F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */; };
+		F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */; };
+		F4B4C1EB2EA022600024D824 /* SampleDataNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1EA2EA022600024D824 /* SampleDataNotifications.swift */; };
+		F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */; };
+		F4B4C1F22EA0416D0024D824 /* RxExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */; };
 		F4B4F3402D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3412D761A45001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
 		F4B4F3462D765769001AF143 /* SiriIntents.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */; };
@@ -1849,7 +1852,6 @@
 		C5592B8A2B394C0300F2F110 /* LocalDatabaseImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseImpl.swift; sourceTree = "<group>"; };
 		C55AF0912B3A68820011EF56 /* PreferencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesTests.swift; sourceTree = "<group>"; };
 		C55AF0962B3B58C00011EF56 /* LocalDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDatabaseTests.swift; sourceTree = "<group>"; };
-		C55AF0A32B3E80300011EF56 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		C55AF0A72B41DDE10011EF56 /* APIManagerImpl+VPN.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIManagerImpl+VPN.swift"; sourceTree = "<group>"; };
 		C561237F2C5F25B60090EB5A /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.tbd; sourceTree = DEVELOPER_DIR; };
 		C56123802C5F25B60090EB5A /* libresolv.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.9.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS17.5.sdk/usr/lib/libresolv.9.tbd; sourceTree = DEVELOPER_DIR; };
@@ -2156,6 +2158,10 @@
 		F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortMapRepositoryTests.swift; sourceTree = "<group>"; };
 		F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPortMapRepository.swift; sourceTree = "<group>"; };
 		F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataPorts.swift; sourceTree = "<group>"; };
+		F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPushNotificationManager.swift; sourceTree = "<group>"; };
+		F4B4C1EA2EA022600024D824 /* SampleDataNotifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleDataNotifications.swift; sourceTree = "<group>"; };
+		F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRepositoryTests.swift; sourceTree = "<group>"; };
+		F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RxExtensions.swift; sourceTree = "<group>"; };
 		F4B4F33F2D761A45001AF143 /* SiriIntents.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = SiriIntents.xcstrings; sourceTree = "<group>"; };
 		F4B5457D2E32D17A00135E74 /* MaintananceLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintananceLocationView.swift; sourceTree = "<group>"; };
 		F4B5457F2E32D19000135E74 /* MaintananceLocationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintananceLocationViewModel.swift; sourceTree = "<group>"; };
@@ -3117,13 +3123,6 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
-		1EFFD0482E99424A005603FB /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		1EFFD04B2E9943EF005603FB /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -3781,8 +3780,7 @@
 			isa = PBXGroup;
 			children = (
 				1EFFD04B2E9943EF005603FB /* Data */,
-				1EFFD0482E99424A005603FB /* Extensions */,
-				C55AF0A32B3E80300011EF56 /* RxExtensions.swift */,
+				F4B4C1F02EA041440024D824 /* Extensions */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -4493,6 +4491,7 @@
 				F43791782E95A17000ED6141 /* SampleDataLeaderboard.swift */,
 				F437917A2E95A17600ED6141 /* SampleDataPreferences.swift */,
 				F4B4C1E62E99829E0024D824 /* SampleDataPorts.swift */,
+				F4B4C1EA2EA022600024D824 /* SampleDataNotifications.swift */,
 				F49935442DA99E5400108558 /* click.caf */,
 			);
 			path = SampleData;
@@ -4530,6 +4529,7 @@
 				F458F60E2E982DE30034A92A /* LookAndFeelRepositoryTests.swift */,
 				F437917C2E95A1E500ED6141 /* ShakeDataRepositoryTests.swift */,
 				F4B4C1E22E99812D0024D824 /* PortMapRepositoryTests.swift */,
+				F4B4C1EC2EA023AE0024D824 /* NotificationRepositoryTests.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -5482,6 +5482,14 @@
 			path = ImageLoader;
 			sourceTree = "<group>";
 		};
+		F4B4C1F02EA041440024D824 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F4B4C1F12EA0416D0024D824 /* RxExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		F4B5457A2E32CFA200135E74 /* MaintananceLocation */ = {
 			isa = PBXGroup;
 			children = (
@@ -5624,6 +5632,7 @@
 				F40419412D8231DA0005EF97 /* MockHTMLParser.swift */,
 				F465A6402D5D3E1400579B5F /* MockSession.swift */,
 				F4B4C1E42E9981390024D824 /* MockPortMapRepository.swift */,
+				F4B4C1E82EA022320024D824 /* MockPushNotificationManager.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -7205,13 +7214,13 @@
 				F43791792E95A17000ED6141 /* SampleDataLeaderboard.swift in Sources */,
 				1EFFD0432E99389B005603FB /* MockUserRepository.swift in Sources */,
 				C5D983C72B34E5AA0069FF3A /* APIUtilTests.swift in Sources */,
+				F4B4C1F22EA0416D0024D824 /* RxExtensions.swift in Sources */,
 				F465A6412D5D3E1400579B5F /* MockSession.swift in Sources */,
 				F43791772E95A16000ED6141 /* SampleDataAPI.swift in Sources */,
 				F4433D162E8333360012EA34 /* KeychainDatabaseTests.swift in Sources */,
 				F458F60F2E982DE30034A92A /* LookAndFeelRepositoryTests.swift in Sources */,
 				F40419452D8232460005EF97 /* HTMLParserTests.swift in Sources */,
 				1EFFD03E2E99374C005603FB /* ServerRepositoryTests.swift in Sources */,
-				C55AF0A42B3E80300011EF56 /* RxExtensions.swift in Sources */,
 				1EFFD0452E993A57005603FB /* MockAdvanceRepository.swift in Sources */,
 				F40419422D8231DA0005EF97 /* MockHTMLParser.swift in Sources */,
 				1E7A19542C34237E00851AE2 /* DNSValue.swift in Sources */,
@@ -7221,11 +7230,14 @@
 				F4433D112E8315800012EA34 /* MockKeychainManager.swift in Sources */,
 				F465A63B2D5D3B7F00579B5F /* MockLogger.swift in Sources */,
 				C55AF0922B3A68820011EF56 /* PreferencesTests.swift in Sources */,
+				F4B4C1E92EA022320024D824 /* MockPushNotificationManager.swift in Sources */,
 				F4433D132E8316CF0012EA34 /* KeychainManagerTests.swift in Sources */,
+				F4B4C1ED2EA023AE0024D824 /* NotificationRepositoryTests.swift in Sources */,
 				F4B4C1E72E9982AA0024D824 /* SampleDataPorts.swift in Sources */,
 				F43791822E95A21900ED6141 /* MockSessionManager.swift in Sources */,
 				F465A63D2D5D3B8F00579B5F /* MockLocalDatabase.swift in Sources */,
 				F465A6372D5D37EF00579B5F /* AppReviewManagerTests.swift in Sources */,
+				F4B4C1EB2EA022600024D824 /* SampleDataNotifications.swift in Sources */,
 				F437917B2E95A17600ED6141 /* SampleDataPreferences.swift in Sources */,
 				F4B4C1E52E9981390024D824 /* MockPortMapRepository.swift in Sources */,
 			);

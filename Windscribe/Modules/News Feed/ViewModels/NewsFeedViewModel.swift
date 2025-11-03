@@ -8,7 +8,6 @@
 
 import Combine
 import SwiftUI
-import RxSwift
 
 protocol NewsFeedViewModelProtocol: ObservableObject {
     func didTapToExpand(id: Int, allowMultipleExpansions: Bool )
@@ -64,26 +63,22 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
 
     // MARK: Data Loading
 
-    func loadNewsFeedData() {
+    @MainActor
+    func loadNewsFeedData() async {
         loadState = .loading
 
-        notificationRepository.getUpdatedNotifications()
-            .asPublisher()
-            .receive(on: DispatchQueue.main)
-            .tryMap { notifications in
-                try self.validateNotifications(notifications)
-            }
-            .map { self.sortNotifications($0) }
-            .map { self.mapToNewsFeedDataModels($0) }
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    self?.handleCompletion(completion)
-                },
-                receiveValue: { [weak self] newsfeedData in
-                    self?.newsFeedData = Array(newsfeedData)
-                }
-            )
-            .store(in: &cancellables)
+        do {
+            let notifications = try await notificationRepository.getUpdatedNotifications()
+            let validated = try validateNotifications(notifications)
+            let sorted = sortNotifications(validated)
+            let mapped = mapToNewsFeedDataModels(sorted)
+
+            self.newsFeedData = Array(mapped)
+            self.loadState = .loaded
+        } catch {
+            self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
+            self.logger.logE("Newsfeed", "Data Load Error: \(error)")
+        }
 
         loadReadStatus()
     }
@@ -139,18 +134,7 @@ class NewsFeedViewModel: NewsFeedViewModelProtocol {
         }
     }
 
-    // Step 3: Handle Completion Separately
-    private func handleCompletion(_ completion: Subscribers.Completion<Error>) {
-        switch completion {
-        case .failure(let error):
-            self.loadState = .error("\(TextsAsset.failedToLoadData): \(error.localizedDescription)")
-            self.logger.logE("Newsfeed", "Data Load Error: \(error)")
-        case .finished:
-            self.loadState = .loaded
-        }
-    }
-
-    // Step 4: Extract Notification Validation
+    // Step 3: Extract Notification Validation
     private func validateNotifications(_ notifications: [Notice]) throws -> [Notice] {
         guard !notifications.isEmpty else {
             throw URLError(.badServerResponse)

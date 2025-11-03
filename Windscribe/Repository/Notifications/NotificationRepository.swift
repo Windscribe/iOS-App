@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import RxSwift
+import Combine
 
 protocol NotificationRepository {
-    var notices: BehaviorSubject<[Notice]> { get }
-    func getUpdatedNotifications() -> Single<[Notice]>
-    func loadNotifications()
+    var notices: CurrentValueSubject<[Notice], Never> { get }
+    func getUpdatedNotifications() async throws -> [Notice]
+    func loadNotifications() async
 }

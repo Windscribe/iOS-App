@@ -21,7 +21,7 @@ protocol MainViewModelType {
     var oldSession: OldSession? { get }
     var locationOrderBy: BehaviorSubject<String> { get }
     var latencies: BehaviorSubject<[PingData]> { get }
-    var notices: BehaviorSubject<[Notice]> { get }
+    var notices: CurrentValueSubject<[Notice], Never> { get }
     var isDarkMode: CurrentValueSubject<Bool, Never> { get }
     var selectedProtocol: BehaviorSubject<String> { get }
     var selectedPort: BehaviorSubject<String> { get }
@@ -92,7 +92,7 @@ class MainViewModel: MainViewModelType {
     var customConfigs = BehaviorSubject<[CustomConfig]?>(value: nil)
     var locationOrderBy = BehaviorSubject<String>(value: DefaultValues.orderLocationsBy)
     let latencies = BehaviorSubject<[PingData]>(value: [])
-    var notices = BehaviorSubject<[Notice]>(value: [])
+    var notices = CurrentValueSubject<[Notice], Never>([])
     var selectedProtocol = BehaviorSubject<String>(value: DefaultValues.protocol)
     var selectedPort = BehaviorSubject<String>(value: DefaultValues.port)
     var connectionMode = BehaviorSubject<String>(value: DefaultValues.connectionMode)
@@ -462,10 +462,16 @@ class MainViewModel: MainViewModelType {
     }
 
     func getNotices() {
-        Observable.combineLatest(localDatabase.getReadNoticesObservable(), localDatabase.getNotificationsObservable()).bind(onNext: { [weak self] _, notifications in
+        Publishers.CombineLatest(
+            localDatabase.getReadNoticesObservable().toPublisher().replaceError(with: []),
+            localDatabase.getNotificationsObservable().toPublisher().replaceError(with: [])
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] (_, notifications) in
             guard let self = self else { return }
-            self.notices.onNext(notifications)
-        }).disposed(by: disposeBag)
+            self.notices.send(notifications)
+        }
+        .store(in: &cancellables)
     }
 
     func checkForUnreadNotifications(completion: @escaping (_ showNotifications: Bool, _ readNoticeDifferentCount: Int) -> Void) {
@@ -492,7 +498,7 @@ class MainViewModel: MainViewModelType {
     }
 
     func retrieveNotifications() -> [NoticeModel]? {
-        guard let notices = try? notices.value() else { return nil }
+        let notices = notices.value
         if notices.filter({$0.isInvalidated}).count > 0 {
             return nil
         }

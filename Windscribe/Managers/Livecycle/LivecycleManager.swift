@@ -67,7 +67,9 @@ class LivecycleManager: LivecycleManagerType {
 
     /// Fresh app launch.
     func onAppStart() {
-        notificationRepo.loadNotifications()
+        Task {
+            await notificationRepo.loadNotifications()
+        }
     }
 
     private func checkForKillSwitch() {
@@ -96,7 +98,9 @@ class LivecycleManager: LivecycleManagerType {
         }
         if Date().timeIntervalSince1970 - lastNotificationTimestamp >= 3600 && preferences.getSessionAuthHash() != nil {
             preferences.saveLastNotificationTimestamp(timeStamp: Date().timeIntervalSince1970)
-            notificationRepo.loadNotifications()
+            Task {
+                await notificationRepo.loadNotifications()
+            }
         }
         credentialsRepo.updateServerConfig()
         handleShortcutLaunch()

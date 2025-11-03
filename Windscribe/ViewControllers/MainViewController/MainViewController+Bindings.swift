@@ -100,11 +100,11 @@ extension MainViewController {
             self.popupRouter?.routeTo(to: RouteID.upgrade(promoCode: payload.promoCode, pcpID: payload.pcpid), from: self)
         }).disposed(by: disposeBag)
 
-        viewModel.notices.subscribe(onNext: { _ in
-            self.checkForUnreadNotifications()
-        }, onError: { error in
-            self.logger.logE("MainViewController", "Realm notifications error \(error.localizedDescription)")
-        }).disposed(by: disposeBag)
+        viewModel.notices
+            .sink { [weak self] _ in
+                self?.checkForUnreadNotifications()
+            }
+            .store(in: &cancellables)
 
         viewModel.showNetworkSecurityTrigger
             .sink {[weak self] in
