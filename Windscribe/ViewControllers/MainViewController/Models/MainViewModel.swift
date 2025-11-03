@@ -414,12 +414,14 @@ class MainViewModel: MainViewModelType {
     }
 
     func loadStaticIps() {
-        staticIpRepository.getStaticServers()
-            .observe(on: MainScheduler.asyncInstance)
-            .subscribe(on: MainScheduler.instance)
-            .subscribe(onSuccess: { [self] data in
+        Task { @MainActor in
+            do {
+                let data = try await staticIpRepository.getStaticServers()
                 staticIPs.onNext(data)
-            }).disposed(by: disposeBag)
+            } catch {
+                logger.logE("MainViewModel", "Failed to load static IPs: \(error)")
+            }
+        }
     }
 
     func loadCustomConfigs() {

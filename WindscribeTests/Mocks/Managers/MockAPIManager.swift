@@ -23,6 +23,10 @@ class MockAPIManager: APIManager {
     var getNotificationsCalled = false
     var lastPcpid: String?
 
+    // StaticIP tracking
+    var staticIPListToReturn: StaticIPList?
+    var getStaticIpListCalled = false
+
     // Track method calls
     var getLeaderboardCalled = false
     var recordScoreCalled = false
@@ -40,6 +44,8 @@ class MockAPIManager: APIManager {
         noticeListToReturn = nil
         getNotificationsCalled = false
         lastPcpid = nil
+        staticIPListToReturn = nil
+        getStaticIpListCalled = false
         getLeaderboardCalled = false
         recordScoreCalled = false
         lastRecordedScore = nil
@@ -177,7 +183,20 @@ class MockAPIManager: APIManager {
     }
 
     func getStaticIpList() async throws -> StaticIPList {
-        fatalError("Not implemented")
+        getStaticIpListCalled = true
+
+        if shouldThrowError {
+            throw customError
+        }
+
+        guard let staticIPList = staticIPListToReturn else {
+            // Return default mock static IP list from sample data
+            let jsonData = SampleDataStaticIP.staticIPListJSON.data(using: .utf8)!
+            let staticIPList = try! JSONDecoder().decode(StaticIPList.self, from: jsonData)
+            return staticIPList
+        }
+
+        return staticIPList
     }
 
     func getOpenVPNServerConfig(openVPNVersion: String) async throws -> String {

@@ -7,9 +7,8 @@
 //
 
 import Foundation
-import RxSwift
 
 protocol StaticIpRepository {
-    func getStaticServers() -> Single<[StaticIP]>
+    func getStaticServers() async throws -> [StaticIP]
     func getStaticIp(id: Int) -> StaticIP?
 }

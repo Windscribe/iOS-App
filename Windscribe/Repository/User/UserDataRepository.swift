@@ -65,8 +65,8 @@ class UserDataRepositoryImpl: UserDataRepository {
             self.logger.logI("UserDataRepository", "Getting PortMap.")
             return asyncToSingle { try await self.portMapRepository.getUpdatedPortMap() }
         }.flatMap { _ in
-            self.logger.logI("UserDataRepository", "Getting PortMap.")
-            return self.staticIpRepository.getStaticServers().catchAndReturn([])
+            self.logger.logI("UserDataRepository", "Getting Static IPs.")
+            return asyncToSingle { try await self.staticIpRepository.getStaticServers() }.catchAndReturn([])
         }.flatMap { _ in
             self.logger.logI("UserDataRepository", "Getting Notifications.")
             return asyncToSingle { try await self.notificationsRepository.getUpdatedNotifications() }.catchAndReturn([])

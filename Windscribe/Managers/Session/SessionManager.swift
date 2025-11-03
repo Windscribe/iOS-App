@@ -195,7 +195,7 @@ class SessionManagerImpl: SessionManager {
             let sipCount = localDatabase.getStaticIPs()?.count ?? 0
             if sipCount != newSession.getSipCount() {
                 logger.logI("SessionManager", "SIP changes detected. Request to retrieve static ip list")
-                _ = try? await staticIPRepo.getStaticServers().value
+                _ = try? await staticIPRepo.getStaticServers()
                 self.checkLocationValidity()
                 _ = try? await self.latencyRepo.loadStaticIpLatency().value
             }

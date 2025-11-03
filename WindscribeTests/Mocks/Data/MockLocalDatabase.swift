@@ -26,6 +26,12 @@ class MockLocalDatabase: LocalDatabase {
     var saveNotificationsCalled = false
     var notificationsToReturn: [Windscribe.Notice]?
 
+    // StaticIP tracking
+    var staticIPsToReturn: [Windscribe.StaticIP]?
+    var saveStaticIPsCalled = false
+    var deleteStaticIpsCalled = false
+    var lastDeletedStaticIPsIgnoreList: [String]?
+
     func migrate() {}
 
     func getSession() -> Observable<Windscribe.Session?> {
@@ -59,12 +65,18 @@ class MockLocalDatabase: LocalDatabase {
     }
 
     func getStaticIPs() -> [Windscribe.StaticIP]? {
-        return []
+        return staticIPsToReturn
     }
 
-    func saveStaticIPs(staticIps: [Windscribe.StaticIP]) {}
+    func saveStaticIPs(staticIps: [Windscribe.StaticIP]) {
+        saveStaticIPsCalled = true
+        staticIPsToReturn = staticIps
+    }
 
-    func deleteStaticIps(ignore: [String]) {}
+    func deleteStaticIps(ignore: [String]) {
+        deleteStaticIpsCalled = true
+        lastDeletedStaticIPsIgnoreList = ignore
+    }
 
     func getOpenVPNServerCredentials() -> Windscribe.OpenVPNServerCredentials? {
         return nil

@@ -69,9 +69,9 @@ class LatencyViewModelImpl: LatencyViewModel {
         }
     }
 
-    private func updateServerList() async throws-> [StaticIP] {
+    private func updateServerList() async throws -> [StaticIP] {
         _ = try await serverRepository.getUpdatedServers()
-        return try await self.staticIpRepository.getStaticServers().value
+        return try await staticIpRepository.getStaticServers()
     }
 
 }

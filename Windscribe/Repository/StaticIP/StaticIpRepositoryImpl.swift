@@ -7,48 +7,33 @@
 //
 
 import Foundation
-import RxSwift
 
 class StaticIpRepositoryImpl: StaticIpRepository {
     private let apiManager: APIManager
     private let localDatabase: LocalDatabase
-    private let disposeBag = DisposeBag()
     private let logger: FileLogger
+
     init(apiManager: APIManager, localDatabase: LocalDatabase, logger: FileLogger) {
         self.apiManager = apiManager
         self.localDatabase = localDatabase
         self.logger = logger
     }
 
-    func getStaticServers() -> Single<[StaticIP]> {
-        return Single.create { single in
-            let task = Task { [weak self] in
-                guard let self = self else {
-                    single(.failure(Errors.validationFailure))
-                    return
-                }
+    /// Fetches static IPs and updates the local database.
+    func getStaticServers() async throws -> [StaticIP] {
+        do {
+            let result = try await apiManager.getStaticIpList()
+            localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
+            localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
+            return Array(result.staticIPs)
+        } catch {
+            logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
 
-                do {
-                    let result = try await self.apiManager.getStaticIpList()
-                    await MainActor.run {
-                        self.localDatabase.deleteStaticIps(ignore: Array(result.staticIPs).map { $0.staticIP })
-                        self.localDatabase.saveStaticIPs(staticIps: Array(result.staticIPs))
-                        single(.success(Array(result.staticIPs)))
-                    }
-                } catch {
-                    await MainActor.run {
-                        self.logger.logE("StaticIpRepository", "Error getting static IPs: \(error)")
-                        if let ips = self.localDatabase.getStaticIPs() {
-                            single(.success(ips))
-                        } else {
-                            single(.failure(error))
-                        }
-                    }
-                }
-            }
-
-            return Disposables.create {
-                task.cancel()
+            // Fallback to cached data if available and not empty
+            if let cachedIps = localDatabase.getStaticIPs(), !cachedIps.isEmpty {
+                return cachedIps
+            } else {
+                throw error
             }
         }
     }
